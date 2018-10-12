@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-row items-stretch relative">
-    <div class="flex-fill flex flex-column bl b--black-20">
+    <div class="flex-fill flex flex-column">
       <div class="pa2 f7 silver ttu fw6 bb b--black-05 bg-nearer-white">SDK</div>
       <CodeEditor
         class="flex-fill"
@@ -8,7 +8,7 @@
         v-model="sdk_str"
       />
     </div>
-    <div class="flex-fill flex flex-column bl b--black-20">
+    <div class="flex-fill flex flex-column bl b--black-05">
       <div class="pa2 f7 silver ttu fw6 bb b--black-05 bg-nearer-white">JSON</div>
       <CodeEditor
         class="flex-fill"
@@ -16,7 +16,7 @@
         v-model="json_str"
       />
     </div>
-    <div class="flex-fill flex flex-column bl b--black-20">
+    <div class="flex-fill flex flex-column bl b--black-05">
       <div class="pa2 f7 silver ttu fw6 bb b--black-05 bg-nearer-white">YAML</div>
       <CodeEditor
         class="flex-fill"
@@ -25,7 +25,7 @@
         v-model="yaml_str"
       />
     </div>
-    <div class="flex-fill flex flex-column bl b--black-20" v-show="false">
+    <div class="flex-fill flex flex-column bl b--black-05" v-show="false">
       <div class="pa2 f7 silver ttu fw6 bb b--black-05 bg-nearer-white">JSON to SDK</div>
       <CodeEditor
         class="flex-fill"

@@ -1,7 +1,7 @@
 <template>
-  <div class="flex flex-column">
+  <div class="flex flex-column bg-white">
     <!-- control bar -->
-    <div class="pa2 relative bg-white bb b--black-05" style="margin-top: 2px">
+    <div class="pa2 relative bb b--black-05">
       <div class="flex flex-row items-center">
         <el-input
           class="w-100 mw5 mr2"

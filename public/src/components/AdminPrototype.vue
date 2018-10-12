@@ -1,25 +1,25 @@
 <template>
   <div class="overflow-x-hidden overflow-y-auto">
-    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a1"  ref="a1" >1</div>
-    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a2"  ref="a2" >2</div>
-    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a3"  ref="a3" >3</div>
-    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a4"  ref="a4" >4</div>
-    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a5"  ref="a5" >5</div>
-    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a6"  ref="a6" >6</div>
-    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a7"  ref="a7" >7</div>
-    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a8"  ref="a8" >8</div>
-    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a9"  ref="a9" >9</div>
-    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a10" ref="a10">10</div>
-    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a11" ref="a11">11</div>
-    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a12" ref="a12">12</div>
-    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a13" ref="a13">13</div>
-    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a14" ref="a14">14</div>
-    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a15" ref="a15">15</div>
-    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a16" ref="a16">16</div>
-    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a17" ref="a17">17</div>
-    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a18" ref="a18">18</div>
-    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a19" ref="a19">19</div>
-    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a20" ref="a20">20</div>
+    <div class="ma3 pa3 ba b--black-10 bg-white" id="a1"  ref="a1" >1</div>
+    <div class="ma3 pa3 ba b--black-10 bg-white" id="a2"  ref="a2" >2</div>
+    <div class="ma3 pa3 ba b--black-10 bg-white" id="a3"  ref="a3" >3</div>
+    <div class="ma3 pa3 ba b--black-10 bg-white" id="a4"  ref="a4" >4</div>
+    <div class="ma3 pa3 ba b--black-10 bg-white" id="a5"  ref="a5" >5</div>
+    <div class="ma3 pa3 ba b--black-10 bg-white" id="a6"  ref="a6" >6</div>
+    <div class="ma3 pa3 ba b--black-10 bg-white" id="a7"  ref="a7" >7</div>
+    <div class="ma3 pa3 ba b--black-10 bg-white" id="a8"  ref="a8" >8</div>
+    <div class="ma3 pa3 ba b--black-10 bg-white" id="a9"  ref="a9" >9</div>
+    <div class="ma3 pa3 ba b--black-10 bg-white" id="a10" ref="a10">10</div>
+    <div class="ma3 pa3 ba b--black-10 bg-white" id="a11" ref="a11">11</div>
+    <div class="ma3 pa3 ba b--black-10 bg-white" id="a12" ref="a12">12</div>
+    <div class="ma3 pa3 ba b--black-10 bg-white" id="a13" ref="a13">13</div>
+    <div class="ma3 pa3 ba b--black-10 bg-white" id="a14" ref="a14">14</div>
+    <div class="ma3 pa3 ba b--black-10 bg-white" id="a15" ref="a15">15</div>
+    <div class="ma3 pa3 ba b--black-10 bg-white" id="a16" ref="a16">16</div>
+    <div class="ma3 pa3 ba b--black-10 bg-white" id="a17" ref="a17">17</div>
+    <div class="ma3 pa3 ba b--black-10 bg-white" id="a18" ref="a18">18</div>
+    <div class="ma3 pa3 ba b--black-10 bg-white" id="a19" ref="a19">19</div>
+    <div class="ma3 pa3 ba b--black-10 bg-white" id="a20" ref="a20">20</div>
 
     <PopperStep :target="$refs['a1']" v-if="is_mounted && false">
       Test Content
