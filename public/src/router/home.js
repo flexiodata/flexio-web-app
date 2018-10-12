@@ -4,7 +4,8 @@ import {
   ROUTE_APP_LEARN,
   ROUTE_APP_PIPES,
   ROUTE_APP_CONNECTIONS,
-  ROUTE_APP_STORAGE
+  ROUTE_APP_STORAGE,
+  ROUTE_APP_ACTIVITY
 } from '../constants/route'
 import * as types from '../store/mutation-types'
 import store from '../store'
