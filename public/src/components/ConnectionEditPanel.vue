@@ -6,11 +6,11 @@
         <i class="el-icon-close pointer f3 black-30 hover-black-60" @click="$emit('close')"></i>
       </div>
       <div
-        class="flex flex-row items-start"
+        class="flex flex-row"
         :class="showTitle ? 'mt2 pt2 bt b--black-10' : ''"
         v-if="has_connection"
       >
-        <ServiceIcon :type="ctype" class="flex-none mt1 br2 square-5" />
+        <ServiceIcon class="flex-none mt1 br2 square-5" :type="ctype" :url="url" :empty-cls="''" />
         <div class="flex-fill flex flex-column" style="margin-left: 12px">
           <div class="f4 fw6 lh-title">{{service_name}}</div>
           <div class="f6 fw4 mt1">{{service_description}}</div>
@@ -284,6 +284,9 @@
       },
       cstatus() {
         return _.get(this, 'edit_connection.connection_status', '')
+      },
+      url() {
+        return _.get(this, 'edit_connection.connection_info.url', '')
       },
       is_connected() {
         return this.cstatus == CONNECTION_STATUS_AVAILABLE

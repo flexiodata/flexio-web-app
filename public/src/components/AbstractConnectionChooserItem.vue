@@ -5,14 +5,14 @@
     @click="onClick"
   >
     <div class="tc css-valign cursor-default" v-if="layout == 'grid'">
-      <service-icon :type="ctype" class="dib v-mid br2 square-5"></service-icon>
+      <ServiceIcon :type="ctype" class="dib v-mid br2 square-5" />
       <div class="f6 fw6 mt2">{{cname}}</div>
     </div>
     <div class="flex flex-row items-center cursor-default" v-else>
       <i class="material-icons md-18 b mr3" v-if="showCheckmark && is_selected">check</i>
       <i class="material-icons md-18 b mr3" style="color: transparent" v-else-if="showCheckmark && !is_selected">check</i>
       <div class="flex flex-row items-center relative mr3">
-        <service-icon class="br1 square-3" :type="ctype" :url="url" :empty-cls="''" />
+        <ServiceIcon class="br1 square-3" :type="ctype" :url="url" :empty-cls="''" />
         <div class="absolute z-1" style="top: -9px; right: -6px" v-if="showStatus && !is_flexio">
           <i class="el-icon-success dark-green bg-white ba b--white br-100 f8" v-if="is_available"></i>
           <i class="el-icon-error dark-red bg-white ba b--white br-100 f8" v-else></i>
