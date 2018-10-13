@@ -22,10 +22,10 @@
       <div class="flex-fill flex flex-column">
         <div class="f5 fw6 cursor-default mr1">{{cname}}</div>
         <div class="flex flex-row items-center">
-          <div class="light-silver" style="padding: 1px; margin: 2px 3px 0 0" v-if="is_storage">
+          <div class="light-silver" style="margin: 3px 3px 0 0" v-if="is_storage">
             <i class="db material-icons hint--top" aria-label="Storage connection" style="font-size: 14px">layers</i>
           </div>
-          <div class="light-silver" style="padding: 1px; margin: 2px 3px 0 0" v-if="is_email">
+          <div class="light-silver" style="margin: 3px 3px 0 0" v-if="is_email">
             <i class="db material-icons hint--top" aria-label="Email connection" style="font-size: 14px">email</i>
           </div>
           <div class="flex-fill light-silver f8 lh-copy code" v-if="showIdentifier && identifier.length > 0">{{identifier}}</div>
