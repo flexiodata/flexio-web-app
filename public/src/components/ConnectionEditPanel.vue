@@ -262,6 +262,7 @@
     },
     data() {
       return {
+        orig_connection: _.assign({}, defaultAttrs(), this.connection),
         edit_connection: _.assign({}, defaultAttrs(), this.connection),
         rules: {
           name: [
@@ -286,7 +287,7 @@
         return _.get(this, 'edit_connection.connection_status', '')
       },
       url() {
-        return _.get(this, 'edit_connection.connection_info.url', '')
+        return _.get(this, 'orig_connection.connection_info.url', '')
       },
       is_connected() {
         return this.cstatus == CONNECTION_STATUS_AVAILABLE
@@ -391,6 +392,7 @@
         })
       },
       reset(attrs) {
+        this.orig_connection = _.assign({}, defaultAttrs(), attrs)
         this.edit_connection = _.assign({}, defaultAttrs(), attrs)
       },
       createPendingConnection(item) {
@@ -450,7 +452,8 @@
 
         // we have to do this to force watcher validation
         this.$nextTick(() => {
-          this.edit_connection = _.assign({}, connection)
+          this.orig_connection = _.cloneDeep(connection)
+          this.edit_connection = _.cloneDeep(connection)
         })
       },
       updateConnection(attrs) {
