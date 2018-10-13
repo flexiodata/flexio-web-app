@@ -270,18 +270,7 @@
         return this.ctype == ctypes.CONNECTION_TYPE_HTTP
       },
       is_oauth() {
-        switch (this.ctype)
-        {
-          case ctypes.CONNECTION_TYPE_BOX:
-          case ctypes.CONNECTION_TYPE_DROPBOX:
-          case ctypes.CONNECTION_TYPE_GITHUB:
-          case ctypes.CONNECTION_TYPE_GMAIL:
-          case ctypes.CONNECTION_TYPE_GOOGLECLOUDSTORAGE:
-          case ctypes.CONNECTION_TYPE_GOOGLEDRIVE:
-          case ctypes.CONNECTION_TYPE_GOOGLESHEETS:
-            return true
-        }
-        return false
+        return this.$_Connection_isOauth(this.ctype)
       },
       service_name() {
         return _.result(this, 'cinfo.service_name', '')
