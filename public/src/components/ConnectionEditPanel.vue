@@ -6,14 +6,36 @@
         <i class="el-icon-close pointer f3 black-30 hover-black-60" @click="$emit('close')"></i>
       </div>
       <div
-        class="flex flex-row"
+        class="flex flex-row items-start"
         :class="showTitle ? 'mt2 pt2 bt b--black-10' : ''"
         v-if="has_connection"
       >
-        <ServiceIcon :type="ctype" class="flex-none dib v-top br2 square-4" />
-        <div class="flex-fill flex flex-column ml2">
+        <ServiceIcon :type="ctype" class="flex-none mt1 br2 square-5" />
+        <div class="flex-fill flex flex-column" style="margin-left: 12px">
           <div class="f4 fw6 lh-title">{{service_name}}</div>
           <div class="f6 fw4 mt1">{{service_description}}</div>
+          <div class="flex flex-row items-center">
+            <div class="hint--top" aria-label="Storage connection">
+              <div
+                class="flex flex-row items-center bg-nearer-white br2 ba b--black-05"
+                style="margin-top: 6px; padding: 3px 6px"
+                v-if="is_storage"
+              >
+                <i class="db material-icons" style="font-size: 14px">layers</i>
+                <span class="f7" style="margin-left: 3px">Storage</span>
+              </div>
+            </div>
+            <div class="hint--top" aria-label="Email connection">
+              <div
+                class="flex flex-row items-center bg-nearer-white br2 ba b--black-05"
+                style="margin-top: 6px; padding: 3px 6px"
+                v-if="is_email"
+              >
+                <i class="db material-icons" style="font-size: 14px">email</i>
+                <span class="f7" style="margin-left: 3px">Email</span>
+              </div>
+            </div>
+          </div>
         </div>
         <div v-if="showSteps && mode != 'edit'">
           <div
@@ -271,6 +293,12 @@
       },
       is_oauth() {
         return this.$_Connection_isOauth(this.ctype)
+      },
+      is_storage() {
+        return this.$_Connection_isStorage(this.ctype)
+      },
+      is_email() {
+        return this.$_Connection_isEmail(this.ctype)
       },
       service_name() {
         return _.result(this, 'cinfo.service_name', '')
