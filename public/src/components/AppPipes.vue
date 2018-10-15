@@ -7,22 +7,25 @@
   </div>
 
   <!-- fetched -->
-  <div class="flex flex-column overflow-y-auto" v-else-if="is_fetched">
-    <!-- control bar -->
-    <div class="center w-100 pa3 pa4-l pb3-l bb bb-0-l b--black-10" style="max-width: 1152px">
-      <div class="flex flex-row">
-        <div class="flex-fill flex flex-row items-center">
-          <h1 class="mv0 f2 fw4 mr3">Pipes</h1>
-        </div>
-        <div class="flex-none flex flex-row items-center">
-          <el-input
-            class="w-100 mw5 mr3"
-            placeholder="Search..."
-            prefix-icon="el-icon-search"
-            @keydown.esc.native="filter = ''"
-            v-model="filter"
-          />
-          <el-button type="primary" class="ttu b" @click="onNewPipeClick">New pipe</el-button>
+  <div class="flex flex-column overflow-y-auto" :id="doc_id" v-else-if="is_fetched">
+    <!-- use `z-7` to ensure the title z-index is greater than the CodeMirror scrollbar -->
+    <div class="mt4 mb3 relative z-7 bg-white sticky">
+      <div class="center w-100 pa3 pl4-l pr4-l bb bb-0-l b--black-10 sticky" style="max-width: 1152px">
+        <!-- control bar -->
+        <div class="flex flex-row">
+          <div class="flex-fill flex flex-row items-center">
+            <h1 class="mv0 f2 fw4 mr3">Pipes</h1>
+          </div>
+          <div class="flex-none flex flex-row items-center">
+            <el-input
+              class="w-100 mw5 mr3"
+              placeholder="Search..."
+              prefix-icon="el-icon-search"
+              @keydown.esc.native="filter = ''"
+              v-model="filter"
+            />
+            <el-button type="primary" class="ttu b" @click="onNewPipeClick">New pipe</el-button>
+          </div>
         </div>
       </div>
     </div>
@@ -41,6 +44,7 @@
 </template>
 
 <script>
+  import stickybits from 'stickybits'
   import { ROUTE_PIPES } from '../constants/route'
   import { OBJECT_STATUS_AVAILABLE } from '../constants/object-status'
   import { mapState, mapGetters } from 'vuex'
@@ -55,8 +59,15 @@
       Spinner,
       PipeList
     },
+    watch: {
+      is_fetched: {
+        handler: 'initSticky',
+        immediate: true
+      }
+    },
     data() {
       return {
+        doc_id: _.uniqueId('app-pipes-'),
         force_loading: false,
         filter: ''
       }
@@ -85,6 +96,14 @@
         }
 
         this.$store.dispatch('createPipe', { attrs })
+      },
+      initSticky() {
+        setTimeout(() => {
+          stickybits('.sticky', {
+            scrollEl: '#' + this.doc_id,
+            useStickyClasses: true
+          })
+        }, 100)
       },
       tryFetchPipes() {
         if (!this.is_fetched && !this.is_fetching) {
@@ -139,3 +158,13 @@
     }
   }
 </script>
+
+<style lang="stylus" scoped>
+  .sticky
+    transition: all 0.15s ease
+
+  .sticky.js-is-sticky
+  .sticky.js-is-stuck
+    border-bottom: 1px solid rgba(0,0,0,0.1)
+    box-shadow: 0 4px 16px -6px rgba(0,0,0,0.2)
+</style>

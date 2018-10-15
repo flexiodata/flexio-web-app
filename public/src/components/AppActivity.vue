@@ -48,8 +48,8 @@
 </template>
 
 <script>
-  import { mapState, mapGetters } from 'vuex'
   import stickybits from 'stickybits'
+  import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
   import ProcessList from './ProcessList.vue'
 
