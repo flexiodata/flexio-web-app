@@ -23,6 +23,7 @@ import {
   Message,
   MessageBox,
   Option,
+  Pagination,
   Popover,
   Radio,
   RadioButton,
@@ -74,6 +75,7 @@ Vue.use(Input)
 Vue.use(Menu)
 Vue.use(MenuItem)
 Vue.use(Option)
+Vue.use(Pagination)
 Vue.use(Popover)
 Vue.use(Radio)
 Vue.use(RadioButton)

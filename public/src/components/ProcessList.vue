@@ -6,6 +6,10 @@
       :default-sort="{ prop: 'fmt_started', order: 'descending' }"
     >
       <el-table-column
+        type="index"
+      />
+
+      <el-table-column
         prop="eid"
         label="Process ID"
         :min-width="120"
@@ -71,9 +75,8 @@
 
   export default {
     props: {
-      parentEid: {
-        type: String,
-         default: ''
+      filterBy: {
+        type: Function
       }
     },
     computed: {
@@ -82,17 +85,12 @@
         p = _.sortBy(p, [ function(p) { return new Date(p.created) } ])
         return _.reverse(p)
       },
-      our_processes() {
-        if (this.parentEid.length == 0) {
-          return this.all_processes
-        }
-
-        return _.filter((p) => {
-          return _.get(p, 'parent.eid') == this.parentEid
-        })
+      filtered_processes() {
+        var processes = this.all_processes
+        return this.filterBy ? _.filter(processes, this.filterBy) : processes
       },
       fmt_processes() {
-        return _.map(this.our_processes, (p) => {
+        return _.map(this.filtered_processes, (p) => {
           return _.assign({}, p, {
             fmt_started: p.started ? moment(p.started).format('l LT') : '--',
             fmt_finished: p.finished ? moment(p.finished).format('l LT') : '--',
