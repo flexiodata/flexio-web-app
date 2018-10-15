@@ -14,7 +14,11 @@
         prop="eid"
         label="Process ID"
         :min-width="120"
-      />
+      >
+        <template slot-scope="scope">
+          <span class="code f7 bg-white br2 ba b--black-05" style="padding: 3px 6px">{{scope.row.eid}}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         prop="fmt_started"
         label="Started"
