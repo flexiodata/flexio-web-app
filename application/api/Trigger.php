@@ -63,7 +63,7 @@ class Trigger
             $pipe = $pipe_eid;
 
         // STEP 3: trigger the appropriate process with the email as an input
-        $pipe = \Flexio\Object\Pipe::load($pipe_eid);
+        $pipe = \Flexio\Object\Pipe::load($pipe);
         if ($pipe->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, "Pipe object not found");
 
