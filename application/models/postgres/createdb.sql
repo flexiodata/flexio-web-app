@@ -156,6 +156,7 @@ CREATE TABLE tbl_pipe (
   ui json,
   deploy_mode varchar(1) NOT NULL default 'B',
   deploy_schedule varchar(1) NOT NULL default 'I',
+  deploy_email varchar(1) NOT NULL default 'I',
   deploy_api varchar(1) NOT NULL default 'I',
   deploy_ui varchar(1) NOT NULL default 'I',
   owned_by varchar(12) NOT NULL default '',
@@ -169,6 +170,7 @@ CREATE TABLE tbl_pipe (
 CREATE INDEX idx_pipe_alias ON tbl_pipe (alias);
 CREATE INDEX idx_pipe_deploy_mode ON tbl_pipe (deploy_mode);
 CREATE INDEX idx_pipe_deploy_schedule ON tbl_pipe (deploy_schedule);
+CREATE INDEX idx_pipe_deploy_email ON tbl_pipe (deploy_email);
 CREATE INDEX idx_pipe_deploy_api ON tbl_pipe (deploy_api);
 CREATE INDEX idx_pipe_deploy_ui ON tbl_pipe (deploy_ui);
 CREATE INDEX idx_pipe_owned_by ON tbl_pipe (owned_by);

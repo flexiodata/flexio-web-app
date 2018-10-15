@@ -482,6 +482,7 @@
   import * as ctypes from '../constants/connection-type'
   import * as connections from '../constants/connection-info'
   import MixinOauth from './mixins/oauth'
+  import MixinConnection from './mixins/connection'
 
   const defaultConnectionInfo = () => {
     return {
@@ -538,7 +539,7 @@
         default: 'add'
       }
     },
-    mixins: [MixinOauth],
+    mixins: [MixinOauth, MixinConnection],
     watch: {
       connection: {
         handler: 'reset',
@@ -612,17 +613,7 @@
         return this.ctype == ctypes.CONNECTION_TYPE_GITHUB
       },
       is_oauth() {
-        switch (this.ctype) {
-          case ctypes.CONNECTION_TYPE_BOX:
-          case ctypes.CONNECTION_TYPE_DROPBOX:
-          case ctypes.CONNECTION_TYPE_GITHUB:
-          case ctypes.CONNECTION_TYPE_GMAIL:
-          case ctypes.CONNECTION_TYPE_GOOGLECLOUDSTORAGE:
-          case ctypes.CONNECTION_TYPE_GOOGLEDRIVE:
-          case ctypes.CONNECTION_TYPE_GOOGLESHEETS:
-            return true
-        }
-        return false
+        return this.$_Connection_isOauth(this.ctype)
       },
       key_values() {
         var ctype = this.getConnectionType()

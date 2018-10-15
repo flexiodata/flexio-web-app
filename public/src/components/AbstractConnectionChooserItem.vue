@@ -5,14 +5,14 @@
     @click="onClick"
   >
     <div class="tc css-valign cursor-default" v-if="layout == 'grid'">
-      <service-icon :type="ctype" class="dib v-mid br2 square-5"></service-icon>
+      <ServiceIcon :type="ctype" class="dib v-mid br2 square-5" />
       <div class="f6 fw6 mt2">{{cname}}</div>
     </div>
     <div class="flex flex-row items-center cursor-default" v-else>
       <i class="material-icons md-18 b mr3" v-if="showCheckmark && is_selected">check</i>
       <i class="material-icons md-18 b mr3" style="color: transparent" v-else-if="showCheckmark && !is_selected">check</i>
       <div class="flex flex-row items-center relative mr3">
-        <service-icon class="br1 square-3" :type="ctype" :url="url" :empty-cls="''" />
+        <ServiceIcon class="br1 square-3" :type="ctype" :url="url" :empty-cls="''" />
         <div class="absolute z-1" style="top: -9px; right: -6px" v-if="showStatus && !is_flexio">
           <i class="el-icon-success dark-green bg-white ba b--white br-100 f8" v-if="is_available"></i>
           <i class="el-icon-error dark-red bg-white ba b--white br-100 f8" v-else></i>
@@ -20,8 +20,16 @@
       </div>
 
       <div class="flex-fill flex flex-column">
-        <div class="f5 fw6 cursor-default">{{cname}}</div>
-        <div class="light-silver f8 lh-copy code" v-if="showIdentifier && identifier.length > 0">{{identifier}}</div>
+        <div class="f5 fw6 cursor-default mr1">{{cname}}</div>
+        <div class="flex flex-row items-center">
+          <div class="light-silver" style="margin: 3px 3px 0 0" v-if="is_storage">
+            <i class="db material-icons hint--top" aria-label="Storage connection" style="font-size: 14px">layers</i>
+          </div>
+          <div class="light-silver" style="margin: 3px 3px 0 0" v-if="is_email">
+            <i class="db material-icons hint--top" aria-label="Email connection" style="font-size: 14px">email</i>
+          </div>
+          <div class="flex-fill light-silver f8 lh-copy code" v-if="showIdentifier && identifier.length > 0">{{identifier}}</div>
+        </div>
         <div class="bt b--black-05" style="padding-top: 2px; margin-top: 2px; max-width: 12rem" v-if="showUrl && url.length > 0">
           <div class="light-silver f8 lh-copy truncate">{{url}}</div>
         </div>
@@ -32,10 +40,6 @@
             <i class="material-icons v-mid">expand_more</i>
           </span>
           <el-dropdown-menu style="min-width: 10rem" slot="dropdown">
-            <!--
-            <el-dropdown-item class="flex flex-row items-center ph2" command="edit"><i class="material-icons mr3">edit</i> Edit</el-dropdown-item>
-            <div class="mv2 bt b--black-10"></div>
-            -->
             <el-dropdown-item class="flex flex-row items-center ph2" command="delete"><i class="material-icons mr3">delete</i> Delete</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -48,58 +52,60 @@
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import { CONNECTION_TYPE_FLEX } from '../constants/connection-type'
   import ServiceIcon from './ServiceIcon.vue'
+  import MixinConnection from './mixins/connection'
 
   export default {
     props: {
-      'layout': {
+      layout: {
         type: String,
         default: 'list' // 'list' or 'grid'
       },
-      'item': {
+      item: {
         type: Object,
         required: true
       },
-      'item-cls': {
+      itemCls: {
         type: String,
         default: ''
       },
-      'item-style': {
+      itemStyle: {
         type: String,
         default: ''
       },
-      'selected-item': {
+      selectedItem: {
         type: Object,
         default: () => { return {} }
       },
-      'selected-cls': {
+      selectedCls: {
         type: String,
         default: 'bg-light-gray'
       },
-      'show-status': {
+      showStatus: {
         type: Boolean,
         default: true
       },
-      'show-identifier': {
+      showIdentifier: {
         type: Boolean,
         default: true
       },
-      'show-url': {
+      showUrl: {
         type: Boolean,
         default: true
       },
-      'show-checkmark': {
+      showCheckmark: {
         type: Boolean,
         default: false
       },
-      'show-dropdown': {
+      showDropdown: {
         type: Boolean,
         default: false
       },
-      'dropdown-items': {
+      dropdownItems: {
         type: Array,
         default: () => { return ['edit','delete'] }
       }
     },
+    mixins: [MixinConnection],
     components: {
       ServiceIcon
     },
@@ -139,6 +145,12 @@
       },
       is_available() {
         return this.cstatus == CONNECTION_STATUS_AVAILABLE
+      },
+      is_storage() {
+        return this.$_Connection_isStorage(this.ctype)
+      },
+      is_email() {
+        return this.$_Connection_isEmail(this.ctype)
       },
       cls() {
         var sel_cls = this.is_selected ? this.selectedCls : ''

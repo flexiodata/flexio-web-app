@@ -8,7 +8,8 @@ const AMAZON_S3 = {
   connection_type: types.CONNECTION_TYPE_AMAZONS3,
   icon: require('../assets/icon/icon-amazon-128.png'),
   is_oauth: false,
-  is_storage: true
+  is_storage: true,
+  is_email: false
 }
 
 const BOX = {
@@ -17,7 +18,8 @@ const BOX = {
   connection_type: types.CONNECTION_TYPE_BOX,
   icon: require('../assets/icon/icon-box-128.png'),
   is_oauth: true,
-  is_storage: true
+  is_storage: true,
+  is_email: false
 }
 
 const API = {
@@ -26,7 +28,8 @@ const API = {
   connection_type: types.CONNECTION_TYPE_HTTP,
   icon: require('../assets/icon/icon-custom-api-128.png'),
   is_oauth: false,
-  is_storage: false
+  is_storage: false,
+  is_email: false
 }
 
 const DROPBOX = {
@@ -35,7 +38,8 @@ const DROPBOX = {
   connection_type: types.CONNECTION_TYPE_DROPBOX,
   icon: require('../assets/icon/icon-dropbox-128.png'),
   is_oauth: true,
-  is_storage: true
+  is_storage: true,
+  is_email: false
 }
 
 const ELASTICSEARCH = {
@@ -44,7 +48,8 @@ const ELASTICSEARCH = {
   connection_type: types.CONNECTION_TYPE_ELASTICSEARCH,
   icon: require('../assets/icon/icon-elasticsearch-128.png'),
   is_oauth: false,
-  is_storage: true
+  is_storage: true,
+  is_email: false
 }
 
 const FLEX = {
@@ -53,7 +58,8 @@ const FLEX = {
   connection_type: types.CONNECTION_TYPE_FLEX,
   icon: require('../assets/icon/icon-flexio-128.png'),
   is_oauth: false,
-  is_storage: false
+  is_storage: true,
+  is_email: false
 }
 
 const GITHUB = {
@@ -62,7 +68,8 @@ const GITHUB = {
   connection_type: types.CONNECTION_TYPE_GITHUB,
   icon: require('../assets/icon/icon-github-128.png'),
   is_oauth: true,
-  is_storage: true
+  is_storage: true,
+  is_email: false
 }
 
 const GMAIL = {
@@ -71,7 +78,8 @@ const GMAIL = {
   connection_type: types.CONNECTION_TYPE_GMAIL,
   icon: require('../assets/icon/icon-gmail-128.png'),
   is_oauth: true,
-  is_storage: false
+  is_storage: false,
+  is_email: true
 }
 
 const GOOGLECLOUDSTORAGE = {
@@ -80,7 +88,8 @@ const GOOGLECLOUDSTORAGE = {
   connection_type: types.CONNECTION_TYPE_GOOGLECLOUDSTORAGE,
   icon: require('../assets/icon/icon-google-cloud-storage-128.png'),
   is_oauth: true,
-  is_storage: true
+  is_storage: true,
+  is_email: false
 }
 
 const GOOGLEDRIVE = {
@@ -89,7 +98,8 @@ const GOOGLEDRIVE = {
   connection_type: types.CONNECTION_TYPE_GOOGLEDRIVE,
   icon: require('../assets/icon/icon-google-drive-128.png'),
   is_oauth: true,
-  is_storage: true
+  is_storage: true,
+  is_email: false
 }
 
 const GOOGLESHEETS = {
@@ -98,7 +108,8 @@ const GOOGLESHEETS = {
   connection_type: types.CONNECTION_TYPE_GOOGLESHEETS,
   icon: require('../assets/icon/icon-google-sheets-128.png'),
   is_oauth: true,
-  is_storage: true
+  is_storage: true,
+  is_email: false
 }
 
 const MYSQL = {
@@ -107,7 +118,8 @@ const MYSQL = {
   connection_type: types.CONNECTION_TYPE_MYSQL,
   icon: require('../assets/icon/icon-mysql-128.png'),
   is_oauth: false,
-  is_storage: true
+  is_storage: true,
+  is_email: false
 }
 
 const POSTGRES = {
@@ -116,7 +128,8 @@ const POSTGRES = {
   connection_type: types.CONNECTION_TYPE_POSTGRES,
   icon: require('../assets/icon/icon-postgres-128.png'),
   is_oauth: false,
-  is_storage: true
+  is_storage: true,
+  is_email: false
 }
 
 const SMTP = {
@@ -125,7 +138,8 @@ const SMTP = {
   connection_type: types.CONNECTION_TYPE_SMTP,
   icon: require('../assets/icon/icon-email-128.png'),
   is_oauth: false,
-  is_storage: false
+  is_storage: false,
+  is_email: true
 }
 
 const SFTP = {
@@ -134,7 +148,8 @@ const SFTP = {
   connection_type: types.CONNECTION_TYPE_SFTP,
   icon: require('../assets/icon/icon-ftp-128.png'),
   is_oauth: false,
-  is_storage: true
+  is_storage: true,
+  is_email: false
 }
 
 const TWILIO = {
@@ -143,7 +158,8 @@ const TWILIO = {
   connection_type: types.CONNECTION_TYPE_TWILIO,
   icon: require('../assets/icon/icon-twilio-128.png'),
   is_oauth: false,
-  is_storage: true
+  is_storage: true,
+  is_email: false
 }
 
 /*
@@ -153,7 +169,8 @@ const STDIN = {
   connection_type: types.CONNECTION_TYPE_STDIN,
   icon: require('../assets/icon/icon-console-128.png'),
   is_oauth: false,
-  is_storage: false
+  is_storage: false,
+  is_email: false
 }
 
 const STDOUT = {
@@ -162,7 +179,8 @@ const STDOUT = {
   connection_type: types.CONNECTION_TYPE_STDOUT,
   icon: require('../assets/icon/icon-console-128.png'),
   is_oauth: false,
-  is_storage: false
+  is_storage: false,
+  is_email: false
 }
 
 const UPLOAD = {
@@ -171,7 +189,8 @@ const UPLOAD = {
   connection_type: types.CONNECTION_TYPE_UPLOAD,
   icon: require('../assets/icon/icon-upload-128.png'),
   is_oauth: false,
-  is_storage: false
+  is_storage: false,
+  is_email: false
 }
 
 const DOWNLOAD = {
@@ -180,7 +199,8 @@ const DOWNLOAD = {
   connection_type: types.CONNECTION_TYPE_DOWNLOAD,
   icon: require('../assets/icon/icon-download-128.png'),
   is_oauth: false,
-  is_storage: false
+  is_storage: false,
+  is_email: false
 }
 
 const FIREBASE = {
@@ -189,7 +209,8 @@ const FIREBASE = {
   connection_type: types.CONNECTION_TYPE_FIREBASE,
   icon: require('../assets/icon/icon-firebase-128.png'),
   is_oauth: false,
-  is_storage: true
+  is_storage: true,
+  is_email: false
 }
 
 const MAILJET = {
@@ -198,7 +219,8 @@ const MAILJET = {
   connection_type: types.CONNECTION_TYPE_MAILJET,
   icon: require('../assets/icon/icon-mailjet-128.png'),
   is_oauth: false,
-  is_storage: false
+  is_storage: false,
+  is_email: false
 }
 
 const RSS = {
@@ -207,7 +229,8 @@ const RSS = {
   connection_type: types.CONNECTION_TYPE_RSS,
   icon: require('../assets/icon/icon-rss-128.png'),
   is_oauth: false,
-  is_storage: false
+  is_storage: false,
+  is_email: false
 }
 
 const SOCRATA = {
@@ -216,7 +239,8 @@ const SOCRATA = {
   connection_type: types.CONNECTION_TYPE_SOCRATA,
   icon: require('../assets/icon/icon-socrata-128.png'),
   is_oauth: false,
-  is_storage: false
+  is_storage: false,
+  is_email: false
 }
 
 const PIPELINEDEALS = {
@@ -225,7 +249,8 @@ const PIPELINEDEALS = {
   connection_type: types.CONNECTION_TYPE_PIPELINEDEALS,
   icon: require('../assets/icon/icon-pipelinedeals-128.png'),
   is_oauth: false,
-  is_storage: false
+  is_storage: false,
+  is_email: false
 }
 */
 

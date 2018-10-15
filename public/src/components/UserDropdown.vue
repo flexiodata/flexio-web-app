@@ -25,7 +25,7 @@
 <script>
   import {
     ROUTE_ACCOUNT,
-    ROUTE_HOME,
+    ROUTE_APP_HOME,
     ROUTE_PIPES,
     ROUTE_SIGNIN
   } from '../constants/route'

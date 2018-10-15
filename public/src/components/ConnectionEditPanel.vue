@@ -10,10 +10,32 @@
         :class="showTitle ? 'mt2 pt2 bt b--black-10' : ''"
         v-if="has_connection"
       >
-        <ServiceIcon :type="ctype" class="flex-none dib v-top br2 square-4" />
-        <div class="flex-fill flex flex-column ml2">
+        <ServiceIcon class="flex-none mt1 br2 square-5" :type="ctype" :url="url" :empty-cls="''" />
+        <div class="flex-fill flex flex-column" style="margin-left: 12px">
           <div class="f4 fw6 lh-title">{{service_name}}</div>
           <div class="f6 fw4 mt1">{{service_description}}</div>
+          <div class="flex flex-row items-center">
+            <div class="hint--top" aria-label="Storage connection">
+              <div
+                class="flex flex-row items-center bg-nearer-white br2 ba b--black-05"
+                style="margin-top: 6px; padding: 3px 6px"
+                v-if="is_storage"
+              >
+                <i class="db material-icons" style="font-size: 14px">layers</i>
+                <span class="f7" style="margin-left: 3px">Storage</span>
+              </div>
+            </div>
+            <div class="hint--top" aria-label="Email connection">
+              <div
+                class="flex flex-row items-center bg-nearer-white br2 ba b--black-05"
+                style="margin-top: 6px; padding: 3px 6px"
+                v-if="is_email"
+              >
+                <i class="db material-icons" style="font-size: 14px">email</i>
+                <span class="f7" style="margin-left: 3px">Email</span>
+              </div>
+            </div>
+          </div>
         </div>
         <div v-if="showSteps && mode != 'edit'">
           <div
@@ -240,6 +262,7 @@
     },
     data() {
       return {
+        orig_connection: _.assign({}, defaultAttrs(), this.connection),
         edit_connection: _.assign({}, defaultAttrs(), this.connection),
         rules: {
           name: [
@@ -263,6 +286,9 @@
       cstatus() {
         return _.get(this, 'edit_connection.connection_status', '')
       },
+      url() {
+        return _.get(this, 'orig_connection.connection_info.url', '')
+      },
       is_connected() {
         return this.cstatus == CONNECTION_STATUS_AVAILABLE
       },
@@ -270,18 +296,13 @@
         return this.ctype == ctypes.CONNECTION_TYPE_HTTP
       },
       is_oauth() {
-        switch (this.ctype)
-        {
-          case ctypes.CONNECTION_TYPE_BOX:
-          case ctypes.CONNECTION_TYPE_DROPBOX:
-          case ctypes.CONNECTION_TYPE_GITHUB:
-          case ctypes.CONNECTION_TYPE_GMAIL:
-          case ctypes.CONNECTION_TYPE_GOOGLECLOUDSTORAGE:
-          case ctypes.CONNECTION_TYPE_GOOGLEDRIVE:
-          case ctypes.CONNECTION_TYPE_GOOGLESHEETS:
-            return true
-        }
-        return false
+        return this.$_Connection_isOauth(this.ctype)
+      },
+      is_storage() {
+        return this.$_Connection_isStorage(this.ctype)
+      },
+      is_email() {
+        return this.$_Connection_isEmail(this.ctype)
       },
       service_name() {
         return _.result(this, 'cinfo.service_name', '')
@@ -371,6 +392,7 @@
         })
       },
       reset(attrs) {
+        this.orig_connection = _.assign({}, defaultAttrs(), attrs)
         this.edit_connection = _.assign({}, defaultAttrs(), attrs)
       },
       createPendingConnection(item) {
@@ -430,7 +452,8 @@
 
         // we have to do this to force watcher validation
         this.$nextTick(() => {
-          this.edit_connection = _.assign({}, connection)
+          this.orig_connection = _.cloneDeep(connection)
+          this.edit_connection = _.cloneDeep(connection)
         })
       },
       updateConnection(attrs) {

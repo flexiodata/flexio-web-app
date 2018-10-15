@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-row items-stretch relative">
     <div
-      class="flex flex-column bl b--black-20 trans-w"
+      class="flex flex-column trans-w"
       :style="code_expanded ? 'width: 40%' : 'width: 30px'"
     >
       <div class="flex flex-row items-center pa2 f7 silver ttu fw6 bb b--black-05 bg-nearer-white">
@@ -24,7 +24,7 @@
         v-model="edit_code"
       />
     </div>
-    <div class="flex-fill flex flex-column bl b--black-20">
+    <div class="flex-fill flex flex-column bl b--black-05">
       <div class="pa2 f7 silver ttu fw6 bb b--black-05 bg-nearer-white">Builder</div>
       <el-alert
         type="error"
@@ -54,6 +54,9 @@
   const edit_code = yaml.safeDump(test_def)
 
   export default {
+    metaInfo: {
+      title: 'Admin Builder'
+    },
     components: {
       CodeEditor,
       BuilderDocument

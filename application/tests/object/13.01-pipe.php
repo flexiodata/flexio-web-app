@@ -234,7 +234,8 @@ class Test
             },
             "deploy_mode": "B",
             "deploy_schedule": "I",
-            "deploy_api": "A",
+            "deploy_email": "I",
+            "deploy_api": "I",
             "deploy_ui": "I",
             "owned_by" : {
                 "eid" : null,
