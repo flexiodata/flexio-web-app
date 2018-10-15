@@ -77,6 +77,13 @@
     props: {
       filterBy: {
         type: Function
+      },
+      start: {
+        type: Number
+      },
+      limit: {
+        type: Number,
+        default: 50
       }
     },
     computed: {
@@ -89,8 +96,17 @@
         var processes = this.all_processes
         return this.filterBy ? _.filter(processes, this.filterBy) : processes
       },
+      limited_processes() {
+        if (!_.isNumber(this.start)) {
+          return this.filtered_processes
+        }
+
+        return _.filter(this.filtered_processes, (item, index) => {
+          return index >= this.start && index < (this.start + this.limit)
+        })
+      },
       fmt_processes() {
-        return _.map(this.filtered_processes, (p) => {
+        return _.map(this.limited_processes, (p) => {
           return _.assign({}, p, {
             fmt_started: p.started ? moment(p.started).format('l LT') : '--',
             fmt_finished: p.finished ? moment(p.finished).format('l LT') : '--',

@@ -21,7 +21,7 @@
           :total="total_count"
           @current-change="updatePager"
         />
-        <div class="f6">{{start}} - {{end}} of {{total_count}}</div>
+        <div class="f6">{{start + 1}} - {{end}} of {{total_count}}</div>
         <el-pagination
           layout="next"
           :page-size="page_size"
@@ -37,6 +37,8 @@
       class="center w-100 pl4-l pr4-l pb4-l"
       style="max-width: 1152px"
       :filter-by="filterBy"
+      :start="start"
+      :limit="page_size"
       :total-count="total_count"
     />
   </div>
@@ -72,14 +74,17 @@
       all_processes() {
         return this.getAllProcesses()
       },
-      start() {
-        return ((this.current_page - 1) * this.page_size) + 1
-      },
-      end() {
-        return this.start + this.page_size - 1
+      filterd_processes() {
+        return _.filter(this.all_processes, this.filterBy)
       },
       total_count() {
-        return _.size(this.all_processes)
+        return _.size(this.filterd_processes)
+      },
+      start() {
+        return ((this.current_page - 1) * this.page_size)
+      },
+      end() {
+        return Math.min((this.start + this.page_size - 1) + 1, this.total_count)
       }
     },
     mounted() {
@@ -104,7 +109,7 @@
         this.$router.replace(new_route)
       },
       filterBy(item, index) {
-        return index >= this.start && index <= this.end
+        return true
       }
     }
   }
