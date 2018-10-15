@@ -73,7 +73,6 @@
         <div v-else>
           <div
             class="hint--top"
-            style="margin-right: -1px"
             :aria-label="schedule_tooltip"
           >
             <i
@@ -85,7 +84,6 @@
           </div>
           <div
             class="hint--top"
-            style="margin-right: -1px"
             :aria-label="api_endpoint_tooltip"
           >
             <i
@@ -97,7 +95,6 @@
           </div>
           <div
             class="hint--top"
-            style="margin-right: -1px"
             :aria-label="email_tooltip"
           >
             <i
@@ -109,7 +106,6 @@
           </div>
           <div
             class="hint--top"
-            style="margin-right: -1px"
             :aria-label="runtime_tooltip"
           >
             <i
