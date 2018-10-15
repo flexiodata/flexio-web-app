@@ -563,6 +563,14 @@ class ContextFs(object):
 
 
 
+class ContextEmail(object):
+
+    def __init__(self):
+        pass
+
+    def send(self, *args, **kwargs):
+        info = proxy.invoke('invoke_service', ['email.send', args[0] if len(args) == 1 else kwargs])
+
 class Context(object):
     def __init__(self, input, output):
         self.input = input
@@ -571,7 +579,8 @@ class Context(object):
         self._form = None
         self._files = None
         self.pipe = PipeFunctions()
-        self.context_fs = ContextFs()
+        self.email = ContextEmail()
+        self.fs = ContextFs()
 
     @property
     def query(self):
@@ -598,10 +607,6 @@ class Context(object):
     @property
     def vars(self):
         return env_vars_obj
-
-    @property
-    def fs(self):
-        return self.context_fs
 
     @property
     def connections(self):
