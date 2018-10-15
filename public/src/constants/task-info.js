@@ -18,22 +18,6 @@ const CONVERT = {
   bg_color: 'bg-task-blue'
 }
 
-const COPY = {
-  op: ops.TASK_OP_COPY,
-  name: 'Copy',
-  description: 'Copy files or directories from one storage-type connection to a different storage-type connection.',
-  icon: 'content_copy',
-  bg_color: 'bg-task-blue'
-}
-
-const ECHO = {
-  op: ops.TASK_OP_ECHO,
-  name: 'Echo',
-  description: 'Echo a message or variable to the next step in your pipe.',
-  icon: 'settings_remote',
-  bg_color: 'bg-task-blue'
-}
-
 const EMAIL_SEND = {
   op: ops.TASK_OP_EMAIL_SEND,
   name: 'Email',
@@ -89,12 +73,10 @@ export const TASK_INFO_EXECUTE       = EXECUTE
 export const TASK_INFO_REQUEST       = REQUEST
 export const TASK_INFO_CONVERT       = CONVERT
 export const TASK_INFO_EMAIL_SEND    = EMAIL_SEND
-export const TASK_INFO_ECHO          = ECHO
 export const TASK_INFO_OAUTH         = OAUTH
 export const TASK_INFO_CONNECT       = CONNECT
 export const TASK_INFO_READ          = READ
 export const TASK_INFO_WRITE         = WRITE
-export const TASK_INFO_COPY          = COPY
 
 /*
 const CALC_FIELD = {
@@ -110,6 +92,14 @@ const COMMENT = {
   description: '',
   op: ops.TASK_OP_COMMENT,
   icon: 'comment',
+  bg_color: 'bg-task-blue'
+}
+
+const COPY = {
+  op: ops.TASK_OP_COPY,
+  name: 'Copy',
+  description: 'Copy files or directories from one storage-type connection to a different storage-type connection.',
+  icon: 'content_copy',
   bg_color: 'bg-task-blue'
 }
 
@@ -135,6 +125,14 @@ const DUPLICATE = {
   op: ops.TASK_OP_DUPLICATE,
   icon: 'content_copy',
   bg_color: 'bg-task-green'
+}
+
+const ECHO = {
+  op: ops.TASK_OP_ECHO,
+  name: 'Echo',
+  description: 'Echo a message or variable to the next step in your pipe.',
+  icon: 'settings_remote',
+  bg_color: 'bg-task-blue'
 }
 
 const FIND_REPLACE = {
@@ -267,9 +265,11 @@ const TRANSFORM = {
 
 export const TASK_INFO_CALC_FIELD    = CALC_FIELD
 export const TASK_INFO_COMMENT       = COMMENT
+export const TASK_INFO_COPY          = COPY
 export const TASK_INFO_CUSTOM        = CUSTOM
 export const TASK_INFO_DISTINCT      = DISTINCT
 export const TASK_INFO_DUPLICATE     = DUPLICATE
+export const TASK_INFO_ECHO          = ECHO
 export const TASK_INFO_FIND_REPLACE  = FIND_REPLACE
 export const TASK_INFO_FILTER        = FILTER
 export const TASK_INFO_GROUP         = GROUP
