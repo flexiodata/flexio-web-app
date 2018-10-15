@@ -73,6 +73,7 @@
         <div v-else>
           <div
             class="hint--top"
+            style="margin-right: -1px"
             :aria-label="schedule_tooltip"
           >
             <i
@@ -84,6 +85,7 @@
           </div>
           <div
             class="hint--top"
+            style="margin-right: -1px"
             :aria-label="api_endpoint_tooltip"
           >
             <i
@@ -95,6 +97,19 @@
           </div>
           <div
             class="hint--top"
+            style="margin-right: -1px"
+            :aria-label="email_tooltip"
+          >
+            <i
+              class="material-icons md-21"
+              :class="is_deployed_email ? 'blue' : 'o-10'"
+            >
+              email
+            </i>
+          </div>
+          <div
+            class="hint--top"
+            style="margin-right: -1px"
             :aria-label="runtime_tooltip"
           >
             <i
@@ -212,6 +227,9 @@
       is_deployed_ui() {
         return _.get(this.item, 'deploy_ui', INACTIVE) == ACTIVE
       },
+      is_deployed_email() {
+        return _.get(this.item, 'deploy_email', INACTIVE) == ACTIVE
+      },
       is_deployed: {
         get() {
           return _.get(this.item, 'deploy_mode') == DEPLOY_MODE_RUN ? true : false
@@ -260,6 +278,9 @@
       },
       api_endpoint_tooltip() {
         return this.is_deployed_api ? 'API Endpoint ON' : 'API Endpoint OFF'
+      },
+      email_tooltip() {
+        return this.is_deployed_api ? 'Email Trigger ON' : 'Email Trigger OFF'
       },
       runtime_tooltip() {
         return this.is_deployed_ui ? 'Flex.io Web Interface ON' : 'Flex.io Web Interface OFF'

@@ -210,6 +210,7 @@
         'pipe_identifier'
         'deploy_mode',
         'deploy_schedule',
+        'deploy_email',
         'deploy_api',
         'deploy_ui',
         'schedule'
