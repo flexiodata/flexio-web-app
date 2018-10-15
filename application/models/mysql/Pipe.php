@@ -30,6 +30,7 @@ class Pipe extends ModelBase
                 'schedule'        => array('type' => 'string', 'required' => false, 'default' => ''),
                 'deploy_mode'     => array('type' => 'string', 'required' => false, 'default' => \Model::PIPE_DEPLOY_MODE_BUILD),
                 'deploy_schedule' => array('type' => 'string', 'required' => false, 'default' => \Model::PIPE_DEPLOY_STATUS_INACTIVE),
+                'deploy_email'    => array('type' => 'string', 'required' => false, 'default' => \Model::PIPE_DEPLOY_STATUS_INACTIVE),
                 'deploy_api'      => array('type' => 'string', 'required' => false, 'default' => \Model::PIPE_DEPLOY_STATUS_INACTIVE),
                 'deploy_ui'       => array('type' => 'string', 'required' => false, 'default' => \Model::PIPE_DEPLOY_STATUS_INACTIVE),
                 'owned_by'        => array('type' => 'string', 'required' => false, 'default' => ''),
@@ -46,6 +47,9 @@ class Pipe extends ModelBase
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         if ($process_arr['deploy_schedule'] != \Model::PIPE_DEPLOY_STATUS_ACTIVE && $process_arr['deploy_schedule'] != \Model::PIPE_DEPLOY_STATUS_INACTIVE)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        if ($process_arr['deploy_email'] != \Model::PIPE_DEPLOY_STATUS_ACTIVE && $process_arr['deploy_email'] != \Model::PIPE_DEPLOY_STATUS_INACTIVE)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         if ($process_arr['deploy_api'] != \Model::PIPE_DEPLOY_STATUS_ACTIVE && $process_arr['deploy_api'] != \Model::PIPE_DEPLOY_STATUS_INACTIVE)
@@ -135,6 +139,7 @@ class Pipe extends ModelBase
                 'schedule'        => array('type' => 'string', 'required' => false),
                 'deploy_mode'     => array('type' => 'string', 'required' => false),
                 'deploy_schedule' => array('type' => 'string', 'required' => false),
+                'deploy_email'    => array('type' => 'string', 'required' => false),
                 'deploy_api'      => array('type' => 'string', 'required' => false),
                 'deploy_ui'       => array('type' => 'string', 'required' => false),
                 'owned_by'        => array('type' => 'string', 'required' => false),
@@ -191,6 +196,11 @@ class Pipe extends ModelBase
             if (isset($process_arr['deploy_schedule']))
             {
                 if ($process_arr['deploy_schedule'] != \Model::PIPE_DEPLOY_STATUS_ACTIVE && $process_arr['deploy_schedule'] != \Model::PIPE_DEPLOY_STATUS_INACTIVE)
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+            }
+            if (isset($process_arr['deploy_email']))
+            {
+                if ($process_arr['deploy_email'] != \Model::PIPE_DEPLOY_STATUS_ACTIVE && $process_arr['deploy_email'] != \Model::PIPE_DEPLOY_STATUS_INACTIVE)
                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
             }
             if (isset($process_arr['deploy_api']))
@@ -251,6 +261,7 @@ class Pipe extends ModelBase
                               'schedule'        => $row['schedule'],
                               'deploy_mode'     => $row['deploy_mode'],
                               'deploy_schedule' => $row['deploy_schedule'],
+                              'deploy_email'    => $row['deploy_email'],
                               'deploy_api'      => $row['deploy_api'],
                               'deploy_ui'       => $row['deploy_ui'],
                               'owned_by'        => $row['owned_by'],
