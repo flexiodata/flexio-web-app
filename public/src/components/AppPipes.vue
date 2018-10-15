@@ -80,6 +80,7 @@
       })
     },
     mounted() {
+      this.initSticky()
       this.tryFetchPipes()
       this.$store.track('Visited Pipes Page')
       this.force_loading = true

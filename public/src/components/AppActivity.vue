@@ -99,6 +99,7 @@
       }
     },
     mounted() {
+      this.initSticky()
       this.tryFetchActivity()
       this.$store.track('Visited Activity Page')
       this.force_loading = true
