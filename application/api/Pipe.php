@@ -50,6 +50,7 @@ class Pipe
                 'schedule'        => array('type' => 'object', 'required' => false),
                 'deploy_mode'     => array('type' => 'string', 'required' => false),
                 'deploy_schedule' => array('type' => 'string', 'required' => false),
+                'deploy_email'    => array('type' => 'string', 'required' => false),
                 'deploy_api'      => array('type' => 'string', 'required' => false),
                 'deploy_ui'       => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
@@ -213,6 +214,7 @@ class Pipe
                 'schedule'        => array('type' => 'object', 'required' => false),
                 'deploy_mode'     => array('type' => 'string', 'required' => false),
                 'deploy_schedule' => array('type' => 'string', 'required' => false),
+                'deploy_email'    => array('type' => 'string', 'required' => false),
                 'deploy_api'      => array('type' => 'string', 'required' => false),
                 'deploy_ui'       => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)

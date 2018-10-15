@@ -171,6 +171,7 @@ CREATE TABLE tbl_pipe (
   ui text default '',
   deploy_mode char(1) NOT NULL default 'B',
   deploy_schedule char(1) NOT NULL default 'I',
+  deploy_email char(1) NOT NULL default 'I',
   deploy_api char(1) NOT NULL default 'I',
   deploy_ui char(1) NOT NULL default 'I',
   owned_by char(12) NOT NULL default '',
@@ -184,6 +185,7 @@ CREATE TABLE tbl_pipe (
 CREATE INDEX idx_pipe_alias ON tbl_pipe (alias);
 CREATE INDEX idx_pipe_deploy_mode ON tbl_pipe (deploy_mode);
 CREATE INDEX idx_pipe_deploy_schedule ON tbl_pipe (deploy_schedule);
+CREATE INDEX idx_pipe_deploy_email ON tbl_pipe (deploy_email);
 CREATE INDEX idx_pipe_deploy_api ON tbl_pipe (deploy_api);
 CREATE INDEX idx_pipe_deploy_ui ON tbl_pipe (deploy_ui);
 CREATE INDEX idx_pipe_owned_by ON tbl_pipe (owned_by);
