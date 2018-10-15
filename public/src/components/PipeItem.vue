@@ -280,7 +280,7 @@
         return this.is_deployed_api ? 'API Endpoint ON' : 'API Endpoint OFF'
       },
       email_tooltip() {
-        return this.is_deployed_api ? 'Email Trigger ON' : 'Email Trigger OFF'
+        return this.is_deployed_email ? 'Email Trigger ON' : 'Email Trigger OFF'
       },
       runtime_tooltip() {
         return this.is_deployed_ui ? 'Flex.io Web Interface ON' : 'Flex.io Web Interface OFF'
