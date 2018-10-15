@@ -15,26 +15,30 @@
           <div class="f4 fw6 lh-title">{{service_name}}</div>
           <div class="f6 fw4 mt1">{{service_description}}</div>
           <div class="flex flex-row items-center">
-            <div class="hint--top" aria-label="Storage connection">
-              <div
-                class="flex flex-row items-center bg-nearer-white br2 ba b--black-05"
-                style="margin-top: 6px; padding: 3px 6px"
-                v-if="is_storage"
-              >
+            <el-tag
+              class="hint--top"
+              style="margin-top: 6px"
+              size="medium"
+              aria-label="Storage connection"
+              v-if="is_storage"
+            >
+              <div class="flex flex-row items-center">
                 <i class="db material-icons" style="font-size: 14px">layers</i>
-                <span class="f7" style="margin-left: 3px">Storage</span>
+                <span class="f8" style="margin-left: 3px">Storage</span>
               </div>
-            </div>
-            <div class="hint--top" aria-label="Email connection">
-              <div
-                class="flex flex-row items-center bg-nearer-white br2 ba b--black-05"
-                style="margin-top: 6px; padding: 3px 6px"
-                v-if="is_email"
-              >
+            </el-tag>
+            <el-tag
+              class="hint--top"
+              style="margin-top: 6px"
+              size="medium"
+              aria-label="Email connection"
+              v-if="is_email"
+            >
+              <div class="flex flex-row items-center">
                 <i class="db material-icons" style="font-size: 14px">email</i>
-                <span class="f7" style="margin-left: 3px">Email</span>
+                <span class="f8" style="margin-left: 3px">Email</span>
               </div>
-            </div>
+            </el-tag>
           </div>
         </div>
         <div v-if="showSteps && mode != 'edit'">
