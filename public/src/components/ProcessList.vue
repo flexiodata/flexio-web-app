@@ -7,6 +7,7 @@
     >
       <el-table-column
         type="index"
+        :index="getIndex"
       />
 
       <el-table-column
@@ -119,7 +120,10 @@
     methods: {
       ...mapGetters([
         'getAllProcesses'
-      ])
+      ]),
+      getIndex(index) {
+        return index + this.start + 1
+      }
     }
   }
 </script>
