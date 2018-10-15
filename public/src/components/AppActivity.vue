@@ -7,28 +7,31 @@
   </div>
 
   <!-- fetched -->
-  <div class="flex flex-column overflow-y-auto" v-else-if="is_fetched">
-    <!-- control bar -->
-    <div class="center w-100 pa3 pa4-l pb3-l bb bb-0-l b--black-10" style="max-width: 1152px">
-      <div class="flex flex-row items-center">
-        <div class="flex-fill flex flex-row items-center">
-          <h1 class="mv0 f2 fw4 mr3">Activity</h1>
+  <div class="flex flex-column overflow-y-auto" :id="doc_id" v-else-if="is_fetched">
+    <!-- use `z-7` to ensure the title z-index is greater than the CodeMirror scrollbar -->
+    <div class="mt4 mb3 relative z-7 bg-white sticky">
+      <div class="center w-100 pa3 pl4-l pr4-l bb bb-0-l b--black-10 sticky" style="max-width: 1152px">
+        <!-- control bar -->
+        <div class="flex flex-row items-center">
+          <div class="flex-fill flex flex-row items-center">
+            <h1 class="mv0 f2 fw4 mr3">Activity</h1>
+          </div>
+          <el-pagination
+            layout="prev"
+            :page-size="page_size"
+            :current-page.sync="current_page"
+            :total="total_count"
+            @current-change="updatePager"
+          />
+          <div class="f6">{{start + 1}} - {{end}} of {{total_count}}</div>
+          <el-pagination
+            layout="next"
+            :page-size="page_size"
+            :current-page.sync="current_page"
+            :total="total_count"
+            @current-change="updatePager"
+          />
         </div>
-        <el-pagination
-          layout="prev"
-          :page-size="page_size"
-          :current-page.sync="current_page"
-          :total="total_count"
-          @current-change="updatePager"
-        />
-        <div class="f6">{{start + 1}} - {{end}} of {{total_count}}</div>
-        <el-pagination
-          layout="next"
-          :page-size="page_size"
-          :current-page.sync="current_page"
-          :total="total_count"
-          @current-change="updatePager"
-        />
       </div>
     </div>
 
@@ -46,6 +49,7 @@
 
 <script>
   import { mapState, mapGetters } from 'vuex'
+  import stickybits from 'stickybits'
   import Spinner from 'vue-simple-spinner'
   import ProcessList from './ProcessList.vue'
 
@@ -57,8 +61,15 @@
       Spinner,
       ProcessList
     },
+    watch: {
+      is_fetched: {
+        handler: 'initSticky',
+        immediate: true
+      }
+    },
     data() {
       return {
+        doc_id: _.uniqueId('app-activity-'),
         force_loading: false,
         filter: '',
         current_page: 1,
@@ -110,7 +121,25 @@
       },
       filterBy(item, index) {
         return true
+      },
+      initSticky() {
+        setTimeout(() => {
+          stickybits('.sticky', {
+            scrollEl: '#' + this.doc_id,
+            useStickyClasses: true
+          })
+        }, 100)
       }
     }
   }
 </script>
+
+<style lang="stylus" scoped>
+  .sticky
+    transition: all 0.15s ease
+
+  .sticky.js-is-sticky
+  .sticky.js-is-stuck
+    border-bottom: 1px solid rgba(0,0,0,0.1)
+    box-shadow: 0 4px 16px -6px rgba(0,0,0,0.2)
+</style>
