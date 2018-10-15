@@ -493,6 +493,18 @@ class ScriptHost
         return strtoupper($str);
     }
 
+    public function func_invoke_service($service, $params)
+    {
+        if ($service == 'email.send')
+        {
+            $task = array_merge([ 'op' => 'email' ], (array)$params);
+
+            $process = \Flexio\Jobs\Process::create();
+            $process->setOwner($this->getProcess()->getOwner());
+            $process->execute($task);
+        }
+    }
+
     public function func_debug($message) : void
     {
         if ($message instanceof BinaryData) {
