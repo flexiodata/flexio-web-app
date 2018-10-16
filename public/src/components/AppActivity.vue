@@ -32,6 +32,19 @@
             @current-change="updatePager"
           />
         </div>
+        <div class="flex flex-row items-center mt2">
+          <div class="flex-fill"></div>
+          <el-date-picker
+            style="width: 240px"
+            type="daterange"
+            align="right"
+            format="MM/dd/yyyy"
+            start-placeholder="Start date"
+            end-placeholder="End date"
+            :default-time="['00:00:00', '23:59:59']"
+            v-model="date_range"
+          />
+        </div>
       </div>
     </div>
 
@@ -48,6 +61,7 @@
 </template>
 
 <script>
+  import moment from 'moment'
   import stickybits from 'stickybits'
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
@@ -75,7 +89,8 @@
         current_page: 1,
         page_size: 50,
         sort: 'started',
-        sort_direction: 'desc'
+        sort_direction: 'desc',
+        date_range: null
       }
     },
     computed: {
@@ -131,6 +146,17 @@
         this.sort_direction = order == 'descending' ? 'desc' : 'asc'
       },
       filterBy(item, index) {
+        if (_.isArray(this.date_range)) {
+          if (_.isNil(item.started) || _.isNil(item.finished)) {
+            return false
+          }
+
+          var start = this.date_range[0]
+          var end = this.date_range[1]
+
+          return moment(item.started) > moment(start) && moment(item.finished) < moment(end)
+        }
+
         return true
       },
       initSticky() {
