@@ -20,6 +20,7 @@
             <el-input
               class="w-100 mw5 mr3"
               placeholder="Search..."
+              clearable
               prefix-icon="el-icon-search"
               @keydown.esc.native="filter = ''"
               v-model="filter"

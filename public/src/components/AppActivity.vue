@@ -35,8 +35,8 @@
         <div class="flex flex-row justify-end items-center mt2">
           <el-select
             style="width: 140px"
-            clearable
             placeholder="Status"
+            clearable
             v-model="status_filter"
           >
             <el-option
