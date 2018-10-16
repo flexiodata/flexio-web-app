@@ -57,12 +57,13 @@ class Trigger
         if ($user_eid)
             $user = $user_eid;
 
+        // if the user is a username, and not already a user eid, resolve it to an eid
         $pipe_eid = \Flexio\Object\Pipe::getEidFromName($user, $pipe);
-        if (!$pipe_eid)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, "Pipe object could not be resolved/found");
+        if ($pipe_eid)
+            $pipe = $pipe_eid;
 
         // STEP 3: trigger the appropriate process with the email as an input
-        $pipe = \Flexio\Object\Pipe::load($pipe_eid);
+        $pipe = \Flexio\Object\Pipe::load($pipe);
         if ($pipe->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, "Pipe object not found");
 
