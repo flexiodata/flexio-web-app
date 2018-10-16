@@ -86,8 +86,10 @@ class Trigger
         if (count($from_addresses) > 0)
         {
             $from_addresses = \Flexio\Base\Email::splitAddressList($from_addresses);
-            $process_email_params = array('email-from' => $from_addresses[0]['email'],
-                                          'email-from-display' => $from_addresses[0]['display']);
+            $process_email_params = array('trigger.email.from' => $from_addresses[0]['email'],
+                                          'trigger.email.fromdisplay' => $from_addresses[0]['display'],
+                                          'email-from' => $from_addresses[0]['email'],            // deprecated, please remove
+                                          'email-from-display' => $from_addresses[0]['display']); // deprecated, please remove
         }
         $engine->setParams($process_email_params);
 
