@@ -22,7 +22,7 @@
       >
         <el-button
           class="ttu b"
-          style="min-width: 5rem; margin: 0 1rem"
+          style="min-width: 5rem; margin: 0 0.75rem"
           type="primary"
           size="small"
           data-tour-step="pipe-onboarding-3"
