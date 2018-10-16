@@ -410,7 +410,7 @@ class Output {
 
     set name(value) {
         this._name = value
-        proxy.invokeSync('setOutputStreamInfo', [this._handle, {'name':value}])
+        proxy.invokeSync('setStreamInfo', [this._handle, {'name':value}])
     }
 
     get contentType() {
@@ -419,7 +419,7 @@ class Output {
 
     set contentType(value) {
         this._contentType = value
-        proxy.invokeSync('setOutputStreamInfo', [this._handle, {'content_type':value}])
+        proxy.invokeSync('setStreamInfo', [this._handle, {'content_type':value}])
     }
 
     get env() {
@@ -647,10 +647,10 @@ function checkModuleInit(callback) {
         return
     } else {
         inited = true
-        proxy.invokeAsync('getInputStreamInfo', ['_fxstdin_']).then((stdin_stream_info) => {
+        proxy.invokeAsync('getStreamInfo', [0]).then((stdin_stream_info) => {
             input = new Input(stdin_stream_info)
             context.input = input
-            proxy.invokeAsync('getOutputStreamInfo', ['_fxstdout_']).then((stdout_stream_info) => {
+            proxy.invokeAsync('getStreamInfo', [1]).then((stdout_stream_info) => {
                 output = new Output(stdout_stream_info)
                 context.output = output
                 inited = true
