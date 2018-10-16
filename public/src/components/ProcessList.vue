@@ -58,14 +58,15 @@
         :sortable="true"
         :formatter="fmtDuration"
       />
+      <div slot="empty">No activity to show</div>
     </el-table>
   </div>
 </template>
 
 <script>
+  import moment from 'moment'
   import { mapGetters } from 'vuex'
   import * as ps from '../constants/process'
-  import moment from 'moment'
 
   export default {
     props: {
