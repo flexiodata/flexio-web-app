@@ -34,7 +34,21 @@
         </div>
         <div class="flex flex-row items-center mt2">
           <div class="flex-fill"></div>
+          <el-select
+            style="width: 140px"
+            clearable
+            placeholder="Status"
+            v-model="status_filter"
+          >
+            <el-option
+              :label="option.label"
+              :value="option.val"
+              :key="option.val"
+              v-for="option in status_options"
+            />
+          </el-select>
           <el-date-picker
+            class="ml2"
             style="width: 240px"
             type="daterange"
             align="right"
@@ -64,8 +78,37 @@
   import moment from 'moment'
   import stickybits from 'stickybits'
   import { mapState, mapGetters } from 'vuex'
+  import * as ps from '../constants/process'
   import Spinner from 'vue-simple-spinner'
   import ProcessList from './ProcessList.vue'
+
+  const fmtProcessStatus = (status) => {
+    switch (status) {
+      case ps.PROCESS_STATUS_PENDING   : return 'Pending'
+      case ps.PROCESS_STATUS_WAITING   : return 'Waiting'
+      case ps.PROCESS_STATUS_RUNNING   : return 'Running'
+      case ps.PROCESS_STATUS_CANCELLED : return 'Canceled'
+      case ps.PROCESS_STATUS_PAUSED    : return 'Paused'
+      case ps.PROCESS_STATUS_FAILED    : return 'Failed'
+      case ps.PROCESS_STATUS_COMPLETED : return 'Completed'
+    }
+
+    return ''
+  }
+
+  const statuses = [
+    ps.PROCESS_STATUS_PENDING,
+    //ps.PROCESS_STATUS_WAITING,
+    ps.PROCESS_STATUS_RUNNING,
+    ps.PROCESS_STATUS_CANCELLED,
+    //ps.PROCESS_STATUS_PAUSED,
+    ps.PROCESS_STATUS_FAILED,
+    ps.PROCESS_STATUS_COMPLETED
+  ]
+
+  const status_options = _.map(statuses, (val) => {
+    return { label: fmtProcessStatus(val), val }
+  })
 
   export default {
     metaInfo: {
@@ -90,7 +133,9 @@
         page_size: 50,
         sort: 'started',
         sort_direction: 'desc',
-        date_range: null
+        date_range: null,
+        status_filter: '',
+        status_options
       }
     },
     computed: {
@@ -155,6 +200,10 @@
           var end = this.date_range[1]
 
           return moment(item.started) > moment(start) && moment(item.finished) < moment(end)
+        }
+
+        if (this.status_filter.length > 0) {
+          return item.process_status == this.status_filter
         }
 
         return true
