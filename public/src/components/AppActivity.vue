@@ -78,7 +78,22 @@
       :start="start"
       :limit="page_size"
       @sort-change="sortBy"
+      @details-click="openProcessDetailsDialog"
     />
+
+    <!-- process details dialog -->
+    <el-dialog
+      custom-class="el-dialog--no-header el-dialog--no-footer"
+      width="56rem"
+      top="8vh"
+      :modal-append-to-body="false"
+      :visible.sync="show_process_details_dialog"
+    >
+      <ProcessDetailsPanel
+        :process-eid="edit_process_eid"
+        @close="show_process_details_dialog = false"
+      />
+    </el-dialog>
   </div>
 </template>
 
@@ -89,6 +104,7 @@
   import * as ps from '../constants/process'
   import Spinner from 'vue-simple-spinner'
   import ProcessList from './ProcessList.vue'
+  import ProcessDetailsPanel from './ProcessDetailsPanel.vue'
 
   const fmtProcessStatus = (status) => {
     switch (status) {
@@ -122,7 +138,8 @@
     },
     components: {
       Spinner,
-      ProcessList
+      ProcessList,
+      ProcessDetailsPanel
     },
     watch: {
       is_fetched: {
@@ -141,7 +158,9 @@
         sort_direction: 'desc',
         date_range: null,
         status_filter: '',
-        status_options
+        status_options,
+        show_process_details_dialog: false,
+        edit_process_eid: ''
       }
     },
     computed: {
@@ -215,6 +234,10 @@
         }
 
         return res
+      },
+      openProcessDetailsDialog(eid) {
+        this.edit_process_eid = eid
+        this.show_process_details_dialog = true
       },
       initSticky() {
         setTimeout(() => {
