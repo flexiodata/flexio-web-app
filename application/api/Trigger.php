@@ -88,6 +88,7 @@ class Trigger
             $from_addresses = \Flexio\Base\Email::splitAddressList($from_addresses);
             $process_email_params = array('trigger.email.from' => $from_addresses[0]['email'],
                                           'trigger.email.fromdisplay' => $from_addresses[0]['display'],
+                                          'trigger.email.subject' => $parser->getSubject(),
                                           'email-from' => $from_addresses[0]['email'],            // deprecated, please remove
                                           'email-from-display' => $from_addresses[0]['display']); // deprecated, please remove
         }
