@@ -116,27 +116,34 @@
           </div>
 
           <div
-            class="ph3 mt2"
+            class="ph3 mt3"
             v-if="item.key == 'deploy_ui' && is_web_deployed"
           >
-            <span style="margin-right: 6px">{{runtime_url}}</span>
-            <el-button
-              type="text"
-              size="tiny"
-              style="padding: 0; border: 0"
-              @click="show_runtime_configure = true"
-            >
-              Edit...
-            </el-button>
-            <el-button
-              type="plain"
-              class="hint--top"
-              aria-label="Copy to Clipboard"
-              size="tiny"
-              :data-clipboard-text="runtime_url"
-            >
-              Copy
-            </el-button>
+            <div class="mt2 ttu fw6 moon-gray">Runtime URL</div>
+            <div>
+              <span style="margin-right: 6px">{{runtime_url}}</span>
+              <el-button
+                type="plain"
+                class="hint--top"
+                aria-label="Copy to Clipboard"
+                size="tiny"
+                :data-clipboard-text="runtime_url"
+              >
+                Copy
+              </el-button>
+            </div>
+
+              <div class="mv1">
+                <el-button
+                  class="ttu b"
+                  type="primary"
+                  size="tiny"
+                  @click="show_runtime_configure = true"
+                >
+                  Edit web interface
+                </el-button>
+              </div>
+
           </div>
 
           <div
@@ -358,6 +365,6 @@
 
 <style lang="stylus" scoped>
   .deploy-on-off-panel
-    border: 1px solid rgba(64, 158, 255, 0.28)
+    border: 1px solid rgba(64, 158, 255, 0.14)
     background-color: rgba(64, 158, 255, 0.07)
 </style>

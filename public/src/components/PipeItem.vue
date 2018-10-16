@@ -67,7 +67,7 @@
       </div>
       <div
         class="dn db-l ml3 ml4-l tr"
-        style="width: 110px"
+        style="width: 120px"
       >
         <div v-if="isHeader">Deployment</div>
         <div v-else>
@@ -117,7 +117,7 @@
           </div>
         </div>
       </div>
-      <div class="flex-none nt3 nb3 ml3 ml4-l tc" style="width: 90px">
+      <div class="flex-none nt3 nb3 ml3 ml4-l tc" style="width: 100px">
         <div v-if="isHeader">
           Status
           <SortArrows

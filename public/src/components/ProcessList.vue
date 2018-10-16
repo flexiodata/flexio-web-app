@@ -2,12 +2,14 @@
   <div>
     <el-table
       class="w-100"
-      :data="fmt_processes"
-      :default-sort="{ prop: 'fmt_started', order: 'descending' }"
+      :data="limited_processes"
+      :default-sort="{ prop: 'started', order: 'descending' }"
+      @sort-change="onSortChange"
     >
       <el-table-column
         type="index"
         :index="getIndex"
+        v-if="has_start"
       />
 
       <el-table-column
@@ -20,21 +22,21 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="fmt_started"
+        prop="started"
         label="Started"
         :min-width="140"
         :sortable="true"
-        :sort-by="'started'"
+        :formatter="fmtDate"
       />
       <el-table-column
-        prop="fmt_finished"
+        prop="finished"
         label="Finished"
         :min-width="140"
         :sortable="true"
-        :sort-by="'finished'"
+        :formatter="fmtDate"
       />
       <el-table-column
-        prop="fmt_process_status"
+        prop="process_status"
         label="Status"
         :min-width="120"
         :sortable="true"
@@ -42,44 +44,37 @@
         <template slot-scope="scope">
           <div class="flex flex-row items-center lh-copy">
             <i class="el-icon-success dark-green" v-if="scope.row.process_status == 'C'"></i>
-            <i class="el-icon-error dark-red" v-else-if="scope.row.process_status == 'F'"></i>
+            <i class="el-icon-warning dark-red" v-else-if="scope.row.process_status == 'F'"></i>
+            <i class="el-icon-error dark-red" v-else-if="scope.row.process_status == 'X'"></i>
+            <i class="el-icon-loading blue" v-else-if="scope.row.process_status == 'R'"></i>
             <i class="el-icon-info blue" v-else></i>
-            <span class="ml2">{{scope.row.fmt_process_status}}</span>
+            <span class="ml2">{{fmtProcessStatus(scope.row.process_status)}}</span>
           </div>
         </template>
       </el-table-column>
       <el-table-column
-        prop="fmt_duration"
+        prop="duration"
         label="Duration"
         align="right"
         :min-width="100"
         :sortable="true"
+        :formatter="fmtDuration"
       />
+      <div slot="empty">No activity to show</div>
     </el-table>
   </div>
 </template>
 
 <script>
+  import moment from 'moment'
   import { mapGetters } from 'vuex'
   import * as ps from '../constants/process'
-  import moment from 'moment'
-
-  const friendlyProcessStatus = (status) => {
-    switch (status) {
-      case ps.PROCESS_STATUS_PENDING   : return 'Pending'
-      case ps.PROCESS_STATUS_WAITING   : return 'Waiting'
-      case ps.PROCESS_STATUS_RUNNING   : return 'Running'
-      case ps.PROCESS_STATUS_CANCELLED : return 'Canceled'
-      case ps.PROCESS_STATUS_PAUSED    : return 'Paused'
-      case ps.PROCESS_STATUS_FAILED    : return 'Failed'
-      case ps.PROCESS_STATUS_COMPLETED : return 'Completed'
-    }
-
-    return ''
-  }
 
   export default {
     props: {
+      items: {
+        type: Array
+      },
       filterBy: {
         type: Function
       },
@@ -93,9 +88,11 @@
     },
     computed: {
       all_processes() {
-        var p = this.getAllProcesses()
-        p = _.sortBy(p, [ function(p) { return new Date(p.created) } ])
-        return _.reverse(p)
+        if (_.isArray(this.items)) {
+          return this.items
+        }
+
+        return this.getAllProcesses()
       },
       filtered_processes() {
         var processes = this.all_processes
@@ -106,27 +103,42 @@
           return this.filtered_processes
         }
 
-        return _.filter(this.filtered_processes, (item, index) => {
-          return index >= this.start && index < (this.start + this.limit)
+        return _.filter(this.filtered_processes, (item, idx) => {
+          return idx >= this.start && idx < (this.start + this.limit)
         })
       },
-      fmt_processes() {
-        return _.map(this.limited_processes, (p) => {
-          return _.assign({}, p, {
-            fmt_started: p.started ? moment(p.started).format('l LT') : '--',
-            fmt_finished: p.finished ? moment(p.finished).format('l LT') : '--',
-            fmt_duration: p.duration ? p.duration.toFixed(2) + ' seconds' : '--',
-            fmt_process_status: friendlyProcessStatus(p.process_status)
-          })
-        })
+      has_start() {
+        return _.isNumber(this.start)
       }
     },
     methods: {
       ...mapGetters([
         'getAllProcesses'
       ]),
-      getIndex(index) {
-        return index + this.start + 1
+      fmtDate(row, col, val, idx) {
+        return val ? moment(val).format('l LT') : '--'
+      },
+      fmtDuration(row, col, val, idx) {
+        return val ? val.toFixed(2) + ' seconds' : '--'
+      },
+      fmtProcessStatus: (status) => {
+        switch (status) {
+          case ps.PROCESS_STATUS_PENDING   : return 'Pending'
+          case ps.PROCESS_STATUS_WAITING   : return 'Waiting'
+          case ps.PROCESS_STATUS_RUNNING   : return 'Running'
+          case ps.PROCESS_STATUS_CANCELLED : return 'Canceled'
+          case ps.PROCESS_STATUS_PAUSED    : return 'Paused'
+          case ps.PROCESS_STATUS_FAILED    : return 'Failed'
+          case ps.PROCESS_STATUS_COMPLETED : return 'Completed'
+        }
+
+        return ''
+      },
+      getIndex(idx) {
+        return idx + this.start + 1
+      },
+      onSortChange(obj) {
+        this.$emit('sort-change', obj)
       }
     }
   }

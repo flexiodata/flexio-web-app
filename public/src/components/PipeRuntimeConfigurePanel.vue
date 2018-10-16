@@ -23,11 +23,9 @@
       >
         <CodeEditor
           class="h-100"
-          :class="!code_expanded ? 'o-40 no-pointer-events no-select' : ''"
           :show-json-view-toggle="false"
           :lang.sync="lang"
           style="font-size: 13px"
-          v-show="code_expanded"
           v-model="edit_code"
         />
       </div>
@@ -43,10 +41,20 @@
           :closable="false"
           v-show="error_msg.length > 0"
         />
+        <div class="h-100 bg-nearer-white pv5 ph4 overflow-y-auto" v-if="is_empty">
+          <div class="center mw6 f5 lh-copy">
+            <p>This is a Flex.io web interface to provide end-users with a runtime version of your pipe, without exposing all of your carefully crafted wiring.</p>
+
+            <p>The web interface provides you with flexibility to request authentication credentials from a user (i.e., logging in with their credentials and running your function against their account) and/or enabling users to apply parameters to your function (i.e., selecting a drop-down menu or entering a value or a date range).</p>
+
+            <p>The web interface is created using YML.  However, the syntax isn't fully documented yet, so please contact us using the chat button at the bottom right if you have any questions and we'll be happy to assist.</p>
+          </div>
+        </div>
         <BuilderDocument
           class="h-100"
           :class="error_msg.length > 0 ? 'o-40 no-pointer-events no-select' : ''"
           :definition="edit_json"
+          v-else
         />
       </div>
     </multipane>
@@ -78,19 +86,19 @@
 
   export default {
     props: {
-      'title': {
+      title: {
         type: String,
         default: ''
       },
-      'show-header': {
+      showHeader: {
         type: Boolean,
         default: true
       },
-      'show-footer': {
+      showFooter: {
         type: Boolean,
         default: true
       },
-      'pipe': {
+      pipe: {
         type: Object,
         default: () => { return defaultAttrs() }
       }
@@ -117,24 +125,33 @@
         lang: 'yaml',
         edit_code: '',
         edit_json: {},
-        error_msg: '',
-        code_expanded: true
+        error_msg: ''
       }
     },
     computed: {
       has_errors() {
         return this.error_msg.length > 0
+      },
+      is_empty() {
+        return this.edit_code == ''
       }
+    },
+    mounted() {
+      this.initPipe()
     },
     methods: {
       onClose() {
-        this.revert()
-        this.initPipe()
+        setTimeout(() => {
+          this.revert()
+          this.initPipe()
+        }, 500)
         this.$emit('close')
       },
       onCancel() {
-        this.revert()
-        this.initPipe()
+        setTimeout(() => {
+          this.revert()
+          this.initPipe()
+        }, 500)
         this.$emit('cancel')
       },
       onSubmit() {
@@ -143,7 +160,9 @@
         this.$emit('submit', edit_pipe)
       },
       initPipe() {
-        this.edit_code = yaml.safeDump(_.get(this.pipe, 'ui', {}))
+        var ui_obj = _.get(this.pipe, 'ui', {})
+        var code = yaml.safeDump(ui_obj)
+        this.edit_code = _.isEmpty(ui_obj) ? '' : code
       },
       revert() {
         // TODO: need to do anything?

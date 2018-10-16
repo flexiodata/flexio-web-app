@@ -303,7 +303,7 @@
 
     <!-- pipe runtime configure dialog -->
     <el-dialog
-      custom-class="el-dialog--no-header el-dialog--no-footer el-dialog--full-body"
+      custom-class="el-dialog--no-header el-dialog--no-footer el-dialog--full-body is-almost-fullscreen"
       :fullscreen="true"
       :modal-append-to-body="false"
       :close-on-click-modal="false"
@@ -314,6 +314,7 @@
         @close="show_runtime_configure_dialog = false"
         @cancel="show_runtime_configure_dialog = false"
         @submit="saveRuntime"
+        v-if="show_runtime_configure_dialog"
       />
     </el-dialog>
 
@@ -473,7 +474,7 @@
         yaml_view: 'yaml',
         show_yaml: false,
         transitioning_yaml: false,
-        has_run_once: false,
+        has_tested_once: false,
         has_errors: false,
         is_saving: false,
         show_save_cancel: false,
@@ -582,6 +583,10 @@
         return this.active_view == PIPEDOC_VIEW_RUN
       },
       active_process_eid() {
+        if (!this.has_tested_once) {
+          return ''
+        }
+
         var process = _.last(this.getActiveDocumentProcesses())
         return _.get(process, 'eid', '')
       },
@@ -732,6 +737,9 @@
 
         // make sure the output is expanded
         this.active_collapse_items = [].concat(this.active_collapse_items).concat(['output'])
+
+        // make sure we know we've tested the pipe at least once
+        this.has_tested_once = true
 
         // scroll to the output item
         this.scrollToItem(this.output_item_id, 300)
