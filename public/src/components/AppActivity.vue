@@ -34,7 +34,7 @@
         </div>
         <div class="flex flex-row justify-end items-center mt2">
           <el-select
-            style="width: 140px"
+            style="width: 150px"
             placeholder="Status"
             clearable
             v-model="status_filter"
@@ -44,7 +44,16 @@
               :value="option.val"
               :key="option.val"
               v-for="option in status_options"
-            />
+            >
+            <div class="flex flex-row items-center">
+              <i class="el-icon-success dark-green" v-if="option.val == 'C'"></i>
+              <i class="el-icon-warning dark-red" v-else-if="option.val == 'F'"></i>
+              <i class="el-icon-error dark-red" v-else-if="option.val == 'X'"></i>
+              <i class="el-icon-loading blue" v-else-if="option.val == 'R'"></i>
+              <i class="el-icon-info blue" v-else></i>
+              <span class="ml2">{{option.label}}</span>
+            </div>
+            </el-option>
           </el-select>
           <el-date-picker
             class="ml2"
@@ -96,13 +105,11 @@
   }
 
   const statuses = [
-    ps.PROCESS_STATUS_PENDING,
-    //ps.PROCESS_STATUS_WAITING,
-    ps.PROCESS_STATUS_RUNNING,
-    ps.PROCESS_STATUS_CANCELLED,
-    //ps.PROCESS_STATUS_PAUSED,
+    ps.PROCESS_STATUS_COMPLETED,
     ps.PROCESS_STATUS_FAILED,
-    ps.PROCESS_STATUS_COMPLETED
+    ps.PROCESS_STATUS_PENDING,
+    ps.PROCESS_STATUS_RUNNING,
+    ps.PROCESS_STATUS_CANCELLED
   ]
 
   const status_options = _.map(statuses, (val) => {

@@ -44,7 +44,9 @@
         <template slot-scope="scope">
           <div class="flex flex-row items-center lh-copy">
             <i class="el-icon-success dark-green" v-if="scope.row.process_status == 'C'"></i>
-            <i class="el-icon-error dark-red" v-else-if="scope.row.process_status == 'F'"></i>
+            <i class="el-icon-warning dark-red" v-else-if="scope.row.process_status == 'F'"></i>
+            <i class="el-icon-error dark-red" v-else-if="scope.row.process_status == 'X'"></i>
+            <i class="el-icon-loading blue" v-else-if="scope.row.process_status == 'R'"></i>
             <i class="el-icon-info blue" v-else></i>
             <span class="ml2">{{fmtProcessStatus(scope.row.process_status)}}</span>
           </div>
