@@ -7,10 +7,10 @@
       </div>
     </div>
 
-    <div>
-      <div v-for="(val, key) in trimmed_process">
-        <div class="ttu fw6 moon-gray">{{key}}</div>
-        <pre class="code f6 overflow-x-auto">{{val}}</pre>
+    <div class="ph4">
+      <div class="flex flex-row items-start mb1" v-for="(val, key) in trimmed_process">
+        <div class="ttu fw6 moon-gray" style="width: 150px">{{key}}</div>
+        <pre class="flex-fill mt0 code f7 overflow-x-auto">{{val}}&nbsp;</pre>
       </div>
     </div>
 
