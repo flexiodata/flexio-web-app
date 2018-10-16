@@ -32,8 +32,7 @@
             @current-change="updatePager"
           />
         </div>
-        <div class="flex flex-row items-center mt2">
-          <div class="flex-fill"></div>
+        <div class="flex flex-row justify-end items-center mt2">
           <el-select
             style="width: 140px"
             clearable
