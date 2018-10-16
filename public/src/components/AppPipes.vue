@@ -10,7 +10,7 @@
   <div class="flex flex-column overflow-y-scroll" :id="doc_id" v-else-if="is_fetched">
     <!-- use `z-7` to ensure the title z-index is greater than the CodeMirror scrollbar -->
     <div class="mt4 relative z-7 bg-white sticky">
-      <div class="center w-100 pa3 pl4-l pr4-l bb bb-0-l b--black-10 sticky" style="max-width: 1152px">
+      <div class="center w-100 pa3 pl4-l pr4-l bb bb-0-l b--black-10 sticky" style="max-width: 1280px">
         <!-- control bar -->
         <div class="flex flex-row">
           <div class="flex-fill flex flex-row items-center">
@@ -34,7 +34,7 @@
     <!-- list -->
     <PipeList
       class="center w-100 pl4-l pr4-l pb4-l"
-      style="max-width: 1152px"
+      style="max-width: 1280px"
       :filter="filter"
       :show-header="true"
       :show-selection-checkboxes="false"
