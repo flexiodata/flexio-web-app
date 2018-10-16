@@ -18,7 +18,7 @@
         :min-width="120"
       >
         <template slot-scope="scope">
-          <span class="code f7 bg-white br2 ba b--black-05" style="padding: 3px 6px">{{scope.row.eid}}</span>
+          <span class="code f7 bg-white br2 ba b--black-10" style="padding: 3px 6px">{{scope.row.eid}}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -59,6 +59,19 @@
         :sortable="true"
         :formatter="fmtDuration"
       />
+      <el-table-column
+        align="right"
+      >
+        <template slot-scope="scope">
+          <el-button
+            type="text"
+            style="padding: 0"
+            @click="$emit('details-click', scope.row.eid)"
+          >
+            Details...
+          </el-button>
+        </template>
+      </el-table-column>
       <div slot="empty">No activity to show</div>
     </el-table>
   </div>
