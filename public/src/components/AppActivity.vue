@@ -190,6 +190,8 @@
         this.sort_direction = order == 'descending' ? 'desc' : 'asc'
       },
       filterBy(item, index) {
+        var res = true
+
         if (_.isArray(this.date_range)) {
           if (_.isNil(item.started) || _.isNil(item.finished)) {
             return false
@@ -198,14 +200,14 @@
           var start = this.date_range[0]
           var end = this.date_range[1]
 
-          return moment(item.started) > moment(start) && moment(item.finished) < moment(end)
+          res = res && moment(item.started) > moment(start) && moment(item.finished) < moment(end)
         }
 
         if (this.status_filter.length > 0) {
-          return item.process_status == this.status_filter
+          res = res && item.process_status == this.status_filter
         }
 
-        return true
+        return res
       },
       initSticky() {
         setTimeout(() => {
