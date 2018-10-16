@@ -38,7 +38,6 @@
       <el-table-column
         prop="process_status"
         label="Status"
-        :min-width="120"
         :sortable="true"
       >
         <template slot-scope="scope">
