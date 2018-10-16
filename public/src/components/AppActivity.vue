@@ -39,10 +39,10 @@
     <ProcessList
       class="center w-100 pl4-l pr4-l pb4-l"
       style="max-width: 1152px"
-      :filter-by="filterBy"
+      :items="output_processes"
       :start="start"
       :limit="page_size"
-      :total-count="total_count"
+      @sort-change="sortBy"
     />
   </div>
 </template>
@@ -73,7 +73,9 @@
         force_loading: false,
         filter: '',
         current_page: 1,
-        page_size: 50
+        page_size: 50,
+        sort: 'started',
+        sort_direction: 'desc'
       }
     },
     computed: {
@@ -85,11 +87,14 @@
       all_processes() {
         return this.getAllProcesses()
       },
-      filterd_processes() {
+      filtered_processes() {
         return _.filter(this.all_processes, this.filterBy)
       },
+      output_processes() {
+        return _.orderBy(this.filtered_processes, [this.sort], [this.sort_direction])
+      },
       total_count() {
-        return _.size(this.filterd_processes)
+        return _.size(this.output_processes)
       },
       start() {
         return ((this.current_page - 1) * this.page_size)
@@ -100,7 +105,7 @@
     },
     mounted() {
       this.initSticky()
-      this.tryFetchActivity()
+      this.tryFetchProcesses()
       this.$store.track('Visited Activity Page')
       this.force_loading = true
       setTimeout(() => { this.force_loading = false }, 10)
@@ -109,7 +114,7 @@
       ...mapGetters([
         'getAllProcesses'
       ]),
-      tryFetchActivity() {
+      tryFetchProcesses() {
         if (!this.is_fetched && !this.is_fetching) {
           this.$store.dispatch('fetchProcesses')
         }
@@ -119,6 +124,11 @@
         var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
         _.set(new_route, 'query.page', page)
         this.$router.replace(new_route)
+      },
+      sortBy({ column, prop, order }) {
+        this.current_page = 1
+        this.sort = prop
+        this.sort_direction = order == 'descending' ? 'desc' : 'asc'
       },
       filterBy(item, index) {
         return true
