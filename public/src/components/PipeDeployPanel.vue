@@ -365,6 +365,6 @@
 
 <style lang="stylus" scoped>
   .deploy-on-off-panel
-    border: 1px solid rgba(64, 158, 255, 0.28)
+    border: 1px solid rgba(64, 158, 255, 0.14)
     background-color: rgba(64, 158, 255, 0.07)
 </style>
