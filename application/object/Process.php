@@ -342,16 +342,11 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         // get the pipe info
-        $pipe_info = false;
-        if (isset($mapped_properties['pipe_info']))
-        {
-            $pipe_info = @json_decode($mapped_properties['pipe_info'],true);
-            if ($pipe_info !== false)
-            {
-                $mapped_properties['pipe_info'] = $pipe_info;
-                $mapped_properties['pipe_info'] = $mapped_properties['pipe_info'];
-            }
-        }
+        $pipe_info = null;
+        if (isset($properties['pipe_info']))
+            $pipe_info = @json_decode($properties['pipe_info'],true);
+            if ($pipe_info === false)
+                $pipe_info = null;
 
         // expand the parent and owner info
         $mapped_properties['parent'] = array(

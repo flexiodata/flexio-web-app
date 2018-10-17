@@ -100,11 +100,13 @@ function populatePipeInfo($db, $process_eid, $pipe_eid)
         $process = \Flexio\Object\Process::load($process_eid);
         $pipe = \Flexio\Object\Pipe::load($pipe_eid);
 
+        // update the process record manually so we don't reset the updated time
         $properties = array();
-        $properties['pipe_info'] = $pipe->get();
-        $process->set($properties);
+        $properties['pipe_info'] = json_encode($pipe->get());
+        $db->update('tbl_process', $properties, 'eid = ' . $db->quote($process_eid));
     }
-    catch (\Flexio\Base\Exception $e)
+    catch (\Exception | \Flexio\Base\Exception $e)
     {
     }
 }
+
