@@ -276,7 +276,26 @@ class ExecuteProxy
     }
 
 
-
+    public static function walk_recursive(&$v, $callback)
+    {
+        if (is_object($v))
+        {
+            foreach ($v as $prop => &$value)
+            {
+                $callback($value);
+                self::walk_recursive($value, $callback);
+            }
+        }
+        else if (is_array($v))
+        {
+            foreach ($v as $key => &$value)
+            {
+                $callback($value);
+                self::walk_recursive($value, $callback);
+            }
+        }
+    }
+    
 
 
     public function onMessage(\ZMQSocket $server, array $msg) : void
@@ -299,12 +318,17 @@ class ExecuteProxy
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: unknown method '$method' invoked");
         }
 
-        $moniker = "~$id/bin.b64:";
+        $moniker = "~$id/";
         $moniker_len = strlen($moniker);
 
-        array_walk_recursive($args, function(&$v, $k) use ($moniker, $moniker_len) {
+        self::walk_recursive($args, function(&$v) use ($moniker, $moniker_len) {
             if (is_string($v) && substr($v, 0, $moniker_len) == $moniker)
-                $v = new BinaryData(base64_decode(substr($v, $moniker_len)));
+            {
+                if (substr($v, $moniker_len, 8) == 'bin.b64:')
+                    $v = new BinaryData(base64_decode(substr($v, $moniker_len+8)));
+                else if (substr($v, $moniker_len, 7) == 'stream:')
+                    $v = "context://fileno/" . substr($v, $moniker_len+7);
+            }
         });
 
         // make function call
@@ -364,11 +388,15 @@ class ScriptHost
         $file = new ScriptHostFile();
         $file->stream = $this->process->getStdin();
         $this->files[] = $file;
+        $handle = count($this->files)-1;
+        $this->process->setLocalFile($handle, $file->stream);
 
-        // stdout is always stream handle 0
+        // stdout is always stream handle 1
         $file = new ScriptHostFile();
         $file->stream = $this->process->getStdout();
         $this->files[] = $file;
+        $handle = count($this->files)-1;
+        $this->process->setLocalFile($handle, $file->stream);
 
         // reserve a spot for stderr (future)
         $this->files[] = new ScriptHostFile();
@@ -457,7 +485,8 @@ class ScriptHost
             $file->stream = $stream;
             $this->files[] = $file;
             $handle = count($this->files)-1;
-
+            $this->process->setLocalFile($handle, $file->stream);
+    
             $results[] = array('handle' => $handle,
                                'tag' => $k,
                                'name' => $file->stream->getName(),
@@ -506,10 +535,13 @@ class ScriptHost
     {
         if ($service == 'email.send')
         {
-            $task = array_merge([ 'op' => 'email' ], (array)$params);
+            // recursively convert objects to arrays
+            $params = json_decode(json_encode($params), true);
+            $task = array_merge([ 'op' => 'email' ], $params);
 
             $process = \Flexio\Jobs\Process::create();
             $process->setOwner($this->getProcess()->getOwner());
+            $process->setLocalFiles($this->getProcess()->getLocalFiles()); // allow job process to access files via context://fileno/X
             $process->execute($task);
         }
     }
@@ -664,6 +696,7 @@ class ScriptHost
 
         $this->files[] = $file;
         $handle = count($this->files)-1;
+        $this->process->setLocalFile($handle, $file->stream);
 
         return array('handle' => $handle,
                      'name' => '',
@@ -672,10 +705,10 @@ class ScriptHost
                      'content_type' => $file->stream->getMimeType());
     }
 
-    public function func_fsCreateTempFile(string $path, string $connection) : ?array
+    public function func_fsCreateTempFile() : ?array
     {
         $stream = \Flexio\Base\Stream::create();
-        $stream->setName('');
+        $stream->setName(''); // temporary
 
         $file = new ScriptHostFile();
         $file->stream = $stream;
@@ -683,6 +716,7 @@ class ScriptHost
 
         $this->files[] = $file;
         $handle = count($this->files)-1;
+        $this->process->setLocalFile($handle, $file->stream);
 
         return array('handle' => $handle,
                      'name' => '',
@@ -704,6 +738,7 @@ class ScriptHost
             $file->stream = $stream;
             $this->files[] = $file;
             $handle = count($this->files)-1;
+            $this->process->setLocalFile($handle, $file->stream);
     
             return array('handle' => $handle,
                          'name' => '',
@@ -746,6 +781,7 @@ class ScriptHost
         $file->stream = $stream;
         $this->files[] = $file;
         $handle = count($this->files)-1;
+        $this->process->setLocalFile($handle, $file->stream);
 
         if ($mode == 'a' || $mode == 'a+')
         {
@@ -767,15 +803,16 @@ class ScriptHost
         if ($stream_idx < 0 || $stream_idx >= count($this->files))
             return false;
 
-        $target_path = $stream->getName();
-        if (strlen($target_path) == 0)
-            return true; // temporary file
-
         $file = $this->files[$stream_idx];
         $file->reader = null;
         $file->writer = null;
 
         $stream = $file->stream;
+
+        $target_path = $stream->getName();
+        if (strlen($target_path) == 0)
+            return true; // temporary file
+
         $reader = $stream->getReader();
 
         $vfs = new \Flexio\Services\Vfs($this->process->getOwner());

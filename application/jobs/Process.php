@@ -94,11 +94,12 @@ class Process implements \Flexio\IFace\IProcess
     private $stdout;
     private $response_code;
     private $error;
+    private $stop;
     private $handlers;     // array of callbacks invoked for each event
     private $files;        // array of streams of files (similar to php's $_FILES)
-    private $stop;
     private $first_execute;
     private $local_connections = [];   // map from connection identifier to connection_properties...e.g. [ 'connection_type' => ''. 'connection_properties' => [...]]
+    private $local_files = [];         // map from file number to Stream object
 
     public function __construct()
     {
@@ -195,6 +196,29 @@ class Process implements \Flexio\IFace\IProcess
         return $this->params;
     }
 
+    // for local files (using file number handle)
+    public function setLocalFile(int $fileno, \Flexio\IFace\IStream $stream)
+    {
+        $this->local_files[$fileno] = $stream;
+        return $this;
+    }
+
+    public function getLocalFile(int $fileno)
+    {
+        return $this->local_files[$fileno] ?? null;
+    }
+
+    public function getLocalFiles()
+    {
+        return $this->local_files;
+    }
+
+    public function setLocalFiles($files)
+    {
+        $this->local_files = $files;
+    }
+
+    // for post files
     public function addFile(string $name, \Flexio\IFace\IStream $stream) : \Flexio\Jobs\Process
     {
         $this->files[$name] = $stream;
@@ -205,6 +229,7 @@ class Process implements \Flexio\IFace\IProcess
     {
         return $this->files;
     }
+
 
     public function addLocalConnection(string $identifier, array $connection_properties) : void
     {
