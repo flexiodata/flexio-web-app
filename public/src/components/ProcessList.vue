@@ -8,6 +8,7 @@
     >
       <el-table-column
         type="index"
+        fixed
         :index="getIndex"
         v-if="has_start"
       />
@@ -15,6 +16,7 @@
       <el-table-column
         prop="eid"
         label="Process ID"
+        fixed
         :min-width="120"
       >
         <template slot-scope="scope">
@@ -24,20 +26,21 @@
       <el-table-column
         prop="started"
         label="Started"
-        :min-width="140"
+        :min-width="160"
         :sortable="true"
         :formatter="fmtDate"
       />
       <el-table-column
         prop="finished"
         label="Finished"
-        :min-width="140"
+        :min-width="160"
         :sortable="true"
         :formatter="fmtDate"
       />
       <el-table-column
         prop="process_status"
         label="Status"
+        :width="120"
         :sortable="true"
       >
         <template slot-scope="scope">
@@ -55,7 +58,7 @@
         prop="duration"
         label="Duration"
         align="right"
-        :min-width="100"
+        :min-width="110"
         :sortable="true"
         :formatter="fmtDuration"
       />
