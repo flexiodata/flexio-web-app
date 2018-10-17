@@ -672,6 +672,25 @@ class ScriptHost
                      'content_type' => $file->stream->getMimeType());
     }
 
+    public function func_fsCreateTempFile(string $path, string $connection) : ?array
+    {
+        $stream = \Flexio\Base\Stream::create();
+        $stream->setName('');
+
+        $file = new ScriptHostFile();
+        $file->stream = $stream;
+        $file->writer = $stream->getWriter();
+
+        $this->files[] = $file;
+        $handle = count($this->files)-1;
+
+        return array('handle' => $handle,
+                     'name' => '',
+                     'size' => $file->stream->getSize(),
+                     'is_table' => $file->stream->isTable(),
+                     'content_type' => $file->stream->getMimeType());
+    }
+
     public function func_fsOpen(string $mode, string $path, string $connection) : ?array
     {
         if ($mode == 'w' || $mode == 'w+')
@@ -748,6 +767,10 @@ class ScriptHost
         if ($stream_idx < 0 || $stream_idx >= count($this->files))
             return false;
 
+        $target_path = $stream->getName();
+        if (strlen($target_path) == 0)
+            return true; // temporary file
+
         $file = $this->files[$stream_idx];
         $file->reader = null;
         $file->writer = null;
@@ -758,9 +781,11 @@ class ScriptHost
         $vfs = new \Flexio\Services\Vfs($this->process->getOwner());
         $vfs->setProcess($this->process);
 
-        $files = $vfs->write($stream->getName(), function($length) use (&$reader) {
+        $files = $vfs->write($target_path, function($length) use (&$reader) {
             return $reader->read($length);
         });
+
+        return true;
     }
 
     public function func_fsExists(string $path) : bool

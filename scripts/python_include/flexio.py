@@ -519,6 +519,12 @@ class ContextFs(object):
         info = proxy.invoke('fsCreate', [path, connection])
         stream = Stream(info)
         stream._need_commit = True
+        return 
+        
+    def create_tempfile(self):
+        info = proxy.invoke('fsCreateTempFile', [])
+        stream = Stream(info)
+        stream._need_commit = True
         return stream
 
     def open(self, path, mode='r', connection=''):
