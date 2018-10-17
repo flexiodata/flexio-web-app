@@ -346,8 +346,6 @@ class ScriptHost
     protected $process = null;
 
     private $files = [];        // array of ScriptHostFile
-    private $stdin_fileidx = -1;
-    private $stdout_fileidx = -1;
 
     // I'd like to add these type checks back, but I was getting an error running this pipe:
     // Flexio.pipe()
@@ -362,17 +360,18 @@ class ScriptHost
     {
         $this->process = $process;
 
-        // reserve a spot for stdin
-        $this->files[] = new ScriptHostFile();
-        $this->stdin_fileidx = count($this->files)-1;
+        // stdin is always stream handle 0
+        $file = new ScriptHostFile();
+        $file->stream = $this->process->getStdin();
+        $this->files[] = $file;
 
-        // reserve a spot for stdout
-        $this->files[] = new ScriptHostFile();
-        $this->stdout_fileidx = count($this->files)-1;
+        // stdout is always stream handle 0
+        $file = new ScriptHostFile();
+        $file->stream = $this->process->getStdout();
+        $this->files[] = $file;
 
         // reserve a spot for stderr (future)
         $this->files[] = new ScriptHostFile();
-        //$this->stderr_fileidx = count($this->files)-1;
     }
 
     //public function getProcess() : \Flexio\IFace\Process
@@ -449,15 +448,25 @@ class ScriptHost
             return $this->context_files;
         }
 
+        $results = [];
+
         $files = $this->process->getFiles();
         foreach ($files as $k => $stream)
         {
-            $files[$k] = [ 'name' => $stream->getName(),
-                           'size' => $stream->getSize(),
-                           'mime_type' => $stream->getMimeType() ];
+            $file = new ScriptHostFile();
+            $file->stream = $stream;
+            $this->files[] = $file;
+            $handle = count($this->files)-1;
+
+            $results[] = array('handle' => $handle,
+                               'tag' => $k,
+                               'name' => $file->stream->getName(),
+                               'size' => $file->stream->getSize(),
+                               'is_table' => $file->stream->isTable(),
+                               'content_type' => $file->stream->getMimeType());
         }
 
-        $this->context_files = (object)$files;
+        $this->context_files = $results;
         return $this->context_files;
     }
 
@@ -613,73 +622,60 @@ class ScriptHost
 
     public $stream_cache = array();
 
-    private function __getInputStreamInfo(string $name) : ?array
+    public function func_getStreamInfo($handle) : ?array
     {
-        if ($name === '_fxstdin_')
-        {
-            $file = $this->files[$this->stdin_fileidx];
-            if ($file->stream === null)
-                $file->stream = $this->process->getStdin();
-
-            return array('handle' => $this->stdin_fileidx,
-                         'name' => '',
-                         'size' => $file->stream->getSize(),
-                         'is_table' => $file->stream->isTable(),
-                         'content_type' => $file->stream->getMimeType());
-        }
-        else if (substr($name, 0, 6) == 'files.')
-        {
-            $name = substr($name, 6);
-
-            $files = $this->process->getFiles();
-            if (isset($files[$name]))
-            {
-                $file = new ScriptHostFile();
-                $file->stream = $files[$name];
-                $this->files[] = $file;
-                $handle = count($this->files)-1;
-
-                return array('handle' => $handle,
-                             'name' => $name,
-                             'size' => $file->stream->getSize(),
-                             'is_table' => $file->stream->isTable(),
-                             'content_type' => $file->stream->getMimeType());
-            }
-        }
-
-        return null;
-    }
-
-    private function __getOutputStreamInfo(string $name) : ?array
-    {
-        if ($name === '_fxstdout_')
-        {
-            $file = $this->files[$this->stdout_fileidx];
-            if ($file->stream === null)
-                $file->stream = $this->process->getStdout();
-
-            return array('handle' => $this->stdout_fileidx,
-                         'name' => '',
-                         'size' => $file->stream->getSize(),
-                         'is_table' => $file->stream->isTable(),
-                         'content_type' => $file->stream->getMimeType());
-        }
-        else
-        {
+        if ($handle < 0 || $handle >= count($this->files))
             return null;
-        }
+
+        $file = $this->files[$handle];
+
+        return array('handle' => $handle,
+                     'name' => $file->stream->getName(),
+                     'size' => $file->stream->getSize(),
+                     'is_table' => $file->stream->isTable(),
+                     'content_type' => $file->stream->getMimeType());
     }
 
-
-    public function func_getInputStreamInfo(string $name) : ?array
+    public function func_setStreamInfo($handle, $properties) : bool
     {
-        return $this->__getInputStreamInfo($name);
+        if ($handle < 0 || $handle >= count($this->files))
+            return false;
+
+        if (!is_array($properties))
+            $properties = (array)$properties;
+
+        if (isset($properties['content_type']))
+            $properties['mime_type'] = $properties['content_type'];
+
+        $properties = \Flexio\Base\Util::filterArray($properties, ["name","mime_type"]);
+        $this->files[$handle]->stream->set($properties);
+
+        return true;
     }
 
     public function func_fsCreate(string $path, string $connection) : ?array
     {
         $stream = \Flexio\Base\Stream::create();
         $stream->setName($path);
+
+        $file = new ScriptHostFile();
+        $file->stream = $stream;
+        $file->writer = $stream->getWriter();
+
+        $this->files[] = $file;
+        $handle = count($this->files)-1;
+
+        return array('handle' => $handle,
+                     'name' => '',
+                     'size' => $file->stream->getSize(),
+                     'is_table' => $file->stream->isTable(),
+                     'content_type' => $file->stream->getMimeType());
+    }
+
+    public function func_fsCreateTempFile(string $path, string $connection) : ?array
+    {
+        $stream = \Flexio\Base\Stream::create();
+        $stream->setName('');
 
         $file = new ScriptHostFile();
         $file->stream = $stream;
@@ -771,6 +767,10 @@ class ScriptHost
         if ($stream_idx < 0 || $stream_idx >= count($this->files))
             return false;
 
+        $target_path = $stream->getName();
+        if (strlen($target_path) == 0)
+            return true; // temporary file
+
         $file = $this->files[$stream_idx];
         $file->reader = null;
         $file->writer = null;
@@ -781,9 +781,11 @@ class ScriptHost
         $vfs = new \Flexio\Services\Vfs($this->process->getOwner());
         $vfs->setProcess($this->process);
 
-        $files = $vfs->write($stream->getName(), function($length) use (&$reader) {
+        $files = $vfs->write($target_path, function($length) use (&$reader) {
             return $reader->read($length);
         });
+
+        return true;
     }
 
     public function func_fsExists(string $path) : bool
@@ -798,29 +800,6 @@ class ScriptHost
         $vfs = new \Flexio\Services\Vfs($this->process->getOwner());
         $vfs->setProcess($this->process);
         return $vfs->list($path);
-    }
-
-
-    public function func_getOutputStreamInfo(string $name) : ?array
-    {
-        return $this->__getOutputStreamInfo($name);
-    }
-
-    public function func_setOutputStreamInfo($idx, $properties) : bool
-    {
-        if ($idx < 0 || $idx >= count($this->files))
-            return false;
-
-        if (!is_array($properties))
-            $properties = (array)$properties;
-
-        if (isset($properties['content_type']))
-            $properties['mime_type'] = $properties['content_type'];
-
-        $properties = \Flexio\Base\Util::filterArray($properties, ["name","mime_type"]);
-        $this->files[$idx]->stream->set($properties);
-
-        return true;
     }
 
     public function func_managedCreate(int $stream_idx, $properties) : bool

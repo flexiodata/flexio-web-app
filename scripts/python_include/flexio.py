@@ -266,7 +266,7 @@ class Stream(object):
     @name.setter
     def name(self, value):
         self._name = value
-        proxy.invoke('setOutputStreamInfo', [self._handle, {'name':value}])
+        proxy.invoke('setStreamInfo', [self._handle, {'name':value}])
 
     @property
     def content_type(self):
@@ -275,7 +275,7 @@ class Stream(object):
     @content_type.setter
     def content_type(self, value):
         self._content_type = value
-        proxy.invoke('setOutputStreamInfo', [self._handle, {'content_type':value}])
+        proxy.invoke('setStreamInfo', [self._handle, {'content_type':value}])
 
     @property
     def size(self):
@@ -519,6 +519,12 @@ class ContextFs(object):
         info = proxy.invoke('fsCreate', [path, connection])
         stream = Stream(info)
         stream._need_commit = True
+        return 
+        
+    def create_tempfile(self):
+        info = proxy.invoke('fsCreateTempFile', [])
+        stream = Stream(info)
+        stream._need_commit = True
         return stream
 
     def open(self, path, mode='r', connection=''):
@@ -598,10 +604,9 @@ class Context(object):
     def files(self):
         if self._files is None:
             self._files = {}
-            fileinfo = proxy.invoke('getFilesParameters', [])
-            for key, value in fileinfo.items():
-                info  = proxy.invoke('getInputStreamInfo', [key])
-                self.files[key] = Stream(info)
+            fileinfos = proxy.invoke('getFilesParameters', [])
+            for fileinfo in fileinfos:
+                self.files[fileinfo['tag']] = Stream(fileinfo)
         return self._files
 
     @property
@@ -640,8 +645,8 @@ import builtins as __builtin__
 
 
 def create_context():
-    stdin_stream_info  = proxy.invoke('getInputStreamInfo', ['_fxstdin_'])
-    stdout_stream_info = proxy.invoke('getOutputStreamInfo', ['_fxstdout_'])
+    stdin_stream_info  = proxy.invoke('getStreamInfo', [0])
+    stdout_stream_info = proxy.invoke('getStreamInfo', [1])
 
     input_stream = Stream(stdin_stream_info)
     output_stream = Stream(stdout_stream_info)
