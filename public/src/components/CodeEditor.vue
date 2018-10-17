@@ -129,6 +129,7 @@
           mode: this.mode,
           gutters: this.lint ? ['CodeMirror-lint-markers'] : [],
           lint: this.lint,
+          indentUnit: this.lang == 'python' ? 4 : 2,
           extraKeys: {
             // indent with 4 spaces for python and 2 spaces for all other languages
             Tab: function(cm) {

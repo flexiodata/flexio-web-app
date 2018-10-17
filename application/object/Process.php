@@ -78,6 +78,15 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         if (!isset($properties))
             $properties = array();
 
+        // if the pipe info is set, make sure it's an object and then encode it as JSON for storage
+        if (isset($properties) && isset($properties['pipe_info']))
+        {
+            if (!is_array($properties['pipe_info']))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+
+            $properties['pipe_info'] = json_encode($properties['pipe_info']);
+        }
+
         // if the task is set, make sure it's an object and then encode it as JSON for storage
         if (isset($properties) && isset($properties['task']))
         {
@@ -119,6 +128,15 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
     public function set(array $properties) : \Flexio\Object\Process
     {
         // TODO: add properties check
+
+        // if the pipe info is set, make sure it's an object and then encode it as JSON for storage
+        if (isset($properties) && isset($properties['pipe_info']))
+        {
+            if (!is_array($properties['pipe_info']))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+            $properties['pipe_info'] = json_encode($properties['pipe_info']);
+        }
 
         // if the task is set, make sure it's an object and then encode it as JSON for storage
         if (isset($properties) && isset($properties['task']))
@@ -323,10 +341,24 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         if (!isset($mapped_properties['eid']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
+        // get the pipe info
+        $pipe_info = null;
+        if (isset($properties['pipe_info']))
+            $pipe_info = @json_decode($properties['pipe_info'],true);
+            if ($pipe_info === false)
+                $pipe_info = null;
+
         // expand the parent and owner info
         $mapped_properties['parent'] = array(
             'eid' => $properties['parent_eid'],
-            'eid_type' => \Model::TYPE_PIPE
+            'eid_type' => \Model::TYPE_PIPE,
+            'eid_status' => $pipe_info['eid_status'] ?? "",
+            'alias' => $pipe_info['alias'] ?? "",
+            'name' => $pipe_info['name'] ?? "",
+            'description' => $pipe_info['description'] ?? "",
+            'deploy_mode' => $pipe_info['deploy_mode'] ?? "",
+            'created' => $pipe_info['created'] ?? "",
+            'updated' => $pipe_info['updated'] ?? ""
         );
         $mapped_properties['owned_by'] = array(
             'eid' => $properties['owned_by'],

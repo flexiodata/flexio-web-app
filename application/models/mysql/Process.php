@@ -23,6 +23,7 @@ class Process extends ModelBase
         if (($validator->check($params, array(
                 'eid_status'     => array('type' => 'string', 'required' => false, 'default' => \Model::STATUS_AVAILABLE),
                 'parent_eid'     => array('type' => 'string', 'required' => false, 'default' => ''),
+                'pipe_info'      => array('type' => 'string', 'required' => false, 'default' => '{}'),
                 'process_mode'   => array('type' => 'string', 'required' => false, 'default' => ''),
                 'process_hash'   => array('type' => 'string', 'required' => false, 'default' => ''),
                 'impl_revision'  => array('type' => 'string', 'required' => false, 'default' => ''),
@@ -104,6 +105,7 @@ class Process extends ModelBase
         if (($validator->check($params, array(
                 'eid_status'     => array('type' => 'string', 'required' => false),
                 'parent_eid'     => array('type' => 'string', 'required' => false),
+                'pipe_info'      => array('type' => 'string', 'required' => false),
                 'process_mode'   => array('type' => 'string', 'required' => false),
                 'process_hash'   => array('type' => 'string', 'required' => false),
                 'impl_revision'  => array('type' => 'string', 'required' => false),
@@ -263,6 +265,7 @@ class Process extends ModelBase
                               'eid_type'         => \Model::TYPE_PROCESS,
                               'eid_status'       => $row['eid_status'],
                               'parent_eid'       => $row['parent_eid'],
+                              'pipe_info'        => $row['pipe_info'],
                               'process_mode'     => $row['process_mode'],
                               'impl_revision'    => $row['impl_revision'],
                               'task'             => $row['task'],

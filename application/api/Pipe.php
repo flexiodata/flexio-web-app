@@ -340,6 +340,7 @@ class Pipe
         $pipe_properties = $pipe->get();
         $process_properties = array(
             'parent_eid' => $pipe_properties['eid'],
+            'pipe_info' => $pipe_properties,
             'task' => $pipe_properties['task'],
             'owned_by' => $pipe_properties['owned_by']['eid'], // same as $owner_user_eid
             'created_by' => $requesting_user_eid

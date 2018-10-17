@@ -214,6 +214,8 @@ class Test
                 "eid" : null,
                 "eid_type" : null
             },
+            "pipe_info" : {
+            },
             "process_mode": null,
             "task" : [
             ],

@@ -61,6 +61,7 @@ class Test
             'eid_type' => \Model::TYPE_PROCESS,
             'eid_status' => \Model::STATUS_AVAILABLE,
             'parent_eid' => '',
+            'pipe_info' => '{}',
             'process_mode' => '',
             'impl_revision' => '',
             'input' => '{}',
