@@ -7,13 +7,9 @@
       </div>
     </div>
 
-    <div class="ph4">
-      <div class="flex flex-row items-start mb1" v-for="(val, key) in trimmed_process">
-        <div class="ttu fw6 moon-gray" style="width: 150px">{{key}}</div>
-        <pre class="flex-fill mt0 code f7 overflow-x-auto">{{val}}&nbsp;</pre>
-      </div>
-    </div>
+    <JsonDetailsPanel :json="process_trimmed" v-if="process" />
 
+    <h4 class="f8 fw6 ttu moon-gray mb1 mt4 pb1">Process Content</h4>
     <ProcessContent :processEid="processEid" />
 
     <div class="mt4 w-100 flex flex-row justify-end" v-if="showFooter">
@@ -29,6 +25,7 @@
 </template>
 
 <script>
+  import JsonDetailsPanel from './JsonDetailsPanel.vue'
   import ProcessContent from './ProcessContent.vue'
 
   export default {
@@ -51,6 +48,7 @@
       }
     },
     components: {
+      JsonDetailsPanel,
       ProcessContent
     },
     computed: {
@@ -60,7 +58,7 @@
       process() {
         return _.get(this.$store, 'state.objects.' + this.processEid)
       },
-      trimmed_process() {
+      process_trimmed() {
         return _.omit(this.process, ['is_fetched', 'is_fetching'])
       },
       pipe_name() {
