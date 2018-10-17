@@ -6,8 +6,9 @@
   >
     <div class="flex flex-row items-center" :class="isHeader ? 'th' : 'td'">
       <div
-        class="flex-none"
+        class="flex-none cursor-default"
         style="padding: 16px 10px"
+        @click.stop
         v-if="showSelectionCheckbox"
       >
         <el-checkbox
