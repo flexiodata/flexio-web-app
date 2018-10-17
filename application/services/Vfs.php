@@ -427,7 +427,11 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         if ($service_identifier_len !== false)
         {
             $service_identifier_len += 3;
-            $rpath_start = 0; // url remote paths include the protocol and the ://
+
+            if (substr($path, 0, 8) == 'context:')
+                $rpath_start = 9;
+                 else
+                $rpath_start = 0; // url remote paths include the protocol and the ://
         }
          else
         {

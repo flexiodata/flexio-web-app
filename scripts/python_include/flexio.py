@@ -36,7 +36,7 @@ class CallProxy(object):
             "id": call_id
         }
 
-        moniker = '~' + call_id + '/bin.b64:'
+        moniker = '~' + call_id + '/'
         self.convert_binary_to_base64(payload['params'], moniker)
 
         self.socket.send(json.dumps(payload).encode())
@@ -69,7 +69,9 @@ class CallProxy(object):
             for key, value in var.items():
                 var[key] = self.convert_binary_to_base64(var[key], moniker)
         elif isinstance(var, (bytes, bytearray)):
-            return moniker + base64.b64encode(var).decode()
+            return moniker + 'bin.b64:' + base64.b64encode(var).decode()
+        elif isinstance(var, object) and getattr(var, '_handle', None) is not None:
+            return moniker + 'stream:' + str(var._handle)
         return var
 
     def convert_base64_to_binary(self, var, moniker):
@@ -80,8 +82,8 @@ class CallProxy(object):
         elif isinstance(var, dict):
             for key, value in var.items():
                 var[key] = self.convert_base64_to_binary(var[key], moniker)
-        elif isinstance(var, str) and var[:moniker_len] == moniker:
-            return base64.b64decode(var[moniker_len:].encode())
+        elif isinstance(var, str) and var[:moniker_len+8] == moniker + 'bin.b64:':
+            return base64.b64decode(var[moniker_len+8:].encode())
         return var
 
 
