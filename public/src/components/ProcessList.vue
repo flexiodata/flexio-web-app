@@ -10,7 +10,7 @@
         type="index"
         fixed
         :index="getIndex"
-        v-if="has_start"
+        v-if="has_start && false"
       />
 
       <el-table-column
@@ -18,9 +18,28 @@
         label="Process ID"
         fixed
         :min-width="120"
+        v-if="false"
       >
         <template slot-scope="scope">
           <span class="code f7 bg-white br2 ba b--black-10" style="padding: 3px 6px">{{scope.row.eid}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="parent.name"
+        label="Pipe Name"
+        fixed
+        :min-width="200"
+      >
+        <template slot-scope="scope">
+          <em class="light-silver" v-if="!hasPipeEid(scope.row)">
+            (Anonymous Pipe)
+          </em>
+          <router-link class="i light-silver" :to="getPipeRoute(scope.row)" v-else-if="!hasPipeName(scope.row)">
+            (No name)
+          </router-link>
+          <router-link class="blue" :to="getPipeRoute(scope.row)" v-else>
+            <div class="truncate">{{scope.row.parent.name}}</div>
+          </router-link>
         </template>
       </el-table-column>
       <el-table-column
@@ -148,6 +167,15 @@
         }
 
         return ''
+      },
+      hasPipeEid(row) {
+        return _.get(row, 'parent.eid', '').length > 0
+      },
+      hasPipeName(row) {
+        return _.get(row, 'parent.name', '').length > 0
+      },
+      getPipeRoute(row) {
+        return '/pipes/' + _.get(row, 'parent.eid')
       },
       getIndex(idx) {
         return idx + this.start + 1
