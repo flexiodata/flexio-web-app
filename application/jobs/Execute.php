@@ -331,6 +331,7 @@ class ExecuteProxy
             }
         });
 
+
         // make function call
         if (!is_array($args))
             $args = [ $args ];
@@ -341,13 +342,13 @@ class ExecuteProxy
         {
             array_walk_recursive($retval, function(&$v, $k) use ($moniker, $moniker_len) {
                 if ($v instanceof BinaryData)
-                    $v = $moniker . base64_encode($v->data);
+                    $v = $moniker . 'bin.b64:' . base64_encode($v->data);
             });
         }
          else
         {
             if ($retval instanceof BinaryData)
-                $retval = $moniker . base64_encode($retval->data);
+                $retval = $moniker . 'bin.b64:' . base64_encode($retval->data);
         }
 
 
