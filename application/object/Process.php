@@ -323,7 +323,6 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "eid_type" => null,
                 "eid_status" =>  null,
                 "parent" => null,
-                "pipe_info" => null,
                 "process_mode" => null,
                 "task" => null,
                 "started_by" => null,
@@ -342,17 +341,8 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         if (!isset($mapped_properties['eid']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-        // expand the parent and owner info
-        $mapped_properties['parent'] = array(
-            'eid' => $properties['parent_eid'],
-            'eid_type' => \Model::TYPE_PIPE
-        );
-        $mapped_properties['owned_by'] = array(
-            'eid' => $properties['owned_by'],
-            'eid_type' => \Model::TYPE_USER
-        );
-
-        // unpack the pipe info
+        // get the pipe info
+        $pipe_info = false;
         if (isset($mapped_properties['pipe_info']))
         {
             $pipe_info = @json_decode($mapped_properties['pipe_info'],true);
@@ -362,6 +352,23 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 $mapped_properties['pipe_info'] = $mapped_properties['pipe_info'];
             }
         }
+
+        // expand the parent and owner info
+        $mapped_properties['parent'] = array(
+            'eid' => $properties['parent_eid'],
+            'eid_type' => \Model::TYPE_PIPE,
+            'eid_status' => $pipe_info['eid_status'] ?? "",
+            'alias' => $pipe_info['alias'] ?? "",
+            'name' => $pipe_info['name'] ?? "",
+            'description' => $pipe_info['description'] ?? "",
+            'deploy_mode' => $pipe_info['deploy_mode'] ?? "",
+            'created' => $pipe_info['created'] ?? "",
+            'updated' => $pipe_info['updated'] ?? ""
+        );
+        $mapped_properties['owned_by'] = array(
+            'eid' => $properties['owned_by'],
+            'eid_type' => \Model::TYPE_USER
+        );
 
         // unpack the primary process task json
         if (isset($mapped_properties['task']))
