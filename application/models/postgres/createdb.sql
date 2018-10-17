@@ -218,6 +218,7 @@ CREATE TABLE tbl_process (
   eid varchar(12) NOT NULL default '',
   eid_status varchar(1) NOT NULL default '',
   parent_eid varchar(12) NOT NULL default '',
+  pipe_info json,
   process_mode varchar(1) NOT NULL default '',
   process_hash varchar(40) NOT NULL default '',
   impl_revision varchar(40) NOT NULL default '',

@@ -78,6 +78,15 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         if (!isset($properties))
             $properties = array();
 
+        // if the pipe info is set, make sure it's an object and then encode it as JSON for storage
+        if (isset($properties) && isset($properties['pipe_info']))
+        {
+            if (!is_array($properties['pipe_info']))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+
+            $properties['pipe_info'] = json_encode($properties['pipe_info']);
+        }
+
         // if the task is set, make sure it's an object and then encode it as JSON for storage
         if (isset($properties) && isset($properties['task']))
         {
@@ -305,6 +314,7 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "eid_type" => null,
                 "eid_status" =>  null,
                 "parent" => null,
+                "pipe_info" => null,
                 "process_mode" => null,
                 "task" => null,
                 "started_by" => null,
@@ -332,6 +342,17 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             'eid' => $properties['owned_by'],
             'eid_type' => \Model::TYPE_USER
         );
+
+        // unpack the pipe info
+        if (isset($mapped_properties['pipe_info']))
+        {
+            $pipe_info = @json_decode($mapped_properties['pipe_info'],true);
+            if ($pipe_info !== false)
+            {
+                $mapped_properties['pipe_info'] = $pipe_info;
+                $mapped_properties['pipe_info'] = $mapped_properties['pipe_info'];
+            }
+        }
 
         // unpack the primary process task json
         if (isset($mapped_properties['task']))

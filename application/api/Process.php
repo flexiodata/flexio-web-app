@@ -98,6 +98,9 @@ class Process
             $process_params['owned_by'] = $pipe->getOwner();
             $process_params['created_by'] = $requesting_user_eid;
 
+            // save the pipe info
+            $process_params['pipe_info'] = $pipe->get();
+
             // use the task of the parent, unless a task is specified directly,
             // in which case use the task that's specified to allow runtime
             // parameters to be set on the pipe that override the pipe variables
