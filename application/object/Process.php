@@ -129,6 +129,15 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
     {
         // TODO: add properties check
 
+        // if the pipe info is set, make sure it's an object and then encode it as JSON for storage
+        if (isset($properties) && isset($properties['pipe_info']))
+        {
+            if (!is_array($properties['pipe_info']))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+            $properties['pipe_info'] = json_encode($properties['pipe_info']);
+        }
+
         // if the task is set, make sure it's an object and then encode it as JSON for storage
         if (isset($properties) && isset($properties['task']))
         {
