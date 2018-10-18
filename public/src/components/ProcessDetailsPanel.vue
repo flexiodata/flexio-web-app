@@ -66,6 +66,12 @@
       JsonDetailsPanel,
       ProcessContent
     },
+    watch: {
+      processEid() {
+        this.active_tab_name = 'details'
+        this.$store.dispatch('fetchProcess', { eid: this.processEid })
+      }
+    },
     data() {
       return {
         active_tab_name: 'details'
