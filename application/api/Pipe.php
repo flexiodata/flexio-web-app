@@ -342,6 +342,7 @@ class Pipe
             'parent_eid' => $pipe_properties['eid'],
             'pipe_info' => $pipe_properties,
             'task' => $pipe_properties['task'],
+            'triggered_by' => \Model::PROCESS_TRIGGERED_API,
             'owned_by' => $pipe_properties['owned_by']['eid'], // same as $owner_user_eid
             'created_by' => $requesting_user_eid
         );

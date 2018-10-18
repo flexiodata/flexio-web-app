@@ -72,6 +72,7 @@ class Trigger
             'parent_eid' => $pipe_properties['eid'],
             'pipe_info' => $pipe_properties,
             'task' => $pipe_properties['task'],
+            'triggered_by' => \Model::PROCESS_TRIGGERED_EMAIL,
             'owned_by' => $pipe_properties['owned_by']['eid'],
             'created_by' => $pipe_properties['owned_by']['eid'] // TODO: we need to determine user based on email (e.g. owner, or public)
         );

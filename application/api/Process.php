@@ -117,6 +117,7 @@ class Process
         }
 
         // create a new process job with the default task
+        $process_params['triggered_by'] = \Model::PROCESS_TRIGGERED_API;
         $process = \Flexio\Object\Process::create($process_params);
 
         // if the process is created from a pipe, it runs with pipe owner privileges
