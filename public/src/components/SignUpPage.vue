@@ -18,14 +18,7 @@
 
   export default {
     metaInfo: {
-      title: 'Sign Up for Flex.io Serverless Functions Today',
-      meta: [
-        {
-          vmid: 'description',
-          name: 'description',
-          content: 'Flex.io enables you to stitch together serverless functions with out-of-the-box helper tasks that take the pain out of OAuth, notifications, scheduling, local storage, library dependencies and other "glue" code.'
-        }
-      ]
+      title: 'Sign Up for Flex.io Serverless Functions Today'
     },
     mixins: [MixinConfig, MixinRedirect],
     components: {
