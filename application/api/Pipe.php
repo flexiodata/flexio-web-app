@@ -336,13 +336,20 @@ class Pipe
         if ($pipe->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_EXECUTE) === false)
              throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
+        // if the process is created with a request from an api token, it's
+        // triggered with an api; if there's no api token, it's triggered
+        // from a web session, in which case it's triggered by the UI;
+        // TODO: this will work until we allow processes to be created from
+        // public pipes that don't require a token
+        $triggered_by = strlen($request->getToken()) > 0 ? \Model::PROCESS_TRIGGERED_API : \Model::PROCESS_TRIGGERED_INTERFACE;
+
         // create a new process
         $pipe_properties = $pipe->get();
         $process_properties = array(
             'parent_eid' => $pipe_properties['eid'],
             'pipe_info' => $pipe_properties,
             'task' => $pipe_properties['task'],
-            'triggered_by' => \Model::PROCESS_TRIGGERED_API,
+            'triggered_by' => $triggered_by,
             'owned_by' => $pipe_properties['owned_by']['eid'], // same as $owner_user_eid
             'created_by' => $requesting_user_eid
         );
