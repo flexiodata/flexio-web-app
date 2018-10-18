@@ -13,15 +13,15 @@
     >
       <el-tab-pane name="details" label="Process info">
         <JsonDetailsPanel
-          class="pa4 overflow-y-auto"
-          style="margin: -15px; max-height: 598px"
+          class="overflow-y-auto"
+          style="margin: -15px; padding: 20px; max-height: 540px"
           :json="process_trimmed"
           v-if="process"
         />
       </el-tab-pane>
       <el-tab-pane name="output" label="Output">
         <ProcessContent
-          style="margin: -16px"
+          class="pa1"
           :processEid="processEid"
         />
       </el-tab-pane>
