@@ -73,7 +73,7 @@
     <!-- list -->
     <ProcessList
       class="center w-100 pl4-l pr4-l pb4-l"
-      style="max-width: 1280px"
+      style="max-width: 1280px; padding-bottom: 8rem""
       :items="output_processes"
       :start="start"
       :limit="page_size"

@@ -22,7 +22,10 @@
         <p class="mt0 mb4 pv3 lh-copy">{{description}}</p>
       </div>
     </div>
-    <div class="center mw-builder-doc" style="padding-bottom: 8rem">
+    <div
+      class="center mw-builder-doc"
+      style="padding-bottom: 8rem"
+    >
       <BuilderList
         class="flex-fill"
         builder-mode="wizard"

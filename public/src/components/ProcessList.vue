@@ -44,14 +44,14 @@
       </el-table-column>
       <el-table-column
         prop="started"
-        label="Started"
+        label="Started (UTC)"
         :min-width="160"
         :sortable="true"
         :formatter="fmtDate"
       />
       <el-table-column
         prop="finished"
-        label="Finished"
+        label="Finished (UTC)"
         :min-width="160"
         :sortable="true"
         :formatter="fmtDate"

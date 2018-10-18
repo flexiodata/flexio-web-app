@@ -40,7 +40,6 @@
         @delete="onItemDelete"
       />
     </transition-group>
-    <div class="h4"></div>
   </div>
 </template>
 
