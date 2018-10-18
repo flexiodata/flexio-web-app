@@ -211,10 +211,15 @@ class Test
             "eid_type" : null,
             "eid_status" : null,
             "parent" : {
-                "eid" : null,
-                "eid_type" : null
-            },
-            "pipe_info" : {
+                "eid": null,
+                "eid_type": null,
+                "eid_status": null,
+                "alias": null,
+                "name": null,
+                "description": null,
+                "deploy_mode": null,
+                "created": null,
+                "updated": null
             },
             "process_mode": null,
             "task" : [
