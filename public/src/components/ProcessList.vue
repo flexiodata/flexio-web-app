@@ -64,11 +64,8 @@
       >
         <template slot-scope="scope">
           <div class="flex flex-row items-center lh-copy">
-            <i class="material-icons md-21" v-if="scope.row.triggered_by == 'S'">schedule</i>
-            <i class="material-icons md-21" v-else-if="scope.row.triggered_by == 'A'">code</i>
-            <i class="material-icons md-21" v-else-if="scope.row.triggered_by == 'E'">email</i>
-            <i class="material-icons md-21" v-else-if="scope.row.triggered_by == 'I'">offline_bolt</i>
-            <span class="ml1">{{fmtTriggeredBy(scope.row.triggered_by)}}</span>
+            <i class="material-icons md-21">{{getTriggerIcon(scope.row.triggered_by, scope.row.process_mode)}}</i>
+            <span class="ml1">{{getTriggerText(scope.row.triggered_by, scope.row.process_mode)}}</span>
           </div>
         </template>
       </el-table-column>
@@ -86,7 +83,7 @@
             <i class="el-icon-error dark-red" v-else-if="scope.row.process_status == 'X'"></i>
             <i class="el-icon-loading blue" v-else-if="scope.row.process_status == 'R'"></i>
             <i class="el-icon-info blue" v-else></i>
-            <span class="ml1">{{fmtProcessStatus(scope.row.process_status)}}</span>
+            <span class="ml1">{{getProcessText(scope.row.process_status)}}</span>
           </div>
         </template>
       </el-table-column>
@@ -172,7 +169,7 @@
       fmtDuration(row, col, val, idx) {
         return val ? val.toFixed(2) + ' seconds' : '--'
       },
-      fmtProcessStatus(status) {
+      getProcessText(status) {
         switch (status) {
           case ps.PROCESS_STATUS_PENDING   : return 'Pending'
           case ps.PROCESS_STATUS_WAITING   : return 'Waiting'
@@ -185,12 +182,32 @@
 
         return '--'
       },
-      fmtTriggeredBy(trigger) {
-        switch (trigger) {
+      getTriggerIcon(triggered_by, process_mode) {
+        switch (triggered_by) {
+          case ps.PROCESS_TRIGGERED_API       : return 'code'
+          case ps.PROCESS_TRIGGERED_EMAIL     : return 'email'
+          case ps.PROCESS_TRIGGERED_SCHEDULER : return 'schedule'
+          case ps.PROCESS_TRIGGERED_INTERFACE :
+            if (process_mode == ps.PROCESS_MODE_BUILD) {
+              return 'storage'
+            } else if (process_mode == ps.PROCESS_MODE_RUN) {
+              return 'offline_bolt'
+            }
+        }
+
+        return ''
+      },
+      getTriggerText(triggered_by, process_mode) {
+        switch (triggered_by) {
           case ps.PROCESS_TRIGGERED_API       : return 'API Endpoint'
           case ps.PROCESS_TRIGGERED_EMAIL     : return 'Email'
           case ps.PROCESS_TRIGGERED_SCHEDULER : return 'Scheduler'
-          case ps.PROCESS_TRIGGERED_INTERFACE : return 'Web Interface'
+          case ps.PROCESS_TRIGGERED_INTERFACE :
+            if (process_mode == ps.PROCESS_MODE_BUILD) {
+              return 'Builder Test'
+            } else if (process_mode == ps.PROCESS_MODE_RUN) {
+              return 'Web Interface'
+            }
         }
 
         return '--'
