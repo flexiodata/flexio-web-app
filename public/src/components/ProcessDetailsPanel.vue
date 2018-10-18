@@ -8,20 +8,21 @@
     </div>
 
     <el-tabs
-      type="border-card"
+      class="el-tabs--flush-header"
+      type="card"
       v-model="active_tab_name"
     >
       <el-tab-pane name="details" label="Process info">
         <JsonDetailsPanel
-          class="overflow-y-auto"
-          style="margin: -15px; padding: 20px; max-height: 540px"
+          class="ba b--black-10 pa3 overflow-y-auto"
+          style="margin-top: -1px; max-height: 540px"
           :json="process_trimmed"
           v-if="process"
         />
       </el-tab-pane>
       <el-tab-pane name="output" label="Output">
         <ProcessContent
-          class="pa1"
+          style="margin-top: -1px"
           :processEid="processEid"
         />
       </el-tab-pane>
