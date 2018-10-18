@@ -66,6 +66,7 @@ class Test
             'input' => '{}',
             'output' => '{}',
             'task' => '{}',
+            'triggered_by' => '',
             'started_by' => '',
             'started' => null,
             'finished' => null,

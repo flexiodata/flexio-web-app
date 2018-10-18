@@ -224,6 +224,7 @@ class Test
             "process_mode": null,
             "task" : [
             ],
+            "triggered_by" : null,
             "started_by" : null,
             "started" : null,
             "finished" : null,

@@ -325,6 +325,7 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "parent" => null,
                 "process_mode" => null,
                 "task" => null,
+                "triggered_by" => null,
                 "started_by" => null,
                 "started" => null,
                 "finished" => null,
