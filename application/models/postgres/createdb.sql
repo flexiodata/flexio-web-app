@@ -220,8 +220,6 @@ CREATE TABLE tbl_process (
   parent_eid varchar(12) NOT NULL default '',
   pipe_info json,
   process_mode varchar(1) NOT NULL default '',
-  process_hash varchar(40) NOT NULL default '',
-  impl_revision varchar(40) NOT NULL default '',
   task json,
   input json,
   output json,
@@ -242,7 +240,6 @@ CREATE TABLE tbl_process (
 
 CREATE INDEX idx_process_eid ON tbl_process (eid);
 CREATE INDEX idx_process_parent_eid ON tbl_process (parent_eid);
-CREATE INDEX idx_process_process_hash ON tbl_process (process_hash);
 CREATE INDEX idx_process_triggered_by ON tbl_process (triggered_by);
 CREATE INDEX idx_process_owned_by ON tbl_process (owned_by);
 CREATE INDEX idx_process_created ON tbl_process (created);

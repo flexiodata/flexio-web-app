@@ -63,7 +63,6 @@ class Test
             'parent_eid' => '',
             'pipe_info' => '{}',
             'process_mode' => '',
-            'impl_revision' => '',
             'input' => '{}',
             'output' => '{}',
             'task' => '{}',
