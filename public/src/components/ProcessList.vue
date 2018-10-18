@@ -57,9 +57,26 @@
         :formatter="fmtDate"
       />
       <el-table-column
+        prop="triggered_by"
+        label="Trigger"
+        :width="160"
+        :sortable="true"
+      >
+        <template slot-scope="scope">
+          <div class="flex flex-row items-center lh-copy">
+            <i class="material-icons md-21" v-if="scope.row.triggered_by == 'S'">schedule</i>
+            <i class="material-icons md-21" v-else-if="scope.row.triggered_by == 'A'">code</i>
+            <i class="material-icons md-21" v-else-if="scope.row.triggered_by == 'E'">email</i>
+            <i class="material-icons md-21" v-else-if="scope.row.triggered_by == 'I'">offline_bolt</i>
+            <span class="ml1">{{fmtTriggeredBy(scope.row.triggered_by)}}</span>
+          </div>
+        </template>
+      </el-table-column>
+
+      <el-table-column
         prop="process_status"
         label="Status"
-        :width="120"
+        :width="110"
         :sortable="true"
       >
         <template slot-scope="scope">
@@ -69,7 +86,7 @@
             <i class="el-icon-error dark-red" v-else-if="scope.row.process_status == 'X'"></i>
             <i class="el-icon-loading blue" v-else-if="scope.row.process_status == 'R'"></i>
             <i class="el-icon-info blue" v-else></i>
-            <span class="ml2">{{fmtProcessStatus(scope.row.process_status)}}</span>
+            <span class="ml1">{{fmtProcessStatus(scope.row.process_status)}}</span>
           </div>
         </template>
       </el-table-column>
@@ -155,7 +172,7 @@
       fmtDuration(row, col, val, idx) {
         return val ? val.toFixed(2) + ' seconds' : '--'
       },
-      fmtProcessStatus: (status) => {
+      fmtProcessStatus(status) {
         switch (status) {
           case ps.PROCESS_STATUS_PENDING   : return 'Pending'
           case ps.PROCESS_STATUS_WAITING   : return 'Waiting'
@@ -166,7 +183,17 @@
           case ps.PROCESS_STATUS_COMPLETED : return 'Completed'
         }
 
-        return ''
+        return '--'
+      },
+      fmtTriggeredBy(trigger) {
+        switch (trigger) {
+          case ps.PROCESS_TRIGGERED_API       : return 'API Endpoint'
+          case ps.PROCESS_TRIGGERED_EMAIL     : return 'Email'
+          case ps.PROCESS_TRIGGERED_SCHEDULER : return 'Scheduler'
+          case ps.PROCESS_TRIGGERED_INTERFACE : return 'Web Interface'
+        }
+
+        return '--'
       },
       hasPipeEid(row) {
         return _.get(row, 'parent.eid', '').length > 0
