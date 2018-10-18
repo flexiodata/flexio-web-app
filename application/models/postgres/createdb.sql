@@ -225,6 +225,7 @@ CREATE TABLE tbl_process (
   task json,
   input json,
   output json,
+  triggered_by varchar(1) NOT NULL default '',
   started_by varchar(12) NOT NULL default '',
   started timestamp NULL default NULL,
   finished timestamp NULL default NULL,
@@ -242,6 +243,7 @@ CREATE TABLE tbl_process (
 CREATE INDEX idx_process_eid ON tbl_process (eid);
 CREATE INDEX idx_process_parent_eid ON tbl_process (parent_eid);
 CREATE INDEX idx_process_process_hash ON tbl_process (process_hash);
+CREATE INDEX idx_process_triggered_by ON tbl_process (triggered_by);
 CREATE INDEX idx_process_owned_by ON tbl_process (owned_by);
 CREATE INDEX idx_process_created ON tbl_process (created);
 
