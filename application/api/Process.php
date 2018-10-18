@@ -431,6 +431,7 @@ class Process
             $process_info_subset['eid_type'] = $process_info['eid_type'];
             $process_info_subset['eid_status'] = $process_info['eid_status'];
             $process_info_subset['parent'] = $process_info['parent'] ?? null;
+            $process_info_subset['triggered_by'] = $process_info['triggered_by'];
             $process_info_subset['started_by'] = $process_info['started_by'];
             $process_info_subset['started'] = $process_info['started'];
             $process_info_subset['finished'] = $process_info['finished'];
