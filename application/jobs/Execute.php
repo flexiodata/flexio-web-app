@@ -833,6 +833,13 @@ class ScriptHost
         return $vfs->exists($path);
     }
 
+    public function func_fsRemove(string $path) : bool
+    {
+        $vfs = new \Flexio\Services\Vfs($this->process->getOwner());
+        $vfs->setProcess($this->process);
+        return $vfs->unlink($path);
+    }
+
     public function func_fsList(string $path, string $connection)
     {
         $vfs = new \Flexio\Services\Vfs($this->process->getOwner());

@@ -72,6 +72,8 @@ def flex_handler(flex):
 
     flex.fs.write(filename, value)
     check = flex.fs.read(filename)
+    flex.fs.remove(filename)
+    
     flex.output.write('passed' if check == value else 'failed')
 EOD;
 
@@ -93,6 +95,7 @@ def flex_handler(flex):
 
     flex.fs.write(filename, value)
     check = flex.fs.read(filename)
+    flex.fs.remove(filename)
     flex.output.write('passed' if check == value else 'failed')
 EOD;
 
@@ -120,6 +123,9 @@ def flex_handler(flex):
         check += c
         if len(c) == 0:
             break
+
+    f.close()
+    flex.fs.remove(filename)
 
     flex.output.write('passed' if check == value else 'failed')
 EOD;
@@ -149,6 +155,9 @@ def flex_handler(flex):
         if len(c) == 0:
             break
 
+    f.close()
+    flex.fs.remove(filename)
+    
     flex.output.write('passed' if check == value else 'failed')
 EOD;
 
@@ -180,6 +189,8 @@ def flex_handler(flex):
         check += c
         if len(c) == 0:
             break
+    f.close()
+    flex.fs.remove(filename)
 
     flex.output.write('passed' if check == value else 'failed')
 EOD;
