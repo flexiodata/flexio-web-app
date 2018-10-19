@@ -64,7 +64,7 @@
       >
         <template slot-scope="scope">
           <div class="flex flex-row items-center lh-copy">
-            <i class="material-icons md-21">{{getTriggerIcon(scope.row.triggered_by, scope.row.process_mode)}}</i>
+            <i class="material-icons md-20">{{getTriggerIcon(scope.row.triggered_by, scope.row.process_mode)}}</i>
             <span class="ml1">{{getTriggerText(scope.row.triggered_by, scope.row.process_mode)}}</span>
           </div>
         </template>
