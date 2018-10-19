@@ -95,6 +95,7 @@
       <ProcessDetailsPanel
         :process-eid="edit_process_eid"
         @close="show_process_details_dialog = false"
+        v-bind="$attrs"
       />
     </el-dialog>
   </div>
