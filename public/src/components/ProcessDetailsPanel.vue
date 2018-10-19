@@ -117,12 +117,14 @@
       fetchProcess() {
         this.active_tab_name = 'process'
 
-        this.$store.dispatch('fetchProcess', { eid: this.processEid }).then(response => {
-          var user_eid = _.get(response.body, 'owned_by.eid', '')
-          if (this.showUser && user_eid.length > 0) {
-            this.$store.dispatch('fetchUser', { eid: user_eid })
-          }
-        })
+        // query the owner if we have their eid
+        var process = _.get(this.$store, 'state.objects.' + this.processEid)
+        var user_eid = _.get(process, 'owned_by.eid', '')
+        if (this.showUser && user_eid.length > 0) {
+          this.$store.dispatch('fetchUser', { eid: user_eid })
+        }
+
+        this.$store.dispatch('fetchProcess', { eid: this.processEid })
       },
       onClose() {
         this.$emit('close')
