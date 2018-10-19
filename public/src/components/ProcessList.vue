@@ -46,7 +46,7 @@
       <el-table-column
         prop="triggered_by"
         label="Trigger"
-        :width="155"
+        :width="160"
         :sortable="true"
       >
         <template slot-scope="scope">
@@ -60,7 +60,7 @@
       <el-table-column
         prop="process_status"
         label="Status"
-        :width="135"
+        :width="140"
         :sortable="true"
       >
         <template slot-scope="scope">
@@ -92,13 +92,13 @@
         prop="duration"
         label="Duration"
         align="right"
-        :width="110"
+        :width="115"
         :sortable="true"
         :formatter="fmtDuration"
       />
       <el-table-column
         align="right"
-        :width="90"
+        :width="85"
       >
         <template slot-scope="scope">
           <el-button
@@ -107,7 +107,7 @@
             style="padding: 0"
             @click="$emit('details-click', scope.row.eid)"
           >
-            Details...
+            Details
           </el-button>
         </template>
       </el-table-column>
