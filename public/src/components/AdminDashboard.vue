@@ -1,11 +1,12 @@
 <template>
   <div class="bg-white">
     <!-- list -->
-    <AppActivity class="h-100" :items="processes" />
+    <AppActivity class="h-100" :items="processes" :show-user="true" />
   </div>
 </template>
 
 <script>
+  import moment from 'moment'
   import api from '../api'
   import AppActivity from './AppActivity.vue'
 
@@ -19,7 +20,10 @@
       }
     },
     mounted() {
-      api.fetchAdminProcesses({ attrs: { created_min: '20181018' } }).then(response => {
+      var last_week = moment().subtract(1, 'weeks')
+      var created_min = last_week.format('YYYYMMDD')
+
+      api.fetchAdminProcesses({ attrs: { created_min } }).then(response => {
         this.processes = response.body
       })
     }

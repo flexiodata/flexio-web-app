@@ -81,6 +81,7 @@
       :limit="page_size"
       @sort-change="sortBy"
       @details-click="openProcessDetailsDialog"
+      v-bind="$attrs"
     />
 
     <!-- process details dialog -->
@@ -138,6 +139,7 @@
     metaInfo: {
       title: 'Activity'
     },
+    inheritAttrs: false,
     props: {
       items: {
         type: Array

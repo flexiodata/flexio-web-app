@@ -11,6 +11,7 @@
         prop="owned_by.eid"
         label="User ID"
         fixed
+        v-if="showUser"
       >
         <template slot-scope="scope">
           <span class="code bg-white br2 ba b--black-10" style="padding: 3px 6px">{{getUserEid(scope.row)}}</span>
@@ -126,6 +127,10 @@
       limit: {
         type: Number,
         default: 50
+      },
+      showUser: {
+        type: Boolean,
+        default: false
       }
     },
     computed: {
