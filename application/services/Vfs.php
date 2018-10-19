@@ -164,10 +164,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         {
             if ($this->root_connection_identifier === null)
             {
-                $full_path = '/' . $connection_identifier;
-                if (strlen($full_path) == 0 || substr($full_path, -1) != '/')
-                    $full_path .= '/';
-                $full_path .= ltrim($entry['path'],'/');
+                $full_path = $connection_identifier . ':/' . ltrim($entry['path'],'/');
             }
              else
             {
@@ -176,16 +173,24 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
                     $full_path = '/' . $full_path;
             }
 
-            $results[] = array(
+            $item = array(
                 'name' => $entry['name'],
-                'path' =>  $full_path,
-                'remote_path' =>  $entry['path'],
+                'path' =>  $entry['path'],
+                'full_path' => $full_path,
                 'size' => $entry['size'],
                 'modified' => $entry['modified'],
                 'type' => $entry['type']
             );
+
+            if ($this->root_connection_identifier === null)
+            {
+               // $item['connection'] = $connection_identifier;
+            }
+
+            $results[] = $item;
         }
 
+        
         return $results;
     }
 
