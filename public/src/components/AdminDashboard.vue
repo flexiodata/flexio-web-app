@@ -7,7 +7,6 @@
 
 <script>
   import moment from 'moment'
-  import api from '../api'
   import AppActivity from './AppActivity.vue'
 
   export default {
@@ -23,7 +22,7 @@
       var last_week = moment().subtract(1, 'days')
       var created_min = last_week.format('YYYYMMDD')
 
-      api.fetchAdminProcesses({ attrs: { created_min } }).then(response => {
+      this.$store.dispatch('fetchAdminProcesses', { created_min }).then(response => {
         this.processes = response.body
       })
     }
