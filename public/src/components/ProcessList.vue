@@ -65,7 +65,7 @@
         <template slot-scope="scope">
           <div class="flex flex-row items-center lh-copy">
             <i class="material-icons md-20">{{getTriggerIcon(scope.row.triggered_by, scope.row.process_mode)}}</i>
-            <span class="ml1">{{getTriggerText(scope.row.triggered_by, scope.row.process_mode)}}</span>
+            <span class="ml1 f7">{{getTriggerText(scope.row.triggered_by, scope.row.process_mode)}}</span>
           </div>
         </template>
       </el-table-column>
@@ -83,7 +83,7 @@
             <i class="el-icon-error dark-red" v-else-if="scope.row.process_status == 'X'"></i>
             <i class="el-icon-loading blue" v-else-if="scope.row.process_status == 'R'"></i>
             <i class="el-icon-info blue" v-else></i>
-            <span class="ml1">{{getProcessText(scope.row.process_status)}}</span>
+            <span class="ml1 f7">{{getProcessText(scope.row.process_status)}}</span>
           </div>
         </template>
       </el-table-column>
