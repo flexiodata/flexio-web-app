@@ -16,10 +16,10 @@ export default {
   meta: { requiresAuth: true },
   children: [
     {
-      // redirect to /admin/tests
+      // redirect to /admin/dashboard
       path: '',
       name: ROUTE_ADMIN,
-      redirect: 'tests'
+      redirect: 'dashboard'
     },
     {
       path: 'dashboard',

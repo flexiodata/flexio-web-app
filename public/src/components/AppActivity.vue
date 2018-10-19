@@ -138,6 +138,11 @@
     metaInfo: {
       title: 'Activity'
     },
+    props: {
+      items: {
+        type: Array
+      }
+    },
     components: {
       Spinner,
       ProcessList,
@@ -172,7 +177,7 @@
         'is_fetched': 'processes_fetched'
       }),
       all_processes() {
-        return this.getAllProcesses()
+        return this.items ? this.items : this.getAllProcesses()
       },
       filtered_processes() {
         return _.filter(this.all_processes, this.filterBy)

@@ -11,12 +11,12 @@
 </template>
 
 <script>
-  const nav_items = [/*
+  const nav_items = [
     {
       route: 'dashboard',
       name: 'Dashboard',
       icon: 'dashboard'
-    },*/
+    },
     {
       route: 'tests',
       name: 'Tests',
@@ -26,7 +26,7 @@
       route: 'builder',
       name: 'Builder',
       icon: 'build'
-    },
+    }/*,
     {
       route: 'translator',
       name: 'Code Translator',
@@ -46,7 +46,7 @@
       route: 'prototype',
       name: 'Prototype',
       icon: 'featured_play_list'
-    }
+    }*/
   ]
 
   export default {

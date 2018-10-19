@@ -1,9 +1,27 @@
 <template>
-  <div class="overflow-y-auto bg-nearer-white">
-    <div class="pa3">TODO: Admin dashboard needs to be redone</div>
+  <div class="bg-white">
+    <!-- list -->
+    <AppActivity class="h-100" :items="processes" />
   </div>
 </template>
 
 <script>
-  export default {}
+  import api from '../api'
+  import AppActivity from './AppActivity.vue'
+
+  export default {
+    components: {
+      AppActivity
+    },
+    data() {
+      return {
+        processes: []
+      }
+    },
+    mounted() {
+      api.fetchAdminProcesses({ attrs: { created_min: '20181018' } }).then(response => {
+        this.processes = response.body
+      })
+    }
+  }
 </script>

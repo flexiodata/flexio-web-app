@@ -120,16 +120,17 @@ export default {
 
   // admin
   fetchAdminInfo:                 function({ type, action })            { return AdminInfoResource[GET] ({ p1: type, p2: action })                        },
-  fetchAdminProcessSummary:       function({ eid })                     { return AdminInfoResource[GET] ({ p1: 'process', p2: 'summary' })                },
-  fetchAdminProcessSummaryDaily:  function()                            { return AdminInfoResource[GET] ({ p1: 'process', p2: 'summary', p3: 'daily' })   },
+  fetchAdminProcesses:            function({ attrs })                   { return AdminInfoResource[GET] (Object.assign({ p1: 'processes' }, attrs))       },
+  fetchAdminProcessSummary:       function({ eid })                     { return AdminInfoResource[GET] ({ p1: 'processes', p2: 'summary' })              },
+  fetchAdminProcessSummaryDaily:  function()                            { return AdminInfoResource[GET] ({ p1: 'processes', p2: 'summary', p3: 'daily' }) },
   fetchAdminTests:                function()                            { return AdminTestResource[GET] ({ p1: 'configure' })                             },
   runAdminTest:                   function({ id })                      { return AdminTestResource[GET] ({ p1: 'run', id })                               },
 
   // vfs
-  vfsListFiles:                   function({ path })                     { return VfsResource[GET] ({ p1: 'list', q: path })                              },
-  vfsGetFile:                     function({ path })                     { return VfsResource[GET] ({ p1: path })                                         },
-  vfsPutFile:                     function({ path })                     { return VfsResource[PUT] ({ p1: path })                                         },
-  vfsCreateDirectory:             function({ path })                     { return VfsResource[PUT] ({ p1: path })                                         }
+  vfsListFiles:                   function({ path })                    { return VfsResource[GET] ({ p1: 'list', q: path })                               },
+  vfsGetFile:                     function({ path })                    { return VfsResource[GET] ({ p1: path })                                          },
+  vfsPutFile:                     function({ path })                    { return VfsResource[PUT] ({ p1: path })                                          },
+  vfsCreateDirectory:             function({ path })                    { return VfsResource[PUT] ({ p1: path })                                          }
 }
 
 /*
