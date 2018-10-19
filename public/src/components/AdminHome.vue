@@ -13,14 +13,14 @@
 <script>
   const nav_items = [
     {
-      route: 'dashboard',
-      name: 'Dashboard',
-      icon: 'dashboard'
-    },
-    {
       route: 'tests',
       name: 'Tests',
       icon: 'gavel'
+    },
+    {
+      route: 'activity',
+      name: 'Activity',
+      icon: 'network_check'
     },
     {
       route: 'builder',
