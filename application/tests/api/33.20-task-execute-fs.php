@@ -157,6 +157,36 @@ EOD;
         \Flexio\Tests\Check::assertString('A.4', 'flex.fs.write(), large value (3MB), followed by flex.fs.open() with read loop',  $actual, $expected, $results);
 
 
+        // BEGIN TEST
+        $script = <<<EOD
+import string
+import random
+
+def flex_handler(flex):
+    rand = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
+    filename = rand
+    chunk = (rand*300).encode('utf-8')
+    value = (rand*300000).encode('utf-8')
+
+    f = flex.fs.open(filename, 'w+')
+    for i in range(0, 1000):
+        f.write(chunk)
+    f.close()
+
+    f = flex.fs.open(filename)
+    check = b''
+    while True:
+        c = f.read(10000)
+        check += c
+        if len(c) == 0:
+            break
+
+    flex.output.write('passed' if check == value else 'failed')
+EOD;
+
+        $actual = $this->runScript($script);
+        $expected = 'passed';
+        \Flexio\Tests\Check::assertString('A.5', 'flex.fs.write() with loop, large value (3MB), followed by flex.fs.open() with read loop',  $actual, $expected, $results);
 
     }
 }

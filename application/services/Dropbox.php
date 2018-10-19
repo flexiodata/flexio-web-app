@@ -60,6 +60,7 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             "recursive" => false
         ]);
 
+
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_URL, "https://api.dropboxapi.com/2/files/list_folder");
