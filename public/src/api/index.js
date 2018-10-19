@@ -7,6 +7,7 @@ import {
   ConnectionResource,
   PipeResource,
   ProcessResource,
+  UserProcessResource,
   RightsResource,
   TokenResource,
   StatisticsResource,
@@ -90,7 +91,10 @@ export default {
 
   // process
   fetchProcesses:                 function({ attrs })                   { return ProcessResource[GET] (attrs)                                             },
-  fetchProcess:                   function({ eid })                     { return ProcessResource[GET] ({ eid })                                           },
+  fetchProcess:                   function({ eid, user_eid }) {
+    var user_eid = user_eid || 'me'
+    return UserProcessResource[GET] ({ eid, user_eid })
+  },
   createProcess:                  function({ attrs })                   { return ProcessResource[POS] ({}, attrs)                                         },
   cancelProcess:                  function({ eid })                     { return ProcessResource[POS] ({ eid, p1: 'cancel' }, {})                         },
 

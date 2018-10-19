@@ -26,6 +26,29 @@ export const fetchCurrentUser = ({ commit, dispatch }) => {
 
 // ----------------------------------------------------------------------- //
 
+export const fetchUser = ({ commit, dispatch }, { eid }) => {
+  commit(types.FETCHING_USER, true)
+
+  return api.fetchUser({ eid }).then(response => {
+    var user = response.body
+
+    if (_.get(user, 'eid', '').length > 0)
+    {
+      commit(types.FETCHED_USER, user)
+      dispatch('analyticsIdentify', user)
+    }
+
+    commit(types.FETCHING_USER, false)
+    return response
+  }, response => {
+    // error callback
+    commit(types.FETCHING_USER, false)
+    return response
+  })
+}
+
+// ----------------------------------------------------------------------- //
+
 export const updateUser = ({ commit }, { eid, attrs }) => {
   commit(types.UPDATING_USER, { eid, attrs })
 

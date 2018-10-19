@@ -30,3 +30,5 @@ export const VfsResource           = Vue.resource(API_V2_ROOT+'/me/vfs{/action}'
 
 export const AdminTestResource     = Vue.resource(API_V2_ROOT+'/admin/tests'+SUFFIX)
 export const AdminInfoResource     = Vue.resource(API_V2_ROOT+'/admin/info'+SUFFIX)
+
+export const UserProcessResource  = Vue.resource(API_V2_ROOT+'{/user_eid}/processes{/eid}'+SUFFIX)
