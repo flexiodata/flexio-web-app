@@ -81,6 +81,7 @@
       :limit="page_size"
       @sort-change="sortBy"
       @details-click="openProcessDetailsDialog"
+      v-bind="$attrs"
     />
 
     <!-- process details dialog -->
@@ -94,6 +95,7 @@
       <ProcessDetailsPanel
         :process-eid="edit_process_eid"
         @close="show_process_details_dialog = false"
+        v-bind="$attrs"
       />
     </el-dialog>
   </div>
@@ -138,6 +140,12 @@
     metaInfo: {
       title: 'Activity'
     },
+    inheritAttrs: false,
+    props: {
+      items: {
+        type: Array
+      }
+    },
     components: {
       Spinner,
       ProcessList,
@@ -172,7 +180,7 @@
         'is_fetched': 'processes_fetched'
       }),
       all_processes() {
-        return this.getAllProcesses()
+        return this.items ? this.items : this.getAllProcesses()
       },
       filtered_processes() {
         return _.filter(this.all_processes, this.filterBy)

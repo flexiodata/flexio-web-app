@@ -8,21 +8,13 @@
       @sort-change="onSortChange"
     >
       <el-table-column
-        type="index"
+        prop="owned_by.eid"
+        label="User ID"
         fixed
-        :index="getIndex"
-        v-if="has_start && false"
-      />
-
-      <el-table-column
-        prop="eid"
-        label="Process ID"
-        fixed
-        :min-width="120"
-        v-if="false"
+        v-if="showUser"
       >
         <template slot-scope="scope">
-          <span class="code bg-white br2 ba b--black-10" style="padding: 3px 6px">{{scope.row.eid}}</span>
+          <span class="code bg-white br2 ba b--black-10" style="padding: 3px 6px">{{getUserEid(scope.row)}}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -135,6 +127,10 @@
       limit: {
         type: Number,
         default: 50
+      },
+      showUser: {
+        type: Boolean,
+        default: false
       }
     },
     computed: {
@@ -171,6 +167,9 @@
       },
       fmtDuration(row, col, val, idx) {
         return val ? val.toFixed(2) + ' seconds' : '--'
+      },
+      getUserEid(row) {
+        return _.get(row, 'owned_by.eid', '--')
       },
       getProcessText(status) {
         switch (status) {

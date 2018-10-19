@@ -22,7 +22,7 @@ export default {
       redirect: 'tests'
     },
     {
-      path: 'dashboard',
+      path: 'activity',
       component: AdminDashboard
     },
     {

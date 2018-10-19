@@ -233,7 +233,25 @@ class Admin
         $result = array();
         foreach ($processes as $p)
         {
-            $result[] = $p->get();
+            $process_info = $p->get();
+
+            $process_info_subset = array();
+            $process_info_subset['eid'] = $process_info['eid'];
+            $process_info_subset['eid_type'] = $process_info['eid_type'];
+            $process_info_subset['eid_status'] = $process_info['eid_status'];
+            $process_info_subset['parent'] = $process_info['parent'] ?? null;
+            $process_info_subset['process_mode'] = $process_info['process_mode'];
+            $process_info_subset['triggered_by'] = $process_info['triggered_by'];
+            $process_info_subset['started_by'] = $process_info['started_by'];
+            $process_info_subset['started'] = $process_info['started'];
+            $process_info_subset['finished'] = $process_info['finished'];
+            $process_info_subset['duration'] = $process_info['duration'];
+            $process_info_subset['process_status'] = $process_info['process_status'];
+            $process_info_subset['owned_by'] = $process_info['owned_by'];
+            $process_info_subset['created'] = $process_info['created'];
+            $process_info_subset['updated'] = $process_info['updated'];
+
+            $result[] = $process_info_subset;
         }
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());

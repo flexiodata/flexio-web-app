@@ -27,6 +27,25 @@ export const fetchProcesses = ({ commit }, attrs) => {
 
 // ----------------------------------------------------------------------- //
 
+export const fetchAdminProcesses = ({ commit }, attrs) => {
+  var pipe_eid = _.get(attrs, 'parent_eid', '')
+
+  commit(types.FETCHING_PROCESSES, { pipe_eid, fetching: true })
+
+  return api.fetchAdminProcesses({ attrs }).then(response => {
+    // success callback
+    commit(types.FETCHED_PROCESSES, { pipe_eid, processes: response.body })
+    commit(types.FETCHING_PROCESSES, { pipe_eid, fetching: false })
+    return response
+  }, response => {
+    // error callback
+    commit(types.FETCHING_PROCESSES, { pipe_eid, fetching: false })
+    return response
+  })
+}
+
+// ----------------------------------------------------------------------- //
+
 export const createProcess = ({ commit, dispatch }, { attrs }) => {
   commit(types.CREATING_PROCESS, { attrs })
 

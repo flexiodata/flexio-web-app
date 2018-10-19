@@ -7,6 +7,7 @@ import {
   ConnectionResource,
   PipeResource,
   ProcessResource,
+  UserProcessResource,
   RightsResource,
   TokenResource,
   StatisticsResource,
@@ -90,7 +91,10 @@ export default {
 
   // process
   fetchProcesses:                 function({ attrs })                   { return ProcessResource[GET] (attrs)                                             },
-  fetchProcess:                   function({ eid })                     { return ProcessResource[GET] ({ eid })                                           },
+  fetchProcess:                   function({ eid, user_eid }) {
+    var user_eid = user_eid || 'me'
+    return UserProcessResource[GET] ({ eid, user_eid })
+  },
   createProcess:                  function({ attrs })                   { return ProcessResource[POS] ({}, attrs)                                         },
   cancelProcess:                  function({ eid })                     { return ProcessResource[POS] ({ eid, p1: 'cancel' }, {})                         },
 
@@ -120,16 +124,17 @@ export default {
 
   // admin
   fetchAdminInfo:                 function({ type, action })            { return AdminInfoResource[GET] ({ p1: type, p2: action })                        },
-  fetchAdminProcessSummary:       function({ eid })                     { return AdminInfoResource[GET] ({ p1: 'process', p2: 'summary' })                },
-  fetchAdminProcessSummaryDaily:  function()                            { return AdminInfoResource[GET] ({ p1: 'process', p2: 'summary', p3: 'daily' })   },
+  fetchAdminProcesses:            function({ attrs })                   { return AdminInfoResource[GET] (Object.assign({ p1: 'processes' }, attrs))       },
+  fetchAdminProcessSummary:       function({ eid })                     { return AdminInfoResource[GET] ({ p1: 'processes', p2: 'summary' })              },
+  fetchAdminProcessSummaryDaily:  function()                            { return AdminInfoResource[GET] ({ p1: 'processes', p2: 'summary', p3: 'daily' }) },
   fetchAdminTests:                function()                            { return AdminTestResource[GET] ({ p1: 'configure' })                             },
   runAdminTest:                   function({ id })                      { return AdminTestResource[GET] ({ p1: 'run', id })                               },
 
   // vfs
-  vfsListFiles:                   function({ path })                     { return VfsResource[GET] ({ p1: 'list', q: path })                              },
-  vfsGetFile:                     function({ path })                     { return VfsResource[GET] ({ p1: path })                                         },
-  vfsPutFile:                     function({ path })                     { return VfsResource[PUT] ({ p1: path })                                         },
-  vfsCreateDirectory:             function({ path })                     { return VfsResource[PUT] ({ p1: path })                                         }
+  vfsListFiles:                   function({ path })                    { return VfsResource[GET] ({ p1: 'list', q: path })                               },
+  vfsGetFile:                     function({ path })                    { return VfsResource[GET] ({ p1: path })                                          },
+  vfsPutFile:                     function({ path })                    { return VfsResource[PUT] ({ p1: path })                                          },
+  vfsCreateDirectory:             function({ path })                    { return VfsResource[PUT] ({ p1: path })                                          }
 }
 
 /*
