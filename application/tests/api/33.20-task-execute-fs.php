@@ -58,8 +58,6 @@ class Test
         $token = \Flexio\Tests\Util::createToken($userid);
 
 
-        // TEST: execute execution without handler
-
         // BEGIN TEST
         $script = <<<EOD
 import string
@@ -73,14 +71,13 @@ def flex_handler(flex):
     flex.fs.write(filename, value)
     check = flex.fs.read(filename)
     flex.fs.remove(filename)
-    
+
     flex.output.write('passed' if check == value else 'failed')
 EOD;
 
         $actual = $this->runScript($script);
         $expected = 'passed';
         \Flexio\Tests\Check::assertString('A.1', 'flex.fs.write() and flex.fs.read(), simple small value',  $actual, $expected, $results);
-
 
 
         // BEGIN TEST
@@ -198,6 +195,67 @@ EOD;
         $actual = $this->runScript($script);
         $expected = 'passed';
         \Flexio\Tests\Check::assertString('A.5', 'flex.fs.write() with loop, large value (3MB), followed by flex.fs.open() with read loop',  $actual, $expected, $results);
+
+
+        // BEGIN TEST
+        $script = <<<EOD
+import string
+import random
+
+def flex_handler(flex):
+    rand = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
+    filename = rand
+
+    flex.fs.write(filename, '123')
+    files = flex.fs.list("/")
+    found = False
+    for file in files:
+        if file['name'] == filename:
+            found = True
+            break;
+    flex.fs.remove(filename)
+
+    flex.output.write('passed' if found else 'failed')
+EOD;
+
+        $actual = $this->runScript($script);
+        $expected = 'passed';
+        \Flexio\Tests\Check::assertString('A.6', 'flex.fs.list(); check that .list() returns newly created file',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $script = <<<EOD
+import string
+import random
+
+def flex_handler(flex):
+    rand = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
+    filename = rand
+
+    flex.fs.write(filename, '123')
+    files = flex.fs.list("/")
+    found = False
+    for file in files:
+        if file['name'] == filename:
+            found = True
+            break;
+    if not found:
+        flex.output.write('failed')
+        return
+
+    flex.fs.remove(filename)
+    files = flex.fs.list("/")
+    found = False
+    for file in files:
+        if file['name'] == filename:
+            found = True
+            break;
+    
+    flex.output.write('passed' if not found else 'failed')
+EOD;
+
+        $actual = $this->runScript($script);
+        $expected = 'passed';
+        \Flexio\Tests\Check::assertString('A.7', 'flex.fs.remove(); check that .list() no longer returns removed file',  $actual, $expected, $results);
 
     }
 }
