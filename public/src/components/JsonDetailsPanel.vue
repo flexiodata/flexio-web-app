@@ -47,7 +47,7 @@
     },
     data() {
       return {
-        pretty_state: 'raw'
+        pretty_state: 'pretty'
       }
     },
     computed: {

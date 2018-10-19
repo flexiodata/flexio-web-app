@@ -25,7 +25,7 @@
       >
         <IconMessage
           class="tc"
-          title="Oops, looks like something went wrong. :-/"
+          title="Oops, looks like something went wrong... :-/"
         />
         <JsonDetailsPanel :json="process_error" />
       </div>

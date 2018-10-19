@@ -71,6 +71,7 @@ class Filter
                 $filter_expr .= (' and (created >= ' . $db->quote($date_clean) . ')');
             }
         }
+
         if (isset($filter_items['created_max']) && array_key_exists('created_max', $allowed_item_keys))
         {
             $date = $filter_items['created_max'];
@@ -173,6 +174,12 @@ class Model
     public const PIPE_DEPLOY_STATUS_UNDEFINED  = '';
     public const PIPE_DEPLOY_STATUS_ACTIVE     = 'A';
     public const PIPE_DEPLOY_STATUS_INACTIVE   = 'I';
+
+    public const PROCESS_TRIGGERED_UNDEFINED = '';
+    public const PROCESS_TRIGGERED_API       = 'A';
+    public const PROCESS_TRIGGERED_EMAIL     = 'E';
+    public const PROCESS_TRIGGERED_SCHEDULER = 'S';
+    public const PROCESS_TRIGGERED_INTERFACE = 'I';
 
     public const ROLE_UNDEFINED     = '';
     public const ROLE_ADMINISTRATOR = 'A';

@@ -86,7 +86,8 @@ class Test
                 "task": {
                     "op": "echo"
                 },
-                "process_status": "'.\Flexio\Jobs\Process::STATUS_PENDING.'"
+                "process_status": "'.\Flexio\Jobs\Process::STATUS_PENDING.'",
+                "triggered_by": "'.\Model::PROCESS_TRIGGERED_API.'"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -103,6 +104,7 @@ class Test
             "task": {
                 "op": "echo"
             },
+            "triggered_by": "",
             "started_by": "",
             "started": null,
             "finished": null,
@@ -116,6 +118,6 @@ class Test
             }
         }
         ';
-        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:userid/processes; create a new process',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:userid/processes; create a new process (don\'t allow triggered_by to be set in API)',  $actual, $expected, $results);
     }
 }

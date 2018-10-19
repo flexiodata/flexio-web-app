@@ -71,50 +71,14 @@
         style="width: 120px"
       >
         <div v-if="isHeader">Deployment</div>
-        <div v-else>
+        <div class="flex flex-row items-center justify-end" v-else>
           <div
             class="hint--top"
-            :aria-label="schedule_tooltip"
+            style="margin-left: 3px"
+            :aria-label="item.tooltip"
+            v-for="item in deployment_icons"
           >
-            <i
-              class="material-icons md-21"
-              :class="is_deployed_schedule ? 'blue' : 'o-10'"
-            >
-              schedule
-            </i>
-          </div>
-          <div
-            class="hint--top"
-            :aria-label="api_endpoint_tooltip"
-          >
-            <i
-              class="material-icons md-21"
-              :class="is_deployed_api ? 'blue' : 'o-10'"
-            >
-              code
-            </i>
-          </div>
-          <div
-            class="hint--top"
-            :aria-label="email_tooltip"
-          >
-            <i
-              class="material-icons md-21"
-              :class="is_deployed_email ? 'blue' : 'o-10'"
-            >
-              email
-            </i>
-          </div>
-          <div
-            class="hint--top"
-            :aria-label="runtime_tooltip"
-          >
-            <i
-              class="material-icons md-21"
-              :class="is_deployed_ui ? 'blue' : 'o-10'"
-            >
-              offline_bolt
-            </i>
+            <i class="db material-icons md-21" :class="item.is_deployed ? 'blue' : 'o-10'">{{item.icon}}</i>
           </div>
         </div>
       </div>
@@ -128,7 +92,7 @@
             @sort="onSort"
           />
         </div>
-        <div class="pv3" @click.stop v-else>
+        <div class="flex flex-row items-center justify-center pv3" @click.stop v-else>
           <LabelSwitch
             class="dib hint--top"
             active-color="#13ce66"
@@ -281,6 +245,30 @@
       },
       runtime_tooltip() {
         return this.is_deployed_ui ? 'Flex.io Web Interface ON' : 'Flex.io Web Interface OFF'
+      },
+      deployment_icons() {
+        return [
+          {
+            icon: 'schedule',
+            tooltip: this.schedule_tooltip,
+            is_deployed: this.is_deployed_schedule
+          },
+          {
+            icon: 'code',
+            tooltip: this.api_endpoint_tooltip,
+            is_deployed: this.is_deployed_api
+          },
+          {
+            icon: 'email',
+            tooltip: this.email_tooltip,
+            is_deployed: this.is_deployed_email
+          },
+          {
+            icon: 'offline_bolt',
+            tooltip: this.runtime_tooltip,
+            is_deployed: this.is_deployed_ui
+          }
+        ]
       },
       show_description_tooltip() {
         return false
