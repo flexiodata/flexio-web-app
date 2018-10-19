@@ -1,7 +1,8 @@
 <template>
   <div>
     <el-table
-      class="w-100"
+      class="w-100 activity-list"
+      size="small"
       :data="limited_processes"
       :default-sort="{ prop: 'started', order: 'descending' }"
       @sort-change="onSortChange"
@@ -21,7 +22,7 @@
         v-if="false"
       >
         <template slot-scope="scope">
-          <span class="code f7 bg-white br2 ba b--black-10" style="padding: 3px 6px">{{scope.row.eid}}</span>
+          <span class="code bg-white br2 ba b--black-10" style="padding: 3px 6px">{{scope.row.eid}}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -51,7 +52,7 @@
         <template slot-scope="scope">
           <div class="flex flex-row items-center lh-copy">
             <i class="material-icons md-20">{{getTriggerIcon(scope.row.triggered_by, scope.row.process_mode)}}</i>
-            <span class="ml1 f7">{{getTriggerText(scope.row.triggered_by, scope.row.process_mode)}}</span>
+            <span class="ml1">{{getTriggerText(scope.row.triggered_by, scope.row.process_mode)}}</span>
           </div>
         </template>
       </el-table-column>
@@ -69,21 +70,21 @@
             <i class="el-icon-error dark-red" v-else-if="scope.row.process_status == 'X'"></i>
             <i class="el-icon-loading blue" v-else-if="scope.row.process_status == 'R'"></i>
             <i class="el-icon-info blue" v-else></i>
-            <span class="ml1 f7">{{getProcessText(scope.row.process_status)}}</span>
+            <span class="ml1">{{getProcessText(scope.row.process_status)}}</span>
           </div>
         </template>
       </el-table-column>
       <el-table-column
         prop="started"
         label="Started (UTC)"
-        :width="165"
+        :width="160"
         :sortable="true"
         :formatter="fmtDate"
       />
       <el-table-column
         prop="finished"
         label="Finished (UTC)"
-        :width="165"
+        :width="160"
         :sortable="true"
         :formatter="fmtDate"
       />
@@ -91,7 +92,7 @@
         prop="duration"
         label="Duration"
         align="right"
-        :width="115"
+        :width="110"
         :sortable="true"
         :formatter="fmtDuration"
       />
@@ -102,6 +103,7 @@
         <template slot-scope="scope">
           <el-button
             type="text"
+            size="small"
             style="padding: 0"
             @click="$emit('details-click', scope.row.eid)"
           >
@@ -231,3 +233,10 @@
     }
   }
 </script>
+
+<style lang="stylus" scoped>
+  .activity-list
+    font-size: 13px
+    .el-button
+      font-size: 13px
+</style>
