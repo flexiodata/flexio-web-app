@@ -28,7 +28,7 @@
         prop="parent.name"
         label="Pipe Name"
         fixed
-        :min-width="200"
+        :min-width="160"
       >
         <template slot-scope="scope">
           <em class="light-silver" v-if="!hasPipeEid(scope.row)">
@@ -43,23 +43,9 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="started"
-        label="Started (UTC)"
-        :min-width="160"
-        :sortable="true"
-        :formatter="fmtDate"
-      />
-      <el-table-column
-        prop="finished"
-        label="Finished (UTC)"
-        :min-width="160"
-        :sortable="true"
-        :formatter="fmtDate"
-      />
-      <el-table-column
         prop="triggered_by"
         label="Trigger"
-        :width="160"
+        :width="155"
         :sortable="true"
       >
         <template slot-scope="scope">
@@ -73,7 +59,7 @@
       <el-table-column
         prop="process_status"
         label="Status"
-        :width="110"
+        :width="135"
         :sortable="true"
       >
         <template slot-scope="scope">
@@ -88,15 +74,30 @@
         </template>
       </el-table-column>
       <el-table-column
+        prop="started"
+        label="Started (UTC)"
+        :width="165"
+        :sortable="true"
+        :formatter="fmtDate"
+      />
+      <el-table-column
+        prop="finished"
+        label="Finished (UTC)"
+        :width="165"
+        :sortable="true"
+        :formatter="fmtDate"
+      />
+      <el-table-column
         prop="duration"
         label="Duration"
         align="right"
-        :min-width="110"
+        :width="115"
         :sortable="true"
         :formatter="fmtDuration"
       />
       <el-table-column
         align="right"
+        :width="90"
       >
         <template slot-scope="scope">
           <el-button
