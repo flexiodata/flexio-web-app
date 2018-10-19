@@ -34,8 +34,9 @@
         </div>
         <div class="flex flex-row justify-end items-center mt2">
           <el-select
-            style="width: 150px"
+            style="width: 140px"
             placeholder="Status"
+            size="small"
             clearable
             v-model="status_filter"
           >
@@ -57,8 +58,9 @@
           </el-select>
           <el-date-picker
             class="ml2"
-            style="width: 240px"
+            style="width: 220px"
             type="daterange"
+            size="small"
             align="right"
             format="MM/dd/yyyy"
             start-placeholder="Start date"
