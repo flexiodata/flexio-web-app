@@ -1,5 +1,4 @@
 import {
-  BaseResource,
   SignupResource,
   LoginResource,
   LogoutResource,
@@ -118,9 +117,6 @@ export default {
 
   // stream
   fetchStream:                    function({ eid })                     { return StreamResource[GET] ({ eid })                                            },
-
-  // statistics
-  fetchStatistics:                function({ type, action })            { return BaseResource[GET] ({ p1: type, p2: action })                             },
 
   // admin
   fetchAdminInfo:                 function({ type, action })            { return AdminInfoResource[GET] ({ p1: type, p2: action })                        },

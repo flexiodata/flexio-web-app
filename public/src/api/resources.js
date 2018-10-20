@@ -18,7 +18,6 @@ export const LogoutResource        = Vue.resource(API_V2_ROOT+'/logout')
 export const ValidateResource      = Vue.resource(API_V2_ROOT+'/validate')
 export const ResetPasswordResource = Vue.resource(API_V2_ROOT+'/resetpassword')
 
-export const BaseResource          = Vue.resource(API_V2_ROOT+'/me'+SUFFIX)
 export const AccountResource       = Vue.resource(API_V2_ROOT+'{/eid}/account'+SUFFIX)
 export const RightsResource        = Vue.resource(API_V2_ROOT+'/me/auth/rights{/eid}'+SUFFIX)
 export const TokenResource         = Vue.resource(API_V2_ROOT+'/me/auth/keys{/eid}'+SUFFIX)
