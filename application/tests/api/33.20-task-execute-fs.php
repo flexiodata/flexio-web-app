@@ -205,6 +205,67 @@ import random
 def flex_handler(flex):
     rand = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
     filename = rand
+    chunk = rand.encode('utf-8')
+    value = (rand+rand).encode('utf-8')
+
+    f = flex.fs.open(filename, 'w+')
+    f.write(chunk)
+    f.close()
+
+    f = flex.fs.open(filename, 'a+')
+    f.write(chunk)
+    f.close()
+
+    check = flex.fs.read(filename)
+    flex.fs.remove(filename)
+
+    flex.output.write('passed' if check == value else 'failed')
+EOD;
+
+        $actual = $this->runScript($script);
+        $expected = 'passed';
+        \Flexio\Tests\Check::assertString('A.6', 'flex.fs.open() in append mode and flex.fs.read(), simple small value',  $actual, $expected, $results);
+
+
+        // BEGIN TEST
+        $script = <<<EOD
+import string
+import random
+
+def flex_handler(flex):
+    rand = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
+    filename = rand
+    chunk = (rand*300).encode('utf-8')
+    value = (rand*300000).encode('utf-8')
+
+    f = flex.fs.open(filename, 'w+')
+    f.write(chunk)
+    f.close()
+
+    f = flex.fs.open(filename, 'a+')
+    for i in range(0, 999):
+        f.write(chunk)
+    f.close()
+
+    check = flex.fs.read(filename)
+    flex.fs.remove(filename)
+
+    flex.output.write('passed' if check == value else 'failed')
+EOD;
+
+        $actual = $this->runScript($script);
+        $expected = 'passed';
+        \Flexio\Tests\Check::assertString('A.7', 'flex.fs.write() and flex.fs.read(), large value (3 MB)',  $actual, $expected, $results);
+
+
+        // BEGIN TEST
+        $script = <<<EOD
+import string
+import random
+
+def flex_handler(flex):
+    rand = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
+    filename = rand
 
     flex.fs.write(filename, '123')
     files = flex.fs.list("/")
