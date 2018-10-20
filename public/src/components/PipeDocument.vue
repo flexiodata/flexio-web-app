@@ -631,14 +631,13 @@
       loadPipe() {
         this.$store.commit('pipe/FETCHING_PIPE', true)
 
-        this.$store.dispatch('fetchPipe', { eid: this.eid }).then(response => {
-          if (response.ok) {
-            var pipe = response.data
-            this.$store.commit('pipe/INIT_PIPE', pipe)
-            this.$store.commit('pipe/FETCHING_PIPE', false)
-          } else {
-            this.$store.commit('pipe/FETCHING_PIPE', false)
-          }
+        this.$store.dispatch('v2_action_fetchPipe', { eid: this.eid }).then(response => {
+          var pipe = response.data
+          this.$store.commit('pipe/INIT_PIPE', pipe)
+        }).catch(error => {
+          // TODO: add error handling
+        }).finally(() => {
+          this.$store.commit('pipe/FETCHING_PIPE', false)
         })
       },
       cancelChanges() {
@@ -655,22 +654,21 @@
         // don't POST null values
         attrs = _.omitBy(attrs, (val, key) => { return _.isNil(val) })
 
-        return this.$store.dispatch('updatePipe', { eid, attrs }).then(response => {
-          if (response.ok) {
-            this.$message({
-              message: 'The pipe was updated successfully.',
-              type: 'success'
-            })
+        return this.$store.dispatch('v2_action_updatePipe', { eid, attrs }).then(response => {
+          this.$message({
+            message: 'The pipe was updated successfully.',
+            type: 'success'
+          })
 
-            this.$store.commit('pipe/INIT_PIPE', response.body)
-            this.revert()
-          } else {
-            this.$message({
-              message: 'There was a problem updating the pipe.',
-              type: 'error'
-            })
-          }
-
+          var pipe = response.data
+          this.$store.commit('pipe/INIT_PIPE', pipe)
+          this.revert()
+        }).catch(error => {
+          this.$message({
+            message: 'There was a problem updating the pipe.',
+            type: 'error'
+          })
+        }).finally(() => {
           this.active_task_idx = -1
         })
       },

@@ -77,7 +77,7 @@
         var cfg_path = 'app.prompt.onboarding.pipeDocument.build.shown'
         this.$_Config_reset(cfg_path)
 
-        this.$store.dispatch('createPipe', { attrs }).then(response => {
+        this.$store.dispatch('v2_action_createPipe', { attrs }).then(response => {
           if (response.ok) {
             var pipe = response.body
             var eid = pipe.eid

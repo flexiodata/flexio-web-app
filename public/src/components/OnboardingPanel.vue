@@ -121,7 +121,7 @@
         'getFirstToken'
       ]),
       tryFetchPipes() {
-        this.$store.dispatch('fetchPipes')
+        this.$store.dispatch('v2_action_fetchPipes')
       },
       checkCreateApiKey() {
         if (this.tokens_fetched && this.api_key.length == 0) {

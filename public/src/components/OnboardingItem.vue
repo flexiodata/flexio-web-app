@@ -289,7 +289,7 @@ If you have any questions, please send us a note using the chat button at the bo
         var task = this.$refs['code'].getTaskJSON()
         _.assign(attrs, { task })
 
-        this.$store.dispatch('createPipe', { attrs }).then(response => {
+        this.$store.dispatch('v2_action_createPipe', { attrs }).then(response => {
           if (response.ok)
           {
             var pipe = response.body

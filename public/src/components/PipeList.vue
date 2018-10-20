@@ -118,7 +118,7 @@
       ]),
       tryFetchPipes() {
         if (!this.is_fetched) {
-          this.$store.dispatch('fetchPipes')
+          this.$store.dispatch('v2_action_fetchPipes')
         }
         if (!this.is_summary_fetched) {
           this.$store.dispatch('fetchProcessSummary')

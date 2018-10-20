@@ -203,7 +203,7 @@
               deploy_mode
             }
 
-            this.$store.dispatch('updatePipe', { eid: this.item.eid, attrs })
+            this.$store.dispatch('v2_action_updatePipe', { eid: this.item.eid, attrs })
           }
 
           if (value === false) {

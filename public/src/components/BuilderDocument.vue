@@ -272,7 +272,7 @@
       },
       createPipe(run_process) {
         var attrs = this.save_attrs
-        this.$store.dispatch('createPipe', { attrs }).then(response => {
+        this.$store.dispatch('v2_action_createPipe', { attrs }).then(response => {
           if (response.ok) {
             var pipe = response.body
             this.$store.commit('builder/CREATE_PIPE', pipe)

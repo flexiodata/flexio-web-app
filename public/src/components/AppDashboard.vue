@@ -96,7 +96,7 @@
         if (!_.isObject(attrs))
           attrs = { name: 'Untitled Pipe' }
 
-        this.$store.dispatch('createPipe', { attrs }).then(response => {
+        this.$store.dispatch('v2_action_createPipe', { attrs }).then(response => {
           if (response.ok)
           {
             var pipe = response.body

@@ -1,4 +1,5 @@
 import {
+  AxiosResource,
   SignupResource,
   LoginResource,
   LogoutResource,
@@ -39,10 +40,15 @@ import axios from 'axios'
   delete: { method: 'DELETE' }
 */
 
-var GET = 'get'
-var POS = 'save'
-var PUT = 'update'
-var DEL = 'delete'
+const GET = 'get'
+const POS = 'save'
+const PUT = 'update'
+const DEL = 'delete'
+
+const V2_GET = 'get'
+const V2_POS = 'post'
+const V2_PUT = 'put'
+const V2_DEL = 'delete'
 
 export default {
 
@@ -130,7 +136,15 @@ export default {
   vfsListFiles:                   function({ path })                    { return VfsResource[GET] ({ p1: 'list', q: path })                               },
   vfsGetFile:                     function({ path })                    { return VfsResource[GET] ({ p1: path })                                          },
   vfsPutFile:                     function({ path })                    { return VfsResource[PUT] ({ p1: path })                                          },
-  vfsCreateDirectory:             function({ path })                    { return VfsResource[PUT] ({ p1: path })                                          }
+  vfsCreateDirectory:             function({ path })                    { return VfsResource[PUT] ({ p1: path })                                          },
+
+  /* -- Axios-based v2 API -- */
+
+  v2_fetchPipes: function(user_eid)             { return AxiosResource(user_eid)[V2_GET] (`/pipes`)                },
+  v2_fetchPipe:  function(user_eid, eid)        { return AxiosResource(user_eid)[V2_GET] (`/pipes/${eid}`)         },
+  v2_createPipe: function(user_eid, attrs)      { return AxiosResource(user_eid)[V2_POS] (`/pipes`, attrs)         },
+  v2_updatePipe: function(user_eid, eid, attrs) { return AxiosResource(user_eid)[V2_POS] (`/pipes/${eid}`, attrs)  },
+  v2_deletePipe: function(user_eid, eid)        { return AxiosResource(user_eid)[V2_DEL] (`/pipes/${eid}`)         },
 }
 
 /*
@@ -140,3 +154,5 @@ export default {
 4) Create Directory    PUT https://localhost/api/me/v2/vfs/my-alias/my-folder/my-subfolder ?????
 5) Delete Files        DEL https://localhost/api/me/v2/vfs/my-alias/my-folder/my-subfolder/aphist.csv
 */
+
+

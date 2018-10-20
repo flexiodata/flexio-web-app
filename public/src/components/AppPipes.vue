@@ -97,7 +97,7 @@
           name: item.name
         }
 
-        this.$store.dispatch('createPipe', { attrs })
+        this.$store.dispatch('v2_action_createPipe', { attrs })
       },
       initSticky() {
         setTimeout(() => {
@@ -109,34 +109,32 @@
       },
       tryFetchPipes() {
         if (!this.is_fetched && !this.is_fetching) {
-          this.$store.dispatch('fetchPipes')
+          this.$store.dispatch('v2_action_fetchPipes')
         }
       },
       tryCreatePipe(attrs) {
         if (!_.isObject(attrs))
           attrs = { name: 'Untitled Pipe' }
 
-        this.$store.dispatch('createPipe', { attrs }).then(response => {
-          if (response.ok) {
-            var pipe = response.body
-            var analytics_payload = _.pick(pipe, ['eid', 'name', 'alias', 'created'])
-            this.$store.track('Created Pipe', analytics_payload)
-
-            this.openPipe(response.body.eid)
-          } else {
-            this.$store.track('Created Pipe (Error)')
-          }
+        this.$store.dispatch('v2_action_createPipe', { attrs }).then(response => {
+          var pipe = response.data
+          var analytics_payload = _.pick(pipe, ['eid', 'name', 'alias', 'created'])
+          this.$store.track('Created Pipe', analytics_payload)
+          this.openPipe(pipe.eid)
+        }).catch(error => {
+          this.$store.track('Created Pipe (Error)')
         })
       },
       tryDeletePipe(attrs) {
+        var eid = _.get(attrs, 'eid', '')
         var name = _.get(attrs, 'name', 'Pipe')
 
-        this.$confirm('Are you sure you want to delete the pipe named "'+name+'"?', 'Really delete pipe?', {
+        this.$confirm('Are you sure you want to delete the pipe named "' + name + '"?', 'Really delete pipe?', {
           confirmButtonText: 'DELETE PIPE',
           cancelButtonText: 'CANCEL',
           type: 'warning'
         }).then(() => {
-          this.$store.dispatch('deletePipe', { attrs })
+          this.$store.dispatch('v2_action_deletePipe', { eid })
         }).catch(() => {
           // do nothing
         })

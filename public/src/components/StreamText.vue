@@ -146,7 +146,7 @@
 
           state.is_fetching = false
           state.has_fetched = true
-        }).catch(response => {
+        }).catch(error => {
           state.is_fetching = false
           state.has_fetched = true
         })
