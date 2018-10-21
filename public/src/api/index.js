@@ -137,19 +137,28 @@ export default {
 
   /* -- Axios-based v2 API -- */
 
-  v2_fetchPipes: function(user_eid)             { return AxiosResource(user_eid)[V2_GET] (`/pipes`)                },
-  v2_fetchPipe:  function(user_eid, eid)        { return AxiosResource(user_eid)[V2_GET] (`/pipes/${eid}`)         },
-  v2_createPipe: function(user_eid, attrs)      { return AxiosResource(user_eid)[V2_POS] (`/pipes`, attrs)         },
-  v2_updatePipe: function(user_eid, eid, attrs) { return AxiosResource(user_eid)[V2_POS] (`/pipes/${eid}`, attrs)  },
-  v2_deletePipe: function(user_eid, eid)        { return AxiosResource(user_eid)[V2_DEL] (`/pipes/${eid}`)         },
+  // connection
+  v2_fetchConnections:     function(user_eid)             { return AxiosResource(user_eid)[V2_GET] (`/connections`)                          },
+  v2_fetchConnection:      function(user_eid, eid)        { return AxiosResource(user_eid)[V2_GET] (`/connections/${eid}`)                   },
+  v2_createConnection:     function(user_eid, attrs)      { return AxiosResource(user_eid)[V2_POS] (`/connections`, attrs)                   },
+  v2_updateConnection:     function(user_eid, eid, attrs) { return AxiosResource(user_eid)[V2_POS] (`/connections/${eid}`, attrs)            },
+  v2_deleteConnection:     function(user_eid, eid)        { return AxiosResource(user_eid)[V2_DEL] (`/connections/${eid}`)                   },
+  v2_testConnection:       function(user_eid, eid, attrs) { return AxiosResource(user_eid)[V2_POS] (`/connections/${eid}/connect`, attrs)    },
+  v2_disconnectConnection: function(user_eid, eid, attrs) { return AxiosResource(user_eid)[V2_POS] (`/connections/${eid}/disconnect`, attrs) },
 
-  v2_fetchProcesses:           function(user_eid)           { return AxiosResource(user_eid)[V2_GET] (`/processes`)                     },
-  v2_fetchProcess:             function(user_eid, eid)      { return AxiosResource(user_eid)[V2_GET] (`/processes/${eid}`)              },
-  v2_createProcess:            function(user_eid, attrs)    { return AxiosResource(user_eid)[V2_POS] (`/processes`, attrs)              },
-  v2_cancelProcess:            function(user_eid, eid)      { return AxiosResource(user_eid)[V2_POS] (`/processes/${eid}/cancel`)       },
-  v2_runProcess:               function(user_eid, eid, cfg) { return AxiosResource(user_eid)[V2_POS] (`/processes/${eid}/run`, {}, cfg) },
-  v2_fetchProcessLog:          function(user_eid, eid)      { return AxiosResource(user_eid)[V2_GET] (`/processes/${eid}/log`)          },
-  v2_fetchProcessSummary:      function(user_eid)           { return AxiosResource(user_eid)[V2_GET] (`/processes/summary`)             },
+  v2_fetchPipes:           function(user_eid)             { return AxiosResource(user_eid)[V2_GET] (`/pipes`)                },
+  v2_fetchPipe:            function(user_eid, eid)        { return AxiosResource(user_eid)[V2_GET] (`/pipes/${eid}`)         },
+  v2_createPipe:           function(user_eid, attrs)      { return AxiosResource(user_eid)[V2_POS] (`/pipes`, attrs)         },
+  v2_updatePipe:           function(user_eid, eid, attrs) { return AxiosResource(user_eid)[V2_POS] (`/pipes/${eid}`, attrs)  },
+  v2_deletePipe:           function(user_eid, eid)        { return AxiosResource(user_eid)[V2_DEL] (`/pipes/${eid}`)         },
+
+  v2_fetchProcesses:       function(user_eid)             { return AxiosResource(user_eid)[V2_GET] (`/processes`)                     },
+  v2_fetchProcess:         function(user_eid, eid)        { return AxiosResource(user_eid)[V2_GET] (`/processes/${eid}`)              },
+  v2_createProcess:        function(user_eid, attrs)      { return AxiosResource(user_eid)[V2_POS] (`/processes`, attrs)              },
+  v2_cancelProcess:        function(user_eid, eid)        { return AxiosResource(user_eid)[V2_POS] (`/processes/${eid}/cancel`)       },
+  v2_runProcess:           function(user_eid, eid, cfg)   { return AxiosResource(user_eid)[V2_POS] (`/processes/${eid}/run`, {}, cfg) },
+  v2_fetchProcessLog:      function(user_eid, eid)        { return AxiosResource(user_eid)[V2_GET] (`/processes/${eid}/log`)          },
+  v2_fetchProcessSummary:  function(user_eid)             { return AxiosResource(user_eid)[V2_GET] (`/processes/summary`)             },
 }
 
 /*

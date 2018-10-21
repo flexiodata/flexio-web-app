@@ -143,7 +143,7 @@ store.track = function(event_name, attrs) {
 
 const tryFetchConnections = () => {
   if (!store.state.connections_fetched && !store.state.connections_fetching) {
-    store.dispatch('fetchConnections')
+    store.dispatch('v2_action_fetchConnections', {})
   }
 }
 

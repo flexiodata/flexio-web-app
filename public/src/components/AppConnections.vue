@@ -139,8 +139,9 @@
         'getAvailableConnections'
       ]),
       tryFetchConnections() {
-        if (!this.is_fetched && !this.is_fetching)
-          this.$store.dispatch('fetchConnections')
+        if (!this.is_fetched && !this.is_fetching) {
+          this.$store.dispatch('v2_action_fetchConnections', {})
+        }
       },
       tryUpdateConnection(attrs) {
         var eid = attrs.eid

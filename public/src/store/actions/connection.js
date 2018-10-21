@@ -4,18 +4,17 @@ import * as types from '../mutation-types'
 
 // ----------------------------------------------------------------------- //
 
-export const fetchConnections = ({ commit }) => {
+export const v2_action_fetchConnections = ({ commit }, { user_eid }) => {
   commit(types.FETCHING_CONNECTIONS, { fetching: true })
 
-  return api.fetchConnections().then(response => {
-    // success callback
-    commit(types.FETCHED_CONNECTIONS, { connections: response.body })
+  return api.v2_fetchConnections().then(response => {
+    var connections = response.data
+    commit(types.FETCHED_CONNECTIONS, { connections })
     commit(types.FETCHING_CONNECTIONS, { fetching: false })
     return response
-  }, response => {
-    // error callback
+  }).catch(error => {
     commit(types.FETCHING_CONNECTIONS, { fetching: false })
-    return response
+    return error
   })
 }
 

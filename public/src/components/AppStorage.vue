@@ -123,8 +123,9 @@
         this.$nextTick(() => { this.$refs['modal-connection-props'].open() })
       },
       tryFetchConnections() {
-        if (!this.is_fetched && !this.is_fetching)
-          this.$store.dispatch('fetchConnections')
+        if (!this.is_fetched && !this.is_fetching) {
+          this.$store.dispatch('v2_action_fetchConnections', {})
+        }
       },
       onConnectionActivate(item) {
         this.connection = _.assign({}, item)
