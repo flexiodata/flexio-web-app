@@ -63,17 +63,14 @@ export const v2_action_updateConnection = ({ commit }, { user_eid, eid, attrs })
   })
 }
 
-export const deleteConnection = ({ commit }, { user_eid, attrs }) => {
+export const v2_action_deleteConnection = ({ commit }, { user_eid, eid }) => {
+  var attrs = { eid }
   commit(types.DELETING_CONNECTION, { attrs })
 
-  var eid = _.get(attrs, 'eid', '')
-  return api.deleteConnection({ eid }).then(response => {
-    // success callback
+  return api.v2_deleteConnection(user_eid, eid).then(response => {
     commit(types.DELETED_CONNECTION, { attrs })
-    return response
-  }, response => {
-    // error callback
-    return response
+  }).catch(error => {
+    return error
   })
 }
 
