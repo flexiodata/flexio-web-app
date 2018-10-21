@@ -17,7 +17,7 @@
       Spinner
     },
     mounted() {
-      this.$store.dispatch('v2_action_fetchPipes').then(response => {
+      this.$store.dispatch('v2_action_fetchPipes', {}).then(response => {
         if (response.ok) {
           var pipes = response.data
           var pipe = _.find(pipes, { alias: 'example-email-results-of-python-function' })

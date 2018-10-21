@@ -4,10 +4,10 @@ import { OBJECT_TYPE_PIPE } from '../../constants/object-type'
 
 // ----------------------------------------------------------------------- //
 
-export const v2_action_fetchPipes = ({ commit }) => {
+export const v2_action_fetchPipes = ({ commit }, { user_eid }) => {
   commit(types.FETCHING_PIPES, { fetching: true })
 
-  return api.v2_fetchPipes().then(response => {
+  return api.v2_fetchPipes(user_eid).then(response => {
     var pipes = response.data
     commit(types.FETCHED_PIPES, { pipes })
     commit(types.FETCHING_PIPES, { fetching: false })

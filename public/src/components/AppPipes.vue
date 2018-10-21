@@ -109,7 +109,7 @@
       },
       tryFetchPipes() {
         if (!this.is_fetched && !this.is_fetching) {
-          this.$store.dispatch('v2_action_fetchPipes')
+          this.$store.dispatch('v2_action_fetchPipes', {})
         }
       },
       tryCreatePipe(attrs) {

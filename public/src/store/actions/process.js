@@ -8,20 +8,19 @@ import {
 
 // ----------------------------------------------------------------------- //
 
-export const fetchProcesses = ({ commit }, attrs) => {
+export const v2_action_fetchProcesses = ({ commit }, { user_eid, attrs }) => {
   var pipe_eid = _.get(attrs, 'parent_eid', '')
 
   commit(types.FETCHING_PROCESSES, { pipe_eid, fetching: true })
 
-  return api.fetchProcesses({ attrs }).then(response => {
-    // success callback
-    commit(types.FETCHED_PROCESSES, { pipe_eid, processes: response.body })
+  return api.v2_fetchProcesses(user_eid).then(response => {
+    var processes = response.data
+    commit(types.FETCHED_PROCESSES, { pipe_eid, processes })
     commit(types.FETCHING_PROCESSES, { pipe_eid, fetching: false })
     return response
-  }, response => {
-    // error callback
+  }).catch(error => {
     commit(types.FETCHING_PROCESSES, { pipe_eid, fetching: false })
-    return response
+    return error
   })
 }
 
