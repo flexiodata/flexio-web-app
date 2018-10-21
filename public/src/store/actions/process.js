@@ -87,19 +87,18 @@ export const v2_action_cancelProcess = ({ commit, dispatch }, { user_eid, eid })
   })
 }
 
-export const runProcess = ({ commit, dispatch }, { user_eid, eid, attrs }) => {
+export const v2_action_runProcess = ({ commit, dispatch }, { user_eid, eid, cfg }) => {
   commit(types.STARTING_PROCESS, { eid })
 
   dispatch('v2_action_fetchProcess', { user_eid, eid, poll: true })
 
-  return api.runProcess({ eid, attrs }).then(response => {
-    // success callback
-    commit(types.STARTED_PROCESS, { process: { eid, process_status: PROCESS_STATUS_RUNNING } })
+  return api.v2_runProcess(user_eid, eid, cfg).then(response => {
+    var process = { eid, process_status: PROCESS_STATUS_RUNNING }
+    commit(types.STARTED_PROCESS, { process })
     return response
-  }, response => {
-    // error callback
+  }).catch(error => {
     dispatch('v2_action_fetchProcess', { user_eid, eid })
-    return response
+    return error
   })
 }
 

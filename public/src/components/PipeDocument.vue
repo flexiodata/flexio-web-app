@@ -719,7 +719,7 @@
       },
       testPipe() {
         var attrs = _.pick(this.edit_pipe, ['task'])
-        var run_attrs = this.process_input
+        var run_cfg = this.process_input
 
         _.assign(attrs, {
           parent_eid: this.eid,
@@ -731,7 +731,7 @@
         this.$store.dispatch('v2_action_createProcess', { attrs }).then(response => {
           var process = response.data
           var eid = process.eid
-          this.$store.dispatch('runProcess', { eid, attrs: run_attrs })
+          this.$store.dispatch('v2_action_runProcess', { eid, cfg: run_cfg })
         })
 
         // make sure the output is expanded
