@@ -792,24 +792,23 @@
           // TODO: handle 'code' and 'state' and 'error' here...
 
           // for now, re-fetch the connection to update its state
-          this.$store.dispatch('fetchConnection', { eid }).then(response => {
-            if (response.ok) {
-              this.$emit('change', _.omit(response.body, ['name', 'alias', 'description']))
+          this.$store.dispatch('v2_action_fetchConnection', { eid }).then(response => {
+            var connection = response.data
+            this.$emit('change', _.omit(connection, ['name', 'alias', 'description']))
 
-              this.$nextTick(() => {
-                if (this.is_connected) {
-                  this.$message({
-                    message: "You've successfully connected to " + this.service_name + "!",
-                    type: 'success'
-                  })
-                }
-              })
-            } else {
-              this.$message({
-                message: _.get(response, 'data.error.message', ''),
-                type: 'error'
-              })
-            }
+            this.$nextTick(() => {
+              if (this.is_connected) {
+                this.$message({
+                  message: "You've successfully connected to " + this.service_name + "!",
+                  type: 'success'
+                })
+              }
+            })
+          }).catch(error => {
+            this.$message({
+              message: _.get(response, 'data.error.message', ''),
+              type: 'error'
+            })
           })
         })
       },
