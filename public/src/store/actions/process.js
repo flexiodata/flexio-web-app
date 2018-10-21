@@ -75,16 +75,15 @@ export const v2_action_fetchProcess = ({ commit, dispatch }, { user_eid, eid, po
 
 // ----------------------------------------------------------------------- //
 
-export const cancelProcess = ({ commit, dispatch }, { eid }) => {
+export const v2_action_cancelProcess = ({ commit, dispatch }, { user_eid, eid }) => {
   commit(types.CANCELING_PROCESS, { eid })
 
-  return api.cancelProcess({ eid }).then(response => {
-    // success callback
-    commit(types.CANCELED_PROCESS, { process: response.body })
+  return api.v2_cancelProcess(user_eid, eid).then(response => {
+    var process = response.data
+    commit(types.CANCELED_PROCESS, { process })
     return response
-  }, response => {
-    // error callback
-    return response
+  }).catch(error => {
+    return error
   })
 }
 
