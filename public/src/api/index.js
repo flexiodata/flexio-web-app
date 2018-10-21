@@ -155,7 +155,6 @@ export default {
 
   v2_fetchProcessLog:          function(user_eid, eid)      { return AxiosResource(user_eid)[V2_GET] (`/processes/${eid}/log`)          },
   v2_fetchProcessSummary:      function(user_eid)           { return AxiosResource(user_eid)[V2_GET] (`/processes/summary`)             },
-  v2_fetchProcessSummaryDaily: function(user_eid)           { return AxiosResource(user_eid)[V2_GET] (`/processes/summary/daily`)       },
 }
 
 /*

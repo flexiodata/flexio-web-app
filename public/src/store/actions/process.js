@@ -120,19 +120,17 @@ export const v2_action_fetchProcessLog = ({ commit, dispatch }, { user_eid, eid 
 
 // ----------------------------------------------------------------------- //
 
-export const fetchProcessSummary = ({ commit, dispatch }) => {
+export const v2_action_fetchProcessSummary = ({ commit, dispatch }, { user_eid }) => {
   commit(types.FETCHING_PROCESS_SUMMARY, { fetching: true })
 
-  return api.fetchProcessSummary().then(response => {
-    // success callback
-    commit(types.FETCHED_PROCESS_SUMMARY, { items: response.body })
-    commit(types.FETCHING_PROCESS_SUMMARY, { fetching: false })
-
-    return response
-  }, response => {
-    // error callback
+  return api.v2_fetchProcessSummary(user_eid).then(response => {
+    var items = response.data
+    commit(types.FETCHED_PROCESS_SUMMARY, { items })
     commit(types.FETCHING_PROCESS_SUMMARY, { fetching: false })
     return response
+  }).catch(error => {
+    commit(types.FETCHING_PROCESS_SUMMARY, { fetching: false })
+    return error
   })
 }
 

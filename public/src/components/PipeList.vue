@@ -121,7 +121,7 @@
           this.$store.dispatch('v2_action_fetchPipes', {})
         }
         if (!this.is_summary_fetched) {
-          this.$store.dispatch('fetchProcessSummary')
+          this.$store.dispatch('v2_action_fetchProcessSummary', {})
         }
       },
       isItemSelected(eid) {
