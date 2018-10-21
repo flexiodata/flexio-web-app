@@ -256,30 +256,17 @@ If you have any questions, please send us a note using the chat button at the bo
         _.assign(attrs, { eid_status: OBJECT_STATUS_AVAILABLE })
 
         // update the connection and make it available
-        this.$store.dispatch('updateConnection', { eid, attrs }).then(response => {
-          if (response.ok)
-          {
-            var connection = response.body
+        this.$store.dispatch('v2_action_updateConnection', { eid, attrs }).then(response => {
+          var connection = response.data
 
-            // try to connect to the connection
-            this.$store.dispatch('testConnection', { eid, attrs })
+          // try to connect to the connection
+          this.$store.dispatch('testConnection', { eid, attrs })
 
-            if (is_pending)
-            {
-              var analytics_payload = _.pick(attrs, ['eid', 'name', 'alias', 'description', 'connection_type'])
-              //this.$store.track('Created Connection In Onboarding', analytics_payload)
-            }
+          this.connection_alias = _.get(connection, 'alias', '')
 
-            this.connection_alias = _.get(connection, 'alias', '')
+          this.show_connection_new_dialog = false
 
-            this.show_connection_new_dialog = false
-
-            this.goStep(this.active_step + 1)
-          }
-           else
-          {
-            //this.$store.track('Created Connection In Onboarding (Error)')
-          }
+          this.goStep(this.active_step + 1)
         })
       },
       tryCreatePipe(attrs) {

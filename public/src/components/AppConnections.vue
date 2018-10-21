@@ -152,36 +152,31 @@
         _.assign(attrs, { eid_status: OBJECT_STATUS_AVAILABLE })
 
         // update the connection and make it available
-        this.$store.dispatch('updateConnection', { eid, attrs }).then(response => {
-          if (response.ok)
-          {
-            this.$message({
-              message: is_pending ? 'The connection was created successfully.' : 'The connection was updated successfully.',
-              type: 'success'
-            })
+        this.$store.dispatch('v2_action_updateConnection', { eid, attrs }).then(response => {
+          var connection = response.data
 
-            // try to connect to the connection
-            this.$store.dispatch('testConnection', { eid, attrs })
+          this.$message({
+            message: is_pending ? 'The connection was created successfully.' : 'The connection was updated successfully.',
+            type: 'success'
+          })
 
-            if (is_pending)
-            {
-              var analytics_payload = _.pick(attrs, ['eid', 'name', 'alias', 'description', 'connection_type'])
-              this.$store.track('Created Connection', analytics_payload)
-            }
+          // try to connect to the connection
+          this.$store.dispatch('testConnection', { eid, attrs })
 
-            this.show_connection_new_dialog = false
-
-            this.selectConnection(_.get(response, 'body', {}))
+          if (is_pending) {
+            var analytics_payload = _.pick(attrs, ['eid', 'name', 'alias', 'description', 'connection_type'])
+            this.$store.track('Created Connection', analytics_payload)
           }
-           else
-          {
-            this.$message({
-              message: is_pending ? 'There was a problem creating the connection.' : 'There was a problem updating the connection.',
-              type: 'error'
-            })
 
-            this.$store.track('Created Connection (Error)')
-          }
+          this.selectConnection(connection)
+          this.show_connection_new_dialog = false
+        }).catch(error => {
+          this.$message({
+            message: is_pending ? 'There was a problem creating the connection.' : 'There was a problem updating the connection.',
+            type: 'error'
+          })
+
+          this.$store.track('Created Connection (Error)')
         })
       },
       tryDeleteConnection(attrs) {

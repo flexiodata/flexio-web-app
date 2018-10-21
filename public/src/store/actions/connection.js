@@ -20,15 +20,15 @@ export const v2_action_fetchConnections = ({ commit }, { user_eid }) => {
 
 // ----------------------------------------------------------------------- //
 
-export const createConnection = ({ commit }, { user_eid, attrs }) => {
+export const v2_action_createConnection = ({ commit }, { user_eid, attrs }) => {
   commit(types.CREATING_CONNECTION, { attrs })
 
-  return api.createConnection({ attrs }).then(response => {
-    var connection = response.body
+  return api.v2_createConnection(user_eid, attrs).then(response => {
+    var connection = response.data
     commit(types.CREATED_CONNECTION, { attrs, connection })
     return response
-  }, response => {
-    return response
+  }).catch(error => {
+    return error
   })
 }
 
@@ -46,20 +46,20 @@ export const v2_action_fetchConnection = ({ commit }, { user_eid, eid }) => {
   })
 }
 
-export const updateConnection = ({ commit }, { user_eid, eid, attrs }) => {
+export const v2_action_updateConnection = ({ commit }, { user_eid, eid, attrs }) => {
   // don't POST '*****' values
-  if (attrs.connection_info)
+  if (attrs.connection_info) {
     attrs.connection_info = util.sanitizeMasked(attrs.connection_info)
+  }
 
   commit(types.UPDATING_CONNECTION, { eid, attrs })
 
-  return api.updateConnection({ eid, attrs }).then(response => {
-    // success callback
-    commit(types.UPDATED_CONNECTION, { eid, attrs: response.body })
+  return api.v2_updateConnection(user_eid, eid, attrs).then(response => {
+    var attrs = response.data
+    commit(types.UPDATED_CONNECTION, { eid, attrs })
     return response
-  }, response => {
-    // error callback
-    return response
+  }).catch(error => {
+    return error
   })
 }
 

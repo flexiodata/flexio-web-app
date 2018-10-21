@@ -185,26 +185,15 @@
         _.assign(attrs, { eid_status: OBJECT_STATUS_AVAILABLE })
 
         // update the connection and make it available
-        this.$store.dispatch('updateConnection', { eid, attrs }).then(response => {
-          var connection = response.body
+        this.$store.dispatch('v2_action_updateConnection', { eid, attrs }).then(response => {
+          var connection = response.data
 
-          if (response.ok) {
-            // TODO: shouldn't we do this in the ConnectionEditPanel?
-            // try to connect to the connection
-            this.$store.dispatch('testConnection', { eid, attrs })
+          // TODO: shouldn't we do this in the ConnectionEditPanel?
+          // try to connect to the connection
+          this.$store.dispatch('testConnection', { eid, attrs })
 
-            /*
-            if (is_pending) {
-              var analytics_payload = _.pick(attrs, ['eid', 'name', 'alias', 'description', 'connection_type'])
-              this.$store.track('Created Connection In Template Builder', analytics_payload)
-            }
-            */
-
-            this.chooseConnection(connection)
-            this.show_connection_dialog = false
-          } else {
-            //this.$store.track('Created Connection In Template Builder (Error)')
-          }
+          this.chooseConnection(connection)
+          this.show_connection_dialog = false
         })
       }
     }

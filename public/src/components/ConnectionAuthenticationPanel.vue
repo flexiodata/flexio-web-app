@@ -814,28 +814,25 @@
       },
       tryTest(attrs) {
         var eid = attrs.eid
-        //attrs = _.pick(attrs, ['name', 'alias', 'description', 'connection_info'])
         attrs = _.pick(attrs, ['name', 'description', 'connection_info'])
 
         // update the connection
-        this.$store.dispatch('updateConnection', { eid, attrs }).then(response => {
-          if (response.ok) {
-            this.test_state = 'testing'
+        this.$store.dispatch('v2_action_updateConnection', { eid, attrs }).then(response => {
+          this.test_state = 'testing'
 
-            // test the connection
-            this.$store.dispatch('testConnection', { eid, attrs }).then(response => {
-              if (response.ok) {
-                this.test_state = 'success'
-                this.$emit('change', _.omit(response.body, ['name', 'alias', 'description', 'connection_info']))
-              } else {
-                this.test_state = 'error'
-                setTimeout(() => { this.test_state = 'none' }, 4000)
-              }
-            })
-          } else {
-            this.test_state = 'error'
-            setTimeout(() => { this.test_state = 'none' }, 4000)
-          }
+          // test the connection
+          this.$store.dispatch('testConnection', { eid, attrs }).then(response => {
+            if (response.ok) {
+              this.test_state = 'success'
+              this.$emit('change', _.omit(response.body, ['name', 'alias', 'description', 'connection_info']))
+            } else {
+              this.test_state = 'error'
+              setTimeout(() => { this.test_state = 'none' }, 4000)
+            }
+          })
+        }).catch(error => {
+          this.test_state = 'error'
+          setTimeout(() => { this.test_state = 'none' }, 4000)
         })
       }
     }
