@@ -295,16 +295,12 @@
           run: true // this will automatically run the process and start polling the process
         })
 
-        this.$store.dispatch('createProcess', { attrs }).then(response => {
-          if (response.ok) {
-            var process = response.body
-            this.$store.commit('builder/CREATE_PROCESS', process)
-            this.$store.track('Ran Process From Template', {
-              title: this.def.name
-            })
-          } else {
-            // TODO: add error handling
-          }
+        this.$store.dispatch('v2_action_createProcess', { attrs }).then(response => {
+          var process = response.data
+          this.$store.commit('builder/CREATE_PROCESS', process)
+          this.$store.track('Ran Process From Template', {
+            title: this.def.name
+          })
         })
       },
       openPipe() {

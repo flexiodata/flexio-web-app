@@ -728,8 +728,9 @@
           */
         })
 
-        this.$store.dispatch('createProcess', { attrs }).then(response => {
-          var eid = response.body.eid
+        this.$store.dispatch('v2_action_createProcess', { attrs }).then(response => {
+          var process = response.data
+          var eid = process.eid
           this.$store.dispatch('runProcess', { eid, attrs: run_attrs })
         })
 
