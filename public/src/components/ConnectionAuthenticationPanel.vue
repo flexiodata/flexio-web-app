@@ -780,7 +780,7 @@
           this.$emit('change', connection)
         }).catch(error => {
           this.$message({
-            message: _.get(response, 'data.error.message', ''),
+            message: _.get(error, 'data.error.message', ''),
             type: 'error'
           })
         })
@@ -806,7 +806,7 @@
             })
           }).catch(error => {
             this.$message({
-              message: _.get(response, 'data.error.message', ''),
+              message: _.get(error, 'data.error.message', ''),
               type: 'error'
             })
           })
