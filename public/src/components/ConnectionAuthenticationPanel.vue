@@ -769,20 +769,20 @@
         var eid = attrs.eid
 
         // disconnect from this connection (oauth only)
-        this.$store.dispatch('disconnectConnection', { eid, attrs }).then(response => {
-          if (response.ok) {
-            this.$message({
-              message: "You've successfully disconnected from " + this.service_name + ".",
-              type: 'success'
-            })
+        this.$store.dispatch('v2_action_disconnectConnection', { eid, attrs }).then(response => {
+          var connection = response.data
 
-            this.$emit('change', response.body)
-          } else {
-            this.$message({
-              message: _.get(response, 'data.error.message', ''),
-              type: 'error'
-            })
-          }
+          this.$message({
+            message: "You've successfully disconnected from " + this.service_name + ".",
+            type: 'success'
+          })
+
+          this.$emit('change', connection)
+        }).catch(error => {
+          this.$message({
+            message: _.get(response, 'data.error.message', ''),
+            type: 'error'
+          })
         })
       },
       tryOauthConnect() {

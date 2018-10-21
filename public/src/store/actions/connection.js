@@ -94,16 +94,15 @@ export const v2_action_testConnection = ({ commit }, { user_eid, eid, attrs }) =
   })
 }
 
-export const disconnectConnection = ({ commit }, { user_eid, eid, attrs }) => {
+export const v2_action_disconnectConnection = ({ commit }, { user_eid, eid, attrs }) => {
   commit(types.TESTING_CONNECTION, { eid, disconnecting: true })
 
-  return api.disconnectConnection({ eid, attrs }).then(response => {
-    // success callback
-    commit(types.DISCONNECTED_CONNECTION, { eid, attrs: response.body })
+  return api.v2_disconnectConnection(eid, attrs).then(response => {
+    var attrs = response.data
+    commit(types.DISCONNECTED_CONNECTION, { eid, attrs })
     commit(types.TESTING_CONNECTION, { eid, disconnecting: false })
     return response
-  }, response => {
-    // error callback
-    return response
+  }).catch(error => {
+    return error
   })
 }
