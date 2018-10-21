@@ -124,7 +124,7 @@
           this.$store.dispatch('fetchUser', { eid: user_eid })
         }
 
-        this.$store.dispatch('fetchProcess', { eid: this.processEid })
+        this.$store.dispatch('v2_action_fetchProcess', { eid: this.processEid })
       },
       onClose() {
         this.$emit('close')

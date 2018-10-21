@@ -65,34 +65,32 @@ export const createProcess = ({ commit, dispatch }, { attrs }) => {
   })
 }
 
-export const fetchProcess = ({ commit, dispatch }, { eid, poll }) => {
+export const v2_action_fetchProcess = ({ commit, dispatch }, { user_eid, eid, poll }) => {
   commit(types.FETCHING_PROCESS, { eid, fetching: true })
 
-  return api.fetchProcess({ eid }).then(response => {
-    // success callback
-    commit(types.FETCHED_PROCESS, response.body)
+  return api.v2_fetchProcess(user_eid, eid).then(response => {
+    var process = response.data
+    commit(types.FETCHED_PROCESS, process)
     commit(types.FETCHING_PROCESS, { eid, fetching: false })
 
     if (poll == true) {
       // poll the process while it is still running
-      var status = _.get(response.body, 'process_status')
+      var status = _.get(process, 'process_status')
       if (_.includes([
             PROCESS_STATUS_PENDING,
             PROCESS_STATUS_WAITING,
             PROCESS_STATUS_RUNNING
           ], status)) {
         _.delay(function() {
-          var eid = _.get(response.body, 'eid', '')
-          dispatch('fetchProcess', { eid, poll: true })
+          dispatch('fetchProcess', { user_eid, eid, poll: true })
         }, 500)
       }
     }
 
     return response
-  }, response => {
-    // error callback
+  }).catch(error => {
     commit(types.FETCHING_PROCESS, { eid, fetching: false })
-    return response
+    return error
   })
 }
 
