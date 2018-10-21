@@ -165,8 +165,8 @@
             connection_type: this.connectionTypeFilter
           }
 
-          this.$store.dispatch('createConnection', { attrs }).then(response => {
-            var connection = response.body
+          this.$store.dispatch('v2_action_createConnection', { attrs }).then(response => {
+            var connection = _.cloneDeep(response.data)
             this.edit_mode = 'add'
             this.edit_connection = connection
             this.show_connection_dialog = true

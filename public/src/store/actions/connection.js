@@ -36,7 +36,7 @@ export const v2_action_fetchConnection = ({ commit }, { user_eid, eid }) => {
   commit(types.FETCHING_CONNECTION, { eid, fetching: true })
 
   return api.v2_fetchConnection(user_eid, eid).then(response => {
-    var connection = response.body
+    var connection = response.data
     commit(types.FETCHED_CONNECTION, connection)
     commit(types.FETCHING_CONNECTION, { eid, fetching: false })
     return response

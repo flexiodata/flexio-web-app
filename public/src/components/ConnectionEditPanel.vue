@@ -406,21 +406,14 @@
           connection_type: item.connection_type
         })
 
-        this.$store.dispatch('createConnection', { attrs }).then(response => {
-          if (response.ok)
-          {
-            var connection = _.cloneDeep(response.body)
-            var service_slug = util.slugify(item.service_name)
+        this.$store.dispatch('v2_action_createConnection', { attrs }).then(response => {
+          var connection = _.cloneDeep(response.data)
+          var service_slug = util.slugify(item.service_name)
 
-            // create a default alias
-            connection.alias = 'my-' + service_slug
+          // create a default alias
+          connection.alias = 'my-' + service_slug
 
-            this.updateConnection(connection)
-          }
-           else
-          {
-            // TODO: add error handling
-          }
+          this.updateConnection(connection)
         })
       },
       formValidateAlias(rule, value, callback) {
