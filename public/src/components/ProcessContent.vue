@@ -141,7 +141,7 @@
       ]),
       fetchProcessLog() {
         if (this.processEid.length > 0) {
-          this.$store.dispatch('fetchProcessLog', { eid: this.processEid })
+          this.$store.dispatch('v2_action_fetchProcessLog', { eid: this.processEid })
         }
       }
     }

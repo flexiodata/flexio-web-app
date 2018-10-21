@@ -104,38 +104,17 @@ export const v2_action_runProcess = ({ commit, dispatch }, { user_eid, eid, cfg 
 
 // ----------------------------------------------------------------------- //
 
-export const fetchAdminProcesses = ({ commit }, attrs) => {
-  var pipe_eid = _.get(attrs, 'parent_eid', '')
-
-  commit(types.FETCHING_PROCESSES, { pipe_eid, fetching: true })
-
-  return api.fetchAdminProcesses({ attrs }).then(response => {
-    // success callback
-    commit(types.FETCHED_PROCESSES, { pipe_eid, processes: response.body })
-    commit(types.FETCHING_PROCESSES, { pipe_eid, fetching: false })
-    return response
-  }, response => {
-    // error callback
-    commit(types.FETCHING_PROCESSES, { pipe_eid, fetching: false })
-    return response
-  })
-}
-
-// ----------------------------------------------------------------------- //
-
-export const fetchProcessLog = ({ commit, dispatch }, { eid }) => {
+export const v2_action_fetchProcessLog = ({ commit, dispatch }, { user_eid, eid }) => {
   commit(types.FETCHING_PROCESS_LOG, { eid, fetching: true })
 
-  return api.fetchProcessLog({ eid }).then(response => {
-    // success callback
-    commit(types.FETCHED_PROCESS_LOG, { eid, log: response.body })
-    commit(types.FETCHING_PROCESS_LOG, { eid, fetching: false })
-
-    return response
-  }, response => {
-    // error callback
+  return api.v2_fetchProcessLog(user_eid, eid).then(response => {
+    var log = response.data
+    commit(types.FETCHED_PROCESS_LOG, { eid, log })
     commit(types.FETCHING_PROCESS_LOG, { eid, fetching: false })
     return response
+  }).catch(error => {
+    commit(types.FETCHING_PROCESS_LOG, { eid, fetching: false })
+    return error
   })
 }
 
@@ -153,6 +132,25 @@ export const fetchProcessSummary = ({ commit, dispatch }) => {
   }, response => {
     // error callback
     commit(types.FETCHING_PROCESS_SUMMARY, { fetching: false })
+    return response
+  })
+}
+
+// ----------------------------------------------------------------------- //
+
+export const fetchAdminProcesses = ({ commit }, attrs) => {
+  var pipe_eid = _.get(attrs, 'parent_eid', '')
+
+  commit(types.FETCHING_PROCESSES, { pipe_eid, fetching: true })
+
+  return api.fetchAdminProcesses({ attrs }).then(response => {
+    // success callback
+    commit(types.FETCHED_PROCESSES, { pipe_eid, processes: response.body })
+    commit(types.FETCHING_PROCESSES, { pipe_eid, fetching: false })
+    return response
+  }, response => {
+    // error callback
+    commit(types.FETCHING_PROCESSES, { pipe_eid, fetching: false })
     return response
   })
 }
