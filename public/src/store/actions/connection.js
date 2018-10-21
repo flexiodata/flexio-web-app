@@ -97,7 +97,7 @@ export const v2_action_testConnection = ({ commit }, { user_eid, eid, attrs }) =
 export const v2_action_disconnectConnection = ({ commit }, { user_eid, eid, attrs }) => {
   commit(types.TESTING_CONNECTION, { eid, disconnecting: true })
 
-  return api.v2_disconnectConnection(eid, attrs).then(response => {
+  return api.v2_disconnectConnection(user_eid, eid, attrs).then(response => {
     var attrs = response.data
     commit(types.DISCONNECTED_CONNECTION, { eid, attrs })
     commit(types.TESTING_CONNECTION, { eid, disconnecting: false })
