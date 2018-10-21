@@ -161,7 +161,7 @@
           })
 
           // try to connect to the connection
-          this.$store.dispatch('testConnection', { eid, attrs })
+          this.$store.dispatch('v2_action_testConnection', { eid, attrs })
 
           if (is_pending) {
             var analytics_payload = _.pick(attrs, ['eid', 'name', 'alias', 'description', 'connection_type'])

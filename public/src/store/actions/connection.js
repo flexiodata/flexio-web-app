@@ -76,21 +76,21 @@ export const v2_action_deleteConnection = ({ commit }, { user_eid, eid }) => {
 
 // ----------------------------------------------------------------------- //
 
-export const testConnection = ({ commit }, { user_eid, eid, attrs }) => {
+export const v2_action_testConnection = ({ commit }, { user_eid, eid, attrs }) => {
   // don't POST '*****' values
-  if (attrs.connection_info)
+  if (attrs.connection_info) {
     attrs.connection_info = util.sanitizeMasked(attrs.connection_info)
+  }
 
   commit(types.TESTING_CONNECTION, { eid, testing: true })
 
-  return api.testConnection({ eid, attrs }).then(response => {
-    // success callback
-    commit(types.TESTED_CONNECTION, { eid, attrs: response.body })
+  return api.v2_testConnection(user_eid, eid, attrs).then(response => {
+    var attrs = response.data
+    commit(types.TESTED_CONNECTION, { eid, attrs })
     commit(types.TESTING_CONNECTION, { eid, testing: false })
     return response
-  }, response => {
-    // error callback
-    return response
+  }).catch(error => {
+    return error
   })
 }
 

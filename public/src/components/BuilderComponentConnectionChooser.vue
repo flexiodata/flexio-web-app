@@ -190,7 +190,7 @@
 
           // TODO: shouldn't we do this in the ConnectionEditPanel?
           // try to connect to the connection
-          this.$store.dispatch('testConnection', { eid, attrs })
+          this.$store.dispatch('v2_action_testConnection', { eid, attrs })
 
           this.chooseConnection(connection)
           this.show_connection_dialog = false

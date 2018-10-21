@@ -260,7 +260,7 @@ If you have any questions, please send us a note using the chat button at the bo
           var connection = response.data
 
           // try to connect to the connection
-          this.$store.dispatch('testConnection', { eid, attrs })
+          this.$store.dispatch('v2_action_testConnection', { eid, attrs })
 
           this.connection_alias = _.get(connection, 'alias', '')
 
