@@ -52,13 +52,16 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
     public static function accumulateStats(array $filter, string $object_column) : array
     {
         // construct a date range from the filter
-        $date_start = '';
-        $date_end = '';
+        $date_start = $filter['created_min'] ?? false;
+        $date_end = $filter['created_max'] ?? false;
+
+        if ($date_start === false || $date_end === false)
+            return array();
 
         try
         {
-            $date_start = (new \DateTime($filter['created_min']))->format('Y-m-d');
-            $date_end = (new \DateTime($filter['created_max']))->format('Y-m-d');
+            $date_start = (new \DateTime($date_start ))->format('Y-m-d');
+            $date_end = (new \DateTime($date_end))->format('Y-m-d');
         }
         catch (\Exception $e)
         {
