@@ -61,11 +61,6 @@ export default {
   // validation
   validate:                       function({ attrs })                   { return ValidateResource[POS] ({}, attrs)                                        },
 
-  // token
-  fetchTokens:                    function()                            { return TokenResource[GET] ()                                                    },
-  createToken:                    function()                            { return TokenResource[POS] ()                                                    },
-  deleteToken:                    function({ eid })                     { return TokenResource[DEL] ({ eid })                                             },
-
   /* -- Axios-based v2 API -- */
 
   // connections
