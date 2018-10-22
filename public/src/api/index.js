@@ -61,12 +61,6 @@ export default {
   // validation
   validate:                       function({ attrs })                   { return ValidateResource[POS] ({}, attrs)                                        },
 
-  // rights
-  fetchRights:                    function({ attrs })                   { return RightsResource[GET] (attrs)                                              },
-  createRights:                   function({ attrs })                   { return RightsResource[POS] ({}, attrs)                                          },
-  updateRight:                    function({ eid, attrs })              { return RightsResource[POS] ({ eid }, attrs)                                     },
-  deleteRight:                    function({ eid })                     { return RightsResource[DEL] ({ eid })                                            },
-
   // token
   fetchTokens:                    function()                            { return TokenResource[GET] ()                                                    },
   createToken:                    function()                            { return TokenResource[POS] ()                                                    },
@@ -165,6 +159,7 @@ export default {
   // streams
   v2_fetchStream:          function(user_eid, eid)        { return AxiosResource(user_eid)[V2_GET] (`/streams/${eid}`)                       },
 
+  // admin
   v2_fetchAdminProcesses:  function(attrs)                { return AxiosResource('admin')[V2_GET] (`/info/processes`, attrs)                 },
   v2_fetchAdminTests:      function()                     { return AxiosResource('admin')[V2_GET] (`/tests/configure`)                       },
   v2_runAdminTest:         function(attrs)                { return AxiosResource('admin')[V2_GET] (`/tests/run`, attrs)                      },

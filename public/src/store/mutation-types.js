@@ -143,20 +143,6 @@ export const CREATED_TOKEN   = 'CREATED_TOKEN'
 export const DELETING_TOKEN  = 'DELETING_TOKEN'
 export const DELETED_TOKEN   = 'DELETED_TOKEN'
 
-/* **** RIGHT MUTATIONS TYPES **** */
-
-export const FETCHING_RIGHTS = 'FETCHING_RIGHTS'
-export const FETCHED_RIGHTS  = 'FETCHED_RIGHTS'
-
-export const CREATING_RIGHT  = 'CREATING_RIGHT'
-export const CREATED_RIGHT   = 'CREATED_RIGHT'
-
-export const UPDATING_RIGHT  = 'UPDATING_RIGHT'
-export const UPDATED_RIGHT   = 'UPDATED_RIGHT'
-
-export const DELETING_RIGHT  = 'DELETING_RIGHT'
-export const DELETED_RIGHT   = 'DELETED_RIGHT'
-
 /* **** TRASH MUTATIONS TYPES **** */
 
 // multiple
