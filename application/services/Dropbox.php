@@ -85,7 +85,6 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             {
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, "The path could not be found");
             }
-
         }
 
         while (true)
@@ -414,6 +413,8 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         $merged_path = \Flexio\Services\Util::mergePath($this->base_path, $path);
         if (substr($merged_path, 0, 1) != '/')
             $merged_path = '/' . $merged_path;
+        if ($merged_path == '/')
+            return '';
         return $merged_path;
     }
 
