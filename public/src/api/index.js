@@ -72,57 +72,6 @@ export default {
   deleteUser:                     function({ eid, attrs })              { return AccountResource[DEL] ({ eid }, attrs)                                    },
   changePassword:                 function({ eid, attrs })              { return AccountResource[POS] ({ eid, p1: 'credentials' }, attrs)                 },
 
-  // connection
-  fetchConnections:               function()                            { return ConnectionResource[GET] ()                                               },
-  fetchConnection:                function({ eid })                     { return ConnectionResource[GET] ({ eid })                                        },
-  createConnection:               function({ attrs })                   { return ConnectionResource[POS] ({}, attrs)                                      },
-  updateConnection:               function({ eid, attrs })              { return ConnectionResource[POS] ({ eid }, attrs)                                 },
-  deleteConnection:               function({ eid })                     { return ConnectionResource[DEL] ({ eid })                                        },
-  testConnection:                 function({ eid, attrs })              { return ConnectionResource[POS] ({ eid, p1: 'connect' }, attrs)                  },
-  disconnectConnection:           function({ eid, attrs })              { return ConnectionResource[POS] ({ eid, p1: 'disconnect' }, attrs)               },
-
-  // pipe
-  fetchPipes:                     function()                            { return PipeResource[GET] ()                                                     },
-  fetchPipe:                      function({ eid })                     { return PipeResource[GET] ({ eid })                                              },
-  createPipe:                     function({ attrs })                   { return PipeResource[POS] ({}, attrs)                                            },
-  updatePipe:                     function({ eid, attrs })              { return PipeResource[POS] ({ eid }, attrs)                                       },
-  deletePipe:                     function({ eid })                     { return PipeResource[DEL] ({ eid })                                              },
-
-  // process
-  fetchProcesses:                 function({ attrs })                   { return ProcessResource[GET] (attrs)                                             },
-  fetchProcess:                   function({ eid, user_eid }) {
-    var user_eid = user_eid || 'me'
-    return UserProcessResource[GET] ({ eid, user_eid })
-  },
-  createProcess:                  function({ attrs })                   { return ProcessResource[POS] ({}, attrs)                                         },
-  cancelProcess:                  function({ eid })                     { return ProcessResource[POS] ({ eid, p1: 'cancel' }, {})                         },
-
-  // `attrs` differs here from other calls in that it wraps up all of the options (headers, etc.)
-  runProcess: function({ eid, attrs }) {
-    var config = {
-      method: 'post',
-      url: '/api/v2/me/processes/' + eid + '/run',
-      withCredentials: true,
-      headers: attrs.headers,
-      data: attrs.data
-    }
-
-    return axios(config)
-  },
-
-  // process (other)
-  fetchProcessLog:                function({ eid })                     { return ProcessResource[GET] ({ eid, p1: 'log' })                                },
-  fetchProcessSummary:            function()                            { return ProcessResource[GET] ({ p1: 'summary' })                                 },
-
-  // stream
-  fetchStream:                    function({ eid })                     { return StreamResource[GET] ({ eid })                                            },
-
-  // admin
-  fetchAdminInfo:                 function({ type, action })            { return AdminInfoResource[GET] ({ p1: type, p2: action })                        },
-  fetchAdminProcesses:            function({ attrs })                   { return AdminInfoResource[GET] (Object.assign({ p1: 'processes' }, attrs))       },
-  fetchAdminTests:                function()                            { return AdminTestResource[GET] ({ p1: 'configure' })                             },
-  runAdminTest:                   function({ id })                      { return AdminTestResource[GET] ({ p1: 'run', id })                               },
-
   // vfs
   vfsListFiles:                   function({ path })                    { return VfsResource[GET] ({ p1: 'list', q: path })                               },
   vfsGetFile:                     function({ path })                    { return VfsResource[GET] ({ p1: path })                                          },
