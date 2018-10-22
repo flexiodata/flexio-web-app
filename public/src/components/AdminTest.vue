@@ -127,8 +127,8 @@
     mounted() {
       var me = this
 
-      api.fetchAdminTests().then(response => {
-        var tests = _.map(response.body, (id, idx) => {
+      api.v2_fetchAdminTests().then(response => {
+        var tests = _.map(response.data, (id, idx) => {
           return { id, idx }
         })
 
