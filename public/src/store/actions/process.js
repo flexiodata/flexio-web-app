@@ -8,11 +8,28 @@ import {
 
 // ----------------------------------------------------------------------- //
 
+export const v2_action_fetchAdminProcesses = ({ commit }, { attrs }) => {
+  var pipe_eid = _.get(attrs, 'parent_eid', '')
+  commit(types.FETCHING_PROCESSES, { pipe_eid, fetching: true })
+
+  return api.v2_fetchAdminProcesses(attrs).then(response => {
+    var processes = response.data
+    commit(types.FETCHED_PROCESSES, { pipe_eid, processes })
+    commit(types.FETCHING_PROCESSES, { pipe_eid, fetching: false })
+    return response
+  }).catch(error => {
+    commit(types.FETCHING_PROCESSES, { pipe_eid, fetching: false })
+    return error
+  })
+}
+
+// ----------------------------------------------------------------------- //
+
 export const v2_action_fetchProcesses = ({ commit }, { user_eid, attrs }) => {
   var pipe_eid = _.get(attrs, 'parent_eid', '')
   commit(types.FETCHING_PROCESSES, { pipe_eid, fetching: true })
 
-  return api.v2_fetchProcesses(user_eid).then(response => {
+  return api.v2_fetchProcesses(user_eid, attrs).then(response => {
     var processes = response.data
     commit(types.FETCHED_PROCESSES, { pipe_eid, processes })
     commit(types.FETCHING_PROCESSES, { pipe_eid, fetching: false })
@@ -131,24 +148,5 @@ export const v2_action_fetchProcessSummary = ({ commit, dispatch }, { user_eid }
   }).catch(error => {
     commit(types.FETCHING_PROCESS_SUMMARY, { fetching: false })
     return error
-  })
-}
-
-// ----------------------------------------------------------------------- //
-
-export const fetchAdminProcesses = ({ commit }, attrs) => {
-  var pipe_eid = _.get(attrs, 'parent_eid', '')
-
-  commit(types.FETCHING_PROCESSES, { pipe_eid, fetching: true })
-
-  return api.fetchAdminProcesses({ attrs }).then(response => {
-    // success callback
-    commit(types.FETCHED_PROCESSES, { pipe_eid, processes: response.body })
-    commit(types.FETCHING_PROCESSES, { pipe_eid, fetching: false })
-    return response
-  }, response => {
-    // error callback
-    commit(types.FETCHING_PROCESSES, { pipe_eid, fetching: false })
-    return response
   })
 }

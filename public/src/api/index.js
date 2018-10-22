@@ -154,7 +154,7 @@ export default {
   v2_deletePipe:           function(user_eid, eid)        { return AxiosResource(user_eid)[V2_DEL] (`/pipes/${eid}`)                         },
 
   // processes
-  v2_fetchProcesses:       function(user_eid)             { return AxiosResource(user_eid)[V2_GET] (`/processes`)                            },
+  v2_fetchProcesses:       function(user_eid, attrs)      { return AxiosResource(user_eid)[V2_GET] (`/processes`, attrs)                     },
   v2_fetchProcess:         function(user_eid, eid)        { return AxiosResource(user_eid)[V2_GET] (`/processes/${eid}`)                     },
   v2_createProcess:        function(user_eid, attrs)      { return AxiosResource(user_eid)[V2_POS] (`/processes`, attrs)                     },
   v2_cancelProcess:        function(user_eid, eid)        { return AxiosResource(user_eid)[V2_POS] (`/processes/${eid}/cancel`)              },
@@ -164,6 +164,10 @@ export default {
 
   // streams
   v2_fetchStream:          function(user_eid, eid)        { return AxiosResource(user_eid)[V2_GET] (`/streams/${eid}`)                       },
+
+  v2_fetchAdminProcesses:  function(attrs)                { return AxiosResource('admin')[V2_GET] (`/info/processes`, attrs)                 },
+  v2_fetchAdminTests:      function()                     { return AxiosResource('admin')[V2_GET] (`/info/configure`)                        },
+  v2_runAdminTest:         function(id)                   { return AxiosResource('admin')[V2_GET] (`/info/run/${id}`)                        },
 }
 
 /*

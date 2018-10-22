@@ -21,9 +21,11 @@
     mounted() {
       var last_week = moment().subtract(1, 'days')
       var created_min = last_week.format('YYYYMMDD')
+      var attrs = { created_min }
 
-      this.$store.dispatch('fetchAdminProcesses', { created_min }).then(response => {
-        this.processes = response.body
+      this.$store.dispatch('v2_action_fetchAdminProcesses', { attrs }).then(response => {
+        var processes = response.data
+        this.processes = processes
       })
     }
   }
