@@ -78,11 +78,9 @@
         this.$_Config_reset(cfg_path)
 
         this.$store.dispatch('v2_action_createPipe', { attrs }).then(response => {
-          if (response.ok) {
-            var pipe = response.body
-            var eid = pipe.eid
-            this.$router.push({ name: ROUTE_PIPES, params: { eid } })
-          }
+          var pipe = response.data
+          var eid = pipe.eid
+          this.$router.push({ name: ROUTE_PIPES, params: { eid } })
         })
       },
       gotoAccount() {
