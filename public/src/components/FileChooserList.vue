@@ -194,16 +194,17 @@
 
         var path = _.defaultTo(this.path, '/')
 
-        api.vfsListFiles({ path }).then(response => {
+        api.v2_vfsListFiles('me', path).then(response => {
           var items = _
-            .chain(_.defaultTo(response.body, []))
+            .chain(_.defaultTo(response.data, []))
             .map((f) => { return _.assign({}, { is_selected: false }, f) })
             .sortBy([{ type: VFS_TYPE_FILE }, function(f) { return _.toLower(f.name) } ])
             .value()
 
           // only show folders
-          if (this.foldersOnly)
+          if (this.foldersOnly) {
             items = _.filter(items, (item) => { return this.isFolderItem(item) })
+          }
 
           // filter by filetype
           if (this.filetypeFilter.length > 0) {
@@ -236,10 +237,11 @@
           }
 
           this.is_inited = true
-        }, response => {
+        }).catch(error => {
+          var response = error.response
           this.is_fetching = false
           this.items = []
-          this.error_message = _.get(response.body, 'error.message', '')
+          this.error_message = _.get(response.data, 'error.message', '')
         })
       }
     }

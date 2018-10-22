@@ -108,6 +108,12 @@ export default {
   // streams
   v2_fetchStream:          function(user_eid, eid)        { return AxiosResource(user_eid)[V2_GET] (`/streams/${eid}`)                       },
 
+  // vfs
+  v2_vfsListFiles:            function(user_eid, path)       { return AxiosResource(user_eid)[V2_GET] (`/vfs/list`, { q: path })             },
+  //v2_vfsGetFile:              function(user_eid, path)       { return AxiosResource(user_eid)[V2_GET] (TODO)                                 },
+  //v2_vfsPutFile:              function(user_eid, path)       { return AxiosResource(user_eid)[V2_PUT] (TODO)                                 },
+  //v2_vfsCreateDirectory:      function(user_eid, path)       { return AxiosResource(user_eid)[V2_PUT] (TODO)                                 },
+
   // admin
   v2_fetchAdminProcesses:  function(attrs)                { return AxiosResource('admin')[V2_GET] (`/info/processes`, attrs)                 },
   v2_fetchAdminTests:      function()                     { return AxiosResource('admin')[V2_GET] (`/tests/configure`)                       },
