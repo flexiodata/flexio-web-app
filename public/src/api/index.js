@@ -72,12 +72,6 @@ export default {
   deleteUser:                     function({ eid, attrs })              { return AccountResource[DEL] ({ eid }, attrs)                                    },
   changePassword:                 function({ eid, attrs })              { return AccountResource[POS] ({ eid, p1: 'credentials' }, attrs)                 },
 
-  // vfs
-  vfsListFiles:                   function({ path })                    { return VfsResource[GET] ({ p1: 'list', q: path })                               },
-  vfsGetFile:                     function({ path })                    { return VfsResource[GET] ({ p1: path })                                          },
-  vfsPutFile:                     function({ path })                    { return VfsResource[PUT] ({ p1: path })                                          },
-  vfsCreateDirectory:             function({ path })                    { return VfsResource[PUT] ({ p1: path })                                          },
-
   /* -- Axios-based v2 API -- */
 
   // connections
@@ -109,10 +103,10 @@ export default {
   v2_fetchStream:          function(user_eid, eid)        { return AxiosResource(user_eid)[V2_GET] (`/streams/${eid}`)                       },
 
   // vfs
-  v2_vfsListFiles:            function(user_eid, path)       { return AxiosResource(user_eid)[V2_GET] (`/vfs/list`, { q: path })             },
-  //v2_vfsGetFile:              function(user_eid, path)       { return AxiosResource(user_eid)[V2_GET] (TODO)                                 },
-  //v2_vfsPutFile:              function(user_eid, path)       { return AxiosResource(user_eid)[V2_PUT] (TODO)                                 },
-  //v2_vfsCreateDirectory:      function(user_eid, path)       { return AxiosResource(user_eid)[V2_PUT] (TODO)                                 },
+  v2_vfsListFiles:            function(user_eid, path)    { return AxiosResource(user_eid)[V2_GET] (`/vfs/list`, { q: path })             },
+  //v2_vfsGetFile:              function(user_eid, path)    { return AxiosResource(user_eid)[V2_GET] (TODO)                                 },
+  //v2_vfsPutFile:              function(user_eid, path)    { return AxiosResource(user_eid)[V2_PUT] (TODO)                                 },
+  //v2_vfsCreateDirectory:      function(user_eid, path)    { return AxiosResource(user_eid)[V2_PUT] (TODO)                                 },
 
   // admin
   v2_fetchAdminProcesses:  function(attrs)                { return AxiosResource('admin')[V2_GET] (`/info/processes`, attrs)                 },
