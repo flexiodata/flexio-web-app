@@ -22,8 +22,13 @@
       <div class="f4 pl3 pr1 tr monospace ttu b dark-red" v-if="has_details && !is_passed===true">Failed</div>
       <div class="f4 pl3 pr1 tr monospace ttu b yellow" v-if="is_xhr_ok===false">&nbsp;Error</div>
     </div>
-    <div class="pt2 pl2 f6" v-if="is_xhr_ok===false">
-      <pre class="ma0">{{item.error_text}}</pre>
+    <div class="pt1 f6" v-if="is_xhr_ok===false">
+      <table class="w-100 css-test-table">
+        <tr>
+          <td class="v-top f6 b w3">&nbsp;</td>
+          <td class="v-top f6"><pre class="ma0">{{item.error_text}}</pre></td>
+        </tr>
+      </table>
     </div>
     <div class="pt1" v-if="item.details && item.details.length > 0" v-show="!show_details">
       <table class="w-100 css-test-table">
@@ -81,7 +86,7 @@
         return this.item.passed
       },
       is_xhr_ok() {
-        return _.get(this.item, 'xhr.ok', true)
+        return _.get(this.item, 'xhr_ok', true)
       },
       cls() {
         return {

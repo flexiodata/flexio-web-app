@@ -166,8 +166,8 @@ export default {
   v2_fetchStream:          function(user_eid, eid)        { return AxiosResource(user_eid)[V2_GET] (`/streams/${eid}`)                       },
 
   v2_fetchAdminProcesses:  function(attrs)                { return AxiosResource('admin')[V2_GET] (`/info/processes`, attrs)                 },
-  v2_fetchAdminTests:      function()                     { return AxiosResource('admin')[V2_GET] (`/tests/configure`)                        },
-  v2_runAdminTest:         function(id)                   { return AxiosResource('admin')[V2_GET] (`/info/run/${id}`)                        },
+  v2_fetchAdminTests:      function()                     { return AxiosResource('admin')[V2_GET] (`/tests/configure`)                       },
+  v2_runAdminTest:         function(attrs)                { return AxiosResource('admin')[V2_GET] (`/tests/run`, attrs)                      },
 }
 
 /*
