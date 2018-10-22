@@ -18,7 +18,7 @@ export const v2_action_fetchCurrentUser = ({ commit, dispatch }) => {
     return response
   }).catch(error => {
     commit(types.FETCHING_USER, false)
-    return response
+    return error
   })
 }
 
@@ -39,7 +39,7 @@ export const v2_action_fetchUser = ({ commit, dispatch }, { eid }) => {
     return response
   }).catch(error => {
     commit(types.FETCHING_USER, false)
-    return response
+    return error
   })
 }
 
@@ -53,7 +53,7 @@ export const v2_action_updateUser = ({ commit }, { eid, attrs }) => {
     commit(types.UPDATED_USER, { eid, attrs })
     return response
   }).catch(error => {
-    return response
+    return error
   })
 }
 
@@ -64,25 +64,23 @@ export const v2_action_deleteUser = ({ commit }, { eid, attrs }) => {
     commit(types.DELETED_USER, { eid, attrs })
     return response
   }).catch(error => {
-    return response
+    return error
   })
 }
 
 // ----------------------------------------------------------------------- //
 
-export const changePassword = ({ commit, dispatch }, { eid, attrs }) => {
+export const v2_action_changePassword = ({ commit, dispatch }, { eid, attrs }) => {
   commit(types.CHANGING_PASSWORD, { eid, attrs })
 
-  return api.changePassword({ eid, attrs }).then(response => {
-    // success callback
-    commit(types.CHANGED_PASSWORD, { eid, attrs: response.body })
-
+  return api.v2_changePassword(eid, attrs).then(response => {
+    var attrs = response.data
+    commit(types.CHANGED_PASSWORD, { eid, attrs })
     dispatch('analyticsTrack', { event_name: 'Changed Password' })
-
     return response
-  }, response => {
+  }).catch(error => {
     // error callback
-    return response
+    return error
   })
 }
 

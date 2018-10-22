@@ -142,22 +142,22 @@
       },
       saveChanges() {
         this.$refs.form.validate((valid) => {
-          if (!valid)
+          if (!valid) {
             return
+          }
 
           var eid = this.active_user_eid
           var attrs = _.pick(this.$data, ['old_password', 'new_password', 'new_password2'])
-          this.$store.dispatch('changePassword', { eid, attrs }).then(response => {
-            if (response.ok) {
-              this.show_success = true
-              this.show_error = false
-              this.resetForm()
-              setTimeout(() => { this.show_success = false }, 4000)
-            } else {
-              this.show_success = false
-              this.show_error = true
-              this.error_msg = _.get(response, 'data.error.message', '')
-            }
+          this.$store.dispatch('v2_action_changePassword', { eid, attrs }).then(response => {
+            this.show_success = true
+            this.show_error = false
+            this.resetForm()
+            setTimeout(() => { this.show_success = false }, 4000)
+          }).catch(error => {
+            var response = error.response
+            this.show_success = false
+            this.show_error = true
+            this.error_msg = _.get(response.data, 'error.message', '')
           })
         })
       }
