@@ -185,16 +185,11 @@
 
           var eid = this.active_user_eid
           var attrs = _.pick(this.edit_info, ['first_name', 'last_name', 'username'])
-          this.$store.dispatch('updateUser', { eid, attrs }).then(response => {
-            if (response.ok)
-            {
-              this.show_success = true
-              setTimeout(() => { this.show_success = false }, 4000)
-            }
-             else
-            {
-              this.show_error = true
-            }
+          this.$store.dispatch('v2_action_updateUser', { eid, attrs }).then(response => {
+            this.show_success = true
+            setTimeout(() => { this.show_success = false }, 4000)
+          }).catch(error => {
+            this.show_error = true
           })
         })
       },

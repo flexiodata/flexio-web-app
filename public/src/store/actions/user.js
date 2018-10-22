@@ -45,15 +45,14 @@ export const v2_action_fetchUser = ({ commit, dispatch }, { eid }) => {
 
 // ----------------------------------------------------------------------- //
 
-export const updateUser = ({ commit }, { eid, attrs }) => {
+export const v2_action_updateUser = ({ commit }, { eid, attrs }) => {
   commit(types.UPDATING_USER, { eid, attrs })
 
-  return api.updateUser({ eid, attrs }).then(response => {
-    // success callback
-    commit(types.UPDATED_USER, { eid, attrs: response.body })
+  return api.v2_updateUser(eid, attrs).then(response => {
+    var attrs = response.data
+    commit(types.UPDATED_USER, { eid, attrs })
     return response
-  }, response => {
-    // error callback
+  }).catch(error => {
     return response
   })
 }
