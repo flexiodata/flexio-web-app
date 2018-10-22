@@ -57,15 +57,13 @@ export const v2_action_updateUser = ({ commit }, { eid, attrs }) => {
   })
 }
 
-export const deleteUser = ({ commit }, { eid, attrs }) => {
+export const v2_action_deleteUser = ({ commit }, { eid, attrs }) => {
   commit(types.DELETING_USER, { eid, attrs })
 
-  return api.deleteUser({ eid, attrs }).then(response => {
-    // success callback
+  return api.v2_deleteUser(eid, attrs).then(response => {
     commit(types.DELETED_USER, { eid, attrs })
     return response
-  }, response => {
-    // error callback
+  }).catch(error => {
     return response
   })
 }

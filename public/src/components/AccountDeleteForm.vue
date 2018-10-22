@@ -158,12 +158,8 @@
 
           var eid = this.active_user_eid
           var attrs = _.pick(this.edit_info, ['username', 'password'])
-          this.$store.dispatch('deleteUser', { eid, attrs }).then(response => {
-            if (response.ok) {
-              this.signOut()
-            } else {
-            // TODO: add error handling
-            }
+          this.$store.dispatch('v2_action_deleteUser', { eid, attrs }).then(response => {
+            this.signOut()
           })
         })
       },

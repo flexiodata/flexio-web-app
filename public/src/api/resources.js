@@ -33,7 +33,7 @@ export const AxiosResource = (user_eid) => {
   var getCfg = ({ method, url, data, cfg }) => {
     var url = base_url + url
 
-    if (method == 'get' || method == 'delete') {
+    if (method == 'get') {
       var cfg = _.assign({}, cfg, { params: data })
       return _.assign({}, base_cfg, { method, url }, cfg)
     }

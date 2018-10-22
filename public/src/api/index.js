@@ -111,7 +111,7 @@ export default {
   // user
   v2_fetchUser:            function(eid)                  { return AxiosResource(eid)[V2_GET] (`/account`)                                   },
   v2_updateUser:           function(eid, attrs)           { return AxiosResource(eid)[V2_POS] (`/account`, attrs)                            },
-  v2_deleteUser:           function(eid)                  { return AxiosResource(eid)[V2_DEL] (`/account`)                                   },
+  v2_deleteUser:           function(eid, attrs)           { return AxiosResource(eid)[V2_DEL] (`/account`, attrs)                            },
   v2_changePassword:       function(eid, attrs)           { return AxiosResource(eid)[V2_POS] (`/account/credentials`, attrs)                },
 
   // admin
