@@ -59,7 +59,7 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             "path" => $remote_path,
             "recursive" => false
         ]);
-        
+
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_URL, "https://api.dropboxapi.com/2/files/list_folder");
@@ -94,7 +94,10 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             {
                 foreach ($result['entries'] as $entry)
                 {
-                    $fullpath = $path;
+                    $fullpath = '';
+                    if (substr($path,0,1) != '/')
+                        $fullpath .= '/';
+                    $fullpath .= $path;
                     if (substr($fullpath, -1) != '/')
                         $fullpath .= '/';
                     $fullpath .= $entry['name'];
@@ -408,7 +411,10 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
     private function getRemotePath(string $path) : string
     {
-        return \Flexio\Services\Util::mergePath($this->base_path, $path);
+        $merged_path = \Flexio\Services\Util::mergePath($this->base_path, $path);
+        if (substr($merged_path, 0, 1) != '/')
+            $merged_path = '/' . $merged_path;
+        return $merged_path;
     }
 
 
