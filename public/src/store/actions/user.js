@@ -3,22 +3,20 @@ import * as types from '../mutation-types'
 
 // ----------------------------------------------------------------------- //
 
-export const fetchCurrentUser = ({ commit, dispatch }) => {
+export const v2_action_fetchCurrentUser = ({ commit, dispatch }) => {
   commit(types.FETCHING_USER, true)
 
-  return api.fetchUser({ eid: 'me' }).then(response => {
-    var user = response.body
+  return api.v2_fetchUser('me').then(response => {
+    var user = response.data
 
-    if (_.get(user, 'eid', '').length > 0)
-    {
+    if (_.get(user, 'eid', '').length > 0) {
       commit(types.FETCHED_USER, user)
       dispatch('analyticsIdentify', user)
     }
 
     commit(types.FETCHING_USER, false)
     return response
-  }, response => {
-    // error callback
+  }).catch(error => {
     commit(types.FETCHING_USER, false)
     return response
   })
@@ -26,22 +24,20 @@ export const fetchCurrentUser = ({ commit, dispatch }) => {
 
 // ----------------------------------------------------------------------- //
 
-export const fetchUser = ({ commit, dispatch }, { eid }) => {
+export const v2_action_fetchUser = ({ commit, dispatch }, { eid }) => {
   commit(types.FETCHING_USER, true)
 
-  return api.fetchUser({ eid }).then(response => {
-    var user = response.body
+  return api.v2_fetchUser(eid).then(response => {
+    var user = response.data
 
-    if (_.get(user, 'eid', '').length > 0)
-    {
+    if (_.get(user, 'eid', '').length > 0) {
       commit(types.FETCHED_USER, user)
       dispatch('analyticsIdentify', user)
     }
 
     commit(types.FETCHING_USER, false)
     return response
-  }, response => {
-    // error callback
+  }).catch(error => {
     commit(types.FETCHING_USER, false)
     return response
   })

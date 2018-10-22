@@ -103,10 +103,16 @@ export default {
   v2_fetchStream:          function(user_eid, eid)        { return AxiosResource(user_eid)[V2_GET] (`/streams/${eid}`)                       },
 
   // vfs
-  v2_vfsListFiles:            function(user_eid, path)    { return AxiosResource(user_eid)[V2_GET] (`/vfs/list`, { q: path })             },
-  //v2_vfsGetFile:              function(user_eid, path)    { return AxiosResource(user_eid)[V2_GET] (TODO)                                 },
-  //v2_vfsPutFile:              function(user_eid, path)    { return AxiosResource(user_eid)[V2_PUT] (TODO)                                 },
-  //v2_vfsCreateDirectory:      function(user_eid, path)    { return AxiosResource(user_eid)[V2_PUT] (TODO)                                 },
+  v2_vfsListFiles:            function(user_eid, path)    { return AxiosResource(user_eid)[V2_GET] (`/vfs/list`, { q: path })                },
+  //v2_vfsGetFile:              function(user_eid, path)    { return AxiosResource(user_eid)[V2_GET] (TODO)                                    },
+  //v2_vfsPutFile:              function(user_eid, path)    { return AxiosResource(user_eid)[V2_PUT] (TODO)                                    },
+  //v2_vfsCreateDirectory:      function(user_eid, path)    { return AxiosResource(user_eid)[V2_PUT] (TODO)                                    },
+
+  // user
+  v2_fetchUser:            function(eid)                  { return AxiosResource(eid)[V2_GET] (`/account`)                                   },
+  v2_updateUser:           function(eid, attrs)           { return AxiosResource(eid)[V2_POS] (`/account`, attrs)                            },
+  v2_deleteUser:           function(eid)                  { return AxiosResource(eid)[V2_DEL] (`/account`)                                   },
+  v2_changePassword:       function(eid, attrs)           { return AxiosResource(eid)[V2_POS] (`/account/credentials`, attrs)                },
 
   // admin
   v2_fetchAdminProcesses:  function(attrs)                { return AxiosResource('admin')[V2_GET] (`/info/processes`, attrs)                 },

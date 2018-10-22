@@ -182,23 +182,20 @@ router.beforeEach((to, from, next) => {
     var redirect_to_signup = to.name == ROUTE_BUILDER
 
     // check if the user is signed in
-    store.dispatch('fetchCurrentUser').then(response => {
-      if (store.state.active_user_eid.length > 0)
-      {
+    store.dispatch('v2_action_fetchCurrentUser').then(response => {
+      if (store.state.active_user_eid.length > 0) {
         // user is signed in; move to the next route
         tryFetchConnections()
         tryFetchTokens()
         next()
-      }
-       else
-      {
+      } else {
         // user is not signed in; redirect them to the sign in page
         next({
           name: redirect_to_signup ? ROUTE_SIGNUP : ROUTE_SIGNIN,
           query: { redirect: to.fullPath }
         })
       }
-    }, response => {
+    }).catch(error => {
       // error fetching current user; bail out
       next({
         name: redirect_to_signup ? ROUTE_SIGNUP : ROUTE_SIGNIN,
@@ -215,9 +212,9 @@ router.beforeEach((to, from, next) => {
 
     // this route does not require authentication; try to sign in just to make
     // sure we know who the active user is and move to the next route
-    store.dispatch('fetchCurrentUser').then(response => {
+    store.dispatch('v2_action_fetchCurrentUser').then(response => {
       next()
-    }, response => {
+    }).catch(error => {
       next()
     })
   }
