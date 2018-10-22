@@ -3,20 +3,18 @@ import * as types from '../mutation-types'
 
 // ----------------------------------------------------------------------- //
 
-export const fetchStream = ({ commit }, { eid }) => {
+export const v2_action_fetchStream = ({ commit }, { user_eid, eid }) => {
   commit(types.FETCHING_STREAM, { eid, fetching: true })
 
-  return api.fetchStream({ eid }).then(response => {
-    // success callback
-    commit(types.FETCHED_STREAM, response.body)
+  return api.v2_fetchStream(user_eid, eid).then(response => {
+    var stream = response.data
+    commit(types.FETCHED_STREAM, stream)
     commit(types.FETCHING_STREAM, { eid, fetching: false })
     return response
-  }, response => {
-    // error callback
+  }).catch(error => {
     commit(types.FETCHING_STREAM, { eid, fetching: false })
-    return response
+    return error
   })
 }
 
 // ----------------------------------------------------------------------- //
-
