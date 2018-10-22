@@ -3,18 +3,17 @@ import * as types from '../mutation-types'
 
 // ----------------------------------------------------------------------- //
 
-export const fetchTokens = ({ commit }) => {
+export const v2_action_fetchTokens = ({ commit }, { user_eid }) => {
   commit(types.FETCHING_TOKENS, { fetching: true })
 
-  return api.fetchTokens().then(response => {
-    // success callback
-    commit(types.FETCHED_TOKENS, { tokens: response.body })
+  return api.v2_fetchTokens(user_eid).then(response => {
+    var tokens = response.data
+    commit(types.FETCHED_TOKENS, { tokens })
     commit(types.FETCHING_TOKENS, { fetching: false })
     return response
-  }, response => {
-    // error callback
+  }).catch(error => {
     commit(types.FETCHING_TOKENS, { fetching: false })
-    return response
+    return error
   })
 }
 

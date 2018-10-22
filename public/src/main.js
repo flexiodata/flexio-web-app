@@ -149,7 +149,7 @@ const tryFetchConnections = () => {
 
 const tryFetchTokens = () => {
   if (!store.state.tokens_fetched && !store.state.tokens_fetching) {
-    store.dispatch('fetchTokens')
+    store.dispatch('v2_action_fetchTokens', {})
   }
 }
 

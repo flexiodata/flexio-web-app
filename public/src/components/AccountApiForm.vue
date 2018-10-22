@@ -73,10 +73,11 @@
       tokens() {
         var tokens = this.getAllTokens()
 
-        if (tokens.length == 0)
+        if (tokens.length == 0) {
           return []
+        }
 
-         return this.showOnlyOne ? [].concat([ _.first(tokens) ]) : tokens
+        return this.showOnlyOne ? [].concat([ _.first(tokens) ]) : tokens
       }
     },
     mounted() {
@@ -87,8 +88,9 @@
         'getAllTokens'
       ]),
       tryFetchTokens() {
-        if (!this.is_fetched)
-          this.$store.dispatch('fetchTokens')
+        if (!this.is_fetched) {
+          this.$store.dispatch('v2_action_fetchTokens', {})
+        }
       },
       createApiKey() {
         this.$store.dispatch('createToken').then(response => {

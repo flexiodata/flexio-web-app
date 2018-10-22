@@ -103,10 +103,15 @@ export default {
   //v2_vfsCreateDirectory:      function(user_eid, path)    { return AxiosResource(user_eid)[V2_PUT] (TODO)                                    },
 
   // user
-  v2_fetchUser:            function(eid)                  { return AxiosResource(eid)[V2_GET] (`/account`)                                   },
-  v2_updateUser:           function(eid, attrs)           { return AxiosResource(eid)[V2_POS] (`/account`, attrs)                            },
-  v2_deleteUser:           function(eid, attrs)           { return AxiosResource(eid)[V2_DEL] (`/account`, attrs)                            },
-  v2_changePassword:       function(eid, attrs)           { return AxiosResource(eid)[V2_POS] (`/account/credentials`, attrs)                },
+  v2_fetchUser:            function(user_eid)             { return AxiosResource(user_eid)[V2_GET] (`/account`)                              },
+  v2_updateUser:           function(user_eid, attrs)      { return AxiosResource(user_eid)[V2_POS] (`/account`, attrs)                       },
+  v2_deleteUser:           function(user_eid, attrs)      { return AxiosResource(user_eid)[V2_DEL] (`/account`, attrs)                       },
+  v2_changePassword:       function(user_eid, attrs)      { return AxiosResource(user_eid)[V2_POS] (`/account/credentials`, attrs)           },
+
+  // token
+  v2_fetchTokens:          function(user_eid)             { return AxiosResource(user_eid)[V2_GET] (`/auth/keys`)                               },
+  v2_createToken:          function(user_eid)             { return AxiosResource(user_eid)[V2_POS] (`/auth/keys`)                               },
+  v2_deleteToken:          function(user_eid, eid)        { return AxiosResource(user_eid)[V2_DEL] (`/auth/keys/${eid}`)                        },
 
   // admin
   v2_fetchAdminProcesses:  function(attrs)                { return AxiosResource('admin')[V2_GET] (`/info/processes`, attrs)                 },
