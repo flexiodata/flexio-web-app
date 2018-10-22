@@ -31,15 +31,13 @@ export const v2_action_createToken = ({ commit, dispatch }, { user_eid }) => {
   })
 }
 
-export const deleteToken = ({ commit }, { eid }) => {
+export const v2_action_deleteToken = ({ commit }, { user_eid, eid }) => {
   commit(types.DELETING_TOKEN, { eid })
 
-  return api.deleteToken({ eid }).then(response => {
-    // success callback
+  return api.v2_deleteToken(user_eid, eid).then(response => {
     commit(types.DELETED_TOKEN, { eid })
     return response
-  }, response => {
-    // error callback
-    return response
+  }).catch(error => {
+    return error
   })
 }

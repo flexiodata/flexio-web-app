@@ -98,7 +98,7 @@
         })
       },
       deleteKey(token) {
-        this.$store.dispatch('deleteToken', { eid: token.eid })
+        this.$store.dispatch('v2_action_deleteToken', { eid: token.eid })
       }
     }
   }
