@@ -66,12 +66,6 @@ export default {
   createToken:                    function()                            { return TokenResource[POS] ()                                                    },
   deleteToken:                    function({ eid })                     { return TokenResource[DEL] ({ eid })                                             },
 
-  // user
-  fetchUser:                      function({ eid })                     { return AccountResource[GET] ({ eid })                                           },
-  updateUser:                     function({ eid, attrs })              { return AccountResource[POS] ({ eid }, attrs)                                    },
-  deleteUser:                     function({ eid, attrs })              { return AccountResource[DEL] ({ eid }, attrs)                                    },
-  changePassword:                 function({ eid, attrs })              { return AccountResource[POS] ({ eid, p1: 'credentials' }, attrs)                 },
-
   /* -- Axios-based v2 API -- */
 
   // connections
