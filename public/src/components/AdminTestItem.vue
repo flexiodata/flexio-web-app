@@ -1,9 +1,9 @@
 <template>
-  <article class="pa1 ma1 ba b--black-05" :class="cls">
+  <article class="pv1 ph2" style="" :class="cls">
     <div class="flex flex-row items-center pointer na1 pa1" @click="toggleDetails">
       <span class="black-30 mr1">
         <i
-          class="material-icons db v-mid"
+          class="material-icons db v-mid trans-a"
           :class="{ 'rotate-90': !show_details }"
           v-if="has_details"
         >chevron_right</i>
@@ -22,7 +22,7 @@
       <div class="f4 pl3 pr1 tr monospace ttu b dark-red" v-if="has_details && !is_passed===true">Failed</div>
       <div class="f4 pl3 pr1 tr monospace ttu b yellow" v-if="is_xhr_ok===false">&nbsp;Error</div>
     </div>
-    <div class="pt1 f6" v-if="is_xhr_ok===false">
+    <div class="pt1" style="margin-left: 24px" v-if="is_xhr_ok===false">
       <table class="w-100 css-test-table">
         <tr>
           <td class="v-top f6 b w3">&nbsp;</td>
@@ -30,14 +30,14 @@
         </tr>
       </table>
     </div>
-    <div class="pt1" v-if="item.details && item.details.length > 0" v-show="!show_details">
+    <div class="pt1" style="margin-left: 24px" v-if="item.details && item.details.length > 0" v-show="!show_details">
       <table class="w-100 css-test-table">
-        <tr :class="!detail.passed ? 'bg-black-05' : ''" v-for="(detail, index) in item.details">
+        <tr :class="!detail.passed ? '' : ''" v-for="(detail, index) in item.details">
           <td class="v-top f6 b w3">{{detail.name}}</td>
           <td class="v-top f6 min-w6 mw6">
             <div>{{detail.description}}</div>
             <div class="flex flex-row mr3" style="margin: 2px 0; max-height: 8rem" v-if="!detail.passed && detail.message && detail.message.length > 0">
-              <div class="f6 monospace overflow-auto ba b--black-40 bg-white-60" style="padding: 2px 3px">
+              <div class="f6 monospace overflow-auto ba b--black-20 bg-white-60" style="padding: 3px">
                 {{detail.message}}
               </div>
             </div>
@@ -92,8 +92,7 @@
         return {
           'css-test-error': this.is_xhr_ok === false,
           'css-test-success': this.is_passed === true,
-          'css-test-failure': this.is_passed === false,
-          'bg-nearer-white': true
+          'css-test-failure': this.is_passed === false
         }
       }
     },
@@ -119,5 +118,5 @@
     tr:hover
       background-color: rgba(0,0,0,0.1)
     td
-      padding: 0 0 0 3px;
+      padding: 0 0 0 3px
 </style>
