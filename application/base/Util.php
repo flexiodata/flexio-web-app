@@ -579,7 +579,7 @@ class Util
 
             $bucket = array();
             foreach($daterange as $date){
-                $date = $date->format("Ymd");
+                $date = $date->format("Y-m-d");
                 $bucket[$date] = 0;
             }
 

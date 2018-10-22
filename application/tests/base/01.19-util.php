@@ -23,22 +23,22 @@ class Test
         // TEST: \Flexio\Base\Util::createDateRangeArray(); bad date input
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::createDateRangeArray("20180101", "");
+        $actual = \Flexio\Base\Util::createDateRangeArray("2018-01-01", "");
         $expected = [];
         \Flexio\Tests\Check::assertArray('A.1', '\Flexio\Base\Util::createDateRangeArray(); bad date input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::createDateRangeArray("", "20180101");
+        $actual = \Flexio\Base\Util::createDateRangeArray("", "2018-01-01");
         $expected = [];
         \Flexio\Tests\Check::assertArray('A.2', '\Flexio\Base\Util::createDateRangeArray(); bad date input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::createDateRangeArray("20180101", "bad");
+        $actual = \Flexio\Base\Util::createDateRangeArray("2018-01-01", "bad");
         $expected = [];
         \Flexio\Tests\Check::assertArray('A.3', '\Flexio\Base\Util::createDateRangeArray(); bad date input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::createDateRangeArray("bad", "20180101");
+        $actual = \Flexio\Base\Util::createDateRangeArray("bad", "2018-01-01");
         $expected = [];
         \Flexio\Tests\Check::assertArray('A.4', '\Flexio\Base\Util::createDateRangeArray(); bad date input',  $actual, $expected, $results);
 
@@ -47,73 +47,80 @@ class Test
         // TEST: \Flexio\Base\Util::createDateRangeArray(); basic date input
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::createDateRangeArray("20180101", "20180101");
+        $actual = \Flexio\Base\Util::createDateRangeArray("2018-01-01", "2018-01-01");
         $expected = [];
         \Flexio\Tests\Check::assertArray('B.1', '\Flexio\Base\Util::createDateRangeArray(); basic date input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::createDateRangeArray("20180102", "20180101");
+        $actual = \Flexio\Base\Util::createDateRangeArray("2018-01-02", "2018-01-01");
         $expected = [];
         \Flexio\Tests\Check::assertArray('B.2', '\Flexio\Base\Util::createDateRangeArray(); basic date input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::createDateRangeArray("20171231", "20180101");
-        $expected = ["20171231" => 0];
+        $actual = \Flexio\Base\Util::createDateRangeArray("2017-12-31", "2018-01-01");
+        $expected = ["2017-12-31" => 0];
         \Flexio\Tests\Check::assertArray('B.3', '\Flexio\Base\Util::createDateRangeArray(); basic date input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::createDateRangeArray("20180101", "20180102");
-        $expected = ["20180101" => 0];
+        $actual = \Flexio\Base\Util::createDateRangeArray("2018-01-01", "2018-01-02");
+        $expected = ["2018-01-01" => 0];
         \Flexio\Tests\Check::assertArray('B.4', '\Flexio\Base\Util::createDateRangeArray(); basic date input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::createDateRangeArray("20180101", "20180103");
-        $expected = ["20180101" => 0, "20180102" => 0];
+        $actual = \Flexio\Base\Util::createDateRangeArray("2018-01-01", "2018-01-03");
+        $expected = ["2018-01-01" => 0, "2018-01-02" => 0];
         \Flexio\Tests\Check::assertArray('B.5', '\Flexio\Base\Util::createDateRangeArray(); basic date input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::createDateRangeArray("20160201", "20160301");
+        $actual = \Flexio\Base\Util::createDateRangeArray("2016-02-01", "2016-03-01");
         $expected = [
-            "20160201" => 0, "20160202" => 0, "20160203" => 0, "20160204" => 0, "20160205" => 0, "20160206" => 0, "20160207" => 0,
-            "20160208" => 0, "20160209" => 0, "20160210" => 0, "20160211" => 0, "20160212" => 0, "20160213" => 0, "20160214" => 0,
-            "20160215" => 0, "20160216" => 0, "20160217" => 0, "20160218" => 0, "20160219" => 0, "20160220" => 0, "20160221" => 0,
-            "20160222" => 0, "20160223" => 0, "20160224" => 0, "20160225" => 0, "20160226" => 0, "20160227" => 0, "20160228" => 0,
-            "20160229" => 0
+            "2016-02-01" => 0, "2016-02-02" => 0, "2016-02-03" => 0, "2016-02-04" => 0, "2016-02-05" => 0, "2016-02-06" => 0, "2016-02-07" => 0,
+            "2016-02-08" => 0, "2016-02-09" => 0, "2016-02-10" => 0, "2016-02-11" => 0, "2016-02-12" => 0, "2016-02-13" => 0, "2016-02-14" => 0,
+            "2016-02-15" => 0, "2016-02-16" => 0, "2016-02-17" => 0, "2016-02-18" => 0, "2016-02-19" => 0, "2016-02-20" => 0, "2016-02-21" => 0,
+            "2016-02-22" => 0, "2016-02-23" => 0, "2016-02-24" => 0, "2016-02-25" => 0, "2016-02-26" => 0, "2016-02-27" => 0, "2016-02-28" => 0,
+            "2016-02-29" => 0
         ];
         \Flexio\Tests\Check::assertArray('B.6', '\Flexio\Base\Util::createDateRangeArray(); basic date input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::createDateRangeArray("20180101 23:23:59", "20180102");
-        $expected = ["20180101" => 0];
+        $actual = \Flexio\Base\Util::createDateRangeArray("2018-01-01 23:23:59", "2018-01-02");
+        $expected = ["2018-01-01" => 0];
         \Flexio\Tests\Check::assertArray('B.7', '\Flexio\Base\Util::createDateRangeArray(); basic date input',  $actual, $expected, $results);
 
+
+        // TEST: \Flexio\Base\Util::createDateRangeArray(); date format handling
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\Util::createDateRangeArray("20180101", "20180102");
+        $expected = ["2018-01-01" => 0];
+        \Flexio\Tests\Check::assertArray('C.1', '\Flexio\Base\Util::createDateRangeArray(); date format handling',  $actual, $expected, $results);
 
 
         // TEST: \Flexio\Base\Util::createDateRangeArray(); datetime handling
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::createDateRangeArray("20180101 00:00:00", "20180102 00:00:00");
-        $expected = ["20180101" => 0];
-        \Flexio\Tests\Check::assertArray('C.1', '\Flexio\Base\Util::createDateRangeArray(); datetime handling',  $actual, $expected, $results);
+        $actual = \Flexio\Base\Util::createDateRangeArray("2018-01-01 00:00:00", "2018-01-02 00:00:00");
+        $expected = ["2018-01-01" => 0];
+        \Flexio\Tests\Check::assertArray('D.1', '\Flexio\Base\Util::createDateRangeArray(); datetime handling',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::createDateRangeArray("20180101 00:00:01", "20180102 00:00:00");
-        $expected = ["20180101" => 0];
-        \Flexio\Tests\Check::assertArray('C.2', '\Flexio\Base\Util::createDateRangeArray(); datetime handling',  $actual, $expected, $results);
+        $actual = \Flexio\Base\Util::createDateRangeArray("2018-01-01 00:00:01", "2018-01-02 00:00:00");
+        $expected = ["2018-01-01" => 0];
+        \Flexio\Tests\Check::assertArray('D.2', '\Flexio\Base\Util::createDateRangeArray(); datetime handling',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::createDateRangeArray("20180101 00:00:00", "20180102 00:00:01");
-        $expected = ["20180101" => 0];
-        \Flexio\Tests\Check::assertArray('C.3', '\Flexio\Base\Util::createDateRangeArray(); datetime handling',  $actual, $expected, $results);
+        $actual = \Flexio\Base\Util::createDateRangeArray("2018-01-01 00:00:00", "2018-01-02 00:00:01");
+        $expected = ["2018-01-01" => 0];
+        \Flexio\Tests\Check::assertArray('D.3', '\Flexio\Base\Util::createDateRangeArray(); datetime handling',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::createDateRangeArray("20180101 23:59:59", "20180102 00:00:00");
-        $expected = ["20180101" => 0];
-        \Flexio\Tests\Check::assertArray('C.4', '\Flexio\Base\Util::createDateRangeArray(); datetime handling',  $actual, $expected, $results);
+        $actual = \Flexio\Base\Util::createDateRangeArray("2018-01-01 23:59:59", "2018-01-02 00:00:00");
+        $expected = ["2018-01-01" => 0];
+        \Flexio\Tests\Check::assertArray('D.4', '\Flexio\Base\Util::createDateRangeArray(); datetime handling',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::createDateRangeArray("20180101 00:00:00", "20180102 23:59:59");
-        $expected = ["20180101" => 0];
-        \Flexio\Tests\Check::assertArray('C.5', '\Flexio\Base\Util::createDateRangeArray(); datetime handling',  $actual, $expected, $results);
+        $actual = \Flexio\Base\Util::createDateRangeArray("2018-01-01 00:00:00", "2018-01-02 23:59:59");
+        $expected = ["2018-01-01" => 0];
+        \Flexio\Tests\Check::assertArray('D.5', '\Flexio\Base\Util::createDateRangeArray(); datetime handling',  $actual, $expected, $results);
     }
 }
