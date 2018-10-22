@@ -125,7 +125,7 @@
       },
       checkCreateApiKey() {
         if (this.tokens_fetched && this.api_key.length == 0) {
-          this.$store.dispatch('createToken')
+          this.$store.dispatch('v2_action_createToken', {})
         }
       }
     }

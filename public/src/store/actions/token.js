@@ -19,16 +19,15 @@ export const v2_action_fetchTokens = ({ commit }, { user_eid }) => {
 
 // ----------------------------------------------------------------------- //
 
-export const createToken = ({ commit, dispatch }) => {
+export const v2_action_createToken = ({ commit, dispatch }, { user_eid }) => {
   commit(types.CREATING_TOKEN)
 
-  return api.createToken().then(response => {
-    // success callback
-    commit(types.CREATED_TOKEN, { attrs: response.body })
+  return api.v2_createToken(user_eid).then(response => {
+    var attrs = response.data
+    commit(types.CREATED_TOKEN, { attrs })
     return response
-  }, response => {
-    // error callback
-    return response
+  }).catch(error => {
+    return error
   })
 }
 

@@ -109,9 +109,9 @@ export default {
   v2_changePassword:       function(user_eid, attrs)      { return AxiosResource(user_eid)[V2_POS] (`/account/credentials`, attrs)           },
 
   // token
-  v2_fetchTokens:          function(user_eid)             { return AxiosResource(user_eid)[V2_GET] (`/auth/keys`)                               },
-  v2_createToken:          function(user_eid)             { return AxiosResource(user_eid)[V2_POS] (`/auth/keys`)                               },
-  v2_deleteToken:          function(user_eid, eid)        { return AxiosResource(user_eid)[V2_DEL] (`/auth/keys/${eid}`)                        },
+  v2_fetchTokens:          function(user_eid)             { return AxiosResource(user_eid)[V2_GET] (`/auth/keys`)                            },
+  v2_createToken:          function(user_eid, attrs)      { return AxiosResource(user_eid)[V2_POS] (`/auth/keys`, attrs)                     },
+  v2_deleteToken:          function(user_eid, eid)        { return AxiosResource(user_eid)[V2_DEL] (`/auth/keys/${eid}`)                     },
 
   // admin
   v2_fetchAdminProcesses:  function(attrs)                { return AxiosResource('admin')[V2_GET] (`/info/processes`, attrs)                 },

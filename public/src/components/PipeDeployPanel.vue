@@ -357,7 +357,7 @@
         'getFirstToken'
       ]),
       generateApiKey() {
-        this.$store.dispatch('createToken')
+        this.$store.dispatch('v2_action_createToken', {})
       }
     }
   }

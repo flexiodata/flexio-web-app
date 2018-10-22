@@ -93,10 +93,8 @@
         }
       },
       createApiKey() {
-        this.$store.dispatch('createToken').then(response => {
-          if (response.ok) {
-            this.$store.track('Created API Key')
-          }
+        this.$store.dispatch('v2_action_createToken', {}).then(response => {
+          this.$store.track('Created API Key')
         })
       },
       deleteKey(token) {
