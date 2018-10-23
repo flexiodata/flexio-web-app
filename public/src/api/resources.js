@@ -28,7 +28,7 @@ export const AxiosResource = (user_eid) => {
     withCredentials: true
   }
 
-  var base_url = API_V2_ROOT + '/' + (user_eid ? user_eid : 'me')
+  var base_url = user_eid === null ? API_V2_ROOT : API_V2_ROOT + '/' + (user_eid ? user_eid : 'me')
 
   var getCfg = ({ method, url, data, cfg }) => {
     var url = base_url + url

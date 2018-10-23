@@ -108,6 +108,9 @@ export default {
   v2_createToken:          function(user_eid)             { return AxiosResource(user_eid)[V2_POS] (`/auth/keys`)                            },
   v2_deleteToken:          function(user_eid, eid)        { return AxiosResource(user_eid)[V2_DEL] (`/auth/keys/${eid}`)                     },
 
+  // validation
+  v2_validate:             function(attrs)                { return AxiosResource(null)[V2_POS] (`/validate`, attrs)                          },
+
   // admin
   v2_fetchAdminProcesses:  function(attrs)                { return AxiosResource('admin')[V2_GET] (`/info/processes`, attrs)                 },
   v2_fetchAdminTests:      function()                     { return AxiosResource('admin')[V2_GET] (`/tests/configure`)                       },

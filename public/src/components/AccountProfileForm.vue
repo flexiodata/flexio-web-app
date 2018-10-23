@@ -164,8 +164,9 @@
       },
       trySaveChanges() {
         this.$refs.form.validate((valid) => {
-          if (!valid)
+          if (!valid) {
             return
+          }
 
           var user = this.getActiveUser()
           var old_username = _.get(user, 'username', ' ')

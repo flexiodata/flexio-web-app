@@ -79,7 +79,6 @@ export const v2_action_changePassword = ({ commit, dispatch }, { eid, attrs }) =
     dispatch('analyticsTrack', { event_name: 'Changed Password' })
     return response
   }).catch(error => {
-    // error callback
     return error
   })
 }

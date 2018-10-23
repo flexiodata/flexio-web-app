@@ -139,7 +139,7 @@
         this.$_Validation_validatePassword(key, value, (response, errors) => {
           var message = _.get(errors, key + '.message', '')
           if (message.length > 0) {
-          callback(new Error('The password entered is incorrect'))
+            callback(new Error('The password entered is incorrect'))
           } else {
             callback()
           }
