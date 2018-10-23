@@ -14,7 +14,13 @@
         v-if="showUser"
       >
         <template slot-scope="scope">
-          <span class="code bg-white br2 ba b--black-10" style="padding: 3px 6px">{{getUserEid(scope.row)}}</span>
+          <span
+            class="code bg-white br2 ba b--black-10" style="padding: 3px 6px"
+            v-if="hasUserEid(scope.row)"
+          >
+            {{getUserEid(scope.row)}}
+          </span>
+          <span v-else>--</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -168,9 +174,6 @@
       fmtDuration(row, col, val, idx) {
         return val ? val.toFixed(2) + ' seconds' : '--'
       },
-      getUserEid(row) {
-        return _.get(row, 'owned_by.eid', '--')
-      },
       getProcessText(status) {
         switch (status) {
           case ps.PROCESS_STATUS_PENDING   : return 'Pending'
@@ -213,6 +216,12 @@
         }
 
         return '--'
+      },
+      getUserEid(row) {
+        return _.get(row, 'owned_by.eid', '')
+      },
+      hasUserEid(row) {
+        return _.get(row, 'owned_by.eid', '').length > 0
       },
       hasPipeEid(row) {
         return _.get(row, 'parent.eid', '').length > 0
