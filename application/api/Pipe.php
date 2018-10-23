@@ -347,7 +347,10 @@ class Pipe
         $pipe_properties = $pipe->get();
 
         // only allow pipes to be triggered from an API call if the pipe is deployed
-        if ($triggered_by === \Model::PROCESS_TRIGGERED_API && $pipe_properties['deploy_mode'] !== \Model::PIPE_DEPLOY_MODE_RUN)
+        // and the api deployment option is activated
+        $api_trigger_active = ($pipe_properties['deploy_mode'] === \Model::PIPE_DEPLOY_MODE_RUN &&
+                               $pipe_properties['deploy_api'] === \Model::PIPE_DEPLOY_STATUS_ACTIVE);
+        if ($triggered_by === \Model::PROCESS_TRIGGERED_API && $api_trigger_active === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         // create a new process
