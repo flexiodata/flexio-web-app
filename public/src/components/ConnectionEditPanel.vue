@@ -18,11 +18,11 @@
             <el-tag
               class="hint--top"
               style="margin-top: 6px"
-              size="medium"
+              size="small"
               aria-label="Storage connection"
               v-if="is_storage"
             >
-              <div class="flex flex-row items-center">
+              <div class="flex flex-row items-center cursor-default">
                 <i class="db material-icons" style="font-size: 14px">layers</i>
                 <span class="f8" style="margin-left: 3px">Storage</span>
               </div>
@@ -30,11 +30,11 @@
             <el-tag
               class="hint--top"
               style="margin-top: 6px"
-              size="medium"
+              size="small"
               aria-label="Email connection"
               v-if="is_email"
             >
-              <div class="flex flex-row items-center">
+              <div class="flex flex-row items-center cursor-default">
                 <i class="db material-icons" style="font-size: 14px">email</i>
                 <span class="f8" style="margin-left: 3px">Email</span>
               </div>
