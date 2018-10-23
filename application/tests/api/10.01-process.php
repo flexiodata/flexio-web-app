@@ -98,13 +98,20 @@ class Test
             "eid_status": "A",
             "parent": {
                 "eid": "",
-                "eid_type": "PIP"
+                "eid_type": "PIP",
+                "eid_status":"",
+                "alias":"",
+                "name":"",
+                "description":"",
+                "deploy_mode":"",
+                "created":"",
+                "updated":""
             },
             "process_mode": "R",
             "task": {
                 "op": "echo"
             },
-            "triggered_by": "",
+            "triggered_by": "A",
             "started_by": "",
             "started": null,
             "finished": null,
