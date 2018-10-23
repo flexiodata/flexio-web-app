@@ -93,7 +93,7 @@ export const signIn = ({ commit, dispatch }, { attrs }) => {
   commit(types.SIGNING_IN, true)
 
   return api.login({ attrs }).then(response => {
-    var user = response.body
+    var user = response.data
 
     // success callback
     commit(types.SIGNED_IN, user)

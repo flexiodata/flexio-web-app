@@ -41,14 +41,7 @@ export const v2_action_fetchPipe = ({ commit }, { user_eid, eid }) => {
     commit(types.FETCHING_PIPE, { eid, fetching: false })
     return response
   }).catch(error => {
-    /*
-    // errors don't include the eid or eid_type in the response body, so  we need
-    // to add them manually to ensure the object is serialized in the Vuex store
-    var eid_type = OBJECT_TYPE_PIPE
-    commit(types.FETCHED_PIPE, _.assign({ eid, eid_type }, response.body))
     commit(types.FETCHING_PIPE, { eid, fetching: false })
-    return response
-    */
     throw error
   })
 }
