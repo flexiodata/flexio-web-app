@@ -342,6 +342,9 @@
       :callbacks="tour_callbacks"
     />
   </div>
+
+    <!-- pipe not found -->
+  <PageNotFound class="bg-nearer-white" v-else-if="pipe_not_found" />
 </template>
 
 <script>
@@ -370,6 +373,7 @@
   import PipeSchedulePanel from './PipeSchedulePanel.vue'
   import PipeDeployPanel from './PipeDeployPanel.vue'
   import ProcessContent from './ProcessContent.vue'
+  import PageNotFound from './PageNotFound.vue'
   import PopperTour from './PopperTour.vue'
 
   import MixinConfig from './mixins/config'
@@ -424,6 +428,7 @@
       PipeSchedulePanel,
       PipeDeployPanel,
       ProcessContent,
+      PageNotFound,
       PopperTour
     },
     watch: {
@@ -479,6 +484,7 @@
         is_saving: false,
         show_save_cancel: false,
         save_cancel_zindex: 2050,
+        pipe_not_found: false,
         process_input: {},
         process_data: {},
 
@@ -633,9 +639,10 @@
 
         this.$store.dispatch('v2_action_fetchPipe', { eid: this.eid }).then(response => {
           var pipe = response.data
+          this.pipe_not_found = false
           this.$store.commit('pipe/INIT_PIPE', pipe)
         }).catch(error => {
-          // TODO: add error handling?
+          this.pipe_not_found = true
         }).finally(() => {
           this.$store.commit('pipe/FETCHING_PIPE', false)
         })
