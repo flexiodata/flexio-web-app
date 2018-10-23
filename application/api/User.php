@@ -366,9 +366,13 @@ class User
         $cleaned_post_params = self::cleanProperties($post_params); // don't store sensitive info
         $request->setRequestParams($cleaned_post_params);
 
+        // note: in validator below, use 'string' type for old password to allow it
+        // to be any string; we'll validate password format separately so we can return
+        // a custom error message that the password entered was invalid as opposed to
+        // a syntax error
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
-                'old_password' => array('type' => 'password', 'required' => true),
+                'old_password' => array('type' => 'string', 'required' => true),
                 'new_password' => array('type' => 'password', 'required' => true)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
@@ -376,6 +380,9 @@ class User
         $validated_post_params = $validator->getParams();
         $old_password = $validated_post_params['old_password'];
         $new_password = $validated_post_params['new_password'];
+
+        if (\Flexio\Base\Password::isValid($old_password) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAUTHORIZED, _('The current password entered was incorrect'));
 
         // load the object
         $owner_user = \Flexio\Object\User::load($owner_user_eid);
