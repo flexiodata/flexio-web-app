@@ -58,9 +58,6 @@ export default {
   logout:                         function()                            { return LogoutResource[POS] ()                                                   },
   resetPassword:                  function({ attrs })                   { return ResetPasswordResource[POS] ({}, attrs)                                   },
 
-  // validation
-  validate:                       function({ attrs })                   { return ValidateResource[POS] ({}, attrs)                                        },
-
   /* -- Axios-based v2 API -- */
 
   // connections
