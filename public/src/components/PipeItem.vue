@@ -203,7 +203,9 @@
               deploy_mode
             }
 
-            this.$store.dispatch('v2_action_updatePipe', { eid: this.item.eid, attrs })
+            this.$store.dispatch('v2_action_updatePipe', { eid: this.item.eid, attrs }).catch(error => {
+              // TODO: add error handling?
+            })
           }
 
           if (value === false) {

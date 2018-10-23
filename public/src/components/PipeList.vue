@@ -118,10 +118,14 @@
       ]),
       tryFetchPipes() {
         if (!this.is_fetched) {
-          this.$store.dispatch('v2_action_fetchPipes', {})
+          this.$store.dispatch('v2_action_fetchPipes', {}).catch(error => {
+            // TODO: add error handling?
+          })
         }
         if (!this.is_summary_fetched) {
-          this.$store.dispatch('v2_action_fetchProcessSummary', {})
+          this.$store.dispatch('v2_action_fetchProcessSummary', {}).catch(error => {
+            // TODO: add error handling?
+          })
         }
       },
       isItemSelected(eid) {

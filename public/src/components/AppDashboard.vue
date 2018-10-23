@@ -97,18 +97,13 @@
           attrs = { name: 'Untitled Pipe' }
 
         this.$store.dispatch('v2_action_createPipe', { attrs }).then(response => {
-          if (response.ok)
-          {
-            var pipe = response.body
-            var analytics_payload = _.pick(pipe, ['eid', 'name', 'description', 'alias', 'created'])
-            this.$store.track('Created Pipe', analytics_payload)
+          var pipe = response.data
+          var analytics_payload = _.pick(pipe, ['eid', 'name', 'description', 'alias', 'created'])
+          this.$store.track('Created Pipe', analytics_payload)
 
-            this.openPipe(response.body.eid)
-          }
-           else
-          {
-            this.$store.track('Created Pipe (Error)')
-          }
+          this.openPipe(response.body.eid)
+        }).catch(error => {
+          this.$store.track('Created Pipe (Error)')
         })
       },
       onNewPipeClick() {

@@ -635,7 +635,7 @@
           var pipe = response.data
           this.$store.commit('pipe/INIT_PIPE', pipe)
         }).catch(error => {
-          // TODO: add error handling
+          // TODO: add error handling?
         }).finally(() => {
           this.$store.commit('pipe/FETCHING_PIPE', false)
         })

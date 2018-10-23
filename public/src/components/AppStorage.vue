@@ -124,7 +124,9 @@
       },
       tryFetchConnections() {
         if (!this.is_fetched && !this.is_fetching) {
-          this.$store.dispatch('v2_action_fetchConnections', {})
+          this.$store.dispatch('v2_action_fetchConnections', {}).catch(error => {
+            // TODO: add error handling?
+          })
         }
       },
       onConnectionActivate(item) {

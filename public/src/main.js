@@ -143,13 +143,17 @@ store.track = function(event_name, attrs) {
 
 const tryFetchConnections = () => {
   if (!store.state.connections_fetched && !store.state.connections_fetching) {
-    store.dispatch('v2_action_fetchConnections', {})
+    store.dispatch('v2_action_fetchConnections', {}).catch(error => {
+      // TODO: add error handling?
+    })
   }
 }
 
 const tryFetchTokens = () => {
   if (!store.state.tokens_fetched && !store.state.tokens_fetching) {
-    store.dispatch('v2_action_fetchTokens', {})
+    store.dispatch('v2_action_fetchTokens', {}).catch(error => {
+      // TODO: add error handling?
+    })
   }
 }
 

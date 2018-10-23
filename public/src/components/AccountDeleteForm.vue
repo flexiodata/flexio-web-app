@@ -160,12 +160,16 @@
           var attrs = _.pick(this.edit_info, ['username', 'password'])
           this.$store.dispatch('v2_action_deleteUser', { eid, attrs }).then(response => {
             this.signOut()
+          }).catch(error => {
+            // TODO: add error handling?
           })
         })
       },
       signOut() {
         this.$store.dispatch('v2_action_signOut').then(response => {
           this.$router.push({ name: ROUTE_SIGNIN })
+        }).catch(error => {
+          // TODO: add error handling?
         })
       }
     }

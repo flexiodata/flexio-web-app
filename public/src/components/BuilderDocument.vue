@@ -273,19 +273,17 @@
       createPipe(run_process) {
         var attrs = this.save_attrs
         this.$store.dispatch('v2_action_createPipe', { attrs }).then(response => {
-          if (response.ok) {
-            var pipe = response.body
-            this.$store.commit('builder/CREATE_PIPE', pipe)
-            this.$store.track('Created Pipe From Template', {
-              title: this.def.name
-            })
+          var pipe = response.data
+          this.$store.commit('builder/CREATE_PIPE', pipe)
+          this.$store.track('Created Pipe From Template', {
+            title: this.def.name
+          })
 
-            if (run_process === true) {
-              this.$nextTick(() => { this.runProcess(attrs, pipe.eid) })
-            }
-          } else {
-            // TODO: add error handling
+          if (run_process === true) {
+            this.$nextTick(() => { this.runProcess(attrs, pipe.eid) })
           }
+        }).catch(error => {
+          // TODO: add error handling?
         })
       },
       runProcess(attrs, parent_eid) {
@@ -301,6 +299,8 @@
           this.$store.track('Ran Process From Template', {
             title: this.def.name
           })
+        }).catch(error => {
+          // TODO: add error handling?
         })
       },
       openPipe() {

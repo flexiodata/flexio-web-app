@@ -14,7 +14,9 @@ export default {
       }
 
       cfg[path] = val
-      this.$store.dispatch('v2_action_updateUser', { eid: user.eid, attrs: { config: cfg } })
+      this.$store.dispatch('v2_action_updateUser', { eid: user.eid, attrs: { config: cfg } }).catch(error => {
+        // TODO: add error handling?
+      })
     },
     $_Config_reset(path) {
       var user = this.$store.getters.getActiveUser
@@ -24,7 +26,9 @@ export default {
       }
 
       delete cfg[path]
-      this.$store.dispatch('v2_action_updateUser', { eid: user.eid, attrs: { config: cfg } })
+      this.$store.dispatch('v2_action_updateUser', { eid: user.eid, attrs: { config: cfg } }).catch(error => {
+        // TODO: add error handling?
+      })
     },
     $_Config_resetAll() {
       var user = this.$store.getters.getActiveUser
@@ -34,7 +38,9 @@ export default {
       }
 
       cfg = {}
-      this.$store.dispatch('v2_action_updateUser', { eid: user.eid, attrs: { config: cfg } })
+      this.$store.dispatch('v2_action_updateUser', { eid: user.eid, attrs: { config: cfg } }).catch(error => {
+        // TODO: add error handling?
+      })
     }
   }
 }

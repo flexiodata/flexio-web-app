@@ -260,13 +260,17 @@ If you have any questions, please send us a note using the chat button at the bo
           var connection = response.data
 
           // try to connect to the connection
-          this.$store.dispatch('v2_action_testConnection', { eid, attrs })
+          this.$store.dispatch('v2_action_testConnection', { eid, attrs }).catch(error => {
+            // TODO: add error handling?
+          })
 
           this.connection_alias = _.get(connection, 'alias', '')
 
           this.show_connection_new_dialog = false
 
           this.goStep(this.active_step + 1)
+        }).catch(error => {
+          // TODO: add error handling?
         })
       },
       tryCreatePipe(attrs) {
@@ -277,24 +281,17 @@ If you have any questions, please send us a note using the chat button at the bo
         _.assign(attrs, { task })
 
         this.$store.dispatch('v2_action_createPipe', { attrs }).then(response => {
-          if (response.ok)
-          {
-            var pipe = response.body
-            var analytics_payload = _.pick(pipe, ['eid', 'name', 'description', 'alias', 'created'])
+          var pipe = response.data
+          var analytics_payload = _.pick(pipe, ['eid', 'name', 'description', 'alias', 'created'])
 
-            //this.$store.track('Created Pipe In Onboarding', analytics_payload)
+          this.pipe_name = _.get(pipe, 'name', '')
+          this.pipe_alias = _.get(pipe, 'alias', '')
+          this.pipe = _.cloneDeep(pipe)
 
-            this.pipe_name = _.get(pipe, 'name', '')
-            this.pipe_alias = _.get(pipe, 'alias', '')
-            this.pipe = _.cloneDeep(pipe)
-
-            this.$nextTick(() => { this.show_pipe_save_dialog = false })
-            this.show_pipe_deploy_dialog = true
-          }
-           else
-          {
-            //this.$store.track('Created Pipe In Onboarding (Error)')
-          }
+          this.$nextTick(() => { this.show_pipe_save_dialog = false })
+          this.show_pipe_deploy_dialog = true
+        }).catch(error => {
+          // TODO: add error handling?
         })
       }
     }

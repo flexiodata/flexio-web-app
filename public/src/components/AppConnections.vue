@@ -140,7 +140,9 @@
       ]),
       tryFetchConnections() {
         if (!this.is_fetched && !this.is_fetching) {
-          this.$store.dispatch('v2_action_fetchConnections', {})
+          this.$store.dispatch('v2_action_fetchConnections', {}).catch(error => {
+            // TODO: add error handling?
+          })
         }
       },
       tryUpdateConnection(attrs) {
@@ -161,7 +163,9 @@
           })
 
           // try to connect to the connection
-          this.$store.dispatch('v2_action_testConnection', { eid, attrs })
+          this.$store.dispatch('v2_action_testConnection', { eid, attrs }).catch(error => {
+            // TODO: add error handling?
+          })
 
           if (is_pending) {
             var analytics_payload = _.pick(attrs, ['eid', 'name', 'alias', 'description', 'connection_type'])
@@ -199,6 +203,8 @@
               var connection = _.get(this.connections, '['+idx+']', {})
               this.selectConnection(connection)
             }
+          }).catch(error => {
+            // TODO: add error handling?
           })
         })
       },

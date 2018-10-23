@@ -26,6 +26,8 @@
       this.$store.dispatch('v2_action_fetchAdminProcesses', { attrs }).then(response => {
         var processes = response.data
         this.processes = processes
+      }).catch(error => {
+        // TODO: add error handling
       })
     }
   }

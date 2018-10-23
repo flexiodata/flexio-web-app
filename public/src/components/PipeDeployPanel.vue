@@ -357,7 +357,9 @@
         'getFirstToken'
       ]),
       generateApiKey() {
-        this.$store.dispatch('v2_action_createToken', {})
+        this.$store.dispatch('v2_action_createToken', {}).catch(error => {
+          // TODO: add error handling?
+        })
       }
     }
   }

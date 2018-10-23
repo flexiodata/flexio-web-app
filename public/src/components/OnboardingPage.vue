@@ -18,18 +18,16 @@
     },
     mounted() {
       this.$store.dispatch('v2_action_fetchPipes', {}).then(response => {
-        if (response.ok) {
-          var pipes = response.data
-          var pipe = _.find(pipes, { alias: 'example-email-results-of-python-function' })
-          var eid = pipe.eid
+        var pipes = response.data
+        var pipe = _.find(pipes, { alias: 'example-email-results-of-python-function' })
+        var eid = pipe.eid
 
-          var cfg_path = 'app.prompt.onboarding.pipeDocument.build.shown'
-          this.$_Config_reset(cfg_path)
+        var cfg_path = 'app.prompt.onboarding.pipeDocument.build.shown'
+        this.$_Config_reset(cfg_path)
 
-          this.$router.push({ name: ROUTE_PIPES, params: { eid } })
-        } else {
-          // TODO: add error handling
-        }
+        this.$router.push({ name: ROUTE_PIPES, params: { eid } })
+      }).catch(error => {
+        // TODO: add error handling?
       })
     }
   }

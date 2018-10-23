@@ -84,14 +84,12 @@
         'getActiveUser'
       ]),
       tryFetchTokens() {
-        this.$store.dispatch('v2_action_fetchTokens', {})
+        this.$store.dispatch('v2_action_fetchTokens', {}).catch(error => {
+          // TODO: add error handling?
+        })
       },
       onOnboardingItemChange(id) {
         var item = _.find(this.items, { id })
-
-        //this.$store.track('Switched Onboarding Item', {
-        //  title: item.name
-        //})
       }
     }
   }

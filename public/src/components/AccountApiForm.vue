@@ -89,16 +89,22 @@
       ]),
       tryFetchTokens() {
         if (!this.is_fetched) {
-          this.$store.dispatch('v2_action_fetchTokens', {})
+          this.$store.dispatch('v2_action_fetchTokens', {}).catch(error => {
+            // TODO: add error handling?
+          })
         }
       },
       createApiKey() {
         this.$store.dispatch('v2_action_createToken', {}).then(response => {
           this.$store.track('Created API Key')
+        }).catch(error => {
+          // TODO: add error handling?
         })
       },
       deleteKey(token) {
-        this.$store.dispatch('v2_action_deleteToken', { eid: token.eid })
+        this.$store.dispatch('v2_action_deleteToken', { eid: token.eid }).catch(error => {
+          // TODO: add error handling?
+        })
       }
     }
   }

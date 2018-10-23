@@ -121,11 +121,15 @@
         'getFirstToken'
       ]),
       tryFetchPipes() {
-        this.$store.dispatch('v2_action_fetchPipes', {})
+        this.$store.dispatch('v2_action_fetchPipes', {}).catch(error => {
+          // TODO: add error handling?
+        })
       },
       checkCreateApiKey() {
         if (this.tokens_fetched && this.api_key.length == 0) {
-          this.$store.dispatch('v2_action_createToken', {})
+          this.$store.dispatch('v2_action_createToken', {}).catch(error => {
+            // TODO: add error handling?
+          })
         }
       }
     }

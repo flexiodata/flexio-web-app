@@ -211,7 +211,9 @@
       ]),
       tryFetchProcesses() {
         if (!this.is_fetched && !this.is_fetching) {
-          this.$store.dispatch('v2_action_fetchProcesses', {})
+          this.$store.dispatch('v2_action_fetchProcesses', {}).catch(error => {
+            // TODO: add error handling?
+          })
         }
       },
       updatePager(page) {

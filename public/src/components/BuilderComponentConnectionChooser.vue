@@ -170,6 +170,8 @@
             this.edit_mode = 'add'
             this.edit_connection = connection
             this.show_connection_dialog = true
+          }).catch(error => {
+            // TODO: add error handling?
           })
         } else {
           this.edit_mode = 'add'
@@ -190,10 +192,14 @@
 
           // TODO: shouldn't we do this in the ConnectionEditPanel?
           // try to connect to the connection
-          this.$store.dispatch('v2_action_testConnection', { eid, attrs })
+          this.$store.dispatch('v2_action_testConnection', { eid, attrs }).catch(error => {
+            // TODO: add error handling?
+          })
 
           this.chooseConnection(connection)
           this.show_connection_dialog = false
+        }).catch(error => {
+          // TODO: add error handling?
         })
       }
     }

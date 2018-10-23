@@ -414,6 +414,8 @@
           connection.alias = 'my-' + service_slug
 
           this.updateConnection(connection)
+        }).catch(error => {
+          // TODO: add error handling?
         })
       },
       formValidateAlias(rule, value, callback) {

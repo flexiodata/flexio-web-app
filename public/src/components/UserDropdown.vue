@@ -81,6 +81,8 @@
           var pipe = response.data
           var eid = pipe.eid
           this.$router.push({ name: ROUTE_PIPES, params: { eid } })
+        }).catch(error => {
+          // TODO: add error handling?
         })
       },
       gotoAccount() {
@@ -89,6 +91,8 @@
       signOut() {
         this.$store.dispatch('v2_action_signOut').then(response => {
           this.$router.push({ name: ROUTE_SIGNIN })
+        }).catch(error => {
+          // TODO: add error handling?
         })
       },
       onCommand(cmd) {

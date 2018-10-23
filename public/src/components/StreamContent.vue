@@ -138,7 +138,9 @@
           return
         }
 
-        this.$store.dispatch('v2_action_fetchStream', { eid: this.streamEid })
+        this.$store.dispatch('v2_action_fetchStream', { eid: this.streamEid }).catch(error => {
+          // TODO: add error handling?
+        })
       }
     }
   }

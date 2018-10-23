@@ -121,10 +121,14 @@
         var process = _.get(this.$store, 'state.objects.' + this.processEid)
         var user_eid = _.get(process, 'owned_by.eid', '')
         if (this.showUser && user_eid.length > 0) {
-          this.$store.dispatch('v2_action_fetchUser', { eid: user_eid })
+          this.$store.dispatch('v2_action_fetchUser', { eid: user_eid }).catch(error => {
+            // TODO: add error handling?
+          })
         }
 
-        this.$store.dispatch('v2_action_fetchProcess', { eid: this.processEid })
+        this.$store.dispatch('v2_action_fetchProcess', { eid: this.processEid }).catch(error => {
+          // TODO: add error handling?
+        })
       },
       onClose() {
         this.$emit('close')

@@ -97,7 +97,9 @@
           name: item.name
         }
 
-        this.$store.dispatch('v2_action_createPipe', { attrs })
+        this.$store.dispatch('v2_action_createPipe', { attrs }).catch(error => {
+          // TODO: add error handling?
+        })
       },
       initSticky() {
         setTimeout(() => {
@@ -109,7 +111,9 @@
       },
       tryFetchPipes() {
         if (!this.is_fetched && !this.is_fetching) {
-          this.$store.dispatch('v2_action_fetchPipes', {})
+          this.$store.dispatch('v2_action_fetchPipes', {}).catch(error => {
+            // TODO: add error handling?
+          })
         }
       },
       tryCreatePipe(attrs) {
@@ -134,7 +138,9 @@
           cancelButtonText: 'CANCEL',
           type: 'warning'
         }).then(() => {
-          this.$store.dispatch('v2_action_deletePipe', { eid })
+          this.$store.dispatch('v2_action_deletePipe', { eid }).catch(error => {
+            // TODO: add error handling?
+          })
         }).catch(() => {
           // do nothing
         })

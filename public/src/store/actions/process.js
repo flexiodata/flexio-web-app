@@ -52,7 +52,9 @@ export const v2_action_createProcess = ({ commit, dispatch }, { user_eid, attrs 
     // the 'run' parameter was specified which means
     // we've started the process; poll for the process
     if (_.get(attrs, 'run', false) === true && process.eid) {
-      dispatch('v2_action_fetchProcess', { user_eid, eid: process.eid, poll: true })
+      dispatch('v2_action_fetchProcess', { user_eid, eid: process.eid, poll: true }).catch(error => {
+        // TODO: add error handling?
+      })
     }
 
     return response
@@ -78,7 +80,9 @@ export const v2_action_fetchProcess = ({ commit, dispatch }, { user_eid, eid, po
             PROCESS_STATUS_RUNNING
           ], status)) {
         _.delay(function() {
-          dispatch('v2_action_fetchProcess', { user_eid, eid, poll: true })
+          dispatch('v2_action_fetchProcess', { user_eid, eid, poll: true }).catch(error => {
+            // TODO: add error handling?
+          })
         }, 500)
       }
     }
@@ -107,14 +111,18 @@ export const v2_action_cancelProcess = ({ commit, dispatch }, { user_eid, eid })
 export const v2_action_runProcess = ({ commit, dispatch }, { user_eid, eid, cfg }) => {
   commit(types.STARTING_PROCESS, { eid })
 
-  dispatch('v2_action_fetchProcess', { user_eid, eid, poll: true })
+  dispatch('v2_action_fetchProcess', { user_eid, eid, poll: true }).catch(error => {
+    // TODO: add error handling?
+  })
 
   return api.v2_runProcess(user_eid, eid, cfg).then(response => {
     var process = { eid, process_status: PROCESS_STATUS_RUNNING }
     commit(types.STARTED_PROCESS, { process })
     return response
   }).catch(error => {
-    dispatch('v2_action_fetchProcess', { user_eid, eid })
+    dispatch('v2_action_fetchProcess', { user_eid, eid }).catch(error => {
+      // TODO: add error handling?
+    })
     return error
   })
 }
