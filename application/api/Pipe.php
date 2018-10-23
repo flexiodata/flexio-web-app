@@ -343,8 +343,17 @@ class Pipe
         // public pipes that don't require a token
         $triggered_by = strlen($request->getToken()) > 0 ? \Model::PROCESS_TRIGGERED_API : \Model::PROCESS_TRIGGERED_INTERFACE;
 
-        // create a new process
+        // get the pipe properties
         $pipe_properties = $pipe->get();
+
+        // only allow pipes to be triggered from an API call if the pipe is deployed
+        // and the api deployment option is activated
+        $api_trigger_active = ($pipe_properties['deploy_mode'] === \Model::PIPE_DEPLOY_MODE_RUN &&
+                               $pipe_properties['deploy_api'] === \Model::PIPE_DEPLOY_STATUS_ACTIVE);
+        if ($triggered_by === \Model::PROCESS_TRIGGERED_API && $api_trigger_active === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+        // create a new process
         $process_properties = array(
             'parent_eid' => $pipe_properties['eid'],
             'pipe_info' => $pipe_properties,
