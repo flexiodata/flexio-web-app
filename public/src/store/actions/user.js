@@ -70,19 +70,6 @@ export const v2_action_deleteUser = ({ commit }, { eid, attrs }) => {
 
 // ----------------------------------------------------------------------- //
 
-export const v2_action_changePassword = ({ commit, dispatch }, { eid, attrs }) => {
-  commit(types.CHANGING_PASSWORD, { eid, attrs })
-
-  return api.v2_changePassword(eid, attrs).then(response => {
-    var attrs = response.data
-    commit(types.CHANGED_PASSWORD, { eid, attrs })
-    dispatch('analyticsTrack', { event_name: 'Changed Password' })
-    return response
-  }).catch(error => {
-    return error
-  })
-}
-
 /*
 export const signUp = ({ commit, dispatch }, { attrs }) => {
   commit(types.SIGNING_UP, true)
@@ -125,26 +112,37 @@ export const signIn = ({ commit, dispatch }, { attrs }) => {
 }
 */
 
-export const signOut = ({ commit, dispatch }) => {
+export const v2_action_signOut = ({ commit, dispatch }) => {
   commit(types.SIGNING_OUT, true)
 
-  return api.logout().then(response => {
-    // success callback
-    commit(types.SIGNED_OUT)
-    commit(types.SIGNING_OUT, false)
-
+  return api.v2_logout().then(response => {
     // reset store state
     commit('RESET_STATE')
     commit('builder/RESET_STATE')
     commit('pipe/RESET_STATE')
 
+    commit(types.SIGNED_OUT)
+    commit(types.SIGNING_OUT, false)
+
     dispatch('analyticsTrack', { event_name: 'Signed Out' })
 
     return response
-  }, response => {
-    // error callback
+  }).catch(error => {
     commit(types.SIGNING_OUT, false)
+    return error
+  })
+}
+
+export const v2_action_changePassword = ({ commit, dispatch }, { eid, attrs }) => {
+  commit(types.CHANGING_PASSWORD, { eid, attrs })
+
+  return api.v2_changePassword(eid, attrs).then(response => {
+    var attrs = response.data
+    commit(types.CHANGED_PASSWORD, { eid, attrs })
+    dispatch('analyticsTrack', { event_name: 'Changed Password' })
     return response
+  }).catch(error => {
+    return error
   })
 }
 

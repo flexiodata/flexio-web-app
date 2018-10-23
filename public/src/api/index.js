@@ -51,7 +51,6 @@ const V2_PUT = 'put'
 const V2_DEL = 'delete'
 
 export default {
-
   // auth
   signUp:                         function({ attrs })                   { return SignupResource[POS] ({}, attrs)                                          },
   login:                          function({ attrs })                   { return LoginResource[POS] ({}, attrs)                                           },
@@ -104,6 +103,12 @@ export default {
   v2_fetchTokens:          function(user_eid)             { return AxiosResource(user_eid)[V2_GET] (`/auth/keys`)                            },
   v2_createToken:          function(user_eid)             { return AxiosResource(user_eid)[V2_POS] (`/auth/keys`)                            },
   v2_deleteToken:          function(user_eid, eid)        { return AxiosResource(user_eid)[V2_DEL] (`/auth/keys/${eid}`)                     },
+
+  // auth
+  //v2_signUp:               function(attrs)                { return AxiosResource(null)[V2_POS] (`/signup`)                                   },
+  //v2_login:                function(attrs)                { return AxiosResource(null)[V2_POS] (`/login`)                                    },
+  v2_logout:               function()                     { return AxiosResource(null)[V2_POS] (`/logout`)                                   },
+  v2_resetPassword:        function(attrs)                { return AxiosResource(null)[V2_POS] (`/resetpassword`)                            },
 
   // validation
   v2_validate:             function(attrs)                { return AxiosResource(null)[V2_POS] (`/validate`, attrs)                          },

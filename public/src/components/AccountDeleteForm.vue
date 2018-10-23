@@ -164,12 +164,8 @@
         })
       },
       signOut() {
-        this.$store.dispatch('signOut').then(response => {
-          if (response.ok) {
-            this.$router.push({ name: ROUTE_SIGNIN })
-          } else {
-            // TODO: add error handling
-          }
+        this.$store.dispatch('v2_action_signOut').then(response => {
+          this.$router.push({ name: ROUTE_SIGNIN })
         })
       }
     }
