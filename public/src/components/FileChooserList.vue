@@ -238,10 +238,9 @@
 
           this.is_inited = true
         }).catch(error => {
-          var response = error.response
           this.is_fetching = false
           this.items = []
-          this.error_message = _.get(response.data, 'error.message', '')
+          this.error_message = _.get(error, 'response.data.error.message', '')
         })
       }
     }

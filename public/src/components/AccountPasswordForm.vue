@@ -154,10 +154,9 @@
             this.resetForm()
             setTimeout(() => { this.show_success = false }, 4000)
           }).catch(error => {
-            var response = error.response
             this.show_success = false
             this.show_error = true
-            this.error_msg = _.get(response.data, 'error.message', '')
+            this.error_msg = _.get(error, 'response.data.error.message', '')
           })
         })
       }

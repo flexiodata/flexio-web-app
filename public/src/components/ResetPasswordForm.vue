@@ -132,9 +132,8 @@
             this.is_sent = true
             this.error_msg = ''
           }).catch(error => {
-            var response = error.response
             this.is_submitting = false
-            this.error_msg = _.get(response.data, 'error.message', '')
+            this.error_msg = _.get(error, 'response.data.error.message', '')
           })
         })
       }
