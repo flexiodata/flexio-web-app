@@ -1,49 +1,4 @@
-import {
-  AxiosResource,
-  SignupResource,
-  LoginResource,
-  LogoutResource,
-  UserResource,
-  ConnectionResource,
-  PipeResource,
-  ProcessResource,
-  UserProcessResource,
-  RightsResource,
-  TokenResource,
-  StatisticsResource,
-  StreamResource,
-  AccountResource,
-  AdminInfoResource,
-  AdminTestResource,
-  ValidateResource,
-  ResetPasswordResource,
-  VfsResource
-} from './resources'
-
-import axios from 'axios'
-
-/*
-  // global Vue object
-  Vue.http.get('/someUrl', [options]).then(successCallback, errorCallback);
-  Vue.http.post('/someUrl', [body], [options]).then(successCallback, errorCallback);
-
-  // in a Vue instance
-  this.$http.get('/someUrl', [options]).then(successCallback, errorCallback);
-  this.$http.post('/someUrl', [body], [options]).then(successCallback, errorCallback);
-
-  // resource default actions
-  get:    { method: 'GET'    },
-  save:   { method: 'POST'   },
-  query:  { method: 'GET'    },
-  update: { method: 'PUT'    },
-  remove: { method: 'DELETE' },
-  delete: { method: 'DELETE' }
-*/
-
-const GET = 'get'
-const POS = 'save'
-const PUT = 'update'
-const DEL = 'delete'
+import { AxiosResource } from './resources'
 
 const V2_GET = 'get'
 const V2_POS = 'post'
@@ -112,11 +67,11 @@ export default {
 }
 
 /*
-1) List Directory      GET https://localhost/api/me/v2/vfs/list?q=/
-2) Get File            GET https://localhost/api/me/v2/vfs/my-alias/my-folder/my-subfolder/aphist.csv
-3) Put File            PUT https://localhost/api/me/v2/vfs/my-alias/my-folder/my-subfolder/aphist.csv
-4) Create Directory    PUT https://localhost/api/me/v2/vfs/my-alias/my-folder/my-subfolder ?????
-5) Delete Files        DEL https://localhost/api/me/v2/vfs/my-alias/my-folder/my-subfolder/aphist.csv
+  VFS Notes...
+
+  1) List Directory      GET https://localhost/api/me/v2/vfs/list?q=/
+  2) Get File            GET https://localhost/api/me/v2/vfs/my-alias/my-folder/my-subfolder/aphist.csv
+  3) Put File            PUT https://localhost/api/me/v2/vfs/my-alias/my-folder/my-subfolder/aphist.csv
+  4) Create Directory    PUT https://localhost/api/me/v2/vfs/my-alias/my-folder/my-subfolder ?????
+  5) Delete Files        DEL https://localhost/api/me/v2/vfs/my-alias/my-folder/my-subfolder/aphist.csv
 */
-
-

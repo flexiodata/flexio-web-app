@@ -64,10 +64,11 @@
         return _.get(this.$store, 'state.objects.'+this.streamEid)
       },
       stream_content_url() {
-        if (this.is_flexio_html)
-          return API_V2_ROOT+'/me/streams/'+this.streamEid+'/content?content_type=text/html'
+        if (this.is_flexio_html) {
+          return API_V2_ROOT + '/me/streams/' + this.streamEid + '/content?content_type=text/html'
+        }
 
-        return API_V2_ROOT+'/me/streams/'+this.streamEid+'/content'
+        return API_V2_ROOT + '/me/streams/' + this.streamEid + '/content'
       },
       stream_query_params() {
         return containsSubstrings([
