@@ -19,7 +19,7 @@ export const v2_action_fetchAdminProcesses = ({ commit }, { attrs }) => {
     return response
   }).catch(error => {
     commit(types.FETCHING_PROCESSES, { pipe_eid, fetching: false })
-    return error
+    throw error
   })
 }
 
@@ -36,7 +36,7 @@ export const v2_action_fetchProcesses = ({ commit }, { user_eid, attrs }) => {
     return response
   }).catch(error => {
     commit(types.FETCHING_PROCESSES, { pipe_eid, fetching: false })
-    return error
+    throw error
   })
 }
 
@@ -59,7 +59,7 @@ export const v2_action_createProcess = ({ commit, dispatch }, { user_eid, attrs 
 
     return response
   }).catch(error => {
-    return error
+    throw error
   })
 }
 
@@ -90,7 +90,7 @@ export const v2_action_fetchProcess = ({ commit, dispatch }, { user_eid, eid, po
     return response
   }).catch(error => {
     commit(types.FETCHING_PROCESS, { eid, fetching: false })
-    return error
+    throw error
   })
 }
 
@@ -104,7 +104,7 @@ export const v2_action_cancelProcess = ({ commit, dispatch }, { user_eid, eid })
     commit(types.CANCELED_PROCESS, { process })
     return response
   }).catch(error => {
-    return error
+    throw error
   })
 }
 
@@ -123,7 +123,7 @@ export const v2_action_runProcess = ({ commit, dispatch }, { user_eid, eid, cfg 
     dispatch('v2_action_fetchProcess', { user_eid, eid }).catch(error => {
       // TODO: add error handling?
     })
-    return error
+    throw error
   })
 }
 
@@ -139,7 +139,7 @@ export const v2_action_fetchProcessLog = ({ commit, dispatch }, { user_eid, eid 
     return response
   }).catch(error => {
     commit(types.FETCHING_PROCESS_LOG, { eid, fetching: false })
-    return error
+    throw error
   })
 }
 
@@ -155,6 +155,6 @@ export const v2_action_fetchProcessSummary = ({ commit, dispatch }, { user_eid }
     return response
   }).catch(error => {
     commit(types.FETCHING_PROCESS_SUMMARY, { fetching: false })
-    return error
+    throw error
   })
 }

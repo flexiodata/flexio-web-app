@@ -18,7 +18,7 @@ export const v2_action_fetchCurrentUser = ({ commit, dispatch }) => {
     return response
   }).catch(error => {
     commit(types.FETCHING_USER, false)
-    return error
+    throw error
   })
 }
 
@@ -38,7 +38,7 @@ export const v2_action_fetchUser = ({ commit, dispatch }, { eid }) => {
     return response
   }).catch(error => {
     commit(types.FETCHING_USER, false)
-    return error
+    throw error
   })
 }
 
@@ -52,7 +52,7 @@ export const v2_action_updateUser = ({ commit }, { eid, attrs }) => {
     commit(types.UPDATED_USER, { eid, attrs })
     return response
   }).catch(error => {
-    return error
+    throw error
   })
 }
 
@@ -63,7 +63,7 @@ export const v2_action_deleteUser = ({ commit }, { eid, attrs }) => {
     commit(types.DELETED_USER, { eid, attrs })
     return response
   }).catch(error => {
-    return error
+    throw error
   })
 }
 
@@ -128,7 +128,7 @@ export const v2_action_signOut = ({ commit, dispatch }) => {
     return response
   }).catch(error => {
     commit(types.SIGNING_OUT, false)
-    return error
+    throw error
   })
 }
 
@@ -141,7 +141,7 @@ export const v2_action_changePassword = ({ commit, dispatch }, { eid, attrs }) =
     dispatch('analyticsTrack', { event_name: 'Changed Password' })
     return response
   }).catch(error => {
-    return error
+    throw error
   })
 }
 

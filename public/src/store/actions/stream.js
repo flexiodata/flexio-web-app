@@ -13,7 +13,7 @@ export const v2_action_fetchStream = ({ commit }, { user_eid, eid }) => {
     return response
   }).catch(error => {
     commit(types.FETCHING_STREAM, { eid, fetching: false })
-    return error
+    throw error
   })
 }
 

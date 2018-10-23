@@ -14,7 +14,7 @@ export const v2_action_fetchPipes = ({ commit }, { user_eid }) => {
     return response
   }).catch(error => {
     commit(types.FETCHING_PIPES, { fetching: false })
-    return error
+    throw error
   })
 }
 
@@ -28,7 +28,7 @@ export const v2_action_createPipe = ({ commit, dispatch }, { user_eid, attrs }) 
     commit(types.CREATED_PIPE, { attrs, pipe })
     return response
   }).catch(error => {
-    return error
+    throw error
   })
 }
 
@@ -49,7 +49,7 @@ export const v2_action_fetchPipe = ({ commit }, { user_eid, eid }) => {
     commit(types.FETCHING_PIPE, { eid, fetching: false })
     return response
     */
-    return error
+    throw error
   })
 }
 
@@ -61,7 +61,7 @@ export const v2_action_updatePipe = ({ commit }, { user_eid, eid, attrs }) => {
     commit(types.UPDATED_PIPE, { eid, attrs })
     return response
   }).catch(error => {
-    return error
+    throw error
   })
 }
 
@@ -73,6 +73,6 @@ export const v2_action_deletePipe = ({ commit }, { user_eid, eid }) => {
     commit(types.DELETED_PIPE, { attrs })
     return response
   }).catch(error => {
-    return error
+    throw error
   })
 }

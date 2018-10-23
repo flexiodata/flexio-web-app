@@ -13,7 +13,7 @@ export const v2_action_fetchTokens = ({ commit }, { user_eid }) => {
     return response
   }).catch(error => {
     commit(types.FETCHING_TOKENS, { fetching: false })
-    return error
+    throw error
   })
 }
 
@@ -27,7 +27,7 @@ export const v2_action_createToken = ({ commit, dispatch }, { user_eid }) => {
     commit(types.CREATED_TOKEN, { attrs })
     return response
   }).catch(error => {
-    return error
+    throw error
   })
 }
 
@@ -38,6 +38,6 @@ export const v2_action_deleteToken = ({ commit }, { user_eid, eid }) => {
     commit(types.DELETED_TOKEN, { eid })
     return response
   }).catch(error => {
-    return error
+    throw error
   })
 }
