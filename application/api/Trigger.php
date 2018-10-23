@@ -67,7 +67,13 @@ class Trigger
         if ($pipe->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, "Pipe object not found");
 
+        // get the pipe properties
         $pipe_properties = $pipe->get();
+
+        // only allow pipes to be triggered from an email if the pipe is deployed
+        if ($pipe_properties['deploy_mode'] !== \Model::PIPE_DEPLOY_MODE_RUN)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
         $process_properties = array(
             'parent_eid' => $pipe_properties['eid'],
             'pipe_info' => $pipe_properties,
