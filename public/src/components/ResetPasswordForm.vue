@@ -127,14 +127,14 @@
 
           this.is_submitting = true
 
-          api.resetPassword({ attrs }).then(response => {
-            // success callback
+          api.v2_resetPassword(attrs).then(response => {
             this.is_submitting = false
             this.is_sent = true
-          }, response => {
-            // error callback
+            this.error_msg = ''
+          }).catch(error => {
+            var response = error.response
             this.is_submitting = false
-            this.error_msg = _.get(response, 'data.error.message', '')
+            this.error_msg = _.get(response.data, 'error.message', '')
           })
         })
       }

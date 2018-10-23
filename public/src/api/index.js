@@ -108,7 +108,7 @@ export default {
   //v2_signUp:               function(attrs)                { return AxiosResource(null)[V2_POS] (`/signup`)                                   },
   //v2_login:                function(attrs)                { return AxiosResource(null)[V2_POS] (`/login`)                                    },
   v2_logout:               function()                     { return AxiosResource(null)[V2_POS] (`/logout`)                                   },
-  v2_resetPassword:        function(attrs)                { return AxiosResource(null)[V2_POS] (`/resetpassword`)                            },
+  v2_resetPassword:        function(attrs)                { return AxiosResource(null)[V2_POS] (`/resetpassword`, attrs)                     },
 
   // validation
   v2_validate:             function(attrs)                { return AxiosResource(null)[V2_POS] (`/validate`, attrs)                          },
