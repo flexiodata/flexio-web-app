@@ -188,8 +188,10 @@
         var name = _.get(attrs, 'name', 'Connection')
 
         this.$confirm('Are you sure you want to delete the connection named "'+name+'"?', 'Really delete connection?', {
-          confirmButtonText: 'DELETE CONNECTION',
-          cancelButtonText: 'CANCEL',
+          confirmButtonClass: 'ttu fw6',
+          cancelButtonClass: 'ttu fw6',
+          confirmButtonText: 'Delete connection',
+          cancelButtonText: 'Cancel',
           type: 'warning'
         }).then(() => {
           var idx = _.findIndex(this.connections, this.connection)

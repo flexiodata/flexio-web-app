@@ -134,8 +134,10 @@
         var name = _.get(attrs, 'name', 'Pipe')
 
         this.$confirm('Are you sure you want to delete the pipe named "' + name + '"?', 'Really delete pipe?', {
-          confirmButtonText: 'DELETE PIPE',
-          cancelButtonText: 'CANCEL',
+          confirmButtonClass: 'ttu fw6',
+          cancelButtonClass: 'ttu fw6',
+          confirmButtonText: 'Delete pipe',
+          cancelButtonText: 'Cancel',
           type: 'warning'
         }).then(() => {
           this.$store.dispatch('v2_action_deletePipe', { eid }).catch(error => {
