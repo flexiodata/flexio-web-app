@@ -14,7 +14,7 @@
         <el-button
           type="primary"
           size="small"
-          class="ttu b"
+          class="ttu fw6"
           @click="runTests"
           v-if="!is_running"
         >
@@ -23,7 +23,7 @@
         <el-button
           type="danger"
           size="small"
-          class="ttu b"
+          class="ttu fw6"
           :disabled="is_canceled"
           @click="cancelTests"
           v-if="is_running"
@@ -36,19 +36,16 @@
           v-model="show_errors_only"
         />
         <span
-          class="f5 pl1 pointer"
+          class="f6 pl1 pointer"
           @click="show_errors_only = !show_errors_only"
         >
           Only show errors
         </span>
         <div class="flex-fill">&nbsp;</div>
-        <div class="f6 ttu b ph2 yellow" v-show="ajax_fail_cnt > 0">AJAX Errors: {{ajax_fail_cnt}}</div>
-        <span class="moon-gray" v-show="ajax_fail_cnt > 0">/</span>
-        <div class="f6 ttu b ph2 dark-green">Passed: {{pass_cnt}}</div>
-        <span class="moon-gray">/</span>
-        <div class="f6 ttu b ph2 dark-red">Failed: {{fail_cnt}}</div>
-        <span class="moon-gray">/</span>
-        <div class="f6 ttu b ph2">Total: {{total_cnt}}</div>
+        <div class="total-item mr2 br-pill f6 ttu fw6 white bg-yellow" v-show="ajax_fail_cnt > 0">AJAX Errors: {{ajax_fail_cnt}}</div>
+        <div class="total-item mr2 br-pill f6 ttu fw6 white bg-dark-green">Passed: {{pass_cnt}}</div>
+        <div class="total-item mr2 br-pill f6 ttu fw6 white bg-dark-red">Failed: {{fail_cnt}}</div>
+        <div class="total-item mr2 br-pill f6 ttu fw6 white bg-dark-gray">Total: {{total_cnt}}</div>
       </div>
     </div>
     <div class="flex-fill overflow-auto">
@@ -116,7 +113,7 @@
       ajax_fail_cnt() {
         return _
           .chain(this.filtered_tests)
-          .filter((t) => { return _.get(t, 'xhr_ok') !== true })
+          .filter((t) => { return _.get(t, 'xhr_error') === true })
           .size()
           .value()
       },
@@ -157,20 +154,20 @@
         this.tests[test_id] = _.assign({}, test, { is_running: true })
 
         api.v2_runAdminTest({ id: test_id }).then(response => {
-          var xhr_ok = response.status == 200 ? true : false
-          this.tests[test_id] = _.assign({}, test, { is_running: false, xhr_ok }, response.data)
+          var xhr_error = response.status == 200 ? false : true
+          this.tests[test_id] = _.assign({}, test, { is_running: false, xhr_error }, response.data)
           this.runTest(this.queue.next())
 
           /*
           if (!_.isNil(response.data)) {
-            this.tests[test_id] = _.assign({}, test, { is_running: false, xhr_ok }, response.data)
+            this.tests[test_id] = _.assign({}, test, { is_running: false, xhr_error }, response.data)
             this.runTest(this.queue.next())
           } else {
             debugger
             // handle errors here...
             var error_text = this.$_Response_getResponseText(response, (error_text) => {
-              xhr_ok = false
-              this.tests[test_id] = _.assign({}, test, { is_running: false, xhr_ok, error_text })
+              xhr_error = false
+              this.tests[test_id] = _.assign({}, test, { is_running: false, xhr_error, error_text })
               this.runTest(this.queue.next())
             })
           }
@@ -178,8 +175,8 @@
         }).catch(error => {
           var response = _.get(error, 'response', {})
           var error_text = _.get(error, 'message', 'There was a problem with the AJAX call')
-          var xhr_ok = response.status == 200 ? true : false
-          this.tests[test_id] = _.assign({}, test, { is_running: false, xhr_ok, error_text })
+          var xhr_error = response.status == 200 ? false : true
+          this.tests[test_id] = _.assign({}, test, { is_running: false, xhr_error, error_text })
           this.runTest(this.queue.next())
         })
       },
@@ -197,3 +194,8 @@
     }
   }
 </script>
+
+<style lang="stylus" scoped>
+  .total-item
+    padding: 6px 16px
+</style>

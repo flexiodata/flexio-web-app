@@ -18,11 +18,13 @@
       <span class="f6 fw6 mr2">{{item.id}}</span>
       <div class="flex-fill">&nbsp;</div>
       <div class="tr pl3 f7 fw6">{{item.message}}</div>
-      <div class="f4 pl3 pr1 tr monospace ttu b dark-green" v-if="has_details && is_passed===true">Passed</div>
-      <div class="f4 pl3 pr1 tr monospace ttu b dark-red" v-if="has_details && !is_passed===true">Failed</div>
-      <div class="f4 pl3 pr1 tr monospace ttu b yellow" v-if="is_xhr_ok===false">&nbsp;Error</div>
+      <div class="f6 pl3 pr1 tr ttu b" style="width: 5rem">
+        <div class="dark-green" v-if="has_details && is_passed===true">Passed</div>
+        <div class="dark-red" v-if="has_details && !is_passed===true">Failed</div>
+        <div class="yellow" v-if="is_xhr_error">&nbsp;Error</div>
+      </div>
     </div>
-    <div class="pt1" style="margin-left: 24px" v-if="is_xhr_ok===false">
+    <div class="pt1" style="margin-left: 24px" v-if="is_xhr_error">
       <table class="w-100 css-test-table">
         <tr>
           <td class="v-top f6 b w3">&nbsp;</td>
@@ -37,19 +39,17 @@
           <td class="v-top f6 min-w6 mw6">
             <div>{{detail.description}}</div>
             <div class="flex flex-row mr3" style="margin: 2px 0; max-height: 8rem" v-if="!detail.passed && detail.message && detail.message.length > 0">
-              <div class="f6 monospace overflow-auto ba b--black-20 bg-white-60" style="padding: 3px">
+              <div class="f8 code overflow-auto ba b--black-20 bg-white-60" style="padding: 3px">
                 {{detail.message}}
               </div>
             </div>
           </td>
           <td class="v-top f7 tr">
-            <div class="dib">
-              <div class="flex flex-row items-center nowrap ttu white bg-dark-green" style="padding: 1px 4px 1px 2px" v-if="detail.passed">
-                <i class="material-icons f7" style="margin-right: 2px">check</i>
+            <div class="dib pr1">
+              <div class="flex flex-row items-center nowrap ttu white bg-dark-green" style="padding: 1px 5px" v-if="detail.passed">
                 <span class="f6 monospace">Passed</span>
               </div>
-              <div class="flex flex-row items-center nowrap ttu white bg-dark-red" style="padding: 1px 4px 1px 2px" v-if="!detail.passed">
-                <i class="material-icons f7" style="margin-right: 2px">close</i>
+              <div class="flex flex-row items-center nowrap ttu white bg-dark-red" style="padding: 1px 5px" v-if="!detail.passed">
                 <span class="f6 monospace">Failed</span>
               </div>
             </div>
@@ -85,12 +85,12 @@
       is_passed() {
         return this.item.passed
       },
-      is_xhr_ok() {
-        return _.get(this.item, 'xhr_ok', true)
+      is_xhr_error() {
+        return _.get(this.item, 'xhr_error', false)
       },
       cls() {
         return {
-          'css-test-error': this.is_xhr_ok === false,
+          'css-test-error': this.is_xhr_error === true,
           'css-test-success': this.is_passed === true,
           'css-test-failure': this.is_passed === false
         }
