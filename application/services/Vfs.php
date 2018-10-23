@@ -83,6 +83,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
 
         $owner_user_eid = $this->getOwner();
 
+        /*
         // if root_connection_identifier is set, the vfs is bound to that connection
 
         if ($this->root_connection_identifier === null && ($path == '' || $path == '/'))
@@ -148,6 +149,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
 
             return $results;
         }
+        */
 
 
         $connection_identifier = '';

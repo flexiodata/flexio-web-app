@@ -83,9 +83,8 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             }
             else if (substr($result['error_summary'], 0, 14) == 'path/not_found')
             {
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, "The path could not be found");
             }
-
         }
 
         while (true)
@@ -94,7 +93,10 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             {
                 foreach ($result['entries'] as $entry)
                 {
-                    $fullpath = $path;
+                    $fullpath = '';
+                    if (substr($path,0,1) != '/')
+                        $fullpath .= '/';
+                    $fullpath .= $path;
                     if (substr($fullpath, -1) != '/')
                         $fullpath .= '/';
                     $fullpath .= $entry['name'];
@@ -157,7 +159,7 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         {
             if (substr($result['error_summary'], 0, 14) == 'path/not_found')
             {
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, "The path could not be found");
             }
             else
             {
@@ -314,7 +316,7 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             {
                 $error_summary = $result['error_summary'] ?? '';
                 if (substr($error_summary, 0, 14) == 'path/not_found')
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, "The path could not be found");
                      else
                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
             }
@@ -408,7 +410,12 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
     private function getRemotePath(string $path) : string
     {
-        return \Flexio\Services\Util::mergePath($this->base_path, $path);
+        $merged_path = \Flexio\Services\Util::mergePath($this->base_path, $path);
+        if (substr($merged_path, 0, 1) != '/')
+            $merged_path = '/' . $merged_path;
+        if ($merged_path == '/')
+            return '';
+        return $merged_path;
     }
 
 

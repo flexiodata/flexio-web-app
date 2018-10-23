@@ -833,11 +833,26 @@ class ScriptHost
         return $vfs->exists($path);
     }
 
-    public function func_fsList(string $path, string $connection)
+    public function func_fsRemove(string $path) : bool
     {
         $vfs = new \Flexio\Services\Vfs($this->process->getOwner());
         $vfs->setProcess($this->process);
+        return $vfs->unlink($path);
+    }
+
+    public function func_fsList(string $path, string $connection)
+    {
+        $params = [ 'path' => $path ];
+        if (strlen($connection) > 0)
+            $params['connection'] = $connection;
+        
+        return \Flexio\Jobs\List1::doList($this->process, $params);
+
+        /*
+        $vfs = new \Flexio\Services\Vfs($this->process->getOwner());
+        $vfs->setProcess($this->process);
         return $vfs->list($path);
+        */
     }
 
     public function func_managedCreate(int $stream_idx, $properties) : bool

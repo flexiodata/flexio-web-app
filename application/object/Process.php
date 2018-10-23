@@ -43,6 +43,92 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $result;
     }
 
+    public static function summary_another(array $filter) : array
+    {
+        $result = self::accumulateStats($filter, 'user_eid');
+        return $result;
+    }
+
+    public static function accumulateStats(array $filter, string $object_column) : array
+    {
+        // construct a date range from the filter
+        $date_start = $filter['created_min'] ?? false;
+        $date_end = $filter['created_max'] ?? false;
+
+        if ($date_start === false || $date_end === false)
+            return array();
+
+        try
+        {
+            $date_start = (new \DateTime($date_start ))->format('Y-m-d');
+            $date_end = (new \DateTime($date_end))->format('Y-m-d');
+        }
+        catch (\Exception $e)
+        {
+            return array();
+        }
+
+        $eid_type = false;
+        if ($object_column == 'pipe_eid')
+            $eid_type = 'PIP';
+        if ($object_column == 'user_eid')
+            $eid_type = 'USR';
+        if ($eid_type === false)
+            return array();
+
+        $total_count = 0;
+        $daily_count = \Flexio\Base\Util::createDateRangeArray($date_start, $date_end);
+
+        $object_totals = array();
+        $stats = \Flexio\System\System::getModel()->process->summary_daily($filter);
+
+        foreach ($stats as $s)
+        {
+            $object_eid = $s[$object_column];
+            $process_created = $s['created'];
+            $process_count = $s['total_count'];
+
+            // initialize the object totals if we haven't yet started accumulating them
+            if (!isset($object_totals[$object_eid]))
+            {
+                $object_totals[$object_eid]['total_count'] = 0;
+                $object_totals[$object_eid]['daily_count'] = \Flexio\Base\Util::createDateRangeArray($date_start, $date_end);
+            }
+
+            // overall totals
+            $total_count += $process_count;
+            $daily_count[$process_created] += $process_count;
+
+            // object totals
+            $object_totals[$object_eid]['total_count'] += $process_count;
+            $object_totals[$object_eid]['daily_count'][$process_created] += $process_count;
+        }
+
+        $object_totals_reformatted = array();
+        foreach ($object_totals as $key => $value)
+        {
+            $object_totals_reformatted[] = array(
+                'eid' => $key,
+                'eid_type' => $eid_type,
+                'total_count' => $value['total_count'],
+                'daily_count' => array_values($value['daily_count'])
+            );
+        }
+
+        $result = array(
+            'header' => array(
+                'start_date' => $date_start,
+                'end_date' => $date_end,
+                'days' => array_keys(\Flexio\Base\Util::createDateRangeArray($date_start, $date_end)),
+                'total_count' => $total_count,
+                'daily_count' => array_values($daily_count)
+            ),
+            'detail' => $object_totals_reformatted
+        );
+
+        return $result;
+    }
+
     public static function list(array $filter) : array
     {
         $object = new static();
