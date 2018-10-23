@@ -25,7 +25,7 @@
         <p>
           <el-button
             type="primary"
-            class="ttu b"
+            class="ttu fw6"
             @click="openPipeInNewWindow"
           >
             <span class="ph4">Run pipe</span>

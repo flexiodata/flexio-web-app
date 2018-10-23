@@ -37,7 +37,7 @@
         />
         <div class="mt3 tc">
           <a
-            class="el-button el-button--primary ttu b no-underline"
+            class="el-button el-button--primary ttu fw6 no-underline"
             :href="download_url"
           >
             Download

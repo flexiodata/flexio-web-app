@@ -611,8 +611,8 @@
 
           if (value === false) {
             this.$confirm('This pipe is turned on and is possibly being used in a production environment. Are you sure you want to continue?', 'Really turn pipe off?', {
-              confirmButtonClass: 'ttu b',
-              cancelButtonClass: 'ttu b',
+              confirmButtonClass: 'ttu fw6',
+              cancelButtonClass: 'ttu fw6',
               confirmButtonText: 'Turn pipe off',
               cancelButtonText: 'Cancel',
               type: 'warning'

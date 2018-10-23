@@ -8,7 +8,7 @@
         style="padding: 1px 12px 2px"
         @click="$emit('save')"
         v-if="show_save_button"
-      ><span class="f6 ttu b">Save &amp; Deploy</span></button>
+      ><span class="f6 ttu fw6">Save &amp; Deploy</span></button>
       <button
         type="button"
         aria-label="Copy to Clipboard"
@@ -18,7 +18,7 @@
         :data-clipboard-target="'#'+textarea_id"
         @click="copy"
         v-if="show_copy_button"
-      ><span class="f6 ttu b">Copy</span></button>
+      ><span class="f6 ttu fw6">Copy</span></button>
       <button
         type="button"
         class="border-box no-select pointer lh-copy white bg-blue darken-10"
@@ -26,14 +26,14 @@
         :class="show_see_it_work_button ? '' : 'br2 br--top br--right'"
         @click="run"
         v-if="show_run_button"
-      ><span class="f6 ttu b">Run</span></button>
+      ><span class="f6 ttu fw6">Run</span></button>
       <a
         class="border-box no-select pointer lh-copy br2 br--top br--right white bg-blue darken-10"
         style="padding: 1px 12px 2px"
         target="_blank"
         :href="externalLink"
         v-if="show_see_it_work_button"
-      ><span class="f6 ttu b">See It Work</span></a>
+      ><span class="f6 ttu fw6">See It Work</span></a>
     </div>
     <h4 class="mt0" v-if="showTitle && title.length > 0">{{title}}</h4>
     <div

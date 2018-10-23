@@ -23,7 +23,7 @@
         slot="buttons"
         plain
         size="tiny"
-        class="ttu b"
+        class="ttu fw6"
         @click="clearConnection"
       >
         Use Different Connection

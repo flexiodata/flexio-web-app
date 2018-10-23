@@ -154,13 +154,13 @@
 
     <div class="mt4 w-100 flex flex-row justify-end" v-show="showFooter && has_connection">
       <el-button
-        class="ttu b"
+        class="ttu fw6"
         @click="$emit('cancel')"
       >
         Cancel
       </el-button>
       <el-button
-        class="ttu b"
+        class="ttu fw6"
         type="primary"
         @click="submit"
         :disabled="has_errors"

@@ -135,7 +135,7 @@
 
               <div class="mv1">
                 <el-button
-                  class="ttu b"
+                  class="ttu fw6"
                   type="primary"
                   size="tiny"
                   @click="show_runtime_configure = true"

@@ -56,7 +56,7 @@
         </el-form-item>
       </el-form>
       <div class="mt3">
-        <el-button type="primary" class="ttu b w-100" @click="tryChangePassword">
+        <el-button type="primary" class="ttu fw6 w-100" @click="tryChangePassword">
           <span v-if="is_submitting">Submitting...</span>
           <span v-else>Change password</span>
         </el-button>

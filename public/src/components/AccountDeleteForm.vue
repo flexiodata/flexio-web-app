@@ -56,7 +56,7 @@
     <div class="mt4">
       <el-button
         type="danger"
-        class="ttu b w-100"
+        class="ttu fw6 w-100"
         :disabled="!is_delete_allowed"
         @click="deleteUser"
       >

@@ -15,7 +15,7 @@
           <h1 class="mv0 f2 fw4 mr3">Storage</h1>
         </div>
         <div class="flex-none flex flex-row items-center" v-if="false">
-          <el-button type="primary" class="ttu b" @click="openAddModal">New storage</el-button>
+          <el-button type="primary" class="ttu fw6" @click="openAddModal">New storage</el-button>
         </div>
       </div>
     </div>
