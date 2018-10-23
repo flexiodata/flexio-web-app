@@ -46,7 +46,7 @@ class Test
             'url' => "$apibase/$userid/pipes",
             'token' => $token,
             'content_type' => 'application/json',
-            'params' => json_encode(["alias" => $alias, "task" => $task])
+            'params' => json_encode(["alias" => $alias, "task" => $task, "deploy_mode" => "R", "deploy_email" => "A"])
         );
         \Flexio\Tests\Util::callApi($params);
 
