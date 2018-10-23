@@ -22,7 +22,7 @@
         slot="buttons"
         plain
         size="tiny"
-        class="ttu b"
+        class="ttu fw6"
         @click="clearConnection"
       >
         Use Different Connection
@@ -36,7 +36,7 @@
       >
         <el-button
           slot="append"
-          class="ttu b"
+          class="ttu fw6"
           type="primary"
           size="small"
           @click="show_file_chooser_dialog = true"
@@ -65,13 +65,13 @@
       />
       <span slot="footer" class="dialog-footer">
         <el-button
-          class="ttu b"
+          class="ttu fw6"
           @click="show_file_chooser_dialog = false"
         >
           Cancel
         </el-button>
         <el-button
-          class="ttu b"
+          class="ttu fw6"
           type="primary"
           @click="updatePath"
         >

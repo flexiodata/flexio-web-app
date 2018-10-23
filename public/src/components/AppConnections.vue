@@ -15,7 +15,7 @@
           <h1 class="mv0 f2 fw4 mr3">Connections</h1>
         </div>
         <div class="flex-none flex flex-row items-center ml3">
-          <el-button type="primary" class="ttu b" @click="show_connection_new_dialog = true">New Connection</el-button>
+          <el-button type="primary" class="ttu fw6" @click="show_connection_new_dialog = true">New Connection</el-button>
         </div>
       </div>
     </div>

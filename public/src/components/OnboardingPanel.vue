@@ -52,7 +52,7 @@
         />
       </div>
       <div class="mt4 mb3 tc">
-        <el-button type="primary" size="large" class="ttu b" @click="$emit('close')">Now build your own data feed</el-button>
+        <el-button type="primary" size="large" class="ttu fw6" @click="$emit('close')">Now build your own data feed</el-button>
       </div>
     </div>
   </div>

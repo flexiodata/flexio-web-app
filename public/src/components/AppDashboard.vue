@@ -7,7 +7,7 @@
           <div class="f2 dn db-ns mr3">Dashboard</div>
         </div>
         <div class="flex-none flex flex-row items-center">
-          <el-button type="primary" class="ttu b" @click="onNewPipeClick">New pipe</el-button>
+          <el-button type="primary" class="ttu fw6" @click="onNewPipeClick">New pipe</el-button>
         </div>
       </div>
     </div>
@@ -24,7 +24,7 @@
             <help-items
               help-message="I need help getting started with Flex.io..."
               :items="['quick-start', 'sdk-and-cli', 'api-docs', 'templates', 'help']"
-              :item-cls="'f6 fw6 ttu br2 ma1 pv3 w4 pointer silver hover-blue bg-white hover-bg-nearer-white'"
+              :item-cls="'f6 fw6 ttu ma1 pv3 w4 pointer br2 silver hover-blue bg-white hover-bg-nearer-white'"
             ></help-items>
           </div>
         </div>

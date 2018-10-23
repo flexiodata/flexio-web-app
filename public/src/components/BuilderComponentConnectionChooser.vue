@@ -26,7 +26,7 @@
       <p class="ttu fw6 f7 moon-gray" v-if="has_connections">&mdash; or &mdash;</p>
       <div class="mt3">
         <el-button
-          class="ttu b"
+          class="ttu fw6"
           @click="createPendingConnection"
         >
           Set up a new connection

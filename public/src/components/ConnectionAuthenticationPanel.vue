@@ -5,7 +5,7 @@
         <div class="lh-copy f6">To use this connection, you must first connect {{service_name}} to Flex.io.</div>
         <div class="mv3 tc">
           <el-button
-            class="ttu b"
+            class="ttu fw6"
             type="primary"
             @click="onConnectClick"
           >
@@ -20,7 +20,7 @@
         </div>
         <div class="mv3 tc">
           <el-button
-            class="ttu b"
+            class="ttu fw6"
             @click="onDisconnectClick"
             v-if="is_connected"
           >
@@ -456,7 +456,7 @@
 
           <el-form-item class="mt2 order-last">
             <el-button
-              class="ttu b"
+              class="ttu fw6"
               :type="test_btn_type"
               :icon="test_btn_icon"
               :loading="test_state == 'testing'"

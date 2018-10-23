@@ -25,7 +25,7 @@
               @keydown.esc.native="filter = ''"
               v-model="filter"
             />
-            <el-button type="primary" class="ttu b" @click="onNewPipeClick">New pipe</el-button>
+            <el-button type="primary" class="ttu fw6" @click="onNewPipeClick">New pipe</el-button>
           </div>
         </div>
       </div>

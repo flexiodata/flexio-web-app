@@ -66,7 +66,7 @@
     <div class="mt3">
       <el-button
         type="primary"
-        class="ttu b"
+        class="ttu fw6"
         @click="saveChanges"
       >
         Update password

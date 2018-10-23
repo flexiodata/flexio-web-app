@@ -121,7 +121,7 @@
         ss_errors: {},
         verify_code: '',
         input_cls: 'input-reset ba b--black-10 br2 focus-b--blue lh-title ph3 pv2a w-100',
-        button_cls: 'border-box no-select ttu b w-100 ph4 pv2a lh-title white bg-blue br2 darken-10'
+        button_cls: 'border-box no-select ttu fw6 w-100 ph4 pv2a lh-title white bg-blue br2 darken-10'
       }
     },
     watch: {

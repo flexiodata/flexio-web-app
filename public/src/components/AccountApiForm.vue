@@ -25,7 +25,7 @@
             :size="showOnlyOne ? 'small' : 'mini'"
             :data-clipboard-text="token.access_code"
           >
-            <span class="ttu b">Copy</span>
+            <span class="ttu fw6">Copy</span>
           </el-button>
         </div>
         <div class="pv2 ph3 tr" v-if="!showOnlyOne">
@@ -42,7 +42,7 @@
     <div class="mt2 mb1" :class="{ 'tc': tokens.length == 0 }" v-if="showCreateButton">
       <el-button
         type="primary"
-        class="ttu b"
+        class="ttu fw6"
         @click="createApiKey"
       >
         Generate API Key

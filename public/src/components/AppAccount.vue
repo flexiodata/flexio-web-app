@@ -33,7 +33,7 @@
               <h3 class="mt0 mb3 pb2 dark-red fw6 bb b--black-10">Delete account</h3>
               <p class="lh-copy f6">Once you delete your account, there's no going back. Please be sure you want to do this!</p>
               <el-button
-                class="ttu b"
+                class="ttu fw6"
                 type="danger"
                 @click="show_account_delete_dialog = true"
               >

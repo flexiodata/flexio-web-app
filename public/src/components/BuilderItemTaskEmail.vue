@@ -88,7 +88,7 @@
     </template>
 
     <el-button
-      class="ttu b"
+      class="ttu fw6"
       size="small"
       @click="show_file_chooser_dialog = true"
     >
@@ -114,13 +114,13 @@
       />
       <span slot="footer" class="dialog-footer">
         <el-button
-          class="ttu b"
+          class="ttu fw6"
           @click="closeFileChooserDialog"
         >
           Cancel
         </el-button>
         <el-button
-          class="ttu b"
+          class="ttu fw6"
           type="primary"
           @click="addFiles"
         >

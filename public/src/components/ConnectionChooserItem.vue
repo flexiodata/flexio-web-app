@@ -33,7 +33,7 @@
       <el-button
         plain
         size="tiny"
-        class="ttu b"
+        class="ttu fw6"
         @click="$emit('item-fix', item)"
         v-if="showStatus && !is_available"
       >
