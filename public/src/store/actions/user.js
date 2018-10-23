@@ -32,7 +32,6 @@ export const v2_action_fetchUser = ({ commit, dispatch }, { eid }) => {
 
     if (_.get(user, 'eid', '').length > 0) {
       commit(types.FETCHED_USER, user)
-      dispatch('analyticsIdentify', user)
     }
 
     commit(types.FETCHING_USER, false)
