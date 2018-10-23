@@ -51,14 +51,6 @@ const V2_PUT = 'put'
 const V2_DEL = 'delete'
 
 export default {
-  // auth
-  signUp:                         function({ attrs })                   { return SignupResource[POS] ({}, attrs)                                          },
-  login:                          function({ attrs })                   { return LoginResource[POS] ({}, attrs)                                           },
-  logout:                         function()                            { return LogoutResource[POS] ()                                                   },
-  resetPassword:                  function({ attrs })                   { return ResetPasswordResource[POS] ({}, attrs)                                   },
-
-  /* -- Axios-based v2 API -- */
-
   // connections
   v2_fetchConnections:     function(user_eid)             { return AxiosResource(user_eid)[V2_GET] (`/connections`)                          },
   v2_fetchConnection:      function(user_eid, eid)        { return AxiosResource(user_eid)[V2_GET] (`/connections/${eid}`)                   },
