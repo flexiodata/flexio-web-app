@@ -43,7 +43,7 @@ class User
                 'timezone'             => array('type' => 'string',     'required' => false, 'default' => 'UTC'),
                 'verify_code'          => array('type' => 'string',     'required' => false, 'default' => ''),
                 'config'               => array('type' => 'object',     'required' => false, 'default' => []),
-                'send_email'           => array('type' => 'boolean',    'required' => false, 'default' => true),
+                'send_email'           => array('type' => 'boolean',    'required' => false, 'default' => false), // don't send an email by default
                 'create_examples'      => array('type' => 'boolean',    'required' => false, 'default' => true),
                 'require_verification' => array('type' => 'boolean',    'required' => false, 'default' => false)
             ))->hasErrors()) === true)
@@ -59,7 +59,8 @@ class User
         // configuration fields we don't want to pass on
         $send_email = $validated_post_params['send_email'];
 
-        // TODO: for now, never send an email
+
+        // for now, never send an email
         $send_email = false;
 
 
