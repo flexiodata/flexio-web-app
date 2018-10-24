@@ -124,12 +124,14 @@
       },
       itemClick(item, evt) {
         // don't allow folders to be selected
-        if (!this.allowFolders && this.isFolderItem(item))
+        if (!this.allowFolders && this.isFolderItem(item)) {
           return
+        }
 
         // handled below
-        if (evt.ctrlKey || evt.shiftKey)
+        if (evt.ctrlKey || evt.shiftKey) {
           return
+        }
 
         _.each(this.items, (f) => { f.is_selected = false })
         this.last_selected_item = item
@@ -141,8 +143,9 @@
       },
       itemCtrlClick(item, evt) {
         // if we aren't allowing multiple selection; reset 'em all to unselected
-        if (!this.allowMultiple)
+        if (!this.allowMultiple) {
           _.each(this.items, (f) => { f.is_selected = false })
+        }
 
         this.last_selected_item = item
         item.is_selected = !item.is_selected
@@ -153,8 +156,7 @@
         var start_idx = _.indexOf(this.items, item)
         var end_idx = _.indexOf(this.items, this.last_selected_item)
 
-        if (start_idx > end_idx)
-        {
+        if (start_idx > end_idx) {
           var tmp = start_idx
           start_idx = end_idx
           end_idx = tmp
@@ -166,8 +168,9 @@
         })
 
         // if we aren't allowing multiple selection; reset 'em all to unselected
-        if (!this.allowMultiple)
+        if (!this.allowMultiple) {
           _.each(this.items, (f) => { f.is_selected = false })
+        }
 
         this.last_selected_item = item
         item.is_selected = true
@@ -176,13 +179,14 @@
       },
       itemDblClick(item) {
         if (this.isFolderItem(item)) {
-          this.$emit('open-folder', _.defaultTo(item.path, '/'))
+          this.$emit('open-folder', _.defaultTo(item.full_path, '/'))
           this.last_selected_item = null
         }
       },
       refreshList() {
-        if (this.path === false)
+        if (this.path === false) {
           return
+        }
 
         this.items = []
         this.last_selected_item = null

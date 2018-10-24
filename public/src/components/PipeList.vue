@@ -146,7 +146,6 @@
         } else {
           this.selected_items = _.without(this.selected_items, eid)
         }
-        console.log(this.selected_items)
       },
       onItemEdit(item) {
         this.$emit('item-edit', item)

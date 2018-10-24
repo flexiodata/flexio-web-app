@@ -3,19 +3,20 @@
     <div class="flex-none flex flex-row items-stretch cursor-default no-select">
       <div
         class="flex flex-row items-center"
+        :key="item.full_path"
         v-for="(item, index) in items"
       >
         <div
           class="flex flex-row items-center darken-05"
           style="padding: 0.25rem 0.375rem"
-          @click="openFolder(item.path)"
+          @click="openFolder(item.full_path)"
           v-if="item.is_connection"
         >
-          <service-icon
+          <ServiceIcon
             class="br1"
             style="width: 1rem; height; 1rem"
             :type="ctype"
-          ></service-icon>
+          />
           <div class="f7 ml1">
             {{service_name}}
           </div>
@@ -26,7 +27,7 @@
         <div
           class="f7 darken-05"
           style="padding: 0.3125rem 0.375rem"
-          @click="openFolder(item.path)"
+          @click="openFolder(item.full_path)"
           v-if="!item.is_connection"
         >
           {{item.name}}
@@ -43,11 +44,11 @@
 
   export default {
     props: {
-      'connection': {
+      connection: {
         type: Object,
         required: true
       },
-      'path': {
+      path: {
         type: String,
         default: '/'
       }
@@ -64,25 +65,40 @@
         return _.result(this, 'cinfo.service_name', '')
       },
       items() {
-        var p = _.get(this, 'path', '')
-        p = _.trim(p, '/')
+        var path = this.path
 
-        var items = p.split('/')
+        // always use `connection_identifier:/folder/file.txt` syntax
+        var path_items = path.split(':')
+        var connection_identifier = path_items[0]
+        path = path_items[1]
+        path = _.trim(path, '/')
+
+        var items = path.split('/')
         items = _.compact(items)
 
+        // make sure we include the connection in our items array
+        items.splice(0, 0, connection_identifier)
+
         var idx = 0
-        var path = ''
+        var full_path = ''
         return _.map(items, (name) => {
-          path += '/'+name
+          if (idx == 0) {
+            full_path += name + ':/'
+          } else if (idx == 1) {
+            // don't prepend a slash here since the connection's path already has the slash in it
+            full_path += name
+          } else {
+            full_path += '/' + name
+          }
 
           // show the folder name
           if (idx++ > 0) {
-            return { name, path, is_connection: false }
+            return { name, full_path, is_connection: false }
           }
 
           // show the service icon and name
           if (name === _.get(this.connection, 'eid') || name === _.get(this.connection, 'alias')) {
-            return { name, path, is_connection: true }
+            return { name, full_path, is_connection: true }
           }
         })
       }
