@@ -45,7 +45,7 @@ class Test
         $timestamp = \Flexio\Tests\Util::getTimestampName();
         foreach ($storage_items as $storage_location)
         {
-            $folderpath = "/$storage_location/job-tests-$timestamp/";
+            $folderpath = "$storage_location:/job-tests-$timestamp/";
             $task = \Flexio\Tests\Task::create([
                 ["op" => "write", "path" => $folderpath."file1.txt"],
                 ["op" => "write", "path" => $folderpath."file2.csv"],
@@ -79,7 +79,7 @@ class Test
             foreach ($tests as $t)
             {
                 $idx++;
-                $folderpath = "/$storage_location/job-tests-$timestamp/";
+                $folderpath = "$storage_location:/job-tests-$timestamp/";
                 $task = \Flexio\Tests\Task::create([
                     ["op" => "list", "path" => $folderpath.$t['pattern']]
                 ]);

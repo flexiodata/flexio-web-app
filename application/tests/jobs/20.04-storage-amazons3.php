@@ -23,7 +23,7 @@ class Test
         // SETUP
         $process_owner = \Flexio\Tests\Util::getTestStorageOwner();
         $files = \Flexio\Tests\Util::getTestDataSamples();
-        $folderpath = "/" . \Flexio\Tests\Base::STORAGE_AMAZONS3 . "/" . 'job-tests-' . \Flexio\Tests\Util::getTimestampName() . "/";
+        $folderpath = \Flexio\Tests\Base::STORAGE_AMAZONS3 . ":/job-tests-" . \Flexio\Tests\Util::getTimestampName() . "/";
 
 
         // TEST: Write/Read Job; Basic Copy

@@ -23,8 +23,8 @@ class Test
         // SETUP
         $files = \Flexio\Tests\Util::getTestDataSamples();
         $test_folder = 'tests' . \Flexio\Tests\Util::getTimestampName();
-        $source_directory = '/home/' . $test_folder . '/';
-        $target_directory = "/" . \Flexio\Tests\Base::STORAGE_DROPBOX . "/" . $test_folder . '/';
+        $source_directory = \Flexio\Tests\Base::STORAGE_LOCAL . ":/$test_folder/";
+        $target_directory = \Flexio\Tests\Base::STORAGE_DROPBOX . ":/$test_folder/";
 
         $process_owner = \Flexio\Tests\Util::getTestStorageOwner();
 
@@ -34,7 +34,7 @@ class Test
             $stream = \Flexio\Tests\Util::createStreamFromFile($filename);
 
             $source_filepath = \Flexio\Tests\Util::getOutputFilePath($source_directory, $filename);
-            $write = \Flexio\Tests\Task::create([["op" => "write", "path" => $source_filepath]]);   
+            $write = \Flexio\Tests\Task::create([["op" => "write", "path" => $source_filepath]]);
             $process_write = \Flexio\Jobs\Process::create()->setOwner($process_owner)->setStdin($stream)->execute($write);
 
             $read = \Flexio\Tests\Task::create([["op" => "read", "path" => $source_filepath]]);

@@ -46,7 +46,7 @@ class Test
         foreach ($storage_items as $storage_location)
         {
             $idx++;
-            $folderpath = "/$storage_location/job-tests-" . \Flexio\Tests\Util::getTimestampName() . "/";
+            $folderpath = "$storage_location:/job-tests-" . \Flexio\Tests\Util::getTimestampName() . "/";
             $filename1 = \Flexio\Base\Util::generateHandle() . '.txt';
             $filename2 = \Flexio\Base\Util::generateHandle() . '.txt';
             $filepath1 = $folderpath . '/' . $filename1;

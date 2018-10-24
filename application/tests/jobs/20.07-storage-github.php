@@ -23,7 +23,7 @@ class Test
         // SETUP
         $process_owner = \Flexio\Tests\Util::getTestStorageOwner();
         $files = \Flexio\Tests\Util::getTestDataSamples();
-        $folderpath = "/" . \Flexio\Tests\Base::STORAGE_GITHUB . '/' . \Flexio\Tests\Base::STORAGE_GITHUB_OWNER . '/' . \Flexio\Tests\Base::STORAGE_GITHUB_REPO . '/job-tests-' . \Flexio\Tests\Util::getTimestampName() . '/';
+        $folderpath = \Flexio\Tests\Base::STORAGE_GITHUB . ':/' . \Flexio\Tests\Base::STORAGE_GITHUB_OWNER . '/' . \Flexio\Tests\Base::STORAGE_GITHUB_REPO . '/job-tests-' . \Flexio\Tests\Util::getTimestampName() . '/';
 
 
 
@@ -51,7 +51,7 @@ class Test
 
             $actual = md5($actual_contents);
             $expected = md5($expected_contents);
-            
+
             \Flexio\Tests\Check::assertString("D.$idx", 'Read/Write; check write/read to/from ' . $filepath, $actual, $expected, $results);
         }
 
@@ -95,7 +95,7 @@ class Test
 
 
 
-        
+
 
         // TEST: Write/Read Job; Implicit Format Conversion
         $create = [

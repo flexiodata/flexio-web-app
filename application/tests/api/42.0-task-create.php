@@ -46,7 +46,7 @@ class Test
         foreach ($storage_items as $storage_location)
         {
             $idx++;
-            $folderpath = "/$storage_location/job-tests-" . \Flexio\Tests\Util::getTimestampName() . "/";
+            $folderpath = "$storage_location:/job-tests-" . \Flexio\Tests\Util::getTimestampName() . "/";
             $filename = \Flexio\Base\Util::generateHandle() . '.txt';
             $task = \Flexio\Tests\Task::create([
                 ["op" => "create", "path" => $folderpath.$filename],
@@ -68,7 +68,7 @@ class Test
         foreach ($storage_items as $storage_location)
         {
             $idx++;
-            $folderpath = "/$storage_location/job-tests-" . \Flexio\Tests\Util::getTimestampName() . "/test_folder/";
+            $folderpath = "$storage_location:/job-tests-" . \Flexio\Tests\Util::getTimestampName() . "/test_folder/";
             $filename = \Flexio\Base\Util::generateHandle() . '.txt';
             $task = \Flexio\Tests\Task::create([
                 ["op" => "create", "path" => $folderpath.$filename],

@@ -78,7 +78,7 @@ class Test
         {
             $idx++;
             $foldername = 'empty_folder1';
-            $parentfolder = "/$storage_location/job-tests-" . \Flexio\Tests\Util::getTimestampName(); // folder path without trailing slash
+            $parentfolder = "$storage_location:/job-tests-" . \Flexio\Tests\Util::getTimestampName(); // folder path without trailing slash
             $mkdirfolder = $parentfolder . '/' . $foldername;
             $task = \Flexio\Tests\Task::create([
                 ["op" => "mkdir", "path" => $mkdirfolder],
@@ -103,7 +103,7 @@ class Test
         {
             $idx++;
             $foldername = 'empty_folder2';
-            $parentfolder = "/$storage_location/job-tests-" . \Flexio\Tests\Util::getTimestampName(); // folder path with trailing slash
+            $parentfolder = "$storage_location:/job-tests-" . \Flexio\Tests\Util::getTimestampName(); // folder path with trailing slash
             $mkdirfolder = $parentfolder . '/' . $foldername . '/';
             $task = \Flexio\Tests\Task::create([
                 ["op" => "mkdir", "path" => $mkdirfolder],

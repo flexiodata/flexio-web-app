@@ -47,10 +47,10 @@ class Test
 
         // BEGIN TEST
         $idx = 0;
-        foreach ($storage_items as $s)
+        foreach ($storage_items as $storage_location)
         {
             $foldername = \Flexio\Tests\Util::getTimestampName();
-            $folderpath = "/$s/service-tests/$foldername/";
+            $folderpath = "$storage_location:/service-tests/$foldername/";
             $filename = \Flexio\Base\Util::generateHandle() . '.txt';
             $filepath = $folderpath . $filename;
 
@@ -65,14 +65,14 @@ class Test
                 $vfs->getFileInfo(\Flexio\Base\Util::generateHandle()); // name outside storage namespace
                 $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
                 $expected = 'Exception: ' . \Flexio\Base\Error::UNAVAILABLE;
-                \Flexio\Tests\Check::assertString("B.$idx", '\Flexio\Services\Vfs::getFileInfo(); file path check on folder that doesn\'t exist should throw an exception' . $s,  $actual, $expected, $results);
+                \Flexio\Tests\Check::assertString("B.$idx", '\Flexio\Services\Vfs::getFileInfo(); file path check on folder that doesn\'t exist should throw an exception' . $storage_location,  $actual, $expected, $results);
             }
             catch (\Flexio\Base\Exception $e)
             {
                 $error = json_decode($e->getMessage(),true);
                 $actual = $error['code'];
                 $expected = \Flexio\Base\Error::UNAVAILABLE;
-                \Flexio\Tests\Check::assertString("B.$idx", '\Flexio\Services\Vfs::getFileInfo(); check exception code' . $s,  $actual, $expected, $results);
+                \Flexio\Tests\Check::assertString("B.$idx", '\Flexio\Services\Vfs::getFileInfo(); check exception code' . $storage_location,  $actual, $expected, $results);
             }
 
             // check file info on a path that doesn't exist within a particular service
@@ -82,14 +82,14 @@ class Test
                 $vfs->getFileInfo($folderpath . \Flexio\Base\Util::generateHandle() . '.txt'); // name within storage namespace
                 $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
                 $expected = 'Exception: ' . \Flexio\Base\Error::UNAVAILABLE;
-                \Flexio\Tests\Check::assertString("B.$idx", '\Flexio\Services\Vfs::getFileInfo(); file path check on folder that doesn\'t exist should throw an exception' . $s,  $actual, $expected, $results);
+                \Flexio\Tests\Check::assertString("B.$idx", '\Flexio\Services\Vfs::getFileInfo(); file path check on folder that doesn\'t exist should throw an exception' . $storage_location,  $actual, $expected, $results);
             }
             catch (\Flexio\Base\Exception $e)
             {
                 $error = json_decode($e->getMessage(),true);
                 $actual = $error['code'];
                 $expected = \Flexio\Base\Error::UNAVAILABLE;
-                \Flexio\Tests\Check::assertString("B.$idx", '\Flexio\Services\Vfs::getFileInfo(); check exception code' . $s,  $actual, $expected, $results);
+                \Flexio\Tests\Check::assertString("B.$idx", '\Flexio\Services\Vfs::getFileInfo(); check exception code' . $storage_location,  $actual, $expected, $results);
             }
 
             // check file info on a directory that exists
@@ -98,13 +98,13 @@ class Test
             {
                 $actual = $vfs->getFileInfo($folderpath);
                 $expected = array('name' => $foldername, 'type' => 'DIR');
-                \Flexio\Tests\Check::assertInArray("B.$idx", '\Flexio\Services\Vfs::getFileInfo(); basic file info check on: ' . $s,  $actual, $expected, $results);
+                \Flexio\Tests\Check::assertInArray("B.$idx", '\Flexio\Services\Vfs::getFileInfo(); basic file info check on: ' . $storage_location,  $actual, $expected, $results);
             }
             catch (\Flexio\Base\Exception $e)
             {
                 $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
                 $expected = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
-                \Flexio\Tests\Check::assertString("B.$idx", '\Flexio\Services\Vfs::getFileInfo(); basic file info check on: ' . $s,  $actual, $expected, $results);
+                \Flexio\Tests\Check::assertString("B.$idx", '\Flexio\Services\Vfs::getFileInfo(); basic file info check on: ' . $storage_location,  $actual, $expected, $results);
             }
 
             // check file info on a file that exists
@@ -113,13 +113,13 @@ class Test
             {
                 $actual = $vfs->getFileInfo($filepath);
                 $expected = array('name' => $filename, 'type' => 'FILE');
-                \Flexio\Tests\Check::assertInArray("B.$idx", '\Flexio\Services\Vfs::getFileInfo(); basic file info check on: ' . $s,  $actual, $expected, $results);
+                \Flexio\Tests\Check::assertInArray("B.$idx", '\Flexio\Services\Vfs::getFileInfo(); basic file info check on: ' . $storage_location,  $actual, $expected, $results);
             }
             catch (\Flexio\Base\Exception $e)
             {
                 $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
                 $expected = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
-                \Flexio\Tests\Check::assertString("B.$idx", '\Flexio\Services\Vfs::getFileInfo(); basic file info check on: ' . $s,  $actual, $expected, $results);
+                \Flexio\Tests\Check::assertString("B.$idx", '\Flexio\Services\Vfs::getFileInfo(); basic file info check on: ' . $storage_location,  $actual, $expected, $results);
             }
         }
     }

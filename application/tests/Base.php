@@ -29,7 +29,7 @@ class Base
     public const FLAG_NONE = '';
     public const FLAG_ERROR_SUPPRESS = 'flag-error-suppress';
 
-    public const STORAGE_LOCAL = 'home';
+    public const STORAGE_LOCAL = 'flex';
     public const STORAGE_AMAZONS3 = 'testsuite-amazons3';
     public const STORAGE_BOX = 'testsuite-box';
     public const STORAGE_DROPBOX = 'testsuite-dropbox';
