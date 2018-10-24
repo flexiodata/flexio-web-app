@@ -33,7 +33,7 @@ class Test
         $userid2 = \Flexio\Tests\Util::createUser(null, null, $password2);
         $token2 = \Flexio\Tests\Util::createToken($userid2);
         $storage_items = [
-            \Flexio\Tests\Base::STORAGE_LOCAL,
+            \Flexio\Tests\Base::STORAGE_FLEX,
             \Flexio\Tests\Base::STORAGE_AMAZONS3,
             \Flexio\Tests\Base::STORAGE_BOX,
             \Flexio\Tests\Base::STORAGE_DROPBOX,
@@ -75,14 +75,14 @@ class Test
         // create a copy of each of the non-local storage types; these
         // contain the credentials we need to test connecting to the services
         $storage_owner = \Flexio\Tests\Util::getTestStorageOwner();
-        foreach ($storage_items as $s)
+        foreach ($storage_items as $storage_location)
         {
             // don't test local storage; no connection exists
-            if ($s === \Flexio\Tests\Base::STORAGE_LOCAL)
+            if ($storage_location === \Flexio\Tests\Base::STORAGE_FLEX)
                 continue;
 
             // get the connection info for the current testsuite connections
-            $testsuite_connection_eid = \Flexio\Object\Connection::getEidFromName($storage_owner, $s);
+            $testsuite_connection_eid = \Flexio\Object\Connection::getEidFromName($storage_owner, $storage_location);
 
             // TODO: add some type of test setup failure notice
             if ($testsuite_connection_eid === false)
@@ -109,7 +109,7 @@ class Test
             );
 
             $new_connection_eid = $new_connection->getEid();
-            $test_connection_eids[$new_connection_eid] = $s;
+            $test_connection_eids[$new_connection_eid] = $storage_location;
         }
 
 

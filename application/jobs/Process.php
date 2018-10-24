@@ -84,8 +84,7 @@ class Process implements \Flexio\IFace\IProcess
         'write'     => '\Flexio\Jobs\Write',
         'report'    => '\Flexio\Jobs\Report',
         'set'       => '\Flexio\Jobs\Set',
-        'mkdir'     => '\Flexio\Jobs\Mkdir',
-        'validate'  => '\Flexio\Jobs\Validate'
+        'mkdir'     => '\Flexio\Jobs\Mkdir'
     );
 
     private $owner_eid;     // user eid of the owner of the process

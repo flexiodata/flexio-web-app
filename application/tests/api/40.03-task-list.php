@@ -28,7 +28,7 @@ class Test
         $userid = \Flexio\Tests\Util::getTestStorageOwner();
         $token = \Flexio\Tests\Util::getTestStorageOwnerToken();
         $storage_items = [
-            \Flexio\Tests\Base::STORAGE_LOCAL,
+            \Flexio\Tests\Base::STORAGE_FLEX,
             \Flexio\Tests\Base::STORAGE_AMAZONS3,
             \Flexio\Tests\Base::STORAGE_BOX,
             \Flexio\Tests\Base::STORAGE_DROPBOX,
@@ -45,7 +45,7 @@ class Test
         $timestamp = \Flexio\Tests\Util::getTimestampName();
         foreach ($storage_items as $storage_location)
         {
-            $folderpath = "/$storage_location/job-tests-$timestamp/";
+            $folderpath = "$storage_location:/job-tests-$timestamp/";
             $task = \Flexio\Tests\Task::create([
                 ["op" => "write", "path" => $folderpath."file1.txt"],
                 ["op" => "write", "path" => $folderpath."file2.csv"],
@@ -79,7 +79,7 @@ class Test
             foreach ($tests as $t)
             {
                 $idx++;
-                $folderpath = "/$storage_location/job-tests-$timestamp/";
+                $folderpath = "$storage_location:/job-tests-$timestamp/";
                 $task = \Flexio\Tests\Task::create([
                     ["op" => "list", "path" => $folderpath.$t['pattern']]
                 ]);
