@@ -303,7 +303,7 @@
 
     <!-- pipe runtime configure dialog -->
     <el-dialog
-      custom-class="el-dialog--no-header el-dialog--no-footer el-dialog--full-body"
+      custom-class="el-dialog--no-header el-dialog--no-footer el-dialog--full-body is-almost-fullscreen"
       :fullscreen="true"
       :modal-append-to-body="false"
       :close-on-click-modal="false"
@@ -314,6 +314,7 @@
         @close="show_runtime_configure_dialog = false"
         @cancel="show_runtime_configure_dialog = false"
         @submit="saveRuntime"
+        v-if="show_runtime_configure_dialog"
       />
     </el-dialog>
 
@@ -341,6 +342,9 @@
       :callbacks="tour_callbacks"
     />
   </div>
+
+    <!-- pipe not found -->
+  <PageNotFound class="bg-nearer-white" v-else-if="pipe_not_found" />
 </template>
 
 <script>
@@ -369,6 +373,7 @@
   import PipeSchedulePanel from './PipeSchedulePanel.vue'
   import PipeDeployPanel from './PipeDeployPanel.vue'
   import ProcessContent from './ProcessContent.vue'
+  import PageNotFound from './PageNotFound.vue'
   import PopperTour from './PopperTour.vue'
 
   import MixinConfig from './mixins/config'
@@ -423,6 +428,7 @@
       PipeSchedulePanel,
       PipeDeployPanel,
       ProcessContent,
+      PageNotFound,
       PopperTour
     },
     watch: {
@@ -473,11 +479,12 @@
         yaml_view: 'yaml',
         show_yaml: false,
         transitioning_yaml: false,
-        has_run_once: false,
+        has_tested_once: false,
         has_errors: false,
         is_saving: false,
         show_save_cancel: false,
         save_cancel_zindex: 2050,
+        pipe_not_found: false,
         process_input: {},
         process_data: {},
 
@@ -582,6 +589,10 @@
         return this.active_view == PIPEDOC_VIEW_RUN
       },
       active_process_eid() {
+        if (!this.has_tested_once) {
+          return ''
+        }
+
         var process = _.last(this.getActiveDocumentProcesses())
         return _.get(process, 'eid', '')
       },
@@ -600,8 +611,8 @@
 
           if (value === false) {
             this.$confirm('This pipe is turned on and is possibly being used in a production environment. Are you sure you want to continue?', 'Really turn pipe off?', {
-              confirmButtonClass: 'ttu b',
-              cancelButtonClass: 'ttu b',
+              confirmButtonClass: 'ttu fw6',
+              cancelButtonClass: 'ttu fw6',
               confirmButtonText: 'Turn pipe off',
               cancelButtonText: 'Cancel',
               type: 'warning'
@@ -626,14 +637,14 @@
       loadPipe() {
         this.$store.commit('pipe/FETCHING_PIPE', true)
 
-        this.$store.dispatch('fetchPipe', { eid: this.eid }).then(response => {
-          if (response.ok) {
-            var pipe = response.data
-            this.$store.commit('pipe/INIT_PIPE', pipe)
-            this.$store.commit('pipe/FETCHING_PIPE', false)
-          } else {
-            this.$store.commit('pipe/FETCHING_PIPE', false)
-          }
+        this.$store.dispatch('v2_action_fetchPipe', { eid: this.eid }).then(response => {
+          var pipe = response.data
+          this.pipe_not_found = false
+          this.$store.commit('pipe/INIT_PIPE', pipe)
+        }).catch(error => {
+          this.pipe_not_found = true
+        }).finally(() => {
+          this.$store.commit('pipe/FETCHING_PIPE', false)
         })
       },
       cancelChanges() {
@@ -650,22 +661,21 @@
         // don't POST null values
         attrs = _.omitBy(attrs, (val, key) => { return _.isNil(val) })
 
-        return this.$store.dispatch('updatePipe', { eid, attrs }).then(response => {
-          if (response.ok) {
-            this.$message({
-              message: 'The pipe was updated successfully.',
-              type: 'success'
-            })
+        return this.$store.dispatch('v2_action_updatePipe', { eid, attrs }).then(response => {
+          this.$message({
+            message: 'The pipe was updated successfully.',
+            type: 'success'
+          })
 
-            this.$store.commit('pipe/INIT_PIPE', response.body)
-            this.revert()
-          } else {
-            this.$message({
-              message: 'There was a problem updating the pipe.',
-              type: 'error'
-            })
-          }
-
+          var pipe = response.data
+          this.$store.commit('pipe/INIT_PIPE', pipe)
+          this.revert()
+        }).catch(error => {
+          this.$message({
+            message: 'There was a problem updating the pipe.',
+            type: 'error'
+          })
+        }).finally(() => {
           this.active_task_idx = -1
         })
       },
@@ -716,7 +726,7 @@
       },
       testPipe() {
         var attrs = _.pick(this.edit_pipe, ['task'])
-        var run_attrs = this.process_input
+        var run_cfg = this.process_input
 
         _.assign(attrs, {
           parent_eid: this.eid,
@@ -725,13 +735,17 @@
           */
         })
 
-        this.$store.dispatch('createProcess', { attrs }).then(response => {
-          var eid = response.body.eid
-          this.$store.dispatch('runProcess', { eid, attrs: run_attrs })
+        this.$store.dispatch('v2_action_createProcess', { attrs }).then(response => {
+          var process = response.data
+          var eid = process.eid
+          this.$store.dispatch('v2_action_runProcess', { eid, cfg: run_cfg })
         })
 
         // make sure the output is expanded
         this.active_collapse_items = [].concat(this.active_collapse_items).concat(['output'])
+
+        // make sure we know we've tested the pipe at least once
+        this.has_tested_once = true
 
         // scroll to the output item
         this.scrollToItem(this.output_item_id, 300)

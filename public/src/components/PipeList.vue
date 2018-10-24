@@ -40,7 +40,6 @@
         @delete="onItemDelete"
       />
     </transition-group>
-    <div class="h4"></div>
   </div>
 </template>
 
@@ -119,10 +118,14 @@
       ]),
       tryFetchPipes() {
         if (!this.is_fetched) {
-          this.$store.dispatch('fetchPipes')
+          this.$store.dispatch('v2_action_fetchPipes', {}).catch(error => {
+            // TODO: add error handling?
+          })
         }
         if (!this.is_summary_fetched) {
-          this.$store.dispatch('fetchProcessSummary')
+          this.$store.dispatch('v2_action_fetchProcessSummary', {}).catch(error => {
+            // TODO: add error handling?
+          })
         }
       },
       isItemSelected(eid) {
@@ -143,7 +146,6 @@
         } else {
           this.selected_items = _.without(this.selected_items, eid)
         }
-        console.log(this.selected_items)
       },
       onItemEdit(item) {
         this.$emit('item-edit', item)

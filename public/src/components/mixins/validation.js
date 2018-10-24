@@ -5,13 +5,12 @@ import api from '../../api'
 export default {
   methods: {
     $_Validation_validateAll: _.debounce(function(validate_attrs, callback) {
-      api.validate({ attrs: validate_attrs }).then(response => {
-        var errors = _.keyBy(response.body, 'key')
+      api.v2_validate(validate_attrs).then(response => {
+        var errors = _.keyBy(response.data, 'key')
 
-        if (_.isFunction(callback))
+        if (_.isFunction(callback)) {
           callback(response, errors)
-      }, response => {
-        // error callback
+        }
       })
     }, 300),
     $_Validation_validateAlias: function(eid_type, alias, callback) {

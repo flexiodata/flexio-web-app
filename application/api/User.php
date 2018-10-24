@@ -43,7 +43,7 @@ class User
                 'timezone'             => array('type' => 'string',     'required' => false, 'default' => 'UTC'),
                 'verify_code'          => array('type' => 'string',     'required' => false, 'default' => ''),
                 'config'               => array('type' => 'object',     'required' => false, 'default' => []),
-                'send_email'           => array('type' => 'boolean',    'required' => false, 'default' => true),
+                'send_email'           => array('type' => 'boolean',    'required' => false, 'default' => false), // don't send an email by default
                 'create_examples'      => array('type' => 'boolean',    'required' => false, 'default' => true),
                 'require_verification' => array('type' => 'boolean',    'required' => false, 'default' => false)
             ))->hasErrors()) === true)
@@ -59,7 +59,8 @@ class User
         // configuration fields we don't want to pass on
         $send_email = $validated_post_params['send_email'];
 
-        // TODO: for now, never send an email
+
+        // for now, never send an email
         $send_email = false;
 
 
@@ -366,16 +367,25 @@ class User
         $cleaned_post_params = self::cleanProperties($post_params); // don't store sensitive info
         $request->setRequestParams($cleaned_post_params);
 
+        // note: in validator below, use 'string' type for old/new passwords to allow them
+        // to be any string; we'll validate password format separately so we can return
+        // a custom error message that the old/new password entered was invalid as opposed to
+        // a syntax error
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
-                'old_password' => array('type' => 'password', 'required' => true),
-                'new_password' => array('type' => 'password', 'required' => true)
+                'old_password' => array('type' => 'string', 'required' => true),
+                'new_password' => array('type' => 'string', 'required' => true)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_post_params = $validator->getParams();
         $old_password = $validated_post_params['old_password'];
         $new_password = $validated_post_params['new_password'];
+
+        if (\Flexio\Base\Password::isValid($old_password) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAUTHORIZED, _('The current password entered was incorrect'));
+        if (\Flexio\Base\Password::isValid($new_password) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, _('A password must have at least 8 characters with at least 1 number'));
 
         // load the object
         $owner_user = \Flexio\Object\User::load($owner_user_eid);

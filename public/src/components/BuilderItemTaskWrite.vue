@@ -15,6 +15,7 @@
     <h4 class="fw6">1. Choose connection</h4>
     <BuilderComponentConnectionChooser
       class="mb3"
+      :filter-by="filter_by"
       :connection-identifier.sync="connection_identifier"
       :show-result="has_available_connection"
     >
@@ -22,7 +23,7 @@
         slot="buttons"
         plain
         size="tiny"
-        class="ttu b"
+        class="ttu fw6"
         @click="clearConnection"
       >
         Use Different Connection
@@ -36,7 +37,7 @@
       >
         <el-button
           slot="append"
-          class="ttu b"
+          class="ttu fw6"
           type="primary"
           size="small"
           @click="show_file_chooser_dialog = true"
@@ -65,13 +66,13 @@
       />
       <span slot="footer" class="dialog-footer">
         <el-button
-          class="ttu b"
+          class="ttu fw6"
           @click="show_file_chooser_dialog = false"
         >
           Cancel
         </el-button>
         <el-button
-          class="ttu b"
+          class="ttu fw6"
           type="primary"
           @click="updatePath"
         >
@@ -159,10 +160,18 @@
       description() {
         return marked(_.get(this.item, 'description', ''))
       },
+      filter_by() {
+        return (item) => {
+          return this.$_Connection_isStorage(item)
+        }
+      },
       write_path: {
         get() {
-          var after_path = util.afterNth(this.edit_values.path, '/', 2)
-          return '/' + after_path
+          var path = util.afterFirst(this.edit_values.path, ':')
+          if (path.indexOf('/') != 0) {
+            path = '/' + path
+          }
+          return path
         },
         set(value) {
           if (this.connection_identifier.length == 0) {
@@ -174,7 +183,7 @@
             path = '/' + path
           }
 
-          this.edit_values.path = '/' + this.connection_identifier + path
+          this.edit_values.path = this.connection_identifier + ':' + path
         }
       },
       store_connection() {
@@ -193,12 +202,7 @@
         if (path.length == 0) {
           this.connection_identifier = ''
         } else {
-          if (_.isArray(path)) {
-            path = _.get(path, '[0]', '')
-          }
-
-          path = path.substring(1)
-          var cid = path.substring(0, path.indexOf('/'))
+          var cid = path.substring(0, path.indexOf(':'))
           this.connection_identifier = cid
         }
 
@@ -222,7 +226,7 @@
       },
       updatePath() {
         var files = this.$refs['file-chooser'].getSelectedFiles()
-        files = _.get(files, '[0].path', '')
+        files = _.get(files, '[0].full_path', '')
         this.edit_values = _.assign({}, this.edit_values, { path: files })
         this.show_file_chooser_dialog = false
       }

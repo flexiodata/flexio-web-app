@@ -557,6 +557,40 @@ class Util
         return sprintf('%s%02d:%02d', $sign, $hours, $minutes);
     }
 
+    public static function createDateRangeArray(string $start_date, string $end_date) : array
+    {
+        // creates an array of dates between the start and end date;
+        // the dates values are the keys and they're initialized with 0;
+        // used for creating histograms based on dates
+
+        if (strlen($start_date) == 0 || strlen($end_date) == 0)
+            return array();
+
+        try
+        {
+            $start_date = new \DateTime($start_date);
+            $end_date = new \DateTime($end_date);
+
+            $start_date->setTime(0, 0, 0, 0); // reset time portion
+            $end_date->setTime(0, 0, 0, 0);
+
+            $interval = new \DateInterval('P1D');
+            $daterange = new \DatePeriod($start_date, $interval, $end_date);
+
+            $bucket = array();
+            foreach($daterange as $date){
+                $date = $date->format("Y-m-d");
+                $bucket[$date] = 0;
+            }
+
+            return $bucket;
+        }
+        catch (\Exception $e)
+        {
+            return array();
+        }
+    }
+
     public static function isPositiveInteger($value) : bool
     {
         // verifies if an id is a positive integer

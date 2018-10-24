@@ -146,11 +146,11 @@ EOD;
 
         // BEGIN TEST
         $object = array(
-            'op'=>'create',
-            'params'=>array(
-                'columns'=>array(
-                    array('name'=>'','type'=>'character','width'=>1),
-                    array('name'=>'','type'=>'character','width'=>1)
+            "op"=>"create",
+            "params"=>array(
+                "columns"=>array(
+                    array("name"=>"","type"=>"character","width"=>1),
+                    array("name"=>"","type"=>"character","width"=>1)
                 )
             )
         );

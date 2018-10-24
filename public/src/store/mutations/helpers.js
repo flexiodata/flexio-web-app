@@ -137,7 +137,6 @@ export const addProcess        = (state, objs, extra_defaults) => { addAbstract(
 export const addProcessTask    = (state, objs, extra_defaults) => { addAbstract(state, objs, PROCESS_TASK_OUTPUT_INFO_DEFAULTS, extra_defaults) }
 export const addUser           = (state, objs, extra_defaults) => { addAbstract(state, objs, USER_DEFAULTS,                     extra_defaults) }
 export const addToken          = (state, objs, extra_defaults) => { addAbstract(state, objs, TOKEN_DEFAULTS,                    extra_defaults) }
-export const addRight          = (state, objs, extra_defaults) => { addAbstract(state, objs, RIGHT_DEFAULTS,                    extra_defaults) }
 // only pipes can be trash (for now), so we can use PIPE_DEFAULTS here
 export const addTrash          = (state, objs, extra_defaults) => { addAbstract(state, objs, PIPE_DEFAULTS,                     extra_defaults) }
 
@@ -150,7 +149,6 @@ export const updateConnection  = (state, eid, attrs) => { updateAbstract(state, 
 export const updateProcess     = (state, eid, attrs) => { updateAbstract(state, eid, attrs) }
 export const updateProcessTask = (state, eid, attrs) => { updateAbstract(state, eid, attrs) }
 export const updateUser        = (state, eid, attrs) => { updateAbstract(state, eid, attrs) }
-export const updateRight       = (state, eid, attrs) => { updateAbstract(state, eid, attrs) }
 
 export const removeObject      = (state, objs) => { removeAbstract(state, objs) }
 export const removeObjectKeys  = (state, objs, keys) => { removeKeys(state, objs, keys) }

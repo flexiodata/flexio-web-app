@@ -25,7 +25,7 @@
             :size="showOnlyOne ? 'small' : 'mini'"
             :data-clipboard-text="token.access_code"
           >
-            <span class="ttu b">Copy</span>
+            <span class="ttu fw6">Copy</span>
           </el-button>
         </div>
         <div class="pv2 ph3 tr" v-if="!showOnlyOne">
@@ -42,7 +42,7 @@
     <div class="mt2 mb1" :class="{ 'tc': tokens.length == 0 }" v-if="showCreateButton">
       <el-button
         type="primary"
-        class="ttu b"
+        class="ttu fw6"
         @click="createApiKey"
       >
         Generate API Key
@@ -73,10 +73,11 @@
       tokens() {
         var tokens = this.getAllTokens()
 
-        if (tokens.length == 0)
+        if (tokens.length == 0) {
           return []
+        }
 
-         return this.showOnlyOne ? [].concat([ _.first(tokens) ]) : tokens
+        return this.showOnlyOne ? [].concat([ _.first(tokens) ]) : tokens
       }
     },
     mounted() {
@@ -87,18 +88,23 @@
         'getAllTokens'
       ]),
       tryFetchTokens() {
-        if (!this.is_fetched)
-          this.$store.dispatch('fetchTokens')
+        if (!this.is_fetched) {
+          this.$store.dispatch('v2_action_fetchTokens', {}).catch(error => {
+            // TODO: add error handling?
+          })
+        }
       },
       createApiKey() {
-        this.$store.dispatch('createToken').then(response => {
-          if (response.ok) {
-            this.$store.track('Created API Key')
-          }
+        this.$store.dispatch('v2_action_createToken', {}).then(response => {
+          this.$store.track('Created API Key')
+        }).catch(error => {
+          // TODO: add error handling?
         })
       },
       deleteKey(token) {
-        this.$store.dispatch('deleteToken', { eid: token.eid })
+        this.$store.dispatch('v2_action_deleteToken', { eid: token.eid }).catch(error => {
+          // TODO: add error handling?
+        })
       }
     }
   }

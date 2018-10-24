@@ -56,7 +56,7 @@
         </el-form-item>
       </el-form>
       <div class="mt3">
-        <el-button type="primary" class="ttu b w-100" @click="tryChangePassword">
+        <el-button type="primary" class="ttu fw6 w-100" @click="tryChangePassword">
           <span v-if="is_submitting">Submitting...</span>
           <span v-else>Change password</span>
         </el-button>
@@ -127,14 +127,13 @@
 
           this.is_submitting = true
 
-          api.resetPassword({ attrs }).then(response => {
-            // success callback
+          api.v2_resetPassword(attrs).then(response => {
             this.is_submitting = false
             this.is_sent = true
-          }, response => {
-            // error callback
+            this.error_msg = ''
+          }).catch(error => {
             this.is_submitting = false
-            this.error_msg = _.get(response, 'data.error.message', '')
+            this.error_msg = _.get(error, 'response.data.error.message', '')
           })
         })
       }

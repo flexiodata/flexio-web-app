@@ -178,14 +178,14 @@
         v-if="builder__is_wizard && is_active && show_buttons"
       >
         <el-button
-          class="ttu b"
+          class="ttu fw6"
           @click="onPrevClick"
           v-show="(!is_first && !is_last) || show_back_button"
         >
           {{back_btn_label}}
         </el-button>
         <el-button
-          class="ttu b"
+          class="ttu fw6"
           type="primary"
           :disabled="!is_next_allowed"
           @click="onNextClick"
@@ -199,13 +199,13 @@
         v-if="!builder__is_wizard && is_active"
       >
         <el-button
-          class="ttu b"
+          class="ttu fw6"
           @click="onCancelClick"
         >
           Cancel
         </el-button>
         <el-button
-          class="ttu b"
+          class="ttu fw6"
           type="primary"
           :disabled="!is_next_allowed"
           @click="onSaveClick"

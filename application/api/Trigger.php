@@ -57,19 +57,31 @@ class Trigger
         if ($user_eid)
             $user = $user_eid;
 
+        // if the user is a username, and not already a user eid, resolve it to an eid
         $pipe_eid = \Flexio\Object\Pipe::getEidFromName($user, $pipe);
-        if (!$pipe_eid)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, "Pipe object could not be resolved/found");
+        if ($pipe_eid)
+            $pipe = $pipe_eid;
 
         // STEP 3: trigger the appropriate process with the email as an input
-        $pipe = \Flexio\Object\Pipe::load($pipe_eid);
+        $pipe = \Flexio\Object\Pipe::load($pipe);
         if ($pipe->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, "Pipe object not found");
 
+        // get the pipe properties
         $pipe_properties = $pipe->get();
+
+        // only allow pipes to be triggered from an API call if the email is deployed
+        // and the email deployment option is activated
+        $email_trigger_active = ($pipe_properties['deploy_mode'] === \Model::PIPE_DEPLOY_MODE_RUN &&
+                                 $pipe_properties['deploy_email'] === \Model::PIPE_DEPLOY_STATUS_ACTIVE);
+        if ($email_trigger_active === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
         $process_properties = array(
             'parent_eid' => $pipe_properties['eid'],
+            'pipe_info' => $pipe_properties,
             'task' => $pipe_properties['task'],
+            'triggered_by' => \Model::PROCESS_TRIGGERED_EMAIL,
             'owned_by' => $pipe_properties['owned_by']['eid'],
             'created_by' => $pipe_properties['owned_by']['eid'] // TODO: we need to determine user based on email (e.g. owner, or public)
         );
@@ -85,8 +97,11 @@ class Trigger
         if (count($from_addresses) > 0)
         {
             $from_addresses = \Flexio\Base\Email::splitAddressList($from_addresses);
-            $process_email_params = array('email-from' => $from_addresses[0]['email'],
-                                          'email-from-display' => $from_addresses[0]['display']);
+            $process_email_params = array('trigger.email.from' => $from_addresses[0]['email'],
+                                          'trigger.email.fromdisplay' => $from_addresses[0]['display'],
+                                          'trigger.email.subject' => $parser->getSubject(),
+                                          'email-from' => $from_addresses[0]['email'],            // deprecated, please remove
+                                          'email-from-display' => $from_addresses[0]['display']); // deprecated, please remove
         }
         $engine->setParams($process_email_params);
 

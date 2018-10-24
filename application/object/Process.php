@@ -43,6 +43,92 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $result;
     }
 
+    public static function summary_another(array $filter) : array
+    {
+        $result = self::accumulateStats($filter, 'user_eid');
+        return $result;
+    }
+
+    public static function accumulateStats(array $filter, string $object_column) : array
+    {
+        // construct a date range from the filter
+        $date_start = $filter['created_min'] ?? false;
+        $date_end = $filter['created_max'] ?? false;
+
+        if ($date_start === false || $date_end === false)
+            return array();
+
+        try
+        {
+            $date_start = (new \DateTime($date_start ))->format('Y-m-d');
+            $date_end = (new \DateTime($date_end))->format('Y-m-d');
+        }
+        catch (\Exception $e)
+        {
+            return array();
+        }
+
+        $eid_type = false;
+        if ($object_column == 'pipe_eid')
+            $eid_type = 'PIP';
+        if ($object_column == 'user_eid')
+            $eid_type = 'USR';
+        if ($eid_type === false)
+            return array();
+
+        $total_count = 0;
+        $daily_count = \Flexio\Base\Util::createDateRangeArray($date_start, $date_end);
+
+        $object_totals = array();
+        $stats = \Flexio\System\System::getModel()->process->summary_daily($filter);
+
+        foreach ($stats as $s)
+        {
+            $object_eid = $s[$object_column];
+            $process_created = $s['created'];
+            $process_count = $s['total_count'];
+
+            // initialize the object totals if we haven't yet started accumulating them
+            if (!isset($object_totals[$object_eid]))
+            {
+                $object_totals[$object_eid]['total_count'] = 0;
+                $object_totals[$object_eid]['daily_count'] = \Flexio\Base\Util::createDateRangeArray($date_start, $date_end);
+            }
+
+            // overall totals
+            $total_count += $process_count;
+            $daily_count[$process_created] += $process_count;
+
+            // object totals
+            $object_totals[$object_eid]['total_count'] += $process_count;
+            $object_totals[$object_eid]['daily_count'][$process_created] += $process_count;
+        }
+
+        $object_totals_reformatted = array();
+        foreach ($object_totals as $key => $value)
+        {
+            $object_totals_reformatted[] = array(
+                'eid' => $key,
+                'eid_type' => $eid_type,
+                'total_count' => $value['total_count'],
+                'daily_count' => array_values($value['daily_count'])
+            );
+        }
+
+        $result = array(
+            'header' => array(
+                'start_date' => $date_start,
+                'end_date' => $date_end,
+                'days' => array_keys(\Flexio\Base\Util::createDateRangeArray($date_start, $date_end)),
+                'total_count' => $total_count,
+                'daily_count' => array_values($daily_count)
+            ),
+            'detail' => $object_totals_reformatted
+        );
+
+        return $result;
+    }
+
     public static function list(array $filter) : array
     {
         $object = new static();
@@ -77,6 +163,15 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
     {
         if (!isset($properties))
             $properties = array();
+
+        // if the pipe info is set, make sure it's an object and then encode it as JSON for storage
+        if (isset($properties) && isset($properties['pipe_info']))
+        {
+            if (!is_array($properties['pipe_info']))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+
+            $properties['pipe_info'] = json_encode($properties['pipe_info']);
+        }
 
         // if the task is set, make sure it's an object and then encode it as JSON for storage
         if (isset($properties) && isset($properties['task']))
@@ -119,6 +214,15 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
     public function set(array $properties) : \Flexio\Object\Process
     {
         // TODO: add properties check
+
+        // if the pipe info is set, make sure it's an object and then encode it as JSON for storage
+        if (isset($properties) && isset($properties['pipe_info']))
+        {
+            if (!is_array($properties['pipe_info']))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+            $properties['pipe_info'] = json_encode($properties['pipe_info']);
+        }
 
         // if the task is set, make sure it's an object and then encode it as JSON for storage
         if (isset($properties) && isset($properties['task']))
@@ -307,6 +411,7 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "parent" => null,
                 "process_mode" => null,
                 "task" => null,
+                "triggered_by" => null,
                 "started_by" => null,
                 "started" => null,
                 "finished" => null,
@@ -323,10 +428,24 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         if (!isset($mapped_properties['eid']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
+        // get the pipe info
+        $pipe_info = null;
+        if (isset($properties['pipe_info']))
+            $pipe_info = @json_decode($properties['pipe_info'],true);
+            if ($pipe_info === false)
+                $pipe_info = null;
+
         // expand the parent and owner info
         $mapped_properties['parent'] = array(
             'eid' => $properties['parent_eid'],
-            'eid_type' => \Model::TYPE_PIPE
+            'eid_type' => \Model::TYPE_PIPE,
+            'eid_status' => $pipe_info['eid_status'] ?? "",
+            'alias' => $pipe_info['alias'] ?? "",
+            'name' => $pipe_info['name'] ?? "",
+            'description' => $pipe_info['description'] ?? "",
+            'deploy_mode' => $pipe_info['deploy_mode'] ?? "",
+            'created' => $pipe_info['created'] ?? "",
+            'updated' => $pipe_info['updated'] ?? ""
         );
         $mapped_properties['owned_by'] = array(
             'eid' => $properties['owned_by'],

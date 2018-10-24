@@ -77,24 +77,22 @@
         var cfg_path = 'app.prompt.onboarding.pipeDocument.build.shown'
         this.$_Config_reset(cfg_path)
 
-        this.$store.dispatch('createPipe', { attrs }).then(response => {
-          if (response.ok) {
-            var pipe = response.body
-            var eid = pipe.eid
-            this.$router.push({ name: ROUTE_PIPES, params: { eid } })
-          }
+        this.$store.dispatch('v2_action_createPipe', { attrs }).then(response => {
+          var pipe = response.data
+          var eid = pipe.eid
+          this.$router.push({ name: ROUTE_PIPES, params: { eid } })
+        }).catch(error => {
+          // TODO: add error handling?
         })
       },
       gotoAccount() {
         this.$router.push({ name: ROUTE_ACCOUNT })
       },
       signOut() {
-        this.$store.dispatch('signOut').then(response => {
-          if (response.ok) {
-            this.$router.push({ name: ROUTE_SIGNIN })
-          } else {
-            // TODO: add error handling
-          }
+        this.$store.dispatch('v2_action_signOut').then(response => {
+          this.$router.push({ name: ROUTE_SIGNIN })
+        }).catch(error => {
+          // TODO: add error handling?
         })
       },
       onCommand(cmd) {

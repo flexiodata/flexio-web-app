@@ -83,6 +83,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
 
         $owner_user_eid = $this->getOwner();
 
+        /*
         // if root_connection_identifier is set, the vfs is bound to that connection
 
         if ($this->root_connection_identifier === null && ($path == '' || $path == '/'))
@@ -148,6 +149,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
 
             return $results;
         }
+        */
 
 
         $connection_identifier = '';
@@ -164,10 +166,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         {
             if ($this->root_connection_identifier === null)
             {
-                $full_path = '/' . $connection_identifier;
-                if (strlen($full_path) == 0 || substr($full_path, -1) != '/')
-                    $full_path .= '/';
-                $full_path .= ltrim($entry['path'],'/');
+                $full_path = $connection_identifier . ':/' . ltrim($entry['path'],'/');
             }
              else
             {
@@ -176,16 +175,24 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
                     $full_path = '/' . $full_path;
             }
 
-            $results[] = array(
+            $item = array(
                 'name' => $entry['name'],
-                'path' =>  $full_path,
-                'remote_path' =>  $entry['path'],
+                'path' =>  $entry['path'],
+                'full_path' => $full_path,
                 'size' => $entry['size'],
                 'modified' => $entry['modified'],
                 'type' => $entry['type']
             );
+
+            if ($this->root_connection_identifier === null)
+            {
+               // $item['connection'] = $connection_identifier;
+            }
+
+            $results[] = $item;
         }
 
+        
         return $results;
     }
 
@@ -427,7 +434,11 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         if ($service_identifier_len !== false)
         {
             $service_identifier_len += 3;
-            $rpath_start = 0; // url remote paths include the protocol and the ://
+
+            if (substr($path, 0, 8) == 'context:')
+                $rpath_start = 9;
+                 else
+                $rpath_start = 0; // url remote paths include the protocol and the ://
         }
          else
         {

@@ -38,16 +38,26 @@ class List1 extends \Flexio\Jobs\Base
         parent::run($process);
 
         // process buffer
-        $outstream = $process->getStdout();
         $params = $this->getJobParameters();
-        $path = $params['path'] ?? null;
 
         if (is_null($path))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Missing parameter 'path'");
 
+        $results = self::doList($this, $params);
+
+        $outstream = $process->getStdout();
+        $outstream->setMimeType(\Flexio\Base\ContentType::JSON);
+
+        $streamwriter = $outstream->getWriter();
+        $streamwriter->write(json_encode($results, JSON_UNESCAPED_SLASHES));
+    }
+
+    public static function doList($process, $params)
+    {
+        $path = $params['path'] ?? null;
+
         $parts = \Flexio\Base\File::splitPath($path);
         $lastpart = array_pop($parts);
-
 
         foreach ($parts as $part)
         {
@@ -67,12 +77,12 @@ class List1 extends \Flexio\Jobs\Base
                 $parts[] = $lastpart;
         }
 
-        $path = '/' . implode('/', $parts);
+        $path = implode('/', $parts);
 
-
-        $streamwriter = $outstream->getWriter();
-
-
+        if (strpos($path, ':') === false)
+        {
+            $path = '/' . $path;
+        }
 
         $vfs = new \Flexio\Services\Vfs($process->getOwner());
         $vfs->setProcess($process);
@@ -94,6 +104,7 @@ class List1 extends \Flexio\Jobs\Base
             $entry = array(
                 'name' => $f['name'],
                 'path' => $f['path'],
+                'full_path' => $f['full_path'],
                 'size' => $f['size'],
                 'modified' => $f['modified'],
                 'type' => $f['type']
@@ -108,7 +119,8 @@ class List1 extends \Flexio\Jobs\Base
             $results[] = $entry;
         }
 
-        $outstream->setMimeType(\Flexio\Base\ContentType::JSON);
-        $streamwriter->write(json_encode($results, JSON_UNESCAPED_SLASHES));
+        return $results;
     }
+
+
 }

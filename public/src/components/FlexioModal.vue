@@ -46,11 +46,11 @@
       },
       'cancel-cls': {
         type: String,
-        default: 'ttu b blue mr2'
+        default: 'ttu fw6 blue mr2'
       },
       'submit-cls': {
         type: String,
-        default: 'ttu b blue'
+        default: 'ttu fw6 blue'
       },
       'cancel-label': {
         type: String,

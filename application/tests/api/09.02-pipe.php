@@ -251,6 +251,7 @@ class Test
                 },
                 "deploy_mode": "B",
                 "deploy_schedule": "I",
+                "deploy_email": "A",
                 "deploy_api": "A",
                 "deploy_ui": "I"
             }'
@@ -283,6 +284,7 @@ class Test
             },
             "deploy_mode": "B",
             "deploy_schedule": "I",
+            "deploy_email": "A",
             "deploy_api": "A",
             "deploy_ui": "I",
             "owned_by": {

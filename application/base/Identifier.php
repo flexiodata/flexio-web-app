@@ -66,7 +66,7 @@ class Identifier
         // or hyphen
         if (!preg_match('/^[a-z][a-z0-9_-]{2,79}$/', $identifier))
         {
-            $message = _("$prefix may only contain letters, numbers, hyphens and underscores");
+            $message = _("$prefix must start with a letter and may only contain letters, numbers, hyphens and underscores");
             return false;
         }
 

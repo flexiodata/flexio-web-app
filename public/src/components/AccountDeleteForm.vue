@@ -56,7 +56,7 @@
     <div class="mt4">
       <el-button
         type="danger"
-        class="ttu b w-100"
+        class="ttu fw6 w-100"
         :disabled="!is_delete_allowed"
         @click="deleteUser"
       >
@@ -139,7 +139,7 @@
         this.$_Validation_validatePassword(key, value, (response, errors) => {
           var message = _.get(errors, key + '.message', '')
           if (message.length > 0) {
-          callback(new Error('The password entered is incorrect'))
+            callback(new Error('The password entered is incorrect'))
           } else {
             callback()
           }
@@ -158,22 +158,18 @@
 
           var eid = this.active_user_eid
           var attrs = _.pick(this.edit_info, ['username', 'password'])
-          this.$store.dispatch('deleteUser', { eid, attrs }).then(response => {
-            if (response.ok) {
-              this.signOut()
-            } else {
-            // TODO: add error handling
-            }
+          this.$store.dispatch('v2_action_deleteUser', { eid, attrs }).then(response => {
+            this.signOut()
+          }).catch(error => {
+            // TODO: add error handling?
           })
         })
       },
       signOut() {
-        this.$store.dispatch('signOut').then(response => {
-          if (response.ok) {
-            this.$router.push({ name: ROUTE_SIGNIN })
-          } else {
-            // TODO: add error handling
-          }
+        this.$store.dispatch('v2_action_signOut').then(response => {
+          this.$router.push({ name: ROUTE_SIGNIN })
+        }).catch(error => {
+          // TODO: add error handling?
         })
       }
     }

@@ -14,7 +14,7 @@
         <el-button
           type="primary"
           size="small"
-          class="ttu b"
+          class="ttu fw6"
           @click="runTests"
           v-if="!is_running"
         >
@@ -23,7 +23,7 @@
         <el-button
           type="danger"
           size="small"
-          class="ttu b"
+          class="ttu fw6"
           :disabled="is_canceled"
           @click="cancelTests"
           v-if="is_running"
@@ -36,23 +36,20 @@
           v-model="show_errors_only"
         />
         <span
-          class="f5 pl1 pointer"
+          class="f6 pl1 pointer"
           @click="show_errors_only = !show_errors_only"
         >
           Only show errors
         </span>
         <div class="flex-fill">&nbsp;</div>
-        <div class="f6 ttu b ph2 yellow" v-show="ajax_fail_cnt > 0">AJAX Errors: {{ajax_fail_cnt}}</div>
-        <span class="moon-gray" v-show="ajax_fail_cnt > 0">/</span>
-        <div class="f6 ttu b ph2 dark-green">Passed: {{pass_cnt}}</div>
-        <span class="moon-gray">/</span>
-        <div class="f6 ttu b ph2 dark-red">Failed: {{fail_cnt}}</div>
-        <span class="moon-gray">/</span>
-        <div class="f6 ttu b ph2">Total: {{total_cnt}}</div>
+        <div class="total-item mr2 br-pill f6 ttu fw6 white bg-yellow" v-show="ajax_fail_cnt > 0">AJAX Errors: {{ajax_fail_cnt}}</div>
+        <div class="total-item mr2 br-pill f6 ttu fw6 white bg-dark-green">Passed: {{pass_cnt}}</div>
+        <div class="total-item mr2 br-pill f6 ttu fw6 white bg-dark-red">Failed: {{fail_cnt}}</div>
+        <div class="total-item mr2 br-pill f6 ttu fw6 white bg-dark-gray">Total: {{total_cnt}}</div>
       </div>
     </div>
     <div class="flex-fill overflow-auto">
-      <admin-test-item
+      <AdminTestItem
         v-for="(test, index) in filtered_tests"
         :item="test"
         :index="index"
@@ -116,7 +113,7 @@
       ajax_fail_cnt() {
         return _
           .chain(this.filtered_tests)
-          .filter((t) => { return _.get(t, 'xhr.ok') === false })
+          .filter((t) => { return _.get(t, 'xhr_error') === true })
           .size()
           .value()
       },
@@ -125,10 +122,8 @@
       }
     },
     mounted() {
-      var me = this
-
-      api.fetchAdminTests().then(response => {
-        var tests = _.map(response.body, (id, idx) => {
+      api.v2_fetchAdminTests().then(response => {
+        var tests = _.map(response.data, (id, idx) => {
           return { id, idx }
         })
 
@@ -140,8 +135,6 @@
     },
     methods: {
       runTests() {
-        var me = this
-
         this.resetTests()
 
         // establish our run queue
@@ -151,47 +144,48 @@
         this.runTest(this.queue.next())
       },
       runTest(queue_item) {
-        if (queue_item.done === true || this.is_canceled === true)
+        if (queue_item.done === true || this.is_canceled === true) {
           return
+        }
 
         var test = queue_item.value
         var test_id = _.get(test, 'id', '')
 
         this.tests[test_id] = _.assign({}, test, { is_running: true })
 
-        api.runAdminTest({ id: test_id }).then(response => {
-          var xhr = _.pick(response, ['ok', 'status', 'statusText'])
+        api.v2_runAdminTest({ id: test_id }).then(response => {
+          var xhr_error = response.status == 200 ? false : true
+          this.tests[test_id] = _.assign({}, test, { is_running: false, xhr_error }, response.data)
+          this.runTest(this.queue.next())
 
-          if (!_.isNil(response.body))
-          {
-            this.tests[test_id] = _.assign({}, test, { is_running: false, xhr }, response.body)
+          /*
+          if (!_.isNil(response.data)) {
+            this.tests[test_id] = _.assign({}, test, { is_running: false, xhr_error }, response.data)
             this.runTest(this.queue.next())
-          }
-           else
-          {
-            var me = this
-
+          } else {
+            debugger
             // handle errors here...
             var error_text = this.$_Response_getResponseText(response, (error_text) => {
-              xhr.ok = false
-              me.tests[test_id] = _.assign({}, test, { is_running: false, xhr, error_text })
-              me.runTest(this.queue.next())
+              xhr_error = false
+              this.tests[test_id] = _.assign({}, test, { is_running: false, xhr_error, error_text })
+              this.runTest(this.queue.next())
             })
           }
-        }, response => {
-          var xhr = _.pick(response, ['ok', 'status', 'statusText'])
-          var error_text = 'There was a problem with the AJAX call'
-          this.tests[test_id] = _.assign({}, test, { is_running: false, xhr, error_text })
+          */
+        }).catch(error => {
+          var response = _.get(error, 'response', {})
+          var error_text = _.get(error, 'message', 'There was a problem with the AJAX call')
+          var xhr_error = response.status == 200 ? false : true
+          this.tests[test_id] = _.assign({}, test, { is_running: false, xhr_error, error_text })
           this.runTest(this.queue.next())
         })
       },
       resetTests() {
-        var me = this
         this.is_canceled = false
 
         _.each(this.tests, (test) => {
           var test_id = _.get(test, 'id', '')
-          me.tests[test_id] = _.assign({ is_running: false }, _.pick(test, ['id','idx']))
+          this.tests[test_id] = _.assign({ is_running: false }, _.pick(test, ['id','idx']))
         })
       },
       cancelTests() {
@@ -200,3 +194,8 @@
     }
   }
 </script>
+
+<style lang="stylus" scoped>
+  .total-item
+    padding: 6px 16px
+</style>

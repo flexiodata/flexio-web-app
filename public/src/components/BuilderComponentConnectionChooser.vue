@@ -26,7 +26,7 @@
       <p class="ttu fw6 f7 moon-gray" v-if="has_connections">&mdash; or &mdash;</p>
       <div class="mt3">
         <el-button
-          class="ttu b"
+          class="ttu fw6"
           @click="createPendingConnection"
         >
           Set up a new connection
@@ -165,11 +165,13 @@
             connection_type: this.connectionTypeFilter
           }
 
-          this.$store.dispatch('createConnection', { attrs }).then(response => {
-            var connection = response.body
+          this.$store.dispatch('v2_action_createConnection', { attrs }).then(response => {
+            var connection = _.cloneDeep(response.data)
             this.edit_mode = 'add'
             this.edit_connection = connection
             this.show_connection_dialog = true
+          }).catch(error => {
+            // TODO: add error handling?
           })
         } else {
           this.edit_mode = 'add'
@@ -185,26 +187,19 @@
         _.assign(attrs, { eid_status: OBJECT_STATUS_AVAILABLE })
 
         // update the connection and make it available
-        this.$store.dispatch('updateConnection', { eid, attrs }).then(response => {
-          var connection = response.body
+        this.$store.dispatch('v2_action_updateConnection', { eid, attrs }).then(response => {
+          var connection = response.data
 
-          if (response.ok) {
-            // TODO: shouldn't we do this in the ConnectionEditPanel?
-            // try to connect to the connection
-            this.$store.dispatch('testConnection', { eid, attrs })
+          // TODO: shouldn't we do this in the ConnectionEditPanel?
+          // try to connect to the connection
+          this.$store.dispatch('v2_action_testConnection', { eid, attrs }).catch(error => {
+            // TODO: add error handling?
+          })
 
-            /*
-            if (is_pending) {
-              var analytics_payload = _.pick(attrs, ['eid', 'name', 'alias', 'description', 'connection_type'])
-              this.$store.track('Created Connection In Template Builder', analytics_payload)
-            }
-            */
-
-            this.chooseConnection(connection)
-            this.show_connection_dialog = false
-          } else {
-            //this.$store.track('Created Connection In Template Builder (Error)')
-          }
+          this.chooseConnection(connection)
+          this.show_connection_dialog = false
+        }).catch(error => {
+          // TODO: add error handling?
         })
       }
     }

@@ -52,7 +52,7 @@
         />
       </div>
       <div class="mt4 mb3 tc">
-        <el-button type="primary" size="large" class="ttu b" @click="$emit('close')">Now build your own data feed</el-button>
+        <el-button type="primary" size="large" class="ttu fw6" @click="$emit('close')">Now build your own data feed</el-button>
       </div>
     </div>
   </div>
@@ -121,11 +121,15 @@
         'getFirstToken'
       ]),
       tryFetchPipes() {
-        this.$store.dispatch('fetchPipes')
+        this.$store.dispatch('v2_action_fetchPipes', {}).catch(error => {
+          // TODO: add error handling?
+        })
       },
       checkCreateApiKey() {
         if (this.tokens_fetched && this.api_key.length == 0) {
-          this.$store.dispatch('createToken')
+          this.$store.dispatch('v2_action_createToken', {}).catch(error => {
+            // TODO: add error handling?
+          })
         }
       }
     }

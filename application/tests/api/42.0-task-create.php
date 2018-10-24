@@ -28,7 +28,7 @@ class Test
         $userid = \Flexio\Tests\Util::getTestStorageOwner();
         $token = \Flexio\Tests\Util::getTestStorageOwnerToken();
         $storage_items = [
-            \Flexio\Tests\Base::STORAGE_LOCAL,
+            \Flexio\Tests\Base::STORAGE_FLEX,
             \Flexio\Tests\Base::STORAGE_AMAZONS3,
             \Flexio\Tests\Base::STORAGE_BOX,
             \Flexio\Tests\Base::STORAGE_DROPBOX,
@@ -46,7 +46,7 @@ class Test
         foreach ($storage_items as $storage_location)
         {
             $idx++;
-            $folderpath = "/$storage_location/job-tests-" . \Flexio\Tests\Util::getTimestampName() . "/";
+            $folderpath = "$storage_location:/job-tests-" . \Flexio\Tests\Util::getTimestampName() . "/";
             $filename = \Flexio\Base\Util::generateHandle() . '.txt';
             $task = \Flexio\Tests\Task::create([
                 ["op" => "create", "path" => $folderpath.$filename],
@@ -68,7 +68,7 @@ class Test
         foreach ($storage_items as $storage_location)
         {
             $idx++;
-            $folderpath = "/$storage_location/job-tests-" . \Flexio\Tests\Util::getTimestampName() . "/test_folder/";
+            $folderpath = "$storage_location:/job-tests-" . \Flexio\Tests\Util::getTimestampName() . "/test_folder/";
             $filename = \Flexio\Base\Util::generateHandle() . '.txt';
             $task = \Flexio\Tests\Task::create([
                 ["op" => "create", "path" => $folderpath.$filename],

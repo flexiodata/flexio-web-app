@@ -5,7 +5,7 @@
       <h2 class="fw6 orange mb4">Sorry, the page you tried cannot be found.</h2>
       <p class="lh-copy mb4">You may have typed the address incorrectly or you may have used an outdated link. If you found a broken link from another site or from our site, please <a href="mailto:support@flex.io?subject=Flex.io%20Broken%20Link" class="blue">email us</a>.</p>
       <p class="mt4">
-        <router-link to="/home" class="dib no-underline ttu fw6 br1 white bg-blue darken-10 pv2 ph3">Back to your dashboard</router-link>
+        <router-link to="/home" class="el-button el-button--large el-button--primary no-underline ttu fw6">Take me back home</router-link>
       </p>
     </div>
   </div>

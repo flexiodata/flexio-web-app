@@ -6,8 +6,9 @@
   >
     <div class="flex flex-row items-center" :class="isHeader ? 'th' : 'td'">
       <div
-        class="flex-none"
+        class="flex-none cursor-default"
         style="padding: 16px 10px"
+        @click.stop
         v-if="showSelectionCheckbox"
       >
         <el-checkbox
@@ -67,46 +68,21 @@
       </div>
       <div
         class="dn db-l ml3 ml4-l tr"
-        style="width: 110px"
+        style="width: 120px"
       >
         <div v-if="isHeader">Deployment</div>
-        <div v-else>
+        <div class="flex flex-row items-center justify-end" v-else>
           <div
             class="hint--top"
-            :aria-label="schedule_tooltip"
+            style="margin-left: 3px"
+            :aria-label="item.tooltip"
+            v-for="item in deployment_icons"
           >
-            <i
-              class="material-icons md-21"
-              :class="is_deployed_schedule ? 'blue' : 'o-10'"
-            >
-              schedule
-            </i>
-          </div>
-          <div
-            class="hint--top"
-            :aria-label="api_endpoint_tooltip"
-          >
-            <i
-              class="material-icons md-21"
-              :class="is_deployed_api ? 'blue' : 'o-10'"
-            >
-              code
-            </i>
-          </div>
-          <div
-            class="hint--top"
-            :aria-label="runtime_tooltip"
-          >
-            <i
-              class="material-icons md-21"
-              :class="is_deployed_ui ? 'blue' : 'o-10'"
-            >
-              offline_bolt
-            </i>
+            <i class="db material-icons md-21" :class="item.is_deployed ? 'blue' : 'o-10'">{{item.icon}}</i>
           </div>
         </div>
       </div>
-      <div class="flex-none nt3 nb3 ml3 ml4-l tc" style="width: 90px">
+      <div class="flex-none nt3 nb3 ml3 ml4-l tc" style="width: 100px">
         <div v-if="isHeader">
           Status
           <SortArrows
@@ -116,7 +92,7 @@
             @sort="onSort"
           />
         </div>
-        <div class="pv3" @click.stop v-else>
+        <div class="flex flex-row items-center justify-center pv3" @click.stop v-else>
           <LabelSwitch
             class="dib hint--top"
             active-color="#13ce66"
@@ -212,6 +188,9 @@
       is_deployed_ui() {
         return _.get(this.item, 'deploy_ui', INACTIVE) == ACTIVE
       },
+      is_deployed_email() {
+        return _.get(this.item, 'deploy_email', INACTIVE) == ACTIVE
+      },
       is_deployed: {
         get() {
           return _.get(this.item, 'deploy_mode') == DEPLOY_MODE_RUN ? true : false
@@ -224,13 +203,15 @@
               deploy_mode
             }
 
-            this.$store.dispatch('updatePipe', { eid: this.item.eid, attrs })
+            this.$store.dispatch('v2_action_updatePipe', { eid: this.item.eid, attrs }).catch(error => {
+              // TODO: add error handling?
+            })
           }
 
           if (value === false) {
             this.$confirm('This pipe is turned on and is possibly being used in a production environment. Are you sure you want to continue?', 'Really turn pipe off?', {
-              confirmButtonClass: 'ttu b',
-              cancelButtonClass: 'ttu b',
+              confirmButtonClass: 'ttu fw6',
+              cancelButtonClass: 'ttu fw6',
               confirmButtonText: 'Turn pipe off',
               cancelButtonText: 'Cancel',
               type: 'warning'
@@ -261,8 +242,35 @@
       api_endpoint_tooltip() {
         return this.is_deployed_api ? 'API Endpoint ON' : 'API Endpoint OFF'
       },
+      email_tooltip() {
+        return this.is_deployed_email ? 'Email Trigger ON' : 'Email Trigger OFF'
+      },
       runtime_tooltip() {
         return this.is_deployed_ui ? 'Flex.io Web Interface ON' : 'Flex.io Web Interface OFF'
+      },
+      deployment_icons() {
+        return [
+          {
+            icon: 'schedule',
+            tooltip: this.schedule_tooltip,
+            is_deployed: this.is_deployed_schedule
+          },
+          {
+            icon: 'code',
+            tooltip: this.api_endpoint_tooltip,
+            is_deployed: this.is_deployed_api
+          },
+          {
+            icon: 'email',
+            tooltip: this.email_tooltip,
+            is_deployed: this.is_deployed_email
+          },
+          {
+            icon: 'offline_bolt',
+            tooltip: this.runtime_tooltip,
+            is_deployed: this.is_deployed_ui
+          }
+        ]
       },
       show_description_tooltip() {
         return false

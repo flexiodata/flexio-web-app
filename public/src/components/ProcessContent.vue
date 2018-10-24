@@ -25,36 +25,9 @@
       >
         <IconMessage
           class="tc"
-          title="Oops, looks like something went wrong. :-/"
+          title="Oops, looks like something went wrong... :-/"
         />
-        <div class="mb2">
-          <el-radio-group size="small" v-model="pretty_state">
-            <el-radio-button label="pretty">Pretty</el-radio-button>
-            <el-radio-button label="raw">Raw</el-radio-button>
-          </el-radio-group>
-        </div>
-        <div
-          class="overflow-auto"
-          v-if="pretty_state == 'pretty'"
-        >
-          <template v-for="(val, key) in process_error">
-            <h4 class="f8 fw6 ttu moon-gray bb b--black-05 mb1 mt3 pb1">{{key}}</h4>
-            <pre class="mb0 tl lh-title f7">{{val}}</pre>
-          </template>
-        </div>
-        <CodeEditor
-          class="bg-white ba b--black-10"
-          lang="json"
-          :show-json-view-toggle="false"
-          :options="{
-            minRows: 12,
-            maxRows: 24,
-            lineNumbers: false,
-            readOnly: true
-          }"
-          v-model="process_error_str"
-          v-else
-        />
+        <JsonDetailsPanel :json="process_error" />
       </div>
       <!-- show content -->
       <div v-else-if="stream_eid.length > 0">
@@ -64,7 +37,7 @@
         />
         <div class="mt3 tc">
           <a
-            class="el-button el-button--primary ttu b no-underline"
+            class="el-button el-button--primary ttu fw6 no-underline"
             :href="download_url"
           >
             Download
@@ -89,6 +62,7 @@
   import Spinner from 'vue-simple-spinner'
   import CodeEditor from './CodeEditor.vue'
   import IconMessage from './IconMessage.vue'
+  import JsonDetailsPanel from './JsonDetailsPanel.vue'
   import StreamContent from './StreamContent.vue'
 
   export default {
@@ -102,6 +76,7 @@
       Spinner,
       CodeEditor,
       IconMessage,
+      JsonDetailsPanel,
       StreamContent
     },
     watch: {
@@ -118,8 +93,7 @@
     },
     data() {
       return {
-        force_loading: false,
-        pretty_state: 'pretty'
+        force_loading: false
       }
     },
     computed: {
@@ -140,9 +114,6 @@
       process_error() {
         var error = _.get(this.process_info, 'error', {})
         return this.is_superuser ? error : _.pick(error, ['code', 'message'])
-      },
-      process_error_str() {
-        return JSON.stringify(this.process_error, null, 2)
       },
       is_process_pending() {
         return this.process_status == PROCESS_STATUS_PENDING
@@ -170,7 +141,9 @@
       ]),
       fetchProcessLog() {
         if (this.processEid.length > 0) {
-          this.$store.dispatch('fetchProcessLog', { eid: this.processEid })
+          this.$store.dispatch('v2_action_fetchProcessLog', { eid: this.processEid }).catch(error => {
+            // TODO: add error handling?
+          })
         }
       }
     }

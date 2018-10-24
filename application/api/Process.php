@@ -98,6 +98,9 @@ class Process
             $process_params['owned_by'] = $pipe->getOwner();
             $process_params['created_by'] = $requesting_user_eid;
 
+            // save the pipe info
+            $process_params['pipe_info'] = $pipe->get();
+
             // use the task of the parent, unless a task is specified directly,
             // in which case use the task that's specified to allow runtime
             // parameters to be set on the pipe that override the pipe variables
@@ -113,7 +116,20 @@ class Process
             $process_params['created_by'] = $requesting_user_eid;
         }
 
-        // create a new process job with the default task
+        // create a new process job with the default task;
+        // if the process is created with a request from an api token, it's
+        // triggered with an api; if there's no api token, it's triggered
+        // from a web session, in which case it's triggered by the UI;
+        // TODO: this will work until we allow processes to be created from
+        // public pipes that don't require a token
+        $triggered_by = strlen($request->getToken()) > 0 ? \Model::PROCESS_TRIGGERED_API : \Model::PROCESS_TRIGGERED_INTERFACE;
+
+        // only allow processes to be run from an API call if the process is in run mode;
+        // note: processes are by default in run mode when called from the API directly
+        if ($triggered_by === \Model::PROCESS_TRIGGERED_API && $process_params['process_mode'] !== \Flexio\Jobs\Process::MODE_RUN)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+        $process_params['triggered_by'] = $triggered_by;
         $process = \Flexio\Object\Process::create($process_params);
 
         // if the process is created from a pipe, it runs with pipe owner privileges
@@ -427,6 +443,8 @@ class Process
             $process_info_subset['eid_type'] = $process_info['eid_type'];
             $process_info_subset['eid_status'] = $process_info['eid_status'];
             $process_info_subset['parent'] = $process_info['parent'] ?? null;
+            $process_info_subset['process_mode'] = $process_info['process_mode'];
+            $process_info_subset['triggered_by'] = $process_info['triggered_by'];
             $process_info_subset['started_by'] = $process_info['started_by'];
             $process_info_subset['started'] = $process_info['started'];
             $process_info_subset['finished'] = $process_info['finished'];

@@ -10,7 +10,7 @@
     />
     <transition name="el-zoom-in-center" mode="out-in">
       <div
-        class="absolute top-0 lh-1 ttu b pointer"
+        class="absolute top-0 lh-1 ttu fw6 pointer"
         :style="text_style"
         @click.stop="onChange"
         v-bind:key="value"
@@ -19,8 +19,8 @@
       </div>
     </transition>
     <div class="relative overflow-hidden">
-      <div class="absolute no-pointer-events dib lh-1 ttu b invisible" :style="hidden_text_style" ref="active-text">{{activeLabel}}</div>
-      <div class="absolute no-pointer-events dib lh-1 ttu b invisible" :style="hidden_text_style" ref="inactive-text">{{inactiveLabel}}</div>
+      <div class="absolute no-pointer-events dib lh-1 ttu fw6 invisible" :style="hidden_text_style" ref="active-text">{{activeLabel}}</div>
+      <div class="absolute no-pointer-events dib lh-1 ttu fw6 invisible" :style="hidden_text_style" ref="inactive-text">{{inactiveLabel}}</div>
     </div>
   </div>
 </template>

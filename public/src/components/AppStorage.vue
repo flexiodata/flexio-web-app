@@ -15,7 +15,7 @@
           <h1 class="mv0 f2 fw4 mr3">Storage</h1>
         </div>
         <div class="flex-none flex flex-row items-center" v-if="false">
-          <el-button type="primary" class="ttu b" @click="openAddModal">New storage</el-button>
+          <el-button type="primary" class="ttu fw6" @click="openAddModal">New storage</el-button>
         </div>
       </div>
     </div>
@@ -123,8 +123,11 @@
         this.$nextTick(() => { this.$refs['modal-connection-props'].open() })
       },
       tryFetchConnections() {
-        if (!this.is_fetched && !this.is_fetching)
-          this.$store.dispatch('fetchConnections')
+        if (!this.is_fetched && !this.is_fetching) {
+          this.$store.dispatch('v2_action_fetchConnections', {}).catch(error => {
+            // TODO: add error handling?
+          })
+        }
       },
       onConnectionActivate(item) {
         this.connection = _.assign({}, item)

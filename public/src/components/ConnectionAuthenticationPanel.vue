@@ -5,7 +5,7 @@
         <div class="lh-copy f6">To use this connection, you must first connect {{service_name}} to Flex.io.</div>
         <div class="mv3 tc">
           <el-button
-            class="ttu b"
+            class="ttu fw6"
             type="primary"
             @click="onConnectClick"
           >
@@ -20,7 +20,7 @@
         </div>
         <div class="mv3 tc">
           <el-button
-            class="ttu b"
+            class="ttu fw6"
             @click="onDisconnectClick"
             v-if="is_connected"
           >
@@ -456,7 +456,7 @@
 
           <el-form-item class="mt2 order-last">
             <el-button
-              class="ttu b"
+              class="ttu fw6"
               :type="test_btn_type"
               :icon="test_btn_icon"
               :loading="test_state == 'testing'"
@@ -482,6 +482,7 @@
   import * as ctypes from '../constants/connection-type'
   import * as connections from '../constants/connection-info'
   import MixinOauth from './mixins/oauth'
+  import MixinConnection from './mixins/connection'
 
   const defaultConnectionInfo = () => {
     return {
@@ -538,7 +539,7 @@
         default: 'add'
       }
     },
-    mixins: [MixinOauth],
+    mixins: [MixinOauth, MixinConnection],
     watch: {
       connection: {
         handler: 'reset',
@@ -612,17 +613,7 @@
         return this.ctype == ctypes.CONNECTION_TYPE_GITHUB
       },
       is_oauth() {
-        switch (this.ctype) {
-          case ctypes.CONNECTION_TYPE_BOX:
-          case ctypes.CONNECTION_TYPE_DROPBOX:
-          case ctypes.CONNECTION_TYPE_GITHUB:
-          case ctypes.CONNECTION_TYPE_GMAIL:
-          case ctypes.CONNECTION_TYPE_GOOGLECLOUDSTORAGE:
-          case ctypes.CONNECTION_TYPE_GOOGLEDRIVE:
-          case ctypes.CONNECTION_TYPE_GOOGLESHEETS:
-            return true
-        }
-        return false
+        return this.$_Connection_isOauth(this.ctype)
       },
       key_values() {
         var ctype = this.getConnectionType()
@@ -778,20 +769,20 @@
         var eid = attrs.eid
 
         // disconnect from this connection (oauth only)
-        this.$store.dispatch('disconnectConnection', { eid, attrs }).then(response => {
-          if (response.ok) {
-            this.$message({
-              message: "You've successfully disconnected from " + this.service_name + ".",
-              type: 'success'
-            })
+        this.$store.dispatch('v2_action_disconnectConnection', { eid, attrs }).then(response => {
+          var connection = response.data
 
-            this.$emit('change', response.body)
-          } else {
-            this.$message({
-              message: _.get(response, 'data.error.message', ''),
-              type: 'error'
-            })
-          }
+          this.$message({
+            message: "You've successfully disconnected from " + this.service_name + ".",
+            type: 'success'
+          })
+
+          this.$emit('change', connection)
+        }).catch(error => {
+          this.$message({
+            message: _.get(error, 'response.data.error.message', ''),
+            type: 'error'
+          })
         })
       },
       tryOauthConnect() {
@@ -801,51 +792,46 @@
           // TODO: handle 'code' and 'state' and 'error' here...
 
           // for now, re-fetch the connection to update its state
-          this.$store.dispatch('fetchConnection', { eid }).then(response => {
-            if (response.ok) {
-              this.$emit('change', _.omit(response.body, ['name', 'alias', 'description']))
+          this.$store.dispatch('v2_action_fetchConnection', { eid }).then(response => {
+            var connection = response.data
+            this.$emit('change', _.omit(connection, ['name', 'alias', 'description']))
 
-              this.$nextTick(() => {
-                if (this.is_connected) {
-                  this.$message({
-                    message: "You've successfully connected to " + this.service_name + "!",
-                    type: 'success'
-                  })
-                }
-              })
-            } else {
-              this.$message({
-                message: _.get(response, 'data.error.message', ''),
-                type: 'error'
-              })
-            }
+            this.$nextTick(() => {
+              if (this.is_connected) {
+                this.$message({
+                  message: "You've successfully connected to " + this.service_name + "!",
+                  type: 'success'
+                })
+              }
+            })
+          }).catch(error => {
+            this.$message({
+              message: _.get(error, 'response.data.error.message', ''),
+              type: 'error'
+            })
           })
         })
       },
       tryTest(attrs) {
         var eid = attrs.eid
-        //attrs = _.pick(attrs, ['name', 'alias', 'description', 'connection_info'])
         attrs = _.pick(attrs, ['name', 'description', 'connection_info'])
 
         // update the connection
-        this.$store.dispatch('updateConnection', { eid, attrs }).then(response => {
-          if (response.ok) {
-            this.test_state = 'testing'
+        this.$store.dispatch('v2_action_updateConnection', { eid, attrs }).then(response => {
+          this.test_state = 'testing'
 
-            // test the connection
-            this.$store.dispatch('testConnection', { eid, attrs }).then(response => {
-              if (response.ok) {
-                this.test_state = 'success'
-                this.$emit('change', _.omit(response.body, ['name', 'alias', 'description', 'connection_info']))
-              } else {
-                this.test_state = 'error'
-                setTimeout(() => { this.test_state = 'none' }, 4000)
-              }
-            })
-          } else {
+          // test the connection
+          this.$store.dispatch('v2_action_testConnection', { eid, attrs }).then(response => {
+            var connection = _.omit(response.data, ['name', 'alias', 'description', 'connection_info'])
+            this.test_state = 'success'
+            this.$emit('change', connection)
+          }).catch(error => {
             this.test_state = 'error'
             setTimeout(() => { this.test_state = 'none' }, 4000)
-          }
+          })
+        }).catch(error => {
+          this.test_state = 'error'
+          setTimeout(() => { this.test_state = 'none' }, 4000)
         })
       }
     }

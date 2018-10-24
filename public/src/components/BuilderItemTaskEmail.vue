@@ -88,7 +88,7 @@
     </template>
 
     <el-button
-      class="ttu b"
+      class="ttu fw6"
       size="small"
       @click="show_file_chooser_dialog = true"
     >
@@ -114,13 +114,13 @@
       />
       <span slot="footer" class="dialog-footer">
         <el-button
-          class="ttu b"
+          class="ttu fw6"
           @click="closeFileChooserDialog"
         >
           Cancel
         </el-button>
         <el-button
-          class="ttu b"
+          class="ttu fw6"
           type="primary"
           @click="addFiles"
         >
@@ -228,7 +228,7 @@
       },
       addFiles() {
         var files = this.selected_files
-        files = _.map(files, (f) => { return { file: f.path } })
+        files = _.map(files, (f) => { return { file: f.full_path } })
         var existing_files = _.get(this.edit_values, 'attachments', [])
         if (!_.isArray(existing_files)) {
           existing_files = [existing_files]

@@ -15,7 +15,7 @@
           <h1 class="mv0 f2 fw4 mr3">Connections</h1>
         </div>
         <div class="flex-none flex flex-row items-center ml3">
-          <el-button type="primary" class="ttu b" @click="show_connection_new_dialog = true">New Connection</el-button>
+          <el-button type="primary" class="ttu fw6" @click="show_connection_new_dialog = true">New Connection</el-button>
         </div>
       </div>
     </div>
@@ -139,8 +139,11 @@
         'getAvailableConnections'
       ]),
       tryFetchConnections() {
-        if (!this.is_fetched && !this.is_fetching)
-          this.$store.dispatch('fetchConnections')
+        if (!this.is_fetched && !this.is_fetching) {
+          this.$store.dispatch('v2_action_fetchConnections', {}).catch(error => {
+            // TODO: add error handling?
+          })
+        }
       },
       tryUpdateConnection(attrs) {
         var eid = attrs.eid
@@ -151,62 +154,60 @@
         _.assign(attrs, { eid_status: OBJECT_STATUS_AVAILABLE })
 
         // update the connection and make it available
-        this.$store.dispatch('updateConnection', { eid, attrs }).then(response => {
-          if (response.ok)
-          {
-            this.$message({
-              message: is_pending ? 'The connection was created successfully.' : 'The connection was updated successfully.',
-              type: 'success'
-            })
+        this.$store.dispatch('v2_action_updateConnection', { eid, attrs }).then(response => {
+          var connection = response.data
 
-            // try to connect to the connection
-            this.$store.dispatch('testConnection', { eid, attrs })
+          this.$message({
+            message: is_pending ? 'The connection was created successfully.' : 'The connection was updated successfully.',
+            type: 'success'
+          })
 
-            if (is_pending)
-            {
-              var analytics_payload = _.pick(attrs, ['eid', 'name', 'alias', 'description', 'connection_type'])
-              this.$store.track('Created Connection', analytics_payload)
-            }
+          // try to connect to the connection
+          this.$store.dispatch('v2_action_testConnection', { eid, attrs }).catch(error => {
+            // TODO: add error handling?
+          })
 
-            this.show_connection_new_dialog = false
-
-            this.selectConnection(_.get(response, 'body', {}))
+          if (is_pending) {
+            var analytics_payload = _.pick(attrs, ['eid', 'name', 'alias', 'description', 'connection_type'])
+            this.$store.track('Created Connection', analytics_payload)
           }
-           else
-          {
-            this.$message({
-              message: is_pending ? 'There was a problem creating the connection.' : 'There was a problem updating the connection.',
-              type: 'error'
-            })
 
-            this.$store.track('Created Connection (Error)')
-          }
+          this.selectConnection(connection)
+          this.show_connection_new_dialog = false
+        }).catch(error => {
+          this.$message({
+            message: is_pending ? 'There was a problem creating the connection.' : 'There was a problem updating the connection.',
+            type: 'error'
+          })
+
+          this.$store.track('Created Connection (Error)')
         })
       },
       tryDeleteConnection(attrs) {
+        var eid = _.get(attrs, 'eid', '')
         var name = _.get(attrs, 'name', 'Connection')
 
         this.$confirm('Are you sure you want to delete the connection named "'+name+'"?', 'Really delete connection?', {
-          confirmButtonText: 'DELETE CONNECTION',
-          cancelButtonText: 'CANCEL',
+          confirmButtonClass: 'ttu fw6',
+          cancelButtonClass: 'ttu fw6',
+          confirmButtonText: 'Delete connection',
+          cancelButtonText: 'Cancel',
           type: 'warning'
         }).then(() => {
           var idx = _.findIndex(this.connections, this.connection)
 
-          this.$store.dispatch('deleteConnection', { attrs }).then(response => {
-            if (response.ok)
-            {
-              if (idx >= 0)
-              {
-                if (idx >= this.connections.length)
-                  idx--
-
-                this.selectConnection(_.get(this.connections, '['+idx+']', {}))
+          this.$store.dispatch('v2_action_deleteConnection', { eid }).then(response => {
+            if (idx >= 0) {
+              if (idx >= this.connections.length) {
+                idx--
               }
+
+              var connection = _.get(this.connections, '['+idx+']', {})
+              this.selectConnection(connection)
             }
+          }).catch(error => {
+            // TODO: add error handling?
           })
-        }).catch(() => {
-          // do nothing
         })
       },
       selectConnection(item) {

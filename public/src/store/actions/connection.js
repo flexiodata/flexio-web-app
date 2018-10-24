@@ -4,113 +4,105 @@ import * as types from '../mutation-types'
 
 // ----------------------------------------------------------------------- //
 
-export const fetchConnections = ({ commit }) => {
+export const v2_action_fetchConnections = ({ commit }, { user_eid }) => {
   commit(types.FETCHING_CONNECTIONS, { fetching: true })
 
-  return api.fetchConnections().then(response => {
-    // success callback
-    commit(types.FETCHED_CONNECTIONS, { connections: response.body })
+  return api.v2_fetchConnections(user_eid).then(response => {
+    var connections = response.data
+    commit(types.FETCHED_CONNECTIONS, { connections })
     commit(types.FETCHING_CONNECTIONS, { fetching: false })
     return response
-  }, response => {
-    // error callback
+  }).catch(error => {
     commit(types.FETCHING_CONNECTIONS, { fetching: false })
-    return response
+    throw error
   })
 }
 
 // ----------------------------------------------------------------------- //
 
-export const createConnection = ({ commit }, { attrs }) => {
+export const v2_action_createConnection = ({ commit }, { user_eid, attrs }) => {
   commit(types.CREATING_CONNECTION, { attrs })
 
-  return api.createConnection({ attrs }).then(response => {
-    // success callback
-    var connection = response.body
+  return api.v2_createConnection(user_eid, attrs).then(response => {
+    var connection = response.data
     commit(types.CREATED_CONNECTION, { attrs, connection })
     return response
-  }, response => {
-    // error callback
-    return response
+  }).catch(error => {
+    throw error
   })
 }
 
-export const fetchConnection = ({ commit }, { eid }) => {
+export const v2_action_fetchConnection = ({ commit }, { user_eid, eid }) => {
   commit(types.FETCHING_CONNECTION, { eid, fetching: true })
 
-  return api.fetchConnection({ eid }).then(response => {
-    // success callback
-    commit(types.FETCHED_CONNECTION, response.body)
+  return api.v2_fetchConnection(user_eid, eid).then(response => {
+    var connection = response.data
+    commit(types.FETCHED_CONNECTION, connection)
     commit(types.FETCHING_CONNECTION, { eid, fetching: false })
     return response
-  }, response => {
-    // error callback
+  }).catch(error => {
     commit(types.FETCHING_CONNECTION, { eid, fetching: false })
-    return response
+    throw error
   })
 }
 
-export const updateConnection = ({ commit }, { eid, attrs }) => {
+export const v2_action_updateConnection = ({ commit }, { user_eid, eid, attrs }) => {
   // don't POST '*****' values
-  if (attrs.connection_info)
+  if (attrs.connection_info) {
     attrs.connection_info = util.sanitizeMasked(attrs.connection_info)
+  }
 
   commit(types.UPDATING_CONNECTION, { eid, attrs })
 
-  return api.updateConnection({ eid, attrs }).then(response => {
-    // success callback
-    commit(types.UPDATED_CONNECTION, { eid, attrs: response.body })
+  return api.v2_updateConnection(user_eid, eid, attrs).then(response => {
+    var attrs = response.data
+    commit(types.UPDATED_CONNECTION, { eid, attrs })
     return response
-  }, response => {
-    // error callback
-    return response
+  }).catch(error => {
+    throw error
   })
 }
 
-export const deleteConnection = ({ commit }, { attrs }) => {
+export const v2_action_deleteConnection = ({ commit }, { user_eid, eid }) => {
+  var attrs = { eid }
   commit(types.DELETING_CONNECTION, { attrs })
 
-  var eid = _.get(attrs, 'eid', '')
-  return api.deleteConnection({ eid }).then(response => {
-    // success callback
+  return api.v2_deleteConnection(user_eid, eid).then(response => {
     commit(types.DELETED_CONNECTION, { attrs })
-    return response
-  }, response => {
-    // error callback
-    return response
+  }).catch(error => {
+    throw error
   })
 }
 
 // ----------------------------------------------------------------------- //
 
-export const testConnection = ({ commit }, { eid, attrs }) => {
+export const v2_action_testConnection = ({ commit }, { user_eid, eid, attrs }) => {
   // don't POST '*****' values
-  if (attrs.connection_info)
+  if (attrs.connection_info) {
     attrs.connection_info = util.sanitizeMasked(attrs.connection_info)
+  }
 
   commit(types.TESTING_CONNECTION, { eid, testing: true })
 
-  return api.testConnection({ eid, attrs }).then(response => {
-    // success callback
-    commit(types.TESTED_CONNECTION, { eid, attrs: response.body })
+  return api.v2_testConnection(user_eid, eid, attrs).then(response => {
+    var attrs = response.data
+    commit(types.TESTED_CONNECTION, { eid, attrs })
     commit(types.TESTING_CONNECTION, { eid, testing: false })
     return response
-  }, response => {
-    // error callback
-    return response
+  }).catch(error => {
+    throw error
   })
 }
 
-export const disconnectConnection = ({ commit }, { eid, attrs }) => {
+export const v2_action_disconnectConnection = ({ commit }, { user_eid, eid, attrs }) => {
   commit(types.TESTING_CONNECTION, { eid, disconnecting: true })
 
-  return api.disconnectConnection({ eid, attrs }).then(response => {
-    // success callback
-    commit(types.DISCONNECTED_CONNECTION, { eid, attrs: response.body })
+  return api.v2_disconnectConnection(user_eid, eid, attrs).then(response => {
+    var attrs = response.data
+    commit(types.DISCONNECTED_CONNECTION, { eid, attrs })
     commit(types.TESTING_CONNECTION, { eid, disconnecting: false })
     return response
-  }, response => {
-    // error callback
-    return response
+  }).catch(error => {
+    throw error
   })
 }

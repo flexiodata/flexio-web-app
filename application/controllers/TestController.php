@@ -235,4 +235,134 @@ EOD;
 
         echo json_encode($_POST);
     }
+
+    public function problemAction() : void
+    {
+        if (!IS_TESTING())
+            return;
+
+        $this->renderRaw();
+
+        $processes = array();
+        for ($i = 0; $i < 20; ++$i)
+        {
+            $processes[] = self::runPipe(true /*true = background*/);
+        }
+
+        // block a minute, or until processes are finished
+        for ($i = 0; $i < 60; ++$i)
+        {
+            if (self::processesFinished($processes))
+                break;
+
+            sleep(1);
+        }
+
+        // return info for each of the finished processes
+        $result = array();
+        foreach ($processes as $p)
+        {
+            $info = $p->get();
+            $result[] = array(
+                'eid' => $info['eid'],
+                'started' => $info['started'],
+                'finished' => $info['finished'],
+                'duration' => $info['duration'],
+                'process_status' => $info['process_status'],
+                'process_info' => $info['process_info']
+            );
+        }
+
+        $response = @json_encode($result, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+        echo "<pre>";
+        echo $response;
+    }
+
+    private static function processesFinished($processes)
+    {
+        foreach ($processes as $p)
+        {
+            $process_info = $p->get();
+            $process_status = $process_info['process_status'];
+            if ($process_status !== 'C' && $process_status !== 'F')
+                return false;
+        }
+
+        return true;
+    }
+
+    private static function runPipe($background)
+    {
+
+$code = <<<EOT
+# basic hello world example
+def flex_handler(flex):
+    flex.end("Hello, World.")
+EOT;
+
+        $task = array(
+            "op" => "sequence",
+            "items" => array(
+                array(
+                    "op" => "execute",
+                    "lang" => "python",
+                    "code" => base64_encode($code)
+                )
+            )
+        );
+
+        $process_properties = array(
+            'task' => $task
+        );
+
+        // STEP 1: create the process
+        $process = \Flexio\Object\Process::create($process_properties);
+
+        // STEP 2: run the process
+        $engine = \Flexio\Jobs\StoredProcess::create($process);
+        $engine->run($background);
+
+        /*
+
+        // note: if not in background mode, following can be used to
+        // echo results
+
+
+        // STEP 3: return the result
+        if ($engine->hasError())
+        {
+            $error = $engine->getError();
+            \Flexio\Api\Response::sendError($error);
+            exit(0);
+        }
+
+        $stream = $engine->getStdout();
+        $stream_info = $stream->get();
+        if ($stream_info === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        $mime_type = $stream_info['mime_type'];
+        $start = 0;
+        $limit = PHP_INT_MAX;
+        $content = \Flexio\Base\Util::getStreamContents($stream, $start, $limit);
+        $response_code = $engine->getResponseCode();
+
+        if ($mime_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
+        {
+            // return content as-is
+            header('Content-Type: ' . $mime_type, true, $response_code);
+        }
+        else
+        {
+            // flexio table; return application/json in place of internal mime
+            header('Content-Type: ' . \Flexio\Base\ContentType::JSON, true, $response_code);
+            $content = json_encode($content, JSON_UNESCAPED_SLASHES);
+        }
+
+        echo $content;
+        */
+
+
+        return $process;
+    }
 }

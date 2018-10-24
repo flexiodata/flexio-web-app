@@ -233,14 +233,32 @@ class Admin
         $result = array();
         foreach ($processes as $p)
         {
-            $result[] = $p->get();
+            $process_info = $p->get();
+
+            $process_info_subset = array();
+            $process_info_subset['eid'] = $process_info['eid'];
+            $process_info_subset['eid_type'] = $process_info['eid_type'];
+            $process_info_subset['eid_status'] = $process_info['eid_status'];
+            $process_info_subset['parent'] = $process_info['parent'] ?? null;
+            $process_info_subset['process_mode'] = $process_info['process_mode'];
+            $process_info_subset['triggered_by'] = $process_info['triggered_by'];
+            $process_info_subset['started_by'] = $process_info['started_by'];
+            $process_info_subset['started'] = $process_info['started'];
+            $process_info_subset['finished'] = $process_info['finished'];
+            $process_info_subset['duration'] = $process_info['duration'];
+            $process_info_subset['process_status'] = $process_info['process_status'];
+            $process_info_subset['owned_by'] = $process_info['owned_by'];
+            $process_info_subset['created'] = $process_info['created'];
+            $process_info_subset['updated'] = $process_info['updated'];
+
+            $result[] = $process_info_subset;
         }
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function process_summary(\Flexio\Api\Request $request) : void
+    public static function process_summary_byuser(\Flexio\Api\Request $request) : void
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -268,177 +286,11 @@ class Admin
 
         $filter = array('eid_status' => \Model::STATUS_AVAILABLE);
         $filter = array_merge($validated_query_params, $filter); // give precedence to fixed status
-        $stats = \Flexio\Object\Process::summary($filter);
+        $stats = \Flexio\Object\Process::summary_another($filter);
 
-        $result = array();
-        foreach ($stats as $s)
-        {
-            $item = array();
-
-            $item['user'] = array();
-            $item['user']['eid'] = '';
-            $item['user']['eid_type'] = '';
-            $item['user']['username'] = '';
-            $item['user']['first_name'] = '';
-            $item['user']['last_name'] = '';
-
-            $item['pipe'] = array();
-            $item['pipe']['eid'] = '';
-            $item['pipe']['eid_type'] = '';
-            $item['pipe']['name'] = 'Anonymous';
-            $item['pipe']['description'] = 'Anonymous Process';
-            $item['pipe']['created'] = '';
-
-            $item['total_count'] = $s['total_count'];
-            $item['total_time'] = $s['total_time'];
-            $item['average_time'] = $s['average_time'];
-
-            $user_info = array();
-            try
-            {
-                $user = \Flexio\Object\User::load($s['user_eid']);
-                if ($user->getStatus() !== \Model::STATUS_DELETED)
-                {
-                    $user_info = $user->get();
-                    $item['user']['eid'] = $user_info['eid'];
-                    $item['user']['eid_type'] = $user_info['eid_type'];
-                    $item['user']['username'] = $user_info['username'];
-                    $item['user']['first_name'] = $user_info['first_name'];
-                    $item['user']['last_name'] = $user_info['last_name'];
-                }
-            }
-            catch (\Flexio\Base\Exception $e)
-            {
-            }
-
-            $pipe_info = array();
-            try
-            {
-                $pipe = \Flexio\Object\Pipe::load($s['pipe_eid']);
-                if ($pipe->getStatus() !== \Model::STATUS_DELETED)
-                {
-                    $pipe_info = $pipe->get();
-                    $item['pipe'] = array();
-                    $item['pipe']['eid'] = $pipe_info['eid'];
-                    $item['pipe']['eid_type'] = $pipe_info['eid_type'];
-                    $item['pipe']['name'] = $pipe_info['name'];
-                    $item['pipe']['description'] = $pipe_info['description'];
-                    $item['pipe']['created'] = $pipe_info['created'];
-                }
-                else
-                {
-                }
-            }
-            catch (\Flexio\Base\Exception $e)
-            {
-            }
-
-            $result[] = $item;
-        }
-
+        $results = $stats;
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api\Response::sendContent($result);
-    }
-
-    public static function process_summary_daily(\Flexio\Api\Request $request) : void
-    {
-        $query_params = $request->getQueryParams();
-        $requesting_user_eid = $request->getRequestingUser();
-        $owner_user_eid = $request->getOwnerFromUrl();
-
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($query_params, array(
-                'owned_by'    => array('type' => 'eid',     'required' => false),
-                'start'       => array('type' => 'integer', 'required' => false),
-                'tail'        => array('type' => 'integer', 'required' => false),
-                'limit'       => array('type' => 'integer', 'required' => false),
-                'created_min' => array('type' => 'date',    'required' => false),
-                'created_max' => array('type' => 'date',    'required' => false)
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-
-        $validated_query_params = $validator->getParams();
-
-        // only allow users from flex.io to get this info
-        $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
-        if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($requesting_user->isAdministrator() !== true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
-        $filter = array('eid_status' => \Model::STATUS_AVAILABLE);
-        $filter = array_merge($validated_query_params, $filter); // give precedence to fixed status
-        $stats = \Flexio\Object\Process::summary_daily($filter);
-
-        $result = array();
-        foreach ($stats as $s)
-        {
-            $item = array();
-
-            $item['user'] = array();
-            $item['user']['eid'] = '';
-            $item['user']['eid_type'] = '';
-            $item['user']['username'] = '';
-            $item['user']['first_name'] = '';
-            $item['user']['last_name'] = '';
-
-            $item['pipe'] = array();
-            $item['pipe']['eid'] = '';
-            $item['pipe']['eid_type'] = '';
-            $item['pipe']['name'] = 'Anonymous';
-            $item['pipe']['description'] = 'Anonymous Process';
-            $item['pipe']['created'] = '';
-
-            $item['process_created'] = $s['created'];
-            $item['total_count'] = $s['total_count'];
-            $item['total_time'] = $s['total_time'];
-            $item['average_time'] = $s['average_time'];
-
-            $user_info = array();
-            try
-            {
-                $user = \Flexio\Object\User::load($s['user_eid']);
-                if ($user->getStatus() !== \Model::STATUS_DELETED)
-                {
-                    $user_info = $user->get();
-                    $item['user']['eid'] = $user_info['eid'];
-                    $item['user']['eid_type'] = $user_info['eid_type'];
-                    $item['user']['username'] = $user_info['username'];
-                    $item['user']['first_name'] = $user_info['first_name'];
-                    $item['user']['last_name'] = $user_info['last_name'];
-                }
-            }
-            catch (\Flexio\Base\Exception $e)
-            {
-            }
-
-            $pipe_info = array();
-            try
-            {
-                $pipe = \Flexio\Object\Pipe::load($s['pipe_eid']);
-                if ($pipe->getStatus() !== \Model::STATUS_DELETED)
-                {
-                    $pipe_info = $pipe->get();
-                    $item['pipe'] = array();
-                    $item['pipe']['eid'] = $pipe_info['eid'];
-                    $item['pipe']['eid_type'] = $pipe_info['eid_type'];
-                    $item['pipe']['name'] = $pipe_info['name'];
-                    $item['pipe']['description'] = $pipe_info['description'];
-                    $item['pipe']['created'] = $pipe_info['created'];
-                }
-                else
-                {
-                }
-            }
-            catch (\Flexio\Base\Exception $e)
-            {
-            }
-
-            $result[] = $item;
-        }
-
-        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($results);
     }
 
     public static function email(\Flexio\Api\Request $request) : void

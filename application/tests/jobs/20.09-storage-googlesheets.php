@@ -23,7 +23,7 @@ class Test
         // SETUP
         $process_owner = \Flexio\Tests\Util::getTestStorageOwner();
         $files = \Flexio\Tests\Util::getTestDataFolder("text");
-        $folderpath = "/" . \Flexio\Tests\Base::STORAGE_GOOGLESHEETS . "/" . 'job-tests-' . \Flexio\Tests\Util::getTimestampName() . "-";
+        $folderpath = \Flexio\Tests\Base::STORAGE_GOOGLESHEETS . ":/job-tests-" . \Flexio\Tests\Util::getTimestampName() . "-";
 
 /*
         // TEST: Write/Read Job; Basic Copy
@@ -44,11 +44,11 @@ class Test
                 continue;
             if (strpos($filename, 'content') === false)
                 continue;
-    
+
             // google sheets cannot stored null values
             if (strpos($filename, 'content-null') !== false)
                 continue;
-            
+
             $idx++;
 
             //if ($idx > 3)

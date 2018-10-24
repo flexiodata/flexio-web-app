@@ -188,11 +188,11 @@ class Email extends \Flexio\Jobs\Base
         try
         {
             $stream = $vfs->open($attachment['file']);
+
             if (!$stream)
             {
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
             }
-
 
             $reader = $stream->getReader();
             $f = fopen($fname, "wb");

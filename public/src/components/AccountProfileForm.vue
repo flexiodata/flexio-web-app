@@ -76,7 +76,7 @@
     <div class="mt3">
       <el-button
         type="primary"
-        class="ttu b"
+        class="ttu fw6"
         @click="trySaveChanges"
       >
         Update profile
@@ -164,8 +164,9 @@
       },
       trySaveChanges() {
         this.$refs.form.validate((valid) => {
-          if (!valid)
+          if (!valid) {
             return
+          }
 
           var user = this.getActiveUser()
           var old_username = _.get(user, 'username', ' ')
@@ -185,23 +186,20 @@
 
           var eid = this.active_user_eid
           var attrs = _.pick(this.edit_info, ['first_name', 'last_name', 'username'])
-          this.$store.dispatch('updateUser', { eid, attrs }).then(response => {
-            if (response.ok)
-            {
-              this.show_success = true
-              setTimeout(() => { this.show_success = false }, 4000)
-            }
-             else
-            {
-              this.show_error = true
-            }
+          this.$store.dispatch('v2_action_updateUser', { eid, attrs }).then(response => {
+            this.show_success = true
+            setTimeout(() => { this.show_success = false }, 4000)
+          }).catch(error => {
+            this.show_error = true
           })
         })
       },
       openConfirmModal() {
         this.$confirm('Changing your username can have unintended effects. Are you sure you want to change your username?', 'Really change your username?', {
-          confirmButtonText: 'CHANGE MY USERNAME',
-          cancelButtonText: 'CANCEL',
+          confirmButtonClass: 'ttu fw6',
+          cancelButtonClass: 'ttu fw6',
+          confirmButtonText: 'Change my username',
+          cancelButtonText: 'Cancel',
           type: 'warning'
         }).then(() => {
           this.saveChanges()

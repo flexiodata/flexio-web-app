@@ -109,7 +109,7 @@
         >
           <el-button
             size="mini"
-            class="w-100 ttu b"
+            class="w-100 ttu fw6"
             @click="addTime"
           >
             Add time
@@ -120,13 +120,13 @@
 
     <div class="mt4 w-100 flex flex-row justify-end" v-if="showFooter">
       <el-button
-        class="ttu b"
+        class="ttu fw6"
         @click="onCancel"
       >
         Cancel
       </el-button>
       <el-button
-        class="ttu b"
+        class="ttu fw6"
         type="primary"
         @click="onSubmit"
       >

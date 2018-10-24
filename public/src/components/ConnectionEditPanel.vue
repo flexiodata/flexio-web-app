@@ -10,10 +10,36 @@
         :class="showTitle ? 'mt2 pt2 bt b--black-10' : ''"
         v-if="has_connection"
       >
-        <ServiceIcon :type="ctype" class="flex-none dib v-top br2 square-4" />
-        <div class="flex-fill flex flex-column ml2">
+        <ServiceIcon class="flex-none mt1 br2 square-5" :type="ctype" :url="url" :empty-cls="''" />
+        <div class="flex-fill flex flex-column" style="margin-left: 12px">
           <div class="f4 fw6 lh-title">{{service_name}}</div>
           <div class="f6 fw4 mt1">{{service_description}}</div>
+          <div class="flex flex-row items-center">
+            <el-tag
+              class="hint--top"
+              style="margin-top: 6px"
+              size="small"
+              aria-label="Storage connection"
+              v-if="is_storage"
+            >
+              <div class="flex flex-row items-center cursor-default">
+                <i class="db material-icons" style="font-size: 14px">layers</i>
+                <span class="f8" style="margin-left: 3px">Storage</span>
+              </div>
+            </el-tag>
+            <el-tag
+              class="hint--top"
+              style="margin-top: 6px"
+              size="small"
+              aria-label="Email connection"
+              v-if="is_email"
+            >
+              <div class="flex flex-row items-center cursor-default">
+                <i class="db material-icons" style="font-size: 14px">email</i>
+                <span class="f8" style="margin-left: 3px">Email</span>
+              </div>
+            </el-tag>
+          </div>
         </div>
         <div v-if="showSteps && mode != 'edit'">
           <div
@@ -128,13 +154,13 @@
 
     <div class="mt4 w-100 flex flex-row justify-end" v-show="showFooter && has_connection">
       <el-button
-        class="ttu b"
+        class="ttu fw6"
         @click="$emit('cancel')"
       >
         Cancel
       </el-button>
       <el-button
-        class="ttu b"
+        class="ttu fw6"
         type="primary"
         @click="submit"
         :disabled="has_errors"
@@ -240,6 +266,7 @@
     },
     data() {
       return {
+        orig_connection: _.assign({}, defaultAttrs(), this.connection),
         edit_connection: _.assign({}, defaultAttrs(), this.connection),
         rules: {
           name: [
@@ -263,6 +290,9 @@
       cstatus() {
         return _.get(this, 'edit_connection.connection_status', '')
       },
+      url() {
+        return _.get(this, 'orig_connection.connection_info.url', '')
+      },
       is_connected() {
         return this.cstatus == CONNECTION_STATUS_AVAILABLE
       },
@@ -270,18 +300,13 @@
         return this.ctype == ctypes.CONNECTION_TYPE_HTTP
       },
       is_oauth() {
-        switch (this.ctype)
-        {
-          case ctypes.CONNECTION_TYPE_BOX:
-          case ctypes.CONNECTION_TYPE_DROPBOX:
-          case ctypes.CONNECTION_TYPE_GITHUB:
-          case ctypes.CONNECTION_TYPE_GMAIL:
-          case ctypes.CONNECTION_TYPE_GOOGLECLOUDSTORAGE:
-          case ctypes.CONNECTION_TYPE_GOOGLEDRIVE:
-          case ctypes.CONNECTION_TYPE_GOOGLESHEETS:
-            return true
-        }
-        return false
+        return this.$_Connection_isOauth(this.ctype)
+      },
+      is_storage() {
+        return this.$_Connection_isStorage(this.ctype)
+      },
+      is_email() {
+        return this.$_Connection_isEmail(this.ctype)
       },
       service_name() {
         return _.result(this, 'cinfo.service_name', '')
@@ -371,6 +396,7 @@
         })
       },
       reset(attrs) {
+        this.orig_connection = _.assign({}, defaultAttrs(), attrs)
         this.edit_connection = _.assign({}, defaultAttrs(), attrs)
       },
       createPendingConnection(item) {
@@ -380,21 +406,16 @@
           connection_type: item.connection_type
         })
 
-        this.$store.dispatch('createConnection', { attrs }).then(response => {
-          if (response.ok)
-          {
-            var connection = _.cloneDeep(response.body)
-            var service_slug = util.slugify(item.service_name)
+        this.$store.dispatch('v2_action_createConnection', { attrs }).then(response => {
+          var connection = _.cloneDeep(response.data)
+          var service_slug = util.slugify(item.service_name)
 
-            // create a default alias
-            connection.alias = 'my-' + service_slug
+          // create a default alias
+          connection.alias = 'my-' + service_slug
 
-            this.updateConnection(connection)
-          }
-           else
-          {
-            // TODO: add error handling
-          }
+          this.updateConnection(connection)
+        }).catch(error => {
+          // TODO: add error handling?
         })
       },
       formValidateAlias(rule, value, callback) {
@@ -430,7 +451,8 @@
 
         // we have to do this to force watcher validation
         this.$nextTick(() => {
-          this.edit_connection = _.assign({}, connection)
+          this.orig_connection = _.cloneDeep(connection)
+          this.edit_connection = _.cloneDeep(connection)
         })
       },
       updateConnection(attrs) {

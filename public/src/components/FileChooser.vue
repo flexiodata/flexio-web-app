@@ -23,8 +23,9 @@
           :selected-item.sync="active_connection"
           :items="connections"
           :item-options="{
-            'item-cls': 'min-w5 pa3 pr2 darken-05',
-            'item-style': 'margin: 0.125rem',
+            'item-cls': 'min-w5 pa3 pr2 ba b--white bg-white hover-bg-nearer-white',
+            'item-style': 'margin: 3px 3px 3px 0',
+            'selected-cls': 'relative b--black-10 bg-nearer-white',
             'show-dropdown': false,
             'show-identifier': true,
             'show-url': false
@@ -32,7 +33,7 @@
           @item-activate="onConnectionActivate"
         />
       </div>
-      <div class="flex-fill overflow-y-auto">
+      <div class="flex-fill overflow-y-auto" :class="{ 'ml2': showConnectionList }">
         <FileChooserList
           ref="file-chooser"
           :path="connection_path"
@@ -40,13 +41,6 @@
           @selection-change="updateItems"
           v-bind="$attrs"
           v-if="file_chooser_mode == 'filechooser'"
-        />
-        <UrlInputList
-          ref="url-input-list"
-          class="ba b--black-10 pa1"
-          style="min-height: 16rem; max-height: 16rem"
-          @selection-change="updateItems"
-          v-if="file_chooser_mode == 'textentry'"
         />
       </div>
     </div>
@@ -64,7 +58,6 @@
   import FileExplorerBar from './FileExplorerBar.vue'
   import FileChooserList from './FileChooserList.vue'
   import AbstractList from './AbstractList.vue'
-  import UrlInputList from './UrlInputList.vue'
   import MixinConnection from './mixins/connection'
 
   const LOCAL_STORAGE_ITEM = {
@@ -91,8 +84,7 @@
     components: {
       FileExplorerBar,
       FileChooserList,
-      AbstractList,
-      UrlInputList
+      AbstractList
     },
     watch: {
       connection: {
@@ -135,21 +127,26 @@
         return _.find(connections, { connection_type: this.ctype })
       },
       submit() {
+        /*
         var url_list = this.$refs['url-input-list']
         if (!_.isNil(url_list))
           url_list.finishEdit()
+        */
 
         this.$emit('submit', this.items)
       },
       reset(attrs) {
-        this.connection_path = '/'
+        this.active_connection = {}
+        this.connection_path = this.getConnectionBasePath()
         this.items = []
         this.$emit('update:selectedItems', [])
       },
       onHide() {
+        /*
         var url_list = this.$refs['url-input-list']
         if (!_.isNil(url_list))
           url_list.reset()
+        */
 
         this.reset()
       },
@@ -167,11 +164,11 @@
         // Flex.io connection now has an alias of 'flex'... keeping this for reference for a bit...
         /*
         if (_.get(this.active_connection, 'connection_type', '') == CONNECTION_TYPE_FLEX) {
-          return '/flex'
+          return 'flex:/'
         }
         */
 
-        return '/' + this.getConnectionIdentifier()
+        return this.getConnectionIdentifier() + ':/'
       },
       initFromConnection(connection) {
         // do a hard refresh of the file list

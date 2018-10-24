@@ -21,8 +21,8 @@
         v-if="!showSaveCancel"
       >
         <el-button
-          class="ttu b"
-          style="min-width: 5rem; margin: 0 1rem"
+          class="ttu fw6"
+          style="min-width: 5rem; margin: 0 0.75rem"
           type="primary"
           size="small"
           data-tour-step="pipe-onboarding-3"
@@ -36,7 +36,7 @@
           class="flex flex-row items-center justify-center"
           style="padding: 5px 5px 6px 10px; border-radius: 3px"
         >
-          <span class="ttu f6 fw6">Your pipe is</span>
+          <span class="f6 ttu fw6">Your pipe is</span>
           <LabelSwitch
             class="dib ml2 hint--bottom-left"
             active-color="#13ce66"
@@ -53,14 +53,14 @@
         v-if="showSaveCancel"
       >
         <el-button
-          class="ttu b"
+          class="ttu fw6"
           size="small"
           @click="$emit('cancel-click')"
         >
           Cancel
         </el-button>
         <el-button
-          class="ttu b"
+          class="ttu fw6"
           size="small"
           type="primary"
           @click="$emit('save-click')"

@@ -50,6 +50,7 @@ class Pipe
                 'schedule'        => array('type' => 'object', 'required' => false),
                 'deploy_mode'     => array('type' => 'string', 'required' => false),
                 'deploy_schedule' => array('type' => 'string', 'required' => false),
+                'deploy_email'    => array('type' => 'string', 'required' => false),
                 'deploy_api'      => array('type' => 'string', 'required' => false),
                 'deploy_ui'       => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
@@ -213,6 +214,7 @@ class Pipe
                 'schedule'        => array('type' => 'object', 'required' => false),
                 'deploy_mode'     => array('type' => 'string', 'required' => false),
                 'deploy_schedule' => array('type' => 'string', 'required' => false),
+                'deploy_email'    => array('type' => 'string', 'required' => false),
                 'deploy_api'      => array('type' => 'string', 'required' => false),
                 'deploy_ui'       => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
@@ -334,11 +336,29 @@ class Pipe
         if ($pipe->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_EXECUTE) === false)
              throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        // create a new process
+        // if the process is created with a request from an api token, it's
+        // triggered with an api; if there's no api token, it's triggered
+        // from a web session, in which case it's triggered by the UI;
+        // TODO: this will work until we allow processes to be created from
+        // public pipes that don't require a token
+        $triggered_by = strlen($request->getToken()) > 0 ? \Model::PROCESS_TRIGGERED_API : \Model::PROCESS_TRIGGERED_INTERFACE;
+
+        // get the pipe properties
         $pipe_properties = $pipe->get();
+
+        // only allow pipes to be triggered from an API call if the pipe is deployed
+        // and the api deployment option is activated
+        $api_trigger_active = ($pipe_properties['deploy_mode'] === \Model::PIPE_DEPLOY_MODE_RUN &&
+                               $pipe_properties['deploy_api'] === \Model::PIPE_DEPLOY_STATUS_ACTIVE);
+        if ($triggered_by === \Model::PROCESS_TRIGGERED_API && $api_trigger_active === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+        // create a new process
         $process_properties = array(
             'parent_eid' => $pipe_properties['eid'],
+            'pipe_info' => $pipe_properties,
             'task' => $pipe_properties['task'],
+            'triggered_by' => $triggered_by,
             'owned_by' => $pipe_properties['owned_by']['eid'], // same as $owner_user_eid
             'created_by' => $requesting_user_eid
         );

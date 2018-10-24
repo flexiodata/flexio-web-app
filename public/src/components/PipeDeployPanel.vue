@@ -10,7 +10,10 @@
         <el-checkbox :label="item.key">{{item.label}}</el-checkbox>
 
         <div class="f8 fw6 lh-copy" style="margin-left: 24px">
-          <div v-if="item.key == 'deploy_schedule' && is_schedule_deployed">
+          <div
+            class="ph3 mt2"
+            v-if="item.key == 'deploy_schedule' && is_schedule_deployed"
+          >
             <span style="margin-right: 6px">{{schedule_str}}</span>
             <el-button
               type="text"
@@ -28,100 +31,97 @@
             </el-button>
           </div>
 
-          <div v-if="item.key == 'deploy_api' && is_api_deployed">
-            <div class="mt2">
+          <div
+            class="ph3 mt3"
+            v-if="item.key == 'deploy_api' && is_api_deployed"
+          >
+            <div>
+              <div class="ttu fw6 moon-gray">API Endpoint</div>
               <div>
-                <div class="ttu fw6 moon-gray">API Endpoint</div>
-                <div>
-                  <span style="margin-right: 6px">{{api_endpoint_url}}</span>
-                  <el-button
-                    type="text"
-                    size="tiny"
-                    style="padding: 0; border: 0"
-                    @click="show_properties = true"
-                  >
-                    Edit...
-                  </el-button>
-                  <el-button
-                    type="plain"
-                    class="hint--top"
-                    aria-label="Copy to Clipboard"
-                    size="tiny"
-                    :data-clipboard-text="api_endpoint_url"
-                  >
-                    Copy
-                  </el-button>
-                </div>
+                <span style="margin-right: 6px">{{api_endpoint_url}}</span>
+                <el-button
+                  type="text"
+                  size="tiny"
+                  style="padding: 0; border: 0"
+                  @click="show_properties = true"
+                >
+                  Edit...
+                </el-button>
+                <el-button
+                  type="plain"
+                  class="hint--top"
+                  aria-label="Copy to Clipboard"
+                  size="tiny"
+                  :data-clipboard-text="api_endpoint_url"
+                >
+                  Copy
+                </el-button>
               </div>
+            </div>
 
-              <div>
-                <div class="mt2 ttu fw6 moon-gray">API Key</div>
-                <div v-if="api_key.length > 0">
-                  <span style="margin-right: 6px">{{api_key}}</span>
-                  <el-button
-                    type="plain"
-                    class="hint--top"
-                    aria-label="Copy to Clipboard"
-                    size="tiny"
-                    :data-clipboard-text="api_endpoint_url"
-                  >
-                    Copy
-                  </el-button>
-                </div>
-                <div v-else>
-                  <em class="fw4 moon-gray" style="margin-right: 6px">(No API key to show)</em>
-                  <el-button
-                    type="plain"
-                    size="tiny"
-                    @click="generateApiKey"
-                  >
-                    Generate API Key
-                  </el-button>
-                </div>
-              </div>
-
+            <div>
+              <div class="mt2 ttu fw6 moon-gray">API Key</div>
               <div v-if="api_key.length > 0">
-                <div class="mt2 ttu fw6 moon-gray">REST</div>
-                <div>
-                  <span style="margin-right: 6px">{{example_http}}</span>
-                  <el-button
-                    type="plain"
-                    class="hint--top"
-                    aria-label="Copy to Clipboard"
-                    size="tiny"
-                    :data-clipboard-text="example_http"
-                  >
-                    Copy
-                  </el-button>
-                </div>
-                <div class="mt2 ttu fw6 moon-gray">cURL</div>
-                <div>
-                  <span style="margin-right: 6px">{{example_curl}}</span>
-                  <el-button
-                    type="plain"
-                    class="hint--top"
-                    aria-label="Copy to Clipboard"
-                    size="tiny"
-                    :data-clipboard-text="example_curl"
-                  >
-                    Copy
-                  </el-button>
-                </div>
+                <span style="margin-right: 6px">{{api_key}}</span>
+                <el-button
+                  type="plain"
+                  class="hint--top"
+                  aria-label="Copy to Clipboard"
+                  size="tiny"
+                  :data-clipboard-text="api_endpoint_url"
+                >
+                  Copy
+                </el-button>
+              </div>
+              <div v-else>
+                <em class="fw4 moon-gray" style="margin-right: 6px">(No API key to show)</em>
+                <el-button
+                  type="plain"
+                  size="tiny"
+                  @click="generateApiKey"
+                >
+                  Generate API Key
+                </el-button>
+              </div>
+            </div>
+
+            <div v-if="api_key.length > 0">
+              <div class="mt2 ttu fw6 moon-gray">REST</div>
+              <div>
+                <span style="margin-right: 6px">{{example_http}}</span>
+                <el-button
+                  type="plain"
+                  class="hint--top"
+                  aria-label="Copy to Clipboard"
+                  size="tiny"
+                  :data-clipboard-text="example_http"
+                >
+                  Copy
+                </el-button>
+              </div>
+              <div class="mt2 ttu fw6 moon-gray">cURL</div>
+              <div>
+                <span style="margin-right: 6px">{{example_curl}}</span>
+                <el-button
+                  type="plain"
+                  class="hint--top"
+                  aria-label="Copy to Clipboard"
+                  size="tiny"
+                  :data-clipboard-text="example_curl"
+                >
+                  Copy
+                </el-button>
               </div>
             </div>
           </div>
 
-          <div v-if="item.key == 'deploy_ui' && is_web_deployed">
+          <div
+            class="ph3 mt3"
+            v-if="item.key == 'deploy_ui' && is_web_deployed"
+          >
+            <div class="mt2 ttu fw6 moon-gray">Runtime URL</div>
             <div>
               <span style="margin-right: 6px">{{runtime_url}}</span>
-              <el-button
-                type="text"
-                size="tiny"
-                style="padding: 0; border: 0"
-                @click="show_runtime_configure = true"
-              >
-                Edit...
-              </el-button>
               <el-button
                 type="plain"
                 class="hint--top"
@@ -132,11 +132,47 @@
                 Copy
               </el-button>
             </div>
+
+              <div class="mv1">
+                <el-button
+                  class="ttu fw6"
+                  type="primary"
+                  size="tiny"
+                  @click="show_runtime_configure = true"
+                >
+                  Edit web interface
+                </el-button>
+              </div>
+
+          </div>
+
+          <div
+            class="ph3 mt2"
+            v-if="item.key == 'deploy_email' && is_email_deployed"
+          >
+            <span style="margin-right: 6px">{{email_trigger}}</span>
+            <el-button
+              type="text"
+              size="tiny"
+              style="padding: 0; border: 0"
+              @click="show_properties = true"
+            >
+              Edit...
+            </el-button>
+            <el-button
+              type="plain"
+              class="hint--top"
+              aria-label="Copy to Clipboard"
+              size="tiny"
+              :data-clipboard-text="email_trigger"
+            >
+              Copy
+            </el-button>
           </div>
         </div>
       </div>
     </el-checkbox-group>
-    <div class="mt3 pv3 ph4 tc bg-nearer-white">
+    <div class="mt3 pv3 ph4 tc bg-nearer-white deploy-on-off-panel">
       <h4 class="fw6">
         <transition name="el-zoom-in-center" mode="out-in">
           <span v-bind:key="is_deployed">
@@ -181,6 +217,7 @@
         'pipe_identifier'
         'deploy_mode',
         'deploy_schedule',
+        'deploy_email',
         'deploy_api',
         'deploy_ui',
         'schedule'
@@ -217,8 +254,12 @@
             label: 'Run using an API endpoint',
           },
           {
+            key: 'deploy_email',
+            label: 'Trigger from an email',
+          },
+          {
             key: 'deploy_ui',
-            label: 'Run using a Flex.io Web Interface',
+            label: 'Run from a Flex.io Web Interface',
           }
         ]
       }
@@ -283,6 +324,9 @@
       is_web_deployed() {
         return _.includes(this.checklist, 'deploy_ui')
       },
+      is_email_deployed() {
+        return _.includes(this.checklist, 'deploy_email')
+      },
       schedule_str() {
         var schedule = _.get(this.pipe, 'schedule')
         return pipe_util.getDeployScheduleStr(schedule)
@@ -290,6 +334,11 @@
       api_endpoint_url() {
         var identifier = pipe_util.getIdentifier(this.pipe)
         return pipe_util.getDeployApiUrl(identifier)
+      },
+      email_trigger() {
+        var current_username = _.get(this.getActiveUser(), 'username').toLowerCase()
+        var pipe_identifier = pipe_util.getIdentifier(this.pipe)
+        return `${current_username}|${pipe_identifier}@pipes.flex.io`
       },
       runtime_url() {
         var eid = _.get(this.pipe, 'eid', '')
@@ -304,11 +353,20 @@
     },
     methods: {
       ...mapGetters([
+        'getActiveUser',
         'getFirstToken'
       ]),
       generateApiKey() {
-        this.$store.dispatch('createToken')
+        this.$store.dispatch('v2_action_createToken', {}).catch(error => {
+          // TODO: add error handling?
+        })
       }
     }
   }
 </script>
+
+<style lang="stylus" scoped>
+  .deploy-on-off-panel
+    border: 1px solid rgba(64, 158, 255, 0.14)
+    background-color: rgba(64, 158, 255, 0.07)
+</style>

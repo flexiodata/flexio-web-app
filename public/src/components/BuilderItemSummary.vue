@@ -11,7 +11,7 @@
       <p class="mv4 f4">Your pipe is configured and ready to be run.</p>
       <div class="mt4">
         <el-button
-          class="ttu b"
+          class="ttu fw6"
           type="primary"
           size="large"
           @click="openPipe"

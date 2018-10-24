@@ -1,9 +1,9 @@
 <template>
-  <article class="pa1 ma1 ba b--black-05" :class="cls">
+  <article class="pv1 ph2" style="" :class="cls">
     <div class="flex flex-row items-center pointer na1 pa1" @click="toggleDetails">
       <span class="black-30 mr1">
         <i
-          class="material-icons db v-mid"
+          class="material-icons db v-mid trans-a"
           :class="{ 'rotate-90': !show_details }"
           v-if="has_details"
         >chevron_right</i>
@@ -18,33 +18,38 @@
       <span class="f6 fw6 mr2">{{item.id}}</span>
       <div class="flex-fill">&nbsp;</div>
       <div class="tr pl3 f7 fw6">{{item.message}}</div>
-      <div class="f4 pl3 pr1 tr monospace ttu b dark-green" v-if="has_details && is_passed===true">Passed</div>
-      <div class="f4 pl3 pr1 tr monospace ttu b dark-red" v-if="has_details && !is_passed===true">Failed</div>
-      <div class="f4 pl3 pr1 tr monospace ttu b yellow" v-if="is_xhr_ok===false">&nbsp;Error</div>
+      <div class="f6 pl3 pr1 tr ttu b" style="width: 5rem">
+        <div class="dark-green" v-if="has_details && is_passed===true">Passed</div>
+        <div class="dark-red" v-if="has_details && !is_passed===true">Failed</div>
+        <div class="yellow" v-if="is_xhr_error">&nbsp;Error</div>
+      </div>
     </div>
-    <div class="pt2 pl2 f6" v-if="is_xhr_ok===false">
-      <pre class="ma0">{{item.error_text}}</pre>
-    </div>
-    <div class="pt1" v-if="item.details && item.details.length > 0" v-show="!show_details">
+    <div class="pt1" style="margin-left: 24px" v-if="is_xhr_error">
       <table class="w-100 css-test-table">
-        <tr :class="!detail.passed ? 'bg-black-05' : ''" v-for="(detail, index) in item.details">
+        <tr>
+          <td class="v-top f6 b w3">&nbsp;</td>
+          <td class="v-top f6"><pre class="ma0">{{item.error_text}}</pre></td>
+        </tr>
+      </table>
+    </div>
+    <div class="pt1" style="margin-left: 24px" v-if="item.details && item.details.length > 0" v-show="!show_details">
+      <table class="w-100 css-test-table">
+        <tr :class="!detail.passed ? '' : ''" v-for="(detail, index) in item.details">
           <td class="v-top f6 b w3">{{detail.name}}</td>
           <td class="v-top f6 min-w6 mw6">
             <div>{{detail.description}}</div>
             <div class="flex flex-row mr3" style="margin: 2px 0; max-height: 8rem" v-if="!detail.passed && detail.message && detail.message.length > 0">
-              <div class="f6 monospace overflow-auto ba b--black-40 bg-white-60" style="padding: 2px 3px">
+              <div class="f8 code overflow-auto ba b--black-20 bg-white-60" style="padding: 3px">
                 {{detail.message}}
               </div>
             </div>
           </td>
           <td class="v-top f7 tr">
-            <div class="dib">
-              <div class="flex flex-row items-center nowrap ttu white bg-dark-green" style="padding: 1px 4px 1px 2px" v-if="detail.passed">
-                <i class="material-icons f7" style="margin-right: 2px">check</i>
+            <div class="dib pr1">
+              <div class="flex flex-row items-center nowrap ttu white bg-dark-green" style="padding: 1px 5px" v-if="detail.passed">
                 <span class="f6 monospace">Passed</span>
               </div>
-              <div class="flex flex-row items-center nowrap ttu white bg-dark-red" style="padding: 1px 4px 1px 2px" v-if="!detail.passed">
-                <i class="material-icons f7" style="margin-right: 2px">close</i>
+              <div class="flex flex-row items-center nowrap ttu white bg-dark-red" style="padding: 1px 5px" v-if="!detail.passed">
                 <span class="f6 monospace">Failed</span>
               </div>
             </div>
@@ -80,15 +85,14 @@
       is_passed() {
         return this.item.passed
       },
-      is_xhr_ok() {
-        return _.get(this.item, 'xhr.ok', true)
+      is_xhr_error() {
+        return _.get(this.item, 'xhr_error', false)
       },
       cls() {
         return {
-          'css-test-error': this.is_xhr_ok === false,
+          'css-test-error': this.is_xhr_error === true,
           'css-test-success': this.is_passed === true,
-          'css-test-failure': this.is_passed === false,
-          'bg-nearer-white': true
+          'css-test-failure': this.is_passed === false
         }
       }
     },
@@ -114,5 +118,5 @@
     tr:hover
       background-color: rgba(0,0,0,0.1)
     td
-      padding: 0 0 0 3px;
+      padding: 0 0 0 3px
 </style>

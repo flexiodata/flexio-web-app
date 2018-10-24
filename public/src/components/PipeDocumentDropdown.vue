@@ -6,7 +6,7 @@
     v-model="visible"
   >
     <el-button
-      class="ttu b"
+      class="ttu fw6"
       type="plain"
       size="tiny"
       slot="reference"

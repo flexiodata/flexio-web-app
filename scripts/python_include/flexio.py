@@ -36,7 +36,7 @@ class CallProxy(object):
             "id": call_id
         }
 
-        moniker = '~' + call_id + '/bin.b64:'
+        moniker = '~' + call_id + '/'
         self.convert_binary_to_base64(payload['params'], moniker)
 
         self.socket.send(json.dumps(payload).encode())
@@ -69,7 +69,9 @@ class CallProxy(object):
             for key, value in var.items():
                 var[key] = self.convert_binary_to_base64(var[key], moniker)
         elif isinstance(var, (bytes, bytearray)):
-            return moniker + base64.b64encode(var).decode()
+            return moniker + 'bin.b64:' + base64.b64encode(var).decode()
+        elif isinstance(var, object) and getattr(var, '_handle', None) is not None:
+            return moniker + 'stream:' + str(var._handle)
         return var
 
     def convert_base64_to_binary(self, var, moniker):
@@ -80,8 +82,8 @@ class CallProxy(object):
         elif isinstance(var, dict):
             for key, value in var.items():
                 var[key] = self.convert_base64_to_binary(var[key], moniker)
-        elif isinstance(var, str) and var[:moniker_len] == moniker:
-            return base64.b64decode(var[moniker_len:].encode())
+        elif isinstance(var, str) and var[:moniker_len+8] == moniker + 'bin.b64:':
+            return base64.b64decode(var[moniker_len+8:].encode())
         return var
 
 
@@ -266,7 +268,7 @@ class Stream(object):
     @name.setter
     def name(self, value):
         self._name = value
-        proxy.invoke('setOutputStreamInfo', [self._handle, {'name':value}])
+        proxy.invoke('setStreamInfo', [self._handle, {'name':value}])
 
     @property
     def content_type(self):
@@ -275,7 +277,7 @@ class Stream(object):
     @content_type.setter
     def content_type(self, value):
         self._content_type = value
-        proxy.invoke('setOutputStreamInfo', [self._handle, {'content_type':value}])
+        proxy.invoke('setStreamInfo', [self._handle, {'content_type':value}])
 
     @property
     def size(self):
@@ -519,6 +521,12 @@ class ContextFs(object):
         info = proxy.invoke('fsCreate', [path, connection])
         stream = Stream(info)
         stream._need_commit = True
+        return 
+        
+    def create_tempfile(self):
+        info = proxy.invoke('fsCreateTempFile', [])
+        stream = Stream(info)
+        stream._need_commit = True
         return stream
 
     def open(self, path, mode='r', connection=''):
@@ -563,6 +571,14 @@ class ContextFs(object):
 
 
 
+class ContextEmail(object):
+
+    def __init__(self):
+        pass
+
+    def send(self, *args, **kwargs):
+        info = proxy.invoke('invoke_service', ['email.send', args[0] if len(args) == 1 else kwargs])
+
 class Context(object):
     def __init__(self, input, output):
         self.input = input
@@ -571,7 +587,8 @@ class Context(object):
         self._form = None
         self._files = None
         self.pipe = PipeFunctions()
-        self.context_fs = ContextFs()
+        self.email = ContextEmail()
+        self.fs = ContextFs()
 
     @property
     def query(self):
@@ -589,19 +606,14 @@ class Context(object):
     def files(self):
         if self._files is None:
             self._files = {}
-            fileinfo = proxy.invoke('getFilesParameters', [])
-            for key, value in fileinfo.items():
-                info  = proxy.invoke('getInputStreamInfo', [key])
-                self.files[key] = Stream(info)
+            fileinfos = proxy.invoke('getFilesParameters', [])
+            for fileinfo in fileinfos:
+                self.files[fileinfo['tag']] = Stream(fileinfo)
         return self._files
 
     @property
     def vars(self):
         return env_vars_obj
-
-    @property
-    def fs(self):
-        return self.context_fs
 
     @property
     def connections(self):
@@ -635,8 +647,8 @@ import builtins as __builtin__
 
 
 def create_context():
-    stdin_stream_info  = proxy.invoke('getInputStreamInfo', ['_fxstdin_'])
-    stdout_stream_info = proxy.invoke('getOutputStreamInfo', ['_fxstdout_'])
+    stdin_stream_info  = proxy.invoke('getStreamInfo', [0])
+    stdout_stream_info = proxy.invoke('getStreamInfo', [1])
 
     input_stream = Stream(stdin_stream_info)
     output_stream = Stream(stdout_stream_info)

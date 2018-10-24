@@ -16,6 +16,7 @@ const getDefaultState = () => {
       'schedule',
       'deploy_mode',
       'deploy_schedule',
+      'deploy_email',
       'deploy_api',
       'deploy_ui',
       'task',

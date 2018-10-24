@@ -14,7 +14,7 @@
           v-model="active_tab_name"
         >
           <el-tab-pane name="profile">
-            <div slot="label"><div style="min-width: 6rem">Profile</div></div>
+            <div slot="label"><div style="min-width: 5rem">Profile</div></div>
             <div class="ml3 mr4">
               <h3 class="mt0 mb3 pb2 fw6 bb b--black-10">Profile</h3>
               <AccountProfileForm style="max-width: 30rem" />
@@ -22,7 +22,7 @@
           </el-tab-pane>
 
           <el-tab-pane name="settings">
-            <div slot="label"><div style="min-width: 6rem">Account</div></div>
+            <div slot="label"><div style="min-width: 5rem">Account</div></div>
             <div class="ml3 mr4">
               <h3 class="mt0 mb3 pb2 fw6 bb b--black-10">Change password</h3>
               <AccountPasswordForm style="max-width: 30rem" />
@@ -33,7 +33,7 @@
               <h3 class="mt0 mb3 pb2 dark-red fw6 bb b--black-10">Delete account</h3>
               <p class="lh-copy f6">Once you delete your account, there's no going back. Please be sure you want to do this!</p>
               <el-button
-                class="ttu b"
+                class="ttu fw6"
                 type="danger"
                 @click="show_account_delete_dialog = true"
               >
@@ -44,7 +44,7 @@
           </el-tab-pane>
 
           <el-tab-pane name="api">
-            <div slot="label"><div style="min-width: 6rem">API keys</div></div>
+            <div slot="label"><div style="min-width: 5rem">API keys</div></div>
             <div class="ml3 mr4" v-if="has_user">
               <h3 class="mt0 mb3 pb2 fw6 bb b--black-10">API keys</h3>
               <p class="lh-copy f6 mb3">This is a list of API keys associated with your account. Remove any keys that you do not recognize.</p>

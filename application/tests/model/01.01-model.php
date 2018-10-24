@@ -281,6 +281,33 @@ class Test
 
 
 
+        // TEST: Model pipe trigger constants; the database stores raw values for
+        // some of these constants, so these tests ensure that the constants
+        // are consistent between various models and the values in the
+        // databases
+
+        $actual = \Model::PROCESS_TRIGGERED_UNDEFINED;
+        $expected = '';
+        \Flexio\Tests\Check::assertString('J.1', 'Pipe deploy mode constant',  $actual, $expected, $results);
+
+        $actual = \Model::PROCESS_TRIGGERED_API;
+        $expected = 'A';
+        \Flexio\Tests\Check::assertString('J.2', 'Pipe deploy mode constant',  $actual, $expected, $results);
+
+        $actual = \Model::PROCESS_TRIGGERED_EMAIL;
+        $expected = 'E';
+        \Flexio\Tests\Check::assertString('J.3', 'Pipe deploy mode constant',  $actual, $expected, $results);
+
+        $actual = \Model::PROCESS_TRIGGERED_SCHEDULER;
+        $expected = 'S';
+        \Flexio\Tests\Check::assertString('J.4', 'Pipe deploy mode constant',  $actual, $expected, $results);
+
+        $actual = \Model::PROCESS_TRIGGERED_INTERFACE;
+        $expected = 'I';
+        \Flexio\Tests\Check::assertString('J.5', 'Pipe deploy mode constant',  $actual, $expected, $results);
+
+
+
         // TEST: Model access code type constants; the database stores raw values
         // for some of these constants, so these tests ensure that the constants
         // are consistent between various models and the values in the

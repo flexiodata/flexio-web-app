@@ -171,6 +171,7 @@ CREATE TABLE tbl_pipe (
   ui text default '',
   deploy_mode char(1) NOT NULL default 'B',
   deploy_schedule char(1) NOT NULL default 'I',
+  deploy_email char(1) NOT NULL default 'I',
   deploy_api char(1) NOT NULL default 'I',
   deploy_ui char(1) NOT NULL default 'I',
   owned_by char(12) NOT NULL default '',
@@ -184,6 +185,7 @@ CREATE TABLE tbl_pipe (
 CREATE INDEX idx_pipe_alias ON tbl_pipe (alias);
 CREATE INDEX idx_pipe_deploy_mode ON tbl_pipe (deploy_mode);
 CREATE INDEX idx_pipe_deploy_schedule ON tbl_pipe (deploy_schedule);
+CREATE INDEX idx_pipe_deploy_email ON tbl_pipe (deploy_email);
 CREATE INDEX idx_pipe_deploy_api ON tbl_pipe (deploy_api);
 CREATE INDEX idx_pipe_deploy_ui ON tbl_pipe (deploy_ui);
 CREATE INDEX idx_pipe_owned_by ON tbl_pipe (owned_by);
@@ -231,12 +233,12 @@ CREATE TABLE tbl_process (
   eid varchar(12) NOT NULL default '',
   eid_status char(1) NOT NULL default '',
   parent_eid varchar(12) NOT NULL default '',
+  pipe_info text default NULL,
   process_mode varchar(1) NOT NULL default '',
-  process_hash varchar(40) NOT NULL default '',
-  impl_revision varchar(40) NOT NULL default '',
   task text default NULL,
   input text default NULL,
   output text default NULL,
+  triggered_by varchar(1) NOT NULL default '',
   started_by varchar(12) NOT NULL default '',
   started timestamp NULL default NULL,
   finished timestamp NULL default NULL,
@@ -253,7 +255,7 @@ CREATE TABLE tbl_process (
 
 CREATE INDEX idx_process_eid ON tbl_process (eid);
 CREATE INDEX idx_process_parent_eid ON tbl_process (parent_eid);
-CREATE INDEX idx_process_process_hash ON tbl_process (process_hash);
+CREATE INDEX idx_process_triggered_by ON tbl_process (triggered_by);
 CREATE INDEX idx_process_owned_by ON tbl_process (owned_by);
 CREATE INDEX idx_process_created ON tbl_process (created);
 

@@ -41,7 +41,7 @@
     <div class="mt3">
       <el-button
         type="primary"
-        class="ttu b"
+        class="ttu fw6"
         @click="saveChanges"
       >
         Update regional settings
@@ -91,16 +91,11 @@
       saveChanges() {
         var eid = this.active_user_eid
         var attrs = _.pick(this.$data, ['timezone'])
-        this.$store.dispatch('updateUser', { eid, attrs }).then(response => {
-          if (response.ok)
-          {
-            this.show_success = true
-            setTimeout(() => { this.show_success = false }, 4000)
-          }
-           else
-          {
-            this.show_error = true
-          }
+        this.$store.dispatch('v2_action_updateUser', { eid, attrs }).then(response => {
+          this.show_success = true
+          setTimeout(() => { this.show_success = false }, 4000)
+        }).catch(error => {
+          this.show_error = true
         })
       }
     }

@@ -56,7 +56,7 @@
       },
       'item-cls': {
         type: String,
-        default: 'f6 fw6 ttu br2 ma2 pa2 h4 w4 pointer moon-gray bg-white hover-blue css-help-item'
+        default: 'f6 ttu fw6 ma2 pa2 h4 w4 pointer br2 moon-gray bg-white hover-blue css-help-item'
       },
       'help-message': {
         type: String,

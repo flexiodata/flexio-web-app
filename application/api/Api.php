@@ -122,8 +122,7 @@ class Api
         'GET /admin/info/connections'                 => '\Flexio\Api\Admin::connections',
         'GET /admin/info/pipes'                       => '\Flexio\Api\Admin::pipes',
         'GET /admin/info/processes'                   => '\Flexio\Api\Admin::processes',
-        'GET /admin/info/processes/summary'           => '\Flexio\Api\Admin::process_summary',
-        'GET /admin/info/processes/summary/daily'     => '\Flexio\Api\Admin::process_summary_daily',
+        'GET /admin/info/processes/summary/user'      => '\Flexio\Api\Admin::process_summary_byuser',
         'GET /admin/tests/configure'                  => '\Flexio\Tests\Base::configure',
         'GET /admin/tests/run'                        => '\Flexio\Tests\Base::run',
 

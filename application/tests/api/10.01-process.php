@@ -86,7 +86,8 @@ class Test
                 "task": {
                     "op": "echo"
                 },
-                "process_status": "'.\Flexio\Jobs\Process::STATUS_PENDING.'"
+                "process_status": "'.\Flexio\Jobs\Process::STATUS_PENDING.'",
+                "triggered_by": "'.\Model::PROCESS_TRIGGERED_API.'"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -97,12 +98,20 @@ class Test
             "eid_status": "A",
             "parent": {
                 "eid": "",
-                "eid_type": "PIP"
+                "eid_type": "PIP",
+                "eid_status":"",
+                "alias":"",
+                "name":"",
+                "description":"",
+                "deploy_mode":"",
+                "created":"",
+                "updated":""
             },
             "process_mode": "R",
             "task": {
                 "op": "echo"
             },
+            "triggered_by": "A",
             "started_by": "",
             "started": null,
             "finished": null,
@@ -116,6 +125,6 @@ class Test
             }
         }
         ';
-        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:userid/processes; create a new process',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:userid/processes; create a new process (don\'t allow triggered_by to be set in API)',  $actual, $expected, $results);
     }
 }

@@ -22,7 +22,10 @@
         <p class="mt0 mb4 pv3 lh-copy">{{description}}</p>
       </div>
     </div>
-    <div class="center mw-builder-doc" style="padding-bottom: 8rem">
+    <div
+      class="center mw-builder-doc"
+      style="padding-bottom: 8rem"
+    >
       <BuilderList
         class="flex-fill"
         builder-mode="wizard"
@@ -269,20 +272,18 @@
       },
       createPipe(run_process) {
         var attrs = this.save_attrs
-        this.$store.dispatch('createPipe', { attrs }).then(response => {
-          if (response.ok) {
-            var pipe = response.body
-            this.$store.commit('builder/CREATE_PIPE', pipe)
-            this.$store.track('Created Pipe From Template', {
-              title: this.def.name
-            })
+        this.$store.dispatch('v2_action_createPipe', { attrs }).then(response => {
+          var pipe = response.data
+          this.$store.commit('builder/CREATE_PIPE', pipe)
+          this.$store.track('Created Pipe From Template', {
+            title: this.def.name
+          })
 
-            if (run_process === true) {
-              this.$nextTick(() => { this.runProcess(attrs, pipe.eid) })
-            }
-          } else {
-            // TODO: add error handling
+          if (run_process === true) {
+            this.$nextTick(() => { this.runProcess(attrs, pipe.eid) })
           }
+        }).catch(error => {
+          // TODO: add error handling?
         })
       },
       runProcess(attrs, parent_eid) {
@@ -292,16 +293,14 @@
           run: true // this will automatically run the process and start polling the process
         })
 
-        this.$store.dispatch('createProcess', { attrs }).then(response => {
-          if (response.ok) {
-            var process = response.body
-            this.$store.commit('builder/CREATE_PROCESS', process)
-            this.$store.track('Ran Process From Template', {
-              title: this.def.name
-            })
-          } else {
-            // TODO: add error handling
-          }
+        this.$store.dispatch('v2_action_createProcess', { attrs }).then(response => {
+          var process = response.data
+          this.$store.commit('builder/CREATE_PROCESS', process)
+          this.$store.track('Ran Process From Template', {
+            title: this.def.name
+          })
+        }).catch(error => {
+          // TODO: add error handling?
         })
       },
       openPipe() {

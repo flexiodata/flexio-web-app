@@ -14,8 +14,8 @@
         <div v-if="user_fetching"></div>
         <UserDropdown v-else-if="is_logged_in" />
         <div v-else>
-          <router-link to="/signin" class="link underline-hover dib f6 f6-ns ttu b black-60 ph2 pv1 mr1 mr2-ns">Sign in</router-link>
-          <router-link to="/signup" class="link no-underline dib f6 f6-ns ttu b br1 white bg-orange darken-10 ph2 ph3-ns pv2 mv1">
+          <router-link to="/signin" class="dib link f6 f6-ns ttu fw6 br2 pv2 ph2 mr1 mr2-ns underline-hover gray">Sign in</router-link>
+          <router-link to="/signup" class="dib link f6 f6-ns ttu fw6 br2 pv2 ph2 ph3-ns no-underline white bg-orange darken-10">
             <span class="di dn-ns">Sign up</span>
             <span class="dn di-ns">Sign up for free</span>
           </router-link>
