@@ -33,7 +33,7 @@ class Test
         $userid2 = \Flexio\Tests\Util::createUser(null, null, $password2);
         $token2 = \Flexio\Tests\Util::createToken($userid2);
         $storage_items = [
-            \Flexio\Tests\Base::STORAGE_LOCAL,
+            \Flexio\Tests\Base::STORAGE_FLEX,
             \Flexio\Tests\Base::STORAGE_AMAZONS3,
             \Flexio\Tests\Base::STORAGE_BOX,
             \Flexio\Tests\Base::STORAGE_DROPBOX,
@@ -78,7 +78,7 @@ class Test
         foreach ($storage_items as $storage_location)
         {
             // don't test local storage; no connection exists
-            if ($storage_location === \Flexio\Tests\Base::STORAGE_LOCAL)
+            if ($storage_location === \Flexio\Tests\Base::STORAGE_FLEX)
                 continue;
 
             // get the connection info for the current testsuite connections

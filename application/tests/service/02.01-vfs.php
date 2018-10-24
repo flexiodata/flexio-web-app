@@ -22,7 +22,7 @@ class Test
     {
         // SETUP
         $storage_items = [
-            \Flexio\Tests\Base::STORAGE_LOCAL,
+            \Flexio\Tests\Base::STORAGE_FLEX,
             \Flexio\Tests\Base::STORAGE_AMAZONS3,
             \Flexio\Tests\Base::STORAGE_BOX,
             \Flexio\Tests\Base::STORAGE_DROPBOX,
