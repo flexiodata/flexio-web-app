@@ -33,7 +33,7 @@
           @item-activate="onConnectionActivate"
         />
       </div>
-      <div class="flex-fill overflow-y-auto">
+      <div class="flex-fill overflow-y-auto" :class="{ 'ml2': showConnectionList }">
         <FileChooserList
           ref="file-chooser"
           :path="connection_path"
