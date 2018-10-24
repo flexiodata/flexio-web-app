@@ -238,7 +238,7 @@ class ExecuteProxy
                 }
             }
 
-            if ($call_count == 0 && (microtime(true) - $start_time) > 30)
+            if ($call_count == 0 && (microtime(true) - $start_time) > 60)
             {
                 // if we haven't yet received our first call after 30 seconds, something is wrong;
                 // terminate the execute job with an exception
@@ -295,7 +295,7 @@ class ExecuteProxy
             }
         }
     }
-    
+
 
 
     public function onMessage(\ZMQSocket $server, array $msg) : void
@@ -487,7 +487,7 @@ class ScriptHost
             $this->files[] = $file;
             $handle = count($this->files)-1;
             $this->process->setLocalFile($handle, $file->stream);
-    
+
             $results[] = array('handle' => $handle,
                                'tag' => $k,
                                'name' => $file->stream->getName(),
@@ -734,13 +734,13 @@ class ScriptHost
 
             $stream = \Flexio\Base\Stream::create();
             $stream->setName($path);
-    
+
             $file = new ScriptHostFile();
             $file->stream = $stream;
             $this->files[] = $file;
             $handle = count($this->files)-1;
             $this->process->setLocalFile($handle, $file->stream);
-    
+
             return array('handle' => $handle,
                          'name' => '',
                          'size' => $file->stream->getSize(),
@@ -754,7 +754,7 @@ class ScriptHost
 
         $info = $vfs->getFileInfo($path);
 
-        
+
 
         $is_table = false;
         $properties = [ 'mime_type' => ($info['content_type'] ?? 'application/octet-stream') ];
@@ -769,7 +769,7 @@ class ScriptHost
 
 
         $stream = \Flexio\Base\Stream::create();
-        $stream->set($properties);        
+        $stream->set($properties);
         $streamwriter = $stream->getWriter();
 
 
@@ -845,7 +845,7 @@ class ScriptHost
         $params = [ 'path' => $path ];
         if (strlen($connection) > 0)
             $params['connection'] = $connection;
-        
+
         return \Flexio\Jobs\List1::doList($this->process, $params);
 
         /*
