@@ -228,7 +228,7 @@
       },
       addFiles() {
         var files = this.selected_files
-        files = _.map(files, (f) => { return { file: f.path } })
+        files = _.map(files, (f) => { return { file: f.full_path } })
         var existing_files = _.get(this.edit_values, 'attachments', [])
         if (!_.isArray(existing_files)) {
           existing_files = [existing_files]

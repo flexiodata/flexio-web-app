@@ -101,11 +101,13 @@
         return this.allowFolders ? items : _.reject(items, { type: VFS_TYPE_DIR })
       },
       empty_message() {
-        if (this.emptyMessage.length > 0)
+        if (this.emptyMessage.length > 0) {
           return this.emptyMessage
+        }
 
-        if (this.foldersOnly)
+        if (this.foldersOnly) {
           return 'This folder has no subfolders'
+        }
 
         return 'This folder is empty'
       }

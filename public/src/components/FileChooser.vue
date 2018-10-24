@@ -127,9 +127,11 @@
         return _.find(connections, { connection_type: this.ctype })
       },
       submit() {
+        /*
         var url_list = this.$refs['url-input-list']
         if (!_.isNil(url_list))
           url_list.finishEdit()
+        */
 
         this.$emit('submit', this.items)
       },
@@ -140,9 +142,11 @@
         this.$emit('update:selectedItems', [])
       },
       onHide() {
+        /*
         var url_list = this.$refs['url-input-list']
         if (!_.isNil(url_list))
           url_list.reset()
+        */
 
         this.reset()
       },
