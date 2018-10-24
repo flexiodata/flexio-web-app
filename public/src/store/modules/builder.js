@@ -162,20 +162,20 @@ const mutations = {
           // for file selection file choosers, append '/*' to any folders that are selected
           if (p.folders_only !== true) {
             files = _.map(files, (f) => {
+              var full_path = f.type === VFS_TYPE_DIR ? f.full_path + '/*' : f.full_path
               var path = f.type === VFS_TYPE_DIR ? f.path + '/*' : f.path
-              var remote_path = f.type === VFS_TYPE_DIR ? f.remote_path + '/*' : f.remote_path
-              return _.assign({}, f, { path, remote_path })
+              return _.assign({}, f, { full_path, path })
             })
           }
 
           if (connection_alias) {
-            // '.connect()' alias is specified; use it instead of the connection eid/alias
-            paths = _.map(files, (f) => { return _.get(f, 'remote_path', null) })
+            // `.connect()` alias is specified; use it instead of the connection eid/alias
+            paths = _.map(files, (f) => { return _.get(f, 'path', null) })
             paths = _.compact(paths)
-            paths = _.map(paths, (p) => { return '/' + connection_alias + p })
+            paths = _.map(paths, (p) => { return connection_alias + ':' + p })
           } else {
             // no connection alias specified; convert array of file objects into an array of paths
-            paths = _.map(files, (f) => { return _.get(f, 'path', null) })
+            paths = _.map(files, (f) => { return _.get(f, 'full_path', null) })
             paths = _.compact(paths)
           }
 

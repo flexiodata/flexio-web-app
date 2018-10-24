@@ -93,18 +93,18 @@
       }
     },
     methods: {
-      updateFolder(path) {
+      updateFolder(full_path) {
         if (this.foldersOnly !== true) {
           return
         }
 
-        var name = path.substr(path.lastIndexOf('/') + 1)
-        var remote_path = '/' + util.afterNth(path, '/', 2)
+        var name = full_path.substr(full_path.lastIndexOf('/') + 1)
+        var path = util.afterFirst(full_path, ':')
 
         var folder = {
           name,
           path,
-          remote_path,
+          full_path,
           size: null,
           modified: '',
           type: VFS_TYPE_DIR
