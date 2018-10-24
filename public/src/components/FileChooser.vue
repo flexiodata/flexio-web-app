@@ -42,13 +42,6 @@
           v-bind="$attrs"
           v-if="file_chooser_mode == 'filechooser'"
         />
-        <UrlInputList
-          ref="url-input-list"
-          class="ba b--black-10 pa1"
-          style="min-height: 16rem; max-height: 16rem"
-          @selection-change="updateItems"
-          v-if="file_chooser_mode == 'textentry'"
-        />
       </div>
     </div>
   </div>
@@ -65,7 +58,6 @@
   import FileExplorerBar from './FileExplorerBar.vue'
   import FileChooserList from './FileChooserList.vue'
   import AbstractList from './AbstractList.vue'
-  import UrlInputList from './UrlInputList.vue'
   import MixinConnection from './mixins/connection'
 
   const LOCAL_STORAGE_ITEM = {
@@ -92,8 +84,7 @@
     components: {
       FileExplorerBar,
       FileChooserList,
-      AbstractList,
-      UrlInputList
+      AbstractList
     },
     watch: {
       connection: {
