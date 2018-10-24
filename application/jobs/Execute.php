@@ -240,7 +240,7 @@ class ExecuteProxy
 
             if ($call_count == 0 && (microtime(true) - $start_time) > 60)
             {
-                // if we haven't yet received our first call after 30 seconds, something is wrong;
+                // if we haven't yet received our first call after 60 seconds, something is wrong;
                 // terminate the execute job with an exception
 
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: IPC timeout");
