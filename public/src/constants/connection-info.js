@@ -158,7 +158,7 @@ const TWILIO = {
   connection_type: types.CONNECTION_TYPE_TWILIO,
   icon: require('../assets/icon/icon-twilio-128.png'),
   is_oauth: false,
-  is_storage: true,
+  is_storage: false,
   is_email: false
 }
 

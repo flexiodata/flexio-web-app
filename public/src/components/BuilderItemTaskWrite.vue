@@ -15,6 +15,7 @@
     <h4 class="fw6">1. Choose connection</h4>
     <BuilderComponentConnectionChooser
       class="mb3"
+      :filter-by="filter_by"
       :connection-identifier.sync="connection_identifier"
       :show-result="has_available_connection"
     >
@@ -158,6 +159,11 @@
       },
       description() {
         return marked(_.get(this.item, 'description', ''))
+      },
+      filter_by() {
+        return (item) => {
+          return this.$_Connection_isStorage(item)
+        }
       },
       write_path: {
         get() {
