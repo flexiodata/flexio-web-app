@@ -142,7 +142,8 @@
         this.$emit('submit', this.items)
       },
       reset(attrs) {
-        this.connection_path = '/'
+        this.active_connection = {}
+        this.connection_path = this.getConnectionBasePath()
         this.items = []
         this.$emit('update:selectedItems', [])
       },
@@ -167,11 +168,11 @@
         // Flex.io connection now has an alias of 'flex'... keeping this for reference for a bit...
         /*
         if (_.get(this.active_connection, 'connection_type', '') == CONNECTION_TYPE_FLEX) {
-          return '/flex'
+          return 'flex:/'
         }
         */
 
-        return '/' + this.getConnectionIdentifier()
+        return this.getConnectionIdentifier() + ':/'
       },
       initFromConnection(connection) {
         // do a hard refresh of the file list
