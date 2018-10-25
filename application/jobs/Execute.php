@@ -206,7 +206,12 @@ class ExecuteProxy
         //ob_end_flush();
         //flush();
 
-        exec("$cmd > /dev/null &", $output, $exit_code);
+        exec("$cmd 2>&1", $output_lines, $exit_code);
+
+        $docker_exec_output = '';
+        foreach ($output_lines as $line)
+            $docker_exec_output .= $line;
+
 
         // should the script host crash for any reason, the container could be left running;
         // the following function adds this container to a list that of containers that
@@ -328,7 +333,7 @@ class ExecuteProxy
 
         if ($ipc_timeout_error)
         {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: IPC timeout Container=$container_name Exit Code=$exit_code State=$full_state");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: IPC timeout Container=$container_name Exit Code=$exit_code Output=$docker_exec_output State=$full_state");
         }
     }
 
