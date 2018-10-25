@@ -82,6 +82,18 @@ function gc_container_remove($container_name)
 
 
 
+function get_docker_status($container_name)
+{
+    @exec("docker inspect -f {{.State.Status}} $container_name", $output_lines);
+    //@exec("docker inspect -f {{.State}} $container_name", $output_lines);
+    //@exec("docker inspect $container_name", $output_lines);
+    
+    $res = '';
+    foreach ($output_lines as $line)
+        $res .= $line;
+    return $res;
+}
+
 class ExecuteProxy
 {
     private const MESSAGE_SIGNATURE = '--MSGqQp8mf~';
@@ -200,6 +212,8 @@ class ExecuteProxy
         $connection_established = false;
         $call_count = 0;
 
+        $last_check = 0;
+
         while (true)
         {
             $message = $server->recv();
@@ -242,17 +256,30 @@ class ExecuteProxy
                 }
             }
 
-            if ($call_count == 0 && (microtime(true) - $start_time) > 30)
+            if ($call_count == 0)
             {
-                // if we haven't yet received our first call after 60 seconds, something is wrong;
-                // terminate the execute job with an exception (but break first and clean up the socket etc)
+                $seconds = (int)floor(microtime(true) - $start_time);
 
-                // first, make sure container is 'dead'
-                $cmd = "$g_dockerbin kill $container_name";
-                @exec("$cmd > /dev/null &");
+                if ($seconds - $last_check > 30)
+                {
+                    $last_check = $seconds;
+                    $status = get_docker_status($container_name);
 
-                $ipc_timeout_error = true;
-                break;
+                    // if the container says it's running -- give it another chance (check in 30 seconds)
+
+                    // but if the final threshold (300 seconds/5 minutes) has expired, something has gone wrong;
+                    // terminate the execute job with an exception (but break first and clean up the socket etc)
+    
+                    if ($seconds >= 300 || $status != 'running')
+                    {
+                        // first, make sure container is 'dead'
+                        $cmd = "$g_dockerbin kill $container_name";
+                        @exec("$cmd > /dev/null &");
+        
+                        $ipc_timeout_error = true;
+                        break;
+                    }
+                }
             }
 
          /*
