@@ -247,6 +247,10 @@ class ExecuteProxy
                 // if we haven't yet received our first call after 60 seconds, something is wrong;
                 // terminate the execute job with an exception (but break first and clean up the socket etc)
 
+                // first, make sure container is 'dead'
+                $cmd = "$g_dockerbin kill $container_name";
+                @exec("$cmd > /dev/null &");
+
                 $ipc_timeout_error = true;
                 break;
             }
