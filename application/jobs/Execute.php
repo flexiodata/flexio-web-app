@@ -141,6 +141,12 @@ class ExecuteProxy
         $access_key = \Flexio\Base\Util::generateRandomString(20);
         $container_name = 'fxexec-' . $access_key;
 
+        // get the docker binary location
+        global $g_dockerbin;
+        $g_dockerbin = \Flexio\System\System::getBinaryPath('docker');
+        if (is_null($g_dockerbin))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
         // start a zeromq server -- let OS choose port
 
         $host_socket_path = "/dev/shm/ipc-exec-$access_key";
@@ -151,22 +157,13 @@ class ExecuteProxy
         $server = new \ZMQSocket(new \ZMQContext(), \ZMQ::SOCKET_REP);
         $server->bind($dsn);
 
-        if (file_exists($host_socket_path))
-        {
-            register_shutdown_function('unlink', $host_socket_path);
-        }
-
         // recv() should time out every 250 ms
         $server->setSockOpt(\ZMQ::SOCKOPT_RCVTIMEO, 250);
         $server->_is_bound = true;
+        $ipc_timeout_error = false;
         
         //$server->setSockOpt(\ZMQ::SOCKOPT_SNDTIMEO, 250);
 
-        // run the container command
-        global $g_dockerbin;
-        $g_dockerbin = \Flexio\System\System::getBinaryPath('docker');
-        if (is_null($g_dockerbin))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         //$cmd = "./update-docker-images && $g_dockerbin run --rm -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=tcp://$address:$port -i fxruntime timeout 3600s python3 /fxpython/fxstart.py";
         //echo $cmd;
@@ -189,8 +186,9 @@ class ExecuteProxy
         gc_container_add($container_name);
 
 
-        register_shutdown_function(function() use (&$server, $dsn) {
+        register_shutdown_function(function() use (&$server, $dsn, $host_socket_path) {
             \Flexio\Jobs\gc_container_cleanup();
+            @unlink($host_socket_path);
             if ($server !== null && $server->_is_bound)
             {
                 $server->unbind($dsn);
@@ -247,9 +245,10 @@ class ExecuteProxy
             if ($call_count == 0 && (microtime(true) - $start_time) > 10)
             {
                 // if we haven't yet received our first call after 60 seconds, something is wrong;
-                // terminate the execute job with an exception
+                // terminate the execute job with an exception (but break first and clean up the socket etc)
 
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: IPC timeout");
+                $ipc_timeout_error = true;
+                break;
             }
 
          /*
@@ -267,8 +266,15 @@ class ExecuteProxy
             $server = null;
         }
 
+        @unlink($host_socket_path);
+
         // docker container stopped normally, so it does not need to be terminated; remove from the container GC list
         gc_container_remove($container_name);
+
+        if ($ipc_timeout_error)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: IPC timeout");
+        }
     }
 
     public function func_compile_error($error)
