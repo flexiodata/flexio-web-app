@@ -158,6 +158,8 @@ class ExecuteProxy
 
         // recv() should time out every 250 ms
         $server->setSockOpt(\ZMQ::SOCKOPT_RCVTIMEO, 250);
+        $server->_is_bound = true;
+        
         //$server->setSockOpt(\ZMQ::SOCKOPT_SNDTIMEO, 250);
 
         // run the container command
@@ -189,7 +191,11 @@ class ExecuteProxy
 
         register_shutdown_function(function() use (&$server, $dsn) {
             \Flexio\Jobs\gc_container_cleanup();
-            $server->unbind($dsn);
+            if ($server !== null && $server->_is_bound)
+            {
+                $server->unbind($dsn);
+                $server->_is_bound = false;
+            }
         });
 
         $start_time = microtime(true);
@@ -238,7 +244,7 @@ class ExecuteProxy
                 }
             }
 
-            if ($call_count == 0 && (microtime(true) - $start_time) > 60)
+            if ($call_count == 0 && (microtime(true) - $start_time) > 10)
             {
                 // if we haven't yet received our first call after 60 seconds, something is wrong;
                 // terminate the execute job with an exception
@@ -252,6 +258,13 @@ class ExecuteProxy
                 die("TIMED OUT");
             }
         */
+        }
+
+        if ($server->_is_bound)
+        {
+            $server->unbind($dsn);
+            $server->_is_bound = false;
+            $server = null;
         }
 
         // docker container stopped normally, so it does not need to be terminated; remove from the container GC list
