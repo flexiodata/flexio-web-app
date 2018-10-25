@@ -286,7 +286,7 @@ class ExecuteProxy
     
                     if ($seconds >= 300 || $status != 'running')
                     {
-                        $status = get_docker_status2($container_name);
+                        $status = "First string: " . $status . " Full Status: " . get_docker_status2($container_name);
 
                         // first, make sure container is 'dead'
                         $cmd = "$g_dockerbin kill $container_name";
