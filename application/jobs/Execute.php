@@ -321,7 +321,7 @@ class ExecuteProxy
 
         if ($ipc_timeout_error)
         {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: IPC timeout State=$full_state");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: IPC timeout Container=$container_name State=$full_state");
         }
     }
 
