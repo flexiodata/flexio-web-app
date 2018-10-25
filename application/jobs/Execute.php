@@ -282,6 +282,12 @@ class ExecuteProxy
                     $full_state = get_docker_full_state($container_name);
                     $is_running = (strpos($full_state, 'running') !== false || (strpos($full_state, 'created') !== false));
 
+                    if (strlen(trim($full_state)) == 0)
+                    {
+                        exec("$cmd > /dev/null &");
+                        continue;
+                    }
+
                     // if the container says it's running -- give it another chance (check in 30 seconds)
 
                     // but if the final threshold (300 seconds/5 minutes) has expired, something has gone wrong;
