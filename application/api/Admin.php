@@ -30,7 +30,10 @@ class Admin
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $result = array(
-            "database" => ""
+            "database" =>  array(
+                "version" => \Flexio\System\System::getModel()->getDbVersionNumber(),
+                "counts" => \Flexio\System\System::getModel()->getTableCounts()
+            )
         );
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
