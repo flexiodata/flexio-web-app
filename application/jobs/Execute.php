@@ -84,6 +84,8 @@ function gc_container_remove($container_name)
 
 function get_docker_status($container_name)
 {
+    // this isn't working on Aaron's machine, so we'll use get_docker_full_state instead
+
     @exec("docker inspect -f {{.State.Status}} $container_name", $output_lines);
     //@exec("docker inspect -f {{.State}} $container_name", $output_lines);
     //@exec("docker inspect $container_name", $output_lines);
@@ -95,7 +97,7 @@ function get_docker_status($container_name)
 }
 
 
-function get_docker_status2($container_name)
+function get_docker_full_state($container_name)
 {
     //@exec("docker inspect -f {{.State.Status}} $container_name", $output_lines);
     @exec("docker inspect -f {{.State}} $container_name", $output_lines);
@@ -277,17 +279,16 @@ class ExecuteProxy
                 if ($seconds - $last_check > 30)
                 {
                     $last_check = $seconds;
-                    $status = get_docker_status($container_name);
+                    $full_state = get_docker_full_state($container_name);
+                    $is_running = (strpos($full_state, 'running') !== false);
 
                     // if the container says it's running -- give it another chance (check in 30 seconds)
 
                     // but if the final threshold (300 seconds/5 minutes) has expired, something has gone wrong;
                     // terminate the execute job with an exception (but break first and clean up the socket etc)
     
-                    if ($seconds >= 300 || $status != 'running')
+                    if ($seconds >= 300 || !$is_running)
                     {
-                        $status = "First string: " . $status . " Full Status: " . get_docker_status2($container_name);
-
                         // first, make sure container is 'dead'
                         $cmd = "$g_dockerbin kill $container_name";
                         @exec("$cmd > /dev/null &");
@@ -320,7 +321,7 @@ class ExecuteProxy
 
         if ($ipc_timeout_error)
         {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: IPC timeout Status=$status...");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: IPC timeout State=$full_state");
         }
     }
 
