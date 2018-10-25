@@ -161,7 +161,7 @@ class ExecuteProxy
         $server->setSockOpt(\ZMQ::SOCKOPT_RCVTIMEO, 250);
         $server->_is_bound = true;
         $ipc_timeout_error = false;
-        
+
         //$server->setSockOpt(\ZMQ::SOCKOPT_SNDTIMEO, 250);
 
 
@@ -242,7 +242,7 @@ class ExecuteProxy
                 }
             }
 
-            if ($call_count == 0 && (microtime(true) - $start_time) > 10)
+            if ($call_count == 0 && (microtime(true) - $start_time) > 60)
             {
                 // if we haven't yet received our first call after 60 seconds, something is wrong;
                 // terminate the execute job with an exception (but break first and clean up the socket etc)
