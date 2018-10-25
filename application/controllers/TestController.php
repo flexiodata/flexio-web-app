@@ -247,7 +247,6 @@ EOD;
         for ($i = 0; $i < 60; ++$i)
         {
             $processes[] = self::runPipe(true /*true = background*/);
-            sleep(2);
         }
 
         // block a minute, or until processes are finished
