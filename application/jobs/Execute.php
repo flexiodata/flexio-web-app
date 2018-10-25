@@ -280,7 +280,7 @@ class ExecuteProxy
                 {
                     $last_check = $seconds;
                     $full_state = get_docker_full_state($container_name);
-                    $is_running = (strpos($full_state, 'running') !== false);
+                    $is_running = (strpos($full_state, 'running') !== false || (strpos($full_state, 'created') !== false));
 
                     // if the container says it's running -- give it another chance (check in 30 seconds)
 
