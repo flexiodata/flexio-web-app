@@ -94,6 +94,20 @@ function get_docker_status($container_name)
     return $res;
 }
 
+
+function get_docker_status2($container_name)
+{
+    //@exec("docker inspect -f {{.State.Status}} $container_name", $output_lines);
+    @exec("docker inspect -f {{.State}} $container_name", $output_lines);
+    //@exec("docker inspect $container_name", $output_lines);
+    
+    $res = '';
+    foreach ($output_lines as $line)
+        $res .= $line;
+    return $res;
+}
+
+
 class ExecuteProxy
 {
     private const MESSAGE_SIGNATURE = '--MSGqQp8mf~';
@@ -272,6 +286,8 @@ class ExecuteProxy
     
                     if ($seconds >= 300 || $status != 'running')
                     {
+                        $status = get_docker_status2($container_name);
+
                         // first, make sure container is 'dead'
                         $cmd = "$g_dockerbin kill $container_name";
                         @exec("$cmd > /dev/null &");
