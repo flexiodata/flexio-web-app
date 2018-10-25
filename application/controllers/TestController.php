@@ -244,9 +244,10 @@ EOD;
         $this->renderRaw();
 
         $processes = array();
-        for ($i = 0; $i < 100; ++$i)
+        for ($i = 0; $i < 60; ++$i)
         {
-            $processes[] = self::runPipe(false /*true = background*/);
+            $processes[] = self::runPipe(true /*true = background*/);
+            sleep(2);
         }
 
         // block a minute, or until processes are finished
@@ -293,7 +294,7 @@ EOD;
 
     private static function runPipe($background)
     {
-
+/*
 $code = <<<EOT
 pass
 EOT;
@@ -303,8 +304,8 @@ EOT;
             "lang" => "python",
             "code" => base64_encode($code)
         );
+*/
 
-/*
 $code = <<<EOT
 # basic hello world example
 def flex_handler(flex):
@@ -316,7 +317,7 @@ EOT;
             "lang" => "python",
             "code" => base64_encode($code)
         );
-*/
+
 
 /*
 $code = <<<EOT

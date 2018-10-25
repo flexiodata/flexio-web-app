@@ -242,7 +242,7 @@ class ExecuteProxy
                 }
             }
 
-            if ($call_count == 0 && (microtime(true) - $start_time) > 60)
+            if ($call_count == 0 && (microtime(true) - $start_time) > 30)
             {
                 // if we haven't yet received our first call after 60 seconds, something is wrong;
                 // terminate the execute job with an exception (but break first and clean up the socket etc)
