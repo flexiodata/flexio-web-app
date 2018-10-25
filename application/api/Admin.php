@@ -29,7 +29,15 @@ class Admin
         if ($requesting_user->isAdministrator() !== true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
+        $package_info = \Flexio\System\System::getPackageInfo();
+        $git_version = \Flexio\System\System::getGitRevision();
+
         $result = array(
+            "application" => array(
+                "name" => $package_info['name'] ?? '',
+                "version" =>  $package_info['version'] ?? '',
+                "sha" => $git_version
+            ),
             "database" =>  array(
                 "version" => \Flexio\System\System::getModel()->getDbVersionNumber(),
                 "counts" => \Flexio\System\System::getModel()->getTableCounts()
