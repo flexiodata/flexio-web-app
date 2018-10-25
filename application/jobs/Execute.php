@@ -205,7 +205,7 @@ class ExecuteProxy
         //ob_end_flush();
         //flush();
 
-        exec("$cmd > /dev/null &");
+        exec("$cmd > /dev/null &", $output, $exit_code);
 
         // should the script host crash for any reason, the container could be left running;
         // the following function adds this container to a list that of containers that
@@ -281,12 +281,12 @@ class ExecuteProxy
                     $last_check = $seconds;
                     $full_state = get_docker_full_state($container_name);
                     $is_running = (strpos($full_state, 'running') !== false || (strpos($full_state, 'created') !== false));
-
+/*
                     if (strlen(trim($full_state)) == 0)
                     {
                         exec("$cmd > /dev/null &");
                         continue;
-                    }
+                    }*/
 
                     // if the container says it's running -- give it another chance (check in 30 seconds)
 
@@ -327,7 +327,7 @@ class ExecuteProxy
 
         if ($ipc_timeout_error)
         {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: IPC timeout Container=$container_name State=$full_state");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: IPC timeout Container=$container_name Exit Code=$exit_code State=$full_state");
         }
     }
 
