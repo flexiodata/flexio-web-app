@@ -244,13 +244,13 @@ EOD;
         $this->renderRaw();
 
         $processes = array();
-        for ($i = 0; $i < 20; ++$i)
+        for ($i = 0; $i < 100; ++$i)
         {
-            $processes[] = self::runPipe(true /*true = background*/);
+            $processes[] = self::runPipe(false /*true = background*/);
         }
 
         // block a minute, or until processes are finished
-        for ($i = 0; $i < 60; ++$i)
+        for ($i = 0; $i < 100; ++$i)
         {
             if (self::processesFinished($processes))
                 break;
@@ -295,21 +295,49 @@ EOD;
     {
 
 $code = <<<EOT
+pass
+EOT;
+
+        $task = array(
+            "op" => "execute",
+            "lang" => "python",
+            "code" => base64_encode($code)
+        );
+
+/*
+$code = <<<EOT
 # basic hello world example
 def flex_handler(flex):
     flex.end("Hello, World.")
 EOT;
 
         $task = array(
-            "op" => "sequence",
-            "items" => array(
-                array(
-                    "op" => "execute",
-                    "lang" => "python",
-                    "code" => base64_encode($code)
-                )
-            )
+            "op" => "execute",
+            "lang" => "python",
+            "code" => base64_encode($code)
         );
+*/
+
+/*
+$code = <<<EOT
+// basic hello world example
+exports.flex_handler = function(flex) {
+  flex.end("Hello, World.")
+}
+EOT;
+
+        $task = array(
+            "op" => "execute",
+            "lang" => "nodejs",
+            "code" => base64_encode($code)
+        );
+
+
+$task = array(
+    "op" => "sleep",
+    "value" => 1
+);
+*/
 
         $process_properties = array(
             'task' => $task
