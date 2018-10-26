@@ -165,6 +165,10 @@ class ExecuteProxy
 
     public function run() : void
     {
+        $max_execution_time = 5;
+        $exception = null;
+        $exception_msg = '';
+
         // generate a key which will be used as a kind of password
         $access_key = \Flexio\Base\Util::generateRandomString(20);
         $container_name = 'fxexec-' . $access_key;
@@ -188,7 +192,7 @@ class ExecuteProxy
         // recv() should time out every 1000 ms
         $server->setSockOpt(\ZMQ::SOCKOPT_RCVTIMEO, 1000);
         $server->_is_bound = true;
-        $ipc_timeout_error = false;
+
 
         //$server->setSockOpt(\ZMQ::SOCKOPT_SNDTIMEO, 250);
 
@@ -198,8 +202,8 @@ class ExecuteProxy
         //flush();
 
         $engine = $this->engine;
-        //$cmd = "$g_dockerbin run --rm --name $container_name -v $host_socket_path:$container_socket_path -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=$container_ipc_address -e FLEXIO_EXECUTE_ENGINE=$engine -i fxruntime timeout 3600s python3 /fxpython/fxstart.py";
-        $cmd = "$g_dockerbin run -d --rm --name $container_name -v $host_socket_path:$container_socket_path -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=$container_ipc_address -e FLEXIO_EXECUTE_ENGINE=$engine -i fxruntime timeout 3600s python3 /fxpython/fxstart.py";
+        //$cmd = "$g_dockerbin run --rm --name $container_name -v $host_socket_path:$container_socket_path -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=$container_ipc_address -e FLEXIO_EXECUTE_ENGINE=$engine -i fxruntime python3 /fxpython/fxstart.py";
+        $cmd = "$g_dockerbin run -d --rm --name $container_name -v $host_socket_path:$container_socket_path -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=$container_ipc_address -e FLEXIO_EXECUTE_ENGINE=$engine -i fxruntime python3 /fxpython/fxstart.py";
 
         //echo "./update-docker-images && $cmd";
         //ob_end_flush();
@@ -229,6 +233,8 @@ class ExecuteProxy
         });
 
         $start_time = microtime(true);
+        $actual_start_time = $start_time;  // but actual_start_time will be updated to reflect actual script execution time start
+
         $connection_established = false;
         $call_count = 0;
 
@@ -252,6 +258,7 @@ class ExecuteProxy
 
                     if ($method == 'get_script')
                     {
+                        $actual_start_time = microtime(true);
                         $response = [ 'result' => $this->code, 'id' => $message['id'] ];
                         $server->send(json_encode($response));
                     }
@@ -276,10 +283,21 @@ class ExecuteProxy
                 }
             }
 
+            $execution_seconds = (int)floor(microtime(true) - $actual_start_time);
+            if ($execution_seconds > $max_execution_time)
+            {
+                // first, make sure container is 'dead'
+                $cmd = "$g_dockerbin kill $container_name";
+                @exec("$cmd > /dev/null &");
+
+                $exception = \Flexio\Base\Error::GENERAL;
+                $exception_msg = "Maximum execution time exceeded";
+                break;
+            }
+
             if ($call_count == 0)
             {
                 $seconds = (int)floor(microtime(true) - $start_time);
-
                 if ($seconds - $last_check > 30)
                 {
                     $last_check = $seconds;
@@ -297,7 +315,10 @@ class ExecuteProxy
                         $cmd = "$g_dockerbin kill $container_name";
                         @exec("$cmd > /dev/null &");
         
-                        $ipc_timeout_error = true;
+                        $exception = \Flexio\Base\Error::GENERAL;
+                        $exception_msg = "Execute proxy: IPC timeout";
+                        //$exception_msg = "Execute proxy: IPC timeout Container=$container_name Exit Code=$exit_code Output=$docker_exec_output State=$full_state";
+
                         break;
                     }
                 }
@@ -323,11 +344,9 @@ class ExecuteProxy
         // docker container stopped normally, so it does not need to be terminated; remove from the container GC list
         gc_container_remove($container_name);
 
-        if ($ipc_timeout_error)
+        if (!is_null($exception))
         {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: IPC timeout");
-            // the following is for debugging
-            //throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: IPC timeout Container=$container_name Exit Code=$exit_code Output=$docker_exec_output State=$full_state");
+            throw new \Flexio\Base\Exception($exception, $exception_msg);
         }
     }
 
