@@ -192,7 +192,6 @@ class ExecuteProxy
 
         //$server->setSockOpt(\ZMQ::SOCKOPT_SNDTIMEO, 250);
 
-
         //$cmd = "./update-docker-images && $g_dockerbin run --rm -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=tcp://$address:$port -i fxruntime timeout 3600s python3 /fxpython/fxstart.py";
         //echo $cmd;
         //ob_end_flush();
@@ -211,7 +210,6 @@ class ExecuteProxy
         $docker_exec_output = '';
         foreach ($output_lines as $line)
             $docker_exec_output .= $line;
-
 
         // should the script host crash for any reason, the container could be left running;
         // the following function adds this container to a list that of containers that
@@ -287,12 +285,6 @@ class ExecuteProxy
                     $last_check = $seconds;
                     $full_state = get_docker_full_state($container_name);
                     $is_running = (strpos($full_state, 'running') !== false || (strpos($full_state, 'created') !== false));
-/*
-                    if (strlen(trim($full_state)) == 0)
-                    {
-                        exec("$cmd > /dev/null &");
-                        continue;
-                    }*/
 
                     // if the container says it's running -- give it another chance (check in 30 seconds)
 
@@ -333,7 +325,9 @@ class ExecuteProxy
 
         if ($ipc_timeout_error)
         {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: IPC timeout Container=$container_name Exit Code=$exit_code Output=$docker_exec_output State=$full_state");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: IPC timeout");
+            // the following is for debugging
+            //throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: IPC timeout Container=$container_name Exit Code=$exit_code Output=$docker_exec_output State=$full_state");
         }
     }
 
