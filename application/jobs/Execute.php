@@ -185,8 +185,8 @@ class ExecuteProxy
         $server = new \ZMQSocket(new \ZMQContext(), \ZMQ::SOCKET_REP);
         $server->bind($dsn);
 
-        // recv() should time out every 250 ms
-        $server->setSockOpt(\ZMQ::SOCKOPT_RCVTIMEO, 250);
+        // recv() should time out every 1000 ms
+        $server->setSockOpt(\ZMQ::SOCKOPT_RCVTIMEO, 1000);
         $server->_is_bound = true;
         $ipc_timeout_error = false;
 
