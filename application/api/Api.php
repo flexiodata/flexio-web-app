@@ -185,7 +185,12 @@ class Api
 
         try
         {
-            // STEP 5: set the api request url params
+            // STEP 5: fail the request if a fail parameter is set; used for testing
+            $fail = $request_query_params['fail'] ?? false;
+            if ($fail !== false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL);
+
+            // STEP 6: set the api request url params
             $request_url_parts = $server_request->getUrlParts();
             $mapped_url_params = self::extractUrlParams($request_url_parts);
             if (!isset($mapped_url_params['apiversion']))
@@ -193,11 +198,11 @@ class Api
 
             $api_request->setUrlParams($mapped_url_params);
 
-            // STEP 6: set the api request user token
+            // STEP 7: set the api request user token
             $requesting_user_token = self::getTokenFromRequestParams($request_header_params, $request_query_params);
             $api_request->setToken($requesting_user_token);
 
-            // STEP 7: set the api request requesting user; if we can find a requesting user from
+            // STEP 8: set the api request requesting user; if we can find a requesting user from
             // the params, set the system session user to that user; if we can't find
             // the requesting user from the request params, then try to get the requesting
             // user from the system session info; if we can't, it's a public request
@@ -206,7 +211,7 @@ class Api
             $api_request->setRequestingUser($requesting_user_eid);
             \Flexio\System\System::setCurrentUserEid($requesting_user_eid);
 
-            // STEP 8: if JSON is sent as part of a POST body, set the api request posted
+            // STEP 9: if JSON is sent as part of a POST body, set the api request posted
             // parameters with the converted JSON; the check for enable_post_data_reading
             // is for calls that 'want' the json payload as their body, such as
             // /pipe/:eid/run and /process/:eid/run
@@ -224,7 +229,7 @@ class Api
             return;
         }
 
-        // STEP 8: process the request
+        // STEP 10: process the request
         self::processRequest($api_request);
     }
 

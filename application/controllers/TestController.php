@@ -244,13 +244,13 @@ EOD;
         $this->renderRaw();
 
         $processes = array();
-        for ($i = 0; $i < 60; ++$i)
+        for ($i = 0; $i < 500; ++$i)
         {
             $processes[] = self::runPipe(true /*true = background*/);
         }
 
         // block a minute, or until processes are finished
-        for ($i = 0; $i < 100; ++$i)
+        for ($i = 0; $i < 10000; ++$i)
         {
             if (self::processesFinished($processes))
                 break;
