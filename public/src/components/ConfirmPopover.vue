@@ -1,0 +1,70 @@
+<template>
+  <el-popover
+    trigger="click"
+    v-on="$listeners"
+    v-bind="$attrs"
+    v-model="is_visible"
+  >
+    <div class="b mb2" v-if="title.length > 0">{{title}}</div>
+    <div>{{message}}</div>
+    <div class="mt3 w-100 flex flex-row justify-end">
+      <el-button
+        size="small"
+        :class="cancelButtonClass"
+        @click="is_visible = false"
+      >
+        {{cancelButtonText}}
+      </el-button>
+      <el-button
+        size="small"
+        :class="confirmButtonClass"
+        :type="confirmButtonType"
+        @click="$emit('confirm-click')"
+      >
+        {{confirmButtonText}}
+      </el-button>
+    </div>
+    <slot name="reference"><i class="material-icons" slot="reference">delete</i></slot>
+  </el-popover>
+</template>
+
+<script>
+  export default {
+    inheritAttrs: false,
+    props: {
+      title: {
+        type: String,
+        default: 'Confirm delete?'
+      },
+      message: {
+        type: String,
+        default: 'Are you sure you want to delete this item?'
+      },
+      cancelButtonText: {
+        type: String,
+        default: 'Cancel'
+      },
+      confirmButtonText: {
+        type: String,
+        default: 'Delete'
+      },
+      cancelButtonClass: {
+        type: String,
+        default: 'ttu fw6'
+      },
+      confirmButtonClass: {
+        type: String,
+        default: 'ttu fw6'
+      },
+      confirmButtonType: {
+        type: String,
+        default: 'danger'
+      }
+    },
+    data() {
+      return {
+        is_visible: false
+      }
+    }
+  }
+</script>
