@@ -233,7 +233,7 @@ class ExecuteProxy
         });
 
         $start_time = microtime(true);
-        $actual_start_time = $start_time;  // but actual_start_time will be updated to reflect actual script execution time start
+        $actual_start_time = null;    // actual_start_time is initially set when the get_script hook is called
 
         $connection_established = false;
         $call_count = 0;
@@ -283,16 +283,19 @@ class ExecuteProxy
                 }
             }
 
-            $execution_seconds = (int)floor(microtime(true) - $actual_start_time);
-            if ($execution_seconds > $max_execution_time)
+            if (!is_null($actual_start_time))
             {
-                // first, make sure container is 'dead'
-                $cmd = "$g_dockerbin kill $container_name";
-                @exec("$cmd > /dev/null &");
+                $execution_seconds = (int)floor(microtime(true) - $actual_start_time);
+                if ($execution_seconds > $max_execution_time)
+                {
+                    // first, make sure container is 'dead'
+                    $cmd = "$g_dockerbin kill $container_name";
+                    @exec("$cmd > /dev/null &");
 
-                $exception = \Flexio\Base\Error::GENERAL;
-                $exception_msg = "Maximum execution time exceeded";
-                break;
+                    $exception = \Flexio\Base\Error::GENERAL;
+                    $exception_msg = "Maximum execution time exceeded";
+                    break;
+                }
             }
 
             if ($call_count == 0)
@@ -323,13 +326,6 @@ class ExecuteProxy
                     }
                 }
             }
-
-         /*
-            if ((microtime(true) - $start_time) > 16)
-            {
-                die("TIMED OUT");
-            }
-        */
         }
 
         if ($server->_is_bound)
