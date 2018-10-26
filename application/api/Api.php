@@ -188,7 +188,16 @@ class Api
             // STEP 5: fail the request if a fail parameter is set; used for testing
             $fail = $request_query_params['fail'] ?? false;
             if ($fail !== false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL);
+            {
+                $error = array(
+                    'code' => $request_query_params['code'] ?? Flexio\Base\Error::GENERAL,
+                    'message' => $request_query_params['message'] ?? ''
+                );
+
+                $response = $request_query_params['response'] ?? null;
+                \Flexio\Api\Response::sendError($error, $response);
+                return;
+            }
 
             // STEP 6: set the api request url params
             $request_url_parts = $server_request->getUrlParts();
