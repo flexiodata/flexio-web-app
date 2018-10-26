@@ -44,7 +44,7 @@ class Response
         echo $response;
     }
 
-    public static function sendError(array $error) : void
+    public static function sendError(array $error, string $http_error_code_override = null) : void
     {
         $error_code = $error['code'] ?? \Flexio\Base\Error::GENERAL;
         $error_message = $error['message'] ?? '';
@@ -62,6 +62,9 @@ class Response
         // set the http error code header
         $protocol = (isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0');
         $http_error_code = (string)self::getHttpErrorCode($error_code);
+        if (isset($http_error_code_override))
+            $http_error_code = $http_error_code_override;
+
         header($protocol . ' ' . $http_error_code . ' ' . 'Bad Request');
 
         // if a message isn't specified, supply a default message
