@@ -113,9 +113,12 @@ class Api
 
         // INTERNAL ENDPOINTS
 
-        // admin
+        // email/cron triggers
         'POS /admin/email/run'                        => '\Flexio\Api\Admin::email',
         'POS /admin/cron/run'                         => '\Flexio\Api\Admin::cron',
+
+        // diagnostic/system info
+        'GET /admin/info/settings'                    => '\Flexio\Api\Admin::settings',
         'GET /admin/info/system'                      => '\Flexio\Api\Admin::system',
         'GET /admin/info/users'                       => '\Flexio\Api\Admin::users',
         'GET /admin/info/actions'                     => '\Flexio\Api\Admin::actions',
@@ -123,10 +126,10 @@ class Api
         'GET /admin/info/pipes'                       => '\Flexio\Api\Admin::pipes',
         'GET /admin/info/processes'                   => '\Flexio\Api\Admin::processes',
         'GET /admin/info/processes/summary/user'      => '\Flexio\Api\Admin::process_summary_byuser',
+
+        // tests
         'GET /admin/tests/configure'                  => '\Flexio\Tests\Base::configure',
         'GET /admin/tests/run'                        => '\Flexio\Tests\Base::run',
-
-        // test
         'GET /admin/action/test'                      => '\Flexio\Api\Action::test'
     );
 

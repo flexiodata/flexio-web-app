@@ -29,6 +29,36 @@ class Admin
         if ($requesting_user->isAdministrator() !== true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
+        $package_info = \Flexio\System\System::getPackageInfo();
+        $git_version = \Flexio\System\System::getGitRevision();
+
+        $result = array(
+            "application" => array(
+                "name" => $package_info['name'] ?? '',
+                "version" =>  $package_info['version'] ?? '',
+                "sha" => $git_version
+            ),
+            "database" =>  array(
+                "version" => \Flexio\System\System::getModel()->getDbVersionNumber(),
+                "counts" => \Flexio\System\System::getModel()->getTableCounts()
+            )
+        );
+
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        \Flexio\Api\Response::sendContent($result);
+    }
+
+    public static function settings(\Flexio\Api\Request $request) : void
+    {
+        $requesting_user_eid = $request->getRequestingUser();
+
+        // only allow users from flex.io to get this info
+        $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
+        if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        if ($requesting_user->isAdministrator() !== true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
         $result = self::checkServerSettings();
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api\Response::sendContent($result);

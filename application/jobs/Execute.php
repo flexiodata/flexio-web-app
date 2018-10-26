@@ -82,6 +82,34 @@ function gc_container_remove($container_name)
 
 
 
+function get_docker_status($container_name)
+{
+    // this isn't working on Aaron's machine, so we'll use get_docker_full_state instead
+
+    @exec("docker inspect -f {{.State.Status}} $container_name", $output_lines);
+    //@exec("docker inspect -f {{.State}} $container_name", $output_lines);
+    //@exec("docker inspect $container_name", $output_lines);
+    
+    $res = '';
+    foreach ($output_lines as $line)
+        $res .= $line;
+    return $res;
+}
+
+
+function get_docker_full_state($container_name)
+{
+    //@exec("docker inspect -f {{.State.Status}} $container_name", $output_lines);
+    @exec("docker inspect -f {{.State}} $container_name", $output_lines);
+    //@exec("docker inspect $container_name", $output_lines);
+    
+    $res = '';
+    foreach ($output_lines as $line)
+        $res .= $line;
+    return $res;
+}
+
+
 class ExecuteProxy
 {
     private const MESSAGE_SIGNATURE = '--MSGqQp8mf~';
@@ -141,6 +169,12 @@ class ExecuteProxy
         $access_key = \Flexio\Base\Util::generateRandomString(20);
         $container_name = 'fxexec-' . $access_key;
 
+        // get the docker binary location
+        global $g_dockerbin;
+        $g_dockerbin = \Flexio\System\System::getBinaryPath('docker');
+        if (is_null($g_dockerbin))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
         // start a zeromq server -- let OS choose port
 
         $host_socket_path = "/dev/shm/ipc-exec-$access_key";
@@ -151,20 +185,13 @@ class ExecuteProxy
         $server = new \ZMQSocket(new \ZMQContext(), \ZMQ::SOCKET_REP);
         $server->bind($dsn);
 
-        if (file_exists($host_socket_path))
-        {
-            register_shutdown_function('unlink', $host_socket_path);
-        }
-
         // recv() should time out every 250 ms
         $server->setSockOpt(\ZMQ::SOCKOPT_RCVTIMEO, 250);
+        $server->_is_bound = true;
+        $ipc_timeout_error = false;
+
         //$server->setSockOpt(\ZMQ::SOCKOPT_SNDTIMEO, 250);
 
-        // run the container command
-        global $g_dockerbin;
-        $g_dockerbin = \Flexio\System\System::getBinaryPath('docker');
-        if (is_null($g_dockerbin))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         //$cmd = "./update-docker-images && $g_dockerbin run --rm -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=tcp://$address:$port -i fxruntime timeout 3600s python3 /fxpython/fxstart.py";
         //echo $cmd;
@@ -172,13 +199,19 @@ class ExecuteProxy
         //flush();
 
         $engine = $this->engine;
-        $cmd = "$g_dockerbin run --rm --name $container_name -v $host_socket_path:$container_socket_path -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=$container_ipc_address -e FLEXIO_EXECUTE_ENGINE=$engine -i fxruntime timeout 3600s python3 /fxpython/fxstart.py";
+        //$cmd = "$g_dockerbin run --rm --name $container_name -v $host_socket_path:$container_socket_path -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=$container_ipc_address -e FLEXIO_EXECUTE_ENGINE=$engine -i fxruntime timeout 3600s python3 /fxpython/fxstart.py";
+        $cmd = "$g_dockerbin run -d --rm --name $container_name -v $host_socket_path:$container_socket_path -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=$container_ipc_address -e FLEXIO_EXECUTE_ENGINE=$engine -i fxruntime timeout 3600s python3 /fxpython/fxstart.py";
 
         //echo "./update-docker-images && $cmd";
         //ob_end_flush();
         //flush();
 
-        exec("$cmd > /dev/null &");
+        exec("$cmd 2>&1", $output_lines, $exit_code);
+
+        $docker_exec_output = '';
+        foreach ($output_lines as $line)
+            $docker_exec_output .= $line;
+
 
         // should the script host crash for any reason, the container could be left running;
         // the following function adds this container to a list that of containers that
@@ -187,14 +220,21 @@ class ExecuteProxy
         gc_container_add($container_name);
 
 
-        register_shutdown_function(function() use (&$server, $dsn) {
+        register_shutdown_function(function() use (&$server, $dsn, $host_socket_path) {
             \Flexio\Jobs\gc_container_cleanup();
-            $server->unbind($dsn);
+            @unlink($host_socket_path);
+            if ($server !== null && $server->_is_bound)
+            {
+                $server->unbind($dsn);
+                $server->_is_bound = false;
+            }
         });
 
         $start_time = microtime(true);
         $connection_established = false;
         $call_count = 0;
+
+        $last_check = 0;
 
         while (true)
         {
@@ -238,12 +278,37 @@ class ExecuteProxy
                 }
             }
 
-            if ($call_count == 0 && (microtime(true) - $start_time) > 30)
+            if ($call_count == 0)
             {
-                // if we haven't yet received our first call after 30 seconds, something is wrong;
-                // terminate the execute job with an exception
+                $seconds = (int)floor(microtime(true) - $start_time);
 
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: IPC timeout");
+                if ($seconds - $last_check > 30)
+                {
+                    $last_check = $seconds;
+                    $full_state = get_docker_full_state($container_name);
+                    $is_running = (strpos($full_state, 'running') !== false || (strpos($full_state, 'created') !== false));
+/*
+                    if (strlen(trim($full_state)) == 0)
+                    {
+                        exec("$cmd > /dev/null &");
+                        continue;
+                    }*/
+
+                    // if the container says it's running -- give it another chance (check in 30 seconds)
+
+                    // but if the final threshold (300 seconds/5 minutes) has expired, something has gone wrong;
+                    // terminate the execute job with an exception (but break first and clean up the socket etc)
+    
+                    if ($seconds >= 300 || !$is_running)
+                    {
+                        // first, make sure container is 'dead'
+                        $cmd = "$g_dockerbin kill $container_name";
+                        @exec("$cmd > /dev/null &");
+        
+                        $ipc_timeout_error = true;
+                        break;
+                    }
+                }
             }
 
          /*
@@ -254,8 +319,22 @@ class ExecuteProxy
         */
         }
 
+        if ($server->_is_bound)
+        {
+            $server->unbind($dsn);
+            $server->_is_bound = false;
+            $server = null;
+        }
+
+        @unlink($host_socket_path);
+
         // docker container stopped normally, so it does not need to be terminated; remove from the container GC list
         gc_container_remove($container_name);
+
+        if ($ipc_timeout_error)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: IPC timeout Container=$container_name Exit Code=$exit_code Output=$docker_exec_output State=$full_state");
+        }
     }
 
     public function func_compile_error($error)
@@ -295,7 +374,7 @@ class ExecuteProxy
             }
         }
     }
-    
+
 
 
     public function onMessage(\ZMQSocket $server, array $msg) : void
@@ -487,7 +566,7 @@ class ScriptHost
             $this->files[] = $file;
             $handle = count($this->files)-1;
             $this->process->setLocalFile($handle, $file->stream);
-    
+
             $results[] = array('handle' => $handle,
                                'tag' => $k,
                                'name' => $file->stream->getName(),
@@ -734,13 +813,13 @@ class ScriptHost
 
             $stream = \Flexio\Base\Stream::create();
             $stream->setName($path);
-    
+
             $file = new ScriptHostFile();
             $file->stream = $stream;
             $this->files[] = $file;
             $handle = count($this->files)-1;
             $this->process->setLocalFile($handle, $file->stream);
-    
+
             return array('handle' => $handle,
                          'name' => '',
                          'size' => $file->stream->getSize(),
@@ -754,7 +833,7 @@ class ScriptHost
 
         $info = $vfs->getFileInfo($path);
 
-        
+
 
         $is_table = false;
         $properties = [ 'mime_type' => ($info['content_type'] ?? 'application/octet-stream') ];
@@ -769,7 +848,7 @@ class ScriptHost
 
 
         $stream = \Flexio\Base\Stream::create();
-        $stream->set($properties);        
+        $stream->set($properties);
         $streamwriter = $stream->getWriter();
 
 
@@ -845,7 +924,7 @@ class ScriptHost
         $params = [ 'path' => $path ];
         if (strlen($connection) > 0)
             $params['connection'] = $connection;
-        
+
         return \Flexio\Jobs\List1::doList($this->process, $params);
 
         /*
