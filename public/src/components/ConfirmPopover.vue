@@ -19,7 +19,7 @@
         size="small"
         :class="confirmButtonClass"
         :type="confirmButtonType"
-        @click="$emit('confirm-click')"
+        @click="onConfirmClick"
       >
         {{confirmButtonText}}
       </el-button>
@@ -64,6 +64,12 @@
     data() {
       return {
         is_visible: false
+      }
+    },
+    methods: {
+      onConfirmClick() {
+        this.is_visible = false
+        this.$nextTick(() => { this.$emit('confirm-click') })
       }
     }
   }
