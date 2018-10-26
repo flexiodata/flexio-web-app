@@ -21,7 +21,7 @@ const slugify = (str) => {
 
 const afterNth = (str, char, cnt) => {
   if (!isNumber(cnt)) { cnt = 1 }
-  var retval = str.substr(str.indexOf('/') + 1)
+  var retval = str.substr(str.indexOf(char) + 1)
   return cnt <= 1 ? retval : afterNth(retval, char, cnt-1)
 }
 
