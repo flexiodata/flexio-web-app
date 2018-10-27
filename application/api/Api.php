@@ -84,6 +84,7 @@ class Api
         // pipes
         'POS /:userid/pipes'                          => '\Flexio\Api\Pipe::create',
         'GET /:userid/pipes'                          => '\Flexio\Api\Pipe::list',
+        'DEL /:userid/pipes'                          => '\Flexio\Api\Pipe::bulkdelete', // experimental
         'POS /:userid/pipes/:objeid'                  => '\Flexio\Api\Pipe::set',
         'GET /:userid/pipes/:objeid'                  => '\Flexio\Api\Pipe::get',
         'DEL /:userid/pipes/:objeid'                  => '\Flexio\Api\Pipe::delete',
