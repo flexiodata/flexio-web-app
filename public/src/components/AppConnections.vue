@@ -29,11 +29,11 @@
         :selected-item.sync="connection"
         :items="connections"
         :item-options="{
-          'item-cls': 'min-w5 pa3 pr2 ba b--white bg-white hover-bg-nearer-white',
-          'item-style': 'margin: 3px',
-          'selected-cls': 'relative b--black-10 bg-nearer-white',
-          'show-dropdown': true,
-          'dropdown-items': ['delete']
+          itemCls: 'min-w5 pa3 pr2 ba b--white bg-white hover-bg-nearer-white',
+          itemStyle: 'margin: 3px',
+          selectedCls: 'relative b--black-10 bg-nearer-white',
+          showDropdown: true,
+          dropdownItems: ['delete']
         }"
         @item-activate="selectConnection"
         @item-delete="tryDeleteConnection"
