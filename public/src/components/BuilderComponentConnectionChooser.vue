@@ -40,6 +40,7 @@
       width="51rem"
       top="8vh"
       :modal-append-to-body="false"
+      :close-on-click-modal="false"
       :visible.sync="show_connection_dialog"
     >
       <ConnectionEditPanel
