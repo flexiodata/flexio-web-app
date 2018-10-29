@@ -35,7 +35,7 @@
     <PipeList
       class="center w-100 pl4-l pr4-l pb4-l"
       style="max-width: 1280px; padding-bottom: 8rem"
-      :filter="filter"
+      :filterBy="filter_by"
       :show-header="true"
       :show-selection-checkboxes="false"
       @item-duplicate="duplicatePipe"
@@ -74,10 +74,10 @@
       }
     },
     computed: {
-      // mix this into the outer object with the object spread operator
       ...mapState({
-        'is_fetching': 'pipes_fetching',
-        'is_fetched': 'pipes_fetched'
+        pipes: state => state.apppipes.pipes,
+        is_fetching: state => state.apppipes.fetching,
+        is_fetched: state => state.apppipes.fetched
       })
     },
     mounted() {
@@ -88,6 +88,9 @@
       setTimeout(() => { this.force_loading = false }, 10)
     },
     methods: {
+      ...mapGetters([
+        'getAllPipes'
+      ]),
       openPipe(eid) {
         this.$router.push({ name: ROUTE_PIPES, params: { eid } })
       },
@@ -110,9 +113,24 @@
         }, 100)
       },
       tryFetchPipes() {
-        if (!this.is_fetched && !this.is_fetching) {
-          this.$store.dispatch('v2_action_fetchPipes', {}).catch(error => {
+        if (this.is_fetching) {
+          return
+        }
+
+        if (this.is_fetched) {
+          var pipes = this.getAllPipes()
+          this.$store.commit('apppipes/INIT_PIPES', pipes)
+        } else {
+          this.$store.commit('apppipes/FETCHING_PIPES', true)
+
+          this.$store.dispatch('v2_action_fetchPipes', {}).then(response => {
+            var pipes = response.data
+            this.$store.commit('apppipes/FETCHING_PIPES', false)
+            this.$store.commit('apppipes/FETCHED_PIPES', true)
+            this.$store.commit('apppipes/INIT_PIPES', pipes)
+          }).catch(error => {
             // TODO: add error handling?
+            this.$store.commit('apppipes/INIT_PIPES', [])
           })
         }
       },

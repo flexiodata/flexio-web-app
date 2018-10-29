@@ -1,6 +1,4 @@
 import _ from 'lodash'
-import Flexio from 'flexio-sdk-js'
-import utilSdkJs from '../../utils/sdk-js'
 
 const getDefaultState = () => {
   return {
@@ -32,7 +30,7 @@ const state = getDefaultState()
 
 const mutations = {
   RESET_STATE (state) {
-    Object.assign(state, getDefaultState())
+    _.assign(state, getDefaultState())
   },
 
   FETCHING_PIPE (state, fetching) {

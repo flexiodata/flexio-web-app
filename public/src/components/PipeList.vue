@@ -5,12 +5,12 @@
     </div>
   </div>
 
-  <EmptyItem class="flex-fill justify-center h-100" v-else-if="filtered_pipes.length == 0 && filter.length > 0">
+  <EmptyItem class="flex-fill justify-center h-100" v-else-if="filtered_pipes.length == 0 && filterBy">
     <i slot="icon" class="material-icons">storage</i>
     <span slot="text">No pipes match the filter criteria</span>
   </EmptyItem>
 
-  <EmptyItem class="flex-fill justify-center h-100" v-else-if="pipes.length == 0">
+  <EmptyItem class="flex-fill justify-center h-100" v-else-if="all_pipes.length == 0">
     <i slot="icon" class="material-icons">storage</i>
     <span slot="text">No pipes to show</span>
   </EmptyItem>
@@ -48,12 +48,14 @@
   import Spinner from 'vue-simple-spinner'
   import PipeItem from './PipeItem.vue'
   import EmptyItem from './EmptyItem.vue'
-  import MixinFilter from './mixins/filter'
 
   export default {
     props: {
-      filter: {
-        type: String
+      items: {
+        type: Array
+      },
+      filterBy: {
+        type: Function
       },
       showHeader: {
         type: Boolean,
@@ -64,7 +66,6 @@
         default: false
       }
     },
-    mixins: [MixinFilter],
     components: {
       Spinner,
       PipeItem,
@@ -85,18 +86,23 @@
         'is_summary_fetching': 'process_summary_fetching',
         'is_summary_fetched': 'process_summary_fetched'
       }),
-      pipes() {
+      all_pipes() {
+        if (_.isArray(this.items)) {
+          return this.items
+        }
+
         return this.getAllPipes()
       },
       mapped_pipes() {
-        return _.map(this.pipes, p => {
+        return _.map(this.all_pipes, p => {
           return _.assign({}, p, {
             execution_cnt: parseInt(_.get(p, 'stats.total_count', '0'))
           })
         })
       },
       filtered_pipes() {
-        return this.$_Filter_filter(this.mapped_pipes, this.filter, ['name', 'description'])
+        var pipes = this.mapped_pipes
+        return this.filterBy ? _.filter(pipes, this.filterBy) : pipes
       },
       sorted_pipes() {
         if (this.sort.length == 0) {
