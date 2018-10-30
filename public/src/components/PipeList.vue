@@ -1,151 +1,241 @@
 <template>
-  <div v-if="is_fetching">
-    <div class="flex flex-column justify-center h-100">
-      <Spinner size="large" message="Loading pipes..." />
-    </div>
-  </div>
+  <div>
+    <el-table
+      class="w-100 activity-list"
+      size="large"
+      :data="limited_pipes"
+      @sort-change="onSortChange"
+    >
+      <el-table-column
+        prop="name"
+        label="Name"
+        :sortable="true"
+      >
+        <template slot-scope="scope">
+          <div class="link">
+            <h3 class="f6 f5-ns fw6 lh-title dark-gray mv0 mr2 truncate title">{{scope.row.name}}</h3>
+            <div class="dn db-ns" v-if="hasDescription(scope.row)">
+              <h5 class="f6 fw4 mt1 mb0 lh-copy light-silver truncate description" ref="description">{{scope.row.description}}</h5>
+            </div>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="execution_cnt"
+        label="Executions"
+        align="right"
+        :sortable="true"
+        :width="120"
+      >
+        <template slot-scope="scope">
+          <span class="f6">{{scope.row.execution_cnt}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="Deployment"
+        align="right"
+        :width="130"
+      >
+        <template slot-scope="scope">
+          <div class="flex flex-row items-center justify-end">
+            <div
+              class="hint--top"
+              style="margin-left: 3px"
+              :aria-label="item.tooltip"
+              v-for="item in getDeploymentIcons(scope.row)"
+            >
+              <i class="db material-icons md-21" :class="item.is_deployed ? 'blue' : 'o-10'">{{item.icon}}</i>
+            </div>
+          </div>
+        </template>
+      </el-table-column>
 
-  <EmptyItem class="flex-fill justify-center h-100" v-else-if="filtered_pipes.length == 0 && filter.length > 0">
-    <i slot="icon" class="material-icons">storage</i>
-    <span slot="text">No pipes match the filter criteria</span>
-  </EmptyItem>
+      <el-table-column
+        prop="deploy_mode"
+        label="Status"
+        align="center"
+        :sortable="true"
+        :width="100"
+      >
+        <template slot-scope="scope">
+          <div class="flex flex-row items-center justify-center mr1">
+            <LabelSwitch
+              class="db"
+              active-color="#13ce66"
+              :width="58"
+            />
+          </div>
+        </template>
+      </el-table-column>
 
-  <EmptyItem class="flex-fill justify-center h-100" v-else-if="pipes.length == 0">
-    <i slot="icon" class="material-icons">storage</i>
-    <span slot="text">No pipes to show</span>
-  </EmptyItem>
-
-  <div v-else>
-    <PipeItem
-      :is-header="true"
-      :item="{}"
-      :show-selection-checkbox="showSelectionCheckboxes"
-      :selected="is_all_selected"
-      :sort.sync="sort"
-      :sort-direction.sync="sort_direction"
-      @select-all="onSelectAll"
-      v-if="showHeader"
-    />
-    <transition-group name="pipe-item">
-      <PipeItem
-        v-for="(pipe, index) in sorted_pipes"
-        :key="pipe.eid"
-        :item="pipe"
-        :index="index"
-        :show-selection-checkbox="showSelectionCheckboxes"
-        :selected="isItemSelected(pipe.eid)"
-        @select="onItemSelect"
-        @edit="onItemEdit"
-        @duplicate="onItemDuplicate"
-        @delete="onItemDelete"
-      />
-    </transition-group>
+      <el-table-column
+        label=""
+        align="right"
+        :width="50"
+      >
+        <template slot-scope="scope">
+          <div @click.stop>
+            <el-dropdown
+              trigger="click"
+              @command="onCommand"
+            >
+              <span class="el-dropdown-link dib pointer black-30 hover-black">
+                <i class="material-icons v-mid">expand_more</i>
+              </span>
+              <el-dropdown-menu style="min-width: 10rem" slot="dropdown">
+                <el-dropdown-item class="flex flex-row items-center ph2" command="open"><i class="material-icons mr3">edit</i> Edit</el-dropdown-item>
+                <el-dropdown-item class="flex flex-row items-center ph2" command="duplicate"><i class="material-icons mr3">content_copy</i> Duplicate</el-dropdown-item>
+                <div class="mv2 bt b--black-10"></div>
+                <el-dropdown-item class="flex flex-row items-center ph2" command="delete"><i class="material-icons mr3">delete</i> Delete</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div>
+        </template>
+      </el-table-column>
+      <div slot="empty">No pipes to show</div>
+    </el-table>
   </div>
 </template>
 
 <script>
-  import { mapState, mapGetters } from 'vuex'
-  import Spinner from 'vue-simple-spinner'
-  import PipeItem from './PipeItem.vue'
-  import EmptyItem from './EmptyItem.vue'
-  import MixinFilter from './mixins/filter'
+  import { mapGetters } from 'vuex'
+  import pipe_util from '../utils/pipe'
+  import LabelSwitch from './LabelSwitch.vue'
+
+  const DEPLOY_MODE_UNDEFINED = ''
+  const DEPLOY_MODE_BUILD     = 'B'
+  const DEPLOY_MODE_RUN       = 'R'
+
+  const ACTIVE = 'A'
+  const INACTIVE = 'I'
 
   export default {
     props: {
-      filter: {
-        type: String
+      items: {
+        type: Array
       },
-      showHeader: {
-        type: Boolean,
-        default: false
+      filterBy: {
+        type: Function
       },
-      showSelectionCheckboxes: {
-        type: Boolean,
-        default: false
+      start: {
+        type: Number
+      },
+      limit: {
+        type: Number,
+        default: 50
       }
     },
-    mixins: [MixinFilter],
     components: {
-      Spinner,
-      PipeItem,
-      EmptyItem
-    },
-    data() {
-      return {
-        sort: '',
-        sort_direction: '',
-        selected_items: []
-      }
+      LabelSwitch
     },
     computed: {
-      // mix this into the outer object with the object spread operator
-      ...mapState({
-        'is_fetching': 'pipes_fetching',
-        'is_fetched': 'pipes_fetched',
-        'is_summary_fetching': 'process_summary_fetching',
-        'is_summary_fetched': 'process_summary_fetched'
-      }),
-      pipes() {
+      all_pipes() {
+        if (_.isArray(this.items)) {
+          return this.items
+        }
+
         return this.getAllPipes()
       },
       mapped_pipes() {
-        return _.map(this.pipes, p => {
+        return _.map(this.all_pipes, p => {
           return _.assign({}, p, {
             execution_cnt: parseInt(_.get(p, 'stats.total_count', '0'))
           })
         })
       },
       filtered_pipes() {
-        return this.$_Filter_filter(this.mapped_pipes, this.filter, ['name', 'description'])
+        var pipes = this.mapped_pipes
+        return this.filterBy ? _.filter(pipes, this.filterBy) : pipes
       },
-      sorted_pipes() {
-        if (this.sort.length == 0) {
+      limited_pipes() {
+        if (!_.isNumber(this.start)) {
           return this.filtered_pipes
         }
 
-        return _.orderBy(this.filtered_pipes, [this.sort], [this.sort_direction])
+        return _.filter(this.filtered_pipes, (item, idx) => {
+          return idx >= this.start && idx < (this.start + this.limit)
+        })
       },
-      is_all_selected() {
-        return this.selected_items.length == this.sorted_pipes.length
+      has_start() {
+        return _.isNumber(this.start)
       }
-    },
-    created() {
-      this.tryFetchPipes()
     },
     methods: {
       ...mapGetters([
         'getAllPipes'
       ]),
-      tryFetchPipes() {
-        if (!this.is_fetched) {
-          this.$store.dispatch('v2_action_fetchPipes', {}).catch(error => {
-            // TODO: add error handling?
-          })
-        }
-        if (!this.is_summary_fetched) {
-          this.$store.dispatch('v2_action_fetchProcessSummary', {}).catch(error => {
-            // TODO: add error handling?
-          })
-        }
+      getPipeRoute(row) {
+        return '/pipes/' + _.get(row, 'eid')
       },
-      isItemSelected(eid) {
-        return _.includes(this.selected_items, eid)
+      getIndex(idx) {
+        return idx + this.start + 1
       },
-      onSelectAll(selected) {
-        if (selected) {
-          this.selected_items = _.map(this.sorted_pipes, (p) => {
-            return p.eid
-          })
-        } else {
-          this.selected_items = []
-        }
+      getScheduleStr(row) {
+        return pipe_util.getDeployScheduleStr(row.schedule)
       },
-      onItemSelect(selected, eid) {
-        if (selected) {
-          this.selected_items = [].concat(this.selected_items).concat([eid])
-        } else {
-          this.selected_items = _.without(this.selected_items, eid)
+      isDeployedSchedule(row) {
+        return row.deploy_schedule === ACTIVE
+      },
+      isDeployedApi(row) {
+        return row.deploy_api === ACTIVE
+      },
+      isDeployedUi(row) {
+        return row.deploy_ui === ACTIVE
+      },
+      isDeployedEmail(row) {
+        return row.deploy_email === ACTIVE
+      },
+      getTooltipSchedule(row) {
+        return this.isDeployedSchedule(row) ? 'Scheduler ON: ' + this.getScheduleStr(row) : 'Scheduler OFF'
+      },
+      getTooltipApi(row) {
+        return this.isDeployedApi(row) ? 'API Endpoint ON' : 'API Endpoint OFF'
+      },
+      getTooltipEmail(row) {
+        return this.isDeployedEmail(row) ? 'Email Trigger ON' : 'Email Trigger OFF'
+      },
+      getTooltipUi(row) {
+        return this.isDeployedUi(row) ? 'Flex.io Web Interface ON' : 'Flex.io Web Interface OFF'
+      },
+
+      getDeploymentIcons(row) {
+        return [
+          {
+            icon: 'schedule',
+            tooltip: this.getTooltipSchedule(row),
+            is_deployed: this.isDeployedSchedule(row)
+          },
+          {
+            icon: 'code',
+            tooltip: this.getTooltipApi(row),
+            is_deployed: this.isDeployedApi(row)
+          },
+          {
+            icon: 'email',
+            tooltip: this.getTooltipEmail(row),
+            is_deployed: this.isDeployedEmail(row)
+          },
+          {
+            icon: 'offline_bolt',
+            tooltip: this.getTooltipUi(row),
+            is_deployed: this.isDeployedUi(row)
+          }
+        ]
+      },
+      hasDescription(row) {
+        return _.get(row, 'description', '').length > 0
+      },
+      onCommand(cmd) {
+        /*
+        switch (cmd) {
+          case 'open':      return this.openPipe()
+          case 'duplicate': return this.$emit('duplicate', this.item)
+          case 'delete':    return this.$emit('delete', this.item)
         }
+        */
+      },
+      onSortChange(obj) {
+        this.$emit('sort-change', obj)
       },
       onItemEdit(item) {
         this.$emit('item-edit', item)

@@ -74,10 +74,11 @@
       }
     },
     computed: {
-      // mix this into the outer object with the object spread operator
       ...mapState({
         'is_fetching': 'pipes_fetching',
-        'is_fetched': 'pipes_fetched'
+        'is_fetched': 'pipes_fetched',
+        'is_summary_fetching': 'process_summary_fetching',
+        'is_summary_fetched': 'process_summary_fetched'
       })
     },
     mounted() {
@@ -112,6 +113,11 @@
       tryFetchPipes() {
         if (!this.is_fetched && !this.is_fetching) {
           this.$store.dispatch('v2_action_fetchPipes', {}).catch(error => {
+            // TODO: add error handling?
+          })
+        }
+        if (!this.is_summary_fetched) {
+          this.$store.dispatch('v2_action_fetchProcessSummary', {}).catch(error => {
             // TODO: add error handling?
           })
         }
