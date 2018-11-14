@@ -34,12 +34,12 @@
     </div>
     <div class="pv1" style="margin-left: 24px" v-if="item.details && item.details.length > 0" v-show="!show_details">
       <table class="w-100 css-test-table">
-        <tr :class="!detail.passed ? '' : ''" v-for="(detail, index) in item.details">
+        <tr :class="!detail.passed ? 'css-row-error' : ''" v-for="(detail, index) in item.details">
           <td class="v-top f6 b w3">{{detail.name}}</td>
           <td class="v-top f6 min-w6 mw6">
             <div>{{detail.description}}</div>
-            <div class="flex flex-row mr3" style="margin: 2px 0; max-height: 8rem" v-if="!detail.passed && detail.message && detail.message.length > 0">
-              <div class="f8 code overflow-auto ba b--black-20 bg-white-60" style="padding: 3px">
+            <div class="flex flex-row mh3" style="margin-top: 2px; margin-bottom: 2px; max-height: 8rem" v-if="!detail.passed && detail.message && detail.message.length > 0">
+              <div class="pa1 f8 code overflow-auto br1 bg-white" style="box-shadow: 0 1px 3px -1px rgba(0,0,0,0.4)">
                 {{detail.message}}
               </div>
             </div>
@@ -118,5 +118,5 @@
     tr:hover
       background-color: rgba(0,0,0,0.05)
     td
-      padding: 0 0 0 3px
+      padding: 2px 0 2px 3px
 </style>
