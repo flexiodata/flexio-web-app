@@ -1,5 +1,5 @@
 <template>
-  <article class="pv1 ph2" style="" :class="cls">
+  <article class="bg-nearer-white br2 ma2 pv1 ph2" style="" :class="cls">
     <div class="flex flex-row items-center pointer na1 pa1" @click="toggleDetails">
       <span class="black-30 mr1">
         <i
@@ -24,7 +24,7 @@
         <div class="yellow" v-if="is_xhr_error">&nbsp;Error</div>
       </div>
     </div>
-    <div class="pt1" style="margin-left: 24px" v-if="is_xhr_error">
+    <div class="pv1" style="margin-left: 24px" v-if="is_xhr_error">
       <table class="w-100 css-test-table">
         <tr>
           <td class="v-top f6 b w3">&nbsp;</td>
@@ -32,7 +32,7 @@
         </tr>
       </table>
     </div>
-    <div class="pt1" style="margin-left: 24px" v-if="item.details && item.details.length > 0" v-show="!show_details">
+    <div class="pv1" style="margin-left: 24px" v-if="item.details && item.details.length > 0" v-show="!show_details">
       <table class="w-100 css-test-table">
         <tr :class="!detail.passed ? '' : ''" v-for="(detail, index) in item.details">
           <td class="v-top f6 b w3">{{detail.name}}</td>
@@ -46,10 +46,10 @@
           </td>
           <td class="v-top f7 tr">
             <div class="dib pr1">
-              <div class="flex flex-row items-center nowrap ttu white bg-dark-green" style="padding: 1px 5px" v-if="detail.passed">
+              <div class="flex flex-row items-center nowrap ttu br1 white bg-dark-green" style="padding: 1px 5px" v-if="detail.passed">
                 <span class="f6 monospace">Passed</span>
               </div>
-              <div class="flex flex-row items-center nowrap ttu white bg-dark-red" style="padding: 1px 5px" v-if="!detail.passed">
+              <div class="flex flex-row items-center nowrap ttu br1 white bg-dark-red" style="padding: 1px 5px" v-if="!detail.passed">
                 <span class="f6 monospace">Failed</span>
               </div>
             </div>
@@ -116,7 +116,7 @@
 
   .css-test-table
     tr:hover
-      background-color: rgba(0,0,0,0.1)
+      background-color: rgba(0,0,0,0.05)
     td
       padding: 0 0 0 3px
 </style>
