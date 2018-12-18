@@ -570,6 +570,7 @@ class Util
         {
             $start_date = new \DateTime($start_date);
             $end_date = new \DateTime($end_date);
+            $end_date->modify('+1 day');
 
             $start_date->setTime(0, 0, 0, 0); // reset time portion
             $end_date->setTime(0, 0, 0, 0);
