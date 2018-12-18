@@ -326,13 +326,11 @@ class Admin
                 $user = \Flexio\Object\User::load($s['user']['eid']);
                 $user_info = $user->get();
                 $info['eid'] = $user_info['eid'];
-                $info['eid_type'] = $user_info['eid_type'];
-                $info['eid_status'] = $user_info['eid_status'];
                 $info['username'] = $user_info['username'];
+                $info['email'] = $user_info['email'];
                 $info['first_name'] = $user_info['first_name'];
                 $info['last_name'] = $user_info['last_name'];
-                $info['email'] = $user_info['email'];
-                $info['email_hash'] = $user_info['email_hash'];
+                $info['created'] = $user_info['created'] ?? '';
                 $s['user'] = $info;
             }
             catch (\Flexio\Base\Exception $e)
