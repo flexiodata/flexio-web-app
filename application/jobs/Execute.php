@@ -165,7 +165,7 @@ class ExecuteProxy
 
     public function run() : void
     {
-        $max_execution_time = 400;
+        $max_execution_time = 900;
         $exception = null;
         $exception_msg = '';
 
