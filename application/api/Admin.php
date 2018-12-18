@@ -318,6 +318,28 @@ class Admin
         $filter = array_merge($validated_query_params, $filter); // give precedence to fixed status
         $stats = \Flexio\Object\Process::summary_another($filter);
 
+            // populate the user info if possible
+        foreach ($stats['detail'] as &$s)
+        {
+            try
+            {
+                $user = \Flexio\Object\User::load($s['user']['eid']);
+                $user_info = $user->get();
+                $info['eid'] = $user_info['eid'];
+                $info['eid_type'] = $user_info['eid_type'];
+                $info['eid_status'] = $user_info['eid_status'];
+                $info['username'] = $user_info['username'];
+                $info['first_name'] = $user_info['first_name'];
+                $info['last_name'] = $user_info['last_name'];
+                $info['email'] = $user_info['email'];
+                $info['email_hash'] = $user_info['email_hash'];
+                $s['user'] = $info;
+            }
+            catch (\Flexio\Base\Exception $e)
+            {
+            }
+        }
+
         $results = $stats;
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api\Response::sendContent($results);
