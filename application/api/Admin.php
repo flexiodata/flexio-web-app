@@ -318,23 +318,26 @@ class Admin
         $filter = array_merge($validated_query_params, $filter); // give precedence to fixed status
         $stats = \Flexio\Object\Process::summary_another($filter);
 
-            // populate the user info if possible
-        foreach ($stats['detail'] as &$s)
+        // populate the user info if possible
+        if (isset($stats['detail']))
         {
-            try
+            foreach ($stats['detail'] as &$s)
             {
-                $user = \Flexio\Object\User::load($s['user']['eid']);
-                $user_info = $user->get();
-                $info['eid'] = $user_info['eid'];
-                $info['username'] = $user_info['username'];
-                $info['email'] = $user_info['email'];
-                $info['first_name'] = $user_info['first_name'];
-                $info['last_name'] = $user_info['last_name'];
-                $info['created'] = $user_info['created'] ?? '';
-                $s['user'] = $info;
-            }
-            catch (\Flexio\Base\Exception $e)
-            {
+                try
+                {
+                    $user = \Flexio\Object\User::load($s['user']['eid']);
+                    $user_info = $user->get();
+                    $info['eid'] = $user_info['eid'];
+                    $info['username'] = $user_info['username'];
+                    $info['email'] = $user_info['email'];
+                    $info['first_name'] = $user_info['first_name'];
+                    $info['last_name'] = $user_info['last_name'];
+                    $info['created'] = $user_info['created'] ?? '';
+                    $s['user'] = $info;
+                }
+                catch (\Flexio\Base\Exception $e)
+                {
+                }
             }
         }
 
