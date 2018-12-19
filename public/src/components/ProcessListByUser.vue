@@ -27,6 +27,12 @@
         :key="day.raw"
         v-for="day in days"
       />
+      <el-table-column
+        align="center"
+        label="Total"
+        prop="total_count"
+        class-name="b"
+      />
       <div slot="empty">No activity to show</div>
     </el-table>
   </div>
