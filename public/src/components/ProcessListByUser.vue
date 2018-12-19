@@ -31,10 +31,10 @@
         :sortable="true"
       >
         <template slot-scope="scope">
-          <span v-if="hasUserEid(scope.row)">
+          <div class="truncate" v-if="hasUserEid(scope.row)">
             {{getUserName(scope.row)}}
-          </span>
-          <span v-else>--</span>
+          </div>
+          <div v-else>--</div>
         </template>
       </el-table-column>
       <el-table-column
