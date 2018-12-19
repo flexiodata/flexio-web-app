@@ -4,24 +4,47 @@
       class="w-100 activity-list-by-user"
       size="small"
       :data="fmt_processes"
+      :default-sort="{ prop: 'user.first_name', order: 'ascending' }"
     >
       <el-table-column
-        label="User"
-        width="250"
+        prop="user.eid"
+        label="ID"
+        fixed
+        :width="120"
+        :sortable="true"
+      >
+        <template slot-scope="scope">
+          <span
+            class="code bg-white br2 ba b--black-10" style="padding: 3px 6px"
+            v-if="hasUserEid(scope.row)"
+          >
+            {{getUserEid(scope.row)}}
+          </span>
+          <span v-else>--</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="Name"
         fixed
         prop="user.first_name"
+        :width="160"
         :sortable="true"
       >
         <template slot-scope="scope">
           <span v-if="hasUserEid(scope.row)">
             {{getUserName(scope.row)}}
-            <span class="f8 code bg-white br2 ba b--black-10" style="padding: 1px 3px">
-              {{getUserEid(scope.row)}}
-            </span>
           </span>
           <span v-else>--</span>
         </template>
       </el-table-column>
+      <el-table-column
+        label="Created"
+        prop="user.created"
+        :width="160"
+        :sortable="true"
+        :sort-method="sortCreated"
+        :formatter="fmtDate"
+      />
       <el-table-column
         align="center"
         class-name="narrow"
@@ -56,7 +79,7 @@
     },
     mounted() {
       var today = moment()
-      var last_week = moment().subtract(60, 'days')
+      var last_week = moment().subtract(6, 'days')
       var created_min = last_week.format('YYYYMMDD')
       var created_max = today.format('YYYYMMDD')
       var url = '/api/v2/admin/info/processes/summary/user?created_min=' + created_min + '&created_max=' + created_max
@@ -100,6 +123,14 @@
       },
       hasUserEid(row) {
         return _.get(row, 'user.eid', '').length > 0
+      },
+      sortCreated(a, b) {
+        var ax = _.get(a, 'user.created', 0)
+        var bx = _.get(b, 'user.created', 0)
+        return moment(ax).unix() - moment(bx).unix()
+      },
+      fmtDate(row, col, val, idx) {
+        return val ? moment(val).format('l LT') : '--'
       }
     }
   }
