@@ -23,6 +23,11 @@
       icon: 'network_check'
     },
     {
+      route: 'users',
+      name: 'Users',
+      icon: 'group'
+    },
+    {
       route: 'builder',
       name: 'Builder',
       icon: 'build'

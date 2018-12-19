@@ -4,6 +4,7 @@ import { ROUTE_ADMIN } from '../constants/route'
 import AdminHome from '../components/AdminHome.vue'
 import AdminDashboard from '../components/AdminDashboard.vue'
 import AdminTest from '../components/AdminTest.vue'
+import AdminUser from '../components/AdminUser.vue'
 import AdminBuilder from '../components/AdminBuilder.vue'
 import AdminCodeTranslator from '../components/AdminCodeTranslator.vue'
 import AdminCode from '../components/AdminCode.vue'
@@ -22,17 +23,21 @@ export default {
       redirect: 'tests'
     },
     {
-      path: 'activity',
-      component: AdminDashboard
-    },
-    {
       path: 'tests',
       component: AdminTest
     },
     {
+      path: 'activity',
+      component: AdminDashboard
+    },
+    {
+      path: 'users',
+      component: AdminUser
+    },
+    {
       path: 'builder',
       component: AdminBuilder
-    },
+    }/*,
     {
       path: 'translator',
       component: AdminCodeTranslator
@@ -48,6 +53,6 @@ export default {
     {
       path: 'prototype',
       component: AdminPrototype
-    }
+    }*/
   ]
 }
