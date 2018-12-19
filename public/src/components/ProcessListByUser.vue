@@ -7,8 +7,9 @@
     >
       <el-table-column
         label="User"
-        width="200"
+        width="250"
         fixed
+        prop="user.first_name"
         :sortable="true"
       >
         <template slot-scope="scope">
@@ -23,6 +24,7 @@
       </el-table-column>
       <el-table-column
         align="center"
+        class-name="narrow"
         :label="day.fmt"
         :prop="day.raw"
         :key="day.raw"
@@ -54,7 +56,7 @@
     },
     mounted() {
       var today = moment()
-      var last_week = moment().subtract(6, 'days')
+      var last_week = moment().subtract(60, 'days')
       var created_min = last_week.format('YYYYMMDD')
       var created_max = today.format('YYYYMMDD')
       var url = '/api/v2/admin/info/processes/summary/user?created_min=' + created_min + '&created_max=' + created_max
@@ -108,4 +110,11 @@
     font-size: 13px
     .el-button
       font-size: 13px
+
+    &.el-table
+      th.narrow
+      td.narrow
+        .cell
+          padding-left: 4px
+          padding-right: 4px
 </style>
