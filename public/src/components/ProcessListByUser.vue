@@ -97,7 +97,7 @@
         return _.map(this.dates, (d) => {
           return {
             raw: d,
-            fmt: moment(d).format('ddd')
+            fmt: moment(d).format('M/D')
           }
         })
       },
