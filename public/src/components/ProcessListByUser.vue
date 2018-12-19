@@ -9,6 +9,7 @@
         label="User"
         width="200"
         fixed
+        :sortable="true"
       >
         <template slot-scope="scope">
           <span v-if="hasUserEid(scope.row)">
@@ -25,6 +26,7 @@
         :label="day.fmt"
         :prop="day.raw"
         :key="day.raw"
+        :sortable="true"
         v-for="day in days"
       />
       <el-table-column
@@ -32,6 +34,7 @@
         label="Total"
         prop="total_count"
         class-name="b"
+        :sortable="true"
       />
       <div slot="empty">No activity to show</div>
     </el-table>
