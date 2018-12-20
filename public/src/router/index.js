@@ -3,7 +3,6 @@ import Router from 'vue-router'
 import Meta from 'vue-meta'
 
 import account from './account'
-import activity from './activity'
 import admin from './admin'
 import builder from './builder'
 import home from './home'
@@ -38,7 +37,6 @@ Vue.use(Meta)
 const routes = [
   basepath_redirect,
   account,
-  activity,
   admin,
   builder,
   home,

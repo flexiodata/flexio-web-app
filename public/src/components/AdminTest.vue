@@ -50,9 +50,10 @@
     </div>
     <div class="flex-fill overflow-auto">
       <AdminTestItem
-        v-for="(test, index) in filtered_tests"
         :item="test"
         :index="index"
+        :key="test.id"
+        v-for="(test, index) in filtered_tests"
       />
     </div>
   </div>
