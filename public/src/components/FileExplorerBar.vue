@@ -40,7 +40,6 @@
 <script>
   import * as connections from '../constants/connection-info'
   import ServiceIcon from './ServiceIcon.vue'
-  import FileChooserList from './FileChooserList.vue'
 
   export default {
     props: {
@@ -54,8 +53,7 @@
       }
     },
     components: {
-      ServiceIcon,
-      FileChooserList
+      ServiceIcon
     },
     computed: {
       ctype() {

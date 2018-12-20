@@ -14,10 +14,11 @@
     </div>
     <table v-else class="f6 w-100">
       <tbody class="lh-copy f6">
-        <file-chooser-item
+        <FileChooserItem
           v-for="(item, index) in items"
           :item="item"
           :index="index"
+          :key="item.full_path"
           @click="itemClick"
           @ctrl-click="itemCtrlClick"
           @shift-click="itemShiftClick"
