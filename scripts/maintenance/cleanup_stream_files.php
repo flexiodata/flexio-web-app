@@ -46,25 +46,40 @@ if (is_null($db))
 }
 
 
-logMessage("Starting");
-
-
 $dryrun = true;
 $limit = 1000000;
+$log_increment = 100;
 $path    = '/srv/www/flexio/store/streams/';
+
+$total_count = 0;
+$deleted_count = 0;
+
+
+// get a list of the items in /srv/www/flexio/store/streams
+$items = scandir($path);
+$total_count = count($items);
+
+logMessage("Starting; $total_count files to process");
 
 
 try
 {
-    // STEP 1: get a list of the items in /srv/www/flexio/store/streams
-    $items = scandir($path);
-
-    // STEP 2: for each one of these items, see if it's in tbl_stream;
-    // if not, delete it
+    // for each one of these items, see if it's in tbl_stream; if not, delete it
     $count = 0;
     foreach ($items as $i)
     {
         $count++;
+
+        if ($dryrun === false)
+        {
+            if ($count % $log_increment === 0)
+                logMessage("Processed $count files; deleted $deleted_count of $total_count files");
+        }
+         else
+        {
+            if ($count % $log_increment === 0)
+                logMessage("Processed $count files; simulated delete $deleted_count of $total_count files");
+        }
 
         if ($count >= $limit)
             break;
@@ -74,28 +89,16 @@ try
 
         // make sure the item isn't a directory
         if (is_file($full_name) === false)
-        {
-            logMessage("Ignoring $name; item is a directory");
             continue;
-        }
 
         // if the item exists in the database, don't delete it
         if (streamExistsInDb($db, $name))
-        {
-            //logMessage("Ignoring $name; item exists in the database");
             continue;
-        }
 
         if ($dryrun === false)
-        {
-            // delete the file
             unlink($full_name);
-            logMessage("Deleting $name");
-        }
-         else
-        {
-            logMessage("Dry run; following would be deleted: $name");
-        }
+
+        $deleted_count++;
     }
 }
 catch(\Exception $e)
@@ -105,8 +108,10 @@ catch(\Exception $e)
 }
 
 
-logMessage("Cleanup complete.");
-
+if ($dryrun === false)
+    logMessage("Finished; deleted $deleted_count of $total_count files");
+     else
+    logMessage("Finished; simulated delete $deleted_count of $total_count files");
 
 
 function streamExistsInDb($db, $path)
