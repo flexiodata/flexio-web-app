@@ -15,18 +15,16 @@
 include_once __DIR__.'/../stub.php';
 
 
-if ($argc != 5)
-{
-    echo '{ "success": false, "msg": "Usage: php update*.php <host> <username> <password> <database_name>" }';
-    exit(0);
-}
+$config = @file_get_contents(__DIR__ . '/../../config/config.json');
+$config = json_decode($config, true);
 
 
-$params = array('host' => $argv[1],
+$params = array('host' => $config['directory_database_host'],
                 'port' => 5432,
-                'username' => $argv[2],
-                'password' => $argv[3],
-                'dbname' => $argv[4]);
+                'username' => $config['directory_database_username'],
+                'password' => $config['directory_database_password'],
+                'dbname' => $config['directory_database_dbname']);
+
 
 try
 {
