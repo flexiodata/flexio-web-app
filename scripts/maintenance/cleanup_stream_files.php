@@ -51,12 +51,12 @@ logMessage("Starting");
 
 $dryrun = true;
 $limit = 1000000;
+$path    = '/srv/www/flexio/store/streams/';
 
 
 try
 {
     // STEP 1: get a list of the items in /srv/www/flexio/store/streams
-    $path    = '/srv/www/flexio/store/streams/';
     $items = scandir($path);
 
     // STEP 2: for each one of these items, see if it's in tbl_stream;
