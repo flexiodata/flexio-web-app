@@ -119,7 +119,7 @@ foreach ($updates as $uv => $uf)
 {
     if ($uv > $current_version)
     {
-        // only process scripts that are newer than the current database veresion
+        // only process scripts that are newer than the current database version
         $name = pathinfo($uf, PATHINFO_BASENAME);
 
         // TODO: log message
