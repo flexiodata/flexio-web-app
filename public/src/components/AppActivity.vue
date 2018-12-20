@@ -16,19 +16,10 @@
           <div class="flex-fill flex flex-row items-center">
             <h1 class="mv0 f2 fw4 mr3">Activity</h1>
           </div>
-          <el-pagination
-            layout="prev"
-            :page-size="page_size"
+          <SimplePager
             :current-page.sync="current_page"
-            :total="total_count"
-            @current-change="updatePager"
-          />
-          <div class="f6">{{start + 1}} - {{end}} of {{total_count}}</div>
-          <el-pagination
-            layout="next"
             :page-size="page_size"
-            :current-page.sync="current_page"
-            :total="total_count"
+            :total-count="total_count"
             @current-change="updatePager"
           />
         </div>
@@ -90,6 +81,7 @@
   import stickybits from 'stickybits'
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
+  import SimplePager from './SimplePager.vue'
   import ProcessList from './ProcessList.vue'
   import ProcessStatusSelect from './ProcessStatusSelect.vue'
   import ProcessDetailsPanel from './ProcessDetailsPanel.vue'
@@ -106,6 +98,7 @@
     },
     components: {
       Spinner,
+      SimplePager,
       ProcessList,
       ProcessStatusSelect,
       ProcessDetailsPanel
