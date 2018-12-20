@@ -67,7 +67,7 @@
 
   export default {
     metaInfo: {
-      title: 'Admin Tests'
+      title: '[Admin] Tests'
     },
     mixins: [MixinFilter, MixinResponse],
     components: {

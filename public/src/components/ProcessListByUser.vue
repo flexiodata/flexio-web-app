@@ -31,9 +31,13 @@
         :sortable="true"
       >
         <template slot-scope="scope">
-          <div class="truncate" v-if="hasUserEid(scope.row)">
-            {{getUserName(scope.row)}}
-          </div>
+          <router-link
+            class="blue"
+            :to="getProcessRouteByUser(scope.row)"
+            v-if="hasUserEid(scope.row)"
+          >
+            <div class="truncate">{{getUserName(scope.row)}}</div>
+          </router-link>
           <div v-else>--</div>
         </template>
       </el-table-column>
@@ -48,19 +52,41 @@
       <el-table-column
         align="center"
         class-name="narrow"
-        :label="day.fmt"
+        :label="day.col_label"
         :prop="day.raw"
         :key="day.raw"
         :sortable="true"
         v-for="day in days"
-      />
+      >
+        <template slot-scope="scope">
+          <router-link
+            class="blue"
+            :to="getProcessRouteByUserAndDate(scope.row, day.query_str, day.query_str)"
+            v-if="scope.row[day.raw] > 0"
+          >
+            {{ scope.row[day.raw] }}
+          </router-link>
+          <div v-else>0</div>
+        </template>
+      </el-table-column>
       <el-table-column
         align="center"
         label="Total"
         prop="total_count"
         class-name="b"
         :sortable="true"
-      />
+      >
+        <template slot-scope="scope">
+          <router-link
+            class="blue"
+            :to="getProcessRouteByUserTotal(scope.row)"
+            v-if="scope.row.total_count > 0"
+          >
+            {{ scope.row.total_count }}
+          </router-link>
+          <div v-else>0</div>
+        </template>
+      </el-table-column>
       <div slot="empty">No activity to show</div>
     </el-table>
   </div>
@@ -74,6 +100,8 @@
   export default {
     data() {
       return {
+        created_min: '',
+        created_max: '',
         res: {}
       }
     },
@@ -83,6 +111,10 @@
       var created_min = last_week.format('YYYYMMDD')
       var created_max = today.format('YYYYMMDD')
       var url = '/api/v2/admin/info/processes/summary/user?created_min=' + created_min + '&created_max=' + created_max
+
+      this.created_min = created_min
+      this.created_max = created_max
+
       axios.get(url).then(response => {
         this.res = response.data
       }).catch(error => {
@@ -97,7 +129,8 @@
         return _.map(this.dates, (d) => {
           return {
             raw: d,
-            fmt: moment(d).format('M/D')
+            query_str: moment(d).format('YMD'),
+            col_label: moment(d).format('M/D')
           }
         })
       },
@@ -131,6 +164,15 @@
       },
       fmtDate(row, col, val, idx) {
         return val ? moment(val).format('l LT') : '--'
+      },
+      getProcessRouteByUser(row) {
+        return '/admin/activity?user_eid=' + this.getUserEid(row)
+      },
+      getProcessRouteByUserAndDate(row, start_date, end_date) {
+        return this.getProcessRouteByUser(row) +'&created_min=' + start_date + '&created_max=' + end_date
+      },
+      getProcessRouteByUserTotal(row) {
+        return this.getProcessRouteByUserAndDate(row, this.created_min, this.created_max)
       }
     }
   }
