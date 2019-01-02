@@ -6520,6 +6520,10 @@ vue-simple-spinner@^1.2.8:
   version "1.2.8"
   resolved "https://registry.yarnpkg.com/vue-simple-spinner/-/vue-simple-spinner-1.2.8.tgz#638249e9b25b43424ff906c14f1b7c7ed441ce9d"
 
+vue-stripe-elements-plus@^0.2.9:
+  version "0.2.9"
+  resolved "https://registry.yarnpkg.com/vue-stripe-elements-plus/-/vue-stripe-elements-plus-0.2.9.tgz#0332e4d03addedabc9622b4a986b6d8525edd8d6"
+
 vue-style-loader@^3.0.0:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/vue-style-loader/-/vue-style-loader-3.0.3.tgz#623658f81506aef9d121cdc113a4f5c9cac32df7"
