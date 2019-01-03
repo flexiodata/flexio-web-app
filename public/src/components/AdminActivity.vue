@@ -10,6 +10,9 @@
   import AppActivity from './AppActivity.vue'
 
   export default {
+    metaInfo: {
+      title: '[Admin] Activity Overview'
+    },
     components: {
       AppActivity
     },
@@ -19,8 +22,8 @@
       }
     },
     mounted() {
-      var last_week = moment().subtract(1, 'days')
-      var created_min = last_week.format('YYYYMMDD')
+      var last_day = moment().subtract(1, 'days')
+      var created_min = last_day.format('YYYYMMDD')
       var attrs = { created_min }
 
       this.$store.dispatch('v2_action_fetchAdminProcesses', { attrs }).then(response => {

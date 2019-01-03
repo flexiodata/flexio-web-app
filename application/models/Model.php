@@ -723,6 +723,43 @@ class Model
         }
     }
 
+    public function getTableCounts() : array
+    {
+        $db = $this->getDatabase();
+
+        $stat_queries = array(
+            'object' => 'select count(*) as count from tbl_object',
+            'association' => 'select count(*) as count from tbl_association',
+            'user' => 'select count(*) as count from tbl_user',
+            'token' => 'select count(*) as count from tbl_token',
+            'acl' => 'select count(*) as count from tbl_acl',
+            'pipe' => 'select count(*) as count from tbl_pipe',
+            'connection' => 'select count(*) as count from tbl_connection',
+            'process' => 'select count(*) as count from tbl_process',
+            'processlog' => 'select count(*) as count from tbl_processlog',
+            'stream' => 'select count(*) as count from tbl_stream',
+            'comment' => 'select count(*) as count from tbl_comment',
+            'action' => 'select count(*) as count from tbl_action',
+            'registry' => 'select count(*) as count from tbl_registry',
+            'system' => 'select count(*) as count from tbl_system'
+        );
+
+        try
+        {
+            $result = array();
+            foreach ($stat_queries as $name => $query)
+            {
+                $count = $db->fetchOne($query);
+                $result[$name] = $count;
+            }
+            return $result;
+        }
+        catch (\Exception $e)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+        }
+    }
+
     public function getDatabase() : \Flexio\Base\Db
     {
         if (!is_null($this->database))

@@ -193,6 +193,62 @@ class Pipe
         \Flexio\Api\Response::sendContent($result);
     }
 
+    public static function bulkdelete(\Flexio\Api\Request $request) : void
+    {
+        $post_params = $request->getPostParams();
+        $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+
+        $request->track(\Flexio\Api\Action::TYPE_PIPE_DELETE);
+
+        // for bulk delete, incoming form is an array of objects to delete in
+        // the following format:
+        // [{"eid": ""}, {"eid": ""}, ...]
+
+        // make sure we have an array of at least one item to delete
+        $pipes_eids_to_delete = $post_params;
+        if (!is_array($pipes_eids_to_delete))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+        if (count($pipes_eids_to_delete) === 0)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        // load the pipes to delete
+        $pipes_to_delete = array();
+        foreach ($pipes_eids_to_delete as $p)
+        {
+            $pipe_eid = $p['eid'] ?? false;
+            if ($pipe_eid === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+            $pipe = \Flexio\Object\Pipe::load($pipe_eid);
+            if ($owner_user_eid !== $pipe->getOwner())
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+            // check the rights on the object
+            if ($pipe->getStatus() === \Model::STATUS_DELETED)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+            if ($pipe->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_DELETE) === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+            $pipes_to_delete[] = $pipe;
+        }
+
+        // if everything is good, delete all the pipes at the same time
+        $result = array();
+        foreach ($pipes_to_delete as $pipe)
+        {
+            $pipe->delete();
+            $properties = $pipe->get();
+            $result[] = self::cleanProperties($properties);
+        }
+
+        // send the response
+        $request->setResponseParams($result);
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        $request->track();
+        \Flexio\Api\Response::sendContent($result);
+    }
+
     public static function set(\Flexio\Api\Request $request) : void
     {
         $post_params = $request->getPostParams();

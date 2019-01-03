@@ -7,6 +7,7 @@
           <FileChooserItem
             :item="file"
             :index="file_index"
+            :key="file.full_path"
             v-for="(file, file_index) in files"
           />
         </tbody>

@@ -9,6 +9,7 @@
       <div
         class="flex flex-row items-center hide-child"
         :class="showOnlyOne ? '' : 'br2 hover-bg-nearer-white'"
+        :key="token.access_code"
         v-for="(token, index) in tokens"
       >
         <div
@@ -29,13 +30,21 @@
           </el-button>
         </div>
         <div class="pv2 ph3 tr" v-if="!showOnlyOne">
-          <span
-            class="pointer f3 lh-solid black-30 hover-black-60 child hint--top"
-            aria-label="Delete API Key"
-            @click="deleteKey(token)"
-          >
-            &times;
-          </span>
+          <div class="hint--top" aria-label="Delete API Key">
+            <ConfirmPopover
+              class="pointer"
+              placement="bottom-end"
+              message="Are you sure you want to delete this API key?"
+              :offset="9"
+              :class="{
+                'child black-30 hover-black-60': delete_popover_token != token,
+                'black': delete_popover_token == token
+              }"
+              @show="delete_popover_token = token"
+              @hide="delete_popover_token = ''"
+              @confirm-click="deleteKey(token)"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -53,16 +62,25 @@
 
 <script>
   import { mapState, mapGetters } from 'vuex'
+  import ConfirmPopover from './ConfirmPopover.vue'
 
   export default {
     props: {
-      'show-create-button': {
+      showCreateButton: {
         type: Boolean,
         default: true
       },
-      'show-only-one': {
+      showOnlyOne: {
         type: Boolean,
         default: false
+      }
+    },
+    components: {
+      ConfirmPopover
+    },
+    data() {
+      return {
+        delete_popover_token: ''
       }
     },
     computed: {

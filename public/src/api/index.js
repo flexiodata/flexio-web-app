@@ -35,10 +35,10 @@ export default {
   v2_fetchStream:          function(user_eid, eid)        { return AxiosResource(user_eid)[V2_GET] (`/streams/${eid}`)                       },
 
   // vfs
-  v2_vfsListFiles:            function(user_eid, path)    { return AxiosResource(user_eid)[V2_GET] (`/vfs/list`, { q: path })                },
-  //v2_vfsGetFile:              function(user_eid, path)    { return AxiosResource(user_eid)[V2_GET] (TODO)                                    },
-  //v2_vfsPutFile:              function(user_eid, path)    { return AxiosResource(user_eid)[V2_PUT] (TODO)                                    },
-  //v2_vfsCreateDirectory:      function(user_eid, path)    { return AxiosResource(user_eid)[V2_PUT] (TODO)                                    },
+  v2_vfsListFiles:         function(user_eid, path)       { return AxiosResource(user_eid)[V2_GET] (`/vfs/list`, { q: path })                },
+//v2_vfsGetFile:           function(user_eid, path)       { return AxiosResource(user_eid)[V2_GET] (TODO)                                    },
+//v2_vfsPutFile:           function(user_eid, path)       { return AxiosResource(user_eid)[V2_PUT] (TODO)                                    },
+//v2_vfsCreateDirectory:   function(user_eid, path)       { return AxiosResource(user_eid)[V2_PUT] (TODO)                                    },
 
   // user
   v2_fetchUser:            function(user_eid)             { return AxiosResource(user_eid)[V2_GET] (`/account`)                              },
@@ -52,8 +52,8 @@ export default {
   v2_deleteToken:          function(user_eid, eid)        { return AxiosResource(user_eid)[V2_DEL] (`/auth/keys/${eid}`)                     },
 
   // auth
-  //v2_signUp:               function(attrs)                { return AxiosResource(null)[V2_POS] (`/signup`)                                   },
-  //v2_login:                function(attrs)                { return AxiosResource(null)[V2_POS] (`/login`)                                    },
+//v2_signUp:               function(attrs)                { return AxiosResource(null)[V2_POS] (`/signup`)                                   },
+//v2_login:                function(attrs)                { return AxiosResource(null)[V2_POS] (`/login`)                                    },
   v2_logout:               function()                     { return AxiosResource(null)[V2_POS] (`/logout`)                                   },
   v2_resetPassword:        function(attrs)                { return AxiosResource(null)[V2_POS] (`/resetpassword`, attrs)                     },
 

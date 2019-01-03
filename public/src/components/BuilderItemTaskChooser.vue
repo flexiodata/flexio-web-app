@@ -77,7 +77,7 @@
     },
     methods: {
       itemClick(item) {
-        this.$emit('task-chooser-select-task', _.omit(item, ['name', 'icon']), this.index)
+        this.$emit('task-chooser-select-task', _.omit(item, ['name', 'icon', 'bg_color']), this.index)
       }
     }
   }

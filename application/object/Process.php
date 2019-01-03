@@ -108,8 +108,7 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         foreach ($object_totals as $key => $value)
         {
             $object_totals_reformatted[] = array(
-                'eid' => $key,
-                'eid_type' => $eid_type,
+                'user' => array('eid' => $key,'eid_type' => $eid_type),
                 'total_count' => $value['total_count'],
                 'daily_count' => array_values($value['daily_count'])
             );

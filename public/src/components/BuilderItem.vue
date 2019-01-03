@@ -132,12 +132,12 @@
       :class="content_cls"
     >
       <div
-        class="child flex flex-row items-center absolute right-0"
+        class="flex flex-row items-center absolute right-0"
         :class="this.showContentBorder ? 'mr4' : ''"
         v-show="!is_active"
       >
         <el-button
-          class="hint--top"
+          class="child hint--top"
           style="border: 0; padding: 0"
           type="text"
           aria-label="Edit this step"
@@ -146,16 +146,25 @@
         >
           <i class="el-icon-edit-outline pointer f4 black-30 hover-black-60"></i>
         </el-button>
-        <el-button
+        <div
           class="hint--top"
-          style="border: 0; padding: 0"
-          type="text"
           aria-label="Delete this step"
-          @click="$emit('delete-step', index)"
           v-show="showDeleteButtons"
         >
-          <i class="material-icons pointer f3 black-30 hover-black-60">delete</i>
-        </el-button>
+          <ConfirmPopover
+            class="pointer"
+            placement="bottom-end"
+            message="Are you sure you want to delete this step?"
+            :offset="9"
+            :class="{
+              'child black-30 hover-black-60': delete_popover_step != index,
+              'black': delete_popover_step == index
+            }"
+            @show="delete_popover_step = index"
+            @hide="delete_popover_step = -1"
+            @confirm-click="$emit('delete-step', index)"
+          />
+        </div>
       </div>
 
       <div class="flex-fill">
@@ -223,11 +232,13 @@
   import { mapGetters } from 'vuex'
   import ServiceIcon from './ServiceIcon.vue'
   import TaskIcon from './TaskIcon.vue'
+  import ConfirmPopover from './ConfirmPopover.vue'
   import builder_components from './builder-components'
 
   const components = _.assign({
     ServiceIcon,
-    TaskIcon
+    TaskIcon,
+    ConfirmPopover
   }, builder_components)
 
   const available_components = _.keys(components)
@@ -290,6 +301,7 @@
     data() {
       return {
         is_next_allowed: true,
+        delete_popover_step: -1,
         available_components
       }
     },

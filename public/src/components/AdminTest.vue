@@ -36,7 +36,7 @@
           v-model="show_errors_only"
         />
         <span
-          class="f6 pl1 pointer"
+          class="f6 fw6 pl1 pointer"
           @click="show_errors_only = !show_errors_only"
         >
           Only show errors
@@ -45,14 +45,15 @@
         <div class="total-item mr2 br-pill f6 ttu fw6 white bg-yellow" v-show="ajax_fail_cnt > 0">AJAX Errors: {{ajax_fail_cnt}}</div>
         <div class="total-item mr2 br-pill f6 ttu fw6 white bg-dark-green">Passed: {{pass_cnt}}</div>
         <div class="total-item mr2 br-pill f6 ttu fw6 white bg-dark-red">Failed: {{fail_cnt}}</div>
-        <div class="total-item mr2 br-pill f6 ttu fw6 white bg-dark-gray">Total: {{total_cnt}}</div>
+        <div class="total-item mr2 br-pill f6 ttu fw6 white bg-silver">Total: {{total_cnt}}</div>
       </div>
     </div>
     <div class="flex-fill overflow-auto">
       <AdminTestItem
-        v-for="(test, index) in filtered_tests"
         :item="test"
         :index="index"
+        :key="test.id"
+        v-for="(test, index) in filtered_tests"
       />
     </div>
   </div>
@@ -66,7 +67,7 @@
 
   export default {
     metaInfo: {
-      title: 'Admin Tests'
+      title: '[Admin] Tests'
     },
     mixins: [MixinFilter, MixinResponse],
     components: {

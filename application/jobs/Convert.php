@@ -436,6 +436,12 @@ class Convert extends \Flexio\Jobs\Base
 
     private function createOutputFromPdfInput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream, string $output_mime_type) : void
     {
+        $instream_mime_type = $instream->getMimeType();
+        if ($instream_mime_type != \Flexio\Base\ContentType::PDF)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::EXECUTE_FAILED, "Input file must be a pdf");
+        }
+
         // input/output
         $outstream->set($instream->get());
         $outstream->setPath(\Flexio\Base\Util::generateHandle());
@@ -455,18 +461,33 @@ class Convert extends \Flexio\Jobs\Base
             $buffer .= $data;
         }
 
-        // parse the pdf
+        // parse the pdf and output it to json
+
         try
         {
             $parser = new \Smalot\PdfParser\Parser();
             $pdf = $parser->parseContent($buffer);
 
+            $details = $pdf->getDetails();
+
+            $metadata = array();
+            $metadata['author'] = $details['Author'] ?? '';
+            $metadata['title'] = $details['Title'] ?? '';
+            $metadata['subject'] = $details['Subject'] ?? '';
+            $metadata['producer'] = $details['Producer'] ?? '';
+            $metadata['keywords'] = $details['Keywords'] ?? '';
+            $metadata['created_by'] = $details['Creator'] ?? '';
+            $metadata['created'] = $details['CreationDate'] ?? '';
+            $metadata['page_count'] = $details['Pages'] ?? '';
+
+            $output = array("metadata" => $metadata, "pages" => array());
+
             // write out the text from each of the pages
             $pages  = $pdf->getPages();
             foreach ($pages as $page)
             {
-                $text = $page->getText();
-                $streamwriter->write($text);
+                $page = array("text" => $page->getText());
+                $output['pages'][] = $page;
             }
         }
         catch (\Exception $e)
@@ -478,7 +499,13 @@ class Convert extends \Flexio\Jobs\Base
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
         }
 
+        $outputtext = json_encode($output);
+        if ($outputtext === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        $streamwriter->write($outputtext);
         $streamwriter->close();
+        $outstream->setMimeType(\Flexio\Base\ContentType::JSON);
         $outstream->setSize($streamwriter->getBytesWritten());
     }
 
