@@ -528,7 +528,12 @@ class ScriptHost
 
     public function func_exit($response_code) : void
     {
-        $this->process->setExitCode((int)$response_code);
+        $this->process->setResponseCode((int)$response_code);
+    }
+
+    public function func_status($response_code) : void
+    {
+        $this->process->setResponseCode((int)$response_code);
     }
 
     public function func_setenv($key,$value) : void

@@ -625,6 +625,9 @@ class Context(object):
         proxy.close()
         sys.exit()
     
+    def status(self, code):
+        fileinfos = proxy.invoke('status', [code])
+
     def end(self, content=None, content_type=None):
         if content_type is not None:
             self.output.content_type = content_type
