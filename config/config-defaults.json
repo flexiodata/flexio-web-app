@@ -31,6 +31,9 @@
 
     "segment_key": "",
 
+    "stripe_public_key": "",
+    "stripe_secret_key": "",
+
     "ses_access_key": "",
     "ses_secret_key": "",
 

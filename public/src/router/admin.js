@@ -2,9 +2,9 @@ import store from '../store'
 import * as types from '../store/mutation-types'
 import { ROUTE_ADMIN } from '../constants/route'
 import AdminHome from '../components/AdminHome.vue'
-import AdminDashboard from '../components/AdminDashboard.vue'
+import AdminActivity from '../components/AdminActivity.vue'
 import AdminTest from '../components/AdminTest.vue'
-import AdminUser from '../components/AdminUser.vue'
+import AdminActivityByUser from '../components/AdminActivityByUser.vue'
 import AdminBuilder from '../components/AdminBuilder.vue'
 import AdminCodeTranslator from '../components/AdminCodeTranslator.vue'
 import AdminCode from '../components/AdminCode.vue'
@@ -28,11 +28,11 @@ export default {
     },
     {
       path: 'activity',
-      component: AdminDashboard
+      component: AdminActivity
     },
     {
       path: 'users',
-      component: AdminUser
+      component: AdminActivityByUser
     },
     {
       path: 'builder',

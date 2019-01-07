@@ -357,6 +357,47 @@ class User
         \Flexio\Api\Response::sendContent($result);
     }
 
+    public static function updatepaymentinfo(\Flexio\Api\Request $request) : void
+    {
+        $post_params = $request->getPostParams();
+        $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+
+        // TODO: user update action or something else?
+        $request->track(\Flexio\Api\Action::TYPE_USER_UPDATE);
+        $cleaned_post_params = self::cleanProperties($post_params); // don't store sensitive info
+        $request->setRequestParams($cleaned_post_params);
+
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($post_params, array(
+                'token' => array('type' => 'string', 'required' => true)
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        $validated_post_params = $validator->getParams();
+
+        // load the user
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+        // check the rights
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+
+        // TODO: call the stripe api and get a customer id to store; if something
+        // goes wrong, throw an exception
+        // $owner_user->set($validated_post_params);
+        // $result = $owner_user->get();
+
+
+        $request->setResponseParams($result);
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        $request->track();
+        \Flexio\Api\Response::sendContent($result);
+    }
+
     public static function changepassword(\Flexio\Api\Request $request) : void
     {
         $post_params = $request->getPostParams();
@@ -856,6 +897,9 @@ class User
 
         if (isset($properties['verify_code']))
             $properties['verify_code'] = "*****";
+
+        if (isset($properties['token']))
+            $properties['token'] = "*****";
 
         return $properties;
     }

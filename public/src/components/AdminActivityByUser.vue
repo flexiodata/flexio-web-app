@@ -14,7 +14,7 @@
         <!-- control bar -->
         <div class="flex flex-row items-center">
           <div class="flex-fill flex flex-row items-center">
-            <h1 class="mv0 f2 fw4 mr3">Daily Process Count By User</h1>
+            <h1 class="mv0 f2 fw4 mr3">Activity By User</h1>
           </div>
           <el-pagination
             layout="prev"
@@ -140,7 +140,7 @@
 
   export default {
     metaInfo: {
-      title: 'Activity'
+      title: '[Admin] Activity By User'
     },
     inheritAttrs: false,
     props: {

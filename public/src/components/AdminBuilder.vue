@@ -55,7 +55,7 @@
 
   export default {
     metaInfo: {
-      title: 'Admin Builder'
+      title: '[Admin] Builder'
     },
     components: {
       CodeEditor,

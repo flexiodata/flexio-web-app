@@ -46,7 +46,7 @@ if (is_null($db))
 
 $dryrun = true;
 $limit = 1000000;
-$log_increment = 100;
+$log_increment = 10000;
 $path    = '/srv/www/flexio/store/streams/';
 
 $total_count = 0;
@@ -56,6 +56,11 @@ $deleted_count = 0;
 // get a list of the items in /srv/www/flexio/store/streams
 $items = scandir($path);
 $total_count = count($items);
+
+
+// get a list of the stream paths in database
+$stream_paths = getStreamsInDb($db);
+
 
 logMessage("Starting; $total_count files to process");
 
@@ -90,7 +95,7 @@ try
             continue;
 
         // if the item exists in the database, don't delete it
-        if (streamExistsInDb($db, $name))
+        if (array_key_exists($name, $stream_paths))
             continue;
 
         if ($dryrun === false)
@@ -111,6 +116,24 @@ if ($dryrun === false)
      else
     logMessage("Finished; simulated delete $deleted_count of $total_count files");
 
+
+function getStreamsInDb($db)
+{
+    try
+    {
+        $result = $db->query("select path from tbl_stream");
+
+        $items = array();
+        while ($result && ($row = $result->fetch()))
+            $items[$row['path']] = 1;
+
+        return $items;
+    }
+    catch (\Exception $e)
+    {
+        return false;
+    }
+}
 
 function streamExistsInDb($db, $path)
 {

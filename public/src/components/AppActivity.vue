@@ -16,46 +16,21 @@
           <div class="flex-fill flex flex-row items-center">
             <h1 class="mv0 f2 fw4 mr3">Activity</h1>
           </div>
-          <el-pagination
-            layout="prev"
-            :page-size="page_size"
+          <SimplePager
             :current-page.sync="current_page"
-            :total="total_count"
-            @current-change="updatePager"
-          />
-          <div class="f6">{{start + 1}} - {{end}} of {{total_count}}</div>
-          <el-pagination
-            layout="next"
             :page-size="page_size"
-            :current-page.sync="current_page"
-            :total="total_count"
+            :total-count="total_count"
             @current-change="updatePager"
           />
         </div>
         <div class="flex flex-row justify-end items-center mt2">
-          <el-select
+          <ProcessStatusSelect
             style="width: 140px"
             placeholder="Status"
             size="small"
             clearable
             v-model="status_filter"
-          >
-            <el-option
-              :label="option.label"
-              :value="option.val"
-              :key="option.val"
-              v-for="option in status_options"
-            >
-            <div class="flex flex-row items-center">
-              <i class="el-icon-success dark-green" v-if="option.val == 'C'"></i>
-              <i class="el-icon-warning dark-red" v-else-if="option.val == 'F'"></i>
-              <i class="el-icon-error dark-red" v-else-if="option.val == 'X'"></i>
-              <i class="el-icon-loading blue" v-else-if="option.val == 'R'"></i>
-              <i class="el-icon-info blue" v-else></i>
-              <span class="ml2">{{option.label}}</span>
-            </div>
-            </el-option>
-          </el-select>
+          />
           <el-date-picker
             class="ml2"
             style="width: 220px"
@@ -105,36 +80,11 @@
   import moment from 'moment'
   import stickybits from 'stickybits'
   import { mapState, mapGetters } from 'vuex'
-  import * as ps from '../constants/process'
   import Spinner from 'vue-simple-spinner'
+  import SimplePager from './SimplePager.vue'
   import ProcessList from './ProcessList.vue'
+  import ProcessStatusSelect from './ProcessStatusSelect.vue'
   import ProcessDetailsPanel from './ProcessDetailsPanel.vue'
-
-  const fmtProcessStatus = (status) => {
-    switch (status) {
-      case ps.PROCESS_STATUS_PENDING   : return 'Pending'
-      case ps.PROCESS_STATUS_WAITING   : return 'Waiting'
-      case ps.PROCESS_STATUS_RUNNING   : return 'Running'
-      case ps.PROCESS_STATUS_CANCELLED : return 'Canceled'
-      case ps.PROCESS_STATUS_PAUSED    : return 'Paused'
-      case ps.PROCESS_STATUS_FAILED    : return 'Failed'
-      case ps.PROCESS_STATUS_COMPLETED : return 'Completed'
-    }
-
-    return ''
-  }
-
-  const statuses = [
-    ps.PROCESS_STATUS_COMPLETED,
-    ps.PROCESS_STATUS_FAILED,
-    ps.PROCESS_STATUS_PENDING,
-    ps.PROCESS_STATUS_RUNNING,
-    ps.PROCESS_STATUS_CANCELLED
-  ]
-
-  const status_options = _.map(statuses, (val) => {
-    return { label: fmtProcessStatus(val), val }
-  })
 
   export default {
     metaInfo: {
@@ -148,7 +98,9 @@
     },
     components: {
       Spinner,
+      SimplePager,
       ProcessList,
+      ProcessStatusSelect,
       ProcessDetailsPanel
     },
     watch: {
@@ -168,7 +120,6 @@
         sort_direction: 'desc',
         date_range: null,
         status_filter: '',
-        status_options,
         show_process_details_dialog: false,
         edit_process_eid: ''
       }

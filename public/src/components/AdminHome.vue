@@ -29,7 +29,7 @@
     },
     {
       route: 'users',
-      name: 'Users',
+      name: 'User Activity',
       icon: 'group'
     },
     {
