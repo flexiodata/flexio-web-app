@@ -104,6 +104,10 @@ class Api
         'POS /:userid/processes/:objeid/run'          => '\Flexio\Api\Process::run',
         'POS /:userid/processes/:objeid/cancel'       => '\Flexio\Api\Process::cancel',
 
+        // processes EXPERIMENTAL endpoint for running code (creates and runs a process from code)
+        'GET /:userid/processes/exec'                 => '\Flexio\Api\Process::exec',
+        'POS /:userid/processes/exec'                 => '\Flexio\Api\Process::exec',
+
         // streams
         'GET /:userid/streams/:objeid'                => '\Flexio\Api\Stream::get',
         'GET /:userid/streams/:objeid/content'        => '\Flexio\Api\Stream::content',

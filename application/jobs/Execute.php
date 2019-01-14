@@ -89,7 +89,7 @@ function get_docker_status($container_name)
     @exec("docker inspect -f {{.State.Status}} $container_name", $output_lines);
     //@exec("docker inspect -f {{.State}} $container_name", $output_lines);
     //@exec("docker inspect $container_name", $output_lines);
-    
+
     $res = '';
     foreach ($output_lines as $line)
         $res .= $line;
@@ -102,7 +102,7 @@ function get_docker_full_state($container_name)
     //@exec("docker inspect -f {{.State.Status}} $container_name", $output_lines);
     @exec("docker inspect -f {{.State}} $container_name", $output_lines);
     //@exec("docker inspect $container_name", $output_lines);
-    
+
     $res = '';
     foreach ($output_lines as $line)
         $res .= $line;
@@ -311,13 +311,13 @@ class ExecuteProxy
 
                     // but if the final threshold (300 seconds/5 minutes) has expired, something has gone wrong;
                     // terminate the execute job with an exception (but break first and clean up the socket etc)
-    
+
                     if ($seconds >= 300 || !$is_running)
                     {
                         // first, make sure container is 'dead'
                         $cmd = "$g_dockerbin kill $container_name";
                         @exec("$cmd > /dev/null &");
-        
+
                         $exception = \Flexio\Base\Error::GENERAL;
                         $exception_msg = "Execute proxy: IPC timeout";
                         //$exception_msg = "Execute proxy: IPC timeout Container=$container_name Exit Code=$exit_code Output=$docker_exec_output State=$full_state";
@@ -1165,7 +1165,7 @@ class Execute extends \Flexio\Jobs\Base
         $job_params = $this->getJobParameters();
 
         // get the language
-        $this->lang = $job_params['lang'];
+        $this->lang = $job_params['lang'] ?? false;
 
         // allow 'javascript' as an alternate for nodejs for backward compatability
         // TODO: remove after migrating all old references
@@ -1250,7 +1250,7 @@ class Execute extends \Flexio\Jobs\Base
 
             if (strlen($err) > 0)
             {
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
+
             }
         }
         else if ($this->lang == 'html')
@@ -1283,6 +1283,11 @@ class Execute extends \Flexio\Jobs\Base
             $outstream->set($outstream_properties);
             $streamwriter = $outstream->getWriter();
             $streamwriter->write($code);
+        }
+        else
+        {
+            // unknown language
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
         }
     }
 

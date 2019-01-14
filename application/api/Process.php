@@ -552,6 +552,100 @@ class Process
         \Flexio\Api\Response::sendRaw($content);
     }
 
+    public static function exec(\Flexio\Api\Request $request) : void
+    {
+        // EXPERIMENTAL API endpoint: creates and runs a process straight from code
+        $query_params = $request->getQueryParams();
+        $post_params = $request->getPostParams();
+        $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+
+        // query/posted parameters are params used in execute job; TODO: these should be
+        // validated using execute job validator for consistency; for now, check
+        // the params separately
+        $params = array_merge($query_params, $post_params);
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($params, array(
+                'lang'         => array('type' => 'string',  'required' => false),
+                'code'         => array('type' => 'string',  'required' => false),
+                'path'         => array('type' => 'string',  'required' => false),
+                'integrity'    => array('type' => 'string',  'required' => false)
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        $validated_params = $validator->getParams();
+        $execute_job_params = $validated_params;
+        $execute_job_params['op'] = 'execute'; // set the execute operation so this doesn't need to be supplied
+
+        // create a new process job with the default task;
+        // if the process is created with a request from an api token, it's
+        // triggered with an api; if there's no api token, it's triggered
+        // from a web session, in which case it's triggered by the UI;
+        // TODO: this will work until we allow processes to be created from
+        // public pipes that don't require a token
+        $triggered_by = strlen($request->getToken()) > 0 ? \Model::PROCESS_TRIGGERED_API : \Model::PROCESS_TRIGGERED_INTERFACE;
+
+        // check the rights on the owner; ability to create an object is governed
+        // currently by user write privileges
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        // set the owner based on the owner being posted to
+        $process_params = array();
+        $process_params['process_mode'] = \Flexio\Jobs\Process::MODE_RUN;
+        $process_params['owned_by'] = $owner_user_eid;
+        $process_params['created_by'] = $requesting_user_eid;
+        $process_params['triggered_by'] = $triggered_by;
+        $process_params['task'] = $execute_job_params;
+        $process = \Flexio\Object\Process::create($process_params);
+
+        // create a job engine, attach it to the process object
+        $engine = \Flexio\Jobs\StoredProcess::create($process);
+
+        // parse the request content and set the stream info
+        $php_stream_handle = fopen('php://input', 'rb');
+        $post_content_type = $_SERVER['CONTENT_TYPE'] ?? '';
+        \Flexio\Base\Util::addProcessInputFromStream($php_stream_handle, $post_content_type, $engine);
+
+        // run the process
+        $engine->run(false  /*true: run in background*/);
+
+        if ($engine->hasError())
+        {
+            $error = $engine->getError();
+            \Flexio\Api\Response::sendError($error);
+            exit(0);
+        }
+
+        $stream = $engine->getStdout();
+        $stream_info = $stream->get();
+        if ($stream_info === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        $mime_type = $stream_info['mime_type'];
+        $start = 0;
+        $limit = PHP_INT_MAX;
+        $content = \Flexio\Base\Util::getStreamContents($stream, $start, $limit);
+        $response_code = $engine->getResponseCode();
+
+        if ($mime_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
+        {
+            // return content as-is
+            header('Content-Type: ' . $mime_type, true, $response_code);
+        }
+        else
+        {
+            // flexio table; return application/json in place of internal mime
+            header('Content-Type: ' . \Flexio\Base\ContentType::JSON, true, $response_code);
+            $content = json_encode($content, JSON_UNESCAPED_SLASHES);
+        }
+
+        \Flexio\Api\Response::sendRaw($content);
+    }
+
     public static function cancel(\Flexio\Api\Request $request) : void
     {
         $requesting_user_eid = $request->getRequestingUser();
