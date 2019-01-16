@@ -1,0 +1,18 @@
+name: PDF to API
+alias: pdf-to-api
+deploy_mode: R
+deploy_schedule: I
+deploy_email: I
+deploy_api: A
+deploy_ui: I
+task:
+  op: sequence
+  items:
+    - op: request
+      method: GET
+      url: '${query.url}'
+    - op: convert
+      input:
+        format: pdf
+      output:
+        format: json
