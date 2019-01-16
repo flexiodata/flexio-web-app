@@ -599,7 +599,12 @@ class Process
         $process_params['owned_by'] = $owner_user_eid;
         $process_params['created_by'] = $requesting_user_eid;
         $process_params['triggered_by'] = $triggered_by;
-        $process_params['task'] = $execute_job_params;
+        $process_params['task'] = [
+            "op" => "sequence",
+            "items" => [
+                $execute_job_params
+            ]
+        ];
         $process = \Flexio\Object\Process::create($process_params);
 
         // create a job engine, attach it to the process object
