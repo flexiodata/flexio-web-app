@@ -610,10 +610,13 @@ class Process
         // create a job engine, attach it to the process object
         $engine = \Flexio\Jobs\StoredProcess::create($process);
 
+        // NOTE: disabled, because posted parameters contain the logic, not the
+        // parameters to run against; re-enable if posted info changes to
+        // include data to process
         // parse the request content and set the stream info
-        $php_stream_handle = fopen('php://input', 'rb');
-        $post_content_type = $_SERVER['CONTENT_TYPE'] ?? '';
-        \Flexio\Base\Util::addProcessInputFromStream($php_stream_handle, $post_content_type, $engine);
+        //$php_stream_handle = fopen('php://input', 'rb');
+        //$post_content_type = $_SERVER['CONTENT_TYPE'] ?? '';
+        //\Flexio\Base\Util::addProcessInputFromStream($php_stream_handle, $post_content_type, $engine);
 
         // run the process
         $engine->run(false  /*true: run in background*/);
