@@ -14,8 +14,8 @@ func main() {
 	os.Exit(1)
     }
 
-    fmt.Println(os.Getuid())
-    if os.Getuid() != 0 {
+    fmt.Println(os.Geteuid())
+    if os.Geteuid() != 0 {
         fmt.Println("launch wants to be run as root")
 	os.Exit(1)
     }

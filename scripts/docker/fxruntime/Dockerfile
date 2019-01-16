@@ -143,9 +143,10 @@ RUN yarn add validator
 # data generation
 RUN yarn add faker
 
-
 COPY flexio.py /usr/lib/python3.5/flexio.py
+RUN cd /usr/lib/python3.5 && python3 -m compileall flexio.py
 COPY fxstart.py /fxpython/fxstart.py
+RUN cd /fxpython && python3 -m compileall fxstart.py
 
 COPY flexio.js /fxnodejs/flexio.js
 COPY run.js /fxnodejs/run.js
