@@ -75,7 +75,12 @@ RUN pip3 install fpdf
 RUN pip3 install openpyxl
 
 # visualization
+
+# for matplotlib, configure with AGG backend so plots can be saved to buffers
 RUN pip3 install matplotlib
+RUN mkdir -p /root/.config/matplotlib
+RUN echo "backend : AGG" > /root/.config/matplotlib/matplotlibrc
+
 RUN pip3 install bokeh
 RUN pip3 install seaborn
 RUN pip3 install plotly
