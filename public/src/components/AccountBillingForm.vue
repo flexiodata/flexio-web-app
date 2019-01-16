@@ -36,7 +36,7 @@
             base: {
               color: '#32325d',
               lineHeight: '18px',
-              fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+              fontFamily: '"Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif',
               fontSmoothing: 'antialiased',
               fontSize: '16px',
               '::placeholder': {
@@ -53,7 +53,12 @@
     },
     methods: {
       pay() {
-
+        // createToken returns a Promise which resolves in a result object with
+        // either a token or an error key.
+        // See https://stripe.com/docs/api#tokens for the token object.
+        // See https://stripe.com/docs/api#errors for the error object.
+        // More general https://stripe.com/docs/stripe.js#stripe-create-token.
+        createToken().then(data => console.log(data.token))
       }
     }
   }
