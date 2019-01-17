@@ -357,7 +357,31 @@ class User
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function updatepaymentinfo(\Flexio\Api\Request $request) : void
+    public static function listcards(\Flexio\Api\Request $request) : void
+    {
+        $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+
+        // load the object
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+
+        // check the rights on the object
+        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+
+        // TODO:
+        // return list of CCs from Stripe
+        // if something goes wrong, throw an exception
+
+
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        \Flexio\Api\Response::sendContent($result);
+    }
+
+    public static function addcard(\Flexio\Api\Request $request) : void
     {
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();

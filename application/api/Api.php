@@ -56,7 +56,8 @@ class Api
         'GET /:userid/account'                        => '\Flexio\Api\User::get',
         'DEL /:userid/account'                        => '\Flexio\Api\User::purge',
         'POS /:userid/account/credentials'            => '\Flexio\Api\User::changepassword',
-        'POS /:userid/account/card'                   => '\Flexio\Api\User::updatepaymentinfo',
+        'GET /:userid/account/cards'                  => '\Flexio\Api\User::listcards',
+        'POS /:userid/account/cards'                  => '\Flexio\Api\User::addcard',
 
         // authorization
         'GET /:userid/auth/rights'                    => '\Flexio\Api\Right::list',
