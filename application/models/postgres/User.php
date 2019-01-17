@@ -28,28 +28,29 @@ class User extends ModelBase
         // make sure the properties that are being updated are the correct type
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
-                'eid_status'        => array('type' => 'string',     'required' => false, 'default' => \Model::STATUS_AVAILABLE),
-                'username'          => array('type' => 'identifier', 'required' => true),
-                'full_name'         => array('type' => 'string',     'required' => false, 'default' => ''),
-                'first_name'        => array('type' => 'string',     'required' => false, 'default' => ''),
-                'last_name'         => array('type' => 'string',     'required' => false, 'default' => ''),
-                'email'             => array('type' => 'email',      'required' => true),
-                'phone'             => array('type' => 'string',     'required' => false, 'default' => ''),
-                'location_city'     => array('type' => 'string',     'required' => false, 'default' => ''),
-                'location_state'    => array('type' => 'string',     'required' => false, 'default' => ''),
-                'location_country'  => array('type' => 'string',     'required' => false, 'default' => ''),
-                'company_name'      => array('type' => 'string',     'required' => false, 'default' => ''),
-                'company_url'       => array('type' => 'string',     'required' => false, 'default' => ''),
-                'locale_language'   => array('type' => 'string',     'required' => false, 'default' => 'en_US'),
-                'locale_decimal'    => array('type' => 'string',     'required' => false, 'default' => '.'),
-                'locale_thousands'  => array('type' => 'string',     'required' => false, 'default' => ','),
-                'locale_dateformat' => array('type' => 'string',     'required' => false, 'default' => 'm/d/Y'),
-                'timezone'          => array('type' => 'string',     'required' => false, 'default' => 'UTC'),
-                'password'          => array('type' => 'password',   'required' => false),
-                'verify_code'       => array('type' => 'string',     'required' => false, 'default' => ''),
-                'config'            => array('type' => 'string',     'required' => false, 'default' => '{}'),
-                'owned_by'          => array('type' => 'string',     'required' => false, 'default' => ''),
-                'created_by'        => array('type' => 'string',     'required' => false, 'default' => '')
+                'eid_status'         => array('type' => 'string',     'required' => false, 'default' => \Model::STATUS_AVAILABLE),
+                'username'           => array('type' => 'identifier', 'required' => true),
+                'full_name'          => array('type' => 'string',     'required' => false, 'default' => ''),
+                'first_name'         => array('type' => 'string',     'required' => false, 'default' => ''),
+                'last_name'          => array('type' => 'string',     'required' => false, 'default' => ''),
+                'email'              => array('type' => 'email',      'required' => true),
+                'phone'              => array('type' => 'string',     'required' => false, 'default' => ''),
+                'location_city'      => array('type' => 'string',     'required' => false, 'default' => ''),
+                'location_state'     => array('type' => 'string',     'required' => false, 'default' => ''),
+                'location_country'   => array('type' => 'string',     'required' => false, 'default' => ''),
+                'company_name'       => array('type' => 'string',     'required' => false, 'default' => ''),
+                'company_url'        => array('type' => 'string',     'required' => false, 'default' => ''),
+                'locale_language'    => array('type' => 'string',     'required' => false, 'default' => 'en_US'),
+                'locale_decimal'     => array('type' => 'string',     'required' => false, 'default' => '.'),
+                'locale_thousands'   => array('type' => 'string',     'required' => false, 'default' => ','),
+                'locale_dateformat'  => array('type' => 'string',     'required' => false, 'default' => 'm/d/Y'),
+                'timezone'           => array('type' => 'string',     'required' => false, 'default' => 'UTC'),
+                'password'           => array('type' => 'password',   'required' => false),
+                'verify_code'        => array('type' => 'string',     'required' => false, 'default' => ''),
+                'stripe_customer_id' => array('type' => 'string',     'required' => false, 'default' => ''),
+                'config'             => array('type' => 'string',     'required' => false, 'default' => '{}'),
+                'owned_by'           => array('type' => 'string',     'required' => false, 'default' => ''),
+                'created_by'         => array('type' => 'string',     'required' => false, 'default' => '')
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
@@ -135,28 +136,29 @@ class User extends ModelBase
         // make sure the properties that are being updated are the correct type
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
-                'eid_status'        => array('type' => 'string',     'required' => false),
-                'username'          => array('type' => 'identifier', 'required' => false),
-                'full_name'         => array('type' => 'string',     'required' => false),
-                'first_name'        => array('type' => 'string',     'required' => false),
-                'last_name'         => array('type' => 'string',     'required' => false),
-                'email'             => array('type' => 'email',      'required' => false),
-                'phone'             => array('type' => 'string',     'required' => false),
-                'location_city'     => array('type' => 'string',     'required' => false),
-                'location_state'    => array('type' => 'string',     'required' => false),
-                'location_country'  => array('type' => 'string',     'required' => false),
-                'company_name'      => array('type' => 'string',     'required' => false),
-                'company_url'       => array('type' => 'string',     'required' => false),
-                'locale_language'   => array('type' => 'string',     'required' => false),
-                'locale_decimal'    => array('type' => 'string',     'required' => false),
-                'locale_thousands'  => array('type' => 'string',     'required' => false),
-                'locale_dateformat' => array('type' => 'string',     'required' => false),
-                'timezone'          => array('type' => 'string',     'required' => false),
-                'password'          => array('type' => 'password',   'required' => false),
-                'verify_code'       => array('type' => 'string',     'required' => false),
-                'config'            => array('type' => 'string',     'required' => false),
-                'owned_by'          => array('type' => 'string',     'required' => false),
-                'created_by'        => array('type' => 'string',     'required' => false)
+                'eid_status'         => array('type' => 'string',     'required' => false),
+                'username'           => array('type' => 'identifier', 'required' => false),
+                'full_name'          => array('type' => 'string',     'required' => false),
+                'first_name'         => array('type' => 'string',     'required' => false),
+                'last_name'          => array('type' => 'string',     'required' => false),
+                'email'              => array('type' => 'email',      'required' => false),
+                'phone'              => array('type' => 'string',     'required' => false),
+                'location_city'      => array('type' => 'string',     'required' => false),
+                'location_state'     => array('type' => 'string',     'required' => false),
+                'location_country'   => array('type' => 'string',     'required' => false),
+                'company_name'       => array('type' => 'string',     'required' => false),
+                'company_url'        => array('type' => 'string',     'required' => false),
+                'locale_language'    => array('type' => 'string',     'required' => false),
+                'locale_decimal'     => array('type' => 'string',     'required' => false),
+                'locale_thousands'   => array('type' => 'string',     'required' => false),
+                'locale_dateformat'  => array('type' => 'string',     'required' => false),
+                'timezone'           => array('type' => 'string',     'required' => false),
+                'password'           => array('type' => 'password',   'required' => false),
+                'verify_code'        => array('type' => 'string',     'required' => false),
+                'stripe_customer_id' => array('type' => 'string',     'required' => false),
+                'config'             => array('type' => 'string',     'required' => false),
+                'owned_by'           => array('type' => 'string',     'required' => false),
+                'created_by'         => array('type' => 'string',     'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
@@ -251,6 +253,7 @@ class User extends ModelBase
                               'locale_dateformat'      => $row['locale_dateformat'],
                               'timezone'               => $row['timezone'],
                               'verify_code'            => $row['verify_code'],
+                              'stripe_customer_id'     => $row['stripe_customer_id'],
                               'config'                 => $row['config'],
                               'owned_by'               => $row['owned_by'],
                               'created_by'             => $row['created_by'],
@@ -297,6 +300,19 @@ class User extends ModelBase
             return false;
 
         return $verify_code;
+    }
+
+    public function getStripeCustomerIdFromEid(string $eid) // TODO: add return type
+    {
+        if (!\Flexio\Base\Eid::isValid($eid))
+            return false;
+
+        $db = $this->getDatabase();
+        $stripe_customer_id = $db->fetchOne('select stripe_customer_id from tbl_user where eid = ?', $eid);
+        if ($stripe_customer_id === false)
+            return false;
+
+        return $stripe_customer_id;
     }
 
     public function getUsernameFromEid(string $eid) // TODO: add return type
