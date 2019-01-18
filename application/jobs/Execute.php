@@ -203,9 +203,14 @@ class ExecuteProxy
 
         $engine = $this->engine;
         //$cmd = "$g_dockerbin run --rm --name $container_name -v $host_socket_path:$container_socket_path -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=$container_ipc_address -e FLEXIO_EXECUTE_ENGINE=$engine -i fxruntime python3 /fxpython/fxstart.py";
-        $cmd = "$g_dockerbin run -d --net=host --rm --name $container_name -v $host_socket_path:$container_socket_path -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=$container_ipc_address -e FLEXIO_EXECUTE_ENGINE=$engine -i fxruntime python3 /fxpython/fxstart.py";
 
-        //echo "./update-docker-images && $cmd";
+        // OLD
+        //$cmd = "$g_dockerbin run -d --net=host --rm --name $container_name -v $host_socket_path:$container_socket_path -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=$container_ipc_address -e FLEXIO_EXECUTE_ENGINE=$engine -i fxruntime python3 /fxpython/fxstart.py";
+
+        // NEW
+        $cmd = "$g_dockerbin run -d --net=host --rm --name $container_name -v $host_socket_path:$container_socket_path -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=$container_ipc_address -e FLEXIO_EXECUTE_ENGINE=$engine -i fxruntime /fxruntime/fxstart";
+
+        //echo "./update-docker-images && " . str_replace(" -d ", " ", $cmd);
         //ob_end_flush();
         //flush();
 
@@ -215,6 +220,7 @@ class ExecuteProxy
         foreach ($output_lines as $line)
             $docker_exec_output .= $line;
 
+        
         // should the script host crash for any reason, the container could be left running;
         // the following function adds this container to a list that of containers that
         // will be terminated if the execute job abnormally exits; If the execute job exits

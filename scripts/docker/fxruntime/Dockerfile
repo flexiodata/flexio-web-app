@@ -12,6 +12,9 @@ RUN apt-get -y install sudo
 RUN apt-get -y install wget
 RUN apt-get -y install apt-utils
 RUN apt-get -y install curl
+RUN apt-get -y install git
+
+RUN mkdir /fxruntime
 
 # zeromq libraries
 RUN apt-get -y install libzmq3-dev libzmq5
@@ -22,6 +25,11 @@ RUN apt-get -y install python3-pip
 # nodejs runtime
 RUN curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
 RUN apt-get -y install nodejs
+
+# golang runtime
+RUN mkdir /fxruntime/go
+ENV GOPATH=/fxruntime/go
+RUN apt-get -y install golang
 
 # puppeteer prequisites for rendering
 RUN apt-get -y install chromium-browser libgconf2-4
@@ -156,6 +164,11 @@ RUN cd /fxpython && python3 -m compileall fxstart.py
 COPY flexio.js /fxnodejs/flexio.js
 COPY run.js /fxnodejs/run.js
 COPY render.js /fxnodejs/render.js
+
+
+RUN go get github.com/pebbe/zmq4
+COPY fxstart.go /fxruntime
+RUN cd /fxruntime && go build fxstart.go
 
 
 # POTENTIAL: csv
