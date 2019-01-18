@@ -1256,7 +1256,7 @@ class Execute extends \Flexio\Jobs\Base
 
             if (strlen($err) > 0)
             {
-
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
             }
         }
         else if ($this->lang == 'html')
@@ -1293,7 +1293,7 @@ class Execute extends \Flexio\Jobs\Base
         else
         {
             // unknown language
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
         }
     }
 

@@ -62,6 +62,7 @@ CREATE TABLE tbl_user (
   timezone varchar(30) NOT NULL default 'UTC',
   password varchar(80) NOT NULL default '',
   verify_code varchar(40) NOT NULL default '',
+  stripe_customer_id varchar(20) NOT NULL default '',
   config json,
   role varchar(1) NOT NULL default '',
   owned_by varchar(12) NOT NULL default '',
