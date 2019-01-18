@@ -1,5 +1,9 @@
 <template>
   <div>
+    <div class="overflow-auto">
+      <pre class="f7 lh-title"><code class="db" style="white-space: pre-wrap" spellcheck="false">{{test}}</code></pre>
+    </div>
+    <div class="bb-b--black-10 mv4"></div>
     <Card
       class="stripe-card"
       stripe="pk_test_TYooMQauvdEDq54NiTphI7jx"
@@ -21,6 +25,7 @@
 </template>
 
 <script>
+  import api from '../api'
   import { Card, createToken } from 'vue-stripe-elements-plus'
 
   export default {
@@ -29,6 +34,7 @@
     },
     data() {
       return {
+        test: '',
         complete: false,
         stripeOptions: {
           // see https://stripe.com/docs/stripe.js#element-options for details
@@ -50,6 +56,13 @@
           }
         }
       }
+    },
+    mounted() {
+      api.v2_fetchCards().then(response => {
+        this.test = JSON.stringify(response.data)
+      }).catch(error => {
+        this.test = JSON.stringify(error)
+      })
     },
     methods: {
       pay() {
