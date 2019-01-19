@@ -580,9 +580,9 @@ class ContextEmail(object):
         info = proxy.invoke('invoke_service', ['email.send', args[0] if len(args) == 1 else kwargs])
 
 class Context(object):
-    def __init__(self, input, output):
-        self.input = input
-        self.output = output
+    def __init__(self):
+        self._input = None
+        self._output = None
         self._query = None
         self._form = None
         self._files = None
@@ -590,6 +590,20 @@ class Context(object):
         self.email = ContextEmail()
         self.fs = ContextFs()
 
+    @property
+    def input(self):
+        if self._input is None:
+            stdin_stream_info  = proxy.invoke('getStreamInfo', [0])
+            self._input = Stream(stdin_stream_info)
+        return self._input
+
+    @property
+    def output(self):
+        if self._output is None:
+            stdout_stream_info  = proxy.invoke('getStreamInfo', [1])
+            self._output = Stream(stdout_stream_info)
+        return self._output
+    
     @property
     def query(self):
         if self._query is None:
@@ -637,30 +651,10 @@ class Context(object):
         sys.exit()
 
 
-g_print_output = None
-def print_redirect_to_output(*args, **kwargs):
-    format_str = '{} ' * len(args)
-    format_str = format_str.rstrip(' ')
-    val = format_str.format(*args, **kwargs)
-    g_print_output.write(val)
-
-
-import builtins as __builtin__
-
-
-
-def create_context():
-    stdin_stream_info  = proxy.invoke('getStreamInfo', [0])
-    stdout_stream_info = proxy.invoke('getStreamInfo', [1])
-
-    input_stream = Stream(stdin_stream_info)
-    output_stream = Stream(stdout_stream_info)
-
-    return Context(input_stream, output_stream)
 
 def run(handler):
 
-    context = create_context()
+    context = Context()
 
     if isinstance(handler, ModuleType):
         func = getattr(handler, 'flex_handler', None)

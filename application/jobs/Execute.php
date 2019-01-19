@@ -179,6 +179,25 @@ class ExecuteProxy
         if (is_null($g_dockerbin))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
+        $host_src_dir = "/dev/shm/fxsrc-$access_key";
+        $container_src_dir = '/fxruntime/src';
+
+        mkdir($host_src_dir, 0700);
+
+        if ($this->engine == 'python')
+        {
+            file_put_contents("$host_src_dir/script.py", $this->code);
+        }
+        else if ($this->engine == 'nodejs')
+        {
+            file_put_contents("$host_src_dir/script.js", $this->code);
+        }
+        else
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED, "Unknown execution engine");
+        }
+
+
         // start a zeromq server -- let OS choose port
 
         $host_socket_path = "/dev/shm/ipc-exec-$access_key";
@@ -208,7 +227,7 @@ class ExecuteProxy
         //$cmd = "$g_dockerbin run -d --net=host --rm --name $container_name -v $host_socket_path:$container_socket_path -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=$container_ipc_address -e FLEXIO_EXECUTE_ENGINE=$engine -i fxruntime python3 /fxpython/fxstart.py";
 
         // NEW
-        $cmd = "$g_dockerbin run -d --net=host --rm --name $container_name -v $host_socket_path:$container_socket_path -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=$container_ipc_address -e FLEXIO_EXECUTE_ENGINE=$engine -i fxruntime /fxruntime/fxstart";
+        $cmd = "$g_dockerbin run -d --net=host --rm --name $container_name -v $host_src_dir:$container_src_dir:ro -v $host_socket_path:$container_socket_path -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=$container_ipc_address -e FLEXIO_EXECUTE_ENGINE=$engine -i fxruntime /fxruntime/fxstart";
 
         //echo "./update-docker-images && " . str_replace(" -d ", " ", $cmd);
         //ob_end_flush();
@@ -216,9 +235,9 @@ class ExecuteProxy
 
         exec("$cmd 2>&1", $output_lines, $exit_code);
 
-        $docker_exec_output = '';
-        foreach ($output_lines as $line)
-            $docker_exec_output .= $line;
+        //$docker_exec_output = '';
+        //foreach ($output_lines as $line)
+        //    $docker_exec_output .= $line;
 
         
         // should the script host crash for any reason, the container could be left running;
@@ -228,7 +247,7 @@ class ExecuteProxy
         gc_container_add($container_name);
 
 
-        register_shutdown_function(function() use (&$server, $dsn, $host_socket_path) {
+        register_shutdown_function(function() use (&$server, $dsn, $host_socket_path, $host_src_dir) {
             \Flexio\Jobs\gc_container_cleanup();
             @unlink($host_socket_path);
             if ($server !== null && $server->_is_bound)
@@ -236,6 +255,8 @@ class ExecuteProxy
                 $server->unbind($dsn);
                 $server->_is_bound = false;
             }
+
+            \Flexio\Base\Util::rmtree($host_src_dir);
         });
 
         $start_time = microtime(true);
@@ -262,9 +283,13 @@ class ExecuteProxy
                 {
                     $method = ($message['method'] ?? '');
 
-                    if ($method == 'get_script')
+                    if ($actual_start_time === null)
                     {
                         $actual_start_time = microtime(true);
+                    }
+                    
+                    if ($method == 'get_script')
+                    {
                         $response = [ 'result' => $this->code, 'id' => $message['id'] ];
                         $server->send(json_encode($response));
                     }
@@ -527,9 +552,9 @@ class ScriptHost
         return $file->writer;
     }
 
-    public function func_hello(string $message) : string
+    public function func_hello() : string
     {
-        return "Parameter = $message";
+        return "hello";
     }
 
     public function func_exit($response_code) : void
