@@ -283,9 +283,13 @@ class ExecuteProxy
                 {
                     $method = ($message['method'] ?? '');
 
-                    if ($method == 'get_script')
+                    if ($actual_start_time === null)
                     {
                         $actual_start_time = microtime(true);
+                    }
+                    
+                    if ($method == 'get_script')
+                    {
                         $response = [ 'result' => $this->code, 'id' => $message['id'] ];
                         $server->send(json_encode($response));
                     }
