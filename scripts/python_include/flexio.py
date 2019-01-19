@@ -651,17 +651,6 @@ class Context(object):
         sys.exit()
 
 
-g_print_output = None
-def print_redirect_to_output(*args, **kwargs):
-    format_str = '{} ' * len(args)
-    format_str = format_str.rstrip(' ')
-    val = format_str.format(*args, **kwargs)
-    g_print_output.write(val)
-
-
-import builtins as __builtin__
-
-
 
 def run(handler):
 
