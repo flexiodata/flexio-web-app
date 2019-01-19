@@ -90,7 +90,7 @@
         createToken().then(data => {
           var token_id = data.token.id
 
-          api.v2_createCard(null, { token: token_id }).then(card_data => {
+          api.v2_createCard('me', { token: token_id }).then(card_data => {
             this.fetchCards()
           })
         })
