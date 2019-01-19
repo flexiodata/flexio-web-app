@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM blitznote/debase:18.04
 MAINTAINER ben@flex.io
 
 
