@@ -7,8 +7,8 @@ import (
     "os"
     "os/exec"
     "bufio"
-    "fmt"
-    "encoding/json"
+    //"fmt"
+    //"encoding/json"
 )
 
 
@@ -22,49 +22,51 @@ func main() {
 	defer requester.Close()
 	requester.Connect(runtime_server)
 
+
     var payload string
     payload = `{
         "version": 1,
         "access_key": "` + runtime_key + `",
-        "method": "get_script",
+        "method": "hello",
         "params": [],
         "id": "111"
     }`
-
 
     requester.Send(payload, 0)
     reply, _ := requester.Recv(0)
 
 
-    var dat map[string]interface{}
-    if err := json.Unmarshal([]byte(reply), &dat); err != nil {
-        panic(err)
-    }
-    code := dat["result"].(string)
+
+    //var dat map[string]interface{}
+    //if err := json.Unmarshal([]byte(reply), &dat); err != nil {
+    //    panic(err)
+    //}
+    //code := dat["result"].(string)
 
     var prog string
     var cmdline []string
     var dir string
     if engine == "python" {
-        f, _ := os.Create("/fxpython/script.py")
-        f.Write([]byte(code))
-        f.Close()
+        //f, _ := os.Create("/fxpython/script.py")
+        //f.Write([]byte(code))
+        //f.Close()
         prog = "/usr/bin/python3"
         cmdline = []string{"-c", "import flexio as f; import script as s; f.run(s)"}
-        dir = "/fxpython"
+        //dir = "/fxpython"
+        dir = "/fxruntime/src"
     } else if engine == "nodejs" {
-        f, _ := os.Create("/fxnodejs/script.js")
-        f.Write([]byte(code))
-        f.Close()
+        //f, _ := os.Create("/fxnodejs/script.js")
+        //f.Write([]byte(code))
+        //f.Close()
         prog = "/usr/bin/node"
-        cmdline = []string{"-e", "var f = require('./flexio'); var s = require('./script'); f.run(s)"}
-        dir = "/fxnodejs"
+        cmdline = []string{"-e", "var f = require('/fxnodejs/flexio'); var s = require('./script'); f.run(s)"}
+        dir = "/fxruntime/src"
     } else {
         panic("Error: unknown execution engine")
     }
 
-    fmt.Printf("Code is %s\n", code)
-    fmt.Printf("Running %s %s\n", prog, cmdline)
+    //fmt.Printf("Code is %s\n", code)
+    //fmt.Printf("Running %s %s\n", prog, cmdline)
 
     os.Chdir(dir)
     //prog = "/bin/ls"
