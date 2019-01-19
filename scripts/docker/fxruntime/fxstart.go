@@ -8,7 +8,7 @@ import (
     "os/exec"
     "bufio"
     //"fmt"
-    //"encoding/json"
+    "encoding/json"
 )
 
 
@@ -75,6 +75,8 @@ func main() {
     cmd := exec.Command(prog, cmdline...)
     cmd.Dir = dir
     //out, err := cmd.Output()
+
+
     cmd_reader, _ := cmd.StdoutPipe()
     scanner := bufio.NewScanner(cmd_reader)
     go func() {
@@ -94,6 +96,28 @@ func main() {
         
         }
     }()
+
+    stderr_reader, _ := cmd.StderrPipe()
+    scanner_stderr := bufio.NewScanner(stderr_reader)
+    go func() {
+        for  scanner_stderr.Scan() {
+            //fmt.Printf( scanner_stderr.Text())
+
+            json_string, _ := json.Marshal(scanner_stderr.Text())
+            payload = `{
+                "version": 1,
+                "access_key": "` + runtime_key + `",
+                "method": "compile_error",
+                "params": [`+string(json_string)+`],
+                "id": "199$*#991"
+            }`
+
+            requester.Send(payload, 0)
+            reply, _ = requester.Recv(0)
+        
+        }
+    }()
+
     cmd.Start()
     cmd.Wait()
 
