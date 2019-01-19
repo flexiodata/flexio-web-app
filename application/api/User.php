@@ -371,36 +371,27 @@ class User
         if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
+        // get the stripe customer id; if a key doesn't yet exist, there are no sources
+        $stripe_customer_id = $owner_user->getStripeCustomerId();
+        if (strlen($stripe_customer_id) === 0)
+        {
+            $result = array();
+            $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+            \Flexio\Api\Response::sendContent($result);
+            return;
+        }
 
-        // TODO:
-        // return list of CCs from Stripe
-        // if something goes wrong, throw an exception
+        // create/update customer with payment source
+        $stripe_secret_key = $GLOBALS['g_config']->stripe_secret_key ?? false;
+        if ($stripe_secret_key === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::ERROR_GENERAL);
 
-/*
-        // return the newly added card info
-        $customer_default_source = $customer_info['default_source'] ?? '';
-        $stripe_api_endpoint = 'https://api.stripe.com/v1/sources/' . $customer_default_source;
-        if (strlen($stripe_api_endpoint) === 0)
+        $sources = self::getCustomerPaymentSources($stripe_secret_key, $stripe_customer_id);
+        if (!is_array($sources))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_HTTPGET, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-        curl_setopt($ch, CURLOPT_URL, $stripe_api_endpoint);
-        $result = curl_exec($ch);
-        $source_info = @json_decode($result, true);
-        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-
-        //if ($httpcode !== 200)
-        //    throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-*/
-
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($sources);
     }
 
     public static function addcard(\Flexio\Api\Request $request) : void
@@ -433,7 +424,7 @@ class User
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // create/update customer with payment source
-        $stripe_secret_key = $GLOBALS['g_config']->stripe_secret_key?? false;
+        $stripe_secret_key = $GLOBALS['g_config']->stripe_secret_key ?? false;
         if ($stripe_secret_key === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::ERROR_GENERAL);
 
@@ -463,7 +454,7 @@ class User
         curl_close($ch);
 
         if ($httpcode !== 200)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, _('Operation failed'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
         // update the customer id
         $new_stripe_customer_id = $customer_info['id'];
@@ -473,23 +464,52 @@ class User
         $owner_user->set($new_params);
 
         // return the newly added card info
-        $customer_default_source = array();
-        $customer_default_source_id = $customer_info['default_source'] ?? '';
-        $customer_cards = $customer_info['sources']['data'];
-        foreach ($customer_cards as $c)
-        {
-            if ($c['id'] === $customer_default_source_id)
-            {
-                $customer_default_source = $c;
-                break;
-            }
-        }
+        $sources = self::getCustomerPaymentSources($stripe_secret_key, $new_stripe_customer_id);
+        if (!is_array($sources))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-        $result = $customer_default_source;
+        $result = $sources;
         $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
         \Flexio\Api\Response::sendContent($result);
+    }
+
+    private static function getCustomerPaymentSources(string $stripe_secret_key, string $stripe_customer_id) :? array
+    {
+        $headers = array();
+        $headers[] = 'Authorization: Bearer ' . $stripe_secret_key;
+        $stripe_api_endpoint = "https://api.stripe.com/v1/customers/$stripe_customer_id/sources";
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_HTTPGET, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($ch, CURLOPT_URL, $stripe_api_endpoint);
+
+        $result = curl_exec($ch);
+        $source_info = @json_decode($result, true);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($httpcode !== 200)
+            return null;
+
+        $result = array();
+        foreach ($source_info['data'] as $s)
+        {
+            $result[] = array(
+                'card_id' => $s['id'],
+                'card_type' => $s['brand'],
+                'card_last4' => $s['last4'],
+                'card_exp_month' => $s['exp_month'],
+                'card_exp_years' => $s['exp_year']
+            );
+        }
+
+        return $result;
     }
 
     public static function changepassword(\Flexio\Api\Request $request) : void
