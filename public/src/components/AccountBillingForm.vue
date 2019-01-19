@@ -1,24 +1,28 @@
 <template>
   <div>
+    <div class="f7 silver ttu fw6">Your Credit Cards</div>
     <div class="overflow-auto">
-      <pre class="f7 lh-title"><code class="db" style="white-space: pre-wrap" spellcheck="false">{{test}}</code></pre>
+      <pre class="f7 lh-title"><code class="db" style="white-space: pre-wrap" spellcheck="false">{{cards}}</code></pre>
     </div>
-    <div class="bb-b--black-10 mv4"></div>
-    <Card
-      class="stripe-card"
-      stripe="pk_test_TYooMQauvdEDq54NiTphI7jx"
-      :class="{ complete }"
-      :options="stripeOptions"
-      @change="complete = $event.complete"
-    />
-    <div class="pt3">
+    <div class="bb b--black-10 mv3"></div>
+    <div class="f7 silver ttu fw6">Add a New Payment Method</div>
+    <div class="mv3">
+      <Card
+        class="stripe-card"
+        :stripe="stripe_public_key"
+        :class="{ complete }"
+        :options="stripe_opts"
+        @change="complete = $event.complete"
+      />
+    </div>
+    <div class="mt3">
       <el-button
         type="primary"
         class="ttu fw6 pay-with-stripe"
-        @click="pay"
+        @click="addCard"
         :disabled="!complete"
       >
-        Submit Payment
+        Add Card
       </el-button>
     </div>
   </div>
@@ -28,15 +32,24 @@
   import api from '../api'
   import { Card, createToken } from 'vue-stripe-elements-plus'
 
+  // Stripe public keys
+  const stripe_test_key = 'pk_test_TYooMQauvdEDq54NiTphI7jx' // Stripe public test key
+  const flexio_test_key = 'pk_test_0b06VXFmtZ2ISyRiBgIfbi3O' // Flex.io public test key
+  const flexio_prod_key = 'pk_live_0VQaMv9XVFoZcAC3VFAuBuyg' // Flex.io public production key
+
+  // whichever key is specified here will be the key that is used
+  const stripe_public_key = flexio_test_key
+
   export default {
     components: {
       Card
     },
     data() {
       return {
-        test: '',
+        cards: '',
+        stripe_public_key,
         complete: false,
-        stripeOptions: {
+        stripe_opts: {
           // see https://stripe.com/docs/stripe.js#element-options for details
           style: {
             base: {
@@ -58,20 +71,29 @@
       }
     },
     mounted() {
-      api.v2_fetchCards().then(response => {
-        this.test = JSON.stringify(response.data)
-      }).catch(error => {
-        this.test = JSON.stringify(error)
-      })
+      this.fetchCards()
     },
     methods: {
-      pay() {
+      fetchCards() {
+        api.v2_fetchCards().then(response => {
+          this.cards = JSON.stringify(response.data)
+        }).catch(error => {
+          this.cards = JSON.stringify(error)
+        })
+      },
+      addCard() {
         // createToken returns a Promise which resolves in a result object with
         // either a token or an error key.
         // See https://stripe.com/docs/api#tokens for the token object.
         // See https://stripe.com/docs/api#errors for the error object.
         // More general https://stripe.com/docs/stripe.js#stripe-create-token.
-        createToken().then(data => console.log(data.token))
+        createToken().then(data => {
+          var token_id = data.token.id
+
+          api.v2_createCard(null, { token: token_id }).then(card_data => {
+            this.fetchCards()
+          })
+        })
       }
     }
   }

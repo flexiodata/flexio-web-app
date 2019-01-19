@@ -56,7 +56,7 @@
             <div slot="label"><div style="min-width: 6rem">Billing</div></div>
             <div class="ml3 mr4">
               <h3 class="mt0 mb3 pb2 fw6 bb b--black-10">Billing</h3>
-              <AccountBillingForm style="max-width: 30rem" />
+              <AccountBillingForm />
             </div>
           </el-tab-pane>
         </el-tabs>
