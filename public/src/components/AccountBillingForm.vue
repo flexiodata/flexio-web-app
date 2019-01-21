@@ -10,7 +10,7 @@
         v-if="card_error.length > 0"
       />
       <div
-        class="mv2 f6 br2 pa2 bg-nearer-white ba b--black-05 flex flex-row items-center"
+        class="mv2 f6 br2 pa2 bg-nearer-white ba b--black-05 flex flex-row items-center hide-child"
         :key="card.card_id"
         v-for="card in cards"
       >
@@ -19,6 +19,21 @@
           <span class="nowrap">{{card.card_type}} ending in {{card.card_last4}}</span>
         </div>
         <div class="pa1 nowrap">Expires {{card.card_exp_month}}/{{card.card_exp_years}}</div>
+        <div
+          class="ml2 hint--top"
+          aria-label="Remove this card"
+        >
+          <ConfirmPopover
+            class="pointer child black-30 hover-black-60"
+            placement="bottom-end"
+            title="Confirm remove card?"
+            message="You will no longer be able to use this card as a payment method. Are you sure you want to remove this card?"
+            confirmButtonText="Remove card"
+            :width="400"
+            :offset="9"
+            @confirm-click="removeCard(card)"
+          />
+        </div>
       </div>
     </div>
     <div class="overflow-auto" v-if="false">
@@ -49,6 +64,10 @@
 </template>
 
 <script>
+  import api from '../api'
+  import { Card, createToken } from 'vue-stripe-elements-plus'
+  import ConfirmPopover from './ConfirmPopover.vue'
+
   // all cards accepted by Stripe
   import visa from 'payment-icons/min/flat/visa.svg'
   import mastercard from 'payment-icons/min/flat/mastercard.svg'
@@ -57,9 +76,6 @@
   import discover from 'payment-icons/min/flat/discover.svg'
   import diners from 'payment-icons/min/flat/diners.svg'
   import unionpay from 'payment-icons/min/flat/unionpay.svg'
-
-  import api from '../api'
-  import { Card, createToken } from 'vue-stripe-elements-plus'
 
   // Stripe public keys
   const stripe_test_key = 'pk_test_TYooMQauvdEDq54NiTphI7jx' // Stripe public test key
@@ -71,7 +87,8 @@
 
   export default {
     components: {
-      Card
+      Card,
+      ConfirmPopover
     },
     data() {
       return {
@@ -138,6 +155,9 @@
             this.fetchCards()
           })
         })
+      },
+      removeCard(card) {
+        alert(card.card_id)
       }
     }
   }

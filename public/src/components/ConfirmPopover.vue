@@ -1,6 +1,8 @@
 <template>
   <el-popover
     trigger="click"
+    :class="is_visible ? activeClass : ''"
+    :style="style"
     v-on="$listeners"
     v-bind="$attrs"
     v-model="is_visible"
@@ -40,6 +42,10 @@
         type: String,
         default: 'Are you sure you want to delete this item?'
       },
+      activeClass: {
+        type: String,
+        default: 'black'
+      },
       cancelButtonText: {
         type: String,
         default: 'Cancel'
@@ -64,6 +70,11 @@
     data() {
       return {
         is_visible: false
+      }
+    },
+    computed: {
+      style() {
+        return this.is_visible ? 'color: black; opacity: 1' : ''
       }
     },
     methods: {
