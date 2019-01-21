@@ -164,6 +164,8 @@
 </script>
 
 <style lang="stylus">
+  @import '../stylesheets/variables.styl'
+
   /**
    * The CSS shown here will not be introduced in the Quickstart guide, but shows
    * how you can use CSS to style your Element's container.
@@ -173,14 +175,12 @@
     height: 40px
     padding: 10px 12px
     border-radius: 4px
-    border: 1px solid transparent
-    box-shadow: 0 1px 3px 0 #e6ebf1
-    -webkit-transition: box-shadow 150ms ease
-    transition: box-shadow 150ms ease
+    border: 1px solid rgba(0,0,0,0.1)
+    transition: all 150ms ease
   }
 
   .StripeElement--focus {
-    box-shadow: 0 1px 3px 0 #cfd7df
+    border-color: $blue
   }
 
   .StripeElement--invalid {
