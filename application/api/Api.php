@@ -58,6 +58,7 @@ class Api
         'POS /:userid/account/credentials'            => '\Flexio\Api\User::changepassword',
         'GET /:userid/account/cards'                  => '\Flexio\Api\User::listcards',
         'POS /:userid/account/cards'                  => '\Flexio\Api\User::addcard',
+        'DEL /:userid/account/cards/*'                => '\Flexio\Api\User::deletecard',
 
         // authorization
         'GET /:userid/auth/rights'                    => '\Flexio\Api\Right::list',
@@ -362,7 +363,21 @@ class Api
             return $function;
         }
 
-        // PATH POSSIBILITY 5; the path is a vfs path with a path after the vfs prefix
+        // PATH POSSIBILITY 5; the path is an account card path, where the path may include a payment service
+        // provider card identifier as part of the path
+        $api_params = $url_params;
+        $api_params['apiparam1'] = $user_eid !== '' ? ':userid' : $api_params['apiparam1'];
+        $apiendpoint = self::buildApiEndpointString($request_method, $api_params);
+        if (substr($apiendpoint,0,27) === 'DEL /:userid/account/cards/')
+            $apiendpoint = 'DEL /:userid/account/cards/*';
+        $function = self::$endpoints[$apiendpoint] ?? false;
+        if ($function !== false)
+        {
+            $request->setOwnerFromUrl($user_eid);
+            return $function;
+        }
+
+        // PATH POSSIBILITY 6; the path is a vfs path with a path after the vfs prefix
         $api_params = $url_params;
         $api_params['apiparam1'] = $user_eid !== '' ? ':userid' : $api_params['apiparam1'];
         $apiendpoint = self::buildApiEndpointString($request_method, $api_params);

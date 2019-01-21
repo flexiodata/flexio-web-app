@@ -475,6 +475,78 @@ class User
         \Flexio\Api\Response::sendContent($result);
     }
 
+    public static function deletecard(\Flexio\Api\Request $request) : void
+    {
+        $request_url = $request->getUrl();
+        $url_params = $request->getUrlParams();
+        $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+
+        // TODO: user update action or something else?
+        $request->track(\Flexio\Api\Action::TYPE_USER_UPDATE);
+
+        // load the object
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+
+        // check the rights on the object
+        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        $path = $request_url;
+
+        $pos = strpos($path, '/account/cards/');
+        if ($pos === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
+
+        // get the card (stripe source) identifier
+        $stripe_source_id = $url_params['apiparam4'] ?? false;
+        if ($stripe_source_id === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
+
+        // delete the payment source
+        $stripe_secret_key = $GLOBALS['g_config']->stripe_secret_key ?? false;
+        if ($stripe_secret_key === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::ERROR_GENERAL);
+
+        $headers = array();
+        $headers[] = 'Authorization: Bearer ' . $stripe_secret_key;
+        $headers[] = 'Content-Type: application/x-www-form-urlencoded';
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+
+        $stripe_customer_id = $owner_user->getStripeCustomerId();
+        $stripe_api_endpoint = "https://api.stripe.com/v1/customers/$stripe_customer_id/sources/$stripe_source_id";
+        curl_setopt($ch, CURLOPT_URL, $stripe_api_endpoint);
+
+        $result = curl_exec($ch);
+        $source_info = @json_decode($result, true);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($httpcode !== 200)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
+
+        $result = array(
+            'card_id' => $source_info['id'],
+            'card_type' => $source_info['brand'],
+            'card_last4' => $source_info['last4'],
+            'card_exp_month' => $source_info['exp_month'],
+            'card_exp_years' => $source_info['exp_year']
+        );
+
+        $request->setResponseParams($result);
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        $request->track();
+        \Flexio\Api\Response::sendContent($result);
+    }
+
     private static function getCustomerPaymentSources(string $stripe_secret_key, string $stripe_customer_id) :? array
     {
         $headers = array();
