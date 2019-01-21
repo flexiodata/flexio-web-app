@@ -18,7 +18,7 @@
           <img :src="getCardLogo(card.card_type)" class="mr2" style="width: 36px">
           <span class="nowrap">{{card.card_type}} ending in {{card.card_last4}}</span>
         </div>
-        <span class="nowrap">Expires {{card.card_exp_month}}/{{card.card_exp_years}}</span>
+        <div class="pa1 nowrap">Expires {{card.card_exp_month}}/{{card.card_exp_years}}</div>
       </div>
     </div>
     <div class="overflow-auto" v-if="false">
