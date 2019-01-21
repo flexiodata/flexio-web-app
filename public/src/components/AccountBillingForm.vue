@@ -1,11 +1,28 @@
 <template>
   <div>
-    <div class="f7 silver ttu fw6">Your Credit Cards</div>
-    <div class="overflow-auto">
+    <div class="mb3 f7 silver ttu fw6">Your Credit Cards</div>
+    <div>
+      <el-alert
+        type="error"
+        show-icon
+        :title="card_error"
+        :closable="false"
+        v-if="card_error.length > 0"
+      />
+      <div
+        class="mv2 f6 br2 pa3 bg-nearer-white ba b--black-05 flex flex-row items-center"
+        :key="card.card_id"
+        v-for="card in cards"
+      >
+        <span class="nowrap w-100">{{card.card_type}} ending in {{card.card_last4}}</span>
+        <span class="nowrap">Expires {{card.card_exp_month}}/{{card.card_exp_years}}</span>
+      </div>
+    </div>
+    <div class="overflow-auto" v-if="false">
       <pre class="f7 lh-title"><code class="db" style="white-space: pre-wrap" spellcheck="false">{{cards}}</code></pre>
     </div>
-    <div class="bb b--black-10 mv3"></div>
-    <div class="f7 silver ttu fw6">Add a New Payment Method</div>
+    <div class="h2"></div>
+    <div class="mb3 f7 silver ttu fw6">Add a New Payment Method</div>
     <div class="mv3">
       <Card
         class="stripe-card"
@@ -46,7 +63,8 @@
     },
     data() {
       return {
-        cards: '',
+        cards: [],
+        card_error: '',
         stripe_public_key,
         complete: false,
         stripe_opts: {
@@ -76,9 +94,11 @@
     methods: {
       fetchCards() {
         api.v2_fetchCards().then(response => {
-          this.cards = JSON.stringify(response.data)
+          this.cards = response.data
+          this.card_error = ''
         }).catch(error => {
-          this.cards = JSON.stringify(error)
+          this.cards = []
+          this.card_error = JSON.stringify(error)
         })
       },
       addCard() {
