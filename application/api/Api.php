@@ -29,8 +29,8 @@ class Api
     // the last time it ran for the other; if so, maybe processes should run with privileges
     // of the process owner, which could be the requesting user; we have the following endpoints
     // which would need to be sorted out:
-    // 'POS /:userid/pipes/:objeid/processes'        => '\Flexio\Api\Process::create',
-    // 'GET /:userid/pipes/:objeid/processes'        => '\Flexio\Api\Pipe::processes',
+    // 'POS /:userid/pipes/:objid/processes'        => '\Flexio\Api\Process::create',
+    // 'GET /:userid/pipes/:objid/processes'        => '\Flexio\Api\Pipe::processes',
 
     // TODO: do we need the stream API, or can we get the content exclusively through VFS
 
@@ -62,13 +62,13 @@ class Api
         // authorization
         'GET /:userid/auth/rights'                    => '\Flexio\Api\Right::list',
         'POS /:userid/auth/rights'                    => '\Flexio\Api\Right::create',
-        'POS /:userid/auth/rights/:objeid'            => '\Flexio\Api\Right::set',
-        'GET /:userid/auth/rights/:objeid'            => '\Flexio\Api\Right::get',
-        'DEL /:userid/auth/rights/:objeid'            => '\Flexio\Api\Right::delete',
+        'POS /:userid/auth/rights/:objid'             => '\Flexio\Api\Right::set',
+        'GET /:userid/auth/rights/:objid'             => '\Flexio\Api\Right::get',
+        'DEL /:userid/auth/rights/:objid'             => '\Flexio\Api\Right::delete',
         'GET /:userid/auth/keys'                      => '\Flexio\Api\Token::list',
         'POS /:userid/auth/keys'                      => '\Flexio\Api\Token::create',
-        'GET /:userid/auth/keys/:objeid'              => '\Flexio\Api\Token::get',
-        'DEL /:userid/auth/keys/:objeid'              => '\Flexio\Api\Token::delete',
+        'GET /:userid/auth/keys/:objid'               => '\Flexio\Api\Token::get',
+        'DEL /:userid/auth/keys/:objid'               => '\Flexio\Api\Token::delete',
 
         // actions
         'GET /:userid/actions'                        => '\Flexio\Api\Action::list',
@@ -77,41 +77,41 @@ class Api
         // connections
         'POS /:userid/connections'                    => '\Flexio\Api\Connection::create',
         'GET /:userid/connections'                    => '\Flexio\Api\Connection::list',
-        'POS /:userid/connections/:objeid'            => '\Flexio\Api\Connection::set',
-        'GET /:userid/connections/:objeid'            => '\Flexio\Api\Connection::get',
-        'DEL /:userid/connections/:objeid'            => '\Flexio\Api\Connection::delete',
-        'POS /:userid/connections/:objeid/connect'    => '\Flexio\Api\Connection::connect',
-        'POS /:userid/connections/:objeid/disconnect' => '\Flexio\Api\Connection::disconnect',
+        'POS /:userid/connections/:objid'             => '\Flexio\Api\Connection::set',
+        'GET /:userid/connections/:objid'             => '\Flexio\Api\Connection::get',
+        'DEL /:userid/connections/:objid'             => '\Flexio\Api\Connection::delete',
+        'POS /:userid/connections/:objid/connect'     => '\Flexio\Api\Connection::connect',
+        'POS /:userid/connections/:objid/disconnect'  => '\Flexio\Api\Connection::disconnect',
 
         // pipes
         'POS /:userid/pipes'                          => '\Flexio\Api\Pipe::create',
         'GET /:userid/pipes'                          => '\Flexio\Api\Pipe::list',
         'DEL /:userid/pipes'                          => '\Flexio\Api\Pipe::bulkdelete', // experimental
-        'POS /:userid/pipes/:objeid'                  => '\Flexio\Api\Pipe::set',
-        'GET /:userid/pipes/:objeid'                  => '\Flexio\Api\Pipe::get',
-        'DEL /:userid/pipes/:objeid'                  => '\Flexio\Api\Pipe::delete',
-        'POS /:userid/pipes/:objeid/run'              => '\Flexio\Api\Pipe::run',
-        'GET /:userid/pipes/:objeid/run'              => '\Flexio\Api\Pipe::run',
+        'POS /:userid/pipes/:objid'                   => '\Flexio\Api\Pipe::set',
+        'GET /:userid/pipes/:objid'                   => '\Flexio\Api\Pipe::get',
+        'DEL /:userid/pipes/:objid'                   => '\Flexio\Api\Pipe::delete',
+        'POS /:userid/pipes/:objid/run'               => '\Flexio\Api\Pipe::run',
+        'GET /:userid/pipes/:objid/run'               => '\Flexio\Api\Pipe::run',
 
         // processes
         'POS /:userid/processes'                      => '\Flexio\Api\Process::create',
         'GET /:userid/processes'                      => '\Flexio\Api\Process::list',
         'GET /:userid/processes/summary'              => '\Flexio\Api\Process::summary', // grand totals
         'GET /:userid/processes/summary/daily'        => '\Flexio\Api\Process::summary_daily', // daily totals; TODO: combine with stats, rename
-        'POS /:userid/processes/:objeid'              => '\Flexio\Api\Process::set',
-        'GET /:userid/processes/:objeid'              => '\Flexio\Api\Process::get',
-        'DEL /:userid/processes/:objeid'              => '\Flexio\Api\Process::delete',
-        'GET /:userid/processes/:objeid/log'          => '\Flexio\Api\Process::log',
-        'POS /:userid/processes/:objeid/run'          => '\Flexio\Api\Process::run',
-        'POS /:userid/processes/:objeid/cancel'       => '\Flexio\Api\Process::cancel',
+        'POS /:userid/processes/:objid'               => '\Flexio\Api\Process::set',
+        'GET /:userid/processes/:objid'               => '\Flexio\Api\Process::get',
+        'DEL /:userid/processes/:objid'               => '\Flexio\Api\Process::delete',
+        'GET /:userid/processes/:objid/log'           => '\Flexio\Api\Process::log',
+        'POS /:userid/processes/:objid/run'           => '\Flexio\Api\Process::run',
+        'POS /:userid/processes/:objid/cancel'        => '\Flexio\Api\Process::cancel',
 
         // processes EXPERIMENTAL endpoint for running code (creates and runs a process from code)
         'GET /:userid/processes/exec'                 => '\Flexio\Api\Process::exec',
         'POS /:userid/processes/exec'                 => '\Flexio\Api\Process::exec',
 
         // streams
-        'GET /:userid/streams/:objeid'                => '\Flexio\Api\Stream::get',
-        'GET /:userid/streams/:objeid/content'        => '\Flexio\Api\Stream::content',
+        'GET /:userid/streams/:objid'                 => '\Flexio\Api\Stream::get',
+        'GET /:userid/streams/:objid/content'         => '\Flexio\Api\Stream::content',
 
         // vfs
         'GET /:userid/vfs/list'                       => '\Flexio\Api\Vfs::list',
@@ -335,7 +335,7 @@ class Api
         $api_params = $url_params;
         $object_eid = self::resolveObjectIdentifier($user_eid, $url_params['apiparam2'], $url_params['apiparam3']);
         $api_params['apiparam1'] = $user_eid !== '' ? ':userid' : $api_params['apiparam1'];
-        $api_params['apiparam3'] = $object_eid !== '' ? ':objeid' : $api_params['apiparam3'];
+        $api_params['apiparam3'] = $object_eid !== '' ? ':objid' : $api_params['apiparam3'];
         $apiendpoint = self::buildApiEndpointString($request_method, $api_params);
 
         $function = self::$endpoints[$apiendpoint] ?? false;
@@ -351,7 +351,7 @@ class Api
         $api_params = $url_params;
         $object_eid = self::resolveObjectIdentifier($user_eid, $url_params['apiparam3'], $url_params['apiparam4']);
         $api_params['apiparam1'] = $user_eid !== '' ? ':userid' : $api_params['apiparam1'];
-        $api_params['apiparam4'] = $object_eid !== '' ? ':objeid' : $api_params['apiparam4'];
+        $api_params['apiparam4'] = $object_eid !== '' ? ':objid' : $api_params['apiparam4'];
         $apiendpoint = self::buildApiEndpointString($request_method, $api_params);
 
         $function = self::$endpoints[$apiendpoint] ?? false;
