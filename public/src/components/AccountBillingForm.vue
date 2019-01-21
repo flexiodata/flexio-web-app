@@ -9,6 +9,11 @@
         :closable="false"
         v-if="card_error.length > 0"
       />
+      <div v-if="cards.length == 0">
+        <div class="mv2 f6 br2 pa3 ba b--black-10 tc">
+          <em>No cards to show</em>
+        </div>
+      </div>
       <div
         class="mv2 f6 br2 pa2 bg-nearer-white ba b--black-05 flex flex-row items-center hide-child"
         :key="card.card_id"
