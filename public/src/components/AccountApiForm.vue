@@ -1,54 +1,53 @@
 <template>
   <div>
     <slot name="empty" v-if="tokens.length == 0">
-      <div class="pv2 ph3 tc f6">
+      <div class="f6 blankslate">
         <em>No API keys to show</em>
       </div>
     </slot>
     <div v-else>
       <div
-        class="flex flex-row items-center hide-child"
-        :class="showOnlyOne ? '' : 'br2 hover-bg-nearer-white'"
+        class="mv2 f6 br2 pv2 ph3 bg-nearer-white ba b--black-05 flex flex-row items-center hide-child"
         :key="token.access_code"
         v-for="(token, index) in tokens"
       >
-        <div
-          class="flex-fill pv2 ph3"
-          :class="showOnlyOne ? 'br2 min-w5 mr2 bg-nearer-white' : ''"
-        >
+        <div class="flex-fill">
           <pre class="ma0"><code>{{token.access_code}}</code></pre>
         </div>
-        <div class="pv2 tr">
-          <el-button
-            type="plain"
-            class="hint--top"
-            aria-label="Copy to Clipboard"
-            :size="showOnlyOne ? 'small' : 'mini'"
-            :data-clipboard-text="token.access_code"
-          >
-            <span class="ttu fw6">Copy</span>
-          </el-button>
-        </div>
-        <div class="pv2 ph3 tr" v-if="!showOnlyOne">
-          <div class="hint--top" aria-label="Delete API Key">
-            <ConfirmPopover
-              class="pointer"
-              placement="bottom-end"
-              message="Are you sure you want to delete this API key?"
-              :offset="9"
-              :class="{
-                'child black-30 hover-black-60': delete_popover_token != token,
-                'black': delete_popover_token == token
-              }"
-              @show="delete_popover_token = token"
-              @hide="delete_popover_token = ''"
-              @confirm-click="deleteKey(token)"
-            />
-          </div>
+        <el-button
+          type="plain"
+          class="hint--top"
+          aria-label="Copy to Clipboard"
+          size="tiny"
+          :data-clipboard-text="token.access_code"
+        >
+          <span class="ttu fw6">Copy</span>
+        </el-button>
+        <div
+          class="ml3 hint--top"
+          aria-label="Delete API Key"
+        >
+          <ConfirmPopover
+            class="pointer"
+            placement="bottom-end"
+            message="Are you sure you want to delete this API key?"
+            :offset="9"
+            :class="{
+              'child black-30 hover-black-60': delete_popover_token != token,
+              'black': delete_popover_token == token
+            }"
+            @show="delete_popover_token = token"
+            @hide="delete_popover_token = ''"
+            @confirm-click="deleteKey(token)"
+          />
         </div>
       </div>
     </div>
-    <div class="mt2 mb1" :class="{ 'tc': tokens.length == 0 }" v-if="showCreateButton">
+    <div
+      class="mb2"
+      :class="tokens.length > 0 ? 'mt2' : 'mt3 tc'"
+      v-if="showCreateButton"
+    >
       <el-button
         type="primary"
         class="ttu fw6"

@@ -9,23 +9,21 @@
         :closable="false"
         v-if="card_error.length > 0"
       />
-      <div v-if="cards.length == 0">
-        <div class="mv2 f6 br2 pa3 ba b--black-10 tc">
-          <em>No cards to show</em>
-        </div>
+      <div class="f6 blankslate" v-if="cards.length == 0">
+        <em>No cards to show</em>
       </div>
       <div
-        class="mv2 f6 br2 pa2 bg-nearer-white ba b--black-05 flex flex-row items-center hide-child"
+        class="mv2 f6 br2 pv2 ph3 bg-nearer-white ba b--black-05 flex flex-row items-center hide-child"
         :key="card.card_id"
         v-for="card in cards"
       >
-        <div class="pa1 flex flex-row items-center w-100">
-          <img :src="getCardLogo(card.card_type)" class="mr2" style="width: 36px">
+        <div class="flex-fill flex flex-row items-center">
+          <img :src="getCardLogo(card.card_type)" class="mr3" style="width: 36px">
           <span class="nowrap">{{card.card_type}} ending in {{card.card_last4}}</span>
         </div>
-        <div class="pa1 nowrap">Expires {{card.card_exp_month}}/{{card.card_exp_years}}</div>
+        <div class="nowrap">Expires {{card.card_exp_month}}/{{card.card_exp_years}}</div>
         <div
-          class="ml2 hint--top"
+          class="ml3 hint--top"
           aria-label="Remove this card"
         >
           <ConfirmPopover
