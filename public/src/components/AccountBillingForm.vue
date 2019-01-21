@@ -56,6 +56,7 @@
   import jcb from 'payment-icons/min/flat/jcb.svg'
   import discover from 'payment-icons/min/flat/discover.svg'
   import diners from 'payment-icons/min/flat/diners.svg'
+  import unionpay from 'payment-icons/min/flat/unionpay.svg'
 
   import api from '../api'
   import { Card, createToken } from 'vue-stripe-elements-plus'
@@ -80,7 +81,8 @@
           'American Express': amex,
           'JCB': jcb,
           'Discover': discover,
-          'Diners Club': diners
+          'Diners Club': diners,
+          'UnionPay': unionpay
         },
         cards: [],
         card_error: '',
