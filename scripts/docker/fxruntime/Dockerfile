@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM blitznote/debase:18.04
 MAINTAINER ben@flex.io
 
 
@@ -156,8 +156,8 @@ RUN yarn add validator
 # data generation
 RUN yarn add faker
 
-COPY flexio.py /usr/lib/python3.5/flexio.py
-RUN cd /usr/lib/python3.5 && python3 -m compileall flexio.py
+COPY flexio.py /usr/lib/python3.6/flexio.py
+RUN cd /usr/lib/python3.6 && python3 -m compileall flexio.py
 COPY fxstart.py /fxpython/fxstart.py
 RUN cd /fxpython && python3 -m compileall fxstart.py
 
