@@ -157,7 +157,9 @@
         })
       },
       removeCard(card) {
-        alert(card.card_id)
+        api.v2_deleteCard('me', card.card_id).then(card_data => {
+          this.fetchCards()
+        })
       }
     }
   }

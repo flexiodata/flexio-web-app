@@ -49,6 +49,7 @@ export default {
   // cards
   v2_fetchCards:           function(user_eid)             { return AxiosResource(user_eid)[V2_GET] (`/account/cards`)                        },
   v2_createCard:           function(user_eid, attrs)      { return AxiosResource(user_eid)[V2_POS] (`/account/cards`, attrs)                 },
+  v2_deleteCard:           function(user_eid, eid)        { return AxiosResource(user_eid)[V2_DEL] (`/account/cards/${eid}`)                     },
 
   // tokens
   v2_fetchTokens:          function(user_eid)             { return AxiosResource(user_eid)[V2_GET] (`/auth/keys`)                            },
