@@ -10,11 +10,14 @@
         v-if="card_error.length > 0"
       />
       <div
-        class="mv2 f6 br2 pa3 bg-nearer-white ba b--black-05 flex flex-row items-center"
+        class="mv2 f6 br2 pa2 bg-nearer-white ba b--black-05 flex flex-row items-center"
         :key="card.card_id"
         v-for="card in cards"
       >
-        <span class="nowrap w-100">{{card.card_type}} ending in {{card.card_last4}}</span>
+        <div class="pa1 flex flex-row items-center w-100">
+          <img :src="getCardLogo(card.card_type)" class="mr2" style="width: 36px">
+          <span class="nowrap">{{card.card_type}} ending in {{card.card_last4}}</span>
+        </div>
         <span class="nowrap">Expires {{card.card_exp_month}}/{{card.card_exp_years}}</span>
       </div>
     </div>
@@ -46,6 +49,14 @@
 </template>
 
 <script>
+  // all cards accepted by Stripe
+  import visa from 'payment-icons/min/flat/visa.svg'
+  import mastercard from 'payment-icons/min/flat/mastercard.svg'
+  import amex from 'payment-icons/min/flat/amex.svg'
+  import jcb from 'payment-icons/min/flat/jcb.svg'
+  import discover from 'payment-icons/min/flat/discover.svg'
+  import diners from 'payment-icons/min/flat/diners.svg'
+
   import api from '../api'
   import { Card, createToken } from 'vue-stripe-elements-plus'
 
@@ -63,6 +74,14 @@
     },
     data() {
       return {
+        card_icons: {
+          'Visa': visa,
+          'MasterCard': mastercard,
+          'American Express': amex,
+          'JCB': jcb,
+          'Discover': discover,
+          'Diners Club': diners
+        },
         cards: [],
         card_error: '',
         stripe_public_key,
@@ -92,6 +111,9 @@
       this.fetchCards()
     },
     methods: {
+      getCardLogo(card_name) {
+        return this.card_icons[card_name] || ''
+      },
       fetchCards() {
         api.v2_fetchCards().then(response => {
           this.cards = response.data

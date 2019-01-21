@@ -4777,6 +4777,10 @@ path-type@^2.0.0:
   dependencies:
     pify "^2.0.0"
 
+payment-icons@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/payment-icons/-/payment-icons-1.1.0.tgz#0e767a0485d3f61fdac6857bc49d35de908c567c"
+
 pbkdf2@^3.0.3:
   version "3.0.14"
   resolved "https://registry.yarnpkg.com/pbkdf2/-/pbkdf2-3.0.14.tgz#a35e13c64799b06ce15320f459c230e68e73bade"
