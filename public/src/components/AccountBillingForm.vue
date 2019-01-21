@@ -53,6 +53,7 @@
         :class="{ complete }"
         :options="stripe_opts"
         @change="complete = $event.complete"
+        v-if="show_stripe_form"
       />
     </div>
     <div class="mt3">
@@ -107,6 +108,7 @@
           'UnionPay': unionpay
         },
         cards: [],
+        show_stripe_form: true,
         card_error: '',
         stripe_public_key,
         complete: false,
@@ -147,6 +149,10 @@
           this.card_error = JSON.stringify(error)
         })
       },
+      resetCard() {
+        this.show_stripe_form = false
+        this.$nextTick(() => { this.show_stripe_form = true })
+      },
       addCard() {
         // createToken returns a Promise which resolves in a result object with
         // either a token or an error key.
@@ -158,6 +164,7 @@
 
           api.v2_createCard('me', { token: token_id }).then(card_data => {
             this.fetchCards()
+            this.resetCard()
           })
         })
       },
