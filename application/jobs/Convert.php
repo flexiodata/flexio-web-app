@@ -442,6 +442,10 @@ class Convert extends \Flexio\Jobs\Base
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::EXECUTE_FAILED, "Input file must be a pdf");
         }
 
+        // TODO: support page count
+        //$page_start = $job_params['input']['page_start'] ?? false;
+        //$page_end = $job_params['input']['page_end'] ?? false;
+
         // input/output
         $outstream->set($instream->get());
         $outstream->setPath(\Flexio\Base\Util::generateHandle());
