@@ -1114,3 +1114,42 @@ class StopWatch
         fbLog($this->label . ' took ' . $diff . ' seconds.');
     }
 }
+
+
+class Profiler
+{
+    var $start_time;
+    var $last_time;
+    var $times = array();
+
+    function __construct()
+    {
+        $this->start_time =  microtime(true);
+        $this->last_time = $this->start_time;
+    }
+
+    function log($message = '')
+    {
+        $current_time = microtime(true);
+        $elapsed_time = round(($current_time - $this->last_time)*1000,2);
+        $this->last_time = $current_time;
+        $this->times[] = array('message' => $message, 'time' => $elapsed_time);
+    }
+
+    function report()
+    {
+        $str = "\n\n";
+
+        foreach($this->times as $t)
+        {
+            $time = $t['time'];
+            $message = $t['message'];
+            $str .= "$time ms \t $message\n";
+        }
+
+        $str .= "\n";
+        $str .= "Total time: " . round(($this->last_time - $this->start_time)*1000,2);
+
+        return $str;
+    }
+}
