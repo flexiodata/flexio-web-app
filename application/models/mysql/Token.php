@@ -181,14 +181,15 @@ class Token extends ModelBase
         return true;
     }
 
-    public function getInfoFromAccessCode(string $code) // TODO: add return type
+    public function getFromAccessCode(string $code) : array
     {
+        if (strlen($code) <= 0)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
         $filter = array('access_code' => $code);
-        $tokens = $this->list($filter);
-
-        if (count($tokens) === 0)
-            return false; // don't flag an error, but acknowledge that object doesn't exist
-
-        return $tokens[0]['eid']; // access code is unique
+        $rows = $this->list($filter);
+        if (count($rows) === 0)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        return $rows[0];
     }
 }
