@@ -1,5 +1,5 @@
-name: PDF to API
-alias: pdf-to-api
+name: PDF to JSON
+alias: pdf-to-json
 deploy_mode: R
 deploy_schedule: I
 deploy_email: I
