@@ -474,7 +474,6 @@ class Convert extends \Flexio\Jobs\Base
         }
 
         // parse the pdf and output it to json
-
         try
         {
             $parser = new \Smalot\PdfParser\Parser();
