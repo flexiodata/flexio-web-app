@@ -31,13 +31,6 @@ class Token extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return json_encode($object);
     }
 
-    public static function getEidFromAccessCode(string $code) // TODO: add return type
-    {
-        $object = new static();
-        $token_model = $object->getModel()->token;
-        return $token_model->getEidFromAccessCode($code);
-    }
-
     public static function list(array $filter) : array
     {
         $object = new static();
@@ -65,6 +58,20 @@ class Token extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $object->setEid($eid);
         $object->clearCache();
         $object->properties = self::formatProperties($properties);
+        return $object;
+    }
+
+    public static function loadFromAccessCode(string $code) : \Flexio\Object\Token
+    {
+        $object = new static();
+
+        $token_model = $object->getModel()->token;
+        $properties = $token_model->getFromAccessCode($code);
+
+        $object->setEid($properties['eid']);
+        $object->clearCache();
+        $object->properties = self::formatProperties($properties);
+
         return $object;
     }
 

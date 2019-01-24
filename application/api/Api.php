@@ -500,42 +500,27 @@ class Api
 
     private static function getRequestingUser(string $requesting_user_token, string $current_session_user_eid) : string
     {
-        $requesting_user_eid = \Flexio\Object\User::MEMBER_PUBLIC; // default
-        $user_eid_from_token = '';
+        // POSSIBILITY 1: no requesting user token and no session; public call
+        if (strlen($requesting_user_token) === 0 && strlen($current_session_user_eid) === 0)
+            return \Flexio\Object\User::MEMBER_PUBLIC;
 
-        try
-        {
-            $token_eid = \Flexio\Object\Token::getEidFromAccessCode($requesting_user_token);
-            if ($token_eid === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        // POSSIBILITY 2: no requesting user token but a valid session; return session
+        if (strlen($requesting_user_token) === 0 && \Flexio\Base\Eid::isValid($current_session_user_eid) === true)
+            return $current_session_user_eid;
 
-            $token = \Flexio\Object\Token::load($token_eid);
-            if ($token->getStatus() === \Model::STATUS_DELETED)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        // POSSIBILITY 3: token of some kind; try load a user from it, and if not possible,
+        // the token or the user is invalid, so throw an exception
+        $token = \Flexio\Object\Token::loadFromAccessCode($requesting_user_token);
+        if ($token->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
-            $token_info = $token->get();
-            $user = \Flexio\Object\User::load($token_info['owned_by']);
-            if ($user->getStatus() === \Model::STATUS_DELETED)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        $token_info = $token->get();
+        $user = \Flexio\Object\User::load($token_info['owned_by']);
+        if ($user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
-            $user_eid_from_token = $user->getEid();
-        }
-        catch (\Flexio\Base\Exception $e)
-        {
-            // fall through
-        }
-
-        if (\Flexio\Base\Eid::isValid($user_eid_from_token) === true)
-        {
-            $requesting_user_eid = $user_eid_from_token;
-        }
-        else
-        {
-            if (\Flexio\Base\Eid::isValid($current_session_user_eid) === true)
-                $requesting_user_eid = $current_session_user_eid;
-        }
-
-        return $requesting_user_eid;
+        $user_eid_from_token = $user->getEid();
+        return $user_eid_from_token;
     }
 
     private static function getPostContent(array $header_params, string $input) : ?array
