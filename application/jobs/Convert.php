@@ -497,10 +497,8 @@ class Convert extends \Flexio\Jobs\Base
             $output['content'] = array();
 
             // write out the text from each of the pages
-
             $pages  = $pdf->getPages();
             $page_count = count($pages);
-
 
             if ($page_start < 1)
                 $page_start = 1;
