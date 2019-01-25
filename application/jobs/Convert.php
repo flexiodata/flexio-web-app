@@ -450,9 +450,9 @@ class Convert extends \Flexio\Jobs\Base
 
         // get the pages to convert if specified; pages is a
         // a comma delimited list of pages and hyphens: 1,2,4-5
-        //$pages_to_convert_str = $job_params['pages'];
-        //if (!is_string($pages_to_convert_str))
-        //    $pages_to_convert_str = null;
+        $pages_to_convert_str = $job_params['input']['pages'];
+        if (!is_string($pages_to_convert_str))
+            $pages_to_convert_str = null;
 
         // input/output
         $outstream->set($instream->get());

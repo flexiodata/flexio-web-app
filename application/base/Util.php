@@ -592,6 +592,83 @@ class Util
         }
     }
 
+    public static function createPageRangeArray(string $page_string, int $page_count) : array
+    {
+        // takes a page string that defines a collection of pages
+        // and returns an array with the indexes of pages in the
+        // collection; e.g.:
+        // pages: 1 => [1]
+        // pages: 1,3 => [1,3]
+        // pages: 1-3 => [1,2,3]
+        // pages: 1,3-5 => [1,3,4,5]
+        // pages: last => [<page_count>]
+        // pages: 2-last => [2,3,4,...,<page_count>]
+        // pages: something-invalid => []
+
+        $empty_result = array();
+        $pages = array();
+
+        $page_ranges = explode(',', $page_string);
+        foreach ($page_ranges as $r)
+        {
+            $page_units = explode('-', trim($r));
+
+            // we'll have at least one entry containing the string, and two
+            // entries if a page range is specified; anything more than that
+            // is invalid
+
+            if (count($page_units) > 2)
+                return $empty_result;
+
+            // trim pages of spaces, replace any 'last' keyword with count,
+            // and make sure values are positive integers within the range
+            foreach ($page_units as &$u)
+            {
+                $u = trim($u);
+                if ($u === 'last')
+                    $u = $page_count;
+
+                if (is_numeric($u) === false) // check for numeric string
+                    return $empty_result;
+
+                $uint = (int)$u;             // coerce string and make sure it's an integer
+                if ($uint != $u)
+                    return $empty_result;
+
+                $u = $uint;
+            }
+
+            // if we have a single page; add any page within the page range
+            if (count($page_units) === 1)
+            {
+                if ($page_units[0] >= 1 && $page_units[0] <= $page_count)
+                    $pages[] = $page_units[0];
+            }
+
+            // if we have multiple pages, create a range of values and add any
+            // that are within the range
+            if (count($page_units) === 2)
+            {
+                $p1 = $page_units[0];
+                $p2 = $page_units[1];
+
+                if ($p1 < 1) $p1 = 1;
+                if ($p1 > $page_count) $p1 = $page_count;
+                if ($p2 < 1) $p2 = 1;
+                if ($p2 > $page_count) $p2 = $page_count;
+
+                if ($p1 <= $p2)
+                    $pages = array_merge($pages, range($p1, $p2));
+            }
+        }
+
+        // sort the array by the values and remove duplicates
+        $pages = array_unique($pages);
+        sort($pages);
+
+        return $pages;
+    }
+
     public static function isPositiveInteger($value) : bool
     {
         // verifies if an id is a positive integer
