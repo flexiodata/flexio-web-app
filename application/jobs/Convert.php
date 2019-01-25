@@ -440,19 +440,16 @@ class Convert extends \Flexio\Jobs\Base
 
         $instream_mime_type = $instream->getMimeType();
         if ($instream_mime_type != \Flexio\Base\ContentType::PDF)
-        {
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::EXECUTE_FAILED, "Input must be a pdf");
-        }
-
-        // get the range of pages to convert
-        $page_start = (int)($job_params['input']['start'] ?? 0);
-        $page_end = (int)($job_params['input']['end'] ?? 0);
 
         // get the pages to convert if specified; pages is a
         // a comma delimited list of pages and hyphens: 1,2,4-5
-        $pages_to_convert_str = $job_params['input']['pages'];
-        if (!is_string($pages_to_convert_str))
-            $pages_to_convert_str = null;
+        $pages_to_convert = $job_params['input']['pages'] ?? '';
+        if (is_string($pages_to_convert) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::EXECUTE_FAILED, "Pages parameter must be a string");
+
+        if (strlen($pages_to_convert) === 0)
+            $pages_to_convert = false;
 
         // input/output
         $outstream->set($instream->get());
@@ -499,33 +496,26 @@ class Convert extends \Flexio\Jobs\Base
             $pages  = $pdf->getPages();
             $page_count = count($pages);
 
-            if ($page_start < 1)
-                $page_start = 1;
-            if ($page_start > $page_count)
-                $page_start = $page_count + 1; // makes it so that if start>end and end=4, that no pages are converted instead of the last page
-            if ($page_end < 1)
-                $page_end = $page_count; // set range at max page end to handle unspecified page ends, which are set to 0 above
-            if ($page_end > $page_count)
-                $page_end = $page_count;
+            // if no string (or empty) string is specified, use the full set of pages;
+            // otherwise use the specified range
+            if ($pages_to_convert === false)
+                $pages_to_convert = \Flexio\Base\Util::createPageRangeArray("1-$page_count", $page_count);
+                 else
+                $pages_to_convert = \Flexio\Base\Util::createPageRangeArray($pages_to_convert, $page_count);
+            $pages_to_convert = array_flip($pages_to_convert);
 
-            if ($page_end >= $page_start)
+            $page_idx = 0;
+            foreach ($pages as $page)
             {
-                $pages_to_convert = range($page_start, $page_end);
-                $pages_to_convert = array_flip($pages_to_convert);
+                $page_idx++; // pages are 1-based index
 
-                $page_idx = 0;
-                foreach ($pages as $page)
-                {
-                    $page_idx++; // pages are 1-based index
+                // check if the page to convert exists in the list of pages to convert;
+                // if not, move on
+                if (array_key_exists($page_idx, $pages_to_convert) == false)
+                    continue;
 
-                    // check if the page to convert exists in the list of pages to convert;
-                    // if not, move on
-                    if (array_key_exists($page_idx, $pages_to_convert) == false)
-                        continue;
-
-                    $page = array("page" => $page_idx, "text" => $page->getText());
-                    $output['content'][] = $page;
-                }
+                $page = array("page" => $page_idx, "text" => $page->getText());
+                $output['content'][] = $page;
             }
         }
         catch (\Exception $e)
