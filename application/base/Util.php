@@ -597,6 +597,7 @@ class Util
         // takes a page string that defines a collection of pages
         // and returns an array with the indexes of pages in the
         // collection; e.g.:
+        // pages: none => []
         // pages: 1 => [1]
         // pages: 1,3 => [1,3]
         // pages: 1-3 => [1,2,3]
@@ -606,8 +607,12 @@ class Util
         // pages: something-invalid => []
 
         $empty_result = array();
-        $pages = array();
 
+        // special case of 'none'; return empty array
+        if (trim($page_string) === 'none')
+            return $empty_result;
+
+        $pages = array();
         $page_ranges = explode(',', $page_string);
         foreach ($page_ranges as $r)
         {

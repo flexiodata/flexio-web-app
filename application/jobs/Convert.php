@@ -442,8 +442,17 @@ class Convert extends \Flexio\Jobs\Base
         if ($instream_mime_type != \Flexio\Base\ContentType::PDF)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::EXECUTE_FAILED, "Input must be a pdf");
 
-        // get the pages to convert if specified; pages is a
-        // a comma delimited list of pages and hyphens: 1,2,4-5
+        // get the pages to convert; pages is a range of pages given
+        // by pages and page ranges and special keywords; examples of page ranges:
+        // pages: none => []
+        // pages: 1 => [1]
+        // pages: 1,3 => [1,3]
+        // pages: 1-3 => [1,2,3]
+        // pages: 1,3-5 => [1,3,4,5]
+        // pages: last => [<page_count>]
+        // pages: 2-last => [2,3,4,...,<page_count>]
+        // pages: something-invalid => []
+
         $pages_to_convert = $job_params['input']['pages'] ?? '';
         if (is_string($pages_to_convert) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::EXECUTE_FAILED, "Pages parameter must be a string");
