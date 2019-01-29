@@ -8,11 +8,13 @@ deploy_ui: I
 task:
   op: sequence
   items:
-    - op: request
-      method: GET
-      url: '${query.url}'
+    - op: execute
+      lang: python
+      code: >-
+        aW1wb3J0IHJlcXVlc3RzCmZyb20gY29sbGVjdGlvbnMgaW1wb3J0IE9yZGVyZWREaWN0IAoKZGVmIGZsZXhpb19oYW5kbGVyKGZsZXgpOgoKICAgIHVybCA9IGZsZXgucXVlcnkuZ2V0KCd1cmwnLCcnKQogICAgY29udGVudF90eXBlID0gJycKICAgIGNvbnRlbnQgPSAnJwoKICAgIHRyeToKICAgICAgICByID0gcmVxdWVzdHMuZ2V0KHVybCkKICAgICAgICBjb250ZW50X3R5cGUgPSByLmhlYWRlcnNbJ2NvbnRlbnQtdHlwZSddCiAgICAgICAgY29udGVudCA9IHIuY29udGVudAogICAgZXhjZXB0OgogICAgICAgIHBhc3MKCiAgICBpZiAoY29udGVudF90eXBlICE9ICdhcHBsaWNhdGlvbi9wZGYnKToKICAgICAgICBlcnJvcl9pbmZvID0gT3JkZXJlZERpY3QoKQogICAgICAgIGVycm9yX2luZm9bJ2Vycm9yJ10gPSBPcmRlcmVkRGljdCgpCiAgICAgICAgZXJyb3JfaW5mb1snZXJyb3InXVsnY29kZSddID0gJ3JlYWQtZmFpbGVkJwogICAgICAgIGVycm9yX2luZm9bJ2Vycm9yJ11bJ21lc3NhZ2UnXSA9ICd1cmwgaXMgaW52YWxpZCBvciBjb250ZW50IGlzIG5vdCBhIHBkZicKICAgICAgICAKICAgICAgICBmbGV4Lm91dHB1dC5jb250ZW50X3R5cGUgPSAnYXBwbGljYXRpb24vanNvbicKICAgICAgICBmbGV4LnN0YXR1cyg1MDApICAgICAgICAKICAgICAgICBmbGV4LmVuZChlcnJvcl9pbmZvKSAgICAgICAgCiAgICAKICAgIGZsZXgub3V0cHV0LmNvbnRlbnRfdHlwZSA9IGNvbnRlbnRfdHlwZQogICAgZmxleC5vdXRwdXQud3JpdGUoY29udGVudCk=
     - op: convert
       input:
         format: pdf
+        pages: '${query.pages}'
       output:
         format: json
