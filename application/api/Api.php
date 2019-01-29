@@ -471,6 +471,16 @@ class Api
     private static function getTokenFromRequestParams(array $header_params, array $query_params) : string
     {
         // AUTHENTICATION TYPE 1: try to get the token from the query params
+
+
+        if (isset($query_params['api_key']))
+        {
+            $access_code = $query_params['api_key'];
+            $access_code = trim($access_code);
+            return $access_code;
+        }
+
+        // DEPRECATED (convert documentation)
         if (isset($query_params['flexio_api_key']))
         {
             $access_code = $query_params['flexio_api_key'];

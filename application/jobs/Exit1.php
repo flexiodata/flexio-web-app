@@ -63,6 +63,7 @@ class Exit1 extends \Flexio\Jobs\Base
             $outstream->copyFrom($instream);
         }
 
+
         // this next line will cause the process loop to exit
         // and return the http response code in $code
         $process->setResponseCode((int)$code);
