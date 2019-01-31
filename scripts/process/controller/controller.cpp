@@ -31,7 +31,7 @@ int main (int argc, char *argv[])
     responder.bind("ipc:///fxruntime/controller/pipes/controller");
 
     Json::Reader reader;
-    Json::Value root;how to 
+    Json::Value root;
 
     printf("Listening...\n");
     while(1)
