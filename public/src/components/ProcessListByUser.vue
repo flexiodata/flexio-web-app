@@ -108,8 +108,8 @@
     mounted() {
       var today = moment()
       var last_week = moment().subtract(6, 'days')
-      var created_min = last_week.format('YYYYMMDD')
-      var created_max = today.format('YYYYMMDD')
+      var created_min = last_week.format('YMMDD')
+      var created_max = today.format('YMMDD')
       var url = '/api/v2/admin/info/processes/summary/user?created_min=' + created_min + '&created_max=' + created_max
 
       this.created_min = created_min
