@@ -85,8 +85,6 @@
         this.$nextTick(() => { this.querying = false })
       },
       updateRoute(query_params) {
-        debugger
-
         // update the route
         var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path', 'query'])
         new_route.query = _.assign({}, new_route.query, query_params)

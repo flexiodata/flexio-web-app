@@ -164,7 +164,6 @@
             this.tests[test_id] = _.assign({}, test, { is_running: false, xhr_error }, response.data)
             this.runTest(this.queue.next())
           } else {
-            debugger
             // handle errors here...
             var error_text = this.$_Response_getResponseText(response, (error_text) => {
               xhr_error = false
