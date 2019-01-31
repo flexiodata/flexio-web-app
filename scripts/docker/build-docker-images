@@ -9,6 +9,10 @@ cp $DIR/../nodejs_include/flexio.js ./
 cp $DIR/../nodejs_include/run.js ./
 cp $DIR/../nodejs_include/render.js ./
 cp $DIR/../nodejs_include/package.json ./
+
+rm -rf ./controller
+cp -a $DIR/../process/controller ./
+
 docker build -t fxruntime . --no-cache
 popd
 
