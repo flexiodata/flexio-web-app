@@ -17,14 +17,23 @@
       AppActivity
     },
     data() {
+      var query = this.$route.query
+      var yesterday = moment().subtract(1, 'days')
+      var today = moment()
+
       return {
-        processes: []
+        processes: [],
+        owned_by: _.get(query, 'owned_by', null),
+        created_min: _.get(query, 'created_min', yesterday.format('YYYYMMDD')),
+        created_max: _.get(query, 'created_max', today.format('YYYYMMDD'))
       }
     },
     mounted() {
-      var last_day = moment().subtract(1, 'days')
-      var created_min = last_day.format('YYYYMMDD')
-      var attrs = { created_min }
+      var attrs = {
+        owned_by: this.owned_by,
+        created_min: this.created_min,
+        created_max: this.created_max
+      }
 
       this.$store.dispatch('v2_action_fetchAdminProcesses', { attrs }).then(response => {
         var processes = response.data
