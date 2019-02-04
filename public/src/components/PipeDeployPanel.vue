@@ -35,7 +35,7 @@
             class="ph3 mt3"
             v-if="item.key == 'deploy_api' && is_api_deployed"
           >
-            <div>
+            <div v-if="false">
               <div class="ttu fw6 moon-gray">API Endpoint</div>
               <div>
                 <span style="margin-right: 6px">{{api_endpoint_url}}</span>
@@ -59,33 +59,23 @@
               </div>
             </div>
 
-            <div>
-              <div class="mt2 ttu fw6 moon-gray">API Key</div>
-              <div v-if="api_key.length > 0">
-                <span style="margin-right: 6px">{{api_key}}</span>
-                <el-button
-                  type="plain"
-                  class="hint--top"
-                  aria-label="Copy to Clipboard"
-                  size="tiny"
-                  :data-clipboard-text="api_endpoint_url"
-                >
-                  Copy
-                </el-button>
-              </div>
-              <div v-else>
-                <em class="fw4 moon-gray" style="margin-right: 6px">(No API key to show)</em>
-                <el-button
-                  type="plain"
-                  size="tiny"
-                  @click="generateApiKey"
-                >
-                  Generate API Key
-                </el-button>
-              </div>
-            </div>
-
             <div v-if="api_key.length > 0">
+              <div v-if="false">
+                <div class="mt2 ttu fw6 moon-gray">API Key</div>
+                <div>
+                  <span style="margin-right: 6px">{{api_key}}</span>
+                  <el-button
+                    type="plain"
+                    class="hint--top"
+                    aria-label="Copy to Clipboard"
+                    size="tiny"
+                    :data-clipboard-text="api_endpoint_url"
+                  >
+                    Copy
+                  </el-button>
+                </div>
+              </div>
+
               <div class="mt2 ttu fw6 moon-gray">REST</div>
               <div>
                 <span style="margin-right: 6px">{{example_http}}</span>
@@ -112,6 +102,16 @@
                   Copy
                 </el-button>
               </div>
+            </div>
+            <div v-else>
+              <em class="fw4 moon-gray" style="margin-right: 6px">No API keys exist. An API key is required in order to run a pipe.</em>
+              <el-button
+                type="plain"
+                size="tiny"
+                @click="generateApiKey"
+              >
+                Generate API Key
+              </el-button>
             </div>
           </div>
 
@@ -345,7 +345,7 @@
         return pipe_util.getDeployRuntimeUrl(eid)
       },
       example_http() {
-        return this.api_endpoint_url + '?flexio_api_key=' + this.api_key
+        return this.api_endpoint_url + '?api_key=' + this.api_key
       },
       example_curl() {
         return 'curl -X POST "' + this.api_endpoint_url + '" --header "Authorization: Bearer ' + this.api_key + '"'
