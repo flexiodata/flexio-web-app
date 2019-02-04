@@ -49,7 +49,6 @@ if (is_null($db))
 try
 {
     $db->exec("update tbl_user set usage_tier = 'developer' where usage_tier = ''");
-    $db->exec($sql);
 }
 catch(\Exception $e)
 {
