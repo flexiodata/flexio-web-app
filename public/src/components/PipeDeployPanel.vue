@@ -246,21 +246,21 @@
       return {
         deployment_options: [
           {
-            key: 'deploy_schedule',
-            label: 'Run on a schedule',
-          },
-          {
             key: 'deploy_api',
             label: 'Run using an API endpoint',
           },
           {
+            key: 'deploy_schedule',
+            label: 'Run on a schedule',
+          },
+          {
             key: 'deploy_email',
             label: 'Trigger from an email',
-          },
+          }/*,
           {
             key: 'deploy_ui',
             label: 'Run from a Flex.io Web Interface',
-          }
+          }*/
         ]
       }
     },
