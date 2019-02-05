@@ -3,6 +3,19 @@
     <slot name="empty" v-if="tokens.length == 0">
       <div class="f6 blankslate">
         <em>No API keys to show</em>
+        <div
+          class="mt4"
+          v-if="showCreateButton"
+        >
+          <el-button
+            type="primary"
+            class="ttu fw6"
+            @click="createApiKey"
+          >
+            Generate API Key
+          </el-button>
+        </div>
+
       </div>
     </slot>
     <div v-else>
@@ -44,9 +57,8 @@
       </div>
     </div>
     <div
-      class="mb2"
-      :class="tokens.length > 0 ? 'mt2' : 'mt3 tc'"
-      v-if="showCreateButton"
+      class="mt3 mb2"
+      v-if="showCreateButton && tokens.length > 0"
     >
       <el-button
         type="primary"
