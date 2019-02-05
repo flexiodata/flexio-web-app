@@ -42,6 +42,8 @@ class User
                 'locale_dateformat'    => array('type' => 'string',     'required' => false, 'default' => 'm/d/Y'),
                 'timezone'             => array('type' => 'string',     'required' => false, 'default' => 'UTC'),
                 'verify_code'          => array('type' => 'string',     'required' => false, 'default' => ''),
+                'usage_tier'           => array('type' => 'string',     'required' => false, 'default' => 'developer'),
+                'referrer'             => array('type' => 'string',     'required' => false, 'default' => ''),
                 'config'               => array('type' => 'object',     'required' => false, 'default' => []),
                 'send_email'           => array('type' => 'boolean',    'required' => false, 'default' => false), // don't send an email by default
                 'create_examples'      => array('type' => 'boolean',    'required' => false, 'default' => true),
@@ -303,6 +305,8 @@ class User
                 'locale_thousands'  => array('type' => 'string',     'required' => false),
                 'locale_dateformat' => array('type' => 'string',     'required' => false),
                 'timezone'          => array('type' => 'string',     'required' => false),
+                'usage_tier'        => array('type' => 'string',     'required' => false),
+                'referrer'          => array('type' => 'string',     'required' => false),
                 'config'            => array('type' => 'object',     'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);

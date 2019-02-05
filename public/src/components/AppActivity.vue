@@ -94,6 +94,15 @@
     props: {
       items: {
         type: Array
+      },
+      createdMin: {
+        type: String
+      },
+      createdMax: {
+        type: String
+      },
+      ownedBy: {
+        type: String
       }
     },
     components: {
@@ -107,9 +116,25 @@
       is_fetched: {
         handler: 'initSticky',
         immediate: true
+      },
+      date_range(val) {
+        if (val) {
+          var start = val[0] ? moment(val[0]).format('YMMDD') : val[0]
+          var end = val[1] ? moment(val[1]).format('YMMDD') : val[1]
+
+          this.$emit('update:createdMin', start)
+          this.$emit('update:createdMax', end)
+        } else {
+          this.$emit('update:createdMin', null)
+          this.$emit('update:createdMax', null)
+        }
       }
     },
     data() {
+      var created_min = this.createdMin ? moment(this.createdMin).toDate() : null
+      var created_max = this.createdMax ? moment(this.createdMax).hour(23).minute(59).second(59).toDate() : null
+      var date_range = [created_min, created_max]
+
       return {
         doc_id: _.uniqueId('app-activity-'),
         force_loading: false,
@@ -118,7 +143,7 @@
         page_size: 50,
         sort: 'started',
         sort_direction: 'desc',
-        date_range: null,
+        date_range,
         status_filter: '',
         show_process_details_dialog: false,
         edit_process_eid: ''

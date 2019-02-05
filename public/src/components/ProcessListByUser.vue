@@ -108,8 +108,8 @@
     mounted() {
       var today = moment()
       var last_week = moment().subtract(6, 'days')
-      var created_min = last_week.format('YYYYMMDD')
-      var created_max = today.format('YYYYMMDD')
+      var created_min = last_week.format('YMMDD')
+      var created_max = today.format('YMMDD')
       var url = '/api/v2/admin/info/processes/summary/user?created_min=' + created_min + '&created_max=' + created_max
 
       this.created_min = created_min
@@ -129,7 +129,7 @@
         return _.map(this.dates, (d) => {
           return {
             raw: d,
-            query_str: moment(d).format('YMD'),
+            query_str: moment(d).format('YMMDD'),
             col_label: moment(d).format('M/D')
           }
         })
@@ -166,7 +166,7 @@
         return val ? moment(val).format('l LT') : '--'
       },
       getProcessRouteByUser(row) {
-        return '/admin/activity?user_eid=' + this.getUserEid(row)
+        return '/admin/activity?owned_by=' + this.getUserEid(row)
       },
       getProcessRouteByUserAndDate(row, start_date, end_date) {
         return this.getProcessRouteByUser(row) +'&created_min=' + start_date + '&created_max=' + end_date

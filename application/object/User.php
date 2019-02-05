@@ -426,6 +426,8 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "locale_thousands" => null,
                 "locale_dateformat" => null,
                 "timezone" => null,
+                "usage_tier" => null,
+                "referrer" => null,
                 "config" => null,
                 "owned_by" => null,
                 "created" => null,

@@ -79,6 +79,8 @@ CREATE TABLE tbl_user (
   password char(80) NOT NULL default '',
   verify_code char(40) NOT NULL default '',
   stripe_customer_id char(20) NOT NULL default '',
+  usage_tier char(20) NOT NULL default '',
+  referrer text default '',
   role char(1) NOT NULL default '',
   config text default '',
   owned_by char(12) NOT NULL default '',

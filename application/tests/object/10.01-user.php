@@ -233,6 +233,8 @@ class Test
             "locale_thousands" : null,
             "locale_dateformat" : null,
             "timezone" : null,
+            "usage_tier" : null,
+            "referrer" : null,
             "config" : {
             },
             "owned_by" : {

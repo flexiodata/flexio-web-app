@@ -48,6 +48,8 @@ class User extends ModelBase
                 'password'           => array('type' => 'password',   'required' => false),
                 'verify_code'        => array('type' => 'string',     'required' => false, 'default' => ''),
                 'stripe_customer_id' => array('type' => 'string',     'required' => false, 'default' => ''),
+                'usage_tier'         => array('type' => 'string',     'required' => false, 'default' => ''),
+                'referrer'           => array('type' => 'string',     'required' => false, 'default' => ''),
                 'config'             => array('type' => 'string',     'required' => false, 'default' => '{}'),
                 'owned_by'           => array('type' => 'string',     'required' => false, 'default' => ''),
                 'created_by'         => array('type' => 'string',     'required' => false, 'default' => '')
@@ -156,6 +158,8 @@ class User extends ModelBase
                 'password'           => array('type' => 'password',   'required' => false),
                 'verify_code'        => array('type' => 'string',     'required' => false),
                 'stripe_customer_id' => array('type' => 'string',     'required' => false),
+                'usage_tier'         => array('type' => 'string',     'required' => false),
+                'referrer'           => array('type' => 'string',     'required' => false),
                 'config'             => array('type' => 'string',     'required' => false),
                 'owned_by'           => array('type' => 'string',     'required' => false),
                 'created_by'         => array('type' => 'string',     'required' => false)
@@ -254,6 +258,8 @@ class User extends ModelBase
                               'timezone'               => $row['timezone'],
                               'verify_code'            => $row['verify_code'],
                               'stripe_customer_id'     => $row['stripe_customer_id'],
+                              'usage_tier'             => $row['usage_tier'],
+                              'referrer'               => $row['referrer'],
                               'config'                 => $row['config'],
                               'owned_by'               => $row['owned_by'],
                               'created_by'             => $row['created_by'],
