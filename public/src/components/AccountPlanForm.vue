@@ -1,44 +1,66 @@
 <template>
   <div>
-    <div class="flex flex-row items-stretch justify-between nl2 nr2">
-      <div
-        class="mh2 ph3 tc br3 cursor-default trans-a"
-        style="box-shadow: inset 0 -4px 12px rgba(0,0,0,0.075)"
-        :class="isPlanMatch(current_plan, plan['Name']) ? 'bg-blue white' : 'bg-nearer-white'"
-        v-for="plan in plans"
-      >
-        <div class="mv4 fw6">{{plan['Name']}}</div>
-        <div class="nt2 nb2">
-          <span class="f1">${{plan['Price']}}</span><span class="f6">/mo</span>
-        </div>
-        <div class="mt4 mb3">
-          <div>{{plan['Executions']}} executions</div>
-          <div class="mt1 o-40" style="font-size: 12px; line-height: 1.25">+ ${{plan['Extra Executions']}} per additional execution</div>
-        </div>
-        <div class="mv3 pt2">
-          <div
-            v-if="isPlanMatch(current_plan, plan['Name'])"
-          >
-            <i class="el-icon-success f2" style="color: #fff"></i>
+    <div v-if="!is_editing">
+      <div class="mb3 f7 silver ttu fw6">Your Current Plan</div>
+      <div class="mv2 f6 br2 pv2 ph3 bg-nearer-white ba b--black-05">
+        <div class="flex flex-row items-center justify-between">
+          <div class="ph3 pv2 f4 fw6 tc">{{current_plan['Name']}}</div>
+          <div class="ph3 pv2 tc">
+            <div>{{current_plan['Executions']}} executions</div>
+            <div class="mt1 o-40" style="font-size: 12px; line-height: 1.25">+ ${{current_plan['Extra Executions']}} per additional execution</div>
           </div>
-          <el-button
-            type="primary"
-            class="w-100 ttu fw6"
-            @click="choosePlan(plan['Name'])"
-            v-else
-          >
-            Choose
-          </el-button>
+          <div class="ph3 pv2">
+            <span class="f1">${{current_plan['Price']}}</span><span class="f6">/mo</span>
+          </div>
+          <div class="ph3 pv2">
+            <el-button
+              type="primary"
+              class="ttu fw6"
+              @click="is_editing = true"
+            >
+              Change Plan
+            </el-button>
+          </div>
         </div>
       </div>
     </div>
-    <div class="mt3" v-if="false">
-      <el-button
-        type="primary"
-        class="ttu fw6"
+    <div v-else>
+      <div class="mb3 f7 silver ttu fw6">Choose a plan</div>
+      <div
+        class="flex flex-row items-stretch justify-between nl2 nr2"
       >
-        Change Plan
-      </el-button>
+        <div
+          class="mh2 ph3 tc br3 cursor-default trans-a"
+          style="box-shadow: inset 0 -4px 12px rgba(0,0,0,0.075)"
+          :class="isPlanMatch(current_plan_name, plan['Name']) ? 'bg-blue white' : 'bg-nearer-white'"
+          v-for="plan in plans"
+        >
+          <div class="mv4 fw6">{{plan['Name']}}</div>
+          <div class="nt2 nb2">
+            <span class="f1">${{plan['Price']}}</span><span class="f6">/mo</span>
+          </div>
+          <div class="mt4 mb3">
+            <div>{{plan['Executions']}} executions</div>
+            <div class="mt1 o-40" style="font-size: 12px; line-height: 1.25">+ ${{plan['Extra Executions']}} per additional execution</div>
+          </div>
+          <div class="mv3 pt2 pb1">
+            <div
+              v-if="isPlanMatch(current_plan_name, plan['Name'])"
+            >
+              <i class="el-icon-success f2" style="color: #fff"></i>
+            </div>
+            <el-button
+              plain
+              type="default"
+              class="w-100 ttu fw6"
+              @click="choosePlan(plan)"
+              v-else
+            >
+              Choose this plan
+            </el-button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -50,12 +72,20 @@
   export default {
     data() {
       return {
+        is_editing: false,
         plans: plans,
-        current_plan: ''
+        current_plan_name: ''
+      }
+    },
+    computed: {
+      current_plan() {
+        return _.find(this.plans, (p) => {
+          return p['Name'].toLowerCase() == this.current_plan_name
+        })
       }
     },
     created() {
-      this.current_plan = _.get(this.getActiveUser(), 'usage_tier', '')
+      this.current_plan_name = _.get(this.getActiveUser(), 'usage_tier', '')
     },
     methods: {
       ...mapGetters([
@@ -65,7 +95,8 @@
         return plan1.toLowerCase() == plan2.toLowerCase()
       },
       choosePlan(plan) {
-        this.current_plan = plan['Name'].toLowerCase()
+        this.current_plan_name = plan['Name'].toLowerCase()
+        this.is_editing = false
       }
     }
   }
