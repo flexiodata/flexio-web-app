@@ -53,9 +53,9 @@
           </el-tab-pane>
 
           <el-tab-pane name="billing">
-            <div slot="label"><div style="min-width: 6rem">Plans &amp; Billing</div></div>
+            <div slot="label"><div style="min-width: 6rem">Billing</div></div>
             <div class="ml3 mr4">
-              <h3 class="mt0 fw6 f3">Usage Plan</h3>
+              <h3 class="mt0 fw6 f3">Plan</h3>
               <AccountPlanForm />
               <div class="h3"></div>
               <h3 class="mt0 fw6 f3">Payment Information</h3>
@@ -120,7 +120,7 @@
           profile: 'Your Profile',
           settings: 'Account Settings',
           api: 'API Keys',
-          billing: 'Plans & Billing'
+          billing: 'Billing'
         },
         active_tab_name: this.getSection(),
         show_account_delete_dialog: false
