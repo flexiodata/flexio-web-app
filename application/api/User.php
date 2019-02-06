@@ -42,7 +42,7 @@ class User
                 'locale_dateformat'    => array('type' => 'string',     'required' => false, 'default' => 'm/d/Y'),
                 'timezone'             => array('type' => 'string',     'required' => false, 'default' => 'UTC'),
                 'verify_code'          => array('type' => 'string',     'required' => false, 'default' => ''),
-                'usage_tier'           => array('type' => 'string',     'required' => false, 'default' => 'developer'),
+                'usage_tier'           => array('type' => 'string',     'required' => false, 'default' => ''),
                 'referrer'             => array('type' => 'string',     'required' => false, 'default' => ''),
                 'config'               => array('type' => 'object',     'required' => false, 'default' => []),
                 'send_email'           => array('type' => 'boolean',    'required' => false, 'default' => false), // don't send an email by default
