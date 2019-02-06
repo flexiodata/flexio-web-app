@@ -6,6 +6,7 @@
     </span>
     <el-dropdown-menu style="min-width: 12rem" slot="dropdown">
       <div class="mv2" style="padding: 0 20px">
+        <FreeTrialNotice class="f8 nt2 nl2 nr2 mb2 pa3 br2 ba b--black-05 bg-nearer-white" />
         <h5 class="ma0">{{full_name}}</h5>
         <div class="mt1 silver f8">{{email}}</div>
       </div>
@@ -31,10 +32,14 @@
   } from '../constants/route'
   import { HOSTNAME } from '../constants/common'
   import { mapGetters } from 'vuex'
+  import FreeTrialNotice from './FreeTrialNotice.vue'
   import MixinConfig from './mixins/config'
 
   export default {
     mixins: [MixinConfig],
+    components: {
+      FreeTrialNotice
+    },
     computed: {
       email() {
         return _.get(this.getActiveUser(), 'email', '')
