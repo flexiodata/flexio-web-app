@@ -129,7 +129,11 @@
         return plan_name1.toLowerCase() == plan_name2.toLowerCase()
       },
       isPlanGreater(plan1, plan2) {
-        return parseFloat(plan1['Price']) > parseFloat(plan2['Price'])
+        if (plan1 && plan2) {
+          return parseFloat(plan1['Price']) > parseFloat(plan2['Price'])
+        } else {
+          return true
+        }
       },
       choosePlan(plan) {
         var new_plan_name = plan['Name'].toLowerCase()
