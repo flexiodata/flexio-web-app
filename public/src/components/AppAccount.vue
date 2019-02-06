@@ -17,7 +17,7 @@
             <div slot="label"><div style="min-width: 5rem">Profile</div></div>
             <div class="ml3 mr4">
               <h3 class="mt0 fw6 f3">Profile</h3>
-              <AccountProfileForm style="max-width: 24rem" />
+              <AccountProfileForm style="max-width: 28rem" />
             </div>
           </el-tab-pane>
 
@@ -25,10 +25,10 @@
             <div slot="label"><div style="min-width: 5rem">Account</div></div>
             <div class="ml3 mr4">
               <h3 class="mt0 fw6 f3">Change Password</h3>
-              <AccountPasswordForm style="max-width: 24rem" />
+              <AccountPasswordForm style="max-width: 28rem" />
               <div class="h3"></div>
               <h3 class="mt0 fw6 f3">Regional Settings</h3>
-              <AccountRegionForm style="max-width: 24rem" />
+              <AccountRegionForm style="max-width: 28rem" />
               <div class="h3"></div>
               <h3 class="mt0 fw6 f3 dark-red">Delete Account</h3>
               <p class="lh-copy f6">Once you delete your account, there's no going back. Please be sure you want to do this!</p>
