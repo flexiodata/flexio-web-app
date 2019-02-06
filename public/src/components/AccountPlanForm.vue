@@ -32,7 +32,7 @@
         <div
           class="mh2 ph3 tc br3 cursor-default trans-a"
           style="box-shadow: inset 0 -4px 12px rgba(0,0,0,0.075)"
-          :class="isPlanMatch(current_plan_name, plan['Name']) ? 'bg-blue white' : 'bg-nearer-white'"
+          :class="isPlanNameSame(plan['Name'], current_plan_name) ? 'bg-blue white' : 'bg-nearer-white'"
           v-for="plan in plans"
         >
           <div class="mv4 fw6">{{plan['Name']}}</div>
@@ -45,10 +45,18 @@
           </div>
           <div class="mv3 pt2 pb1">
             <div
-              v-if="isPlanMatch(current_plan_name, plan['Name'])"
+              v-if="isPlanNameSame(plan['Name'], current_plan_name)"
             >
               <i class="el-icon-success f2" style="color: #fff"></i>
             </div>
+            <el-button
+              type="primary"
+              class="w-100 ttu fw6"
+              @click="choosePlan(plan)"
+              v-else-if="isPlanGreater(plan, current_plan)"
+            >
+              Upgrade now
+            </el-button>
             <el-button
               plain
               type="default"
@@ -56,7 +64,7 @@
               @click="choosePlan(plan)"
               v-else
             >
-              Choose this plan
+              Choose
             </el-button>
           </div>
         </div>
@@ -91,8 +99,11 @@
       ...mapGetters([
         'getActiveUser'
       ]),
-      isPlanMatch(plan1, plan2) {
+      isPlanNameSame(plan1, plan2) {
         return plan1.toLowerCase() == plan2.toLowerCase()
+      },
+      isPlanGreater(plan1, plan2) {
+        return parseFloat(plan1['Price']) > parseFloat(plan2['Price'])
       },
       choosePlan(plan) {
         this.current_plan_name = plan['Name'].toLowerCase()
