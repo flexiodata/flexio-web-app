@@ -19,9 +19,9 @@
       >
         <div class="flex-fill flex flex-row items-center">
           <img :src="getCardLogo(card.card_type)" class="mr3" style="width: 36px">
-          <span class="nowrap">{{card.card_type}} ending in {{card.card_last4}}</span>
+          <span>{{card.card_type}} ending in {{card.card_last4}}</span>
         </div>
-        <div class="nowrap">Expires {{card.card_exp_month}}/{{card.card_exp_years}}</div>
+        <div>Expires {{card.card_exp_month}}/{{card.card_exp_years}}</div>
         <div
           class="ml3 hint--top"
           aria-label="Remove this card"
