@@ -3,7 +3,7 @@
     class="bg-nearer-white ph4 overflow-y-scroll relative"
     style="padding-bottom: 8rem"
   >
-    <div class="center" style="max-width: 48rem">
+    <div class="center" style="max-width: 56rem">
       <div class="mt4 mt5-ns bg-white br2 relative css-white-box">
         <!-- uncomment this to extend tab list right border all the way down -->
         <div class="absolute top-2 bottom-2 tab-list-border" v-if="false"></div>
@@ -16,21 +16,21 @@
           <el-tab-pane name="profile">
             <div slot="label"><div style="min-width: 5rem">Profile</div></div>
             <div class="ml3 mr4">
-              <h3 class="mt0 mb3 pb2 fw6 bb b--black-10">Profile</h3>
-              <AccountProfileForm style="max-width: 30rem" />
+              <h3 class="mt0 fw6 f3">Profile</h3>
+              <AccountProfileForm style="max-width: 28rem" />
             </div>
           </el-tab-pane>
 
           <el-tab-pane name="settings">
             <div slot="label"><div style="min-width: 5rem">Account</div></div>
             <div class="ml3 mr4">
-              <h3 class="mt0 mb3 pb2 fw6 bb b--black-10">Change password</h3>
-              <AccountPasswordForm style="max-width: 30rem" />
+              <h3 class="mt0 fw6 f3">Change Password</h3>
+              <AccountPasswordForm style="max-width: 28rem" />
               <div class="h3"></div>
-              <h3 class="mt0 mb3 pb2 fw6 bb b--black-10">Regional settings</h3>
-              <AccountRegionForm style="max-width: 30rem" />
+              <h3 class="mt0 fw6 f3">Regional Settings</h3>
+              <AccountRegionForm style="max-width: 28rem" />
               <div class="h3"></div>
-              <h3 class="mt0 mb3 pb2 dark-red fw6 bb b--black-10">Delete account</h3>
+              <h3 class="mt0 fw6 f3 dark-red">Delete Account</h3>
               <p class="lh-copy f6">Once you delete your account, there's no going back. Please be sure you want to do this!</p>
               <el-button
                 class="ttu fw6"
@@ -46,7 +46,7 @@
           <el-tab-pane name="api">
             <div slot="label"><div style="min-width: 5rem">API keys</div></div>
             <div class="ml3 mr4" v-if="has_user">
-              <h3 class="mt0 mb3 pb2 fw6 bb b--black-10">API keys</h3>
+              <h3 class="mt0 fw6 f3">API Keys</h3>
               <p class="lh-copy f6 mb3">This is a list of API keys associated with your account. Remove any keys that you do not recognize.</p>
               <AccountApiForm />
             </div>
@@ -55,7 +55,10 @@
           <el-tab-pane name="billing">
             <div slot="label"><div style="min-width: 6rem">Billing</div></div>
             <div class="ml3 mr4">
-              <h3 class="mt0 mb3 pb2 fw6 bb b--black-10">Billing</h3>
+              <h3 class="mt0 fw6 f3">Plan</h3>
+              <AccountPlanForm />
+              <div class="h3"></div>
+              <h3 class="mt0 fw6 f3">Payment Information</h3>
               <AccountBillingForm />
             </div>
           </el-tab-pane>
@@ -85,6 +88,7 @@
   import AccountProfileForm from './AccountProfileForm.vue'
   import AccountRegionForm from './AccountRegionForm.vue'
   import AccountApiForm from './AccountApiForm.vue'
+  import AccountPlanForm from './AccountPlanForm.vue'
   import AccountBillingForm from './AccountBillingForm.vue'
   import AccountPasswordForm from './AccountPasswordForm.vue'
   import AccountDeleteForm from './AccountDeleteForm.vue'
@@ -99,6 +103,7 @@
       AccountProfileForm,
       AccountRegionForm,
       AccountApiForm,
+      AccountPlanForm,
       AccountBillingForm,
       AccountPasswordForm,
       AccountDeleteForm
