@@ -4,7 +4,7 @@
       <div class="mb3 f7 silver ttu fw6">Your Current Plan</div>
       <div
         class="mv2 f6 br2 pv2 ph3 bg-nearer-white ba b--black-05"
-        v-if="hasPlan(current_plan_name)"
+        v-if="!hasPlan(current_plan_name)"
       >
         <div class="flex flex-row items-center justify-between">
           <div class="flex-fill ph2 pv2 f4 fw6">No plan selected</div>
@@ -91,7 +91,7 @@
 
 <script>
   import plans from '../data/usage-plans.yml'
-  import { mapGetters } from 'vuex'
+  import { mapState, mapGetters } from 'vuex'
 
   export default {
     data() {
@@ -102,6 +102,9 @@
       }
     },
     computed: {
+      ...mapState([
+        'active_user_eid'
+      ]),
       current_plan() {
         return _.find(this.plans, (p) => {
           return p['Name'].toLowerCase() == this.current_plan_name
@@ -129,8 +132,16 @@
         return parseFloat(plan1['Price']) > parseFloat(plan2['Price'])
       },
       choosePlan(plan) {
-        this.current_plan_name = plan['Name'].toLowerCase()
-        this.is_editing = false
+        var new_plan_name = plan['Name'].toLowerCase()
+        var eid = this.active_user_eid
+        var attrs = {
+          usage_tier: new_plan_name
+        }
+
+        this.$store.dispatch('v2_action_updateUser', { eid, attrs }).then(response => {
+          this.current_plan_name = new_plan_name
+          this.is_editing = false
+        })
       }
     }
   }
