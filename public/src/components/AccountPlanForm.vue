@@ -7,7 +7,7 @@
         v-if="!hasPlan(current_plan_name)"
       >
         <div class="flex flex-row items-center justify-between">
-          <div class="flex-fill ph2 pv2 f4 fw6">No plan selected</div>
+          <div class="flex-fill ph2 pv2 f4 fw6">No plan has been selected</div>
           <div class="ph2 pv2">
             <el-button
               type="primary"
@@ -43,6 +43,7 @@
           </div>
         </div>
       </div>
+      <div class="mt2 f7 dark-green" v-if="days_left > 0">You have {{days_left}} days left in your free trial</div>
     </div>
     <div v-else>
       <div class="mb3 f7 silver ttu fw6">Choose a plan</div>
@@ -90,8 +91,11 @@
 </template>
 
 <script>
-  import plans from '../data/usage-plans.yml'
+  import moment from 'moment'
   import { mapState, mapGetters } from 'vuex'
+  import plans from '../data/usage-plans.yml'
+
+  const TRIAL_LENGTH = 14
 
   export default {
     data() {
@@ -109,6 +113,20 @@
         return _.find(this.plans, (p) => {
           return p['Name'].toLowerCase() == this.current_plan_name
         })
+      },
+      today() {
+        return moment()
+      },
+      signed_up_date() {
+        return moment(_.get(this.getActiveUser(), 'created'))
+      },
+      days_since_sign_up() {
+        var duration = moment.duration(this.today.diff(this.signed_up_date))
+        return duration.as('days')
+      },
+      days_left() {
+        var diff = Math.ceil(TRIAL_LENGTH - this.days_since_sign_up)
+        return Math.max(diff, 0)
       }
     },
     created() {
