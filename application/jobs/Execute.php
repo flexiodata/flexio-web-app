@@ -238,15 +238,15 @@ class ExecuteProxy
             }
             catch(\Exception $e)
             {
-                echo $e->getMessage();
+                //echo $e->getMessage();
                 // error occurred, start a new server
-                echo "No controller found";
+                //echo "No controller found";
                 $client = null;
             }
         }
          else
         {
-            echo "No controller file found ($container_zmq)";
+            //echo "No controller file found ($container_zmq)";
         }
 
 
