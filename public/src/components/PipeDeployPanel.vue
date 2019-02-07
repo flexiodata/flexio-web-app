@@ -367,6 +367,12 @@
 
 <style lang="stylus" scoped>
   .deploy-on-off-panel
-    border: 1px solid rgba(64, 158, 255, 0.14)
-    background-color: rgba(64, 158, 255, 0.07)
+    // match blue background and text color from hover menu item
+    //color: rgba(102, 177, 255, 1)
+    border: 1px solid rgba(102, 177, 255, 0.25)
+    background: rgba(236, 245, 255, 0.75)
+
+    // old values
+    //border: 1px solid rgba(64, 158, 255, 0.14)
+    //background-color: rgba(64, 158, 255, 0.07)
 </style>

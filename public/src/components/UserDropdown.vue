@@ -6,7 +6,7 @@
     </span>
     <el-dropdown-menu style="min-width: 12rem" slot="dropdown">
       <div class="mv2" style="padding: 0 20px">
-        <FreeTrialNotice class="f8 nt2 nl2 nr2 mb2 pa3 br2 ba b--black-05 bg-nearer-white" />
+        <FreeTrialNotice class="f8 br2" style="margin: -10px -12px 10px; padding: 12px; color: rgba(102, 177, 255, 1); border: 1px solid rgba(102, 177, 255, 0.25); background: rgba(236, 245, 255, 0.75)" />
         <h5 class="ma0">{{full_name}}</h5>
         <div class="mt1 silver f8">{{email}}</div>
       </div>
