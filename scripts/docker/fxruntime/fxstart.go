@@ -15,8 +15,13 @@ import (
 func main() {
 
     engine := os.Getenv("FLEXIO_EXECUTE_ENGINE")
+    execute_home := os.Getenv("FLEXIO_EXECUTE_HOME")
     runtime_server := os.Getenv("FLEXIO_RUNTIME_SERVER")
     runtime_key := os.Getenv("FLEXIO_RUNTIME_KEY")
+
+    if len(execute_home) == 0 {
+        execute_home = "/fxruntime/src"
+    }
 
     requester, _ := zmq.NewSocket(zmq.REQ)
 	defer requester.Close()
@@ -53,14 +58,14 @@ func main() {
         prog = "/usr/bin/python3"
         cmdline = []string{"-c", "import flexio as f; import script as s; f.run(s)"}
         //dir = "/fxpython"
-        dir = "/fxruntime/src"
+        dir = execute_home
     } else if engine == "nodejs" {
         //f, _ := os.Create("/fxnodejs/script.js")
         //f.Write([]byte(code))
         //f.Close()
         prog = "/usr/bin/node"
         cmdline = []string{"-e", "var f = require('/fxnodejs/flexio'); var s = require('./script'); f.run(s)"}
-        dir = "/fxruntime/src"
+        dir = execute_home
     } else {
         panic("Error: unknown execution engine")
     }
