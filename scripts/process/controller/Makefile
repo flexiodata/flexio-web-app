@@ -3,7 +3,7 @@ EXENAME = controller
 INCLUDES = 
 CPP = g++
 CFLAGS = 
-LIBS = -lzmq -ljsoncpp
+LIBS = -lzmq -ljsoncpp -lpthread
 DEPENDLIBS =
 
 OBJECTS = controller.o
