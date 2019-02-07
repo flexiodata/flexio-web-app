@@ -49,7 +49,7 @@
       <div class="mb3 f7 silver ttu fw6">Choose a plan</div>
       <div class="flex flex-column flex-row-l items-stretch justify-between nl2 nr2">
         <div
-          class="mh2 mb3 mb0-l ph3 tc br3 cursor-default trans-a"
+          class="mh2 mb3 mb0-l ph3 tc br3 cursor-default"
           style="box-shadow: inset 0 -4px 12px rgba(0,0,0,0.075)"
           :class="isPlanNameSame(plan['Name'], current_plan_name) ? 'bg-blue white' : 'bg-nearer-white'"
           v-for="plan in plans"
@@ -85,6 +85,14 @@
             </el-button>
           </div>
         </div>
+      </div>
+      <div class="flex flex-row justify-end mt1">
+        <el-button
+          type="text"
+          @click="is_editing = false"
+        >
+          &laquo; I don't want to change my plan
+        </el-button>
       </div>
     </div>
   </div>
