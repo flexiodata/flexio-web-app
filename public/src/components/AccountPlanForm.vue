@@ -91,7 +91,7 @@
           type="text"
           @click="is_editing = false"
         >
-          &laquo; I don't want to change my plan
+          I don't want to change my plan
         </el-button>
       </div>
     </div>
