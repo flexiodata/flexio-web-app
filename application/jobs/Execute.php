@@ -114,6 +114,7 @@ class ExecuteProxy
 {
     private const MESSAGE_SIGNATURE = '--MSGqQp8mf~';
 
+    public $owner_eid;
     public $code = '';
     public $pipes = [null,null,null];
     public $process = null;
@@ -135,8 +136,9 @@ class ExecuteProxy
         return $result;
     }
 
-    public function initialize($engine, $code, $callbacks) : bool
+    public function initialize($owner_eid, $engine, $code, $callbacks) : bool
     {
+        $this->owner_eid = $owner_eid;
         $this->engine = $engine;
         $this->callbacks = $callbacks;
         $this->code = $code;
@@ -165,13 +167,13 @@ class ExecuteProxy
 
     public function run() : void
     {
+        // generate a key which will be used as a kind of password
+        $access_key = \Flexio\Base\Util::generateRandomString(20);
+
+        $container_name = 'fxexec-' . $this->owner_eid;
         $max_execution_time = 3600;
         $exception = null;
         $exception_msg = '';
-
-        // generate a key which will be used as a kind of password
-        $access_key = \Flexio\Base\Util::generateRandomString(20);
-        $container_name = 'fxexec-' . $access_key;
 
         // get the docker binary location
         global $g_dockerbin;
@@ -179,18 +181,129 @@ class ExecuteProxy
         if (is_null($g_dockerbin))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
-        $host_src_dir = "/dev/shm/fxsrc-$access_key";
-        $container_src_dir = '/fxruntime/src';
+        // there is a directory hierarchy that is written on the host and mounted in the container
+        // For example, if two processes were running in one container, it would look like this
 
-        mkdir($host_src_dir, 0700);
+        // /dev/shm/owner-eid/controller
+        // /dev/shm/owner-eid/fxproc-111111/process
+        // /dev/shm/owner-eid/fxproc-111111/code/ (script files)
+        // /dev/shm/owner-eid/fxproc-222222/process
+        // /dev/shm/owner-eid/fxproc-222222/code/ (script files)
+        //
+        // Inside the container, /dev/shm/owner-eid is mounted to /fxruntime/base
+
+        $top_dir = "/dev/shm/fxexec";
+        $base_dir = $top_dir . '/' . $this->owner_eid;
+        $process_dir = $base_dir . '/fxproc-' . $access_key;
+        $src_dir = $process_dir . '/src';
+        $container_zmq = "$base_dir/controller";
+        $hostprocess_zmq = "$process_dir/process";
+
+
+        $cont_base_dir = '/fxruntime/base';
+        $cont_src_dir = $cont_base_dir . '/fxproc-' . $access_key . '/src';
+        $cont_ipc_address = "ipc://$cont_base_dir/fxproc-$access_key/process";
+        $client = null;
+
+
+        $zmq_context = new \ZMQContext();
+
+        // find out if we need to start a container
+
+        if (file_exists($container_zmq))
+        {
+            $client = new \ZMQSocket($zmq_context, \ZMQ::SOCKET_REQ);
+            $client->connect("ipc://$container_zmq");
+            $client->setSockOpt(\ZMQ::SOCKOPT_SNDTIMEO, 1000);
+            $client->setSockOpt(\ZMQ::SOCKOPT_RCVTIMEO, 1000);
+            $client->_is_bound = true;
+
+            try
+            {
+                //echo "Sending message to ipc://$container_zmq <br/>";
+                $client->send('{"cmd":"hello"}');
+
+                $message = $client->recv();
+                if ($message === false)
+                {
+                    $client = null;
+                }
+                 else
+                {
+                    if (($message['response'] ?? '') != 'hello')
+                    {
+                        $client = null;
+                    }
+                }
+            }
+            catch(\Exception $e)
+            {
+                echo $e->getMessage();
+                // error occurred, start a new server
+                echo "No controller found";
+                $client = null;
+            }
+        }
+         else
+        {
+            echo "No controller file found ($container_zmq)";
+        }
+
+
+        if (is_null($client))
+        {
+            @mkdir($base_dir, 0700, true);
+
+            $uid = posix_getuid();
+            $cmd = "$g_dockerbin run -d --net=host --rm --name $container_name -v $base_dir:$cont_base_dir  -i fxruntime /fxruntime/fxcontroller $uid";
+
+            //echo "./update-docker-images && " . str_replace(" -d ", " ", str_replace(" -i", " -it", $cmd));
+            //ob_end_flush();
+            //flush();
+    
+            exec("$cmd 2>&1", $output_lines, $exit_code);
+    
+            $count = 0;
+            while (!file_exists($container_zmq))
+            {
+                usleep(100000); // sleep 100ms
+                if (++$count == 300)
+                {
+                    // 30 seconds expired; stop waiting
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: IPC timeout");
+                }
+            }
+
+            $client = new \ZMQSocket($zmq_context, \ZMQ::SOCKET_REQ);
+            $client->connect("ipc://$container_zmq");
+            $client->setSockOpt(\ZMQ::SOCKOPT_SNDTIMEO, 1000);
+            $client->setSockOpt(\ZMQ::SOCKOPT_RCVTIMEO, 1000);
+            $client->_is_bound = true;
+
+            $client->send('{"cmd":"hello"}');
+            $message = $client->recv();
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        mkdir($src_dir, 0700, true);
 
         if ($this->engine == 'python')
         {
-            file_put_contents("$host_src_dir/script.py", $this->code);
+            file_put_contents("$src_dir/script.py", $this->code);
         }
         else if ($this->engine == 'nodejs')
         {
-            file_put_contents("$host_src_dir/script.js", $this->code);
+            file_put_contents("$src_dir/script.js", $this->code);
         }
         else
         {
@@ -198,21 +311,40 @@ class ExecuteProxy
         }
 
 
-        // start a zeromq server -- let OS choose port
 
-        $host_socket_path = "/dev/shm/ipc-exec-$access_key";
-        $container_socket_path = "/tmp/ipc-endpoint";
-        $container_ipc_address = "ipc://$container_socket_path";
 
-        $dsn = "ipc://$host_socket_path";
-        $server = new \ZMQSocket(new \ZMQContext(), \ZMQ::SOCKET_REP);
+
+        // start a zeromq server with a domain socket
+
+        $container_socket_path = "/fxruntime/base/fxproc-$access_key/process";
+
+        $dsn = "ipc://$hostprocess_zmq";
+        $server = new \ZMQSocket($zmq_context, \ZMQ::SOCKET_REP);
         $server->bind($dsn);
 
         // recv() should time out every 1000 ms
         $server->setSockOpt(\ZMQ::SOCKOPT_RCVTIMEO, 1000);
         $server->_is_bound = true;
 
+        $engine = $this->engine;
 
+
+        $command =
+        [
+            'cmd' => 'run',
+            'cmdline' => [ '/fxruntime/fxstart' ],
+            'setenv' => [ 'FLEXIO_RUNTIME_KEY' => $access_key,
+                          'FLEXIO_RUNTIME_SERVER' => $cont_ipc_address,
+                          'FLEXIO_EXECUTE_ENGINE' => $engine,
+                          'FLEXIO_EXECUTE_HOME' => $cont_src_dir ]
+        ];
+
+        $client->send(json_encode($command));
+        $message = $client->recv();
+
+
+        //die("Ok got connection $message");
+/*
         //$server->setSockOpt(\ZMQ::SOCKOPT_SNDTIMEO, 250);
 
         //$cmd = "./update-docker-images && $g_dockerbin run --rm -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=tcp://$address:$port -i fxruntime timeout 3600s python3 /fxpython/fxstart.py";
@@ -221,13 +353,13 @@ class ExecuteProxy
         //flush();
 
         $engine = $this->engine;
-        //$cmd = "$g_dockerbin run --rm --name $container_name -v $host_socket_path:$container_socket_path -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=$container_ipc_address -e FLEXIO_EXECUTE_ENGINE=$engine -i fxruntime python3 /fxpython/fxstart.py";
+        //$cmd = "$g_dockerbin run --rm --name $container_name -v $host_socket_path:$container_socket_path -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=$cont_ipc_address -e FLEXIO_EXECUTE_ENGINE=$engine -i fxruntime python3 /fxpython/fxstart.py";
 
         // OLD
-        //$cmd = "$g_dockerbin run -d --net=host --rm --name $container_name -v $host_socket_path:$container_socket_path -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=$container_ipc_address -e FLEXIO_EXECUTE_ENGINE=$engine -i fxruntime python3 /fxpython/fxstart.py";
+        //$cmd = "$g_dockerbin run -d --net=host --rm --name $container_name -v $host_socket_path:$container_socket_path -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=$cont_ipc_address -e FLEXIO_EXECUTE_ENGINE=$engine -i fxruntime python3 /fxpython/fxstart.py";
 
         // NEW
-        $cmd = "$g_dockerbin run -d --net=host --rm --name $container_name -v $host_src_dir:$container_src_dir:ro -v $host_socket_path:$container_socket_path -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=$container_ipc_address -e FLEXIO_EXECUTE_ENGINE=$engine -i fxruntime /fxruntime/fxstart";
+        $cmd = "$g_dockerbin run -d --net=host --rm --name $container_name -v $host_src_dir:$container_src_dir:ro -v $host_socket_path:$container_socket_path -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=$cont_ipc_address -e FLEXIO_EXECUTE_ENGINE=$engine -i fxruntime /fxruntime/fxstart";
 
         //echo "./update-docker-images && " . str_replace(" -d ", " ", $cmd);
         //ob_end_flush();
@@ -258,6 +390,11 @@ class ExecuteProxy
 
             \Flexio\Base\Util::rmtree($host_src_dir);
         });
+
+*/
+
+
+
 
         $start_time = microtime(true);
         $actual_start_time = null;    // actual_start_time is initially set when the get_script hook is called
@@ -332,7 +469,7 @@ class ExecuteProxy
             if ($call_count == 0)
             {
                 $seconds = (int)floor(microtime(true) - $start_time);
-                if ($seconds - $last_check > 30)
+                if ($seconds - $last_check > 300)
                 {
                     $last_check = $seconds;
                     $full_state = get_docker_full_state($container_name);
@@ -366,7 +503,7 @@ class ExecuteProxy
             $server = null;
         }
 
-        @unlink($host_socket_path);
+        //@unlink($host_socket_path);
 
         // docker container stopped normally, so it does not need to be terminated; remove from the container GC list
         gc_container_remove($container_name);
@@ -1274,7 +1411,7 @@ class Execute extends \Flexio\Jobs\Base
             $script_host->setProcess($process);
 
             $ep = new ExecuteProxy;
-            $ep->initialize($this->lang, $this->code, $script_host);
+            $ep->initialize($process->getOwner(), $this->lang, $this->code, $script_host);
             $ep->run();
 
             $err = $ep->getStdError();
