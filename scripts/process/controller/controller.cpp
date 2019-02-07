@@ -125,7 +125,21 @@ int main (int argc, char *argv[])
     //socket.bind("ipc:///tmp/mulch");
     socket.bind("ipc:///fxruntime/base/controller");
 
+
+    // set permissions
+    if (argc > 1)
+    {
+        int uid = atoi(argv[1]);
+        printf("setting socket permission (uid = %d)\n", uid);
+        int res = chown("fxruntime/base/controller", uid, -1);
+        printf("res = %d, errno %d\n", res, (res != 0 ? errno : 0));
+    }
+
+
+    // set timeout so we can loop
     socket.setsockopt(ZMQ_RCVTIMEO, 1000);
+
+
 
     Json::Reader reader;
     Json::Value root;
