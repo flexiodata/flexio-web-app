@@ -213,6 +213,13 @@ class ExecuteProxy
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED, "Unknown execution engine");
         }
 
+        
+        // at script shutdown, clean up progress directory
+        register_shutdown_function(function() use ($host_process_dir) {
+            \Flexio\Base\Util::rmtree($host_process_dir);
+        });
+
+
     
     
         //echo("Time c2 " . (microtime(true)-$c1) . ";");
@@ -339,27 +346,13 @@ class ExecuteProxy
 
 
 
-/*
-        // should the script host crash for any reason, the container could be left running;
-        // the following function adds this container to a list that of containers that
-        // will be terminated if the execute job abnormally exits; If the execute job exits
-        // normally, no GC will be done
-        gc_container_add($container_name);
-
-
-        register_shutdown_function(function() use (&$zmqsock_server, $dsn, $host_socket_path, $host_src_dir) {
-            \Flexio\Jobs\gc_container_cleanup();
-            @unlink($host_socket_path);
+        register_shutdown_function(function() use (&$zmqsock_server, $dsn) {
             if ($zmqsock_server !== null && $zmqsock_server->_is_bound)
             {
                 $zmqsock_server->unbind($dsn);
                 $zmqsock_server->_is_bound = false;
             }
-
-            \Flexio\Base\Util::rmtree($host_src_dir);
         });
-
-*/
 
 
 
