@@ -77,7 +77,7 @@ void* signals_thread(void*)
     } 
 }
 
-int main (int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     int idle_counter = 0;
 
@@ -346,6 +346,9 @@ int main (int argc, char *argv[])
     pthread_kill(receive_signals_thread, SIGCHLD);
     pthread_join(receive_signals_thread, NULL);
     pthread_mutex_destroy(&finished_processes_mutex);
+
+    socket.close();
+    unlink("/fxruntime/base/controller");
 }
 
 
