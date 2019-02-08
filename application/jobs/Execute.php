@@ -146,27 +146,10 @@ class ExecuteProxy
     }
 
 
-        /*
-        // start a zeromq server -- let OS choose port
-        $address = self::getLocalIpAddress();
-        $server = new \ZMQSocket(new \ZMQContext(), \ZMQ::SOCKET_REP);
-        $server->bind("tcp://$address:*");
-
-        // figure out what port OS chose
-        $port = $server->getSockOpt(\ZMQ::SOCKOPT_LAST_ENDPOINT);
-        $colon = strrpos($port, ':');
-        $port = ($colon !== false ? substr($port, $colon+1) : '');
-        if (strlen($port) == 0)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: could not determine bind port");
-        $port = (int)$port;
-
-        $address = self::getLocalIpAddress();
-        $ipc_address = "tcp://$address:$port";
-        */
-
-
     public function run() : void
     {
+        $c1 = microtime(true);
+
         // generate a key which will be used as a kind of password
         $access_key = \Flexio\Base\Util::generateRandomString(20);
 
@@ -181,6 +164,8 @@ class ExecuteProxy
         if (is_null($g_dockerbin))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
+
+
         // there is a directory hierarchy that is written on the host and mounted in the container
         // For example, if two processes were running in one container, it would look like this
 
@@ -192,47 +177,73 @@ class ExecuteProxy
         //
         // Inside the container, /dev/shm/owner-eid is mounted to /fxruntime/base
 
-        $top_dir = "/dev/shm/fxexec";
-        $base_dir = $top_dir . '/' . $this->owner_eid;
-        $process_dir = $base_dir . '/fxproc-' . $access_key;
-        $src_dir = $process_dir . '/src';
-        $container_zmq = "$base_dir/controller";
-        $hostprocess_zmq = "$process_dir/process";
-
+        $host_top_dir = "/dev/shm/fxexec";
+        $host_base_dir = $host_top_dir . '/' . $this->owner_eid;
+        $host_process_dir = $host_base_dir . '/fxproc-' . $access_key;
+        $host_src_dir = $host_process_dir . '/src';
+        $host_container_zmq = "$host_base_dir/controller";
+        $host_process_zmq = "$host_process_dir/process";
 
         $cont_base_dir = '/fxruntime/base';
         $cont_src_dir = $cont_base_dir . '/fxproc-' . $access_key . '/src';
         $cont_ipc_address = "ipc://$cont_base_dir/fxproc-$access_key/process";
-        $client = null;
-
 
         $zmq_context = new \ZMQContext();
+        $zmqsock_client = null;
+
+
+
+        // write out the execute job's script
+        
+        if (false === @mkdir($host_src_dir, 0700, true))
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED, "Cannot create source directory");
+        }
+
+        if ($this->engine == 'python')
+        {
+            file_put_contents("$host_src_dir/script.py", $this->code);
+        }
+        else if ($this->engine == 'nodejs')
+        {
+            file_put_contents("$host_src_dir/script.js", $this->code);
+        }
+        else
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED, "Unknown execution engine");
+        }
+
+    
+    
+        $c2 = microtime(true);
+        printf("Time c2 " . ($c2-$c1) . ";");
+
 
         // find out if we need to start a container
 
-        if (file_exists($container_zmq))
+        if (file_exists($host_container_zmq))
         {
-            $client = new \ZMQSocket($zmq_context, \ZMQ::SOCKET_REQ);
-            $client->connect("ipc://$container_zmq");
-            $client->setSockOpt(\ZMQ::SOCKOPT_SNDTIMEO, 1000);
-            $client->setSockOpt(\ZMQ::SOCKOPT_RCVTIMEO, 1000);
-            $client->_is_bound = true;
+            $zmqsock_client = new \ZMQSocket($zmq_context, \ZMQ::SOCKET_REQ);
+            $zmqsock_client->connect("ipc://$host_container_zmq");
+            $zmqsock_client->setSockOpt(\ZMQ::SOCKOPT_SNDTIMEO, 1000);
+            $zmqsock_client->setSockOpt(\ZMQ::SOCKOPT_RCVTIMEO, 1000);
+            $zmqsock_client->_is_bound = true;
 
             try
             {
-                //echo "Sending message to ipc://$container_zmq <br/>";
-                $client->send('{"cmd":"hello"}');
+                //echo "Sending message to ipc://$host_container_zmq <br/>";
+                $zmqsock_client->send('{"cmd":"hello"}');
 
-                $message = $client->recv();
+                $message = $zmqsock_client->recv();
                 if ($message === false)
                 {
-                    $client = null;
+                    $zmqsock_client = null;
                 }
                  else
                 {
                     if (($message['response'] ?? '') != 'hello')
                     {
-                        $client = null;
+                        $zmqsock_client = null;
                     }
                 }
             }
@@ -241,21 +252,21 @@ class ExecuteProxy
                 //echo $e->getMessage();
                 // error occurred, start a new server
                 //echo "No controller found";
-                $client = null;
+                $zmqsock_client = null;
             }
         }
          else
         {
-            //echo "No controller file found ($container_zmq)";
+            //echo "No controller file found ($host_container_zmq)";
         }
 
+        $c3 = microtime(true);
+        printf("Time c3 " . ($c3-$c1) . ";");
 
-        if (is_null($client))
+        if (is_null($zmqsock_client))
         {
-            @mkdir($base_dir, 0700, true);
-
             $uid = posix_getuid();
-            $cmd = "$g_dockerbin run -d --net=host --rm --name $container_name -v $base_dir:$cont_base_dir  -i fxruntime /fxruntime/fxcontroller $uid";
+            $cmd = "$g_dockerbin run -d --net=host --rm --name $container_name -v $host_base_dir:$cont_base_dir  -i fxruntime /fxruntime/fxcontroller $uid";
 
             //echo "./update-docker-images && " . str_replace(" -d ", " ", str_replace(" -i", " -it", $cmd));
             //ob_end_flush();
@@ -264,7 +275,7 @@ class ExecuteProxy
             exec("$cmd 2>&1", $output_lines, $exit_code);
     
             $count = 0;
-            while (!file_exists($container_zmq))
+            while (!file_exists($host_container_zmq))
             {
                 usleep(100000); // sleep 100ms
                 if (++$count == 300)
@@ -274,41 +285,26 @@ class ExecuteProxy
                 }
             }
 
-            $client = new \ZMQSocket($zmq_context, \ZMQ::SOCKET_REQ);
-            $client->connect("ipc://$container_zmq");
-            $client->setSockOpt(\ZMQ::SOCKOPT_SNDTIMEO, 1000);
-            $client->setSockOpt(\ZMQ::SOCKOPT_RCVTIMEO, 1000);
-            $client->_is_bound = true;
+            $zmqsock_client = new \ZMQSocket($zmq_context, \ZMQ::SOCKET_REQ);
+            $zmqsock_client->connect("ipc://$host_container_zmq");
+            $zmqsock_client->setSockOpt(\ZMQ::SOCKOPT_SNDTIMEO, 1000);
+            $zmqsock_client->setSockOpt(\ZMQ::SOCKOPT_RCVTIMEO, 1000);
+            $zmqsock_client->_is_bound = true;
 
-            $client->send('{"cmd":"hello"}');
-            $message = $client->recv();
+            //$zmqsock_client->send('{"cmd":"hello"}');
+            //$message = $zmqsock_client->recv();
         }
 
 
 
 
+        $c4 = microtime(true);
+        printf("Time c4 " . ($c4-$c1) . ";");
 
 
 
 
 
-
-
-
-        mkdir($src_dir, 0700, true);
-
-        if ($this->engine == 'python')
-        {
-            file_put_contents("$src_dir/script.py", $this->code);
-        }
-        else if ($this->engine == 'nodejs')
-        {
-            file_put_contents("$src_dir/script.js", $this->code);
-        }
-        else
-        {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED, "Unknown execution engine");
-        }
 
 
 
@@ -318,13 +314,13 @@ class ExecuteProxy
 
         $container_socket_path = "/fxruntime/base/fxproc-$access_key/process";
 
-        $dsn = "ipc://$hostprocess_zmq";
-        $server = new \ZMQSocket($zmq_context, \ZMQ::SOCKET_REP);
-        $server->bind($dsn);
+        $dsn = "ipc://$host_process_zmq";
+        $zmqsock_server = new \ZMQSocket($zmq_context, \ZMQ::SOCKET_REP);
+        $zmqsock_server->bind($dsn);
 
-        // recv() should time out every 1000 ms
-        $server->setSockOpt(\ZMQ::SOCKOPT_RCVTIMEO, 1000);
-        $server->_is_bound = true;
+        // recv() should time out every 1000 ms so we can loop below
+        $zmqsock_server->setSockOpt(\ZMQ::SOCKOPT_RCVTIMEO, 1000);
+        $zmqsock_server->_is_bound = true;
 
         $engine = $this->engine;
 
@@ -339,39 +335,15 @@ class ExecuteProxy
                           'FLEXIO_EXECUTE_HOME' => $cont_src_dir ]
         ];
 
-        $client->send(json_encode($command));
-        $message = $client->recv();
+        $zmqsock_client->send(json_encode($command));
+        $message = $zmqsock_client->recv();
+
+        $c5 = microtime(true);
+        printf("Time c5 " . ($c5-$c1) . ";");
 
 
-        //die("Ok got connection $message");
+
 /*
-        //$server->setSockOpt(\ZMQ::SOCKOPT_SNDTIMEO, 250);
-
-        //$cmd = "./update-docker-images && $g_dockerbin run --rm -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=tcp://$address:$port -i fxruntime timeout 3600s python3 /fxpython/fxstart.py";
-        //echo $cmd;
-        //ob_end_flush();
-        //flush();
-
-        $engine = $this->engine;
-        //$cmd = "$g_dockerbin run --rm --name $container_name -v $host_socket_path:$container_socket_path -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=$cont_ipc_address -e FLEXIO_EXECUTE_ENGINE=$engine -i fxruntime python3 /fxpython/fxstart.py";
-
-        // OLD
-        //$cmd = "$g_dockerbin run -d --net=host --rm --name $container_name -v $host_socket_path:$container_socket_path -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=$cont_ipc_address -e FLEXIO_EXECUTE_ENGINE=$engine -i fxruntime python3 /fxpython/fxstart.py";
-
-        // NEW
-        $cmd = "$g_dockerbin run -d --net=host --rm --name $container_name -v $host_src_dir:$container_src_dir:ro -v $host_socket_path:$container_socket_path -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=$cont_ipc_address -e FLEXIO_EXECUTE_ENGINE=$engine -i fxruntime /fxruntime/fxstart";
-
-        //echo "./update-docker-images && " . str_replace(" -d ", " ", $cmd);
-        //ob_end_flush();
-        //flush();
-
-        exec("$cmd 2>&1", $output_lines, $exit_code);
-
-        //$docker_exec_output = '';
-        //foreach ($output_lines as $line)
-        //    $docker_exec_output .= $line;
-
-        
         // should the script host crash for any reason, the container could be left running;
         // the following function adds this container to a list that of containers that
         // will be terminated if the execute job abnormally exits; If the execute job exits
@@ -379,13 +351,13 @@ class ExecuteProxy
         gc_container_add($container_name);
 
 
-        register_shutdown_function(function() use (&$server, $dsn, $host_socket_path, $host_src_dir) {
+        register_shutdown_function(function() use (&$zmqsock_server, $dsn, $host_socket_path, $host_src_dir) {
             \Flexio\Jobs\gc_container_cleanup();
             @unlink($host_socket_path);
-            if ($server !== null && $server->_is_bound)
+            if ($zmqsock_server !== null && $zmqsock_server->_is_bound)
             {
-                $server->unbind($dsn);
-                $server->_is_bound = false;
+                $zmqsock_server->unbind($dsn);
+                $zmqsock_server->_is_bound = false;
             }
 
             \Flexio\Base\Util::rmtree($host_src_dir);
@@ -394,6 +366,9 @@ class ExecuteProxy
 */
 
 
+
+$c6 = microtime(true);
+printf("Time c6 " . ($c6-$c1) . ";");
 
 
         $start_time = microtime(true);
@@ -406,7 +381,7 @@ class ExecuteProxy
 
         while (true)
         {
-            $message = $server->recv();
+            $message = $zmqsock_server->recv();
 
             if ($message !== false)
             {
@@ -428,23 +403,23 @@ class ExecuteProxy
                     if ($method == 'get_script')
                     {
                         $response = [ 'result' => $this->code, 'id' => $message['id'] ];
-                        $server->send(json_encode($response));
+                        $zmqsock_server->send(json_encode($response));
                     }
                     else if ($method == 'compile_error')
                     {
                         $retval = call_user_func_array([ $this, 'func_'.$method ], $message['params'] ?? ['']);
                         $response = [ 'result' => true, 'id' => $message['id'] ];
-                        $server->send(json_encode($response));
+                        $zmqsock_server->send(json_encode($response));
                     }
                     else if ($method == 'exit_loop')
                     {
                         $response = [ 'result' => true, 'id' => $message['id'] ];
-                        $server->send(json_encode($response));
+                        $zmqsock_server->send(json_encode($response));
                         break;
                     }
                     else
                     {
-                        $this->onMessage($server, $message);
+                        $this->onMessage($zmqsock_server, $message);
                     }
 
                     ++$call_count;
@@ -496,11 +471,16 @@ class ExecuteProxy
             }
         }
 
-        if ($server->_is_bound)
+
+        $c7 = microtime(true);
+        printf("Time c7 " . ($c7-$c1) . ";");
+
+
+        if ($zmqsock_server->_is_bound)
         {
-            $server->unbind($dsn);
-            $server->_is_bound = false;
-            $server = null;
+            $zmqsock_server->unbind($dsn);
+            $zmqsock_server->_is_bound = false;
+            $zmqsock_server = null;
         }
 
         //@unlink($host_socket_path);
@@ -512,6 +492,11 @@ class ExecuteProxy
         {
             throw new \Flexio\Base\Exception($exception, $exception_msg);
         }
+
+
+        $c8 = microtime(true);
+        printf("Time c8 " . ($c8-$c1) . ";");
+
     }
 
     public function func_compile_error($error)
@@ -554,7 +539,7 @@ class ExecuteProxy
 
 
 
-    public function onMessage(\ZMQSocket $server, array $msg) : void
+    public function onMessage(\ZMQSocket $zmqsock_server, array $msg) : void
     {
         if (!isset($msg['id']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: missing id");
@@ -610,7 +595,7 @@ class ExecuteProxy
 
         //  Send reply back to client
         $response = [ 'result' => $retval, 'id' => $msg['id'] ];
-        $server->send(json_encode($response));
+        $zmqsock_server->send(json_encode($response));
     }
 }
 
