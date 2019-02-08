@@ -215,8 +215,7 @@ class ExecuteProxy
 
     
     
-        $c2 = microtime(true);
-        printf("Time c2 " . ($c2-$c1) . ";");
+        //echo("Time c2 " . (microtime(true)-$c1) . ";");
 
 
         // find out if we need to start a container
@@ -260,8 +259,7 @@ class ExecuteProxy
             //echo "No controller file found ($host_container_zmq)";
         }
 
-        $c3 = microtime(true);
-        printf("Time c3 " . ($c3-$c1) . ";");
+        //echo("Time c3 " . (microtime(true)-$c1) . ";");
 
         if (is_null($zmqsock_client))
         {
@@ -277,8 +275,8 @@ class ExecuteProxy
             $count = 0;
             while (!file_exists($host_container_zmq))
             {
-                usleep(100000); // sleep 100ms
-                if (++$count == 300)
+                usleep(50000); // sleep 50ms
+                if (++$count == 600)
                 {
                     // 30 seconds expired; stop waiting
                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: IPC timeout");
@@ -298,8 +296,7 @@ class ExecuteProxy
 
 
 
-        $c4 = microtime(true);
-        printf("Time c4 " . ($c4-$c1) . ";");
+        //echo("Time c4 " . (microtime(true)-$c1) . ";");
 
 
 
@@ -338,8 +335,7 @@ class ExecuteProxy
         $zmqsock_client->send(json_encode($command));
         $message = $zmqsock_client->recv();
 
-        $c5 = microtime(true);
-        printf("Time c5 " . ($c5-$c1) . ";");
+        //echo("Time c5 " . (microtime(true)-$c1) . ";");
 
 
 
@@ -367,8 +363,7 @@ class ExecuteProxy
 
 
 
-$c6 = microtime(true);
-printf("Time c6 " . ($c6-$c1) . ";");
+        //echo("Time c6 " . (microtime(true)-$c1) . ";");
 
 
         $start_time = microtime(true);
@@ -422,6 +417,11 @@ printf("Time c6 " . ($c6-$c1) . ";");
                         $this->onMessage($zmqsock_server, $message);
                     }
 
+                    if ($call_count == 0)
+                    {
+                        //echo("Time c7 " . (microtime(true)-$c1) . ";");                
+                    }
+
                     ++$call_count;
                 }
             }
@@ -472,8 +472,7 @@ printf("Time c6 " . ($c6-$c1) . ";");
         }
 
 
-        $c7 = microtime(true);
-        printf("Time c7 " . ($c7-$c1) . ";");
+        //echo("Time c8 " . (microtime(true)-$c1) . ";");
 
 
         if ($zmqsock_server->_is_bound)
@@ -494,8 +493,7 @@ printf("Time c6 " . ($c6-$c1) . ";");
         }
 
 
-        $c8 = microtime(true);
-        printf("Time c8 " . ($c8-$c1) . ";");
+        //echo("Time c9 " . (microtime(true)-$c1) . ";");
 
     }
 
