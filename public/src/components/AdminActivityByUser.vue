@@ -78,7 +78,6 @@
     <ProcessListByUser
       class="center w-100 pl4-l pr4-l pb4-l"
       style="max-width: 1280px; padding-bottom: 8rem"
-      :items="output_processes"
       :start="start"
       :limit="page_size"
       @sort-change="sortBy"
@@ -172,15 +171,13 @@
         status_filter: '',
         status_options,
         show_process_details_dialog: false,
-        edit_process_eid: ''
+        edit_process_eid: '',
+
+        is_fetched: false, // TODO: remove this hack
+        is_fetching: true // TODO: remove this hack
       }
     },
     computed: {
-      // mix this into the outer object with the object spread operator
-      ...mapState({
-        'is_fetching': 'processes_fetching',
-        'is_fetched': 'processes_fetched'
-      }),
       all_processes() {
         return this.items ? this.items : this.getAllProcesses()
       },
@@ -202,22 +199,15 @@
     },
     mounted() {
       this.initSticky()
-      this.tryFetchProcesses()
       this.$store.track('Visited Activity Page')
       this.force_loading = true
       setTimeout(() => { this.force_loading = false }, 10)
+      setTimeout(() => {
+        this.is_fetching = false
+        this.is_fetched = true
+      }, 500) // TODO: remove this hack
     },
     methods: {
-      ...mapGetters([
-        'getAllProcesses'
-      ]),
-      tryFetchProcesses() {
-        if (!this.is_fetched && !this.is_fetching) {
-          this.$store.dispatch('v2_action_fetchProcesses', {}).catch(error => {
-            // TODO: add error handling?
-          })
-        }
-      },
       updatePager(page) {
         // update the route
         var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
