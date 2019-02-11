@@ -77,7 +77,7 @@ void* signals_thread(void*)
     } 
 }
 
-int main (int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     int idle_counter = 0;
 
@@ -125,7 +125,21 @@ int main (int argc, char *argv[])
     //socket.bind("ipc:///tmp/mulch");
     socket.bind("ipc:///fxruntime/base/controller");
 
+
+    // set permissions
+    if (argc > 1)
+    {
+        int uid = atoi(argv[1]);
+        printf("setting socket permission (uid = %d)\n", uid);
+        int res = chown("fxruntime/base/controller", uid, -1);
+        printf("res = %d, errno %d\n", res, (res != 0 ? errno : 0));
+    }
+
+
+    // set timeout so we can loop
     socket.setsockopt(ZMQ_RCVTIMEO, 1000);
+
+
 
     Json::Reader reader;
     Json::Value root;
@@ -332,6 +346,9 @@ int main (int argc, char *argv[])
     pthread_kill(receive_signals_thread, SIGCHLD);
     pthread_join(receive_signals_thread, NULL);
     pthread_mutex_destroy(&finished_processes_mutex);
+
+    socket.close();
+    unlink("/fxruntime/base/controller");
 }
 
 
