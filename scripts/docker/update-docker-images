@@ -4,7 +4,6 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 pushd $DIR/fxruntime
 cp $DIR/../python_include/flexio.py ./
-cp $DIR/../python_include/fxstart.py ./
 cp $DIR/../nodejs_include/flexio.js ./
 cp $DIR/../nodejs_include/run.js ./
 cp $DIR/../nodejs_include/render.js ./
@@ -12,6 +11,7 @@ cp $DIR/../nodejs_include/package.json ./
 
 rm -rf ./controller
 cp -a $DIR/../process/controller ./
+cp -a $DIR/../process/start ./
 
 docker build -t fxruntime .
 popd

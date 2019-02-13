@@ -80,7 +80,9 @@ RUN mkdir -p /root/.config/matplotlib && echo "backend : AGG" > /root/.config/ma
 
 RUN mkdir /fxruntime && \
     mkdir /fxruntime/go && \
-    mkdir /fxruntime/controller && \
+    mkdir /fxruntime/build && \
+    mkdir /fxruntime/build/controller && \
+    mkdir /fxruntime/build/start && \
     mkdir /fxpython && \
     mkdir /fxnodejs
 
@@ -103,9 +105,10 @@ RUN go get github.com/pebbe/zmq4
 COPY fxstart.go /fxruntime
 RUN cd /fxruntime && go build fxstart.go
 
-COPY ./controller/controller.cpp /fxruntime/controller
-COPY ./controller/Makefile /fxruntime/controller
-RUN cd /fxruntime/controller && make && mv /fxruntime/controller/controller /fxruntime/fxcontroller && rm *.o
+COPY ./controller/Makefile ./controller/controller.cpp /fxruntime/build/controller/
+COPY ./start/Makefile ./start/start.cpp ./start/base64.cpp ./start/base64.h /fxruntime/build/start/
+RUN cd /fxruntime/build/controller && make && mv /fxruntime/build/controller/fxcontroller /fxruntime && rm *.o
+RUN cd /fxruntime/build/start      && make && mv /fxruntime/build/start/fxstart /fxruntime/fxstartcpp           && rm *.o
 
 
 # POTENTIAL: csv

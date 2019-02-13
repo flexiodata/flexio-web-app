@@ -1,5 +1,5 @@
 
-EXENAME = controller 
+EXENAME = fxcontroller 
 INCLUDES = 
 CPP = g++
 CFLAGS = 
