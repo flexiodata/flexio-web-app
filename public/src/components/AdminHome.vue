@@ -18,19 +18,19 @@
 <script>
   const nav_items = [
     {
-      route: 'tests',
-      name: 'Tests',
-      icon: 'gavel'
-    },
-    {
-      route: 'activity',
-      name: 'Activity',
-      icon: 'network_check'
-    },
-    {
       route: 'users',
       name: 'User Activity',
       icon: 'group'
+    },
+    {
+      route: 'processes',
+      name: 'Process Activity',
+      icon: 'network_check'
+    },
+    {
+      route: 'tests',
+      name: 'Tests',
+      icon: 'gavel'
     },
     {
       route: 'builder',

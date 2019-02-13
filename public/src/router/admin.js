@@ -17,17 +17,17 @@ export default {
   meta: { requiresAuth: true },
   children: [
     {
-      // redirect to /admin/tests
+      // redirect to /admin/users
       path: '',
       name: ROUTE_ADMIN,
-      redirect: 'tests'
+      redirect: 'users'
     },
     {
       path: 'tests',
       component: AdminTest
     },
     {
-      path: 'activity',
+      path: 'processes',
       component: AdminActivity
     },
     {
