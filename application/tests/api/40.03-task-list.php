@@ -34,7 +34,7 @@ class Test
             \Flexio\Tests\Base::STORAGE_DROPBOX,
             //\Flexio\Tests\Base::STORAGE_GITHUB,
             \Flexio\Tests\Base::STORAGE_GOOGLEDRIVE,
-            \Flexio\Tests\Base::STORAGE_GOOGLECLOUDSTORAGE,
+            //\Flexio\Tests\Base::STORAGE_GOOGLECLOUDSTORAGE,
             \Flexio\Tests\Base::STORAGE_SFTP
         ];
 
