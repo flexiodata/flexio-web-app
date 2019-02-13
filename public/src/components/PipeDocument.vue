@@ -252,8 +252,8 @@
                           <i class="material-icons" v-if="is_locked">lock</i>
                           <i class="material-icons" v-else>lock_open</i>
                         </el-button>
-                        <span v-if="is_locked">Click the lock to make changes</span>
-                        <span v-else="is_locked">Click the lock to prevent further changes</span>
+                        <span @click.stop="toggleLock" v-if="is_locked">Click the lock to make changes</span>
+                        <span @click.stop="toggleLock" v-else="is_locked">Click the lock to prevent further changes</span>
                       </div>
                       <span v-if="false" class="ml1 lh-1 hint--bottom hint--large" aria-label="The task list defines the actual logic for the pipe that will be run. Steps can be added either using the interface below or by editing the 'task' node in the YAML sidebar.">
                         <i class="el-icon-info blue"></i>
@@ -812,6 +812,10 @@
       },
       toggleLock() {
         this.is_locked = !this.is_locked
+
+        if (!this.is_locked) {
+          this.active_collapse_items = this.active_collapse_items.concat(['tasks'])
+        }
       },
       initStickyAndTour() {
         setTimeout(() => {
