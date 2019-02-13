@@ -79,6 +79,21 @@ void* signals_thread(void*)
 
 int main(int argc, char *argv[])
 {
+    // save process signal mask so we can pass it to children
+    sigset_t saved_sigset;
+    if (sigprocmask(0, NULL, &saved_sigset) < 0)
+    {
+        fprintf(stderr, "sigprocmask() returned error.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    posix_spawnattr_t spawn_attr;
+    posix_spawnattr_init(&spawn_attr);
+    posix_spawnattr_setsigmask(&spawn_attr, &saved_sigset);
+    posix_spawnattr_setflags  (&spawn_attr, POSIX_SPAWN_SETSIGMASK);
+
+
+
     int idle_counter = 0;
 
     if (0 != pthread_mutex_init(&finished_processes_mutex, NULL))
@@ -293,7 +308,7 @@ int main(int argc, char *argv[])
 
             pid_t pid;
             int status;
-            if (0 == posix_spawn(&pid, prog, NULL, NULL, (char* const*)args, final_env))
+            if (0 == posix_spawn(&pid, prog, NULL, &spawn_attr, (char* const*)args, final_env))
             {
                 printf("... success.\n");
                 running_processes.insert(pid);

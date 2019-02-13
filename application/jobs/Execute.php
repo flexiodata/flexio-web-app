@@ -336,7 +336,8 @@ class ExecuteProxy
             'setenv' => [ 'FLEXIO_RUNTIME_KEY' => $access_key,
                           'FLEXIO_RUNTIME_SERVER' => $cont_ipc_address,
                           'FLEXIO_EXECUTE_ENGINE' => $engine,
-                          'FLEXIO_EXECUTE_HOME' => $cont_src_dir ]
+                          'FLEXIO_EXECUTE_HOME' => $cont_src_dir,
+                          'PYTHONDONTWRITEBYTECODE' => '1' ]
         ];
 
         $zmqsock_client->send(json_encode($command));
@@ -417,6 +418,11 @@ class ExecuteProxy
 
                     ++$call_count;
                 }
+                 else
+                {
+                    $response = [ 'result' => false, 'id' => 'Invalid credentials' ];
+                    $zmqsock_server->send(json_encode($response));
+                }
             }
 
             if (!is_null($actual_start_time))
@@ -437,7 +443,7 @@ class ExecuteProxy
             if ($call_count == 0)
             {
                 $seconds = (int)floor(microtime(true) - $start_time);
-                if ($seconds - $last_check > 300)
+                if ($seconds - $last_check > 3000) /*300*/
                 {
                     $last_check = $seconds;
                     $full_state = get_docker_full_state($container_name);
@@ -491,8 +497,16 @@ class ExecuteProxy
     }
 
     public function func_compile_error($error)
-    {
-        $this->compile_error .= $error;
+    {   
+        $pos = strpos($error, "bin.b64:");
+        if ($pos !== false)
+        {
+            $this->compile_error .= base64_decode(substr($error, $pos+8));
+        }
+        else
+        {
+            $this->compile_error .= $error;
+        }
     }
 
     public function getStdError() : ?string

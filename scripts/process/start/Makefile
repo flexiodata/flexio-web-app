@@ -1,12 +1,12 @@
 
-EXENAME = fxcontroller 
+EXENAME = fxstart
 INCLUDES = 
 CPP = g++
 CFLAGS = 
-LIBS = -lzmq -ljsoncpp -lpthread
+LIBS = -lzmq
 DEPENDLIBS =
 
-OBJECTS = controller.o
+OBJECTS = start.o base64.o
 
 all: $(EXENAME)
     
