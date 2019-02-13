@@ -243,17 +243,34 @@
                   <template slot="title">
                     <div class="flex flex-row items-center" data-tour-step="pipe-onboarding-1">
                       <span class="f4">Tasks</span>
-                      <div class="flex flex-row items-center ml3" v-if="is_deployed">
+                      <div class="flex flex-row items-center ml3" @click.stop v-if="is_deployed">
+                        <ConfirmPopover
+                          class="pointer"
+                          style="margin-right: 2px"
+                          placement="bottom-start"
+                          message="Editing a pipe while it is deployed can have unintended consequences. Are you sure you want to continue?"
+                          title="Confirm unlock?"
+                          confirmButtonText="Unlock"
+                          :width="420"
+                          :offset="-50"
+                          @confirm-click="toggleLock"
+                          v-if="is_locked"
+                        >
+                          <div class="flex flex-row items-center" slot="reference">
+                            <i class="material-icons blue">lock</i>
+                          </div>
+                        </ConfirmPopover>
                         <el-button
                           type="text"
-                          style="padding: 0"
-                          @click.stop="toggleLock"
+                          style="border: 0; padding: 0; margin-right: 2px"
+                          slot="reference"
+                          @click="toggleLock"
+                          v-else
                         >
-                          <i class="material-icons" v-if="is_locked">lock</i>
-                          <i class="material-icons" v-else>lock_open</i>
+                          <i class="material-icons">lock_open</i>
                         </el-button>
-                        <span @click.stop="toggleLock" v-if="is_locked">Click the lock to make changes</span>
-                        <span @click.stop="toggleLock" v-else="is_locked">Click the lock to prevent further changes</span>
+                        <span class="cursor-default" v-if="is_locked">Click the lock to make changes</span>
+                        <span class="cursor-default" v-else="is_locked">Click the lock to prevent further changes</span>
                       </div>
                       <span v-if="false" class="ml1 lh-1 hint--bottom hint--large" aria-label="The task list defines the actual logic for the pipe that will be run. Steps can be added either using the interface below or by editing the 'task' node in the YAML sidebar.">
                         <i class="el-icon-info blue"></i>
@@ -383,6 +400,7 @@
   import { Multipane, MultipaneResizer } from 'vue-multipane'
   import Spinner from 'vue-simple-spinner'
   import IconMessage from './IconMessage.vue'
+  import ConfirmPopover from './ConfirmPopover.vue'
   import ProcessInput from './ProcessInput.vue'
   import BuilderDocument from './BuilderDocument.vue'
   import BuilderList from './BuilderList.vue'
@@ -439,6 +457,7 @@
       MultipaneResizer,
       Spinner,
       IconMessage,
+      ConfirmPopover,
       ProcessInput,
       BuilderDocument,
       BuilderList,

@@ -8,7 +8,7 @@
     v-model="is_visible"
   >
     <div class="b mb2" v-if="title.length > 0">{{title}}</div>
-    <div>{{message}}</div>
+    <div class="tl">{{message}}</div>
     <div class="mt3 w-100 flex flex-row justify-end">
       <el-button
         size="small"
@@ -26,7 +26,7 @@
         {{confirmButtonText}}
       </el-button>
     </div>
-    <slot name="reference"><i class="material-icons" slot="reference">delete</i></slot>
+    <slot name="reference" slot="reference"><i class="material-icons">delete</i></slot>
   </el-popover>
 </template>
 
