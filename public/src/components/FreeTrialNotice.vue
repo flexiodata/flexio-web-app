@@ -1,5 +1,5 @@
 <template>
-  <div class="f7 dark-green" v-if="days_left >= 0">{{msg}}</div>
+  <div class="f7 dark-green" v-if="days_left > 0">{{msg}}</div>
 </template>
 
 <script>

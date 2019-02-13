@@ -28,7 +28,7 @@
           v-if="user"
         />
       </el-tab-pane>
-      <el-tab-pane name="output" label="Output">
+      <el-tab-pane name="output" label="Output" v-if="false">
         <ProcessContent
           style="margin-top: -1px"
           :processEid="processEid"
@@ -126,7 +126,7 @@
           })
         }
 
-        this.$store.dispatch('v2_action_fetchProcess', { eid: this.processEid }).catch(error => {
+        this.$store.dispatch('v2_action_fetchProcess', { user_eid, eid: this.processEid }).catch(error => {
           // TODO: add error handling?
         })
       },
