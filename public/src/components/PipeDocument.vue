@@ -263,7 +263,7 @@
                   <div class="pt3 ph3">
                     <PipeBuilderList
                       ref="task-list"
-                      :class="is_deployed && is_locked ? 'o-40 no-pointer no-select' : ''"
+                      :class="is_deployed && is_locked ? 'o-40 no-pointer-events no-select' : ''"
                       :container-id="scrollbar_container_id"
                       :has-errors.sync="has_errors"
                       :active-item-idx.sync="active_task_idx"
