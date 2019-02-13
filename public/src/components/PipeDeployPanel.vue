@@ -172,7 +172,7 @@
         </div>
       </div>
     </el-checkbox-group>
-    <div class="mt3 pv3 ph4 tc bg-nearer-white deploy-on-off-panel">
+    <div class="mt3 pv3 ph4 tc bg-nearer-white deploy-on-off-panel" v-if="false">
       <h4 class="fw6">
         <transition name="el-zoom-in-center" mode="out-in">
           <span v-bind:key="is_deployed">

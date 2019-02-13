@@ -1,5 +1,5 @@
 <template>
-  <div class="relative">
+  <div style="position: relative; line-height: 1">
     <el-switch
       ref="switch"
       :value="value"

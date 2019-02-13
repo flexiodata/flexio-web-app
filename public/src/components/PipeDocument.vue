@@ -213,6 +213,14 @@
                   <template slot="title">
                     <div class="flex flex-row items-center">
                       <span class="f4">Deployment</span>
+                      <LabelSwitch
+                        class="dib ml3 hint--bottom"
+                        style="height: 20px"
+                        active-color="#13ce66"
+                        :aria-label="is_deployed ? 'Turn pipe off' : 'Turn pipe on'"
+                        :width="58"
+                        v-model="is_deployed"
+                      />
                     </div>
                   </template>
                   <div class="pt3 ph3">
@@ -389,6 +397,7 @@
   import ProcessContent from './ProcessContent.vue'
   import PageNotFound from './PageNotFound.vue'
   import PopperTour from './PopperTour.vue'
+  import LabelSwitch from './LabelSwitch.vue'
 
   import MixinConfig from './mixins/config'
 
@@ -443,7 +452,8 @@
       PipeDeployPanel,
       ProcessContent,
       PageNotFound,
-      PopperTour
+      PopperTour,
+      LabelSwitch
     },
     watch: {
       eid: {
