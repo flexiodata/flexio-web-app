@@ -204,39 +204,7 @@
                   </div>
                 </el-collapse-item>
 
-                <!-- deployment panel; only visible when pipe is deployed -->
-                <el-collapse-item
-                  class="mb4 pv1 ph3 bg-white br2 css-white-box"
-                  name="deployment"
-                  data-tour-step="pipe-onboarding-6"
-                >
-                  <template slot="title">
-                    <div class="flex flex-row items-center">
-                      <span class="f4">Deployment</span>
-                      <LabelSwitch
-                        class="dib ml3 hint--bottom"
-                        style="height: 20px"
-                        active-color="#13ce66"
-                        :aria-label="is_deployed ? 'Turn pipe off' : 'Turn pipe on'"
-                        :width="58"
-                        @click.stop
-                        v-model="is_deployed"
-                      />
-                    </div>
-                  </template>
-                  <div class="pt3 ph3">
-                    <PipeDeployPanel
-                      :is-mode-run.sync="is_deployed"
-                      :pipe="edit_pipe"
-                      :show-properties-panel.sync="show_pipe_properties_dialog"
-                      :show-runtime-configure-panel.sync="show_runtime_configure_dialog"
-                      :show-schedule-panel.sync="show_pipe_schedule_dialog"
-                      @updated-deployment="onDeploymentUpdated"
-                    />
-                  </div>
-                </el-collapse-item>
-
-                <!-- tasks panel; visible when pipe is not deployed -->
+                <!-- tasks panel -->
                 <el-collapse-item
                   class="mb4 pv1 ph3 bg-white br2 css-white-box"
                   name="tasks"
@@ -315,6 +283,38 @@
                         <em>Click the <code class="ph1 ba b--black-10 bg-nearer-white br2">Test</code> button to see the result of your pipe logic here.</em>
                       </div>
                     </ProcessContent>
+                  </div>
+                </el-collapse-item>
+
+                <!-- deployment panel -->
+                <el-collapse-item
+                  class="mb4 pv1 ph3 bg-white br2 css-white-box"
+                  name="deployment"
+                  data-tour-step="pipe-onboarding-6"
+                >
+                  <template slot="title">
+                    <div class="flex flex-row items-center">
+                      <span class="f4">Deployment</span>
+                      <LabelSwitch
+                        class="dib ml3 hint--bottom"
+                        style="height: 20px"
+                        active-color="#13ce66"
+                        :aria-label="is_deployed ? 'Turn pipe off' : 'Turn pipe on'"
+                        :width="58"
+                        @click.stop
+                        v-model="is_deployed"
+                      />
+                    </div>
+                  </template>
+                  <div class="pt3 ph3">
+                    <PipeDeployPanel
+                      :is-mode-run.sync="is_deployed"
+                      :pipe="edit_pipe"
+                      :show-properties-panel.sync="show_pipe_properties_dialog"
+                      :show-runtime-configure-panel.sync="show_runtime_configure_dialog"
+                      :show-schedule-panel.sync="show_pipe_schedule_dialog"
+                      @updated-deployment="onDeploymentUpdated"
+                    />
                   </div>
                 </el-collapse-item>
               </el-collapse>
@@ -835,6 +835,8 @@
 
         if (!this.is_locked) {
           this.active_collapse_items = this.active_collapse_items.concat(['tasks'])
+        } else {
+          this.active_collapse_items = _.without(this.active_collapse_items, 'tasks')
         }
       },
       initStickyAndTour() {
