@@ -332,7 +332,7 @@ class ExecuteProxy
         $command =
         [
             'cmd' => 'run',
-            'cmdline' => [ '/fxruntime/fxstartcpp' ],
+            'cmdline' => [ '/fxruntime/fxstart' ],
             'setenv' => [ 'FLEXIO_RUNTIME_KEY' => $access_key,
                           'FLEXIO_RUNTIME_SERVER' => $cont_ipc_address,
                           'FLEXIO_EXECUTE_ENGINE' => $engine,
