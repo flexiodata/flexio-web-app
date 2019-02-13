@@ -82,16 +82,6 @@ const GMAIL = {
   is_email: true
 }
 
-const GOOGLECLOUDSTORAGE = {
-  service_name: 'Google Cloud Storage',
-  service_description: 'Unified object storage for developers and enterprises',
-  connection_type: types.CONNECTION_TYPE_GOOGLECLOUDSTORAGE,
-  icon: require('../assets/icon/icon-google-cloud-storage-128.png'),
-  is_oauth: true,
-  is_storage: true,
-  is_email: false
-}
-
 const GOOGLEDRIVE = {
   service_name: 'Google Drive',
   service_description: 'Online document and file storage',
@@ -213,6 +203,16 @@ const FIREBASE = {
   is_email: false
 }
 
+const GOOGLECLOUDSTORAGE = {
+  service_name: 'Google Cloud Storage',
+  service_description: 'Unified object storage for developers and enterprises',
+  connection_type: types.CONNECTION_TYPE_GOOGLECLOUDSTORAGE,
+  icon: require('../assets/icon/icon-google-cloud-storage-128.png'),
+  is_oauth: true,
+  is_storage: true,
+  is_email: false
+}
+
 const MAILJET = {
   service_name: 'Mailjet',
   service_description: 'Send email that converts',
@@ -266,7 +266,6 @@ export const CONNECTION_INFO_ELASTICSEARCH        = ELASTICSEARCH
 export const CONNECTION_INFO_SMTP                 = SMTP
 export const CONNECTION_INFO_GITHUB               = GITHUB
 export const CONNECTION_INFO_GMAIL                = GMAIL
-export const CONNECTION_INFO_GOOGLECLOUDSTORAGE   = GOOGLECLOUDSTORAGE
 export const CONNECTION_INFO_GOOGLEDRIVE          = GOOGLEDRIVE
 export const CONNECTION_INFO_GOOGLESHEETS         = GOOGLESHEETS
 export const CONNECTION_INFO_MYSQL                = MYSQL
@@ -275,12 +274,13 @@ export const CONNECTION_INFO_SFTP                 = SFTP
 export const CONNECTION_INFO_TWILIO               = TWILIO
 
 // TODO: what are we going to do with these?
-//export const CONNECTION_INFO_STDIN         = STDIN
-//export const CONNECTION_INFO_STDOUT        = STDOUT
-//export const CONNECTION_INFO_UPLOAD        = UPLOAD
-//export const CONNECTION_INFO_DOWNLOAD      = DOWNLOAD
-//export const CONNECTION_INFO_FIREBASE      = FIREBASE
-//export const CONNECTION_INFO_MAILJET       = MAILJET
-//export const CONNECTION_INFO_RSS           = RSS
-//export const CONNECTION_INFO_SOCRATA       = SOCRATA
-//export const CONNECTION_INFO_PIPELINEDEALS = PIPELINEDEALS
+//export const CONNECTION_INFO_STDIN                = STDIN
+//export const CONNECTION_INFO_STDOUT               = STDOUT
+//export const CONNECTION_INFO_UPLOAD               = UPLOAD
+//export const CONNECTION_INFO_DOWNLOAD             = DOWNLOAD
+//export const CONNECTION_INFO_FIREBASE             = FIREBASE
+//export const CONNECTION_INFO_MAILJET              = MAILJET
+//export const CONNECTION_INFO_GOOGLECLOUDSTORAGE   = GOOGLECLOUDSTORAGE
+//export const CONNECTION_INFO_RSS                  = RSS
+//export const CONNECTION_INFO_SOCRATA              = SOCRATA
+//export const CONNECTION_INFO_PIPELINEDEALS        = PIPELINEDEALS
