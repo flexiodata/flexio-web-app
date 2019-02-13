@@ -840,6 +840,12 @@
         }
       },
       initStickyAndTour() {
+        if (this.is_deployed) {
+          this.active_collapse_items = _.without(this.active_collapse_items, 'tasks')
+        } else {
+          this.active_collapse_items = this.active_collapse_items.concat(['tasks'])
+        }
+
         setTimeout(() => {
           stickybits('.sticky', {
             scrollEl: '#' + this.scrollbar_container_id,
