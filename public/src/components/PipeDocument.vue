@@ -204,15 +204,49 @@
                   </div>
                 </el-collapse-item>
 
+                <!-- deployment panel; only visible when pipe is deployed -->
+                <el-collapse-item
+                  class="mb4 pv1 ph3 bg-white br2 css-white-box"
+                  name="deployment"
+                  data-tour-step="pipe-onboarding-6"
+                >
+                  <template slot="title">
+                    <div class="flex flex-row items-center">
+                      <span class="f4">Deployment</span>
+                    </div>
+                  </template>
+                  <div class="pt3 ph3">
+                    <PipeDeployPanel
+                      :is-mode-run.sync="is_deployed"
+                      :pipe="edit_pipe"
+                      :show-properties-panel.sync="show_pipe_properties_dialog"
+                      :show-runtime-configure-panel.sync="show_runtime_configure_dialog"
+                      :show-schedule-panel.sync="show_pipe_schedule_dialog"
+                      @updated-deployment="onDeploymentUpdated"
+                    />
+                  </div>
+                </el-collapse-item>
+
                 <!-- tasks panel; visible when pipe is not deployed -->
                 <el-collapse-item
                   class="mb4 pv1 ph3 bg-white br2 css-white-box"
                   name="tasks"
-                  v-if="!is_deployed"
                 >
                   <template slot="title">
                     <div class="flex flex-row items-center" data-tour-step="pipe-onboarding-1">
                       <span class="f4">Tasks</span>
+                      <div class="flex flex-row items-center ml3" v-if="is_deployed">
+                        <el-button
+                          type="text"
+                          style="padding: 0"
+                          @click.stop="toggleLock"
+                        >
+                          <i class="material-icons" v-if="is_locked">lock</i>
+                          <i class="material-icons" v-else>lock_open</i>
+                        </el-button>
+                        <span v-if="is_locked">Click the lock to make changes</span>
+                        <span v-else="is_locked">Click the lock to prevent further changes</span>
+                      </div>
                       <span v-if="false" class="ml1 lh-1 hint--bottom hint--large" aria-label="The task list defines the actual logic for the pipe that will be run. Steps can be added either using the interface below or by editing the 'task' node in the YAML sidebar.">
                         <i class="el-icon-info blue"></i>
                       </span>
@@ -221,6 +255,7 @@
                   <div class="pt3 ph3">
                     <PipeBuilderList
                       ref="task-list"
+                      :class="is_deployed && is_locked ? 'o-40 no-pointer no-select' : ''"
                       :container-id="scrollbar_container_id"
                       :has-errors.sync="has_errors"
                       :active-item-idx.sync="active_task_idx"
@@ -254,27 +289,6 @@
                         <em>Click the <code class="ph1 ba b--black-10 bg-nearer-white br2">Test</code> button to see the result of your pipe logic here.</em>
                       </div>
                     </ProcessContent>
-                  </div>
-                </el-collapse-item>
-                <el-collapse-item
-                  class="mb4 pv1 ph3 bg-white br2 css-white-box"
-                  name="deployment"
-                  data-tour-step="pipe-onboarding-6"
-                >
-                  <template slot="title">
-                    <div class="flex flex-row items-center">
-                      <span class="f4">Deployment</span>
-                    </div>
-                  </template>
-                  <div class="pt3 ph3">
-                    <PipeDeployPanel
-                      :is-mode-run.sync="is_deployed"
-                      :pipe="edit_pipe"
-                      :show-properties-panel.sync="show_pipe_properties_dialog"
-                      :show-runtime-configure-panel.sync="show_runtime_configure_dialog"
-                      :show-schedule-panel.sync="show_pipe_schedule_dialog"
-                      @updated-deployment="onDeploymentUpdated"
-                    />
                   </div>
                 </el-collapse-item>
               </el-collapse>
@@ -482,6 +496,7 @@
         has_tested_once: false,
         has_errors: false,
         is_saving: false,
+        is_locked: true,
         show_save_cancel: false,
         save_cancel_zindex: 2050,
         pipe_not_found: false,
@@ -606,6 +621,7 @@
             var pipe = _.cloneDeep(this.edit_pipe)
             _.assign(pipe, { deploy_mode })
             this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
+            this.is_locked = true
             this.saveChanges()
           }
 
@@ -783,6 +799,9 @@
         } else {
           this.$store.track('Closed Pipe Definition')
         }
+      },
+      toggleLock() {
+        this.is_locked = !this.is_locked
       },
       initStickyAndTour() {
         setTimeout(() => {

@@ -5,7 +5,7 @@
     </div>
     <h3 class="fw6 f3 mt3 mb4">Your pipe is working!</h3>
     <div class="mw7 center">
-      <p class="mt0 lh-copy">You may update your deployment options below or turn the pipe off to edit it.</p>
+      <p class="mt0 lh-copy">You may update your deployment options below. You may also edit the pipe by turning it off or by unlocking the task panel below.</p>
     </div>
     <div v-if="false">
       <div class="mv4 mw7 center">
