@@ -219,6 +219,7 @@
                         active-color="#13ce66"
                         :aria-label="is_deployed ? 'Turn pipe off' : 'Turn pipe on'"
                         :width="58"
+                        @click.stop
                         v-model="is_deployed"
                       />
                     </div>
