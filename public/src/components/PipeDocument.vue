@@ -229,15 +229,23 @@
                             <i class="material-icons blue">lock</i>
                           </div>
                         </ConfirmPopover>
-                        <el-button
-                          type="text"
-                          style="border: 0; padding: 0; margin-right: 2px"
-                          slot="reference"
-                          @click="toggleLock"
+                        <div
+                          class="flex flex-row items-center"
+                          style="display: flex"
+                          :class="is_changed ? 'hint--top' : ''"
+                          :aria-label="is_changed ? 'Cancel or save changes to the pipe before locking' : ''"
                           v-else
                         >
-                          <i class="material-icons">lock_open</i>
-                        </el-button>
+                          <el-button
+                            type="text"
+                            slot="reference"
+                            style="border: 0; padding: 0; margin-right: 2px"
+                            :disabled="is_changed"
+                            @click="toggleLock"
+                          >
+                            <i class="material-icons">lock_open</i>
+                          </el-button>
+                        </div>
                         <span class="cursor-default" v-if="is_locked">Click the lock to make changes</span>
                         <span class="cursor-default" v-else="is_locked">Click the lock to prevent further changes</span>
                       </div>
@@ -831,6 +839,10 @@
         }
       },
       toggleLock() {
+        if (this.is_changed) {
+          return
+        }
+
         this.is_locked = !this.is_locked
 
         if (!this.is_locked) {
