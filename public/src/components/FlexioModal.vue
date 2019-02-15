@@ -16,8 +16,20 @@
             <slot name="footer">
               <div class="flex flex-row">
                 <div class="flex-fill">&nbsp;</div>
-                <btn btn-md class="flex-none" :class="cancelCls" @click="cancelClick">{{cancelLabel}}</btn>
-                <btn btn-md class="flex-none" :class="submitCls" @click="submitClick">{{submitLabel}}</btn>
+                <button
+                  type="button"
+                  class="border-box no-select ph4 pv2a lh-title br2 darken-10"
+                  @click="cancelClick"
+                >
+                  {{cancelLabel}}
+                </button>
+                <button
+                  type="button"
+                  class="border-box no-select ph4 pv2a lh-title br2 darken-10"
+                  @click="submitCls"
+                >
+                  {{submitLabel}}
+                </button>
               </div>
             </slot>
           </div>
@@ -28,8 +40,6 @@
 </template>
 
 <script>
-  import Btn from './Btn.vue'
-
   export default {
     props: {
       'title': {
@@ -50,7 +60,7 @@
       },
       'submit-cls': {
         type: String,
-        default: 'ttu fw6 blue'
+        default: 'ttu fw6 white bg-blue'
       },
       'cancel-label': {
         type: String,
@@ -76,9 +86,6 @@
         type: Boolean,
         default: true
       }
-    },
-    components: {
-      Btn
     },
     methods: {
       maskClick() {
