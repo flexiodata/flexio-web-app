@@ -464,7 +464,7 @@ class User
         if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        $source_info = self::addCustomerPaymentSource($user, $stripe_token);
+        $source_info = self::addCustomerPaymentSource($owner_user, $stripe_token);
 
         // return the list of cards
         $result = $source_info;
