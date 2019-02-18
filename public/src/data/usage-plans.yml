@@ -1,0 +1,41 @@
+- 'Name': Developer
+  'Price': '29'
+  'Executions': '5,000'
+  'Extra Executions': '0.006'
+  'Bandwidth': '10 GB'
+  'Local Storage': '1 GB'
+  'Execution Timeout': '1 min'
+  'Unlimited Prototyping': true
+  'Visual Pipe Builder': true
+  'Run From API': true
+  'Trigger From Email': true
+  'Scheduling': true
+  'Live Chat Support': true
+
+- 'Name': Team
+  'Price': '99'
+  'Executions': '20,000'
+  'Extra Executions': '0.005'
+  'Bandwidth': '50 GB'
+  'Local Storage': '10 GB'
+  'Execution Timeout': '5 min'
+  'Unlimited Prototyping': true
+  'Visual Pipe Builder': true
+  'Run From API': true
+  'Trigger From Email': true
+  'Scheduling': true
+  'Live Chat Support': true
+
+- 'Name': Business
+  'Price': '199'
+  'Executions': '50,000'
+  'Extra Executions': '0.004'
+  'Bandwidth': '200 GB'
+  'Local Storage': '100 GB'
+  'Execution Timeout': '15 min'
+  'Unlimited Prototyping': true
+  'Visual Pipe Builder': true
+  'Run From API': true
+  'Trigger From Email': true
+  'Scheduling': true
+  'Live Chat Support': true
