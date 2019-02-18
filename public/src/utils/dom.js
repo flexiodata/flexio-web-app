@@ -1,9 +1,9 @@
 
-const isHiddenInDOM = (el) => {
+export const isHiddenInDOM = (el) => {
   return (el.offsetParent === null)
 }
 
-const fallbackCss = (el_id, href) => {
+export const fallbackCss = (el_id, href) => {
   var tmp_el = document.createElement('div')
   tmp_el.className = 'dn' // use Tachyons as our test case (if it's not loaded, it's likely nothing else is either)
 
@@ -24,9 +24,4 @@ const fallbackCss = (el_id, href) => {
   }
 
   document.body.removeChild(tmp_el)
-}
-
-export default {
-  isHiddenInDOM,
-  fallbackCss
 }
