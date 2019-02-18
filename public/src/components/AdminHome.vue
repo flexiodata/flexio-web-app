@@ -51,12 +51,12 @@
       route: 'modals',
       name: 'Modals',
       icon: 'picture_in_picture'
-    },
+    }*/,
     {
       route: 'prototype',
       name: 'Prototype',
       icon: 'featured_play_list'
-    }*/
+    }
   ]
 
   export default {

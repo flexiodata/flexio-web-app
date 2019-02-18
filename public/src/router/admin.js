@@ -37,6 +37,10 @@ export default {
     {
       path: 'builder',
       component: AdminBuilder
+    },
+    {
+      path: 'prototype',
+      component: AdminPrototype
     }/*,
     {
       path: 'translator',
@@ -49,10 +53,7 @@ export default {
     {
       path: 'modals',
       component: AdminModals
-    },
-    {
-      path: 'prototype',
-      component: AdminPrototype
-    }*/
+    }
+    */
   ]
 }
