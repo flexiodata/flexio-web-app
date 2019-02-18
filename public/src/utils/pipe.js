@@ -1,7 +1,7 @@
 import * as sched from '../constants/schedule'
 import moment from 'moment'
 
-const getTimeStr = (s) => {
+export const getTimeStr = (s) => {
   var times = _.get(s, 'times', [])
   times = _.map(times, (t) => {
     return moment().hour(t.hour).minute(t.minute).format('LT');
@@ -9,7 +9,7 @@ const getTimeStr = (s) => {
   return times.join(', ')
 }
 
-const getDayStr = (s) => {
+export const getDayStr = (s) => {
   var days = _.get(s, 'days', [])
   days = _.map(days, (d) => {
     return moment().isoWeekday(d).format('dddd')
@@ -17,7 +17,7 @@ const getDayStr = (s) => {
   return days.join(', ')
 }
 
-const getMonthDayStr = (s) => {
+export const getMonthDayStr = (s) => {
   var days = _.get(s, 'days', [])
   days = _.map(days, (d) => {
     switch (d) {
@@ -32,12 +32,12 @@ const getMonthDayStr = (s) => {
   return days.join(', ')
 }
 
-const getIdentifier = (pipe) => {
+export const getIdentifier = (pipe) => {
   var alias = _.get(pipe, 'alias', '')
   return alias.length > 0 ? alias : _.get(pipe, 'eid', '')
 }
 
-const getDeployScheduleStr = (s) => {
+export const getDeployScheduleStr = (s) => {
   if (_.isNil(s)) {
     return ''
   }
@@ -64,17 +64,10 @@ const getDeployScheduleStr = (s) => {
   return ''
 }
 
-const getDeployApiUrl = (identifier) => {
+export const getDeployApiUrl = (identifier) => {
   return 'https://api.flex.io/v1/me/pipes/' + identifier + '/run'
 }
 
-const getDeployRuntimeUrl = (eid) => {
+export const getDeployRuntimeUrl = (eid) => {
   return 'https://' + window.location.hostname + '/app/pipes/' + eid + '/run'
-}
-
-export default {
-  getIdentifier,
-  getDeployScheduleStr,
-  getDeployApiUrl,
-  getDeployRuntimeUrl
 }

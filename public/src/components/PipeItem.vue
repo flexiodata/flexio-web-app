@@ -127,7 +127,7 @@
 </template>
 
 <script>
-  import pipe_util from '../utils/pipe'
+  import { getDeployScheduleStr } from '../utils/pipe'
   import { ROUTE_PIPES } from '../constants/route'
   import LabelSwitch from './LabelSwitch.vue'
   import SortArrows from './SortArrows.vue'
@@ -234,7 +234,7 @@
         return parseInt(_.get(this.item, 'stats.total_count', '0'))
       },
       schedule_str() {
-        return pipe_util.getDeployScheduleStr(this.item.schedule)
+        return getDeployScheduleStr(this.item.schedule)
       },
       schedule_tooltip() {
         return this.is_deployed_schedule ? 'Scheduler ON: ' + this.schedule_str : 'Scheduler OFF'

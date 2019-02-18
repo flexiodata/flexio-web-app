@@ -199,7 +199,12 @@
 <script>
   import moment from 'moment'
   import { mapGetters } from 'vuex'
-  import pipe_util from '../utils/pipe'
+  import {
+    getIdentifier,
+    getDeployScheduleStr,
+    getDeployRuntimeUrl,
+    getDeployApiUrl
+  } from '../utils/pipe'
   import * as sched from '../constants/schedule'
   import LabelSwitch from './LabelSwitch.vue'
 
@@ -329,20 +334,20 @@
       },
       schedule_str() {
         var schedule = _.get(this.pipe, 'schedule')
-        return pipe_util.getDeployScheduleStr(schedule)
+        return getDeployScheduleStr(schedule)
       },
       api_endpoint_url() {
-        var identifier = pipe_util.getIdentifier(this.pipe)
-        return pipe_util.getDeployApiUrl(identifier)
+        var identifier = getIdentifier(this.pipe)
+        return getDeployApiUrl(identifier)
       },
       email_trigger() {
         var current_username = _.get(this.getActiveUser(), 'username').toLowerCase()
-        var pipe_identifier = pipe_util.getIdentifier(this.pipe)
+        var pipe_identifier = getIdentifier(this.pipe)
         return `${current_username}|${pipe_identifier}@pipes.flex.io`
       },
       runtime_url() {
         var eid = _.get(this.pipe, 'eid', '')
-        return pipe_util.getDeployRuntimeUrl(eid)
+        return getDeployRuntimeUrl(eid)
       },
       example_http() {
         return this.api_endpoint_url + '?api_key=' + this.api_key
