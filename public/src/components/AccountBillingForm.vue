@@ -69,6 +69,7 @@
 
 <script>
   import api from '../api'
+  import util from '../utils'
   import { Card, createToken } from 'vue-stripe-elements-plus'
   import ConfirmPopover from './ConfirmPopover.vue'
 
@@ -87,7 +88,7 @@
   const flexio_prod_key = 'pk_live_0VQaMv9XVFoZcAC3VFAuBuyg' // Flex.io public production key
 
   // whichever key is specified here will be the key that is used
-  const stripe_public_key = flexio_test_key
+  const stripe_public_key = util.isProduction() ? flexio_prod_key : flexio_test_key
 
   export default {
     components: {

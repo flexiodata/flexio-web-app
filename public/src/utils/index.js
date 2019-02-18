@@ -45,6 +45,10 @@ const atobUnicode = (str) => {
   }).join(''))
 }
 
+const isProduction = () => {
+  return window.location.hostname == 'www.flex.io' ? true : false
+}
+
 export default {
   isNumber,
   pluralize,
@@ -53,5 +57,6 @@ export default {
   afterFirst,
   sanitizeMasked,
   btoaUnicode,
-  atobUnicode
+  atobUnicode,
+  isProduction
 }
