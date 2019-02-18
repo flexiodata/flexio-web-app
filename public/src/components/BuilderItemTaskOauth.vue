@@ -56,7 +56,7 @@
 <script>
   import marked from 'marked'
   import { mapGetters } from 'vuex'
-  import util from '../utils'
+  import { btoaUnicode } from '../utils'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import BuilderComponentConnectionChooser from './BuilderComponentConnectionChooser.vue'
   import MixinConnection from './mixins/connection'
@@ -168,7 +168,7 @@ exports.flex_handler = function(flex) {
   flex.end(auth_token)
 }
 `
-        return util.btoaUnicode(code)
+        return btoaUnicode(code)
       },
       base64_python() {
         var alias = this.$_Connection_getConnectionIdentifier(this.store_connection)
@@ -187,7 +187,7 @@ def flex_handler(flex):
     flex.end(auth_token)
 `
 
-        return util.btoaUnicode(code)
+        return btoaUnicode(code)
       },
       base64_code() {
         switch (this.lang) {

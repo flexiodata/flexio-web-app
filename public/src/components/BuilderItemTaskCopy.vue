@@ -125,7 +125,7 @@
 
 <script>
   import marked from 'marked'
-  import util from '../utils'
+  import { afterNth } from '../utils'
   import { mapGetters } from 'vuex'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import BuilderComponentConnectionChooser from './BuilderComponentConnectionChooser.vue'
@@ -209,7 +209,7 @@
       },
       source_path: {
         get() {
-          var after_path = util.afterNth(this.edit_values.from, '/', 2)
+          var after_path = afterNth(this.edit_values.from, '/', 2)
           return '/' + after_path
         },
         set(value) {
@@ -227,7 +227,7 @@
       },
       destination_path: {
         get() {
-          var after_path = util.afterNth(this.edit_values.to, '/', 2)
+          var after_path = afterNth(this.edit_values.to, '/', 2)
           return '/' + after_path
         },
         set(value) {

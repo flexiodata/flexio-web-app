@@ -3,9 +3,9 @@
 </template>
 
 <script>
-  import util from '../utils'
   import moment from 'moment'
   import { mapGetters } from 'vuex'
+  import { pluralize } from '../utils'
 
   const TRIAL_LENGTH = 14
 
@@ -26,7 +26,7 @@
         return Math.max(diff, 0)
       },
       msg() {
-        var days = util.pluralize(this.days_left, 'days', 'day', 'days')
+        var days = pluralize(this.days_left, 'days', 'day', 'days')
         return 'You have ' + this.days_left + ' ' + days + ' left in your free trial'
       }
     },

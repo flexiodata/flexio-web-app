@@ -85,7 +85,7 @@
 
 <script>
   import marked from 'marked'
-  import util from '../utils'
+  import { afterFirst } from '../utils'
   import { mapGetters } from 'vuex'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import BuilderComponentConnectionChooser from './BuilderComponentConnectionChooser.vue'
@@ -167,7 +167,7 @@
       },
       write_path: {
         get() {
-          var path = util.afterFirst(this.edit_values.path, ':')
+          var path = afterFirst(this.edit_values.path, ':')
           if (path.indexOf('/') != 0) {
             path = '/' + path
           }

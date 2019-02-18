@@ -36,7 +36,7 @@
 </template>
 
 <script>
-  import util from '../utils'
+  import { afterFirst } from '../utils'
   import FileChooser from './FileChooser.vue'
   import FileChooserItem from './FileChooserItem.vue'
   import MixinConnection from './mixins/connection'
@@ -100,7 +100,7 @@
         }
 
         var name = full_path.substr(full_path.lastIndexOf('/') + 1)
-        var path = util.afterFirst(full_path, ':')
+        var path = afterFirst(full_path, ':')
 
         var folder = {
           name,

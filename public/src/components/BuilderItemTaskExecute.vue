@@ -84,15 +84,15 @@
 
 <script>
   import marked from 'marked'
-  import util from '../utils'
+  import { btoaUnicode } from '../utils'
   import CodeEditor from './CodeEditor.vue'
 
-  const default_python = util.btoaUnicode(`# basic hello world example
+  const default_python = btoaUnicode(`# basic hello world example
 def flex_handler(flex):
     flex.end("Hello, World.")
 `)
 
-  const default_javascript = util.btoaUnicode(`// basic hello world example
+  const default_javascript = btoaUnicode(`// basic hello world example
 exports.flex_handler = function(flex) {
   flex.end("Hello, World.")
 }

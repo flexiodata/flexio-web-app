@@ -1,5 +1,5 @@
 import api from '../../api'
-import util from '../../utils'
+import { sanitizeMasked } from '../../utils'
 import * as types from '../mutation-types'
 
 // ----------------------------------------------------------------------- //
@@ -49,7 +49,7 @@ export const v2_action_fetchConnection = ({ commit }, { user_eid, eid }) => {
 export const v2_action_updateConnection = ({ commit }, { user_eid, eid, attrs }) => {
   // don't POST '*****' values
   if (attrs.connection_info) {
-    attrs.connection_info = util.sanitizeMasked(attrs.connection_info)
+    attrs.connection_info = sanitizeMasked(attrs.connection_info)
   }
 
   commit(types.UPDATING_CONNECTION, { eid, attrs })
@@ -79,7 +79,7 @@ export const v2_action_deleteConnection = ({ commit }, { user_eid, eid }) => {
 export const v2_action_testConnection = ({ commit }, { user_eid, eid, attrs }) => {
   // don't POST '*****' values
   if (attrs.connection_info) {
-    attrs.connection_info = util.sanitizeMasked(attrs.connection_info)
+    attrs.connection_info = sanitizeMasked(attrs.connection_info)
   }
 
   commit(types.TESTING_CONNECTION, { eid, testing: true })

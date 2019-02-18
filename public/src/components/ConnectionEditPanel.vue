@@ -177,7 +177,7 @@
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import * as ctypes from '../constants/connection-type'
   import * as connections from '../constants/connection-info'
-  import util from '../utils'
+  import { slugify } from '../utils'
   import ServiceList from './ServiceList.vue'
   import ServiceIcon from './ServiceIcon.vue'
   import ConnectionAuthenticationPanel from './ConnectionAuthenticationPanel.vue'
@@ -408,7 +408,7 @@
 
         this.$store.dispatch('v2_action_createConnection', { attrs }).then(response => {
           var connection = _.cloneDeep(response.data)
-          var service_slug = util.slugify(item.service_name)
+          var service_slug = slugify(item.service_name)
 
           // create a default alias
           connection.alias = 'my-' + service_slug
@@ -443,7 +443,7 @@
 
         if (this.mode == 'add' && _.has(connection, 'connection_type')) {
           var service_name = this.$_Connection_getServiceName(connection)
-          var service_slug = util.slugify(service_name)
+          var service_slug = slugify(service_name)
 
           // create a default alias
           connection.alias = 'my-' + service_slug
