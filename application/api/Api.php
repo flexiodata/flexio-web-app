@@ -49,6 +49,12 @@ class Api
         'POS /forgotpassword'                         => '\Flexio\Api\User::requestpasswordreset',
         'POS /resetpassword'                          => '\Flexio\Api\User::resetpassword',
 
+        // authentication pair for allowing signing in from third-party websites via api
+        'GET /session'                                => '\Flexio\Api\System::session', // test
+        'POS /session'                                => '\Flexio\Api\System::session',
+        'GET /login'                                  => '\Flexio\Api\System::logintoken', // special variant that allows login to be called via a redirect and token
+
+
         // AUTHENTICATED ENDPOINTS:
 
         // users

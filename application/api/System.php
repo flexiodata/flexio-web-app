@@ -34,6 +34,68 @@ class System
         \Flexio\Api\Response::sendContent($result);
     }
 
+    public static function session(\Flexio\Api\Request $request) : void
+    {
+        $post_params = $request->getPostParams();
+
+        // TODO: track?
+
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($post_params, array(
+                'username' => array('type' => 'string', 'required' => true), // allow string here to accomodate username/email
+                'password' => array('type' => 'string', 'required' => true)  // allow string here to fall through to general error message below
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        $validated_post_params = $validator->getParams();
+        $username = $validated_post_params['username'];
+        $password = $validated_post_params['password'];
+
+        // return a token that can be used to login
+        try
+        {
+            $current_user_eid = \Flexio\Object\User::getEidFromIdentifier($username);
+            $current_user = \Flexio\Object\User::load($current_user_eid);
+            if ($current_user->getStatus() === \Model::STATUS_DELETED)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+            if ($current_user->checkPassword($password) === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAUTHORIZED);
+
+            $user_info_basic = array();
+            $user_info_basic['eid'] = $current_user_eid;
+            $user_info_basic['eid_type'] = \Model::TYPE_USER;
+            $user_info_basic['timestamp'] = \Flexio\Base\Util::getCurrentTimestamp();
+
+            $user_info_basic = json_encode($user_info_basic);
+            $token = \Flexio\Base\Util::encrypt($user_info_basic, $GLOBALS['g_store']->connection_enckey);
+
+            $result = array(
+                'token' => $token
+            );
+
+            $request->setRequestingUser($current_user_eid);
+            $request->setResponseParams($result);
+            $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+
+            \Flexio\Api\Response::sendContent($result);
+
+            return;
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+        }
+
+        sleep(1);
+        $error_message = _('Authentication failed'); // default error message
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAUTHORIZED, $error_message);
+    }
+
+    public static function logintoken(\Flexio\Api\Request $request) : void
+    {
+        // function for logging in with a token; time-sensitive token is generated from session function
+    }
+
     public static function login(\Flexio\Api\Request $request) : void
     {
         $post_params = $request->getPostParams();
@@ -53,24 +115,20 @@ class System
         $password = $validated_post_params['password'];
 
         // try to log in to the system
-        $error_message = _('Authentication failed'); // default error message
-        $result = \Flexio\System\System::login($username, $password, $error_message);
-
-        if (!$result)
-        {
-            sleep(1);
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAUTHORIZED, $error_message);
-        }
-
-        // return "about" info
+        $error_message = _('Authentication failed');
         try
         {
+            $result = \Flexio\System\System::login($username, $password, $error_message);
+            if (!$result)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAUTHORIZED);
+
             $current_user_eid = \Flexio\Object\User::getEidFromIdentifier($username);
             $current_user = \Flexio\Object\User::load($current_user_eid);
             if ($current_user->getStatus() === \Model::STATUS_DELETED)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-            $result = $current_user->get();
 
+            // return "about" info
+            $result = $current_user->get();
             $request->setRequestingUser($current_user_eid);
             $request->setResponseParams($result);
             $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
@@ -83,14 +141,9 @@ class System
         {
         }
 
-        $result = array();
-        $result['eid'] = '';
-        $result['eid_type'] = \Model::TYPE_USER;
-
-        $request->setResponseParams($result);
-        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        $request->track();
-        \Flexio\Api\Response::sendContent($result);
+        // return an error code
+        sleep(1);
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAUTHORIZED, $error_message);
     }
 
     public static function logout(\Flexio\Api\Request $request) : void
