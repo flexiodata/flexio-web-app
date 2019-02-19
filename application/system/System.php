@@ -20,13 +20,18 @@ class System
 {
     public const SESSION_VERSION = 5;
 
-    // login() authenticates a username and password and, if valid,
-    // creates session variables which store the authentication information;
-    // if the authentication succeeded, the method returns true, otherwise
-    // it returns false
+/*
+    // DEPRECATED: user authentication moved to API layer to allow other authentication
+    // flows in the API; implementation superceded by createUserSession() below which
+    // simply creates a session from a valid user eid
 
     public static function login(string $username, string $password, string &$error_message = null) : bool
     {
+        // login() authenticates a username and password and, if valid,
+        // creates session variables which store the authentication information;
+        // if the authentication succeeded, the method returns true, otherwise
+        // it returns false
+
         global $g_store, $g_config;
 
         // clear any existing identity
@@ -111,6 +116,64 @@ class System
         //session_write_close();
 
         return true;
+    }
+*/
+
+    public static function createUserSession(string $user_eid) : bool
+    {
+        // creates session variables which store the authentication information
+        // from a user eid; if the session creation succeeded, the method returns
+        // true, otherwise it returns false
+
+        global $g_store, $g_config;
+
+        // clear any existing identity
+        \Flexio\System\System::clearLoginIdentity();
+
+        // if we haven't already started a session, start a new one
+        fxStartSession();
+
+        // generate a new session id to prevent session hijacking
+        if (session_id())
+        {
+            // David was getting this error message, so we added the @
+            // <br /> <b>Warning</b>:  session_regenerate_id(): Session object destruction failed.
+            // ID: redis (path: tcp://localhost:6379) in <b>/media/sf_flexio/application/system/System.php</b>
+            // on line <b>41</b><br /> {     "errors": [         {             "message": "Invalid username or
+            //  password.",             "code": "general"         }     ] }
+            @session_regenerate_id(true);
+        }
+
+        try
+        {
+            $user_model = \Flexio\System\System::getModel()->user;
+            $user_info = $user_model->get($user_eid);
+
+            // set new identity
+            $_SESSION['env']['session_version'] = \Flexio\System\System::SESSION_VERSION;
+            $_SESSION['env']['user_eid'] = $user_info['eid'];
+
+            // make sure we don't have any inactivity value
+            if (isset($_SESSION['last_activity']))
+                unset($_SESSION['last_activity']);
+
+            \Flexio\System\System::setupSessionAuth();
+
+            return true;
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+        }
+
+        // unable to set up the session
+        return false;
+    }
+
+    public static function destroyUserSession() : void
+    {
+        \Flexio\System\System::clearLoginIdentity();
+        @session_destroy();
+        @setcookie('FXSESSID', '', time()-86400, '/');
     }
 
     // sets up a php call's user information
