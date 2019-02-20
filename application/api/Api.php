@@ -163,11 +163,11 @@ class Api
         }
         else
         {
-            //if (substr($request_http_host, 0, 4) == 'api.' && substr($request_http_host, -8) == '.flex.io')
             $is_api_api = substr($request_http_host, 0, 4) == 'api.' && substr($request_http_host, -8) == '.flex.io';
             $is_www_api = substr($request_http_host, 0, 4) == 'www.' && substr($request_http_host, -8) == '.flex.io';
             $uri = $server_request->getUri();
 
+            //if (substr($request_http_host, 0, 4) == 'api.' && substr($request_http_host, -8) == '.flex.io')
             if ($is_api_api ||
                 ($is_www_api && substr($uri, 0, 15) == '/api/v2/session') ||
                 ($is_www_api && substr($uri, 0, 14) == '/api/v2/signup') ||
