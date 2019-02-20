@@ -21,12 +21,12 @@
       }
     },
     mounted() {
-      var ref = _.get(this.query, 'ref', '')
+      var token = _.get(this.query, 'token', '')
       var redirect = _.get(this.query, 'redirect', '/')
 
-      if (ref.length > 0) {
+      if (token.length > 0) {
         // initialize session
-        axios.get('/api/v2/login', { params: ref }).then(response => {
+        axios.get('/api/v2/login', { params: token }).then(response => {
           this.fetchUserAndRedirect(redirect)
         })
       } else {
