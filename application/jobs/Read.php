@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * Copyright (c) 2017, Gold Prairie, Inc.  All rights reserved.
+ * Copyright (c) 2017, Gold Prairie LLC. All rights reserved.
  *
  * Project:  Flex.io App
  * Author:   Benjamin I. Williams
@@ -49,7 +49,7 @@ class Read extends \Flexio\Jobs\Base
 
         if (strlen(($job_params['connection'] ?? '')) > 0)
             $vfs->setRootConnection($job_params['connection']);
-        
+
         $info = $vfs->getFileInfo($path);
 
         $properties = [ 'mime_type' => ($info['content_type'] ?? 'application/octet-stream') ];

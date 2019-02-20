@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * Copyright (c) 2015, Gold Prairie, Inc.  All rights reserved.
+ * Copyright (c) 2015, Gold Prairie LLC. All rights reserved.
  *
  * Project:  Flex.io App
  * Author:   Benjamin I. Williams
@@ -447,7 +447,7 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
         $content_type = "text/plain";
 
-        
+
         $dest_is_folder = false;
         try
         {
@@ -587,7 +587,7 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
                 $object->expires = $expires;
 
                 $object->bucket = $params['bucket'] ?? '';
-                $object->base_path = $params['base_path'] ?? '';    
+                $object->base_path = $params['base_path'] ?? '';
 
                 return $object;
             }
@@ -628,7 +628,7 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
 
                 $object->bucket = $params['bucket'] ?? '';
                 $object->base_path = $params['base_path'] ?? '';
-    
+
                 return $object;
             }
         }
@@ -713,7 +713,7 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
 
             if (strlen($this->base_path) > 0 && $this->base_path != '/')
                 $path = $this->base_path . '/' . $path;
-            
+
             while (false !== strpos($path,'//'))
                 $path = str_replace('//','/',$path);
         }
@@ -724,7 +724,7 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
 
             while (false !== strpos($full_path, '//'))
                 $full_path = str_replace('//','/', $full_path);
-            
+
             $has_leading_slash = (substr($full_path, 0, 1) == '/');
             $has_trailing_slash = (substr($full_path, -1) == '/');
 

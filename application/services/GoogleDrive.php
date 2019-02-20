@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * Copyright (c) 2015, Gold Prairie, Inc.  All rights reserved.
+ * Copyright (c) 2015, Gold Prairie LLC. All rights reserved.
  *
  * Project:  Flex.io App
  * Author:   Aaron L. Williams
@@ -589,7 +589,7 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
                     $object->refresh_token = $refresh_token;
 
                 $object->base_path = $params['base_path'] ?? '';
-                
+
                 return $object;
             }
         }

@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * Copyright (c) 2015, Gold Prairie, Inc.  All rights reserved.
+ * Copyright (c) 2015, Gold Prairie LLC. All rights reserved.
  *
  * Project:  Flex.io App
  * Author:   Benjamin I. Williams
@@ -237,7 +237,7 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
         else if ($folder == 'fileno')
         {
             $val = $this->process->getLocalFile((int)$file);
-            
+
             if (!isset($val))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
         }

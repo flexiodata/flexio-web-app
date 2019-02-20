@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * Copyright (c) 2011-2013, Gold Prairie, Inc.  All rights reserved.
+ * Copyright (c) 2011-2013, Gold Prairie LLC. All rights reserved.
  *
  * Project:  Flex.io App
  * Author:   Aaron L. Williams; Benjamin I. Williams

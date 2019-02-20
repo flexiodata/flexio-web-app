@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * Copyright (c) 2018, Gold Prairie, Inc.  All rights reserved.
+ * Copyright (c) 2018, Gold Prairie LLC. All rights reserved.
  *
  * Project:  Flex.io App
  * Author:   Benjamin I. Williams
@@ -154,7 +154,7 @@ def flex_handler(flex):
 
     f.close()
     flex.fs.remove(filename)
-    
+
     flex.output.write('passed' if check == value else 'failed')
 EOD;
 
@@ -310,7 +310,7 @@ def flex_handler(flex):
         if file['name'] == filename:
             found = True
             break;
-    
+
     flex.output.write('passed' if not found else 'failed')
 EOD;
 

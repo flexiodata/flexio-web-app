@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * Copyright (c) 2015, Gold Prairie, Inc.  All rights reserved.
+ * Copyright (c) 2015, Gold Prairie LLC. All rights reserved.
  *
  * Project:  Flex.io App
  * Author:   Benjamin I. Williams
@@ -194,7 +194,7 @@ class ExecuteProxy
 
 
         // write out the execute job's script
-        
+
         if (false === @mkdir($host_src_dir, 0700, true))
         {
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED, "Cannot create source directory");
@@ -213,15 +213,15 @@ class ExecuteProxy
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED, "Unknown execution engine");
         }
 
-        
+
         // at script shutdown, clean up progress directory
         register_shutdown_function(function() use ($host_process_dir) {
             \Flexio\Base\Util::rmtree($host_process_dir);
         });
 
 
-    
-    
+
+
         //echo("Time c2 " . (microtime(true)-$c1) . ";");
 
 
@@ -276,9 +276,9 @@ class ExecuteProxy
             //echo "./update-docker-images && " . str_replace(" -d ", " ", str_replace(" -i", " -it", $cmd));
             //ob_end_flush();
             //flush();
-    
+
             exec("$cmd 2>&1", $output_lines, $exit_code);
-    
+
             $count = 0;
             while (!file_exists($host_container_zmq))
             {
@@ -388,7 +388,7 @@ class ExecuteProxy
                     {
                         $actual_start_time = microtime(true);
                     }
-                    
+
                     if ($method == 'get_script')
                     {
                         $response = [ 'result' => $this->code, 'id' => $message['id'] ];
@@ -413,7 +413,7 @@ class ExecuteProxy
 
                     if ($call_count == 0)
                     {
-                        //echo("Time c7 " . (microtime(true)-$c1) . ";");                
+                        //echo("Time c7 " . (microtime(true)-$c1) . ";");
                     }
 
                     ++$call_count;
@@ -497,7 +497,7 @@ class ExecuteProxy
     }
 
     public function func_compile_error($error)
-    {   
+    {
         $pos = strpos($error, "bin.b64:");
         if ($pos !== false)
         {

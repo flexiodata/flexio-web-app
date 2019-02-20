@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * Copyright (c) 2015, Gold Prairie, Inc.  All rights reserved.
+ * Copyright (c) 2015, Gold Prairie LLC. All rights reserved.
  *
  * Project:  Flex.io App
  * Author:   Benjamin I. Williams
@@ -115,7 +115,7 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
     {
         if (!$this->authenticated())
             return null;
-        
+
         $ids = $this->getIdsFromPath($path);
         if (isset($ids['spreadsheet_id']))
             $spreadsheet_id = $ids['spreadsheet_id'];
@@ -626,7 +626,7 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
             {
                 if (count($row) < count($column_names))
                     $row = array_pad($row, count($column_names), '');
-            
+
                 $row = array_combine($column_names, $row);
 
                 $callback($row);
