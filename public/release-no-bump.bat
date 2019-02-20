@@ -10,3 +10,4 @@ call git add dist\js\*.js
 call git add dist\css\*.css
 call git add dist\assets\*
 call git add package.json
+call npm version
