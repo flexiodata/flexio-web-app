@@ -1,15 +1,20 @@
 <template>
-  <div>
-    <div>InitSessionPage</div>
-    <pre class="f7">{{query}}</pre>
+  <div class="bg-nearer-white">
+    <div class="flex flex-column justify-center h-100">
+      <Spinner size="large" message="Signing in..." />
+    </div>
   </div>
 </template>
 
 <script>
+  import Spinner from 'vue-simple-spinner'
   import MixinRedirect from './mixins/redirect'
 
   export default {
     mixins: [MixinRedirect],
+    components: {
+      Spinner
+    },
     data() {
       return {
         query: this.$route.query
