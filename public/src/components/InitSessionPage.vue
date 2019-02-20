@@ -27,7 +27,9 @@
 
       if (token.length > 0) {
         // initialize session
-        axios.get('/api/v2/login', { params: token }).then(response => {
+        axios.get('/api/v2/login', { params: { token } }).then(response => {
+          this.fetchUserAndRedirect(redirect)
+        }).catch(error => {
           this.fetchUserAndRedirect(redirect)
         })
       } else {
