@@ -43,7 +43,7 @@ import App from './components/App.vue'
 import router from './router' // VueRouter
 import store from './store' // Vuex store
 import { fallbackCss } from './utils/dom'
-import { ROUTE_BUILDER, ROUTE_SIGNIN, ROUTE_SIGNUP } from './constants/route'
+import { ROUTE_BUILDER, ROUTE_INITSESSION, ROUTE_SIGNIN, ROUTE_SIGNUP } from './constants/route'
 import { CHANGE_ACTIVE_DOCUMENT } from './store/mutation-types'
 
 // fallback css (if there's no Internet connection)
@@ -209,6 +209,11 @@ router.beforeEach((to, from, next) => {
   }
    else
   {
+    // this route already attempts to fetch te current user
+    if (to.name == ROUTE_INITSESSION) {
+      return
+    }
+
     // we're already fetching the user; done
     if (store.state.user_fetching) {
       return

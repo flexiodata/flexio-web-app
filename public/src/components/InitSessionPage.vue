@@ -27,10 +27,19 @@
       if (ref.length > 0) {
         // initialize session
         axios.get('/api/v2/login', { params: ref }).then(response => {
-          this.$_Redirect_redirect(redirect, 'replace')
+          this.fetchUserAndRedirect(redirect)
         })
       } else {
-        this.$_Redirect_redirect(redirect, 'replace')
+        this.fetchUserAndRedirect(redirect)
+      }
+    },
+    methods: {
+      fetchUserAndRedirect(redirect) {
+        this.$store.dispatch('v2_action_fetchCurrentUser').then(response => {
+          this.$_Redirect_redirect(redirect, 'replace')
+        }).catch(error => {
+          this.$_Redirect_redirect(redirect, 'replace')
+        })
       }
     }
   }
