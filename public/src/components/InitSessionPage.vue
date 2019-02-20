@@ -7,6 +7,7 @@
 </template>
 
 <script>
+  import axios from 'axios'
   import Spinner from 'vue-simple-spinner'
   import MixinRedirect from './mixins/redirect'
 
@@ -21,16 +22,25 @@
       }
     },
     mounted() {
-      var ref = _.get(this.query, 'ref', '')
+      var token = _.get(this.query, 'token', '')
       var redirect = _.get(this.query, 'redirect', '/')
 
-      if (ref.length > 0) {
+      if (token.length > 0) {
         // initialize session
-        axios.get('/api/v2/login', { params: ref }).then(response => {
-          this.$_Redirect_redirect(redirect, 'replace')
+        axios.get('/api/v2/login', { params: token }).then(response => {
+          this.fetchUserAndRedirect(redirect)
         })
       } else {
-        this.$_Redirect_redirect(redirect, 'replace')
+        this.fetchUserAndRedirect(redirect)
+      }
+    },
+    methods: {
+      fetchUserAndRedirect(redirect) {
+        this.$store.dispatch('v2_action_fetchCurrentUser').then(response => {
+          this.$_Redirect_redirect(redirect, 'replace')
+        }).catch(error => {
+          this.$_Redirect_redirect(redirect, 'replace')
+        })
       }
     }
   }
