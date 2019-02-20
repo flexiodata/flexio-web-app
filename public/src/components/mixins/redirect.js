@@ -6,7 +6,13 @@ import { ROUTE_APP_HOME } from '../../constants/route'
 
 export default {
   methods: {
-    $_Redirect_redirect: function(redirect) {
+    // method: 'push' or 'replace'; default to 'push'
+    $_Redirect_redirect: function(redirect, redirect_method) {
+      var method = 'push'
+      if (redirect_method == 'replace') {
+        method = redirect_method
+      }
+
       if (!_.isString(redirect)) {
         // grab the redirect from the query string if it exists
         redirect = _.get(this.$route, 'query.redirect', '')
@@ -18,9 +24,9 @@ export default {
       }
 
       if (redirect && redirect.length > 0) {
-        this.$router.push({ path: redirect })
+        this.$router[method]({ path: redirect })
       } else {
-        this.$router.push({ name: ROUTE_APP_HOME })
+        this.$router[method]({ name: ROUTE_APP_HOME })
       }
     }
   }
