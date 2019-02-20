@@ -7,6 +7,7 @@
 </template>
 
 <script>
+  import axios from 'axios'
   import Spinner from 'vue-simple-spinner'
   import MixinRedirect from './mixins/redirect'
 
