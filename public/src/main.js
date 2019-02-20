@@ -209,13 +209,14 @@ router.beforeEach((to, from, next) => {
   }
    else
   {
-    // this route already attempts to fetch te current user
-    if (to.name == ROUTE_INITSESSION) {
+    // we're already fetching the user; done
+    if (store.state.user_fetching) {
       return
     }
 
-    // we're already fetching the user; done
-    if (store.state.user_fetching) {
+    // this route already attempts to fetch te current user
+    if (to.name == ROUTE_INITSESSION) {
+      next()
       return
     }
 
