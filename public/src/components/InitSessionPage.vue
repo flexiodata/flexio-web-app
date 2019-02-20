@@ -21,7 +21,7 @@
 
       if (ref.length > 0) {
         // initialize session
-        axios.post('/api/v2/sessioninit', { ref }).then(response => {
+        axios.get('/api/v2/login', { params: ref }).then(response => {
           this.$_Redirect_redirect(redirect, 'replace')
         })
       } else {
