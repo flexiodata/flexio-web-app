@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * Copyright (c) 2015, Gold Prairie, Inc.  All rights reserved.
+ * Copyright (c) 2015, Gold Prairie LLC. All rights reserved.
  *
  * Project:  Flex.io App
  * Author:   Benjamin I. Williams
@@ -260,9 +260,9 @@ class ExecuteProxy
             //echo "./update-docker-images && " . str_replace(" -d ", " ", str_replace(" -i", " -it", $cmd));
             //ob_end_flush();
             //flush();
-    
+
             exec("$cmd 2>&1", $output_lines, $exit_code);
-    
+
             $count = 0;
             while (!file_exists($container_zmq))
             {
@@ -371,7 +371,7 @@ class ExecuteProxy
         //foreach ($output_lines as $line)
         //    $docker_exec_output .= $line;
 
-        
+
         // should the script host crash for any reason, the container could be left running;
         // the following function adds this container to a list that of containers that
         // will be terminated if the execute job abnormally exits; If the execute job exits
@@ -424,7 +424,7 @@ class ExecuteProxy
                     {
                         $actual_start_time = microtime(true);
                     }
-                    
+
                     if ($method == 'get_script')
                     {
                         $response = [ 'result' => $this->code, 'id' => $message['id'] ];

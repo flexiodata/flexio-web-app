@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * Copyright (c) 2016, Gold Prairie, Inc.  All rights reserved.
+ * Copyright (c) 2016, Gold Prairie LLC. All rights reserved.
  *
  * Project:  Flex.io App
  * Author:   Benjamin I. Williams
@@ -544,7 +544,7 @@ class ExprTranslatorPostgres
 
                 break;
 
- 
+
 
             case 'integer':
                 if ($old_type == 'text' || $old_type == 'character' || $old_type == 'widecharacter')
@@ -809,7 +809,7 @@ class ExprTranslatorPostgres
 
         if ($old_type == ExprParser::TYPE_NULL)
             return 'null';
-        
+
         $type = null;
         $width = null;
         $scale = null;
@@ -1353,7 +1353,7 @@ class ExprTranslatorPostgres
     {
         if ($this->getType($params[0]) == ExprParser::TYPE_NULL)
             return "null::timestamp";
-        
+
         if (count($params) == 1)
         {
             // to_timestamp() with one parameter is the same as cast(fld, datetime)

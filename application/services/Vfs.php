@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * Copyright (c) 2013, Gold Prairie, Inc.  All rights reserved.
+ * Copyright (c) 2013, Gold Prairie LLC. All rights reserved.
  *
  * Project:  Flex.io App
  * Author:   Benjamin I. Williams
@@ -192,7 +192,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
             $results[] = $item;
         }
 
-        
+
         return $results;
     }
 
@@ -260,7 +260,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         $connection_identifier = '';
         $rpath = '';
         $service = $this->getServiceFromPath($path, $connection_identifier, $rpath);
-        
+
         return $service->exists($rpath);
     }
 
@@ -275,7 +275,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         $connection_identifier = '';
         $rpath = '';
         $service = $this->getServiceFromPath($path, $connection_identifier, $rpath);
-        
+
         return $service->createFile($rpath, $properties);
     }
 
@@ -290,7 +290,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         $connection_identifier = '';
         $rpath = '';
         $service = $this->getServiceFromPath($path, $connection_identifier, $rpath);
-        
+
         return $service->createDirectory($rpath, $properties);
     }
 
@@ -305,7 +305,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         $connection_identifier = '';
         $rpath = '';
         $service = $this->getServiceFromPath($path, $connection_identifier, $rpath);
-        
+
         return $service->open([ 'path' => $rpath ]);
     }
 
@@ -320,7 +320,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         $connection_identifier = '';
         $rpath = '';
         $service = $this->getServiceFromPath($path, $connection_identifier, $rpath);
-        
+
         return $service->unlink($rpath);
     }
 
@@ -338,7 +338,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         $connection_identifier = '';
         $rpath = '';
         $service = $this->getServiceFromPath($path, $connection_identifier, $rpath);
-        
+
         return $service->read([ 'path' => $rpath ], $callback);
     }
 
@@ -359,7 +359,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         $connection_identifier = '';
         $rpath = '';
         $service = $this->getServiceFromPath($pathstr, $connection_identifier, $rpath);
-        
+
         $arr = [ 'path' => $rpath ];
         if (is_array($path))
         {
@@ -381,7 +381,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         $connection_identifier = '';
         $rpath = '';
         $service = $this->getServiceFromPath($path, $connection_identifier, $rpath);
-        
+
         return $service->insert([ 'path' => $rpath ], $rows);
     }
 
@@ -447,7 +447,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
             if ($service_identifier_len !== false)
             {
                 $rpath_start = $service_identifier_len+1;
-            } 
+            }
         }
 
         if ($service_identifier_len !== false)

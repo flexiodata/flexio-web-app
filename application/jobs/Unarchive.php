@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * Copyright (c) 2018, Gold Prairie, Inc.  All rights reserved.
+ * Copyright (c) 2018, Gold Prairie LLC. All rights reserved.
  *
  * Project:  Flex.io App
  * Author:   Benjamin I. Williams
@@ -42,7 +42,7 @@ class Unarchive extends \Flexio\Jobs\Base
             register_shutdown_function('unlink', $archive_fname);
 
             $f = fopen($archive_fname, 'wb');
-    
+
             if (isset($params['path']))
             {
                 $vfs->read($path, function($data) use (&$f) {
@@ -69,7 +69,7 @@ class Unarchive extends \Flexio\Jobs\Base
             {
                 $entry = $zip->getNameIndex($i);
                 //if ( substr( $entry, -1 ) == '/' ) continue; // skip directories
-               
+
                 $f = $zip->getStream($entry);
                 if (!$f)
                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED, "Read failed on ZIP entry " . $entry);
@@ -101,7 +101,7 @@ class Unarchive extends \Flexio\Jobs\Base
             register_shutdown_function('unlink', $archive_fname);
 
             $f = fopen($archive_fname, 'wb');
-    
+
             if (isset($params['path']))
             {
                 $vfs->read($path, function($data) use (&$f) {
@@ -118,7 +118,7 @@ class Unarchive extends \Flexio\Jobs\Base
             }
 
             fclose($f);
-    
+
             $writer = $outstream->getWriter();
 
             $f = gzopen($archive_fname, 'rb');
@@ -128,7 +128,7 @@ class Unarchive extends \Flexio\Jobs\Base
                 if ($buf !== false && $buf !== null)
                     $writer->write($buf);
             }
-            
+
             gzclose($f);
             $writer->close();
             unset($writer);

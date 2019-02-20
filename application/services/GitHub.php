@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * Copyright (c) 2017, Gold Prairie, Inc.  All rights reserved.
+ * Copyright (c) 2017, Gold Prairie LLC. All rights reserved.
  *
  * Project:  Flex.io App
  * Author:   Benjamin I. Williams; Aaron L. Williams
@@ -149,7 +149,7 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         }
 
         $entry = (array)$entry;
-        
+
 
         if ($httpcode >= 200 && $httpcode <= 299)
         {
@@ -667,7 +667,7 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         {
             if (count($path_parts) < 2)
                 return false;
-            
+
             $repository = implode('/', array_splice($path_parts,0,2));
             $path = implode('/', $path_parts); // everything left over
             return true;
@@ -677,14 +677,14 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         {
             if (count($path_parts) < 2)
                 return true;
-            
+
             $repository = $this->owner . '/' . array_splice($path_parts,0,1)[0];
             $path = implode('/', $path_parts); // everything left over
             return true;
         }
 
         if (strlen($this->owner) > 0 && strlen($this->repository) > 0)
-        {   
+        {
             $repository = $this->owner . '/' . $this->repository;
             $path = trim($full_path,'/');
             return true;

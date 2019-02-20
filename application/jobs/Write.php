@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * Copyright (c) 2017, Gold Prairie, Inc.  All rights reserved.
+ * Copyright (c) 2017, Gold Prairie LLC. All rights reserved.
  *
  * Project:  Flex.io App
  * Author:   Benjamin I. Williams
@@ -73,7 +73,7 @@ class Write extends \Flexio\Jobs\Base
             $connection_identifier = '';
             $rpath = '';
             $service = $vfs->getServiceFromPath($path, $connection_identifier, $rpath);
-            
+
             // check if the service only supports write(), and if so, go to the catch
             if (($service->getFlags() & \Flexio\IFace\IFileSystem::FLAG_HAS_OPEN) == 0)
                 throw new \Exception(""); // go to the catch and use $vfs->write()

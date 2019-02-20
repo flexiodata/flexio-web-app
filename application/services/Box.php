@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * Copyright (c) 2015, Gold Prairie, Inc.  All rights reserved.
+ * Copyright (c) 2015, Gold Prairie LLC. All rights reserved.
  *
  * Project:  Flex.io App
  * Author:   Benjamin I. Williams; Aaron L. Williams
@@ -596,7 +596,7 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                     $object->refresh_token = $refresh_token;
 
                 $object->base_path = $params['base_path'] ?? '';
-                
+
                 return $object;
             }
         }
@@ -620,7 +620,7 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             if (is_null($object->refresh_token)) $object->refresh_token = '';
 
             $object->base_path = $params['base_path'] ?? '';
-            
+
             return $object;
         }
 
