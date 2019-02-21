@@ -76,8 +76,8 @@
             </el-button>
             <el-button
               plain
-              type="default"
               class="w-100 ttu fw6"
+              style="background-color: transparent; border-color: transparent"
               @click="choosePlan(plan)"
               v-else
             >
