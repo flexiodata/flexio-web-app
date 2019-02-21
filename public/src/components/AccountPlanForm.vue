@@ -43,7 +43,7 @@
           </div>
         </div>
       </div>
-      <FreeTrialNotice class="mt2" />
+      <FreeTrialNotice class="mt2 f7 dark-green" />
     </div>
     <div v-else>
       <div class="mb3 f7 silver ttu fw6">Choose a plan</div>

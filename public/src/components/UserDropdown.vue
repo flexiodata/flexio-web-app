@@ -5,8 +5,12 @@
       <i class="material-icons v-mid black-30 nl1 md-18">expand_more</i>
     </span>
     <el-dropdown-menu style="min-width: 12rem" slot="dropdown">
-      <div class="mv2" style="padding: 0 20px">
-        <FreeTrialNotice class="f8 br2" style="margin: -10px -12px 10px; padding: 12px; color: rgba(102, 177, 255, 1); border: 1px solid rgba(102, 177, 255, 0.25); background: rgba(236, 245, 255, 0.75)" />
+      <div style="padding: 0 20px; margin: 8px 0">
+        <FreeTrialNotice
+          class="f8 br2"
+          style="padding: 12px; margin: -10px -10px 10px -10px; color: #66b1ff; background-color: #ecf5ff"
+          :show-upgrade="true"
+        />
         <h5 class="ma0">{{full_name}}</h5>
         <div class="mt1 silver f8">{{email}}</div>
       </div>
