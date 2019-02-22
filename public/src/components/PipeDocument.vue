@@ -391,7 +391,7 @@
     />
   </div>
 
-    <!-- pipe not found -->
+  <!-- pipe not found -->
   <PageNotFound class="bg-nearer-white" v-else-if="pipe_not_found" />
 </template>
 
