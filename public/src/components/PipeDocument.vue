@@ -484,7 +484,7 @@
       LabelSwitch
     },
     watch: {
-      eid: {
+      route_identifier: {
         handler: 'loadPipe',
         immediate: true
       },
@@ -562,8 +562,11 @@
         is_fetched: state => state.pipe.fetched,
         is_changed: state => state.pipe.changed
       }),
+      route_identifier() {
+        return _.get(this.$route, 'params.identifier', undefined)
+      },
       eid() {
-        return _.get(this.$route, 'params.eid', undefined)
+        return _.get(this.orig_pipe, 'eid', undefined)
       },
       title() {
         return _.get(this.orig_pipe, 'name', '')
@@ -691,7 +694,7 @@
       loadPipe() {
         this.$store.commit('pipe/FETCHING_PIPE', true)
 
-        this.$store.dispatch('v2_action_fetchPipe', { eid: this.eid }).then(response => {
+        this.$store.dispatch('v2_action_fetchPipe', { eid: this.route_identifier }).then(response => {
           var pipe = response.data
           this.pipe_not_found = false
           this.$store.commit('pipe/INIT_PIPE', pipe)
