@@ -227,8 +227,12 @@
           }
         }
       },
+      identifier() {
+        var alias = this.item.alias
+        return alias.length > 0 ? alias : _.get(this.item, 'eid', '')
+      },
       pipe_route() {
-        return { name: ROUTE_PIPES, params: { eid: this.item.eid } }
+        return { name: ROUTE_PIPES, params: { eid: this.identifier } }
       },
       execution_cnt() {
         return parseInt(_.get(this.item, 'stats.total_count', '0'))
