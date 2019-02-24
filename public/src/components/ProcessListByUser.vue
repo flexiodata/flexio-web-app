@@ -165,7 +165,7 @@
         return val ? moment(val).format('l LT') : '--'
       },
       getProcessRouteByUser(row) {
-        return '/admin/activity?owned_by=' + this.getUserEid(row)
+        return '/admin/processes?owned_by=' + this.getUserEid(row)
       },
       getProcessRouteByUserAndDate(row, start_date, end_date) {
         return this.getProcessRouteByUser(row) +'&created_min=' + start_date + '&created_max=' + end_date
