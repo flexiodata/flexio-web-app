@@ -6,6 +6,7 @@ import account from './account'
 import admin from './admin'
 import builder from './builder'
 import home from './home'
+import byuser from './byuser'
 import pipes from './pipes'
 import onboard from './onboard'
 
@@ -42,6 +43,7 @@ const routes = [
   builder,
   home,
   pipes,
+  byuser,
   onboard,
   { path: '/signin',         name: ROUTE_SIGNIN,         component: SignInPage         },
   { path: '/signup',         name: ROUTE_SIGNUP,         component: SignUpPage         },
