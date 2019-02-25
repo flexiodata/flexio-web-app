@@ -232,7 +232,7 @@
         return alias.length > 0 ? alias : _.get(this.item, 'eid', '')
       },
       pipe_route() {
-        return { name: ROUTE_PIPES, params: { eid: this.identifier } }
+        return { name: ROUTE_PIPES, params: { identifier: this.identifier } }
       },
       execution_cnt() {
         return parseInt(_.get(this.item, 'stats.total_count', '0'))
