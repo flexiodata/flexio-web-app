@@ -1,11 +1,11 @@
 import {
-  ROUTE_APP_HOME,
-  ROUTE_APP_DASHBOARD,
-  ROUTE_APP_LEARN,
-  ROUTE_APP_PIPES,
-  ROUTE_APP_CONNECTIONS,
-  ROUTE_APP_STORAGE,
-  ROUTE_APP_ACTIVITY
+  ROUTE_HOME_PAGE,
+  ROUTE_DASHBOARD_PAGE,
+  ROUTE_LEARN_PAGE,
+  ROUTE_PIPE_LIST_PAGE,
+  ROUTE_CONNECTION_LIST_PAGE,
+  ROUTE_STORAGE_PAGE,
+  ROUTE_ACTIVITY_LIST_PAGE
 } from '../constants/route'
 import * as types from '../store/mutation-types'
 import store from '../store'
@@ -23,27 +23,27 @@ export default {
     {
       // redirect to /pipes
       path: '',
-      name: ROUTE_APP_HOME,
+      name: ROUTE_HOME_PAGE,
       redirect: '/pipes'
     },
     {
       path: '/pipes',
-      name: ROUTE_APP_PIPES,
+      name: ROUTE_PIPE_LIST_PAGE,
       component: AppPipes
     },
     {
       path: '/connections',
-      name: ROUTE_APP_CONNECTIONS,
+      name: ROUTE_CONNECTION_LIST_PAGE,
       component: AppConnections
     },
     {
       path: '/storage',
-      name: ROUTE_APP_STORAGE,
+      name: ROUTE_STORAGE_PAGE,
       component: AppStorage
     },
     {
       path: '/activity',
-      name: ROUTE_APP_ACTIVITY,
+      name: ROUTE_ACTIVITY_LIST_PAGE,
       component: AppActivity
     }
   ]

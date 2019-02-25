@@ -11,7 +11,7 @@
 </template>
 
 <script>
-  import { ROUTE_ONBOARD, ROUTE_SIGNIN } from '../constants/route'
+  import { ROUTE_ONBOARD_PAGE, ROUTE_SIGNIN_PAGE } from '../constants/route'
   import SignUpForm from './SignUpForm.vue'
   import MixinConfig from './mixins/config'
   import MixinRedirect from './mixins/redirect'
@@ -27,7 +27,7 @@
     computed: {
       signin_route() {
         return {
-          name: ROUTE_SIGNIN,
+          name: ROUTE_SIGNIN_PAGE,
           query: this.$route.query
         }
       }
@@ -43,7 +43,7 @@
         var cfg_path = 'app.prompt.onboarding.pipeDocument.build.shown'
 
         if (this.$_Config_get(cfg_path, false) === false) {
-          this.$router.push({ name: ROUTE_ONBOARD })
+          this.$router.push({ name: ROUTE_ONBOARD_PAGE })
         } else {
           this.$_Redirect_redirect()
         }

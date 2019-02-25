@@ -11,11 +11,11 @@ import pipes from './pipes'
 import onboard from './onboard'
 
 import {
-  ROUTE_SIGNIN,
-  ROUTE_SIGNUP,
-  ROUTE_FORGOTPASSWORD,
-  ROUTE_RESETPASSWORD,
-  ROUTE_INITSESSION
+  ROUTE_SIGNIN_PAGE,
+  ROUTE_SIGNUP_PAGE,
+  ROUTE_FORGOTPASSWORD_PAGE,
+  ROUTE_RESETPASSWORD_PAGE,
+  ROUTE_INITSESSION_PAGE
 } from '../constants/route'
 
 import SignInPage from '../components/SignInPage.vue'
@@ -45,12 +45,12 @@ const routes = [
   pipes,
   byuser,
   onboard,
-  { path: '/signin',         name: ROUTE_SIGNIN,         component: SignInPage         },
-  { path: '/signup',         name: ROUTE_SIGNUP,         component: SignUpPage         },
-  { path: '/forgotpassword', name: ROUTE_FORGOTPASSWORD, component: ForgotPasswordPage },
-  { path: '/resetpassword',  name: ROUTE_RESETPASSWORD,  component: ResetPasswordPage  },
-  { path: '/initsession',    name: ROUTE_INITSESSION,    component: InitSessionPage    },
-  { path: "*",                                           component: PageNotFound       }
+  { path: '/signin',         name: ROUTE_SIGNIN_PAGE,         component: SignInPage         },
+  { path: '/signup',         name: ROUTE_SIGNUP_PAGE,         component: SignUpPage         },
+  { path: '/forgotpassword', name: ROUTE_FORGOTPASSWORD_PAGE, component: ForgotPasswordPage },
+  { path: '/resetpassword',  name: ROUTE_RESETPASSWORD_PAGE,  component: ResetPasswordPage  },
+  { path: '/initsession',    name: ROUTE_INITSESSION_PAGE,    component: InitSessionPage    },
+  { path: "*",                                                component: PageNotFound       }
 ]
 
 export default new Router({

@@ -76,7 +76,7 @@
 </template>
 
 <script>
-  import { ROUTE_PIPES } from '../constants/route'
+  import { ROUTE_PIPE_PAGE } from '../constants/route'
   import AccountApiForm from './AccountApiForm.vue'
   import HelpItems from './HelpItems.vue'
 
@@ -90,7 +90,7 @@
     },
     methods: {
       openPipe(eid) {
-        this.$router.push({ name: ROUTE_PIPES, params: { eid } })
+        this.$router.push({ name: ROUTE_PIPE_PAGE, params: { eid } })
       },
       tryCreatePipe(attrs) {
         if (!_.isObject(attrs))

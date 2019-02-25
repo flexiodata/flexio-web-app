@@ -11,7 +11,7 @@
 </template>
 
 <script>
-  import { ROUTE_SIGNIN, ROUTE_SIGNUP } from '../constants/route'
+  import { ROUTE_SIGNIN_PAGE, ROUTE_SIGNUP_PAGE } from '../constants/route'
   import ForgotPasswordForm from './ForgotPasswordForm.vue'
 
   export default {
@@ -24,13 +24,13 @@
     computed: {
       signup_route() {
         return {
-          name: ROUTE_SIGNUP,
+          name: ROUTE_SIGNUP_PAGE,
           query: this.$route.query
         }
       },
       signin_route() {
         return {
-          name: ROUTE_SIGNIN
+          name: ROUTE_SIGNIN_PAGE
         }
       }
     },

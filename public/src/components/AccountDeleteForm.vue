@@ -68,7 +68,7 @@
 
 <script>
   import { mapState, mapGetters } from 'vuex'
-  import { ROUTE_SIGNIN } from '../constants/route'
+  import { ROUTE_SIGNIN_PAGE } from '../constants/route'
   import MixinValidation from './mixins/validation'
 
   const defaultInfo = () => {
@@ -167,7 +167,7 @@
       },
       signOut() {
         this.$store.dispatch('v2_action_signOut').then(response => {
-          this.$router.push({ name: ROUTE_SIGNIN })
+          this.$router.push({ name: ROUTE_SIGNIN_PAGE })
         }).catch(error => {
           // TODO: add error handling?
         })

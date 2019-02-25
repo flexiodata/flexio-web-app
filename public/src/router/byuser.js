@@ -1,10 +1,10 @@
 import {
-  ROUTE_APP_BYUSER,
-  ROUTE_APP_PIPES,
-  ROUTE_APP_CONNECTIONS,
-  ROUTE_APP_STORAGE,
-  ROUTE_APP_ACTIVITY,
-  ROUTE_PIPES
+  ROUTE_BYUSER_PAGE,
+  ROUTE_PIPE_LIST_PAGE,
+  ROUTE_CONNECTION_LIST_PAGE,
+  ROUTE_STORAGE_PAGE,
+  ROUTE_ACTIVITY_LIST_PAGE,
+  ROUTE_PIPE_PAGE
 } from '../constants/route'
 import AppByUser from '../components/AppByUser.vue'
 import AppPipes from '../components/AppPipes.vue'
@@ -15,7 +15,7 @@ import PipeDocument from '../components/PipeDocument.vue'
 
 export default {
   path: '/:user_identifier',
-  name: ROUTE_APP_BYUSER,
+  name: ROUTE_BYUSER_PAGE,
   component: AppByUser,
   meta: { requiresAuth: true },
   children: [
@@ -27,7 +27,7 @@ export default {
     {
       // pipe list
       path: 'pipes',
-      name: ROUTE_APP_PIPES,
+      name: ROUTE_PIPE_LIST_PAGE,
       component: AppPipes
     },
     {
@@ -38,19 +38,19 @@ export default {
     {
       // connection list
       path: 'connections',
-      name: ROUTE_APP_CONNECTIONS,
+      name: ROUTE_CONNECTION_LIST_PAGE,
       component: AppConnections
     },
     {
       // storage
       path: 'storage',
-      name: ROUTE_APP_STORAGE,
+      name: ROUTE_STORAGE_PAGE,
       component: AppStorage
     },
     {
       // activity
       path: 'activity',
-      name: ROUTE_APP_ACTIVITY,
+      name: ROUTE_ACTIVITY_LIST_PAGE,
       component: AppActivity
     }
   ]

@@ -7,7 +7,7 @@
 </template>
 
 <script>
-  import { ROUTE_PIPES } from '../constants/route'
+  import { ROUTE_PIPE_PAGE } from '../constants/route'
   import Spinner from 'vue-simple-spinner'
   import MixinConfig from './mixins/config'
 
@@ -30,7 +30,7 @@
         return this.getOnboardPipe().length > 0
       },
       openPipe(eid) {
-        this.$router.push({ name: ROUTE_PIPES, params: { eid } })
+        this.$router.push({ name: ROUTE_PIPE_PAGE, params: { eid } })
       },
       createPipe(attrs) {
         if (!_.isObject(attrs)) {

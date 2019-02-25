@@ -16,10 +16,10 @@
 
 <script>
   import {
-    ROUTE_SIGNIN,
-    ROUTE_SIGNUP,
-    ROUTE_FORGOTPASSWORD,
-    ROUTE_RESETPASSWORD
+    ROUTE_SIGNIN_PAGE,
+    ROUTE_SIGNUP_PAGE,
+    ROUTE_FORGOTPASSWORD_PAGE,
+    ROUTE_RESETPASSWORD_PAGE
   } from '../constants/route'
   import { mapState, mapGetters } from 'vuex'
   import AppNavbar from './AppNavbar.vue'
@@ -58,10 +58,10 @@
       },
       show_intercom_button() {
         switch (this.route_name) {
-          case ROUTE_SIGNIN:
-          case ROUTE_SIGNUP:
-          case ROUTE_FORGOTPASSWORD:
-          case ROUTE_RESETPASSWORD:
+          case ROUTE_SIGNIN_PAGE:
+          case ROUTE_SIGNUP_PAGE:
+          case ROUTE_FORGOTPASSWORD_PAGE:
+          case ROUTE_RESETPASSWORD_PAGE:
             return false
 
           // 404

@@ -29,10 +29,10 @@
 
 <script>
   import {
-    ROUTE_ACCOUNT,
-    ROUTE_APP_HOME,
-    ROUTE_PIPES,
-    ROUTE_SIGNIN
+    ROUTE_ACCOUNT_PAGE,
+    ROUTE_HOME_PAGE,
+    ROUTE_PIPE_PAGE,
+    ROUTE_SIGNIN_PAGE
   } from '../constants/route'
   import { HOSTNAME } from '../constants/common'
   import { mapGetters } from 'vuex'
@@ -89,17 +89,17 @@
         this.$store.dispatch('v2_action_createPipe', { attrs }).then(response => {
           var pipe = response.data
           var eid = pipe.eid
-          this.$router.push({ name: ROUTE_PIPES, params: { eid } })
+          this.$router.push({ name: ROUTE_PIPE_PAGE, params: { eid } })
         }).catch(error => {
           // TODO: add error handling?
         })
       },
       gotoAccount() {
-        this.$router.push({ name: ROUTE_ACCOUNT })
+        this.$router.push({ name: ROUTE_ACCOUNT_PAGE })
       },
       signOut() {
         this.$store.dispatch('v2_action_signOut').then(response => {
-          this.$router.push({ name: ROUTE_SIGNIN })
+          this.$router.push({ name: ROUTE_SIGNIN_PAGE })
         }).catch(error => {
           // TODO: add error handling?
         })

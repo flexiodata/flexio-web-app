@@ -43,7 +43,12 @@ import App from './components/App.vue'
 import router from './router' // VueRouter
 import store from './store' // Vuex store
 import { fallbackCss } from './utils/dom'
-import { ROUTE_BUILDER, ROUTE_INITSESSION, ROUTE_SIGNIN, ROUTE_SIGNUP } from './constants/route'
+import {
+  ROUTE_BUILDER_PAGE,
+  ROUTE_INITSESSION_PAGE,
+  ROUTE_SIGNIN_PAGE,
+  ROUTE_SIGNUP_PAGE
+} from './constants/route'
 import { CHANGE_ACTIVE_DOCUMENT } from './store/mutation-types'
 
 // fallback css (if there's no Internet connection)
@@ -183,7 +188,7 @@ router.beforeEach((to, from, next) => {
       return
     }
 
-    var redirect_to_signup = to.name == ROUTE_BUILDER
+    var redirect_to_signup = to.name == ROUTE_BUILDER_PAGE
 
     // check if the user is signed in
     store.dispatch('v2_action_fetchCurrentUser').then(response => {
@@ -195,14 +200,14 @@ router.beforeEach((to, from, next) => {
       } else {
         // user is not signed in; redirect them to the sign in page
         next({
-          name: redirect_to_signup ? ROUTE_SIGNUP : ROUTE_SIGNIN,
+          name: redirect_to_signup ? ROUTE_SIGNUP_PAGE : ROUTE_SIGNIN_PAGE,
           query: { redirect: to.fullPath }
         })
       }
     }).catch(error => {
       // error fetching current user; bail out
       next({
-        name: redirect_to_signup ? ROUTE_SIGNUP : ROUTE_SIGNIN,
+        name: redirect_to_signup ? ROUTE_SIGNUP_PAGE : ROUTE_SIGNIN_PAGE,
         query: { redirect: to.fullPath }
       })
     })
@@ -215,7 +220,7 @@ router.beforeEach((to, from, next) => {
     }
 
     // this route already attempts to fetch te current user
-    if (to.name == ROUTE_INITSESSION) {
+    if (to.name == ROUTE_INITSESSION_PAGE) {
       next()
       return
     }
