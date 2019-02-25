@@ -1,5 +1,6 @@
 export const ROUTE_APP_HOME         = 'app-home'
 export const ROUTE_APP_ACTIVITY     = 'app-account'
+export const ROUTE_APP_BYUSER       = 'app-byuser'
 export const ROUTE_APP_CONNECTIONS  = 'app-connections'
 export const ROUTE_APP_LEARN        = 'app-learn'
 export const ROUTE_APP_DASHBOARD    = 'app-dashboard'

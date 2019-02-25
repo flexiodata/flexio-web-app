@@ -1,4 +1,5 @@
 import {
+  ROUTE_APP_BYUSER,
   ROUTE_APP_PIPES,
   ROUTE_APP_CONNECTIONS,
   ROUTE_APP_STORAGE,
@@ -14,6 +15,7 @@ import PipeDocument from '../components/PipeDocument.vue'
 
 export default {
   path: '/:user_identifier',
+  name: ROUTE_APP_BYUSER,
   component: AppByUser,
   meta: { requiresAuth: true },
   children: [
