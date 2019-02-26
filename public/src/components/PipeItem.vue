@@ -128,7 +128,11 @@
 
 <script>
   import { getDeployScheduleStr } from '../utils/pipe'
-  import { ROUTE_PIPE_PAGE } from '../constants/route'
+  import {
+    ROUTE_BYUSER_PAGE,
+    ROUTE_BYUSER_PIPE_PAGE,
+    ROUTE_PIPE_PAGE
+  } from '../constants/route'
   import LabelSwitch from './LabelSwitch.vue'
   import SortArrows from './SortArrows.vue'
 
@@ -232,6 +236,13 @@
         return alias.length > 0 ? alias : _.get(this.item, 'eid', '')
       },
       pipe_route() {
+        // TODO: this component shouldn't have anything to do with the store state
+        var user_identifier = this.$store.state.routed_user
+
+        if (user_identifier.length > 0) {
+          return { name: ROUTE_BYUSER_PIPE_PAGE, params: { user_identifier, identifier: this.identifier } }
+        }
+
         return { name: ROUTE_PIPE_PAGE, params: { identifier: this.identifier } }
       },
       execution_cnt() {

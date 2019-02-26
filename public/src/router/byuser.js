@@ -1,5 +1,6 @@
 import {
   ROUTE_BYUSER_PAGE,
+  ROUTE_BYUSER_PIPE_PAGE,
   ROUTE_PIPE_LIST_PAGE,
   ROUTE_CONNECTION_LIST_PAGE,
   ROUTE_STORAGE_PAGE,
@@ -27,30 +28,27 @@ export default {
     {
       // pipe list
       path: 'pipes',
-      name: ROUTE_PIPE_LIST_PAGE,
       component: AppPipes
     },
     {
       // pipe document
       path: 'pipes/:identifier/:view?/:state?',
+      name: ROUTE_BYUSER_PIPE_PAGE,
       component: PipeDocument
     },
     {
       // connection list
       path: 'connections',
-      name: ROUTE_CONNECTION_LIST_PAGE,
       component: AppConnections
     },
     {
       // storage
       path: 'storage',
-      name: ROUTE_STORAGE_PAGE,
       component: AppStorage
     },
     {
       // activity
       path: 'activity',
-      name: ROUTE_ACTIVITY_LIST_PAGE,
       component: AppActivity
     }
   ]
