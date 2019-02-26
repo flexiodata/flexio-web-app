@@ -2,6 +2,7 @@
 /* **** CORE MUTATIONS TYPES **** */
 
 export const CHANGE_ACTIVE_DOCUMENT = 'CHANGE_ACTIVE_DOCUMENT'
+export const CHANGE_ROUTED_USER     = 'CHANGE_ROUTED_USER'
 export const RESET_STATE            = 'RESET_STATE'
 
 /* **** CONNECTION MUTATIONS TYPES **** */
