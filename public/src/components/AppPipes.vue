@@ -111,7 +111,7 @@
       },
       tryFetchPipes() {
         if (!this.is_fetched && !this.is_fetching) {
-          this.$store.dispatch('v2_action_fetchPipes', {}).catch(error => {
+          this.$store.dispatch('v2_action_fetchPipes', { user_eid: this.$route.params.user_identifier }).catch(error => {
             // TODO: add error handling?
           })
         }
