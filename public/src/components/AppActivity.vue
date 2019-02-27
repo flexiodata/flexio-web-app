@@ -14,7 +14,7 @@
         <!-- control bar -->
         <div class="flex flex-row items-center">
           <div class="flex-fill flex flex-row items-center">
-            <h1 class="mv0 f2 fw4 mr3">Activity</h1>
+            <h1 class="mv0 f2 fw4 mr3">{{title}}</h1>
           </div>
           <SimplePager
             :current-page.sync="current_page"
@@ -172,6 +172,13 @@
       },
       end() {
         return Math.min((this.start + this.page_size - 1) + 1, this.total_count)
+      },
+      routed_user() {
+        return this.$store.state.routed_user
+      },
+      title() {
+        var ru = this.routed_user
+        return ru.length > 0 ? ru + '/' + 'activity' : 'Activity'
       }
     },
     mounted() {
