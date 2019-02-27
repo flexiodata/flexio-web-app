@@ -14,7 +14,7 @@
         <!-- control bar -->
         <div class="flex flex-row">
           <div class="flex-fill flex flex-row items-center">
-            <h1 class="mv0 f2 fw4 mr3">Pipes</h1>
+            <h1 class="mv0 f2 fw4 mr3">{{title}}</h1>
           </div>
           <div class="flex-none flex flex-row items-center">
             <el-input
@@ -78,7 +78,14 @@
       ...mapState({
         'is_fetching': 'pipes_fetching',
         'is_fetched': 'pipes_fetched'
-      })
+      }),
+      routed_user() {
+        return this.$store.state.routed_user
+      },
+      title() {
+        var ru = this.routed_user
+        return ru.length > 0 ? ru + '/' + 'pipes' : 'Pipes'
+      }
     },
     mounted() {
       this.initSticky()
@@ -90,7 +97,7 @@
     methods: {
       openPipe(eid) {
         // TODO: this component shouldn't have anything to do with the route or store state
-        var user_identifier = this.$store.state.routed_user
+        var user_identifier = this.routed_user
         var identifier = eid
         this.$router.push({ name: ROUTE_PIPE_PAGE, params: { user_identifier, identifier } })
       },
