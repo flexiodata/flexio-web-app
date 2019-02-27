@@ -948,11 +948,12 @@ class User
         return $pipe->getEid();
     }
 
-
-    public static function validate(\Flexio\Api\Request $request) : void
+    public static function validateCredentials(\Flexio\Api\Request $request) : void
     {
+        // function for validating user credentials (e.g. username, email, password)
+        // publicly available
+
         $post_params = $request->getPostParams();
-        $requesting_user_eid = $request->getRequestingUser();
 
         // the input for a validation is an array of objects that each
         // have a key, value and type; only 10 items can be validated at a time
@@ -996,34 +997,78 @@ class User
         $result = array();
         foreach ($post_params as $p)
         {
-            $result[] = self::validateObject($p, $requesting_user_eid);
+            $result[] = self::validateCredentialItem($p);
         }
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api\Response::sendContent($result);
     }
 
-    private static function validateObject(array $params, string $requesting_user_eid = null) : array
+    public static function validateObjects(\Flexio\Api\Request $request) : void
+    {
+        // function for validating user objects (e.g. pipe alias, connection alias, script syntax)
+        // requires appropriate permissions
+
+        $post_params = $request->getPostParams();
+        $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+
+        // the input for a validation is an array of objects that each
+        // have a key, value and type; only 10 items can be validated at a time
+        /*
+        [
+            {
+                "key": "",
+                "value": "",
+                "type": ""
+            },
+            {
+                "key": "",
+                "value": "",
+                "type": ""
+            }
+        ]
+        */
+
+        // make sure params is an array
+        if (!is_array($post_params))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        if (count($post_params) === 0 || count($post_params) > 10)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        // make sure each of the items in the array has the required params
+        foreach ($post_params as $p)
+        {
+            // checks to see if a username is available
+            $validator = \Flexio\Base\Validator::create();
+            if (($validator->check($p, array(
+                    'key'      => array('type' => 'string', 'required' => true),
+                    'value'    => array('type' => 'string', 'required' => true),
+                    'type'     => array('type' => 'string', 'required' => true),
+                    'eid_type' => array('type' => 'string', 'required' => false)
+                ))->hasErrors()) === true)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+        }
+
+        // build up the return object of results
+        $result = array();
+        foreach ($post_params as $p)
+        {
+            $result[] = self::validateObjectItem($p, $owner_user_eid, $requesting_user_eid);
+        }
+
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        \Flexio\Api\Response::sendContent($result);
+    }
+
+    private static function validateCredentialItem(array $params) : array
     {
         $key = $params['key'];
         $value = $params['value'];
         $type = $params['type'];
         $eid_type = $params['eid_type'] ?? \Model::TYPE_UNDEFINED;
 
-        // make sure the user is logged in for certain kinds of validation checks
-        if (\Flexio\Base\Eid::isValid($requesting_user_eid) === false)
-        {
-            switch ($type)
-            {
-                case 'task':
-                case 'javascript':
-                case 'nodejs':
-                case 'python':
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-            }
-        }
-
-        // continue with the validation checks
         $valid = false;
         $message = '';
 
@@ -1036,11 +1081,6 @@ class User
 
             case 'email':
                 $valid = self::validateEmail($type, $value, $message);
-                break;
-
-            case 'alias':
-                $user = $requesting_user_eid ?? '';
-                $valid = self::validateAlias($type, $eid_type, $user, $value, $message);
                 break;
 
             case 'password':
@@ -1058,12 +1098,45 @@ class User
                     }
                 }
                 break;
+        }
+
+        // echo back the key and whether or not it's valid (note: don't echo
+        // back the value to minimize transport of values like a password)
+        $properties = array();
+        $properties['key'] = $key;
+        $properties['valid'] = $valid;
+        $properties['message'] = $message;
+
+        return $properties;
+    }
+
+    private static function validateObjectItem(array $params, string $owner_user_eid, string $requesting_user_eid = '') : array
+    {
+        $key = $params['key'];
+        $value = $params['value'];
+        $type = $params['type'];
+        $eid_type = $params['eid_type'] ?? \Model::TYPE_UNDEFINED;
+
+        // continue with the validation checks
+        $valid = false;
+        $message = '';
+
+        switch ($type)
+        {
+            case 'alias':
+                $valid = self::validateAlias($type, $eid_type, $owner_user_eid, $requesting_user_eid, $value, $message);
+                break;
 
             // python/javascript
             case 'javascript':
             case 'nodejs':
             case 'python':
                 {
+                    // TODO: for now, validation of scripts isn't depenent on any specific
+                    // user info; simply make sure a user is logged in
+                    if (\Flexio\Base\Eid::isValid($requesting_user_eid) === false)
+                        throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
                     $code = base64_decode($value);
                     $err = \Flexio\Jobs\Execute::checkScript($type, $code);
                     if ($err === true)
@@ -1082,6 +1155,11 @@ class User
             // task
             case 'task':
             {
+                // TODO: for now, validation of tasks isn't depenent on any specific
+                // user info; simply make sure a user is logged in
+                if (\Flexio\Base\Eid::isValid($requesting_user_eid) === false)
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
                 $task = $value;
                 $error_list = array();
                 $err = self::validateTask($requesting_user_eid, $task, $error_list);
@@ -1167,7 +1245,7 @@ class User
         return true;
     }
 
-    private static function validateAlias(string $type, string $eid_type, string $user_eid, string $value, string &$message = '') : bool
+    private static function validateAlias(string $type, string $eid_type, string $owner_user_eid, string $requesting_user_eid, string $value, string &$message = '') : bool
     {
         try
         {
@@ -1179,10 +1257,18 @@ class User
 
             // an alias can only be specific for a valid user; if the user doesn't load
             // an exception will be thrown
-            $user = \Flexio\Object\User::load($user_eid);
+            $owner_user = \Flexio\Object\User::load($owner_user_eid);
+
+            // make sure the requesting user has rights to the user (the object may
+            // not exist, which means we need to check against write privileges on
+            // the user); throw an exception, which will cause the function to return
+            // false, which won't reveal any info about aliases created by a particular
+            // user
+            if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
             if (($eid_type == \Model::TYPE_PIPE || $eid_type == \Model::TYPE_UNDEFINED) &&
-                \Flexio\Object\Pipe::getEidFromName($user->getEid(), $value) !== false)
+                \Flexio\Object\Pipe::getEidFromName($owner_user->getEid(), $value) !== false)
             {
                 // identifier already exists
                 $message = _('This alias is already taken.');
@@ -1190,7 +1276,7 @@ class User
             }
 
             if (($eid_type == \Model::TYPE_CONNECTION || $eid_type == \Model::TYPE_UNDEFINED) &&
-                \Flexio\Object\Connection::getEidFromName($user->getEid(), $value) !== false)
+                \Flexio\Object\Connection::getEidFromName($owner_user->getEid(), $value) !== false)
             {
                 // identifier already exists
                 $message = _('This alias is already taken.');

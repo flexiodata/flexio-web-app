@@ -44,7 +44,7 @@ class Api
         'GET /about'                                  => '\Flexio\Api\System::about',
         'POS /login'                                  => '\Flexio\Api\System::login',
         'POS /logout'                                 => '\Flexio\Api\System::logout',
-        'POS /validate'                               => '\Flexio\Api\User::validate',
+        'POS /validate'                               => '\Flexio\Api\User::validateCredentials',
         'POS /signup'                                 => '\Flexio\Api\User::create',
         'POS /forgotpassword'                         => '\Flexio\Api\User::requestpasswordreset',
         'POS /resetpassword'                          => '\Flexio\Api\User::resetpassword',
@@ -56,6 +56,9 @@ class Api
 
 
         // AUTHENTICATED ENDPOINTS:
+
+        // validation
+        'POS /:userid/validate'                       => '\Flexio\Api\User::validateObjects',
 
         // users
         'POS /:userid/account'                        => '\Flexio\Api\User::set',
