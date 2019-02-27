@@ -15,8 +15,8 @@ export const AxiosResource = (user_eid) => {
   }
 
   var getBaseUrl = (url) => {
-    // all calls default to 'me'
-    var user_eid = 'me'
+    var api_root = API_V2_ROOT
+    var api_user_root = 'me'
 
     var allowed = false
     var allowed_routes = ['/connections', '/pipes', '/processes', '/streams', '/vfs']
@@ -25,15 +25,15 @@ export const AxiosResource = (user_eid) => {
     })
 
     if (allowed) {
-      var user_eid = store.state.routed_user
+      api_user_root = store.state.routed_user
 
       // no username is specified; default to 'me'
-      if (!user_eid || user_eid.length == 0) {
-        user_eid = 'me'
+      if (!api_user_root || api_user_root.length == 0) {
+        api_user_root = 'me'
       }
     }
 
-    return API_V2_ROOT + '/' + user_eid
+    return user_eid === null ? api_root : api_root + '/' + api_user_root
   }
 
   var getCfg = ({ method, url, data, cfg }) => {
