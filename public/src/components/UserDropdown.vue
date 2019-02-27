@@ -88,8 +88,8 @@
 
         this.$store.dispatch('v2_action_createPipe', { attrs }).then(response => {
           var pipe = response.data
-          var eid = pipe.eid
-          this.$router.push({ name: ROUTE_PIPE_PAGE, params: { eid } })
+          var identifier = pipe.eid
+          this.$router.push({ name: ROUTE_PIPE_PAGE, params: { identifier } })
         }).catch(error => {
           // TODO: add error handling?
         })

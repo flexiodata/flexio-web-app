@@ -89,7 +89,10 @@
     },
     methods: {
       openPipe(eid) {
-        this.$router.push({ name: ROUTE_PIPE_PAGE, params: { eid } })
+        // TODO: this component shouldn't have anything to do with the route or store state
+        var user_identifier = this.$store.state.routed_user
+        var identifier = eid
+        this.$router.push({ name: ROUTE_PIPE_PAGE, params: { user_identifier, identifier } })
       },
       duplicatePipe(item) {
         var attrs = {
@@ -111,7 +114,7 @@
       },
       tryFetchPipes() {
         if (!this.is_fetched && !this.is_fetching) {
-          this.$store.dispatch('v2_action_fetchPipes', { user_eid: this.$route.params.user_identifier }).catch(error => {
+          this.$store.dispatch('v2_action_fetchPipes', {}).catch(error => {
             // TODO: add error handling?
           })
         }

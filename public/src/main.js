@@ -184,9 +184,9 @@ router.beforeEach((to, from, next) => {
   }
 
   const goNext = () => {
+    store.commit(CHANGE_ROUTED_USER, to.params.user_identifier || '')
     tryFetchConnections()
     tryFetchTokens()
-    store.commit(CHANGE_ROUTED_USER, to.params.user_identifier || '')
     next()
   }
 
