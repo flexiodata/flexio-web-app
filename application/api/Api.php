@@ -42,9 +42,9 @@ class Api
 
         // system
         'GET /about'                                  => '\Flexio\Api\System::about',
-        'POS /validate'                               => '\Flexio\Api\System::validate',
         'POS /login'                                  => '\Flexio\Api\System::login',
         'POS /logout'                                 => '\Flexio\Api\System::logout',
+        'POS /validate'                               => '\Flexio\Api\User::validate',
         'POS /signup'                                 => '\Flexio\Api\User::create',
         'POS /forgotpassword'                         => '\Flexio\Api\User::requestpasswordreset',
         'POS /resetpassword'                          => '\Flexio\Api\User::resetpassword',
