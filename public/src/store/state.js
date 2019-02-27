@@ -20,6 +20,7 @@ export default () => {
 
     active_user_eid: '',
     active_document_eid: '',
+    routed_user: '',
 
     objects: {}
   }

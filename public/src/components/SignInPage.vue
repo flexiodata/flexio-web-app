@@ -13,7 +13,7 @@
 
 <script>
   import { mapState } from 'vuex'
-  import { ROUTE_SIGNUP, ROUTE_FORGOTPASSWORD } from '../constants/route'
+  import { ROUTE_SIGNUP_PAGE, ROUTE_FORGOTPASSWORD_PAGE } from '../constants/route'
   import SignInForm from './SignInForm.vue'
   import MixinRedirect from './mixins/redirect'
 
@@ -38,13 +38,13 @@
       ]),
       signup_route() {
         return {
-          name: ROUTE_SIGNUP,
+          name: ROUTE_SIGNUP_PAGE,
           query: this.$route.query
         }
       },
       forgotpassword_route() {
         return {
-          name: ROUTE_FORGOTPASSWORD
+          name: ROUTE_FORGOTPASSWORD_PAGE
         }
       }
     },

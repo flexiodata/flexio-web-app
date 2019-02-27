@@ -6,6 +6,10 @@ export default {
     state.active_document_eid = eid
   },
 
+  [types.CHANGE_ROUTED_USER]: (state, identifier) => {
+    state.routed_user = identifier
+  },
+
   [types.RESET_STATE]: (state) => {
     Object.assign(state, getDefaultState())
   }

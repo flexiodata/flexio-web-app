@@ -1,6 +1,6 @@
 import store from '../store'
 import * as types from '../store/mutation-types'
-import { ROUTE_ADMIN } from '../constants/route'
+import { ROUTE_ADMIN_PAGE } from '../constants/route'
 import AdminHome from '../components/AdminHome.vue'
 import AdminActivity from '../components/AdminActivity.vue'
 import AdminTest from '../components/AdminTest.vue'
@@ -19,7 +19,7 @@ export default {
     {
       // redirect to /admin/users
       path: '',
-      name: ROUTE_ADMIN,
+      name: ROUTE_ADMIN_PAGE,
       redirect: 'users'
     },
     {

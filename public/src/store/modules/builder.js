@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { ROUTE_BUILDER } from '../../constants/route'
+import { ROUTE_BUILDER_PAGE } from '../../constants/route'
 
 const VFS_TYPE_DIR = 'DIR'
 
@@ -48,7 +48,7 @@ const mutations = {
     var prompts = _.get(def, 'ui.prompts', [])
 
     // if we're in the builder, remove all runtime-only steps and add a summary step
-    if (state.route == ROUTE_BUILDER) {
+    if (state.route == ROUTE_BUILDER_PAGE) {
       prompts = _.reject(prompts, { runtime_only: true })
 
       var existing_summary = _.find(prompts, { element: 'summary' })

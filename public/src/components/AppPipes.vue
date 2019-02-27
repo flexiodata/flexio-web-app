@@ -46,7 +46,7 @@
 
 <script>
   import stickybits from 'stickybits'
-  import { ROUTE_PIPES } from '../constants/route'
+  import { ROUTE_PIPE_PAGE } from '../constants/route'
   import { OBJECT_STATUS_AVAILABLE } from '../constants/object-status'
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
@@ -89,7 +89,10 @@
     },
     methods: {
       openPipe(eid) {
-        this.$router.push({ name: ROUTE_PIPES, params: { eid } })
+        // TODO: this component shouldn't have anything to do with the route or store state
+        var user_identifier = this.$store.state.routed_user
+        var identifier = eid
+        this.$router.push({ name: ROUTE_PIPE_PAGE, params: { user_identifier, identifier } })
       },
       duplicatePipe(item) {
         var attrs = {

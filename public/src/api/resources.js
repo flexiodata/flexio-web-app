@@ -1,4 +1,5 @@
 import axios from 'axios'
+import store from '../store'
 
 export const API_V2_ROOT = '/api/v2'
 
@@ -13,13 +14,30 @@ export const AxiosResource = (user_eid) => {
     */
   }
 
-  var base_url = API_V2_ROOT
-  if (user_eid !== null) {
-    base_url += '/' + (user_eid || 'me')
+  var getBaseUrl = (url) => {
+    // all calls default to 'me'
+    var user_eid = 'me'
+
+    var allowed = false
+    var allowed_routes = ['/connections', '/pipes', '/processes', '/streams', '/vfs']
+    allowed_routes.forEach((route) => {
+      allowed = allowed || url.indexOf(route) == 0
+    })
+
+    if (allowed) {
+      var user_eid = store.state.routed_user
+
+      // no username is specified; default to 'me'
+      if (!user_eid || user_eid.length == 0) {
+        user_eid = 'me'
+      }
+    }
+
+    return API_V2_ROOT + '/' + user_eid
   }
 
   var getCfg = ({ method, url, data, cfg }) => {
-    var url = base_url + url
+    var url = getBaseUrl(url) + url
 
     // use the `data` object as GET params
     if (method == 'get') {

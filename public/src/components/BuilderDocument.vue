@@ -70,7 +70,7 @@
   import axios from 'axios'
   import stickybits from 'stickybits'
   import { mapState, mapGetters } from 'vuex'
-  import { ROUTE_BUILDER, ROUTE_PIPES } from '../constants/route'
+  import { ROUTE_BUILDER_PAGE, ROUTE_PIPE_PAGE } from '../constants/route'
   import { PROCESS_MODE_BUILD } from '../constants/process'
   import Flexio from 'flexio-sdk-js'
   import Spinner from 'vue-simple-spinner'
@@ -163,7 +163,7 @@
         pipe: state => state.builder.pipe
       }),
       is_builder_document() {
-        return this.$route.name == ROUTE_BUILDER
+        return this.$route.name == ROUTE_BUILDER_PAGE
       },
       slug() {
         if (this.is_builder_document) {
@@ -305,7 +305,7 @@
       },
       openPipe() {
         var eid = this.pipe.eid
-        this.$router.push({ name: ROUTE_PIPES, params: { eid } })
+        this.$router.push({ name: ROUTE_PIPE_PAGE, params: { eid } })
       },
       updateItemState(values, index) {
         this.$store.commit('builder/UPDATE_ATTRS', values)
