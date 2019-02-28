@@ -9,7 +9,7 @@ MAINTAINER ben@flex.io
 ########################################
 
 RUN apt -y update && \
-    apt -y install sudo wget apt-utils curl git python3-pip libzmq3-dev libzmq5 libjsoncpp-dev golang chromium-browser libgconf2-4 nodejs npm && \
+    apt -y install sudo wget apt-utils curl git python3-pip libzmq3-dev libzmq5 libjsoncpp-dev golang chromium-browser libgconf2-4 nodejs npm python3-psycopg2 && \
     npm install -g yarn
 
 # nodejs runtime
@@ -63,6 +63,7 @@ RUN pip3 install zmq && \
     pip3 install keras && \ 
     pip3 install cerberus && \ 
     pip3 install faker && \ 
+    pip3 install sqlalchemy && \ 
     pip3 install boto3
 
 # POTENTIAL: web scraping (spacy)
