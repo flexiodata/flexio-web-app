@@ -64,6 +64,7 @@ RUN pip3 install zmq && \
     pip3 install cerberus && \ 
     pip3 install faker && \ 
     pip3 install sqlalchemy && \ 
+    pip3 install plaid && \ 
     pip3 install boto3
 
 # POTENTIAL: web scraping (spacy)
