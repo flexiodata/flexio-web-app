@@ -65,7 +65,10 @@ RUN pip3 install zmq && \
     pip3 install faker && \ 
     pip3 install sqlalchemy && \ 
     pip3 install plaid && \ 
+    pip3 install pandasql && \
+    pip3 install pysqldf && \
     pip3 install boto3
+    
 
 # POTENTIAL: web scraping (spacy)
 # RUN apt-get install -y libffi-dev libxml2-dev libxslt-dev lib32z1-dev libssl-dev
