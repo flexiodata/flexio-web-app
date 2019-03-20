@@ -88,8 +88,12 @@
 
         this.$store.dispatch('v2_action_createPipe', { attrs }).then(response => {
           var pipe = response.data
+
+          // TODO: this component shouldn't have anything to do with the route or store state
+          var ru = this.routed_user
+          var user_identifier = ru && ru.length > 0 ? ru : null
           var identifier = pipe.eid
-          this.$router.push({ name: ROUTE_PIPE_PAGE, params: { identifier } })
+          this.$router.push({ name: ROUTE_PIPE_PAGE, params: { user_identifier, identifier } })
         }).catch(error => {
           // TODO: add error handling?
         })

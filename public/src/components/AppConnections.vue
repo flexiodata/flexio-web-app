@@ -132,7 +132,7 @@
       },
       title() {
         var ru = this.routed_user
-        return ru.length > 0 ? ru + '/' + 'connections' : 'Connections'
+        return ru && ru.length > 0 ? ru + '/' + 'connections' : 'Connections'
       }
     },
     created() {

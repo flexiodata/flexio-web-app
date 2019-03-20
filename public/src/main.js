@@ -184,7 +184,11 @@ router.beforeEach((to, from, next) => {
   }
 
   const goNext = () => {
-    store.commit(CHANGE_ROUTED_USER, to.params.user_identifier || '')
+    var user = store.getters.getActiveUser
+    var active_username = _.get(user, 'username', store.state.active_user_eid)
+
+    store.commit(CHANGE_ROUTED_USER, to.params.user_identifier || active_username)
+
     tryFetchConnections()
     tryFetchTokens()
     next()
