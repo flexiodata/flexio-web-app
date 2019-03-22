@@ -32,7 +32,10 @@
       <multipane-resizer />
       <div
         class="pane bl b--black-20"
-        :style="{ flexGrow: 1 }"
+        :style="{
+          flexGrow: 1,
+          fontSize: '1rem'
+        }"
       >
         <el-alert
           type="error"
