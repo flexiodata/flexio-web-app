@@ -156,8 +156,10 @@ router.afterEach((to, from) => {
 })
 
 router.beforeEach((to, from, next) => {
+  console.log(to)
+
   // update the active document in the store
-  store.commit(CHANGE_ACTIVE_DOCUMENT, to.params.eid || to.name)
+  store.commit(CHANGE_ACTIVE_DOCUMENT, to.params.identifier || to.name)
 
   const tryFetchConnections = () => {
     if (!store.state.connections_fetched && !store.state.connections_fetching) {
