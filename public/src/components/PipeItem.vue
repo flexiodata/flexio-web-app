@@ -238,7 +238,8 @@
         // TODO: this component shouldn't have anything to do with the route or store state
         var ru = this.routed_user
         var user_identifier = ru && ru.length > 0 ? ru : null
-        var identifier = this.identifier
+        //var identifier = this.identifier
+        var identifier = _.get(this.item, 'eid', '')
         return { name: ROUTE_PIPE_PAGE, params: { user_identifier, identifier } }
       },
       execution_cnt() {
