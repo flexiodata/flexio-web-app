@@ -178,7 +178,7 @@
       },
       title() {
         var ru = this.routed_user
-        return ru.length > 0 ? ru + '/' + 'activity' : 'Activity'
+        return ru && ru.length > 0 ? ru + '/' + 'activity' : 'Activity'
       }
     },
     mounted() {

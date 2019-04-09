@@ -234,18 +234,27 @@
           this.$store.commit('builder/FETCHING_DEF', false)
           this.initSticky()
         } else {
-          var template_url = '/def/templates/' + this.slug + '.json'
-          axios.get(template_url).then(response => {
-            var def = response.data
-            this.$store.commit('builder/INIT_ROUTE', this.$route.name)
-            this.$store.commit('builder/INIT_DEF', def)
-            this.$store.commit('builder/FETCHING_DEF', false)
-            this.$store.track('Started Template', {
-              title: def.name
+          var template_url
+
+          if (this.slug == 'external') {
+            template_url = _.get(this.$route.query, 'url', '')
+          } else {
+            template_url = '/def/templates/' + this.slug + '.json'
+          }
+
+          if (template_url.length > 0) {
+            axios.get(template_url).then(response => {
+              var def = response.data
+              this.$store.commit('builder/INIT_ROUTE', this.$route.name)
+              this.$store.commit('builder/INIT_DEF', def)
+              this.$store.commit('builder/FETCHING_DEF', false)
+              this.$store.track('Started Template', {
+                title: def.name
+              })
+            }).catch(error => {
+              this.$store.commit('builder/FETCHING_DEF', false)
             })
-          }).catch(error => {
-            this.$store.commit('builder/FETCHING_DEF', false)
-          })
+          }
         }
       },
       updateTask() {

@@ -84,7 +84,7 @@
       },
       title() {
         var ru = this.routed_user
-        return ru.length > 0 ? ru + '/' + 'pipes' : 'Pipes'
+        return ru && ru.length > 0 ? ru + '/' + 'pipes' : 'Pipes'
       }
     },
     mounted() {
@@ -97,7 +97,8 @@
     methods: {
       openPipe(eid) {
         // TODO: this component shouldn't have anything to do with the route or store state
-        var user_identifier = this.routed_user
+        var ru = this.routed_user
+        var user_identifier = ru && ru.length > 0 ? ru : null
         var identifier = eid
         this.$router.push({ name: ROUTE_PIPE_PAGE, params: { user_identifier, identifier } })
       },

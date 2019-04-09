@@ -111,7 +111,7 @@
       },
       title() {
         var ru = this.routed_user
-        return ru.length > 0 ? ru + '/' + 'storage' : 'Storage'
+        return ru && ru.length > 0 ? ru + '/' + 'storage' : 'Storage'
       }
     },
     created() {

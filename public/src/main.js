@@ -156,8 +156,10 @@ router.afterEach((to, from) => {
 })
 
 router.beforeEach((to, from, next) => {
+  console.log(to)
+
   // update the active document in the store
-  store.commit(CHANGE_ACTIVE_DOCUMENT, to.params.eid || to.name)
+  store.commit(CHANGE_ACTIVE_DOCUMENT, to.params.identifier || to.name)
 
   const tryFetchConnections = () => {
     if (!store.state.connections_fetched && !store.state.connections_fetching) {
@@ -184,7 +186,11 @@ router.beforeEach((to, from, next) => {
   }
 
   const goNext = () => {
-    store.commit(CHANGE_ROUTED_USER, to.params.user_identifier || '')
+    var user = store.getters.getActiveUser
+    var active_username = _.get(user, 'username', store.state.active_user_eid)
+
+    store.commit(CHANGE_ROUTED_USER, to.params.user_identifier || active_username)
+
     tryFetchConnections()
     tryFetchTokens()
     next()

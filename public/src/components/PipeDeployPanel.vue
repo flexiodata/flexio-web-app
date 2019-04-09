@@ -259,12 +259,12 @@
             label: 'Run on a schedule',
           },
           {
-            key: 'deploy_email',
-            label: 'Trigger from an email',
-          }/*,
-          {
             key: 'deploy_ui',
             label: 'Run from a Flex.io Web Interface',
+          }/*,
+          {
+            key: 'deploy_email',
+            label: 'Trigger from an email',
           }*/
         ]
       }
