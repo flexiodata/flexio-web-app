@@ -214,6 +214,9 @@
       },
       show_description() {
         return _.get(this.def, 'description', '').length > 0 && _.get(this.def, 'ui.settings.show_description', false)
+      },
+      routed_user() {
+        return this.$store.state.routed_user
       }
     },
     methods: {
@@ -315,7 +318,13 @@
       },
       openPipe() {
         var eid = this.pipe.eid
-        this.$router.push({ name: ROUTE_PIPE_PAGE, params: { eid } })
+
+        // TODO: this component shouldn't have anything to do with the route or store state
+        var ru = this.routed_user
+        var user_identifier = ru && ru.length > 0 ? ru : null
+        var identifier = eid
+
+        this.$router.push({ name: ROUTE_PIPE_PAGE, params: { user_identifier, identifier } })
       },
       updateItemState(values, index) {
         this.$store.commit('builder/UPDATE_ATTRS', values)
