@@ -67,7 +67,8 @@ RUN pip3 install zmq && \
     pip3 install plaid && \ 
     pip3 install pandasql && \
     pip3 install pysqldf && \
-    pip3 install boto3
+    pip3 install boto3 && \
+    pip3 install mysql-connector
     
 
 # POTENTIAL: web scraping (spacy)
