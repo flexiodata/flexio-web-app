@@ -97,7 +97,8 @@
         } else if (p.variable) {
           var echo_obj = {
              op: 'echo',
-             msg: p.variable + ': ${' + p.variable + '}'
+             msg: '${' + p.variable + '}',
+             variable_name: p.variable
           }
           task_obj.items.push(echo_obj)
         }
