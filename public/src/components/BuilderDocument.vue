@@ -80,7 +80,6 @@
 
   const buildTestDefinition = () => {
     var def = _.cloneDeep(test_def)
-    return def
 
     // easy way to get rid of a bunch of elements for quick testing
     //def.ui.prompts = _.filter(def.ui.prompts, { element: 'form' })

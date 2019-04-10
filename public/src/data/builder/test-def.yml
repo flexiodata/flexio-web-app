@@ -1,17 +1,20 @@
-name: Internal Analytic Report - Crunchbase
+name: Test Prompts
 description: >
-  Automated feed of integrated and summarized data from Crunchbase News to deliver to internal staff.
+  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+  proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
 keywords: []
 connections: []
 
 ####
 
 content: |
-  # Internal Analytic Report
+  # Test prompts
 
-  ### Key data for Crunchbase News reporting projects
-
-  Automated feed of integrated and summarized data from Crunchbase News to deliver to internal staff.
+  Example template for rendering all components
 
 ####
 
@@ -20,48 +23,146 @@ ui:
     show_title: false
   prompts:
     - element: message
-      title: Internal Analytic Report - Crunchbase
-      description: >
-        Automated feed of integrated and summarized data from Crunchbase News to deliver to internal staff.
+      title: Copy files from Dropbox to Google Drive
+      description: |
+        This template steps you through the process of setting up a data feed to transfer files from Dropbox to Google Drive that you can schedule or deploy in your own code. You'll be ready to go in a few short steps:
 
-        This template will set up a Google Sheet with live updating results from Crunchbase in two quick steps:
-          * Connect to your Google Sheets account
-          * Create a Google Sheet with live updating results via Flex.io
+          * Connect to Dropbox and select source files
+          * Connect to Google Drive and select the destination folder
+          * Schedule the data feed or choose other options to run the pipe
       connections:
-        - googlesheets
+        - dropbox
+        - googledrive
+    - element: form
+      title: Standard form
+      description: This is the form description. Text is written in Markdown so it can be quite descriptive.
+      cls: el-form--cozy
+      label_position: left
+      label_width: 9rem
+      form_items:
+        - element: input
+          type: text
+          variable: input_text
+          label: Text Input
+          placeholder: Text Input
+          value: ''
+        - element: input
+          type: textarea
+          variable: input_textarea
+          label: Textarea
+          placeholder: Textarea
+          value: ''
+        - element: code-editor
+          lang: javascript
+          variable: code
+          label: Code
+          value: ''
+        - element: input
+          type: date
+          variable: input_date
+          label: Date Input
+          placeholder: Date Input
+          value: ''
+        - element: input
+          type: daterange
+          variable: input_daterange
+          label: Date Range Input
+          placeholder: Date Range Input
+          value: ''
+        - element: select
+          variable: input_select
+          label: Select
+          placeholder: Select
+          value: IL
+          options:
+            - label: California
+              value: CA
+            - label: Illinois
+              value: IL
+            - label: Wyoming
+              value: WY
+        - element: radio-group
+          variable: radio_group
+          label: Radio Group
+          placeholder: Radio Group
+          value: []
+          options:
+            - label: California
+              value: CA
+            - label: Illinois
+              value: IL
+            - label: Wyoming
+              value: WY
+        - element: checkbox-group
+          variable: checkbox_group
+          label: Checkbox Group
+          placeholder: Checkbox Group
+          value: []
+          options:
+            - label: California
+              value: CA
+            - label: Illinois
+              value: IL
+            - label: Wyoming
+              value: WY
+        - element: checkbox
+          variable: checkbox
+          label: Checkbox
+          placeholder: Checkbox
+          value: false
+        - element: switch
+          variable: switch
+          label: Switch
+          placeholder: Switch
+          value: false
     - element: connection-chooser
-      variable: source_connection
-      connection_type: googlesheets
-      connection_eid: null
-    - element: message
-      title: Generate Report
-      description: >
-        You're ready to go! Click the **RUN** button to create the Google Sheet.
-      next_button:
-        show: true
-        label: Run
-        actions:
-          - create_pipe
-          - run_process
-    - element: spinner
-      spinner_message: Generating sheet...
-    - element: summary
-      title: Success
-      description: >
-        ### You're all set!
+      title: Connection chooser with single connection type
+      variable: connection_dropbox
+      connection_type: dropbox
+    - element: connection-chooser
+      title: Connection chooser with all connection
+      variable: connection_any
+      connection_type: ''
+    - element: file-chooser
+      title: Default file chooser
+      description: This is the default file chooser. Multiple files and folder can be selected at the same time.
+      variable: file_chooser_default
+      connection: connection_any
+    - element: file-chooser
+      title: File chooser with CSVs only
+      description: This file chooser only allows CSV files to be selected.
+      variable: file_chooser_csv_only
+      connection: connection_dropbox
+      filetype_filter:
+        - csv
+      allow_folders: false
+    - element: file-chooser
+      title: File chooser with a connection alias
+      description: This file chooser uses a connection alias `my-foo-alias`.
+      variable: file_chooser_alias
+      connection: connection_dropbox
+      connection_alias: my-foo-alias
+    - element: file-chooser
+      title: Single file selection file chooser
+      description: This file chooser only allows a single file to be selected.
+      variable: file_chooser_single_file
+      connection: connection_dropbox
+      allow_multiple: false
+      allow_folders: false
+    - element: file-chooser
+      description: Folder only file chooser
+      variable: folder_chooser_folders_only
+      connection: connection_dropbox
+      folders_only: true
+    - element: file-chooser
+      description: Single folder selection file chooser
+      variable: folder_chooser_single_folder
+      connection: connection_dropbox
+      folders_only: true
+      allow_multiple: false
 
-        Your Google Sheet has successfully been generated. Click the **View Sheet** button to view the sheet.
-      action_button:
-        label: View Sheet
-        href: '{{process_result.spreadsheetUrl}}'
+####
 
 task:
   op: sequence
-  items:
-    - op: connect
-      connection: '${source_connection}'
-      alias: gsheets
-    - op: execute
-      lang: python
-      code: >-
-        aW1wb3J0IGpzb24KaW1wb3J0IHJlcXVlc3RzCgpkZWYgZmxleF9oYW5kbGVyKGZsZXgpOgogICAgYXV0aF90b2tlbiA9IGZsZXguY29ubmVjdGlvbnNbImdzaGVldHMiXS5nZXRfYWNjZXNzX3Rva2VuKCkKICAgIHNoZWV0X2lkID0gIjFneU5UX3MzYVdwUm9pSTFvX0JVTk9oVGFyLXR5QzRzdGJOd2h2TEJTRU40IgogICAgdGVtcGxhdGVfdXJsID0gImh0dHBzOi8vZmxleGlvLWNydW5jaGJhc2UtZGVtby5uZXRsaWZ5LmNvbS9hc3NldHMvdGVtcGxhdGVzL2dzaGVldC1jcnVuY2hiYXNlLWludGVybmFsLWFuYWx5dGljLXJlcG9ydC5qc29uIgoKICAgICNzaGVldF9qc29uID0gZ2V0X3NoZWV0KHNoZWV0X2lkLCBhdXRoX3Rva2VuKQogICAgc2hlZXRfanNvbiA9IGNyZWF0ZV9zaGVldCh0ZW1wbGF0ZV91cmwsIGF1dGhfdG9rZW4pCgogICAgIyB0ZXN0IGNvZGUKICAgIGZsZXgub3V0cHV0LmNvbnRlbnRfdHlwZSA9ICJhcHBsaWNhdGlvbi9qc29uIgogICAgZmxleC5vdXRwdXQud3JpdGUoc2hlZXRfanNvbikKCiMgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tICMKCmRlZiBnZXRfaHR0cF9oZWFkZXJzKGF1dGhfdG9rZW4pOgogICAgcmV0dXJuIHsgIkF1dGhvcml6YXRpb24iOiAiQmVhcmVyICIgKyBhdXRoX3Rva2VuIH0KCmRlZiBnZXRfc2hlZXQoc2hlZXRfaWQsIGF1dGhfdG9rZW4pOgogICAgdXJsID0gImh0dHBzOi8vc2hlZXRzLmdvb2dsZWFwaXMuY29tL3Y0L3NwcmVhZHNoZWV0cy8iICsgc2hlZXRfaWQKICAgIHBhcmFtcyA9IHsKICAgICAgICAiaW5jbHVkZUdyaWREYXRhIjogVHJ1ZSwKICAgICAgICAicmFuZ2VzIjogWyJBMTpENTEiLCJjYl9zdGRfZnVuY3Rpb25zX3gyeGM4ZDk4XyFBMTpCNiIsImNiX2N1c3RvbV9mdW5jdGlvbnNfYmI4cmtzN2FfIUExOkw0Il0KICAgIH0KICAgIHJlc3BvbnNlID0gcmVxdWVzdHMuZ2V0KHVybCwgcGFyYW1zLCBoZWFkZXJzPWdldF9odHRwX2hlYWRlcnMoYXV0aF90b2tlbikpCiAgICByZXN1bHQgPSBqc29uLmxvYWRzKHJlc3BvbnNlLnRleHQpCiAgICByZXR1cm4gcmVzdWx0CgpkZWYgY3JlYXRlX3NoZWV0KHRlbXBsYXRlX3VybCwgYXV0aF90b2tlbik6CiAgICB0ZW1wbGF0ZV9yZXNwb25zZSA9IHJlcXVlc3RzLmdldCh0ZW1wbGF0ZV91cmwpCiAgICBkYXRhID0ganNvbi5sb2Fkcyh0ZW1wbGF0ZV9yZXNwb25zZS50ZXh0KQoKICAgIHVybCA9ICJodHRwczovL3NoZWV0cy5nb29nbGVhcGlzLmNvbS92NC9zcHJlYWRzaGVldHMvIgogICAgcmVzcG9uc2UgPSByZXF1ZXN0cy5wb3N0KHVybCwgZGF0YT1qc29uLmR1bXBzKGRhdGEpLCBoZWFkZXJzPWdldF9odHRwX2hlYWRlcnMoYXV0aF90b2tlbikpCiAgICByZXN1bHQgPSBqc29uLmxvYWRzKHJlc3BvbnNlLnRleHQpCiAgICByZXR1cm4gcmVzdWx0Cg==
+  items: []
