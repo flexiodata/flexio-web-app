@@ -40,9 +40,12 @@
         this.$router.push(this.signin_route)
       },
       onSignedIn() {
+        var redirect = _.get(this.$route, 'query.redirect', '')
         var cfg_path = 'app.prompt.onboarding.pipeDocument.build.shown'
 
-        if (this.$_Config_get(cfg_path, false) === false) {
+        if (redirect.length > 0) {
+          this.$_Redirect_redirect()
+        } else if (this.$_Config_get(cfg_path, false) === false) {
           this.$router.push({ name: ROUTE_ONBOARD_PAGE })
         } else {
           this.$_Redirect_redirect()
