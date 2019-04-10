@@ -52,10 +52,13 @@ const mutations = {
     if (state.route == ROUTE_BUILDER_PAGE) {
       prompts = _.reject(prompts, { runtime_only: true })
 
+      // don't auto-add summary
+      /*
       var existing_summary = _.find(prompts, { element: 'summary' })
       if (!existing_summary) {
         prompts.push({ element: 'summary' })
       }
+      */
     }
 
     // map prompt objects
@@ -244,8 +247,11 @@ const mutations = {
     }, new_result_step, { process_eid: attrs.eid })
 
     if (result_step_idx == -1) {
+      // don't auto add result step
+      /*
       // insert the result step
-      prompts.splice(state.active_prompt_idx, 0, new_result_step)
+      //prompts.splice(state.active_prompt_idx, 0, new_result_step)
+      */
     } else {
       // replace the existing result step
       prompts.splice(result_step_idx, 1, new_result_step)
