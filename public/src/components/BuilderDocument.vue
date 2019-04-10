@@ -302,8 +302,7 @@
       runProcess(attrs, parent_eid) {
         _.assign(attrs, {
           parent_eid,
-          process_mode: PROCESS_MODE_BUILD,
-          run: true // this will automatically run the process and start polling the process
+          process_mode: PROCESS_MODE_BUILD
         })
 
         this.$store.dispatch('v2_action_createProcess', { attrs }).then(response => {
@@ -311,6 +310,13 @@
           this.$store.commit('builder/CREATE_PROCESS', process)
           this.$store.track('Ran Process From Template', {
             title: this.def.name
+          })
+
+          var eid = process.eid
+          this.$store.dispatch('v2_action_runProcess', { eid }).then(response => {
+            this.$store.commit('builder/UPDATE_PROCESS_RESULT', response.data)
+          }).catch(error => {
+            // TODO: add error handling?
           })
         }).catch(error => {
           // TODO: add error handling?

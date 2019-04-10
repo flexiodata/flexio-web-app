@@ -10,6 +10,7 @@ const getDefaultState = () => {
     task: {},
     pipe: {},
     process: {},
+    process_result: {},
     prompts: [],
     attrs: {},
     active_prompt: {},
@@ -251,6 +252,10 @@ const mutations = {
     }
 
     state.prompts = prompts
+  },
+
+  UPDATE_PROCESS_RESULT (state, attrs) {
+    state.process_result = attrs
   },
 
   GO_PREV_ITEM (state) {
