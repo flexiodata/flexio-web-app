@@ -90,12 +90,13 @@
         this.$emit('open-pipe')
       },
       onActionClick() {
+        debugger
         var href = this.action_btn_href
 
         if (href.length > 0) {
-          if (href.indexOf('{{') == 0) {
-            href = href.replace('{{', '')
-            href = href.replace('}}', '')
+          if (href.indexOf('%%') == 0) {
+            href = href.replace('%%', '')
+            href = href.replace('%%', '')
             href = _.get(this, href, '#')
           }
           window.location.href = href
