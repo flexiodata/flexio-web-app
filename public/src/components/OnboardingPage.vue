@@ -30,7 +30,8 @@
         return this.getOnboardPipe().length > 0
       },
       openPipe(eid) {
-        this.$router.push({ name: ROUTE_PIPE_PAGE, params: { eid } })
+        var identifier = eid
+        this.$router.push({ name: ROUTE_PIPE_PAGE, params: { identifier } })
       },
       createPipe(attrs) {
         if (!_.isObject(attrs)) {
