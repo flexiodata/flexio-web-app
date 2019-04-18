@@ -5,7 +5,7 @@
         <div class="tc mb4" style="margin-top: -64px">
           <img src="../assets/icon/icon-flexio-128.png" alt="Flex.io" class="br-100" style="width: 64px">
         </div>
-        <h1 class="tc mb4 pb2" >Welcome to Flex.io</h1>
+        <h1 class="tc mb4 pb2">Welcome to Flex.io</h1>
         <div>
           <p style="margin: 0 0 2rem 0">Sign in with one of the following:</p>
           <div class="flex flex-column">
