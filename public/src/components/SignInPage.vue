@@ -2,8 +2,8 @@
   <main class="pa3 ph3-m pa5-ns bg-nearer-white black-60 overflow-auto">
     <div class="measure center">
       <div class="br2 bg-white mt4 pa4 css-white-box" v-if="false">
-        <div class="tc mb4" style="margin-top: -64px">
-          <img src="../assets/icon/icon-flexio-128.png" alt="Flex.io" class="br-100" style="width: 64px">
+        <div class="tc mb4" style="margin-top: -68px">
+          <img src="../assets/icon/icon-flexio-128.png" alt="Flex.io" class="br-100 ba bw1 b--white" style="width: 68px; box-shadow: 0 2px 4px rgba(0,0,0,0.2)">
         </div>
         <h1 class="tc mb4 pb2">Welcome to Flex.io</h1>
         <div>
