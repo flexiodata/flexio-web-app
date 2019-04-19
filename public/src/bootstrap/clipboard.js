@@ -35,5 +35,3 @@ copy.on('error', function(evt) {
       t.removeAttribute('aria-label')
   }, 4000)
 })
-
-export default {}

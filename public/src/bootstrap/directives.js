@@ -1,6 +1,6 @@
+/*
 import Vue from 'vue'
 
-/*
 // global directives (move to a new file if we get too many here)
 
 Vue.directive('focus', {
@@ -33,5 +33,3 @@ Vue.directive('select-all', {
   }
 })
 */
-
-export default {}

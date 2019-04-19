@@ -1,25 +1,19 @@
 import Vue from 'vue'
-import VueScrollTo from 'vue-scrollto'
 import App from './components/App.vue'
 import router from './router' // VueRouter
 import store from './store' // Vuex store
 import { fallbackCss } from './utils/dom'
 
+import plugins from './bootstrap/plugins' // Vue plugins
 import element from './bootstrap/element-ui' // Element UI includes
 import directives from './bootstrap/directives' // Vue directives
 import clipboard from './bootstrap/clipboard' // clipboard.js access
 import guards from './bootstrap/guards' // VueRouter guards
 
 // fallback css (if there's no Internet connection)
-
 fallbackCss('tachyons-css-test', '/dist/css/tachyons.min.css')
 
-// setup for VueScrollTo (programmatic scrolling)
-
-Vue.use(VueScrollTo)
-
 // initial view necessary to begin using Vue
-
 const app = new Vue({
   el: '#app',
   // provide the router using the 'router' option.
