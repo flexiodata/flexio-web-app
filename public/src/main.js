@@ -5,7 +5,7 @@ import router from './router' // VueRouter
 import store from './store' // Vuex store
 import { fallbackCss } from './utils/dom'
 
-import element from './bootstrap/element-ui' // Element UI
+import element from './bootstrap/element-ui' // Element UI includes
 import directives from './bootstrap/directives' // Vue directives
 import clipboard from './bootstrap/clipboard' // clipboard.js access
 import guards from './bootstrap/guards' // VueRouter guards
