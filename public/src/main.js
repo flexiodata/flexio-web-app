@@ -18,13 +18,6 @@ fallbackCss('tachyons-css-test', '/dist/css/tachyons.min.css')
 
 Vue.use(VueScrollTo)
 
-// add helper `track` method to global store object
-
-store.track = function(event_name, attrs) {
-  attrs = _.assign({}, attrs, { event_name })
-  store.dispatch('analyticsTrack', attrs)
-}
-
 // initial view necessary to begin using Vue
 
 const app = new Vue({

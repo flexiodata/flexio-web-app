@@ -9,7 +9,7 @@ import getDefaultState from './state'
 // use Vuex for centralized state management
 Vue.use(Vuex)
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
   state: getDefaultState(),
   modules,
   mutations,
@@ -17,3 +17,12 @@ export default new Vuex.Store({
   getters,
   strict: process.env.NODE_ENV !== 'production'
 })
+
+// add helper `track` method to global store object
+
+store.track = function(event_name, attrs) {
+  attrs = _.assign({}, attrs, { event_name })
+  store.dispatch('analyticsTrack', attrs)
+}
+
+export default store
