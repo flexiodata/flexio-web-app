@@ -1,14 +1,14 @@
 import Vue from 'vue'
-import App from './components/App.vue'
+import App from '@comp/App'
 import router from './router' // VueRouter
 import store from './store' // Vuex store
 import { fallbackCss } from './utils/dom'
 
-import './bootstrap/element-ui' // Element UI includes
-import './bootstrap/plugins'    // Vue plugins
-import './bootstrap/directives' // Vue directives
-import './bootstrap/guards'     // VueRouter guards
-import './bootstrap/clipboard'  // clipboard.js access
+import '@/bootstrap/element-ui' // Element UI includes
+import '@/bootstrap/plugins'    // Vue plugins
+import '@/bootstrap/directives' // Vue directives
+import '@/bootstrap/guards'     // VueRouter guards
+import '@/bootstrap/clipboard'  // clipboard.js access
 
 // fallback css (if there's no Internet connection)
 fallbackCss('tachyons-css-test', '/dist/css/tachyons.min.css')

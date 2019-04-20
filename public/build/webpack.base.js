@@ -1,6 +1,11 @@
 'use strict'
 
+const path = require('path')
 const options = require('./options')
+
+function resolve(dir) {
+  return path.join(__dirname, '..', dir)
+}
 
 module.exports = {
   entry: {
@@ -14,9 +19,11 @@ module.exports = {
   },
 
   resolve: {
+    extensions: ['.js', '.vue', '.json'],
     alias: {
       'vue$': options.isProduction ? 'vue/dist/vue.min' : 'vue/dist/vue',
-      '@': options.paths.src.main
+      '@': resolve('src'),
+      '@comp': resolve('src/components')
     }
   },
 
