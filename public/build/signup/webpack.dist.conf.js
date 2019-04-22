@@ -5,7 +5,7 @@ const version = require('../../package.json').version
 const merge = require('deep-assign')
 const webpack = require('webpack')
 
-const options = require('./options')
+const options = require('../options')
 
 const base = {
   entry: options.paths.resolve('src/signup.js'),
