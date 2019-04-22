@@ -1,4 +1,4 @@
-import FlexioSignUpModal from './components/SignUpModal.vue'
+import FlexioSignUpModal from '@comp/SignUpModal'
 
 // expose component to global scope
 if (typeof window !== 'undefined' && window.Vue) {
