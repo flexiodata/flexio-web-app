@@ -233,7 +233,7 @@
   import ServiceIcon from '@comp/ServiceIcon'
   import TaskIcon from '@comp/TaskIcon'
   import ConfirmPopover from '@comp/ConfirmPopover'
-  import builder_components from './builder-components'
+  import builder_components from '@comp/builder-components'
 
   const components = _.assign({
     ServiceIcon,

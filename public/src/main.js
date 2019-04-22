@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import App from '@comp/App'
-import router from './router' // VueRouter
-import store from './store' // Vuex store
-import { fallbackCss } from './utils/dom'
+import router from '@/router' // VueRouter
+import store from '@/store' // Vuex store
+import { fallbackCss } from '@/utils/dom'
 
 import '@/bootstrap/element-ui' // Element UI includes
 import '@/bootstrap/plugins'    // Vue plugins
