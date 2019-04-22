@@ -47,7 +47,7 @@
 <script>
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import ServiceIcon from '@comp/ServiceIcon'
-  import MixinConnection from './mixins/connection'
+  import MixinConnection from '@comp/mixins/connection'
 
   export default {
     props: {

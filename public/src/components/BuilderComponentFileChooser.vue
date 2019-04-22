@@ -39,7 +39,7 @@
   import { afterFirst } from '@/utils'
   import FileChooser from '@comp/FileChooser'
   import FileChooserItem from '@comp/FileChooserItem'
-  import MixinConnection from './mixins/connection'
+  import MixinConnection from '@comp/mixins/connection'
 
   const VFS_TYPE_DIR = 'DIR'
 

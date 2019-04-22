@@ -62,8 +62,8 @@
 <script>
   import api from '@/api'
   import AdminTestItem from '@comp/AdminTestItem'
-  import MixinFilter from './mixins/filter'
-  import MixinResponse from './mixins/response'
+  import MixinFilter from '@comp/mixins/filter'
+  import MixinResponse from '@comp/mixins/response'
 
   export default {
     metaInfo: {

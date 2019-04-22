@@ -88,7 +88,7 @@
 
 <script>
   import { OBJECT_TYPE_PIPE } from '../constants/object-type'
-  import Validation from './mixins/validation'
+  import Validation from '@comp/mixins/validation'
 
   const defaultAttrs = () => {
     return {

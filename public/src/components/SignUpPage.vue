@@ -13,8 +13,8 @@
 <script>
   import { ROUTE_ONBOARD_PAGE, ROUTE_SIGNIN_PAGE } from '../constants/route'
   import SignUpForm from '@comp/SignUpForm'
-  import MixinConfig from './mixins/config'
-  import MixinRedirect from './mixins/redirect'
+  import MixinConfig from '@comp/mixins/config'
+  import MixinRedirect from '@comp/mixins/redirect'
 
   export default {
     metaInfo: {

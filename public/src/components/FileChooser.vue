@@ -57,7 +57,7 @@
   import FileExplorerBar from '@comp/FileExplorerBar'
   import FileChooserList from '@comp/FileChooserList'
   import AbstractList from '@comp/AbstractList'
-  import MixinConnection from './mixins/connection'
+  import MixinConnection from '@comp/mixins/connection'
 
   const LOCAL_STORAGE_ITEM = {
     connection_type: CONNECTION_TYPE_FLEX,

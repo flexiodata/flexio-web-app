@@ -182,8 +182,8 @@
   import ServiceIcon from '@comp/ServiceIcon'
   import ConnectionAuthenticationPanel from '@comp/ConnectionAuthenticationPanel'
   import ConnectionInfoPanel from '@comp/ConnectionInfoPanel'
-  import MixinConnection from './mixins/connection'
-  import MixinValidation from './mixins/validation'
+  import MixinConnection from '@comp/mixins/connection'
+  import MixinValidation from '@comp/mixins/validation'
 
   const defaultAttrs = () => {
     return {

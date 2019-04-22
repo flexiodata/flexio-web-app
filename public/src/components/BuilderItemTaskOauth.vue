@@ -59,7 +59,7 @@
   import { btoaUnicode } from '@/utils'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import BuilderComponentConnectionChooser from '@comp/BuilderComponentConnectionChooser'
-  import MixinConnection from './mixins/connection'
+  import MixinConnection from '@comp/mixins/connection'
 
   const getDefaultValues = () => {
     return {

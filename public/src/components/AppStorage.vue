@@ -61,7 +61,7 @@
   import AbstractList from '@comp/AbstractList'
   import FileChooser from '@comp/FileChooser'
   import EmptyItem from '@comp/EmptyItem'
-  import MixinConnection from './mixins/connection'
+  import MixinConnection from '@comp/mixins/connection'
 
   const LOCAL_STORAGE_ITEM = {
     connection_type: CONNECTION_TYPE_FLEX,

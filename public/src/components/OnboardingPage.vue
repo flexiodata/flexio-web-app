@@ -9,7 +9,7 @@
 <script>
   import { ROUTE_PIPE_PAGE } from '../constants/route'
   import Spinner from 'vue-simple-spinner'
-  import MixinConfig from './mixins/config'
+  import MixinConfig from '@comp/mixins/config'
 
   // 'pdf-to-json'
   import pipe_pipe_to_json from '../data/pipe/pdf-to-json.yml'

@@ -426,7 +426,7 @@
   import PopperTour from '@comp/PopperTour'
   import LabelSwitch from '@comp/LabelSwitch'
 
-  import MixinConfig from './mixins/config'
+  import MixinConfig from '@comp/mixins/config'
 
   const ACTIVE = 'A'
   const INACTIVE = 'I'

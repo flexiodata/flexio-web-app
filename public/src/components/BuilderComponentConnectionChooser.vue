@@ -63,7 +63,7 @@
   import ConnectionEditPanel from '@comp/ConnectionEditPanel'
   import ConnectionChooserList from '@comp/ConnectionChooserList'
   import ConnectionChooserItem from '@comp/ConnectionChooserItem'
-  import MixinConnection from './mixins/connection'
+  import MixinConnection from '@comp/mixins/connection'
 
   export default {
     props: {

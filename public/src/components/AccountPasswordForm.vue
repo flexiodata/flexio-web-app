@@ -80,7 +80,7 @@
 
 <script>
   import { mapState } from 'vuex'
-  import MixinValidation from './mixins/validation'
+  import MixinValidation from '@comp/mixins/validation'
 
   export default {
     mixins: [MixinValidation],
