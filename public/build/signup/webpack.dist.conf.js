@@ -1,21 +1,20 @@
 'use strict'
 
 const version = require('../../package.json').version
-
 const merge = require('deep-assign')
 const webpack = require('webpack')
-
 const options = require('../options')
+const banner =
+  'Flex.io Web Sign In v' + version + ' (https://github.com/flexiodata/flexio)\n' +
+  '(c) ' + new Date().getFullYear() + ' Gold Prairie LLC\n' +
 
 const base = {
   entry: options.paths.resolve('src/signup.js'),
-
   // without this, webpack throws in a polyfill for node.js's Buffer class
   node: {
     Buffer: false,
     process: false
   },
-
   output: {
     filename: options.isProduction ? 'flexio-signup.min.js' : 'flexio-signup.js',
     path: options.paths.output.signup,
@@ -23,13 +22,13 @@ const base = {
     libraryExport: 'default',
     libraryTarget: 'umd'
   },
-
   resolve: {
     alias: {
-      'vue$': 'vue/dist/vue'
+      'vue$': options.isProduction ? 'vue/dist/vue.min' : 'vue/dist/vue',
+      '@': options.paths.resolve('src'),
+      '@comp': options.paths.resolve('src/components')
     }
   },
-
   module: {
     rules: [
       // allow support for .vue file syntax:
@@ -51,19 +50,12 @@ const base = {
   }
 }
 
-const banner =
-  '/*!\n' +
-  ' * Flex.io Web Sign In v' + version + ' (https://github.com/flexiodata/flexio)\n' +
-  ' * (c) ' + new Date().getFullYear() + ' Gold Prairie LLC\n' +
-  ' */'
-
 const config = merge(base, {
   devtool: '#source-map',
-
   plugins: [
     new webpack.BannerPlugin({
       banner,
-      raw: true,
+      raw: false,
       entryOnly: true
     })
   ]

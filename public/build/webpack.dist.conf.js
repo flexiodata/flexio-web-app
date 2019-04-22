@@ -2,7 +2,6 @@
 
 const merge = require('deep-assign')
 const webpack = require('webpack')
-
 const options = require('./options')
 const base = require('./webpack.base.conf.js')
 
@@ -19,9 +18,7 @@ const config = merge(base, {
     Buffer: false,
     process: false
   },
-
   devtool: '#source-map',
-
   plugins: [
     new webpack.BannerPlugin({
       banner: options.banner,

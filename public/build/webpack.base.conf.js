@@ -3,30 +3,23 @@
 const path = require('path')
 const options = require('./options')
 
-function resolve(dir) {
-  return path.join(__dirname, '..', dir)
-}
-
 module.exports = {
   entry: {
     app: options.paths.resolve('src/main.js')
   },
-
   output: {
     path: options.paths.output.main,
     publicPath: '/dist/',
     filename: options.isProduction ? 'js/[name]-[chunkhash].js' : 'js/[name].js'
   },
-
   resolve: {
     extensions: ['.js', '.vue', '.json'],
     alias: {
       'vue$': options.isProduction ? 'vue/dist/vue.min' : 'vue/dist/vue',
-      '@': resolve('src'),
-      '@comp': resolve('src/components')
+      '@': options.paths.resolve('src'),
+      '@comp': options.paths.resolve('src/components')
     }
   },
-
   module: {
     rules: [
       // allow support for .vue file syntax:

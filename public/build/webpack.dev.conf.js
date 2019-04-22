@@ -2,7 +2,6 @@
 
 const merge = require('deep-assign')
 const webpack = require('webpack')
-
 const options = require('./options')
 const base = require('./webpack.base.conf.js')
 
@@ -42,7 +41,6 @@ config.module.rules = (config.module.rules || []).concat([
     loader: 'style-loader!css-loader!autoprefixer-loader!stylus-loader'
   }
 ])
-
 
 /* load plugins */
 
