@@ -10,11 +10,6 @@ const banner =
 
 const base = {
   entry: options.paths.resolve('src/signup.js'),
-  // without this, webpack throws in a polyfill for node.js's Buffer class
-  node: {
-    Buffer: false,
-    process: false
-  },
   output: {
     filename: options.isProduction ? 'flexio-signup.min.js' : 'flexio-signup.js',
     path: options.paths.output.signup,
@@ -47,6 +42,18 @@ const base = {
         exclude: /node_modules/
       }
     ]
+  },
+  node: {
+    // prevent webpack from injecting useless setImmediate polyfill because Vue
+    // source contains it (although only uses it if it's native).
+    setImmediate: false,
+    // prevent webpack from injecting mocks to Node native modules
+    // that does not make sense for the client
+    dgram: 'empty',
+    fs: 'empty',
+    net: 'empty',
+    tls: 'empty',
+    child_process: 'empty'
   }
 }
 
