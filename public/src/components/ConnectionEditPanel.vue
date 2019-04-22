@@ -177,7 +177,7 @@
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import * as ctypes from '../constants/connection-type'
   import * as connections from '../constants/connection-info'
-  import { slugify } from '../utils'
+  import { slugify } from '@/utils'
   import ServiceList from '@comp/ServiceList'
   import ServiceIcon from '@comp/ServiceIcon'
   import ConnectionAuthenticationPanel from '@comp/ConnectionAuthenticationPanel'

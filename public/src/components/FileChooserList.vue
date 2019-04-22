@@ -30,7 +30,7 @@
 </template>
 
 <script>
-  import api from '../api'
+  import api from '@/api'
   import Spinner from 'vue-simple-spinner'
   import FileChooserItem from '@comp/FileChooserItem'
 

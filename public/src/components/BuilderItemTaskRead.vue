@@ -85,7 +85,7 @@
 
 <script>
   import marked from 'marked'
-  import { afterFirst } from '../utils'
+  import { afterFirst } from '@/utils'
   import { mapGetters } from 'vuex'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import BuilderComponentConnectionChooser from '@comp/BuilderComponentConnectionChooser'

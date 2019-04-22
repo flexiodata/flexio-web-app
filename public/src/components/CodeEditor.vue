@@ -40,7 +40,7 @@
   //import {} from 'codemirror/mode/css/css'
   //import {} from 'codemirror/mode/xml/xml'
   //import {} from 'codemirror/mode/htmlmixed/htmlmixed'
-  import { atobUnicode, btoaUnicode } from '../utils'
+  import { atobUnicode, btoaUnicode } from '@/utils'
 
   import yaml from 'js-yaml'
 

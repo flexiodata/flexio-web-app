@@ -60,7 +60,7 @@
 </template>
 
 <script>
-  import api from '../api'
+  import api from '@/api'
   import AdminTestItem from '@comp/AdminTestItem'
   import MixinFilter from './mixins/filter'
   import MixinResponse from './mixins/response'

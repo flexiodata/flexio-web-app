@@ -68,8 +68,8 @@
 </template>
 
 <script>
-  import api from '../api'
-  import { isProduction } from '../utils'
+  import api from '@/api'
+  import { isProduction } from '@/utils'
   import { Card, createToken } from 'vue-stripe-elements-plus'
   import ConfirmPopover from '@comp/ConfirmPopover'
 

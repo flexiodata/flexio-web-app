@@ -1,5 +1,5 @@
-import router from '../router' // VueRouter
-import store from '../store' // Vuex store
+import router from '@/router' // VueRouter
+import store from '@/store' // Vuex store
 import {
   ROUTE_INITSESSION_PAGE,
   ROUTE_SIGNIN_PAGE,

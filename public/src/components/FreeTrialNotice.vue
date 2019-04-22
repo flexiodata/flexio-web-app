@@ -21,7 +21,7 @@
 <script>
   import moment from 'moment'
   import { mapGetters } from 'vuex'
-  import { pluralize } from '../utils'
+  import { pluralize } from '@/utils'
 
   const TRIAL_LENGTH = 14
 

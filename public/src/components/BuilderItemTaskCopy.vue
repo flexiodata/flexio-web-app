@@ -125,7 +125,7 @@
 
 <script>
   import marked from 'marked'
-  import { afterNth } from '../utils'
+  import { afterNth } from '@/utils'
   import { mapGetters } from 'vuex'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import BuilderComponentConnectionChooser from '@comp/BuilderComponentConnectionChooser'
