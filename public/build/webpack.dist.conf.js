@@ -4,7 +4,7 @@ const merge = require('deep-assign')
 const webpack = require('webpack')
 
 const options = require('./options')
-const base = require('./webpack.base.js')
+const base = require('./webpack.base.conf.js')
 
 // webpack plugins
 const WebpackMd5Hash = require('webpack-md5-hash')

@@ -1,6 +1,6 @@
 'use strict'
 
-const version = require('../package.json').version
+const version = require('../../package.json').version
 
 const merge = require('deep-assign')
 const webpack = require('webpack')

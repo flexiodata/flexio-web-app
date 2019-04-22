@@ -5,11 +5,11 @@
   "author": "David Z. Williams <dave@flex.io>",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_ENV=development webpack-dev-server --config build/webpack.dev.js --open --inline --https --hot",
-    "build:signup:debug": "cross-env NODE_ENV=debug webpack --config build/webpack.signup.dist.js --progress --hide-modules",
-    "build:signup:release": "cross-env NODE_ENV=production webpack --config build/webpack.signup.dist.js --progress --hide-modules",
-    "build:debug": "cross-env NODE_ENV=debug webpack --config build/webpack.dist.js --progress --hide-modules",
-    "build:release": "cross-env NODE_ENV=production webpack --config build/webpack.dist.js --progress --hide-modules",
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --config build/webpack.dev.conf.js --open --inline --https --hot",
+    "build:debug": "cross-env NODE_ENV=debug webpack --config build/webpack.dist.conf.js --progress --hide-modules",
+    "build:release": "cross-env NODE_ENV=production webpack --config build/webpack.dist.conf.js --progress --hide-modules",
+    "build:signup:debug": "cross-env NODE_ENV=debug webpack --config build/signup/webpack.dist.conf.js --progress --hide-modules",
+    "build:signup:release": "cross-env NODE_ENV=production webpack --config build/signup/webpack.dist.conf.js --progress --hide-modules",
     "deploy": "npm run build:release && npm run build:signup:release"
   },
   "dependencies": {
