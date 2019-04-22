@@ -88,13 +88,13 @@
 
 <script>
   import { mapState } from 'vuex'
-  import AccountProfileForm from './AccountProfileForm.vue'
-  import AccountRegionForm from './AccountRegionForm.vue'
-  import AccountApiForm from './AccountApiForm.vue'
-  import AccountPlanForm from './AccountPlanForm.vue'
-  import AccountBillingForm from './AccountBillingForm.vue'
-  import AccountPasswordForm from './AccountPasswordForm.vue'
-  import AccountDeleteForm from './AccountDeleteForm.vue'
+  import AccountProfileForm from '@comp/AccountProfileForm'
+  import AccountRegionForm from '@comp/AccountRegionForm'
+  import AccountApiForm from '@comp/AccountApiForm'
+  import AccountPlanForm from '@comp/AccountPlanForm'
+  import AccountBillingForm from '@comp/AccountBillingForm'
+  import AccountPasswordForm from '@comp/AccountPasswordForm'
+  import AccountDeleteForm from '@comp/AccountDeleteForm'
 
   export default {
     metaInfo() {

@@ -31,8 +31,8 @@
   import * as ops from '../constants/task-op'
   import * as task_info from '../constants/task-info'
   import builder_defs from '../data/builder'
-  import BuilderList from './BuilderList.vue'
-  import PipeBuilderEmptyItem from './PipeBuilderEmptyItem.vue'
+  import BuilderList from '@comp/BuilderList'
+  import PipeBuilderEmptyItem from '@comp/PipeBuilderEmptyItem'
 
   export default {
     props: {

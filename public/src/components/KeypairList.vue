@@ -18,7 +18,7 @@
 </template>
 
 <script>
-  import KeypairItem from './KeypairItem.vue'
+  import KeypairItem from '@comp/KeypairItem'
 
   const newKeypairItem = (key, val) => {
     key = _.defaultTo(key, '')

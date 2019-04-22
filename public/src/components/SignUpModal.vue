@@ -18,8 +18,8 @@
 </template>
 
 <script>
-  import FlexioModal from './FlexioModal.vue'
-  import FlexioEntryForm from './FlexioEntryForm.vue'
+  import FlexioModal from '@comp/FlexioModal'
+  import FlexioEntryForm from '@comp/FlexioEntryForm'
 
   export default {
     props: {

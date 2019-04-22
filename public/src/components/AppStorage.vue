@@ -58,9 +58,9 @@
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
-  import AbstractList from './AbstractList.vue'
-  import FileChooser from './FileChooser.vue'
-  import EmptyItem from './EmptyItem.vue'
+  import AbstractList from '@comp/AbstractList'
+  import FileChooser from '@comp/FileChooser'
+  import EmptyItem from '@comp/EmptyItem'
   import MixinConnection from './mixins/connection'
 
   const LOCAL_STORAGE_ITEM = {

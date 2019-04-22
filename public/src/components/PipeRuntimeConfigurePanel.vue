@@ -84,8 +84,8 @@
 <script>
   import yaml from 'js-yaml'
   import { Multipane, MultipaneResizer } from 'vue-multipane'
-  import CodeEditor from './CodeEditor.vue'
-  import BuilderDocument from './BuilderDocument.vue'
+  import CodeEditor from '@comp/CodeEditor'
+  import BuilderDocument from '@comp/BuilderDocument'
 
   export default {
     props: {

@@ -15,7 +15,7 @@
 </template>
 
 <script>
-  import BuilderItem from './BuilderItem.vue'
+  import BuilderItem from '@comp/BuilderItem'
 
   export default {
     inheritAttrs: false,

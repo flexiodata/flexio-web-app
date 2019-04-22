@@ -61,7 +61,7 @@
 <script>
   import { mapState, mapGetters } from 'vuex'
   import Flexio from 'flexio-sdk-js'
-  import OnboardingCodeEditor from './OnboardingCodeEditor.vue'
+  import OnboardingCodeEditor from '@comp/OnboardingCodeEditor'
 
   export default {
     props: {

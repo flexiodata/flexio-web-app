@@ -67,8 +67,8 @@
 </template>
 
 <script>
-  import KeypairList from './KeypairList.vue'
-  import CodeEditor from './CodeEditor.vue'
+  import KeypairList from '@comp/KeypairList'
+  import CodeEditor from '@comp/CodeEditor'
 
   const getDefaultUiValues = () => {
     return _.assign({}, {

@@ -73,7 +73,7 @@
 
 <script>
   import { mapState, mapGetters } from 'vuex'
-  import ConfirmPopover from './ConfirmPopover.vue'
+  import ConfirmPopover from '@comp/ConfirmPopover'
 
   export default {
     props: {

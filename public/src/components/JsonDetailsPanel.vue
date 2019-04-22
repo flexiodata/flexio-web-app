@@ -33,7 +33,7 @@
 </template>
 
 <script>
-  import CodeEditor from './CodeEditor.vue'
+  import CodeEditor from '@comp/CodeEditor'
 
   export default {
     props: {

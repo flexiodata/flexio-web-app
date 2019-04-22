@@ -28,7 +28,7 @@
 
 <script>
   import { mapState } from 'vuex'
-  import UserDropdown from './UserDropdown.vue'
+  import UserDropdown from '@comp/UserDropdown'
 
   export default {
     components: {

@@ -11,7 +11,7 @@
 </template>
 
 <script>
-  import CodeEditor from './CodeEditor.vue'
+  import CodeEditor from '@comp/CodeEditor'
 
   var default_text = "\
 def greet(name):\n\

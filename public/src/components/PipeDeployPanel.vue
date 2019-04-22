@@ -206,7 +206,7 @@
     getDeployApiUrl
   } from '../utils/pipe'
   import * as sched from '../constants/schedule'
-  import LabelSwitch from './LabelSwitch.vue'
+  import LabelSwitch from '@comp/LabelSwitch'
 
   const ACTIVE = 'A'
   const INACTIVE = 'I'

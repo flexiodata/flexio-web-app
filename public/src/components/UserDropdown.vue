@@ -36,7 +36,7 @@
   } from '../constants/route'
   import { HOSTNAME } from '../constants/common'
   import { mapGetters } from 'vuex'
-  import FreeTrialNotice from './FreeTrialNotice.vue'
+  import FreeTrialNotice from '@comp/FreeTrialNotice'
   import MixinConfig from './mixins/config'
 
   export default {

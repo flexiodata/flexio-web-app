@@ -58,7 +58,7 @@
   import { mapGetters } from 'vuex'
   import { btoaUnicode } from '../utils'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
-  import BuilderComponentConnectionChooser from './BuilderComponentConnectionChooser.vue'
+  import BuilderComponentConnectionChooser from '@comp/BuilderComponentConnectionChooser'
   import MixinConnection from './mixins/connection'
 
   const getDefaultValues = () => {

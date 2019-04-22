@@ -39,7 +39,7 @@
 
 <script>
   import * as connections from '../constants/connection-info'
-  import ServiceIcon from './ServiceIcon.vue'
+  import ServiceIcon from '@comp/ServiceIcon'
 
   export default {
     props: {

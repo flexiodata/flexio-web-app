@@ -33,7 +33,7 @@
 <script>
   import { mapState, mapGetters } from 'vuex'
   import items from '../data/onboarding'
-  import OnboardingItem from './OnboardingItem.vue'
+  import OnboardingItem from '@comp/OnboardingItem'
 
   export default {
     components: {

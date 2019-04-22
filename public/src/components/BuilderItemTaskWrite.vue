@@ -88,8 +88,8 @@
   import { afterFirst } from '../utils'
   import { mapGetters } from 'vuex'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
-  import BuilderComponentConnectionChooser from './BuilderComponentConnectionChooser.vue'
-  import BuilderComponentFileChooser from './BuilderComponentFileChooser.vue'
+  import BuilderComponentConnectionChooser from '@comp/BuilderComponentConnectionChooser'
+  import BuilderComponentFileChooser from '@comp/BuilderComponentFileChooser'
   import MixinConnection from './mixins/connection'
 
   const getDefaultValues = () => {

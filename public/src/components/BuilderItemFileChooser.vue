@@ -26,7 +26,7 @@
 
 <script>
   import marked from 'marked'
-  import BuilderComponentFileChooser from './BuilderComponentFileChooser.vue'
+  import BuilderComponentFileChooser from '@comp/BuilderComponentFileChooser'
 
   const VFS_TYPE_DIR = 'DIR'
 

@@ -15,7 +15,7 @@
 </template>
 
 <script>
-  import ServiceIcon from './ServiceIcon.vue'
+  import ServiceIcon from '@comp/ServiceIcon'
 
   export default {
     props: {

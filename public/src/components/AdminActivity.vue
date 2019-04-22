@@ -14,7 +14,7 @@
 
 <script>
   import moment from 'moment'
-  import AppActivity from './AppActivity.vue'
+  import AppActivity from '@comp/AppActivity'
 
   export default {
     metaInfo: {

@@ -77,8 +77,8 @@
 
 <script>
   import { ROUTE_PIPE_PAGE } from '../constants/route'
-  import AccountApiForm from './AccountApiForm.vue'
-  import HelpItems from './HelpItems.vue'
+  import AccountApiForm from '@comp/AccountApiForm'
+  import HelpItems from '@comp/HelpItems'
 
   export default {
     components: {

@@ -50,7 +50,7 @@
   import { OBJECT_STATUS_AVAILABLE } from '../constants/object-status'
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
-  import PipeList from './PipeList.vue'
+  import PipeList from '@comp/PipeList'
 
   export default {
     metaInfo: {

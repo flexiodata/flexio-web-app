@@ -49,8 +49,8 @@
 </template>
 
 <script>
-  import JsonDetailsPanel from './JsonDetailsPanel.vue'
-  import ProcessContent from './ProcessContent.vue'
+  import JsonDetailsPanel from '@comp/JsonDetailsPanel'
+  import ProcessContent from '@comp/ProcessContent'
 
   export default {
     props: {

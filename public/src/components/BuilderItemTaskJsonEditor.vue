@@ -29,7 +29,7 @@
 <script>
   import yaml from 'js-yaml'
   import marked from 'marked'
-  import CodeEditor from './CodeEditor.vue'
+  import CodeEditor from '@comp/CodeEditor'
 
   export default {
     props: {

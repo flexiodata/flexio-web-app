@@ -37,8 +37,8 @@
 
 <script>
   import { afterFirst } from '../utils'
-  import FileChooser from './FileChooser.vue'
-  import FileChooserItem from './FileChooserItem.vue'
+  import FileChooser from '@comp/FileChooser'
+  import FileChooserItem from '@comp/FileChooserItem'
   import MixinConnection from './mixins/connection'
 
   const VFS_TYPE_DIR = 'DIR'

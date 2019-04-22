@@ -44,10 +44,10 @@
 </template>
 
 <script>
-  import FlexioEntryForm from './FlexioEntryForm.vue'
-  import SignUpModal from './SignUpModal.vue'
-  import PopperStep from './PopperStep.vue'
-  import PopperTour from './PopperTour.vue'
+  import FlexioEntryForm from '@comp/FlexioEntryForm'
+  import SignUpModal from '@comp/SignUpModal'
+  import PopperStep from '@comp/PopperStep'
+  import PopperTour from '@comp/PopperTour'
 
   export default {
     metaInfo: {

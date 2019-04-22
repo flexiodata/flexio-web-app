@@ -46,7 +46,7 @@
 
 <script>
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
-  import ServiceIcon from './ServiceIcon.vue'
+  import ServiceIcon from '@comp/ServiceIcon'
   import MixinConnection from './mixins/connection'
 
   export default {

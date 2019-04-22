@@ -60,9 +60,9 @@
   import { mapGetters } from 'vuex'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
-  import ConnectionEditPanel from './ConnectionEditPanel.vue'
-  import ConnectionChooserList from './ConnectionChooserList.vue'
-  import ConnectionChooserItem from './ConnectionChooserItem.vue'
+  import ConnectionEditPanel from '@comp/ConnectionEditPanel'
+  import ConnectionChooserList from '@comp/ConnectionChooserList'
+  import ConnectionChooserItem from '@comp/ConnectionChooserItem'
   import MixinConnection from './mixins/connection'
 
   export default {

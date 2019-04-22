@@ -129,8 +129,8 @@
 <script>
   import { getDeployScheduleStr } from '../utils/pipe'
   import { ROUTE_PIPE_PAGE } from '../constants/route'
-  import LabelSwitch from './LabelSwitch.vue'
-  import SortArrows from './SortArrows.vue'
+  import LabelSwitch from '@comp/LabelSwitch'
+  import SortArrows from '@comp/SortArrows'
 
   const DEPLOY_MODE_UNDEFINED = ''
   const DEPLOY_MODE_BUILD     = 'B'

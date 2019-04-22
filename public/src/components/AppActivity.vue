@@ -81,10 +81,10 @@
   import stickybits from 'stickybits'
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
-  import SimplePager from './SimplePager.vue'
-  import ProcessList from './ProcessList.vue'
-  import ProcessStatusSelect from './ProcessStatusSelect.vue'
-  import ProcessDetailsPanel from './ProcessDetailsPanel.vue'
+  import SimplePager from '@comp/SimplePager'
+  import ProcessList from '@comp/ProcessList'
+  import ProcessStatusSelect from '@comp/ProcessStatusSelect'
+  import ProcessDetailsPanel from '@comp/ProcessDetailsPanel'
 
   export default {
     metaInfo: {

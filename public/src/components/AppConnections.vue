@@ -81,9 +81,9 @@
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
-  import AbstractList from './AbstractList.vue'
-  import ConnectionEditPanel from './ConnectionEditPanel.vue'
-  import EmptyItem from './EmptyItem.vue'
+  import AbstractList from '@comp/AbstractList'
+  import ConnectionEditPanel from '@comp/ConnectionEditPanel'
+  import EmptyItem from '@comp/EmptyItem'
 
   export default {
     metaInfo: {

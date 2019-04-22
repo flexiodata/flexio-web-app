@@ -15,7 +15,7 @@
 </template>
 
 <script>
-  import AbstractConnectionChooserItem from './AbstractConnectionChooserItem.vue'
+  import AbstractConnectionChooserItem from '@comp/AbstractConnectionChooserItem'
 
   export default {
     props: {

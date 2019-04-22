@@ -18,7 +18,7 @@
 
 <script>
   import marked from 'marked'
-  import ProcessContent from './ProcessContent.vue'
+  import ProcessContent from '@comp/ProcessContent'
 
   export default {
     props: {

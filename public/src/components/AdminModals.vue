@@ -46,8 +46,8 @@
 
 <script>
   import { CONNECTION_TYPE_MYSQL } from '../constants/connection-type'
-  import FlexioModal from './FlexioModal.vue'
-  import SignUpModal from './SignUpModal.vue'
+  import FlexioModal from '@comp/FlexioModal'
+  import SignUpModal from '@comp/SignUpModal'
 
   export default {
     metaInfo: {

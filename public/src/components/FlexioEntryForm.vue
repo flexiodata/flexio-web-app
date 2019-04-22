@@ -24,9 +24,9 @@
 </template>
 
 <script>
-  import SignUpForm from './SignUpForm.vue'
-  import SignInForm from './SignInForm.vue'
-  import ForgotPasswordForm from './ForgotPasswordForm.vue'
+  import SignUpForm from '@comp/SignUpForm'
+  import SignInForm from '@comp/SignInForm'
+  import ForgotPasswordForm from '@comp/ForgotPasswordForm'
 
   export default {
     props: {

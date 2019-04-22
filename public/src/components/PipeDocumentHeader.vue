@@ -73,7 +73,7 @@
 </template>
 
 <script>
-  import LabelSwitch from './LabelSwitch.vue'
+  import LabelSwitch from '@comp/LabelSwitch'
 
   export default {
     props: {

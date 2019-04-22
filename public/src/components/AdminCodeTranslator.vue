@@ -40,7 +40,7 @@
   import yaml from 'js-yaml'
   import Flexio from 'flexio-sdk-js'
   import utilSdkJs from '../utils/sdk-js'
-  import CodeEditor from './CodeEditor.vue'
+  import CodeEditor from '@comp/CodeEditor'
 
   export default {
     metaInfo: {

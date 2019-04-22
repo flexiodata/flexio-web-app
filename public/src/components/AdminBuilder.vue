@@ -44,8 +44,8 @@
 
 <script>
   import yaml from 'js-yaml'
-  import CodeEditor from './CodeEditor.vue'
-  import BuilderDocument from './BuilderDocument.vue'
+  import CodeEditor from '@comp/CodeEditor'
+  import BuilderDocument from '@comp/BuilderDocument'
 
   import test_def from '../data/builder/test-def.yml'
   // easy way to get rid of a bunch of elements for quick testing

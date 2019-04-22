@@ -37,8 +37,8 @@
 
 <script>
   import marked from 'marked'
-  import ServiceIcon from './ServiceIcon.vue'
-  import TaskIcon from './TaskIcon.vue'
+  import ServiceIcon from '@comp/ServiceIcon'
+  import TaskIcon from '@comp/TaskIcon'
 
   export default {
     props: {

@@ -133,7 +133,7 @@
 
 <script>
   import marked from 'marked'
-  import FileChooser from './FileChooser.vue'
+  import FileChooser from '@comp/FileChooser'
 
   const getDefaultValues = () => {
     return {

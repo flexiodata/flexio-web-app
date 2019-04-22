@@ -230,9 +230,9 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import ServiceIcon from './ServiceIcon.vue'
-  import TaskIcon from './TaskIcon.vue'
-  import ConfirmPopover from './ConfirmPopover.vue'
+  import ServiceIcon from '@comp/ServiceIcon'
+  import TaskIcon from '@comp/TaskIcon'
+  import ConfirmPopover from '@comp/ConfirmPopover'
   import builder_components from './builder-components'
 
   const components = _.assign({

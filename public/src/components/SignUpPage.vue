@@ -12,7 +12,7 @@
 
 <script>
   import { ROUTE_ONBOARD_PAGE, ROUTE_SIGNIN_PAGE } from '../constants/route'
-  import SignUpForm from './SignUpForm.vue'
+  import SignUpForm from '@comp/SignUpForm'
   import MixinConfig from './mixins/config'
   import MixinRedirect from './mixins/redirect'
 

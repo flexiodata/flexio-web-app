@@ -22,7 +22,7 @@
     ROUTE_RESETPASSWORD_PAGE
   } from '../constants/route'
   import { mapState, mapGetters } from 'vuex'
-  import AppNavbar from './AppNavbar.vue'
+  import AppNavbar from '@comp/AppNavbar'
 
   export default {
     name: 'App',

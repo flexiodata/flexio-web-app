@@ -94,10 +94,10 @@
   import marked from 'marked'
   import { mapGetters } from 'vuex'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
-  import ConnectionEditPanel from './ConnectionEditPanel.vue'
-  import PipeEditPanel from './PipeEditPanel.vue'
-  import PipeDeployPanel from './PipeDeployPanel.vue'
-  import OnboardingCodeEditor from './OnboardingCodeEditor.vue'
+  import ConnectionEditPanel from '@comp/ConnectionEditPanel'
+  import PipeEditPanel from '@comp/PipeEditPanel'
+  import PipeDeployPanel from '@comp/PipeDeployPanel'
+  import OnboardingCodeEditor from '@comp/OnboardingCodeEditor'
 
   export default {
     props: {

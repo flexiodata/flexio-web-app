@@ -74,8 +74,8 @@
   import { PROCESS_MODE_BUILD } from '../constants/process'
   import Flexio from 'flexio-sdk-js'
   import Spinner from 'vue-simple-spinner'
-  import BuilderList from './BuilderList.vue'
-  import CodeEditor from './CodeEditor.vue'
+  import BuilderList from '@comp/BuilderList'
+  import CodeEditor from '@comp/CodeEditor'
   import test_def from '../data/builder/test-def.yml'
 
   const buildTestDefinition = () => {

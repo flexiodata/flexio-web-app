@@ -11,7 +11,7 @@
 </template>
 
 <script>
-  import TimeChooserItem from './TimeChooserItem.vue'
+  import TimeChooserItem from '@comp/TimeChooserItem'
 
   export default {
     props: ['times'],

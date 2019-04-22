@@ -33,7 +33,7 @@
   import { API_V2_ROOT } from '../api/resources'
   import Grid from 'vue-grid2'
   import Spinner from 'vue-simple-spinner'
-  import StreamText from './StreamText.vue'
+  import StreamText from '@comp/StreamText'
 
   var containsSubstrings = function(arr, str) {
     var bools = _.map(arr, (a) => {

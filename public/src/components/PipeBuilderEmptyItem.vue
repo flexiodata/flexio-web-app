@@ -9,7 +9,7 @@
 </template>
 
 <script>
-  import BuilderItemTaskChooser from './BuilderItemTaskChooser.vue'
+  import BuilderItemTaskChooser from '@comp/BuilderItemTaskChooser'
 
   export default {
     components: {

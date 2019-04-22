@@ -74,7 +74,7 @@
 
 <script>
   import zenscroll from 'zenscroll'
-  import Popper from './Popper.vue'
+  import Popper from '@comp/Popper'
 
   const isNil = (v) => { return v === undefined || v === null }
   const getType = (v) => { return v === undefined ? 'undefined' : v === null ? 'null' : v.constructor.name.toLowerCase() }

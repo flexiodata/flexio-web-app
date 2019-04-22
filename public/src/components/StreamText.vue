@@ -36,7 +36,7 @@
 <script>
   import axios from 'axios'
   import Spinner from 'vue-simple-spinner'
-  import CodeEditor from './CodeEditor.vue'
+  import CodeEditor from '@comp/CodeEditor'
 
   const INITIAL_DATA = {
     is_fetching: false,

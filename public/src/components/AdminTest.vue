@@ -61,7 +61,7 @@
 
 <script>
   import api from '../api'
-  import AdminTestItem from './AdminTestItem.vue'
+  import AdminTestItem from '@comp/AdminTestItem'
   import MixinFilter from './mixins/filter'
   import MixinResponse from './mixins/response'
 

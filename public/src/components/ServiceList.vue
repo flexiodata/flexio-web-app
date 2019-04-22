@@ -13,7 +13,7 @@
 <script>
   import { CONNECTION_TYPE_FLEX }  from '../constants/connection-type'
   import * as connections from '../constants/connection-info'
-  import ServiceItem from './ServiceItem.vue'
+  import ServiceItem from '@comp/ServiceItem'
 
   export default {
     props: {

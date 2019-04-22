@@ -7,7 +7,7 @@
 </template>
 
 <script>
-  import ResetPasswordForm from './ResetPasswordForm.vue'
+  import ResetPasswordForm from '@comp/ResetPasswordForm'
 
   export default {
     metaInfo: {
