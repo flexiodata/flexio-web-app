@@ -18,6 +18,7 @@ const base = {
     libraryTarget: 'umd'
   },
   resolve: {
+    extensions: ['.js', '.vue', '.json'],
     alias: {
       'vue$': options.isProduction ? 'vue/dist/vue.min' : 'vue/dist/vue',
       '@': options.paths.resolve('src'),
