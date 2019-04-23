@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import App from '@comp/App'
+import App2 from '@comp/App2'
 import router from '@/router' // VueRouter
 import store from '@/store' // Vuex store
 import { fallbackCss } from '@/utils/dom'
@@ -22,5 +22,5 @@ const app = new Vue({
   // provide the store using the 'store' option.
   // this will inject the store instance to all child components.
   store,
-  render: h => h(App)
+  render: h => h(App2)
 })

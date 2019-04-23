@@ -26,7 +26,7 @@
       @select-all="onSelectAll"
       v-if="showHeader"
     />
-    <transition-group name="pipe-item">
+    <transition-group name="pipe-item" tag="div">
       <PipeItem
         v-for="(pipe, index) in sorted_pipes"
         :key="pipe.eid"

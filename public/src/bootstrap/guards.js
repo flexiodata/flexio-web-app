@@ -62,8 +62,7 @@ router.beforeEach((to, from, next) => {
     next()
   }
 
-  if (store.state.active_user_eid.length > 0)
-  {
+  if (store.state.active_user_eid.length > 0) {
     // user is signed in; move to the next route
     goNext()
   } else {

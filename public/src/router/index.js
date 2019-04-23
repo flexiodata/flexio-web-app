@@ -19,6 +19,7 @@ import SignUpPage from '@comp/SignUpPage'
 import ForgotPasswordPage from '@comp/ForgotPasswordPage'
 import ResetPasswordPage from '@comp/ResetPasswordPage'
 import InitSessionPage from '@comp/InitSessionPage'
+import PrototypePage from '@comp/PrototypePage'
 import OnboardingPage from '@comp/OnboardingPage'
 import PageNotFound from '@comp/PageNotFound'
 
@@ -38,6 +39,7 @@ const routes = [
   { path: '/forgotpassword',                             name: rn.ROUTE_FORGOTPASSWORD_PAGE,  component: ForgotPasswordPage        },
   { path: '/resetpassword',                              name: rn.ROUTE_RESETPASSWORD_PAGE,   component: ResetPasswordPage         },
   { path: '/initsession',                                name: rn.ROUTE_INITSESSION_PAGE,     component: InitSessionPage           },
+  { path: '/prototype',                                  name: rn.ROUTE_PROTOTYPE_PAGE,       component: PrototypePage             },
   { path: '/:user_identifier?/pipes',                    name: rn.ROUTE_PIPE_LIST_PAGE,       component: AppPipes,            meta },
   { path: '/:user_identifier?/pipes/:identifier/:view?', name: rn.ROUTE_PIPE_PAGE,            component: PipeDocument,        meta },
   { path: '/:user_identifier?/connections',              name: rn.ROUTE_CONNECTION_LIST_PAGE, component: AppConnections,      meta },
