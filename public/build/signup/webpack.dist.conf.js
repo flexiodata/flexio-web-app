@@ -6,7 +6,7 @@ const webpack = require('webpack')
 const options = require('../options')
 const banner =
   'Flex.io Web Sign In v' + version + ' (https://github.com/flexiodata/flexio)\n' +
-  '(c) ' + new Date().getFullYear() + ' Gold Prairie LLC\n' +
+  '(c) ' + new Date().getFullYear() + ' Gold Prairie LLC\n'
 
 const base = {
   entry: options.paths.resolve('src/signup.js'),
