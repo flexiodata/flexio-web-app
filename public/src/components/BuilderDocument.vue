@@ -243,7 +243,7 @@
           if (this.slug == 'external') {
             template_url = _.get(this.$route.query, 'url', '')
           } else {
-            template_url = '/def/templates/' + this.slug + '.json'
+            template_url = 'https://static.flex.io/templates/' + this.slug + '.json'
           }
 
           if (template_url.length > 0) {
