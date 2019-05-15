@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="flex flex-column fixed absolute--fill overflow-hidden">
     <AppNavbar v-if="show_intercom_button && show_navbar" />
-    <router-view class="flex-fill bt b--black-05"></router-view>
+    <router-view class="flex-fill"></router-view>
     <el-button
       type="primary"
       circle
