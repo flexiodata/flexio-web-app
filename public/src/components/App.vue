@@ -19,7 +19,8 @@
     ROUTE_SIGNIN_PAGE,
     ROUTE_SIGNUP_PAGE,
     ROUTE_FORGOTPASSWORD_PAGE,
-    ROUTE_RESETPASSWORD_PAGE
+    ROUTE_RESETPASSWORD_PAGE,
+    ROUTE_GSHEETS
   } from '../constants/route'
   import { mapState, mapGetters } from 'vuex'
   import AppNavbar from '@comp/AppNavbar'
@@ -54,6 +55,10 @@
         return this.active_user_eid.length > 0
       },
       show_navbar() {
+        if (this.route_name == ROUTE_GSHEETS) {
+          return false
+        }
+
         return this.is_logged_in
       },
       show_intercom_button() {
@@ -62,6 +67,7 @@
           case ROUTE_SIGNUP_PAGE:
           case ROUTE_FORGOTPASSWORD_PAGE:
           case ROUTE_RESETPASSWORD_PAGE:
+          case ROUTE_GSHEETS:
             return false
 
           // 404

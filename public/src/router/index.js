@@ -21,6 +21,7 @@ import ResetPasswordPage from '@comp/ResetPasswordPage'
 import InitSessionPage from '@comp/InitSessionPage'
 import PrototypePage from '@comp/PrototypePage'
 import OnboardingPage from '@comp/OnboardingPage'
+import GSheets from '@comp/GSheets'
 import PageNotFound from '@comp/PageNotFound'
 
 // use VueRouter for handling browser history
@@ -48,6 +49,7 @@ const routes = [
   { path: '/account/:section?',                          name: rn.ROUTE_ACCOUNT_PAGE,         component: AppAccount,          meta },
   { path: '/builder/:template',                          name: rn.ROUTE_BUILDER_PAGE,         component: BuilderDocument,     meta },
   { path: '/onboard',                                    name: rn.ROUTE_ONBOARD_PAGE,         component: OnboardingPage,      meta },
+  { path: '/gsheets',                                    name: rn.ROUTE_GSHEETS,              component: GSheets,             meta },
   admin_routes,
   { path: "*", component: PageNotFound } // 404
 ]
