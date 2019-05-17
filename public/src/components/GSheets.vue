@@ -14,7 +14,7 @@
     >
       <div key="detail" class="pa3" v-if="selected_item">
         <div>
-          <el-button type="text" size="small" style="padding: 0" @click="selected_item = null">&laquo; Back</el-button>
+          <el-button type="text" size="small" class="back-button" @click="selected_item = null">&laquo; Back</el-button>
         </div>
         <h3 class="pb1 bb b--black-05">{{selected_item.name}}</h3>
         <h4>Description</h4>
@@ -131,6 +131,11 @@
       border-bottom-color: transparent
       color: #fff
       background-color: $blue
+
+  .back-button
+    padding: 0
+    margin: 0
+    border: 0
 
   .slide-left-leave-active,
   .slide-left-enter-active
