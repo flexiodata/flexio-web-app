@@ -1,13 +1,18 @@
 <template>
   <div id="us" class="flex flex-column">
-    <div class="flex-none pa2" v-show="false">
+    <div class="flex-none pa2 header" v-show="false">
       <el-radio-group v-model="view" size="tiny">
         <el-radio-button label="pipes">Pipes</el-radio-button>
         <el-radio-button label="connections">Connections</el-radio-button>
       </el-radio-group>
     </div>
-    <div class="flex-fill overflow-auto">
-      <div class="pa3" v-if="selected_item">
+    <transition-group
+      tag="div"
+      class="flex-fill container"
+      mode="in-out"
+      :name="selected_item ? 'slide-right' : 'slide-left'"
+    >
+      <div key="detail" class="pa3" v-if="selected_item">
         <div>
           <el-button type="text" size="small" style="padding: 0" @click="selected_item = null">&laquo; Back</el-button>
         </div>
@@ -21,16 +26,26 @@
         <h4>Examples</h4>
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident, repellat minus fugiat tempore accusamus expedita amet enim ducimus qui praesentium eius quisquam neque odio saepe eum at molestias odit sed.</p>
       </div>
-      <div v-else-if="view == 'pipes'">
-        <div v-for="p in pipes" class="pointer ph2 pv2 bb b--black-05 darken-05 overflow-auto" @click="showDetail(p)">
+      <div key="pipes" v-else-if="view == 'pipes'">
+        <div v-for="p in pipes" class="list-item" @click="showDetail(p)">
           {{ p.name }}
         </div>
       </div>
-      <div v-else-if="view == 'connections'">
-        <div v-for="c in connections" class="pointer ph2 pv2 bb b--black-05 darken-05 overflow-auto" @click="showDetail(c)">
+      <div key="connections" v-else-if="view == 'connections'">
+        <div v-for="c in connections" class="list-item" @click="showDetail(c)">
           {{ c.name }}
         </div>
       </div>
+    </transition-group>
+    <div class="flex-none tc bg-white" style="padding: 2px">
+      <a
+        href="https://www.flex.io"
+        title="Visit Flex.io website"
+        class="no-underline gray hover-black"
+        target="_blank"
+      >
+        <span class="relative" style="font-size: 10px; top: -1px">Powered by</span> <img src="../assets/logo-flexio-14x49.png" style="height: 10px">
+      </a>
     </div>
   </div>
 </template>
@@ -79,12 +94,43 @@
 </script>
 
 <style lang="stylus" scoped>
-  #us
-    font-size: 13px
-
-  .gsheets-sidebar-header
-    background-color: #616161
+  @import '../stylesheets/variables.styl'
 
   p
     line-height: 1.5
+
+  #us
+    font-size: 13px
+
+  .header
+    background-color: #616161
+
+  .container
+    overflow-x: hidden
+    overflow-y: auto
+
+  .list-item
+    cursor: pointer
+    padding: 0.5rem
+    border-bottom: 1px solid rgba(0,0,0,0.05)
+    &:hover
+      border-bottom-color: transparent
+      color: #fff
+      background-color: $blue
+
+  .slide-left-leave-active,
+  .slide-left-enter-active
+    transition: 0.15s
+  .slide-left-enter
+    transform: translate(-100%, 0)
+  .slide-left-leave-to
+    transform: translate(100%, 0)
+
+  .slide-right-leave-active,
+  .slide-right-enter-active
+    transition: 0.15s
+  .slide-right-enter
+    transform: translate(100%, 0)
+  .slide-right-leave-to
+    transform: translate(-100%, 0)
 </style>
