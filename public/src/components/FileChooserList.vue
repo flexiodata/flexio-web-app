@@ -43,6 +43,10 @@
 
   export default {
     props: {
+      connectionEid: {
+        type: String,
+        default: ''
+      },
       path: {
         type: [String, Boolean],
         default: '/'
@@ -86,6 +90,10 @@
       }
     },
     watch: {
+      connectionEid: {
+        handler: 'refreshList',
+        immediate: true
+      },
       path: {
         handler: 'refreshList',
         immediate: true
@@ -200,6 +208,10 @@
         }
 
         var path = _.defaultTo(this.path, '/')
+
+        if (this.connectionEid) {
+          path = '/' + this.connectionEid + path
+        }
 
         api.v2_vfsListFiles('me', path).then(response => {
           var items = _

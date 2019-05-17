@@ -31,9 +31,12 @@
           {{ p.name }}
         </div>
       </div>
-      <div key="connections" v-else-if="view == 'connections'">
-        <div v-for="c in connections" class="list-item" @click="showDetail(c)">
-          {{ c.name }}
+      <div key="functions" v-else-if="view == 'functions'">
+        <div v-for="c in github_connections">
+          <FileChooser
+            style="margin: 0 -1px"
+            :connection="c"
+          />
         </div>
       </div>
       <div key="padding" class="footer-padding"></div>
@@ -53,15 +56,15 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import JsonDetailsPanel from '@comp/JsonDetailsPanel'
+  import FileChooser from '@comp/FileChooser'
 
   export default {
     components: {
-      JsonDetailsPanel
+      FileChooser
     },
     data() {
       return {
-        view: 'pipes',
+        view: 'functions',
         selected_item: null
       }
     },
@@ -71,6 +74,11 @@
       },
       connections() {
         return this.getAllConnections()
+      },
+      github_connections() {
+        return _.filter(this.connections, (c) => {
+          return c.connection_type == 'github'
+        })
       }
     },
     mounted() {
