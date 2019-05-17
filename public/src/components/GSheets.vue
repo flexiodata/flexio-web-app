@@ -36,8 +36,9 @@
           {{ c.name }}
         </div>
       </div>
+      <div key="padding" class="footer-padding"></div>
     </transition-group>
-    <div class="flex-none tc bg-white" style="padding: 2px">
+    <div class="footer flex flex-row items-center justify-center">
       <a
         href="https://www.flex.io"
         title="Visit Flex.io website"
@@ -95,6 +96,7 @@
 
 <style lang="stylus" scoped>
   @import '../stylesheets/variables.styl'
+  $footer-height = 22px
 
   p
     line-height: 1.5
@@ -104,6 +106,18 @@
 
   .header
     background-color: #616161
+
+  .footer
+    position: absolute
+    bottom: 0
+    left: 0
+    right: 17px
+    height: $footer-height
+    background-color: #fff
+    text-align: center
+
+  .footer-padding
+    height: $footer-height
 
   .container
     overflow-x: hidden
