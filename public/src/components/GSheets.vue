@@ -10,15 +10,15 @@
       tag="div"
       class="flex-fill container"
       mode="in-out"
-      :name="selected_item ? 'slide-right' : 'slide-left'"
+      :name="selected_file ? 'slide-right' : 'slide-left'"
     >
-      <div key="detail" class="pa3" v-if="selected_item">
+      <div key="detail" class="pa3" v-if="selected_file">
         <div>
-          <el-button type="text" size="small" class="back-button" @click="selected_item = null">&laquo; Back</el-button>
+          <el-button type="text" size="small" class="back-button" @click="selected_files = []">&laquo; Back</el-button>
         </div>
-        <h3 class="pb1 bb b--black-05">{{selected_item.name}}</h3>
+        <h3 class="pb1 bb b--black-05">{{selected_file.name}}</h3>
         <h4>Description</h4>
-        <p>{{selected_item.description}}</p>
+        <p>{{selected_file.description}}</p>
         <h4>Connection</h4>
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Incidunt minima voluptatibus laborum necessitatibus.</p>
         <h4>Data sets</h4>
@@ -35,6 +35,8 @@
         <div v-for="c in github_connections">
           <FileChooser
             style="margin: 0 -1px"
+            :allow-multiple="false"
+            :selected-items.sync="selected_files"
             :connection="c"
           />
         </div>
@@ -65,7 +67,9 @@
     data() {
       return {
         view: 'functions',
-        selected_item: null
+        selected_files: [],
+        contents: ''/*,
+        selected_file: null*/
       }
     },
     computed: {
@@ -79,6 +83,9 @@
         return _.filter(this.connections, (c) => {
           return c.connection_type == 'github'
         })
+      },
+      selected_file() {
+        return this.selected_files.length > 0 ? this.selected_files[0] : null
       }
     },
     mounted() {
@@ -92,7 +99,7 @@
         'getAllConnections'
       ]),
       showDetail(item) {
-        this.selected_item = item
+        //this.selected_file = item
       },
       sendMessage(msg) {
         // Make sure you are sending a string, and to stringify JSON
