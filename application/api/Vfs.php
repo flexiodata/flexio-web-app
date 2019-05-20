@@ -168,4 +168,141 @@ class Vfs
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api\Response::sendContent($result);
     }
+
+    public static function exec(\Flexio\Api\Request $request) : void
+    {
+        // EXPERIMENTAL API endpoint: creates and runs a process straight from a file on vfs
+
+        $request_url = $request->getUrl();
+        $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+
+        // TODO: pass on query/post params to the execute job
+        //$query_params = $request->getQueryParams();
+        //$post_params = $request->getPostParams();
+
+        // load the object; TODO: right now, govern VFS write rights using write
+        // permissions on the user; perhaps use user privileges on store/streams?
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+
+        // check the rights on the object
+        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        // get the code from the vfs path
+        $path = $request_url;
+
+        $pos = strpos($path, '/run');
+        if ($pos === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
+
+        // grab path, including preceding slash
+        $path = substr($path, $pos+4);
+
+        // get the file extension and set the language
+        $language = false;
+        $ext = strtolower(\Flexio\Base\File::getFileExtension($path));
+        if ($ext === 'flexio')
+            $language = 'flexio'; // execute content as a JSON pipe
+        if ($ext === 'py')
+            $language = 'python';
+        if ($ext === 'js')
+            $language = 'nodejs';
+
+        if ($language === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, 'Unsupported language');
+
+        // get the content
+        $content = '';
+        $vfs = new \Flexio\Services\Vfs($owner_user_eid);
+        $vfs->read($path, function($data) use (&$content) {
+            $content .= $data;
+        });
+
+
+        // create a new process job with the default task;
+        // if the process is created with a request from an api token, it's
+        // triggered with an api; if there's no api token, it's triggered
+        // from a web session, in which case it's triggered by the UI;
+        // TODO: this will work until we allow processes to be created from
+        // public pipes that don't require a token
+        $triggered_by = strlen($request->getToken()) > 0 ? \Model::PROCESS_TRIGGERED_API : \Model::PROCESS_TRIGGERED_INTERFACE;
+
+        // set the owner based on the owner being posted to
+        $process_params = array();
+        $process_params['process_mode'] = \Flexio\Jobs\Process::MODE_RUN;
+        $process_params['owned_by'] = $owner_user_eid;
+        $process_params['created_by'] = $requesting_user_eid;
+        $process_params['triggered_by'] = $triggered_by;
+
+        // set the task info
+        if ($language === 'flexio')
+        {
+            $task = array();
+            $pipe = @json_decode($content,true);
+            if (!is_null($pipe))
+                $task = $pipe['task'] ?? array();
+            $process_params['task'] = $task;
+        }
+        else
+        {
+            $execute_job_params = array();
+            $execute_job_params['op'] = 'execute'; // set the execute operation so this doesn't need to be supplied
+            $execute_job_params['lang'] = $language; // TODO: set the language from the extension
+            $execute_job_params['code'] = base64_encode($content); // encode the script
+
+            $process_params['task'] = [
+                "op" => "sequence",
+                "items" => [
+                    $execute_job_params
+                ]
+            ];
+        }
+        $process = \Flexio\Object\Process::create($process_params);
+
+        // create a job engine, attach it to the process object
+        $engine = \Flexio\Jobs\StoredProcess::create($process);
+
+        // parse the request content and set the stream info
+        $php_stream_handle = fopen('php://input', 'rb');
+        $post_content_type = $_SERVER['CONTENT_TYPE'] ?? '';
+        \Flexio\Base\Util::addProcessInputFromStream($php_stream_handle, $post_content_type, $engine);
+
+        // run the process
+        $engine->run(false  /*true: run in background*/);
+
+        if ($engine->hasError())
+        {
+            $error = $engine->getError();
+            \Flexio\Api\Response::sendError($error);
+            exit(0);
+        }
+
+        $stream = $engine->getStdout();
+        $stream_info = $stream->get();
+        if ($stream_info === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        $mime_type = $stream_info['mime_type'];
+        $start = 0;
+        $limit = PHP_INT_MAX;
+        $content = \Flexio\Base\Util::getStreamContents($stream, $start, $limit);
+        $response_code = $engine->getResponseCode();
+
+        if ($mime_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
+        {
+            // return content as-is
+            header('Content-Type: ' . $mime_type, true, $response_code);
+        }
+        else
+        {
+            // flexio table; return application/json in place of internal mime
+            header('Content-Type: ' . \Flexio\Base\ContentType::JSON, true, $response_code);
+            $content = json_encode($content, JSON_UNESCAPED_SLASHES);
+        }
+
+        \Flexio\Api\Response::sendRaw($content);
+    }
 }

@@ -128,6 +128,10 @@ class Api
         'GET /:userid/vfs/*'                          => '\Flexio\Api\Vfs::get',
         'PUT /:userid/vfs/*'                          => '\Flexio\Api\Vfs::put',
 
+        // vfs-styled EXPERIMENTAL endpoint for running code (creates and runs a process from code)
+        'GET /:userid/run/*'                          => '\Flexio\Api\Vfs::exec',
+        'POS /:userid/run/*'                          => '\Flexio\Api\Vfs::exec',
+
         // INTERNAL ENDPOINTS
 
         // email/cron triggers
@@ -323,7 +327,6 @@ class Api
         $api_params = $url_params;
         $apiendpoint = self::buildApiEndpointString($request_method, $api_params);
 
-
         $function = self::$endpoints[$apiendpoint] ?? false;
         if ($function !== false)
             return $function;
@@ -386,7 +389,22 @@ class Api
             return $function;
         }
 
-        // PATH POSSIBILITY 6; the path is a vfs path with a path after the vfs prefix
+        // PATH POSSIBILITY 6; the path is an run endpoint followed by a path
+        $api_params = $url_params;
+        $api_params['apiparam1'] = $user_eid !== '' ? ':userid' : $api_params['apiparam1'];
+        $apiendpoint = self::buildApiEndpointString($request_method, $api_params);
+
+             if (substr($apiendpoint,0,16) === 'GET /:userid/run') $apiendpoint = 'GET /:userid/run/*';
+        else if (substr($apiendpoint,0,16) === 'PUT /:userid/run') $apiendpoint = 'POS /:userid/run/*';
+
+        $function = self::$endpoints[$apiendpoint] ?? false;
+        if ($function !== false)
+        {
+            $request->setOwnerFromUrl($user_eid);
+            return $function;
+        }
+
+        // PATH POSSIBILITY 7; the path is a vfs path with a path after the vfs prefix
         $api_params = $url_params;
         $api_params['apiparam1'] = $user_eid !== '' ? ':userid' : $api_params['apiparam1'];
         $apiendpoint = self::buildApiEndpointString($request_method, $api_params);
