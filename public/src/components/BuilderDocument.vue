@@ -68,6 +68,7 @@
 
 <script>
   import axios from 'axios'
+  import yaml from 'js-yaml'
   import stickybits from 'stickybits'
   import { mapState, mapGetters } from 'vuex'
   import { ROUTE_BUILDER_PAGE, ROUTE_PIPE_PAGE } from '../constants/route'
@@ -243,12 +244,14 @@
           if (this.slug == 'external') {
             template_url = _.get(this.$route.query, 'url', '')
           } else {
-            template_url = 'https://static.flex.io/templates/' + this.slug + '.json'
+            template_url = 'https://static.flex.io/templates/builder/' + this.slug + '.yml'
           }
 
           if (template_url.length > 0) {
             axios.get(template_url).then(response => {
-              var def = response.data
+              var yaml_def = response.data
+              var def = yaml.safeLoad(yaml_def)
+              debugger
               this.$store.commit('builder/INIT_ROUTE', this.$route.name)
               this.$store.commit('builder/INIT_DEF', def)
               this.$store.commit('builder/FETCHING_DEF', false)
