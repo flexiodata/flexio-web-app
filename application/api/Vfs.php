@@ -191,8 +191,8 @@ class Vfs
         if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        // get the code from the vfs path
-        $path = $request_url;
+        // get the file to excecute from the vfs path
+        $path = parse_url($request_url, PHP_URL_PATH);
 
         $pos = strpos($path, '/run');
         if ($pos === false)
