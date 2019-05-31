@@ -395,7 +395,7 @@ class Api
         $apiendpoint = self::buildApiEndpointString($request_method, $api_params);
 
              if (substr($apiendpoint,0,16) === 'GET /:userid/run') $apiendpoint = 'GET /:userid/run/*';
-        else if (substr($apiendpoint,0,16) === 'PUT /:userid/run') $apiendpoint = 'POS /:userid/run/*';
+        else if (substr($apiendpoint,0,16) === 'POS /:userid/run') $apiendpoint = 'POS /:userid/run/*';
 
         $function = self::$endpoints[$apiendpoint] ?? false;
         if ($function !== false)
