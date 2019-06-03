@@ -10,6 +10,17 @@
         <slot name="buttons" slot="buttons"></slot>
       </ConnectionChooserItem>
     </template>
+    <template v-else-if="show_inline_chooser">
+      <ConnectionEditPanel
+        :show-title="false"
+        :mode="edit_mode"
+        :connection="edit_connection"
+        :filter-by="filterBy"
+        @close="show_inline_chooser = false"
+        @cancel="show_inline_chooser = false"
+        @submit="tryUpdateConnection"
+      />
+    </template>
     <template v-else>
       <p class="ttu fw6 f7 moon-gray" v-if="has_connections">Use an existing connection</p>
       <ConnectionChooserList
@@ -77,6 +88,10 @@
       filterBy: {
         type: Function
       },
+      inlineChooser: {
+        type: Boolean,
+        default: true
+      },
       showResult: {
         type: Boolean,
         default: false
@@ -93,6 +108,16 @@
         handler: 'initSelf',
         immediate: true,
         deep: true
+      },
+      show_inline_chooser: {
+        immediate: true,
+        handler(val, old_val) {
+          if (val === true) {
+            this.createPendingConnection()
+          } else {
+            this.edit_connection = undefined
+          }
+        }
       }
     },
     data() {
@@ -100,7 +125,8 @@
         edit_mode: 'add',
         orig_connection: undefined,
         edit_connection: undefined,
-        show_connection_dialog: false
+        show_connection_dialog: false,
+        reset_inline_chooser: false
       }
     },
     computed: {
@@ -124,6 +150,15 @@
       service_name() {
         return this.$_Connection_getServiceName(this.connectionTypeFilter)
       },
+      show_inline_chooser: {
+        get() {
+          return this.inlineChooser == true && !this.has_connections && !this.reset_inline_chooser
+        },
+        set(value) {
+          this.reset_inline_chooser = !value
+          this.$nextTick(() => { this.reset_inline_chooser = false })
+        }
+      }
     },
     methods: {
       ...mapGetters([
@@ -170,14 +205,18 @@
             var connection = _.cloneDeep(response.data)
             this.edit_mode = 'add'
             this.edit_connection = connection
-            this.show_connection_dialog = true
+            if (!this.inlineChooser) {
+              this.show_connection_dialog = true
+            }
           }).catch(error => {
             // TODO: add error handling?
           })
         } else {
           this.edit_mode = 'add'
           this.edit_connection = undefined
-          this.show_connection_dialog = true
+          if (!this.inlineChooser) {
+            this.show_connection_dialog = true
+          }
         }
       },
       tryUpdateConnection(attrs) {

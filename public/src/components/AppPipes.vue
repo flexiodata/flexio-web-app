@@ -159,6 +159,7 @@
         })
       },
       onNewPipeClick() {
+        /*
         // when creating a new pipe, start out with a basic Python 'Hello World' script
         var attrs = {
           name: 'Untitled Pipe',
@@ -168,6 +169,19 @@
               op: 'execute',
               lang: 'python',
               code: 'IyBiYXNpYyBoZWxsbyB3b3JsZCBleGFtcGxlCmRlZiBmbGV4X2hhbmRsZXIoZmxleCk6CiAgICBmbGV4LmVuZCgiSGVsbG8sIFdvcmxkLiIpCg=='
+            }]
+          }
+        }
+        */
+
+        // when creating a new pipe, start out with a basic read task
+        var attrs = {
+          name: 'Untitled Pipe',
+          task: {
+            op: 'sequence',
+            items: [{
+              op: 'read',
+              title: 'Select Source'
             }]
           }
         }

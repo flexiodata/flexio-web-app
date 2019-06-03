@@ -18,6 +18,7 @@
       :filter-by="filter_by"
       :connection-identifier.sync="connection_identifier"
       :show-result="has_available_connection"
+      :inline-chooser="true"
     >
       <el-button
         slot="buttons"
