@@ -157,7 +157,7 @@
                   class="mb4 pv1 ph3 bg-white br2 css-white-box"
                   name="input"
                   data-tour-step="pipe-onboarding-2"
-                  v-if="!is_deployed"
+                  v-if="!is_deployed && false"
                 >
                   <template slot="title">
                     <div class="flex flex-row items-center">
@@ -275,7 +275,7 @@
                   name="output"
                   data-tour-step="pipe-onboarding-4"
                   :id="output_item_id"
-                  v-if="!is_deployed"
+                  v-if="!is_deployed && false"
                 >
                   <template slot="title">
                     <div class="flex flex-row items-center">
