@@ -164,6 +164,9 @@ class Connection(object):
         self.name = info['name']
         self.description = info['description']
 
+    def get_credentials(self):
+        return proxy.invoke('getConnectionCredentials', [self.eid])
+
     def get_access_token(self):
         return proxy.invoke('getConnectionAccessToken', [self.eid])
 

@@ -528,6 +528,10 @@ class ContextConnection {
     getAccessToken() {
         return proxy.invokeSync('getConnectionAccessToken', [this.eid])
     }
+
+    getCredentials() {
+        return proxy.invokeSync('getConnectionCredentials', [this.eid])
+    }
 }
 
 class ContextConnections {
