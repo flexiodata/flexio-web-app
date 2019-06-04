@@ -1,6 +1,7 @@
 export const CONNECTION_TYPE_UNKNOWN            = ''
 export const CONNECTION_TYPE_AMAZONS3           = 'amazons3'
 export const CONNECTION_TYPE_BOX                = 'box'
+export const CONNECTION_TYPE_CRUNCHBASE         = 'crunchbase'
 export const CONNECTION_TYPE_DROPBOX            = 'dropbox'
 export const CONNECTION_TYPE_ELASTICSEARCH      = 'elasticsearch'
 export const CONNECTION_TYPE_FLEX               = 'flex'

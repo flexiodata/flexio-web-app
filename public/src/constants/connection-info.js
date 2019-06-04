@@ -32,6 +32,16 @@ const API = {
   is_email: false
 }
 
+const CRUNCHBASE = {
+  service_name: 'Crunchbase',
+  service_description: 'Discover innovative companies and the people behind them',
+  connection_type: types.CONNECTION_TYPE_CRUNCHBASE,
+  icon: require('../assets/icon/icon-crunchbase-128.png'),
+  is_oauth: false,
+  is_storage: true,
+  is_email: false
+}
+
 const DROPBOX = {
   service_name: 'Dropbox',
   service_description: 'Cloud file storage and syncing',
@@ -261,6 +271,7 @@ export const CONNECTION_INFO_FLEX                 = FLEX
 export const CONNECTION_INFO_API                  = API
 export const CONNECTION_INFO_AMAZON_S3            = AMAZON_S3
 export const CONNECTION_INFO_BOX                  = BOX
+export const CONNECTION_INFO_CRUNCHBASE           = CRUNCHBASE
 export const CONNECTION_INFO_DROPBOX              = DROPBOX
 export const CONNECTION_INFO_SMTP                 = SMTP
 export const CONNECTION_INFO_GITHUB               = GITHUB
