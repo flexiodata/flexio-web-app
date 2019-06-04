@@ -114,6 +114,9 @@
           prompt = _.get(def, 'prompt', null)
         }
 
+        // make sure we don't overwrite any objects
+        prompt = _.cloneDeep(prompt)
+
         // if we couldn't find a matching task builder definition
         // show a basic JSON task editor
         if (_.isNil(prompt)) {
@@ -124,6 +127,13 @@
           }
         } else if (prompt.element.indexOf('task-') != -1) {
           var task = _.omit(task, ['eid'])
+
+          // probably should be thought out better and not just target title...
+          var ttitle = _.get(task, 'title', '')
+          if (ttitle.length > 0) {
+            prompt.title = ttitle
+          }
+
           prompt = _.assign({}, prompt, { form_values: task })
         } else if (prompt.element == 'form') {
           // for form builder items, assign the form item value by finding it in the task object
