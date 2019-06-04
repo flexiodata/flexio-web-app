@@ -94,7 +94,10 @@ class MySql implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         $fields = array();
         while ($result && ($row = $result->fetch_assoc()))
         {
+            $row = array_change_key_case($row, CASE_LOWER);
+
             // TODO: filter based on the path
+
 
             $fields[] = array(
                 'name' => $row['table_name'],
