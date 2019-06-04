@@ -42,16 +42,6 @@ const DROPBOX = {
   is_email: false
 }
 
-const ELASTICSEARCH = {
-  service_name: 'Elasticsearch',
-  service_description: 'Open source search and analytics',
-  connection_type: types.CONNECTION_TYPE_ELASTICSEARCH,
-  icon: require('../assets/icon/icon-elasticsearch-128.png'),
-  is_oauth: false,
-  is_storage: true,
-  is_email: false
-}
-
 const FLEX = {
   service_name: 'Flex.io',
   service_description: '',
@@ -70,16 +60,6 @@ const GITHUB = {
   is_oauth: true,
   is_storage: true,
   is_email: false
-}
-
-const GMAIL = {
-  service_name: 'Gmail',
-  service_description: "Google's free email service",
-  connection_type: types.CONNECTION_TYPE_GMAIL,
-  icon: require('../assets/icon/icon-gmail-128.png'),
-  is_oauth: true,
-  is_storage: false,
-  is_email: true
 }
 
 const GOOGLEDRIVE = {
@@ -142,16 +122,6 @@ const SFTP = {
   is_email: false
 }
 
-const TWILIO = {
-  service_name: 'Twilio',
-  service_description: 'Programmatically make and receive phone calls and send and receive text messages',
-  connection_type: types.CONNECTION_TYPE_TWILIO,
-  icon: require('../assets/icon/icon-twilio-128.png'),
-  is_oauth: false,
-  is_storage: false,
-  is_email: false
-}
-
 /*
 const STDIN = {
   service_name: 'Stdin',
@@ -193,6 +163,16 @@ const DOWNLOAD = {
   is_email: false
 }
 
+const ELASTICSEARCH = {
+  service_name: 'Elasticsearch',
+  service_description: 'Open source search and analytics',
+  connection_type: types.CONNECTION_TYPE_ELASTICSEARCH,
+  icon: require('../assets/icon/icon-elasticsearch-128.png'),
+  is_oauth: false,
+  is_storage: true,
+  is_email: false
+}
+
 const FIREBASE = {
   service_name: 'Firebase',
   service_description: 'Mobile and web application development platform',
@@ -211,6 +191,16 @@ const GOOGLECLOUDSTORAGE = {
   is_oauth: true,
   is_storage: true,
   is_email: false
+}
+
+const GMAIL = {
+  service_name: 'Gmail',
+  service_description: "Google's free email service",
+  connection_type: types.CONNECTION_TYPE_GMAIL,
+  icon: require('../assets/icon/icon-gmail-128.png'),
+  is_oauth: true,
+  is_storage: false,
+  is_email: true
 }
 
 const MAILJET = {
@@ -252,6 +242,16 @@ const PIPELINEDEALS = {
   is_storage: false,
   is_email: false
 }
+
+const TWILIO = {
+  service_name: 'Twilio',
+  service_description: 'Programmatically make and receive phone calls and send and receive text messages',
+  connection_type: types.CONNECTION_TYPE_TWILIO,
+  icon: require('../assets/icon/icon-twilio-128.png'),
+  is_oauth: false,
+  is_storage: false,
+  is_email: false
+}
 */
 
 /* exports */
@@ -262,25 +262,26 @@ export const CONNECTION_INFO_API                  = API
 export const CONNECTION_INFO_AMAZON_S3            = AMAZON_S3
 export const CONNECTION_INFO_BOX                  = BOX
 export const CONNECTION_INFO_DROPBOX              = DROPBOX
-export const CONNECTION_INFO_ELASTICSEARCH        = ELASTICSEARCH
 export const CONNECTION_INFO_SMTP                 = SMTP
 export const CONNECTION_INFO_GITHUB               = GITHUB
-export const CONNECTION_INFO_GMAIL                = GMAIL
 export const CONNECTION_INFO_GOOGLEDRIVE          = GOOGLEDRIVE
 export const CONNECTION_INFO_GOOGLESHEETS         = GOOGLESHEETS
 export const CONNECTION_INFO_MYSQL                = MYSQL
 export const CONNECTION_INFO_POSTGRES             = POSTGRES
 export const CONNECTION_INFO_SFTP                 = SFTP
-export const CONNECTION_INFO_TWILIO               = TWILIO
 
 // TODO: what are we going to do with these?
 //export const CONNECTION_INFO_STDIN                = STDIN
 //export const CONNECTION_INFO_STDOUT               = STDOUT
 //export const CONNECTION_INFO_UPLOAD               = UPLOAD
 //export const CONNECTION_INFO_DOWNLOAD             = DOWNLOAD
+//export const CONNECTION_INFO_ELASTICSEARCH        = ELASTICSEARCH
 //export const CONNECTION_INFO_FIREBASE             = FIREBASE
 //export const CONNECTION_INFO_MAILJET              = MAILJET
 //export const CONNECTION_INFO_GOOGLECLOUDSTORAGE   = GOOGLECLOUDSTORAGE
+//export const CONNECTION_INFO_GMAIL                = GMAIL
 //export const CONNECTION_INFO_RSS                  = RSS
 //export const CONNECTION_INFO_SOCRATA              = SOCRATA
 //export const CONNECTION_INFO_PIPELINEDEALS        = PIPELINEDEALS
+//export const CONNECTION_INFO_TWILIO               = TWILIO
+

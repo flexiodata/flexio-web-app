@@ -11,14 +11,9 @@
       </ConnectionChooserItem>
     </template>
     <template v-else-if="show_inline_chooser">
-      <ConnectionEditPanel
-        :show-title="false"
-        :mode="edit_mode"
-        :connection="edit_connection"
+      <ServiceList
+        @item-activate="createPendingConnection"
         :filter-by="filterBy"
-        @close="show_inline_chooser = false"
-        @cancel="show_inline_chooser = false"
-        @submit="tryUpdateConnection"
       />
     </template>
     <template v-else>
@@ -56,6 +51,7 @@
     >
       <ConnectionEditPanel
         :mode="edit_mode"
+        :show-steps="show_create_steps"
         :connection="edit_connection"
         :filter-by="filterBy"
         @close="show_connection_dialog = false"
@@ -71,11 +67,11 @@
   import { mapGetters } from 'vuex'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
+  import ServiceList from '@comp/ServiceList'
   import ConnectionEditPanel from '@comp/ConnectionEditPanel'
   import ConnectionChooserList from '@comp/ConnectionChooserList'
   import ConnectionChooserItem from '@comp/ConnectionChooserItem'
   import MixinConnection from '@comp/mixins/connection'
-
   export default {
     props: {
       connectionIdentifier: {
@@ -99,6 +95,7 @@
     },
     mixins: [MixinConnection],
     components: {
+      ServiceList,
       ConnectionEditPanel,
       ConnectionChooserList,
       ConnectionChooserItem
@@ -108,16 +105,6 @@
         handler: 'initSelf',
         immediate: true,
         deep: true
-      },
-      show_inline_chooser: {
-        immediate: true,
-        handler(val, old_val) {
-          if (val === true) {
-            this.createPendingConnection()
-          } else {
-            this.edit_connection = undefined
-          }
-        }
       }
     },
     data() {
@@ -125,8 +112,8 @@
         edit_mode: 'add',
         orig_connection: undefined,
         edit_connection: undefined,
-        show_connection_dialog: false,
-        reset_inline_chooser: false
+        show_create_steps: false,
+        show_connection_dialog: false
       }
     },
     computed: {
@@ -150,14 +137,8 @@
       service_name() {
         return this.$_Connection_getServiceName(this.connectionTypeFilter)
       },
-      show_inline_chooser: {
-        get() {
-          return this.inlineChooser == true && !this.has_connections && !this.reset_inline_chooser
-        },
-        set(value) {
-          this.reset_inline_chooser = !value
-          this.$nextTick(() => { this.reset_inline_chooser = false })
-        }
+      show_inline_chooser() {
+        return this.inlineChooser == true && !this.has_connections
       }
     },
     methods: {
@@ -193,30 +174,31 @@
         this.edit_connection = connection
         this.show_connection_dialog = true
       },
-      createPendingConnection() {
-        if (this.connectionTypeFilter.length > 0) {
+      createPendingConnection(conn) {
+        var cname = _.get(conn, 'service_name', this.service_name)
+        var ctype = _.get(conn, 'connection_type', this.connectionTypeFilter)
+
+        if (ctype.length > 0) {
           var attrs = {
             eid_status: OBJECT_STATUS_PENDING,
-            name: this.service_name,
-            connection_type: this.connectionTypeFilter
+            name: cname,
+            connection_type: ctype
           }
 
           this.$store.dispatch('v2_action_createConnection', { attrs }).then(response => {
             var connection = _.cloneDeep(response.data)
             this.edit_mode = 'add'
+            this.show_create_steps = false
             this.edit_connection = connection
-            if (!this.inlineChooser) {
-              this.show_connection_dialog = true
-            }
+            this.show_connection_dialog = true
           }).catch(error => {
             // TODO: add error handling?
           })
         } else {
           this.edit_mode = 'add'
+          this.show_create_steps = true
           this.edit_connection = undefined
-          if (!this.inlineChooser) {
-            this.show_connection_dialog = true
-          }
+          this.show_connection_dialog = true
         }
       },
       tryUpdateConnection(attrs) {
