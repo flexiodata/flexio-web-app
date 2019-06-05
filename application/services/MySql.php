@@ -98,7 +98,6 @@ class MySql implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
             // TODO: filter based on the path
 
-
             $fields[] = array(
                 'name' => $row['table_name'],
                 'path' => $row['table_name'],
