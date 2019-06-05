@@ -131,6 +131,8 @@ class Api
         // vfs-styled EXPERIMENTAL endpoint for running code (creates and runs a process from code)
         'GET /:userid/run/*'                          => '\Flexio\Api\Vfs::exec',
         'POS /:userid/run/*'                          => '\Flexio\Api\Vfs::exec',
+        'PUT /:userid/run/*'                          => '\Flexio\Api\Vfs::exec',
+        'DEL /:userid/run/*'                          => '\Flexio\Api\Vfs::exec',
 
         // INTERNAL ENDPOINTS
 
@@ -395,7 +397,9 @@ class Api
         $apiendpoint = self::buildApiEndpointString($request_method, $api_params);
 
              if (substr($apiendpoint,0,16) === 'GET /:userid/run') $apiendpoint = 'GET /:userid/run/*';
-        else if (substr($apiendpoint,0,16) === 'PUT /:userid/run') $apiendpoint = 'POS /:userid/run/*';
+        else if (substr($apiendpoint,0,16) === 'POS /:userid/run') $apiendpoint = 'POS /:userid/run/*';
+        else if (substr($apiendpoint,0,16) === 'PUT /:userid/run') $apiendpoint = 'PUT /:userid/run/*';
+        else if (substr($apiendpoint,0,16) === 'DEL /:userid/run') $apiendpoint = 'DEL /:userid/run/*';
 
         $function = self::$endpoints[$apiendpoint] ?? false;
         if ($function !== false)
