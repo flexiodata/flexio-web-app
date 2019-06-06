@@ -148,14 +148,6 @@
             >
               <h4 class="mv0 pa3">Input</h4>
 
-              <template slot="title">
-                <div class="flex flex-row items-center">
-                  <span class="f4">Input</span>
-                  <span v-if="false" class="ml1 lh-1 hint--bottom hint--large" aria-label="An optional web interface that can be used in a runtime enviroment to prompt users for parameters to use when running the pipe. Interface elements can be added by editing the 'ui' node in the YAML sidebar.">
-                    <i class="el-icon-info blue"></i>
-                  </span>
-                </div>
-              </template>
               <div class="ph3">
                 <p class="mt0 ttu fw6 f7 moon-gray">Test this pipe with the following POST parameters</p>
                 <ProcessInput
@@ -174,19 +166,11 @@
               :id="output_item_id"
               v-if="!is_deployed"
             >
-              <h4 class="mv0 ph3">Output</h4>
+              <h4 class="mv0 ph3 pb3">Output</h4>
 
-              <template slot="title">
-                <div class="flex flex-row items-center">
-                  <span class="f4">Output</span>
-                  <span v-if="false" class="ml1 lh-1 hint--bottom hint--large" aria-label="The output panel shows the output of the pipe after it has been run.">
-                    <i class="el-icon-info blue"></i>
-                  </span>
-                </div>
-              </template>
-              <div class="pt3 ph3">
+              <div class="ph3">
                 <ProcessContent :process-eid="active_process_eid">
-                  <div class="tc f6" slot="empty">
+                  <div class="ba b--black-10 pa3 tc f6 lh-copy" slot="empty">
                     <em>Click the <code class="ph1 ba b--black-10 bg-nearer-white br2">Test</code> button to see the result of your pipe logic here.</em>
                   </div>
                 </ProcessContent>
