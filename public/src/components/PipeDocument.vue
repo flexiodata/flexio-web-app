@@ -818,7 +818,7 @@
         this.has_tested_once = true
 
         // scroll to the output item
-        this.scrollToItem(this.output_item_id, 300)
+        //this.scrollToItem(this.output_item_id, 300)
 
         this.$store.track('Tested Pipe')
       },
