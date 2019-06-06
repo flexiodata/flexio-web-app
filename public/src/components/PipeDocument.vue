@@ -50,8 +50,8 @@
           class="flex-none bg-nearer-white trans-a"
           default-active="0"
           :style="{
-            width: show_yaml || is_deployed ? '0' : '49px',
-            opacity: show_yaml || is_deployed ? '0' : '1',
+            width: show_yaml || show_testing || is_deployed ? '0' : '49px',
+            opacity: show_yaml || show_testing || is_deployed ? '0' : '1',
             borderRight: 0
           }"
         >
@@ -60,6 +60,12 @@
             @click="showYaml(true)"
           >
             <i class="material-icons nl2 nr2 hint--right" :aria-label="show_yaml ? 'Hide Pipe Definition' : 'Show Pipe Definition'">code</i>
+          </el-menu-item>
+          <el-menu-item
+            index="0"
+            @click="showTesting(true)"
+          >
+            <i class="material-icons nl2 nr2 hint--right" :aria-label="show_testing ? 'Hide Testing Panel' : 'Show Testing Panel'">assignment</i>
           </el-menu-item>
         </el-menu>
 
@@ -70,7 +76,7 @@
           <div
             class="pane"
             :class="{
-              'trans-a': !show_yaml || transitioning_yaml
+              'trans-a': !show_yaml || transitioning_sidebar
             }"
             :style="{
               maxWidth: '50%',
@@ -111,12 +117,88 @@
               v-model="edit_pipe"
             />
           </div>
-          <multipane-resizer
+          <div
+            class="pane bg-white"
             :class="{
-              'no-pointer-events': !show_yaml
+              'trans-a': !show_testing || transitioning_sidebar
             }"
             :style="{
-              zIndex: show_yaml ? 3 : 0
+              maxWidth: '50%',
+              minWidth: show_testing ? '380px' : '1px',
+              width: show_testing ? '22%' : '1px',
+              marginLeft: show_testing ? '0' : '-2px',
+              opacity: show_testing ? '1' : '0.01',
+              boxShadow: '2px 2px 6px rgba(0,0,0,0.1)',
+              zIndex: show_testing ? 2 : 0
+            }"
+          >
+            <div class="flex flex-row items-center bg-nearer-white bb b--black-05 pa2">
+              <div class="f6 fw6 flex-fill">Testing</div>
+              <div class="pointer f5 black-30 hover-black-60 hint--bottom-left" aria-label="Hide Testing" @click="showTesting(false)">
+                <i class="el-icon-close fw6"></i>
+              </div>
+            </div>
+
+            <!-- input panel; visible when pipe is not deployed -->
+            <div
+              class="mb4 ph2"
+              name="input"
+              data-tour-step="pipe-onboarding-2"
+              v-if="!is_deployed"
+            >
+              <h4 class="mv0 pa3">Input</h4>
+
+              <template slot="title">
+                <div class="flex flex-row items-center">
+                  <span class="f4">Input</span>
+                  <span v-if="false" class="ml1 lh-1 hint--bottom hint--large" aria-label="An optional web interface that can be used in a runtime enviroment to prompt users for parameters to use when running the pipe. Interface elements can be added by editing the 'ui' node in the YAML sidebar.">
+                    <i class="el-icon-info blue"></i>
+                  </span>
+                </div>
+              </template>
+              <div class="ph3">
+                <p class="mt0 ttu fw6 f7 moon-gray">Test this pipe with the following POST parameters</p>
+                <ProcessInput
+                  ref="process-input"
+                  v-model="process_input"
+                  :process-data.sync="process_data"
+                />
+              </div>
+            </div>
+
+            <!-- output panel; visible when pipe is not deployed -->
+            <div
+              class="mb4 ph2"
+              name="output"
+              data-tour-step="pipe-onboarding-4"
+              :id="output_item_id"
+              v-if="!is_deployed"
+            >
+              <h4 class="mv0 ph3">Output</h4>
+
+              <template slot="title">
+                <div class="flex flex-row items-center">
+                  <span class="f4">Output</span>
+                  <span v-if="false" class="ml1 lh-1 hint--bottom hint--large" aria-label="The output panel shows the output of the pipe after it has been run.">
+                    <i class="el-icon-info blue"></i>
+                  </span>
+                </div>
+              </template>
+              <div class="pt3 ph3">
+                <ProcessContent :process-eid="active_process_eid">
+                  <div class="tc f6" slot="empty">
+                    <em>Click the <code class="ph1 ba b--black-10 bg-nearer-white br2">Test</code> button to see the result of your pipe logic here.</em>
+                  </div>
+                </ProcessContent>
+              </div>
+            </div>
+          </div>
+          <multipane-resizer
+            :class="{
+              'no-pointer-events': !show_yaml && !show_testing
+            }"
+            :style="{
+              zIndex: show_yaml || show_testing ? 3 : 0
             }"
           />
           <div
@@ -152,58 +234,6 @@
                 class="el-collapse--plain"
                 v-model="active_collapse_items"
               >
-                <!-- input panel; visible when pipe is not deployed -->
-                <el-collapse-item
-                  class="mb4 pv1 ph3 bg-white br2 css-white-box"
-                  name="input"
-                  data-tour-step="pipe-onboarding-2"
-                  v-if="!is_deployed && false"
-                >
-                  <template slot="title">
-                    <div class="flex flex-row items-center">
-                      <span class="f4">Input</span>
-                      <span v-if="false" class="ml1 lh-1 hint--bottom hint--large" aria-label="An optional web interface that can be used in a runtime enviroment to prompt users for parameters to use when running the pipe. Interface elements can be added by editing the 'ui' node in the YAML sidebar.">
-                        <i class="el-icon-info blue"></i>
-                      </span>
-                    </div>
-                  </template>
-                  <div class="pt3 ph3">
-                    <p class="mt0 ttu fw6 f7 moon-gray">Test this pipe with the following POST parameters</p>
-                    <ProcessInput
-                      ref="process-input"
-                      v-model="edit_input"
-                      v-if="false"
-                    />
-                    <ProcessInput
-                      ref="process-input"
-                      v-model="process_input"
-                      :process-data.sync="process_data"
-                    />
-                  </div>
-                  <div class="pt3 ph3" v-if="false">
-                    <BuilderList
-                      builder-mode="wizard"
-                      :items="edit_ui_list"
-                      :container-id="scrollbar_container_id"
-                      :active-item-idx.sync="active_ui_idx"
-                      :show-numbers="true"
-                      :show-icons="false"
-                      :show-insert-buttons="false"
-                      :show-edit-buttons="false"
-                      :show-delete-buttons="false"
-                      @item-prev="active_ui_idx--"
-                      @item-next="active_ui_idx++"
-                      v-if="edit_ui_list.length > 0"
-                    />
-                    <div
-                      class="tc f6"
-                      v-else
-                    >
-                      <em>There is no web interface for this pipe.</em>
-                    </div>
-                  </div>
-                </el-collapse-item>
-
                 <!-- tasks panel -->
                 <el-collapse-item
                   class="mb4 pv1 ph3 bg-white br2 css-white-box"
@@ -266,31 +296,6 @@
                       v-model="edit_task_list"
                     />
                     <div data-tour-step="pipe-onboarding-5" class="relative o-0 w3" style="left: 64px; top: -450px"></div>
-                  </div>
-                </el-collapse-item>
-
-                <!-- output panel; visible when pipe is not deployed -->
-                <el-collapse-item
-                  class="mb4 pv1 ph3 bg-white br2 css-white-box"
-                  name="output"
-                  data-tour-step="pipe-onboarding-4"
-                  :id="output_item_id"
-                  v-if="!is_deployed && false"
-                >
-                  <template slot="title">
-                    <div class="flex flex-row items-center">
-                      <span class="f4">Output</span>
-                      <span v-if="false" class="ml1 lh-1 hint--bottom hint--large" aria-label="The output panel shows the output of the pipe after it has been run.">
-                        <i class="el-icon-info blue"></i>
-                      </span>
-                    </div>
-                  </template>
-                  <div class="pt3 ph3">
-                    <ProcessContent :process-eid="active_process_eid">
-                      <div class="tc f6" slot="empty">
-                        <em>Click the <code class="ph1 ba b--black-10 bg-nearer-white br2">Test</code> button to see the result of your pipe logic here.</em>
-                      </div>
-                    </ProcessContent>
                   </div>
                 </el-collapse-item>
 
@@ -507,8 +512,12 @@
         })
       },
       show_yaml() {
-        this.transitioning_yaml = true
-        setTimeout(() => { this.transitioning_yaml = false }, 150)
+        this.transitioning_sidebar = true
+        setTimeout(() => { this.transitioning_sidebar = false }, 150)
+      },
+      show_testing() {
+        this.transitioning_sidebar = true
+        setTimeout(() => { this.transitioning_sidebar = false }, 150)
       }
     },
     data() {
@@ -530,7 +539,8 @@
         show_runtime_configure_dialog: false,
         yaml_view: 'yaml',
         show_yaml: false,
-        transitioning_yaml: false,
+        show_testing: false,
+        transitioning_sidebar: false,
         has_tested_once: false,
         has_errors: false,
         is_saving: false,
@@ -782,6 +792,9 @@
         })
       },
       testPipe() {
+        this.show_yaml = false
+        this.show_testing = true
+
         var attrs = _.pick(this.edit_pipe, ['task'])
         var run_cfg = this.process_input
 
@@ -839,6 +852,14 @@
           this.$store.track('Opened Pipe Definition')
         } else {
           this.$store.track('Closed Pipe Definition')
+        }
+      },
+      showTesting(show) {
+        this.show_testing = !!show
+        if (!!show) {
+          this.$store.track('Opened Testing Panel')
+        } else {
+          this.$store.track('Closed Testing Panel')
         }
       },
       toggleLock() {
