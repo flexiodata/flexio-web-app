@@ -47,11 +47,11 @@
     <div class="h-100" v-else>
       <div class="flex flex-row h-100">
         <el-menu
-          class="flex-none bg-nearer-white trans-a"
+          class="flex-none bg-nearer-white"
           default-active="0"
           :style="{
-            width: show_yaml || show_testing || is_deployed ? '0' : '49px',
-            opacity: show_yaml || show_testing || is_deployed ? '0' : '1',
+            width: show_sidebar || is_deployed ? '0' : '49px',
+            opacity: show_sidebar || is_deployed ? '0' : '1',
             borderRight: 0
           }"
         >
@@ -74,115 +74,103 @@
           layout="vertical"
         >
           <div
-            class="pane"
-            :class="{
-              'trans-a': !show_yaml || transitioning_sidebar
-            }"
-            :style="{
-              maxWidth: '50%',
-              minWidth: show_yaml ? '200px' : '1px',
-              width: show_yaml ? '20%' : '1px',
-              marginLeft: show_yaml ? '0' : '-2px',
-              opacity: show_yaml ? '1' : '0.01',
-              boxShadow: '2px 2px 6px rgba(0,0,0,0.1)',
-              zIndex: show_yaml ? 2 : 0
-            }"
-          >
-            <div class="flex flex-row items-center bg-nearer-white bb b--black-05 pa2">
-              <div class="f6 fw6 flex-fill">Pipe Definition</div>
-              <el-radio-group
-                class="mh2"
-                size="micro"
-                v-model="yaml_view"
-              >
-                <el-radio-button label="json"><span class="fw6">JSON</span></el-radio-button>
-                <el-radio-button label="yaml"><span class="fw6">YAML</span></el-radio-button>
-              </el-radio-group>
-              <div class="pointer f5 black-30 hover-black-60 hint--bottom-left" aria-label="Hide Pipe Definition" @click="showYaml(false)">
-                <i class="el-icon-close fw6"></i>
-              </div>
-            </div>
-            <PipeCodeEditor
-              class="h-100"
-              ref="code-editor"
-              editor-cls="bg-white h-100"
-              :type="yaml_view"
-              :class="{
-                'no-pointer-events': !show_yaml
-              }"
-              :show-json-view-toggle="false"
-              :task-only="false"
-              :has-errors.sync="has_errors"
-              @save="saveChanges"
-              v-model="edit_pipe"
-            />
-          </div>
-          <div
             class="pane bg-white"
             :class="{
-              'trans-a': !show_testing || transitioning_sidebar
+              'trans-a': false //!show_sidebar || transitioning_sidebar
             }"
             :style="{
               maxWidth: '50%',
-              minWidth: show_testing ? '380px' : '1px',
-              width: show_testing ? '22%' : '1px',
-              marginLeft: show_testing ? '0' : '-2px',
-              opacity: show_testing ? '1' : '0.01',
+              minWidth: show_sidebar ? '200px' : '1px',
+              width: show_sidebar ? '20%' : '1px',
+              marginLeft: show_sidebar ? '0' : '-2px',
+              opacity: show_sidebar ? '1' : '0.01',
               boxShadow: '2px 2px 6px rgba(0,0,0,0.1)',
-              zIndex: show_testing ? 2 : 0
+              zIndex: show_sidebar ? 2 : 0
             }"
           >
-            <div class="flex flex-row items-center bg-nearer-white bb b--black-05 pa2">
-              <div class="f6 fw6 flex-fill">Testing</div>
-              <div class="pointer f5 black-30 hover-black-60 hint--bottom-left" aria-label="Hide Testing" @click="showTesting(false)">
-                <i class="el-icon-close fw6"></i>
+            <template v-if="show_yaml">
+              <div class="flex flex-row items-center bg-nearer-white bb b--black-05 pa2">
+                <div class="f6 fw6 flex-fill">Pipe Definition</div>
+                <el-radio-group
+                  class="mh2"
+                  size="micro"
+                  v-model="yaml_view"
+                >
+                  <el-radio-button label="json"><span class="fw6">JSON</span></el-radio-button>
+                  <el-radio-button label="yaml"><span class="fw6">YAML</span></el-radio-button>
+                </el-radio-group>
+                <div class="pointer f5 black-30 hover-black-60 hint--bottom-left" aria-label="Hide Pipe Definition" @click="showYaml(false)">
+                  <i class="el-icon-close fw6"></i>
+                </div>
               </div>
-            </div>
-
-            <!-- input panel; visible when pipe is not deployed -->
-            <div
-              class="mb4 ph2"
-              name="input"
-              data-tour-step="pipe-onboarding-2"
-              v-if="!is_deployed"
-            >
-              <h4 class="mv0 pa3">Input</h4>
-
-              <div class="ph3">
-                <p class="mt0 ttu fw6 f7 moon-gray">Test this pipe with the following POST parameters</p>
-                <ProcessInput
-                  ref="process-input"
-                  v-model="process_input"
-                  :process-data.sync="process_data"
-                />
+              <PipeCodeEditor
+                class="h-100"
+                ref="code-editor"
+                editor-cls="bg-white h-100"
+                :type="yaml_view"
+                :class="{
+                  'no-pointer-events': !show_yaml
+                }"
+                :show-json-view-toggle="false"
+                :task-only="false"
+                :has-errors.sync="has_errors"
+                @save="saveChanges"
+                v-model="edit_pipe"
+              />
+            </template>
+            <template v-if="show_testing">
+              <div class="flex flex-row items-center bg-nearer-white bb b--black-05 pa2">
+                <div class="f6 fw6 flex-fill">Testing</div>
+                <div class="pointer f5 black-30 hover-black-60 hint--bottom-left" aria-label="Hide Testing" @click="showTesting(false)">
+                  <i class="el-icon-close fw6"></i>
+                </div>
               </div>
-            </div>
 
-            <!-- output panel; visible when pipe is not deployed -->
-            <div
-              class="mb4 ph2"
-              name="output"
-              data-tour-step="pipe-onboarding-4"
-              :id="output_item_id"
-              v-if="!is_deployed"
-            >
-              <h4 class="mv0 ph3 pb3">Output</h4>
+              <!-- input panel; visible when pipe is not deployed -->
+              <div
+                class="mb4 ph2"
+                name="input"
+                data-tour-step="pipe-onboarding-2"
+                v-if="!is_deployed"
+              >
+                <h4 class="mv0 pa3">Input</h4>
 
-              <div class="ph3">
-                <ProcessContent :process-eid="active_process_eid">
-                  <div class="ba b--black-10 pa3 tc f6 lh-copy" slot="empty">
-                    <em>Click the <code class="ph1 ba b--black-10 bg-nearer-white br2">Test</code> button to see the result of your pipe logic here.</em>
-                  </div>
-                </ProcessContent>
+                <div class="ph3">
+                  <p class="mt0 ttu fw6 f7 moon-gray">Test this pipe with the following POST parameters</p>
+                  <ProcessInput
+                    ref="process-input"
+                    v-model="process_input"
+                    :process-data.sync="process_data"
+                  />
+                </div>
               </div>
-            </div>
+
+              <!-- output panel; visible when pipe is not deployed -->
+              <div
+                class="mb4 ph2"
+                name="output"
+                data-tour-step="pipe-onboarding-4"
+                :id="output_item_id"
+                v-if="!is_deployed"
+              >
+                <h4 class="mv0 ph3 pb3">Output</h4>
+
+                <div class="ph3">
+                  <ProcessContent :process-eid="active_process_eid">
+                    <div class="ba b--black-10 pa3 tc f6 lh-copy" slot="empty">
+                      <em>Click the <code class="ph1 ba b--black-10 bg-nearer-white br2">Test</code> button to see the result of your pipe logic here.</em>
+                    </div>
+                  </ProcessContent>
+                </div>
+              </div>
+            </template>
           </div>
           <multipane-resizer
             :class="{
-              'no-pointer-events': !show_yaml && !show_testing
+              'no-pointer-events': !show_sidebar
             }"
             :style="{
-              zIndex: show_yaml || show_testing ? 3 : 0
+              zIndex: show_sidebar ? 3 : 0
             }"
           />
           <div
@@ -645,6 +633,9 @@
 
         var process = _.last(this.getActiveDocumentProcesses())
         return _.get(process, 'eid', '')
+      },
+      show_sidebar() {
+        return this.show_yaml || this.show_testing
       },
       is_deployed: {
         get() {
