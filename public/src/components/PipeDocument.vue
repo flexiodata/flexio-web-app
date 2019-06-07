@@ -81,7 +81,7 @@
             :style="{
               maxWidth: '50%',
               minWidth: show_sidebar ? '200px' : '1px',
-              width: show_sidebar ? '20%' : '1px',
+              width: show_sidebar ? '22%' : '1px',
               marginLeft: show_sidebar ? '0' : '-2px',
               opacity: show_sidebar ? '1' : '0.01',
               boxShadow: '2px 2px 6px rgba(0,0,0,0.1)',
