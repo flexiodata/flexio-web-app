@@ -822,9 +822,9 @@
 
           // test the connection
           this.$store.dispatch('v2_action_testConnection', { eid, attrs }).then(response => {
-            var connection = _.omit(response.data, ['name', 'alias', 'description', 'connection_info'])
+            //var connection = _.omit(response.data, ['name', 'alias', 'description', 'connection_info'])
             this.test_state = 'success'
-            this.$emit('change', connection)
+            //this.$emit('change', connection)
           }).catch(error => {
             this.test_state = 'error'
             setTimeout(() => { this.test_state = 'none' }, 4000)
