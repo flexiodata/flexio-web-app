@@ -57,6 +57,53 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $user_model->getEidFromEmail($identifier);
     }
 
+    public static function generateTokenFromUserEid(string $user_eid) : string
+    {
+        // add a random seed and timestamp to the user info
+        $user_info = array();
+        $user_info['eid'] = $user_eid;
+        $user_info['timestamp'] = \Flexio\Base\Util::getCurrentTimestamp();
+        $user_info['random'] = \Flexio\Base\Util::generateRandomString(20);
+
+        $user_info_str = json_encode($user_info);
+        $token = \Flexio\Base\Util::encrypt($user_info_str, $GLOBALS['g_store']->connection_enckey);
+        $token = self::base64_url_encode($token); // make sure token is url safe since it'll be passed as a query param
+        return $token;
+    }
+
+    public static function getUserEidFromToken(string $token) : ?string
+    {
+        // valid tokens are long; for speed to distinguish between a token and an
+        // api key, return null if the token isn't at least 30 characters
+        if (strlen($token) < 30)
+            return null;
+
+        $token = self::base64_url_decode($token);
+        $user_info = \Flexio\Base\Util::decrypt($token, $GLOBALS['g_store']->connection_enckey);
+        if (!$user_info)
+            return null;
+
+        $user_info = json_decode($user_info, true);
+        if ($user_info === false)
+            return null;
+
+        $token_timestamp = $user_info['timestamp'] ?? false;
+        if ($token_timestamp === false)
+            return null;
+
+        // compare the timestamp to the current time; if the timestamp is more than
+        // a certain period time after the one in the token, then the token is
+        // no longer valid, so return null
+        // TODO: current time token period is set to 7 days; should make smaller
+        $current_timestamp = \Flexio\Base\Util::getCurrentTimestamp();
+        $date_diff_seconds = \Flexio\Base\Util::formatDateDiff($token_timestamp, $current_timestamp);
+        if ($date_diff_seconds < 0 || $date_diff_seconds > 60*60*24*7)
+            return null;
+
+        // return the user info
+        return $user_info['eid'];
+    }
+
     public static function list(array $filter) : array
     {
         $object = new static();
@@ -453,5 +500,15 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             $mapped_properties['config'] = $config;
 
         return $mapped_properties;
+    }
+
+    private static function base64_url_encode($input)
+    {
+        return strtr(base64_encode($input), '+/=', '._-');
+    }
+
+    private static function base64_url_decode($input)
+    {
+        return base64_decode(strtr($input, '._-', '+/='));
     }
 }
