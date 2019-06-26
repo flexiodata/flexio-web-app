@@ -34,6 +34,15 @@ const EXECUTE = {
   bg_color: 'bg-task-purple'
 }
 
+const LOOKUP = {
+  op: ops.TASK_OP_LOOKUP,
+  op_name: ops.TASK_OP_LOOKUP,
+  name: 'Lookup',
+  description: 'Lookup values based on a key/value pair lookup in a dataset.',
+  icon: 'find_in_page',
+  bg_color: 'bg-task-purple'
+}
+
 const OAUTH = {
   op: ops.TASK_OP_OAUTH,
   name: 'OAuth',
@@ -70,6 +79,7 @@ const WRITE = {
 
 // go out of alphabetical order here so the order is correct in the task chooser builder item
 export const TASK_INFO_EXECUTE       = EXECUTE
+export const TASK_INFO_LOOKUP        = LOOKUP
 export const TASK_INFO_REQUEST       = REQUEST
 export const TASK_INFO_CONVERT       = CONVERT
 export const TASK_INFO_EMAIL_SEND    = EMAIL_SEND

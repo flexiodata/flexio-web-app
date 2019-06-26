@@ -109,13 +109,20 @@
           }
         } else {
           var def = _.find(builder_defs, (bi) => {
-            return _.get(bi, 'task.op') == task.op
+            return _.get(bi, 'task.op_name', '') === task.op_name
           })
+          if (!def) {
+            def = _.find(builder_defs, (bi) => {
+              return _.get(bi, 'task.op') == task.op
+            })
+          }
           prompt = _.get(def, 'prompt', null)
         }
 
         // make sure we don't overwrite any objects
         prompt = _.cloneDeep(prompt)
+
+        console.log(prompt)
 
         // if we couldn't find a matching task builder definition
         // show a basic JSON task editor

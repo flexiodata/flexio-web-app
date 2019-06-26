@@ -13,7 +13,7 @@
     >
     </div>
 
-    <div class="flex flex-row flex-wrap items-center nl2" style="max-width: 40rem">
+    <div class="flex flex-row flex-wrap items-center nl2" style="max-width: 46rem">
       <div
         class="br2 ma2 pv3 w4 pointer silver hover-blue ba css-list-item hint--top hint--medium-large"
         :key="item.op"
