@@ -15,7 +15,15 @@
             v-if="item.key == 'deploy_ui' && is_gsheets_deployed"
           >
             <div v-if="api_key.length > 0">
-              We have at least one API key
+              <span>Follow these steps to run this pipe from Google Sheets.</span>
+              <el-button
+                type="text"
+                size="tiny"
+                style="padding: 0; border: 0"
+                @click="show_gsheets_instructions_dialog = true"
+              >
+                Show Steps...
+              </el-button>
             </div>
             <div v-else>
               <em class="fw4 moon-gray" style="margin-right: 6px">No API keys exist. An API key is required in order to run a pipe from Google Sheets.</em>
@@ -212,6 +220,30 @@
         />
       </div>
     </div>
+
+    <!-- pipe schedule dialog -->
+    <el-dialog
+      title="Run from Google Sheets"
+      width="42rem"
+      top="8vh"
+      :modal-append-to-body="false"
+      :visible.sync="show_gsheets_instructions_dialog"
+    >
+      <ol>
+        <li><p class="lh-copy"><a href="https://docs.google.com/spreadsheets/create" target="_blank">Create</a> or open a spreadsheet in Google Sheets.</p></li>
+        <li><p class="lh-copy">Select the menu item <span class="b">Tools > Script editor</span>.</p></li>
+        <li>
+          <p class="lh-copy">Copy and paste the following code into the script file (named <span class="b">Code.js</span> by default):</p>
+          <CodeEditor
+            class="mb3 ba b--black-10 f8"
+            lang="javascript"
+            v-model.trim="gsheets_code"
+          />
+        </li>
+        <li><p class="lh-copy">Once the script file has been saved, you can run any Flex.io pipe using its alias. This pipe can be run by typing <code style="padding: 2px 4px; border-radius: 2px" class="bg-black-10">{{gsheets_custom_function}}</code> into a cell in your spreadsheet.</p></li>
+        <li><p class="lh-copy">More instructions can be found on the <a href="https://developers.google.com/apps-script/guides/sheets/functions" target="_blank">Custom Functions in Google Sheets</a> page.</p></li>
+      </ol>
+    </el-dialog>
   </div>
 </template>
 
@@ -225,10 +257,38 @@
     getDeployApiUrl
   } from '../utils/pipe'
   import * as sched from '../constants/schedule'
+  import CodeEditor from '@comp/CodeEditor'
   import LabelSwitch from '@comp/LabelSwitch'
 
   const ACTIVE = 'A'
   const INACTIVE = 'I'
+
+  const GOOGLE_SHEETS_DEPLOY_CODE = `
+function FLEX(alias) {
+
+  // flexio api key to use
+  var flexio_api_key = '{{api_key}}';
+
+  // get the arguments, except the first, which is the pipe alias
+  var args = Array.prototype.slice.call(arguments, 1);
+
+  // call the flexio pipe with the function arguments
+  var options = {
+    'method' : 'post',
+    'headers' : {
+      'Authorization' : 'Bearer ' + flexio_api_key,
+      'Content-Type' : 'application/json'
+    },
+    'payload': JSON.stringify(args)
+  };
+  var url = 'https://api.flex.io/v1/me/pipes/'+ alias +'/run';
+  var result = UrlFetchApp.fetch(url, options).getContentText();
+  var result = JSON.parse(result);
+
+  // return the result
+  return result;
+}
+`
 
   export default {
     props: {
@@ -261,14 +321,24 @@
       showRuntimeConfigurePanel: {
         type: Boolean,
         default: false
+      },
+      showGoogleSheetsInstructions: {
+        type: Boolean,
+        default: false
       }
     },
     components: {
+      CodeEditor,
       LabelSwitch
     },
     data() {
       return {
+        show_gsheets_instructions_dialog: false,
         deployment_options: [
+          {
+            key: 'deploy_ui',
+            label: 'Run from Google Sheets',
+          },
           {
             key: 'deploy_api',
             label: 'Run using an API endpoint',
@@ -276,10 +346,6 @@
           {
             key: 'deploy_schedule',
             label: 'Run on a schedule',
-          },
-          {
-            key: 'deploy_ui',
-            label: 'Run from Google Sheets',
           }/*,
           {
             key: 'deploy_ui',
@@ -295,6 +361,11 @@
     computed: {
       api_key() {
         return this.getFirstToken()
+      },
+      gsheets_code() {
+        var code = GOOGLE_SHEETS_DEPLOY_CODE.trim()
+        code = code.replace('{{api_key}}', this.api_key)
+        return code
       },
       is_deployed: {
         get() {
@@ -370,6 +441,10 @@
         var current_username = _.get(this.getActiveUser(), 'username').toLowerCase()
         var pipe_identifier = getIdentifier(this.pipe)
         return `${current_username}|${pipe_identifier}@pipes.flex.io`
+      },
+      gsheets_custom_function() {
+        var identifier = getIdentifier(this.pipe)
+        return `=FLEX("${identifier}")`
       },
       runtime_url() {
         var eid = _.get(this.pipe, 'eid', '')
