@@ -119,7 +119,7 @@ def flex_handler(flex):
     lookup_table_config = {
         "data": lookup_table_content,
         "delimiter": ",",
-        "quotechar": "\"",
+        "quotechar": "\\\"",
         "encoding": "utf8"
     }
 
