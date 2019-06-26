@@ -21,16 +21,28 @@
       @validate="onValidateItem"
     >
       <el-form-item
-        key="lookup_key"
-        label="Enter the key field"
-        prop="lookup_key"
-        style="max-width: 24rem"
+        key="lookup_keys"
+        label="Select the key fields"
+        prop="lookup_keys"
       >
-        <el-input
-          placeholder="Enter the name of the key field"
-          autocomplete="off"
-          v-model="edit_values.lookup_key"
-        />
+        <el-select
+          multiple
+          filterable
+          allow-create
+          default-first-option
+          popper-class="dn"
+          placeholder="Enter the names of the key fields"
+          style="width: 100%"
+          v-model="edit_values.lookup_keys"
+        >
+          <el-option
+            v-for="item in []"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+
       </el-form-item>
       <el-form-item
         key="return_columns"
@@ -48,7 +60,7 @@
           v-model="edit_values.return_columns"
         >
           <el-option
-            v-for="item in return_column_options"
+            v-for="item in []"
             :key="item.value"
             :label="item.label"
             :value="item.value">
@@ -64,7 +76,7 @@
   import { atobUnicode, btoaUnicode } from '@/utils'
 
   // non-base64 Python code
-  const default_code = `
+  const template_code = `
 # looks up data values from a table based on keys
 
 import pandas
@@ -74,7 +86,7 @@ from io import StringIO
 def flex_handler(flex):
 
     # data values for which to look up content
-    lookup_columns = flex.input.read()
+    lookup_values = flex.input.read()
     # lookup_values = [["000031","00410575"],["a","00306529"],["000053","b"],["000053","00306529"],["000053","00306529"]]
 
     # table to use for lookup values
@@ -146,10 +158,10 @@ def getValuesFromLookup(key, lookup_table_index, lookup_columns):
 
   const getDefaultValues = () => {
     return {
-      lookup_key: '',
-      return_columns: '',
+      lookup_keys: [],
+      return_columns: [],
       lang: 'python',
-      code: btoaUnicode(default_code)
+      code: ''
     }
   }
 
@@ -195,9 +207,9 @@ def getValuesFromLookup(key, lookup_table_index, lookup_columns):
         orig_values: getDefaultValues(),
         edit_values: getDefaultValues(),
         form_errors: {},
-        return_column_options: [],
+        template_code: template_code,
         rules: {
-          lookup_key: [
+          lookup_keys: [
             { required: true, message: 'Please input the key field on which to do the lookup' }
           ],
           return_columns: [
@@ -253,7 +265,12 @@ def getValuesFromLookup(key, lookup_table_index, lookup_columns):
         }
       },
       onEditValuesChange() {
-        this.$emit('item-change', this.edit_values, this.index)
+        var vals = _.cloneDeep(this.edit_values)
+        vals.code = this.template_code
+        vals.code = vals.code.replace('{{lookup_keys}}', this.edit_values.lookup_keys.join(','))
+        vals.code = vals.code.replace('{{lookup_columns}}', this.edit_values.return_columns.join(','))
+        vals.code = btoaUnicode(vals.code)
+        this.$emit('item-change', vals, this.index)
       }
     }
   }
