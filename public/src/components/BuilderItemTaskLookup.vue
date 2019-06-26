@@ -12,7 +12,38 @@
       v-show="show_description"
     >
     </div>
-    <p>This is the lookup task.</p>
+    <el-form
+      ref="form"
+      class="flex-fill el-form--compact el-form__label-tiny"
+      label-position="top"
+      :model="edit_values"
+      :rules="rules"
+      @validate="onValidateItem"
+    >
+      <el-form-item
+        key="lookup_key"
+        label="Select the key field"
+        prop="lookup_key"
+        style="max-width: 24rem"
+      >
+        <el-input
+          placeholder="Enter the name of the key field"
+          autocomplete="off"
+          v-model="edit_values.lookup_key"
+        />
+      </el-form-item>
+      <el-form-item
+        key="return_columns"
+        label="Select columns to return"
+        prop="return_columns"
+      >
+        <el-input
+          placeholder="Enter the names of the columns to return"
+          autocomplete="off"
+          v-model="edit_values.return_columns"
+        />
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 
@@ -21,7 +52,10 @@
 
   const getDefaultValues = () => {
     return {
-      msg: ''
+      lookup_key: '',
+      return_columns: '',
+      code: '',
+      lang: 'python'
     }
   }
 
@@ -68,8 +102,11 @@
         edit_values: getDefaultValues(),
         form_errors: {},
         rules: {
-          msg: [
-            { required: true, message: 'Please input a message' }
+          lookup_key: [
+            { required: true, message: 'Please input the key field on which to do the lookup' }
+          ],
+          return_columns: [
+            { required: true, message: 'Please input the names of the columns to return' }
           ]
         }
       }

@@ -109,20 +109,26 @@
           }
         } else {
           var def = _.find(builder_defs, (bi) => {
-            return _.get(bi, 'task.op_name', '') === task.op_name
+            return _.get(bi, 'task.op') == task.op
           })
-          if (!def) {
-            def = _.find(builder_defs, (bi) => {
-              return _.get(bi, 'task.op') == task.op
-            })
-          }
           prompt = _.get(def, 'prompt', null)
+
+          // TODO: use an execute task under the hood, but allow for a custom UI for the lookup task
+          if (task.op == 'lookup' || (task.op == 'execute' && task.real_op == 'lookup')) {
+            prompt = {
+              element: 'task-lookup',
+              title: 'Lookup'
+            }
+
+            task.op = 'execute'
+            task.real_op = 'lookup'
+            task.code = ''
+            task.lang = 'python'
+          }
         }
 
         // make sure we don't overwrite any objects
         prompt = _.cloneDeep(prompt)
-
-        console.log(prompt)
 
         // if we couldn't find a matching task builder definition
         // show a basic JSON task editor

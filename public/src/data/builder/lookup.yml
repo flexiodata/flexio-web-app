@@ -1,6 +1,5 @@
 task:
   op: lookup
-  op_name: lookup
 
 prompt:
   element: task-lookup

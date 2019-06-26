@@ -258,7 +258,7 @@
         return this.is_deployed_email ? 'Email Trigger ON' : 'Email Trigger OFF'
       },
       runtime_tooltip() {
-        return this.is_deployed_ui ? 'Flex.io Web Interface ON' : 'Flex.io Web Interface OFF'
+        return this.is_deployed_ui ? 'Google Sheets ON' : 'Google Sheets OFF'
       },
       deployment_icons() {
         return [

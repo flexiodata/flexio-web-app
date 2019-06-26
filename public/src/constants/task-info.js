@@ -36,7 +36,6 @@ const EXECUTE = {
 
 const LOOKUP = {
   op: ops.TASK_OP_LOOKUP,
-  op_name: ops.TASK_OP_LOOKUP,
   name: 'Lookup',
   description: 'Lookup values based on a key/value pair lookup in a dataset.',
   icon: 'find_in_page',
