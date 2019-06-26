@@ -22,7 +22,7 @@
     >
       <el-form-item
         key="lookup_key"
-        label="Select the key field"
+        label="Enter the key field"
         prop="lookup_key"
         style="max-width: 24rem"
       >
@@ -37,11 +37,23 @@
         label="Select columns to return"
         prop="return_columns"
       >
-        <el-input
+        <el-select
+          multiple
+          filterable
+          allow-create
+          default-first-option
+          popper-class="dn"
           placeholder="Enter the names of the columns to return"
-          autocomplete="off"
+          style="width: 100%"
           v-model="edit_values.return_columns"
-        />
+        >
+          <el-option
+            v-for="item in return_column_options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
       </el-form-item>
     </el-form>
   </div>
@@ -101,6 +113,7 @@
         orig_values: getDefaultValues(),
         edit_values: getDefaultValues(),
         form_errors: {},
+        return_column_options: [],
         rules: {
           lookup_key: [
             { required: true, message: 'Please input the key field on which to do the lookup' }
