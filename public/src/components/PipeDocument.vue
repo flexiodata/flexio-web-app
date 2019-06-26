@@ -118,52 +118,54 @@
                 v-model="edit_pipe"
               />
             </template>
-            <template v-if="show_testing">
-              <div class="flex flex-row items-center bg-nearer-white bb b--black-05 pa2">
+            <div class="flex flex-column h-100" v-if="show_testing">
+              <div class="flex-none flex flex-row items-center bg-nearer-white bb b--black-05 pa2">
                 <div class="f6 fw6 flex-fill">Testing</div>
                 <div class="pointer f5 black-30 hover-black-60 hint--bottom-left" aria-label="Hide Testing" @click="showTesting(false)">
                   <i class="el-icon-close fw6"></i>
                 </div>
               </div>
 
-              <!-- input panel; visible when pipe is not deployed -->
-              <div
-                class="mb4 ph2"
-                name="input"
-                data-tour-step="pipe-onboarding-2"
-                v-if="!is_deployed"
-              >
-                <h4 class="mv0 pa3">Input</h4>
+              <div class="flex-fill overflow-y-auto">
+                <!-- input panel; visible when pipe is not deployed -->
+                <div
+                  class="mb4 ph2"
+                  name="input"
+                  data-tour-step="pipe-onboarding-2"
+                  v-if="!is_deployed"
+                >
+                  <h4 class="mv0 pa3">Input</h4>
 
-                <div class="ph3">
-                  <p class="mt0 ttu fw6 f7 moon-gray">Test this pipe with the following POST parameters</p>
-                  <ProcessInput
-                    ref="process-input"
-                    v-model="process_input"
-                    :process-data.sync="process_data"
-                  />
+                  <div class="ph3">
+                    <p class="mt0 ttu fw6 f7 moon-gray">Test this pipe with the following POST parameters</p>
+                    <ProcessInput
+                      ref="process-input"
+                      v-model="process_input"
+                      :process-data.sync="process_data"
+                    />
+                  </div>
+                </div>
+
+                <!-- output panel; visible when pipe is not deployed -->
+                <div
+                  class="mb4 ph2"
+                  name="output"
+                  data-tour-step="pipe-onboarding-4"
+                  :id="output_item_id"
+                  v-if="!is_deployed"
+                >
+                  <h4 class="mv0 ph3 pb3">Output</h4>
+
+                  <div class="ph3">
+                    <ProcessContent :process-eid="active_process_eid">
+                      <div class="ba b--black-10 pa3 tc f6 lh-copy" slot="empty">
+                        <em>Click the <code class="ph1 ba b--black-10 bg-nearer-white br2">Test</code> button to see the result of your pipe logic here.</em>
+                      </div>
+                    </ProcessContent>
+                  </div>
                 </div>
               </div>
-
-              <!-- output panel; visible when pipe is not deployed -->
-              <div
-                class="mb4 ph2"
-                name="output"
-                data-tour-step="pipe-onboarding-4"
-                :id="output_item_id"
-                v-if="!is_deployed"
-              >
-                <h4 class="mv0 ph3 pb3">Output</h4>
-
-                <div class="ph3">
-                  <ProcessContent :process-eid="active_process_eid">
-                    <div class="ba b--black-10 pa3 tc f6 lh-copy" slot="empty">
-                      <em>Click the <code class="ph1 ba b--black-10 bg-nearer-white br2">Test</code> button to see the result of your pipe logic here.</em>
-                    </div>
-                  </ProcessContent>
-                </div>
-              </div>
-            </template>
+            </div>
           </div>
           <multipane-resizer
             :class="{
