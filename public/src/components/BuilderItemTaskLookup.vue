@@ -61,13 +61,95 @@
 
 <script>
   import marked from 'marked'
+  import { atobUnicode, btoaUnicode } from '@/utils'
+
+  // non-base64 Python code
+  const default_code = `
+# looks up data values from a table based on keys
+
+import pandas
+import json
+from io import StringIO
+
+def flex_handler(flex):
+
+    # data values for which to look up content
+    lookup_columns = flex.input.read()
+    # lookup_values = [["000031","00410575"],["a","00306529"],["000053","b"],["000053","00306529"],["000053","00306529"]]
+
+    # table to use for lookup values
+    lookup_table_path = '{{lookup_table_path}}'
+    # lookup_table_path = 'my-connection-alias:/my-file.txt'
+
+    # columns from the lookup table to use to search for values
+    lookup_keys = '{{lookup_keys}}'.split(',')
+    # lookup_keys = ["Vend_no","Item_no"]
+
+    # columns from the lookup table to return
+    lookup_columns = '{{lookup_columns}}'.split(',')
+    # lookup_columns = ["Item_desc","Case_cost","Item_cost"]
+
+    # table config to use for lookup
+    file = flex.fs.open(lookup_table_path)
+    lookup_table_content = file.read()
+    file.close()
+
+    lookup_table_config = {
+        "data": lookup_table_content,
+        "delimiter": ",",
+        "quotechar": "\"",
+        "encoding": "utf8"
+    }
+
+    # get the result and return it
+    result = lookupValues(lookup_table_config, lookup_keys, lookup_columns, lookup_values)
+    flex.output.write(json.dumps(result))
+
+
+def lookupValues(lookup_table_config, lookup_keys, lookup_columns, lookup_values):
+
+    # seperator for constructing keys
+    seperator = "|"
+
+    # load the csv into a dictionary using pandas
+    df = pandas.read_csv(lookup_table_config['data'], sep=lookup_table_config['delimiter'], quotechar=lookup_table_config['quotechar'], skipinitialspace=True, encoding=lookup_table_config['encoding'], dtype = str)
+    lookup_table = df.to_dict('records')
+
+    # create a dictionary of lookup values based on the key
+    lookup_table_index = {}
+    for row in lookup_table:
+        keyvalues = []
+        for lk in lookup_keys:
+            keyvalues.append(str(row.get(lk,'')))
+        key = seperator.join(keyvalues)
+        lookup_table_index[key] = row
+
+    # return an output corresponding to the exact order of the
+    # input values, filled out with the appropriate information from the
+    # index use all fields if no fields are specified
+    result = []
+    result.append(lookup_columns)
+    for lv in lookup_values:
+        key = seperator.join(lv)
+        result.append(getValuesFromLookup(key, lookup_table_index, lookup_columns))
+
+    return result
+
+
+def getValuesFromLookup(key, lookup_table_index, lookup_columns):
+    default_values = ['']*len(lookup_columns)
+    default_row = dict(zip(lookup_columns, default_values))
+    lookup_values = lookup_table_index.get(key, default_row)
+    result = [lookup_values.get(c,'') for c in lookup_columns]
+    return result
+`
 
   const getDefaultValues = () => {
     return {
       lookup_key: '',
       return_columns: '',
-      code: '',
-      lang: 'python'
+      lang: 'python',
+      code: btoaUnicode(default_code)
     }
   }
 

@@ -122,7 +122,6 @@
 
             task.op = 'execute'
             task.real_op = 'lookup'
-            task.code = ''
             task.lang = 'python'
           }
         }
