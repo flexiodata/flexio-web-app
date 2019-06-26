@@ -27,9 +27,20 @@
       >
         <el-input
           autocomplete="off"
+          spellcheck="false"
           placeholder="Enter the lookup file or table"
           v-model="edit_values.lookup_path"
-        />
+        >
+          <el-button
+            slot="append"
+            class="ttu fw6"
+            type="primary"
+            size="small"
+            @click="show_file_chooser_dialog = true"
+          >
+            Browse
+          </el-button>
+        </el-input>
       </el-form-item>
       <el-form-item
         key="lookup_keys"
@@ -78,12 +89,48 @@
         </el-select>
       </el-form-item>
     </el-form>
+
+    <!-- file chooser dialog -->
+    <el-dialog
+      custom-class="el-dialog--compressed-body"
+      title="Choose files"
+      width="60vw"
+      top="8vh"
+      :append-to-body="true"
+      :visible.sync="show_file_chooser_dialog"
+    >
+      <FileChooser
+        ref="file-chooser"
+        style="max-height: 60vh"
+        :selected-items.sync="selected_files"
+        :allow-multiple="false"
+        :allow-folders="false"
+        :show-connection-list="true"
+        v-if="show_file_chooser_dialog"
+      />
+      <span slot="footer" class="dialog-footer">
+        <el-button
+          class="ttu fw6"
+          @click="show_file_chooser_dialog = false"
+        >
+          Cancel
+        </el-button>
+        <el-button
+          class="ttu fw6"
+          type="primary"
+          @click="addFiles"
+        >
+          Choose a file
+        </el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
   import marked from 'marked'
   import { atobUnicode, btoaUnicode } from '@/utils'
+  import FileChooser from '@comp/FileChooser'
 
   // non-base64 Python code
   const template_code = `
@@ -195,6 +242,9 @@ def getValuesFromLookup(key, lookup_table_index, lookup_columns):
         required: true
       }
     },
+    components: {
+      FileChooser
+    },
     watch: {
       item: {
         handler: 'initSelf',
@@ -215,6 +265,8 @@ def getValuesFromLookup(key, lookup_table_index, lookup_columns):
     },
     data() {
       return {
+        selected_files: [],
+        show_file_chooser_dialog: false,
         orig_values: getDefaultValues(),
         edit_values: getDefaultValues(),
         form_errors: {},
@@ -271,6 +323,12 @@ def getValuesFromLookup(key, lookup_table_index, lookup_columns):
           errors[key] = true
         }
         this.form_errors = _.assign({}, errors)
+      },
+      addFiles() {
+        var files = this.selected_files
+        files = _.map(files, (f) => { return f.full_path })
+        this.edit_values.lookup_path = _.get(files, '[0]', '')
+        this.show_file_chooser_dialog = false
       },
       onChange(val) {
         if (val) {
