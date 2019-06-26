@@ -11,6 +11,25 @@
 
         <div class="f8 fw6 lh-copy" style="margin-left: 24px">
           <div
+            class="ph3 mt3"
+            v-if="item.key == 'deploy_ui' && is_gsheets_deployed"
+          >
+            <div v-if="api_key.length > 0">
+              We have at least one API key
+            </div>
+            <div v-else>
+              <em class="fw4 moon-gray" style="margin-right: 6px">No API keys exist. An API key is required in order to run a pipe from Google Sheets.</em>
+              <el-button
+                type="plain"
+                size="tiny"
+                @click="generateApiKey"
+              >
+                Generate API Key
+              </el-button>
+            </div>
+          </div>
+
+          <div
             class="ph3 mt2"
             v-if="item.key == 'deploy_schedule' && is_schedule_deployed"
           >
@@ -117,7 +136,7 @@
 
           <div
             class="ph3 mt3"
-            v-if="item.key == 'deploy_ui' && is_web_deployed"
+            v-if="false && item.key == 'deploy_ui' && is_web_deployed"
           >
             <div class="mt2 ttu fw6 moon-gray">Runtime URL</div>
             <div>
@@ -260,6 +279,10 @@
           },
           {
             key: 'deploy_ui',
+            label: 'Run from Google Sheets',
+          }/*,
+          {
+            key: 'deploy_ui',
             label: 'Run from a Flex.io Web Interface',
           }/*,
           {
@@ -322,6 +345,9 @@
       },
       is_schedule_deployed() {
         return _.includes(this.checklist, 'deploy_schedule')
+      },
+      is_gsheets_deployed() {
+        return _.includes(this.checklist, 'deploy_ui')
       },
       is_api_deployed() {
         return _.includes(this.checklist, 'deploy_api')
