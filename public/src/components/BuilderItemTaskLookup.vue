@@ -21,6 +21,17 @@
       @validate="onValidateItem"
     >
       <el-form-item
+        key="lookup_path"
+        label="Select the path of the lookup file or table"
+        prop="lookup_path"
+      >
+        <el-input
+          autocomplete="off"
+          placeholder="Enter the lookup file or table"
+          v-model="edit_values.lookup_path"
+        />
+      </el-form-item>
+      <el-form-item
         key="lookup_keys"
         label="Select the key fields"
         prop="lookup_keys"
@@ -42,7 +53,6 @@
             :value="item.value">
           </el-option>
         </el-select>
-
       </el-form-item>
       <el-form-item
         key="return_columns"
@@ -158,6 +168,7 @@ def getValuesFromLookup(key, lookup_table_index, lookup_columns):
 
   const getDefaultValues = () => {
     return {
+      lookup_path: '',
       lookup_keys: [],
       return_columns: [],
       lang: 'python',
@@ -209,6 +220,9 @@ def getValuesFromLookup(key, lookup_table_index, lookup_columns):
         form_errors: {},
         template_code: template_code,
         rules: {
+          lookup_path: [
+            { required: true, message: 'Please select the path of the file or table on which to do the lookup' }
+          ],
           lookup_keys: [
             { required: true, message: 'Please input the key field on which to do the lookup' }
           ],
@@ -267,6 +281,7 @@ def getValuesFromLookup(key, lookup_table_index, lookup_columns):
       onEditValuesChange() {
         var vals = _.cloneDeep(this.edit_values)
         vals.code = this.template_code
+        vals.code = vals.code.replace('{{lookup_table_path}}', this.edit_values.lookup_path)
         vals.code = vals.code.replace('{{lookup_keys}}', this.edit_values.lookup_keys.join(','))
         vals.code = vals.code.replace('{{lookup_columns}}', this.edit_values.return_columns.join(','))
         vals.code = btoaUnicode(vals.code)
