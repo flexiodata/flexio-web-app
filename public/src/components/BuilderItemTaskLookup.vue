@@ -144,6 +144,7 @@ def flex_handler(flex):
 
     # data values for which to look up content
     lookup_values = flex.input.read()
+    lookup_values = json.loads(lookup_values)
     # lookup_values = [["000031","00410575"],["a","00306529"],["000053","b"],["000053","00306529"],["000053","00306529"]]
 
     # table to use for lookup values
@@ -164,7 +165,7 @@ def flex_handler(flex):
     file.close()
 
     lookup_table_config = {
-        "data": lookup_table_content,
+        "data": StringIO(lookup_table_content.decode()),
         "delimiter": ",",
         "quotechar": "\\\"",
         "encoding": "utf8"
