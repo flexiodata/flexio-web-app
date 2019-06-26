@@ -7,7 +7,12 @@
         :class="index == 0 ? 'bt' : ''"
         v-for="(item, index) in deployment_options"
       >
-        <el-checkbox :label="item.key">{{item.label}}</el-checkbox>
+        <el-checkbox
+          :class="is_gsheets_deployed && is_api_deployed && item.key == 'deploy_api' ? 'o-40 no-pointer-events': ''"
+          :label="item.key"
+        >
+          {{item.label}}
+        </el-checkbox>
 
         <div class="f8 fw6 lh-copy" style="margin-left: 24px">
           <div
@@ -60,6 +65,7 @@
 
           <div
             class="ph3 mt3"
+            :class="is_gsheets_deployed && is_api_deployed ? 'o-40 no-pointer-events': ''"
             v-if="item.key == 'deploy_api' && is_api_deployed"
           >
             <div v-if="false">

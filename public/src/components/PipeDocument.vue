@@ -898,6 +898,11 @@
           }
         }
 
+        // `deploy_api` is required for `deploy_ui` (Google Sheets) right now
+        if (_.get(pipe, 'deploy_ui') == ACTIVE) {
+          _.set(pipe, 'deploy_api', ACTIVE)
+        }
+
         this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
         this.saveChanges()
       },
