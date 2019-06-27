@@ -132,6 +132,7 @@
   import { atobUnicode, btoaUnicode } from '@/utils'
   import FileChooser from '@comp/FileChooser'
 
+
   // non-base64 Python code
   const template_code = `
 # looks up data values from a table based on keys
@@ -139,12 +140,27 @@
 import pandas
 import json
 from io import StringIO
+from cerberus import Validator
+from collections import OrderedDict
 
 def flex_handler(flex):
 
+    # get the input
+    input = flex.input.read()
+    try:
+        input = json.loads(input)
+        if not isinstance(input, list): raise ValueError
+    except ValueError:
+        raise ValueError
+
+    # define the expected parameters and map the values to the parameter names
+    # based on the positions of the keys/values
+    params = OrderedDict()
+    params['range']  = {'required': True}
+    input = dict(zip(params.keys(), input))
+
     # data values for which to look up content
-    lookup_values = flex.input.read()
-    lookup_values = json.loads(lookup_values)
+    lookup_values = input['range']
     # lookup_values = [["000031","00410575"],["a","00306529"],["000053","b"],["000053","00306529"],["000053","00306529"]]
 
     # table to use for lookup values
@@ -157,7 +173,7 @@ def flex_handler(flex):
 
     # columns from the lookup table to return
     lookup_columns = '{{lookup_columns}}'.split(',')
-    # lookup_columns = ["Item_desc","Case_cost","Item_cost"]
+    #lookup_columns = ["Item_desc","Case_cost","Item_cost"]
 
     # table config to use for lookup
     file = flex.fs.open(lookup_table_path)
@@ -183,6 +199,7 @@ def lookupValues(lookup_table_config, lookup_keys, lookup_columns, lookup_values
 
     # load the csv into a dictionary using pandas
     df = pandas.read_csv(lookup_table_config['data'], sep=lookup_table_config['delimiter'], quotechar=lookup_table_config['quotechar'], skipinitialspace=True, encoding=lookup_table_config['encoding'], dtype = str)
+    df.columns = map(str.lower, df.columns)
     lookup_table = df.to_dict('records')
 
     # create a dictionary of lookup values based on the key
@@ -190,7 +207,7 @@ def lookupValues(lookup_table_config, lookup_keys, lookup_columns, lookup_values
     for row in lookup_table:
         keyvalues = []
         for lk in lookup_keys:
-            keyvalues.append(str(row.get(lk,'')))
+            keyvalues.append(str(row.get(lk.lower(),'')))
         key = seperator.join(keyvalues)
         lookup_table_index[key] = row
 
@@ -198,7 +215,7 @@ def lookupValues(lookup_table_config, lookup_keys, lookup_columns, lookup_values
     # input values, filled out with the appropriate information from the
     # index use all fields if no fields are specified
     result = []
-    result.append(lookup_columns)
+    # result.append(lookup_columns) # uncomment to include column names
     for lv in lookup_values:
         key = seperator.join(lv)
         result.append(getValuesFromLookup(key, lookup_table_index, lookup_columns))
@@ -210,9 +227,10 @@ def getValuesFromLookup(key, lookup_table_index, lookup_columns):
     default_values = ['']*len(lookup_columns)
     default_row = dict(zip(lookup_columns, default_values))
     lookup_values = lookup_table_index.get(key, default_row)
-    result = [lookup_values.get(c,'') for c in lookup_columns]
+    result = [lookup_values.get(c.lower(),'') for c in lookup_columns]
     return result
 `
+
 
   const getDefaultValues = () => {
     return {
