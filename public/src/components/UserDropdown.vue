@@ -30,7 +30,6 @@
 <script>
   import {
     ROUTE_ACCOUNT_PAGE,
-    ROUTE_HOME_PAGE,
     ROUTE_PIPE_PAGE,
     ROUTE_SIGNIN_PAGE
   } from '../constants/route'
