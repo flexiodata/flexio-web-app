@@ -120,6 +120,7 @@
               title: 'Lookup'
             }
 
+            task = _.cloneDeep(task)
             task.op = 'execute'
             task.real_op = 'lookup'
             task.lang = 'python'
