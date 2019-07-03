@@ -549,7 +549,20 @@ class Api
         if (strlen($requesting_user_token) === 0 && \Flexio\Base\Eid::isValid($current_session_user_eid) === true)
             return $current_session_user_eid;
 
-        // POSSIBILITY 3: token of some kind; try load a user from it, and if not possible,
+        // POSSIBILITY 3: session token; try load a user from it, and if not possible,
+        // fall through to the api token possibility
+        $user_eid_from_session_token = \Flexio\Object\User::getUserEidFromToken($requesting_user_token);
+        if (isset($user_eid_from_session_token))
+        {
+            // make sure the user is valid
+            $user = \Flexio\Object\User::load($user_eid_from_session_token);
+            if ($user->getStatus() === \Model::STATUS_DELETED)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+            return $user->getEid();
+        }
+
+        // POSSIBILITY 4: api token; try load a user from it, and if not possible,
         // the token or the user is invalid, so throw an exception
         $token = \Flexio\Object\Token::loadFromAccessCode($requesting_user_token);
         if ($token->getStatus() === \Model::STATUS_DELETED)
@@ -560,8 +573,7 @@ class Api
         if ($user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
-        $user_eid_from_token = $user->getEid();
-        return $user_eid_from_token;
+        return $user->getEid();
     }
 
     private static function getPostContent(array $header_params, string $input) : ?array

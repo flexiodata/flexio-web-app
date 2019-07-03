@@ -9,8 +9,9 @@ MAINTAINER ben@flex.io
 ########################################
 
 RUN apt -y update && \
-    apt -y install sudo wget apt-utils curl git python3-pip libzmq3-dev libzmq5 libjsoncpp-dev golang chromium-browser libgconf2-4 nodejs npm python3-psycopg2 && \
-    npm install -g yarn
+    apt -y install sudo wget apt-utils curl git python3-pip libzmq3-dev libzmq5 libjsoncpp-dev golang chromium-browser libgconf2-4 nodejs npm python3-psycopg2 unzip && \
+    npm install -g yarn && \
+    apt -y install fonts-liberation libappindicator3-1 lsb-release
 
 # nodejs runtime
 #RUN curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
@@ -68,8 +69,16 @@ RUN pip3 install zmq && \
     pip3 install pandasql && \
     pip3 install pysqldf && \
     pip3 install boto3 && \
-    pip3 install mysql-connector
+    pip3 install mysql-connector && \
+    pip3 install selenium
     
+
+
+RUN cd /tmp && wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+    dpkg -i google-chrome-stable_current_amd64.deb && \
+    rm google-chrome-stable_current_amd64.deb
+RUN cd /usr/bin && wget https://chromedriver.storage.googleapis.com/75.0.3770.8/chromedriver_linux64.zip && unzip chromedriver_linux64.zip && chmod +x chromedriver
+
 
 # POTENTIAL: web scraping (spacy)
 # RUN apt-get install -y libffi-dev libxml2-dev libxslt-dev lib32z1-dev libssl-dev

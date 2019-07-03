@@ -54,7 +54,7 @@ class System
         // default error message
         $error_message = _('Invalid username or password.');
 
-        // return a token that can be used to login
+        // return a token that can be used to login or in api calls
         try
         {
             // try to get the user eid from username
@@ -86,17 +86,7 @@ class System
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAUTHORIZED);
             }
 
-            $user_info_basic = array();
-            $user_info_basic['timestamp'] = \Flexio\Base\Util::getCurrentTimestamp();
-            $user_info_basic['eid'] = $current_user_eid;
-            $user_info_basic['random'] = \Flexio\Base\Util::generateRandomString(20);
-
-            $user_info_basic = json_encode($user_info_basic);
-            $token = \Flexio\Base\Util::encrypt($user_info_basic, $GLOBALS['g_store']->connection_enckey);
-
-            // TODO: make sure encryption succeeds, or return an error
-
-            $token = self::base64_url_encode($token); // make sure token is url safe since it'll be passwed as a query param
+            $token = \Flexio\Object\User::generateTokenFromUserEid($current_user_eid);
             $result = array(
                 'token' => $token
             );
@@ -137,37 +127,12 @@ class System
         $token = $validated_post_params['token'];
 
         // attempt to decrypt the user info from the token
-        $token = self::base64_url_decode($token);
-        $user_info_basic = \Flexio\Base\Util::decrypt($token, $GLOBALS['g_store']->connection_enckey);
-        if (!$user_info_basic)
+        $current_user_eid = \Flexio\Object\User::getUserEidFromToken($token);
+        if (!$current_user_eid)
         {
             $error_message = _('Invalid token.');
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAUTHORIZED);
         }
-
-        $user_info_basic = json_decode($user_info_basic, true);
-
-        if ($user_info_basic === false)
-        {
-            $error_message = _('Invalid token.');
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAUTHORIZED);
-        }
-
-        $current_user_eid = $user_info_basic['eid'] ?? false;
-        if ($current_user_eid === false)
-        {
-            $error_message = _('Invalid token.');
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAUTHORIZED);
-        }
-
-        $timestamp = $user_info_basic['timestamp'] ?? false;
-        if ($timestamp === false)
-        {
-            $error_message = _('Invalid token.');
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAUTHORIZED);
-        }
-        // TODO: check the timestamp to make sure it's within a minute of the previous token
-
 
         // default error message
         $error_message = _('Authentication failed.');
@@ -296,15 +261,5 @@ class System
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
         \Flexio\Api\Response::sendContent($result);
-    }
-
-    private static function base64_url_encode($input)
-    {
-        return strtr(base64_encode($input), '+/=', '._-');
-    }
-
-    private static function base64_url_decode($input)
-    {
-        return base64_decode(strtr($input, '._-', '+/='));
     }
 }
