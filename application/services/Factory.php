@@ -40,6 +40,7 @@ class Factory
     public const TYPE_PIPELINEDEALS       = 'pipelinedeals';
     public const TYPE_MAILJET             = 'mailjet';
     public const TYPE_TWILIO              = 'twilio';
+    public const TYPE_KEYRING             = 'keyring'; // general purpose set of key values; here as a place holder constant to match UI
 
 
     public static function create(array $connection_properties) // TODO: add return type
