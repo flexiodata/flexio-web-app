@@ -8,6 +8,7 @@ export const CONNECTION_TYPE_FLEX               = 'flex'
 export const CONNECTION_TYPE_GITHUB             = 'github'
 export const CONNECTION_TYPE_GMAIL              = 'gmail'
 export const CONNECTION_TYPE_HTTP               = 'http' /* api */
+export const CONNECTION_TYPE_KEYRING            = 'keyring'
 export const CONNECTION_TYPE_GOOGLECLOUDSTORAGE = 'googlecloudstorage'
 export const CONNECTION_TYPE_GOOGLEDRIVE        = 'googledrive'
 export const CONNECTION_TYPE_GOOGLESHEETS       = 'googlesheets'

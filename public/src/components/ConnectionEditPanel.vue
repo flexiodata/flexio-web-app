@@ -128,11 +128,17 @@
           </el-form-item>
         </el-form>
 
+        <div
+          v-if="is_keyring"
+        >
+          This is a Keyring connection
+        </div>
+
         <ConnectionInfoPanel
           ref="connection-info-panel"
           :connection-info.sync="connection_info"
           :form-errors.sync="connection_info_form_errors"
-          v-if="is_http"
+          v-else-if="is_http"
         />
 
         <div
@@ -298,6 +304,9 @@
       },
       is_http() {
         return this.ctype == ctypes.CONNECTION_TYPE_HTTP
+      },
+      is_keyring() {
+        return this.ctype == ctypes.CONNECTION_TYPE_KEYRING
       },
       is_oauth() {
         return this.$_Connection_isOauth(this.ctype)
