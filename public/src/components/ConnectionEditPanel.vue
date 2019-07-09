@@ -418,14 +418,16 @@
         })
       },
       reset(attrs) {
-        this.orig_connection = _.assign({}, defaultAttrs(), attrs)
-        this.edit_connection = _.assign({}, defaultAttrs(), attrs)
+        var ctype = _.get(attrs, 'connection_type')
+        this.orig_connection = _.assign({}, defaultAttrs(ctype), attrs)
+        this.edit_connection = _.assign({}, defaultAttrs(ctype), attrs)
       },
       createPendingConnection(item) {
-        var attrs = _.assign({}, this.edit_connection, {
+        var ctype = item.connection_type
+        var attrs = _.assign({}, defaultAttrs(ctype), {
           eid_status: OBJECT_STATUS_PENDING,
           name: item.service_name,
-          connection_type: item.connection_type
+          connection_type: ctype
         })
 
         this.$store.dispatch('v2_action_createConnection', { attrs }).then(response => {
