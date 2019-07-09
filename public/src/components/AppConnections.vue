@@ -95,6 +95,10 @@
       EmptyItem
     },
     watch: {
+      route_identifier: {
+        handler: 'loadConnection',
+        immediate: true
+      },
       connections(val, old_val) {
         if (!this.has_connection) {
           this.selectConnection(_.first(this.connections))
@@ -114,6 +118,9 @@
         'is_fetching': 'connections_fetching',
         'is_fetched': 'connections_fetched'
       }),
+      route_identifier() {
+        return _.get(this.$route, 'params.identifier', undefined)
+      },
       connections() {
         return this.getAvailableConnections()
       },
@@ -217,9 +224,33 @@
           })
         })
       },
+      updateRoute() {
+        // update the route
+        var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
+        var view = this.active_view
+        _.set(new_route, 'params.view', view)
+        this.$router.replace(new_route)
+      },
+      loadConnection(identifier) {
+        if (identifier) {
+          var c = _.find(this.connections, { eid: identifier })
+          if (!c) {
+            c = _.find(this.connections, { alias: identifier })
+          }
+          if (c) {
+            this.connection = _.cloneDeep(c)
+            this.last_selected = _.cloneDeep(c)
+          }
+        }
+      },
       selectConnection(item) {
-        this.connection = _.cloneDeep(item)
-        this.last_selected = _.cloneDeep(item)
+        var alias = _.get(item, 'alias', '')
+        var identifier = alias.length > 0 ? alias : _.get(item, 'eid', '')
+
+        // update the route
+        var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
+        _.set(new_route, 'params.identifier', identifier)
+        this.$router.push(new_route)
       },
       cancelChanges(item) {
         this.connection = _.cloneDeep(this.last_selected)

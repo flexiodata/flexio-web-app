@@ -40,7 +40,7 @@ const routes = [
   { path: '/initsession',                                name: rn.ROUTE_INITSESSION_PAGE,     component: InitSessionPage           },
   { path: '/:user_identifier?/pipes',                    name: rn.ROUTE_PIPE_LIST_PAGE,       component: AppPipes,            meta },
   { path: '/:user_identifier?/pipes/:identifier/:view?', name: rn.ROUTE_PIPE_PAGE,            component: PipeDocument,        meta },
-  { path: '/:user_identifier?/connections',              name: rn.ROUTE_CONNECTION_LIST_PAGE, component: AppConnections,      meta },
+  { path: '/:user_identifier?/connections/:identifier?', name: rn.ROUTE_CONNECTION_LIST_PAGE, component: AppConnections,      meta },
   { path: '/:user_identifier?/storage',                  name: rn.ROUTE_STORAGE_PAGE,         component: AppStorage,          meta },
   { path: '/:user_identifier?/activity',                 name: rn.ROUTE_ACTIVITY_LIST_PAGE,   component: AppActivity,         meta },
   { path: '/account/:section?',                          name: rn.ROUTE_ACCOUNT_PAGE,         component: AppAccount,          meta },
