@@ -23,8 +23,7 @@
           :selected-item.sync="active_connection"
           :items="connections"
           :item-options="{
-            itemCls: 'min-w5 pa3 pr2 ba b--white bg-white hover-bg-nearer-white',
-            itemStyle: 'margin: 3px 3px 3px 0',
+            itemCls: 'min-w5 pa3 bb b--black-05 bg-white hover-bg-nearer-white',
             selectedCls: 'relative b--black-10 bg-nearer-white',
             showIdentifier: true,
             showUrl: false
