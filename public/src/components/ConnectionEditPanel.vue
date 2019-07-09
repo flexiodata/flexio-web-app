@@ -129,9 +129,16 @@
         </el-form>
 
         <div
+          class="mt3 pa3 ba b--black-10 br2"
           v-if="is_keyring"
         >
-          This is a Keyring connection
+          <div class="flex flex-row items-center mb3 lh-copy ttu fw6 f6">
+            <i class="material-icons mr1 f4">list_alt</i> Keypair Values
+          </div>
+          <KeypairList
+            :header="{ key: 'Key', val: 'Value' }"
+            v-model="connection_info"
+          />
         </div>
 
         <ConnectionInfoPanel
@@ -186,12 +193,27 @@
   import { slugify } from '@/utils'
   import ServiceList from '@comp/ServiceList'
   import ServiceIcon from '@comp/ServiceIcon'
+  import KeypairList from '@comp/KeypairList'
   import ConnectionAuthenticationPanel from '@comp/ConnectionAuthenticationPanel'
   import ConnectionInfoPanel from '@comp/ConnectionInfoPanel'
   import MixinConnection from '@comp/mixins/connection'
   import MixinValidation from '@comp/mixins/validation'
 
-  const defaultAttrs = () => {
+  const defaultAttrs = (ctype) => {
+    var connection_info = ctype === ctypes.CONNECTION_TYPE_KEYRING ? {} : {
+      method: '',
+      url: '',
+      auth: 'none',
+      username: '',
+      password: '',
+      token: '',
+      access_token: '',
+      refresh_token: '',
+      expires: '',
+      headers: {},
+      data: {}
+    }
+
     return {
       eid: null,
       eid_status: OBJECT_STATUS_PENDING,
@@ -199,19 +221,7 @@
       alias: '',
       description: '',
       connection_type: '',
-      connection_info: {
-        method: '',
-        url: '',
-        auth: 'none',
-        username: '',
-        password: '',
-        token: '',
-        access_token: '',
-        refresh_token: '',
-        expires: '',
-        headers: {},
-        data: {}
-      }
+      connection_info
     }
   }
 
@@ -253,6 +263,7 @@
     components: {
       ServiceList,
       ServiceIcon,
+      KeypairList,
       ConnectionAuthenticationPanel,
       ConnectionInfoPanel
     },
@@ -271,9 +282,11 @@
       }
     },
     data() {
+      var ctype = this.connection.connection_type
+
       return {
-        orig_connection: _.assign({}, defaultAttrs(), this.connection),
-        edit_connection: _.assign({}, defaultAttrs(), this.connection),
+        orig_connection: _.assign({}, defaultAttrs(ctype), this.connection),
+        edit_connection: _.assign({}, defaultAttrs(ctype), this.connection),
         rules: {
           name: [
             { required: true, message: 'Please input a name', trigger: 'blur' }
