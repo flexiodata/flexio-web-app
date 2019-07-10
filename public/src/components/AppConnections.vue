@@ -8,37 +8,48 @@
 
   <!-- fetched -->
   <div class="flex flex-column" v-else-if="is_fetched">
-    <!-- control bar -->
-    <div class="flex-none pa3 relative bg-white bb b--black-05">
-      <div class="flex flex-row">
-        <div class="flex-fill flex flex-row items-center">
-          <h1 class="mv0 f2 fw4 mr3">{{title}}</h1>
-        </div>
-        <div class="flex-none flex flex-row items-center ml3">
-          <el-button type="primary" class="ttu fw6" @click="show_connection_new_dialog = true">New Connection</el-button>
-        </div>
-      </div>
-    </div>
 
     <div class="flex-fill flex flex-row" v-if="connections.length > 0">
       <template  v-if="has_connection">
-        <AbstractList
-          ref="list"
-          class="overflow-y-auto br b--black-05"
-          layout="list"
-          item-component="AbstractConnectionChooserItem"
-          :selected-item.sync="connection"
-          :items="connections"
-          :item-options="{
-            itemCls: 'min-w5 pa3 pr2 bg-white hover-bg-nearer-white',
-            selectedCls: 'relative bg-nearer-white',
-            showDropdown: true,
-            dropdownItems: ['delete']
-          }"
-          @item-activate="selectConnection"
-          @item-delete="tryDeleteConnection"
-        />
-        <div class="flex-fill overflow-y-auto" v-if="connection">
+        <div class="flex flex-column br b--black-05">
+          <!-- control bar -->
+          <div class="flex-none ph3 pv2 relative bg-white bb b--black-05">
+            <div class="flex flex-row">
+              <div class="flex-fill flex flex-row items-center">
+                <h2 class="mv0 f3 mr3">Connections</h2>
+              </div>
+              <div class="flex-none flex flex-row items-center ml3">
+                <el-button
+                  size="small"
+                  type="primary"
+                  class="ttu fw6"
+                  @click="show_connection_new_dialog = true"
+                >
+                  New
+                </el-button>
+              </div>
+            </div>
+          </div>
+
+          <AbstractList
+            ref="list"
+            layout="list"
+            item-component="AbstractConnectionChooserItem"
+            class="overflow-y-auto"
+            :class=""
+            :selected-item.sync="connection"
+            :items="connections"
+            :item-options="{
+              itemCls: 'min-w5 pa3 bb b--black-05 bg-white hover-bg-nearer-white',
+              selectedCls: 'relative bg-nearer-white',
+              showDropdown: true,
+              dropdownItems: ['delete']
+            }"
+            @item-activate="selectConnection"
+            @item-delete="tryDeleteConnection"
+          />
+        </div>
+        <div class="flex-fill overflow-y-auto">
           <ConnectionEditPanel
             class="pa3 pa4-l"
             style="max-width: 60rem"

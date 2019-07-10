@@ -8,18 +8,6 @@
 
   <!-- fetched -->
   <div class="flex flex-column" v-else-if="is_fetched">
-    <!-- control bar -->
-    <div class="pa3 relative bg-white bb b--black-05">
-      <div class="flex flex-row">
-        <div class="flex-fill flex flex-row items-center">
-          <h1 class="mv0 f2 fw4 mr3">{{title}}</h1>
-        </div>
-        <div class="flex-none flex flex-row items-center" v-if="false">
-          <el-button type="primary" class="ttu fw6" @click="openAddModal">New storage</el-button>
-        </div>
-      </div>
-    </div>
-
     <div class="flex flex-row flex-fill" v-if="connections.length > 0">
       <AbstractList
         ref="list"
@@ -29,7 +17,7 @@
         :selected-item.sync="connection"
         :items="connections"
         :item-options="{
-          itemCls: 'min-w5 pa3 bg-white hover-bg-nearer-white',
+          itemCls: 'min-w5 pa3 bb b--black-05 bg-white hover-bg-nearer-white',
           selectedCls: 'relative bg-nearer-white',
           showIdentifier: true,
           showUrl: false

@@ -23,7 +23,7 @@
           :selected-item.sync="active_connection"
           :items="connections"
           :item-options="{
-            itemCls: 'min-w5 pa3 bg-white hover-bg-nearer-white',
+            itemCls: 'min-w5 pa3 bb b--black-05 bg-white hover-bg-nearer-white',
             selectedCls: 'relative bg-nearer-white',
             showIdentifier: true,
             showUrl: false
