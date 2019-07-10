@@ -49,9 +49,22 @@
             @item-delete="tryDeleteConnection"
           />
         </div>
-        <div class="flex-fill overflow-y-auto">
+        <div
+          class="flex-fill"
+          v-if="mode == 'static'"
+        >
+          <ConnectionStaticPanel
+            class="pa3 pa4-l trans-p"
+            style="max-width: 60rem"
+            :connection="connection"
+          />
+        </div>
+        <div
+          class="flex-fill overflow-y-auto"
+          v-else
+        >
           <ConnectionEditPanel
-            class="pa3 pa4-l"
+            class="pa3 pa4-l trans-p"
             style="max-width: 60rem"
             mode="edit"
             :show-title="false"
@@ -97,6 +110,7 @@
   import Spinner from 'vue-simple-spinner'
   import AbstractList from '@comp/AbstractList'
   import ConnectionEditPanel from '@comp/ConnectionEditPanel'
+  import ConnectionStaticPanel from '@comp/ConnectionStaticPanel'
   import EmptyItem from '@comp/EmptyItem'
   import PageNotFound from '@comp/PageNotFound'
 
@@ -108,6 +122,7 @@
       Spinner,
       AbstractList,
       ConnectionEditPanel,
+      ConnectionStaticPanel,
       EmptyItem,
       PageNotFound
     },
@@ -139,6 +154,7 @@
     },
     data() {
       return {
+        mode: 'static',
         connection: {},
         last_selected: {},
         show_connection_new_dialog: false
@@ -152,6 +168,9 @@
       }),
       route_identifier() {
         return _.get(this.$route, 'params.identifier', undefined)
+      },
+      route_view() {
+        return _.get(this.$route, 'params.view', undefined)
       },
       connections() {
         return this.getAvailableConnections()
