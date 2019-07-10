@@ -24,6 +24,7 @@ class Pipe extends ModelBase
                 'eid_status'      => array('type' => 'string', 'required' => false, 'default' => \Model::STATUS_AVAILABLE),
                 'alias'           => array('type' => 'alias',  'required' => false, 'default' => ''),
                 'name'            => array('type' => 'string', 'required' => false, 'default' => ''),
+                'short_description' => array('type' => 'string', 'required' => false),
                 'description'     => array('type' => 'string', 'required' => false, 'default' => ''),
                 'ui'              => array('type' => 'string', 'required' => false, 'default' => '{}'),
                 'task'            => array('type' => 'string', 'required' => false, 'default' => '{}'),
@@ -57,6 +58,16 @@ class Pipe extends ModelBase
 
         if ($process_arr['deploy_ui'] != \Model::PIPE_DEPLOY_STATUS_ACTIVE && $process_arr['deploy_ui'] != \Model::PIPE_DEPLOY_STATUS_INACTIVE)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+
+        // TODO: alias migration project; remove when migration is complete
+        // if short_description is set, map it to the name
+        if (isset($process_arr['short_description']))
+        {
+            $process_arr['name'] = $process_arr['short_description'];
+            unset($process_arr['short_description']);
+        }
+
 
         $db = $this->getDatabase();
         $db->beginTransaction();
@@ -133,6 +144,7 @@ class Pipe extends ModelBase
                 'eid_status'      => array('type' => 'string', 'required' => false),
                 'alias'           => array('type' => 'alias',  'required' => false),
                 'name'            => array('type' => 'string', 'required' => false),
+                'short_description' => array('type' => 'string', 'required' => false),
                 'description'     => array('type' => 'string', 'required' => false),
                 'ui'              => array('type' => 'string', 'required' => false),
                 'task'            => array('type' => 'string', 'required' => false),
@@ -156,6 +168,16 @@ class Pipe extends ModelBase
         // if the item doesn't exist, return false
         if ($this->exists($eid) === false)
             return false;
+
+
+        // TODO: alias migration project; remove when migration is complete
+        // if short_description is set, map it to the name
+        if (isset($process_arr['short_description']))
+        {
+            $process_arr['name'] = $process_arr['short_description'];
+            unset($process_arr['short_description']);
+        }
+
 
         $db = $this->getDatabase();
         $db->beginTransaction();
@@ -255,6 +277,7 @@ class Pipe extends ModelBase
                               'eid_status'      => $row['eid_status'],
                               'alias'           => $row['alias'],
                               'name'            => $row['name'],
+                              'short_description' => $row['name'],
                               'description'     => $row['description'],
                               'ui'              => $row['ui'],
                               'task'            => $row['task'],

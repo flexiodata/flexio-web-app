@@ -24,6 +24,7 @@ class Connection extends ModelBase
                 'eid_status'        => array('type' => 'string', 'required' => false, 'default' => \Model::STATUS_AVAILABLE),
                 'alias'             => array('type' => 'alias',  'required' => false, 'default' => ''),
                 'name'              => array('type' => 'string', 'required' => false, 'default' => ''),
+                'short_description' => array('type' => 'string', 'required' => false),
                 'description'       => array('type' => 'string', 'required' => false, 'default' => ''),
                 'connection_type'   => array('type' => 'string', 'required' => false, 'default' => ''),
                 'connection_status' => array('type' => 'string', 'required' => false, 'default' => \Model::CONNECTION_STATUS_UNAVAILABLE),
@@ -44,6 +45,16 @@ class Connection extends ModelBase
 
         // encrypt the connection info
         $process_arr['connection_info'] = \Flexio\Base\Util::encrypt($process_arr['connection_info'], $GLOBALS['g_store']->connection_enckey);
+
+
+        // TODO: alias migration project; remove when migration is complete
+        // if short_description is set, map it to the name
+        if (isset($process_arr['short_description']))
+        {
+            $process_arr['name'] = $process_arr['short_description'];
+            unset($process_arr['short_description']);
+        }
+
 
         $db = $this->getDatabase();
         $db->beginTransaction();
@@ -120,6 +131,7 @@ class Connection extends ModelBase
                 'eid_status'        => array('type' => 'string', 'required' => false),
                 'alias'             => array('type' => 'alias',  'required' => false),
                 'name'              => array('type' => 'string', 'required' => false),
+                'short_description' => array('type' => 'string', 'required' => false),
                 'description'       => array('type' => 'string', 'required' => false),
                 'connection_type'   => array('type' => 'string', 'required' => false),
                 'connection_status' => array('type' => 'string', 'required' => false),
@@ -146,6 +158,16 @@ class Connection extends ModelBase
         // if the item doesn't exist, return false
         if ($this->exists($eid) === false)
             return false;
+
+
+        // TODO: alias migration project; remove when migration is complete
+        // if short_description is set, map it to the name
+        if (isset($process_arr['short_description']))
+        {
+            $process_arr['name'] = $process_arr['short_description'];
+            unset($process_arr['short_description']);
+        }
+
 
         $db = $this->getDatabase();
         $db->beginTransaction();
@@ -218,6 +240,7 @@ class Connection extends ModelBase
                               'eid_status'        => $row['eid_status'],
                               'alias'             => $row['alias'],
                               'name'              => $row['name'],
+                              'short_description' => $row['name'],
                               'description'       => $row['description'],
                               'connection_type'   => $row['connection_type'],
                               'connection_status' => $row['connection_status'],
