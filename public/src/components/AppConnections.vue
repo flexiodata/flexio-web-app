@@ -101,7 +101,22 @@
       },
       connections(val, old_val) {
         if (!this.has_connection) {
-          this.selectConnection(_.first(this.connections))
+          var identifier = _.get(this.$route, 'params.identifier', '')
+          if (identifier.length == 0) {
+            var c = _.first(this.connections)
+            if (c) {
+              var alias = _.get(c, 'alias', '')
+              identifier = alias.length > 0 ? alias : _.get(c, 'eid', '')
+            }
+          }
+          if (identifier.length > 0) {
+            this.loadConnection(identifier)
+
+            // update the route
+            var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
+            _.set(new_route, 'params.identifier', identifier)
+            this.$router.replace(new_route)
+          }
         }
       }
     },
@@ -146,7 +161,6 @@
     },
     mounted() {
       this.$store.track('Visited Connections Page')
-      this.selectConnection(_.first(this.connections))
     },
     methods: {
       ...mapGetters([
@@ -241,6 +255,10 @@
             this.connection = _.cloneDeep(c)
             this.last_selected = _.cloneDeep(c)
           }
+        } else {
+          var c = _.first(this.connections)
+          this.connection = _.cloneDeep(c)
+          this.last_selected = _.cloneDeep(c)
         }
       },
       selectConnection(item) {
