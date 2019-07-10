@@ -23,14 +23,14 @@
     <div class="flex-fill flex flex-row" v-if="connections.length > 0">
       <AbstractList
         ref="list"
-        class="br b--black-05 overflow-y-auto"
+        class="overflow-y-auto br b--black-05"
         layout="list"
         item-component="AbstractConnectionChooserItem"
         :selected-item.sync="connection"
         :items="connections"
         :item-options="{
-          itemCls: 'min-w5 pa3 pr2 bb b--black-05 bg-white hover-bg-nearer-white',
-          selectedCls: 'relative b--black-10 bg-nearer-white',
+          itemCls: 'min-w5 pa3 pr2 bg-white hover-bg-nearer-white',
+          selectedCls: 'relative bg-nearer-white',
           showDropdown: true,
           dropdownItems: ['delete']
         }"
