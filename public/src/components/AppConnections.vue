@@ -21,35 +21,39 @@
     </div>
 
     <div class="flex-fill flex flex-row" v-if="connections.length > 0">
-      <AbstractList
-        ref="list"
-        class="overflow-y-auto br b--black-05"
-        layout="list"
-        item-component="AbstractConnectionChooserItem"
-        :selected-item.sync="connection"
-        :items="connections"
-        :item-options="{
-          itemCls: 'min-w5 pa3 pr2 bg-white hover-bg-nearer-white',
-          selectedCls: 'relative bg-nearer-white',
-          showDropdown: true,
-          dropdownItems: ['delete']
-        }"
-        @item-activate="selectConnection"
-        @item-delete="tryDeleteConnection"
-        v-if="connections.length > 0"
-      />
-      <div class="flex-fill overflow-y-auto" v-if="connection">
-        <ConnectionEditPanel
-          class="pa3 pa4-l"
-          style="max-width: 60rem"
-          mode="edit"
-          :show-title="false"
-          :show-steps="false"
-          :connection="connection"
-          @cancel="cancelChanges"
-          @submit="tryUpdateConnection"
+      <template  v-if="has_connection">
+        <AbstractList
+          ref="list"
+          class="overflow-y-auto br b--black-05"
+          layout="list"
+          item-component="AbstractConnectionChooserItem"
+          :selected-item.sync="connection"
+          :items="connections"
+          :item-options="{
+            itemCls: 'min-w5 pa3 pr2 bg-white hover-bg-nearer-white',
+            selectedCls: 'relative bg-nearer-white',
+            showDropdown: true,
+            dropdownItems: ['delete']
+          }"
+          @item-activate="selectConnection"
+          @item-delete="tryDeleteConnection"
         />
-      </div>
+        <div class="flex-fill overflow-y-auto" v-if="connection">
+          <ConnectionEditPanel
+            class="pa3 pa4-l"
+            style="max-width: 60rem"
+            mode="edit"
+            :show-title="false"
+            :show-steps="false"
+            :connection="connection"
+            @cancel="cancelChanges"
+            @submit="tryUpdateConnection"
+          />
+        </div>
+      </template>
+
+      <!-- connection not found -->
+      <PageNotFound class="flex-fill bg-nearer-white" v-else />
     </div>
     <EmptyItem class="flex flex-column justify-center h-100" v-else>
       <i slot="icon" class="material-icons">repeat</i>
@@ -83,6 +87,7 @@
   import AbstractList from '@comp/AbstractList'
   import ConnectionEditPanel from '@comp/ConnectionEditPanel'
   import EmptyItem from '@comp/EmptyItem'
+  import PageNotFound from '@comp/PageNotFound'
 
   export default {
     metaInfo: {
@@ -92,7 +97,8 @@
       Spinner,
       AbstractList,
       ConnectionEditPanel,
-      EmptyItem
+      EmptyItem,
+      PageNotFound
     },
     watch: {
       route_identifier: {
