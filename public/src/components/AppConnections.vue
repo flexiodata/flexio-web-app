@@ -190,7 +190,7 @@
         return _.get(this.connection, 'connection_type', '')
       },
       cname() {
-        return _.get(this.connection, 'name', '')
+        return _.get(this.connection, 'short_description', '')
       },
       is_storage_connection() {
         return this.$_Connection_isStorage(this.connection)
@@ -228,7 +228,7 @@
         var ctype = _.get(attrs, 'connection_type', '')
         var is_pending = _.get(attrs, 'eid_status', '') === OBJECT_STATUS_PENDING
 
-        attrs = _.pick(attrs, ['name', 'alias', 'description', 'connection_info'])
+        attrs = _.pick(attrs, ['short_description', 'alias', 'description', 'connection_info'])
         _.assign(attrs, { eid_status: OBJECT_STATUS_AVAILABLE })
 
         // update the connection and make it available
@@ -246,7 +246,7 @@
           })
 
           if (is_pending) {
-            var analytics_payload = _.pick(attrs, ['eid', 'name', 'alias', 'description', 'connection_type'])
+            var analytics_payload = _.pick(attrs, ['eid', 'short_description', 'alias', 'description', 'connection_type'])
             this.$store.track('Created Connection', analytics_payload)
           }
 
@@ -264,9 +264,9 @@
       },
       tryDeleteConnection(attrs) {
         var eid = _.get(attrs, 'eid', '')
-        var name = _.get(attrs, 'name', 'Connection')
+        var short_description = _.get(attrs, 'short_description', 'Connection')
 
-        this.$confirm('Are you sure you want to delete the connection named "'+name+'"?', 'Really delete connection?', {
+        this.$confirm('Are you sure you want to delete the connection named "' + short_description + '"?', 'Really delete connection?', {
           confirmButtonClass: 'ttu fw6',
           cancelButtonClass: 'ttu fw6',
           confirmButtonText: 'Delete connection',

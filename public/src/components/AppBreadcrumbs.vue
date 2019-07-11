@@ -49,7 +49,7 @@
           return 'Account Settings'
         }
 
-        return _.get(this.getActiveDocument(), 'name', '')
+        return _.get(this.getActiveDocument(), 'short_description', '')
       },
       is_pipes() {
         return this.$route.name == ROUTE_PIPE_PAGE

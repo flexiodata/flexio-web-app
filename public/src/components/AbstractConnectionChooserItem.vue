@@ -120,7 +120,7 @@
         return _.get(this.item, 'eid', '')
       },
       cname() {
-        return _.get(this.item, 'name', '')
+        return _.get(this.item, 'short_description', '')
       },
       ctype() {
         return _.get(this.item, 'connection_type', '')
