@@ -73,20 +73,20 @@
           <div class="flex flex-row">
             <el-form-item
               class="flex-fill mr3"
-              key="name"
-              prop="name"
+              key="short_description"
+              prop="short_description"
             >
               <template slot="label">
                 Name
-                <span class="lh-1 hint--top" aria-label="The name of your connection">
+                <span class="lh-1 hint--top" aria-label="The short description of your connection">
                   <i class="el-icon-info blue"></i>
                 </span>
               </template>
               <el-input
-                placeholder="Name"
+                placeholder="Enter short description"
                 autocomplete="off"
                 :autofocus="true"
-                v-model="edit_connection.name"
+                v-model="edit_connection.short_description"
               />
             </el-form-item>
 
@@ -210,8 +210,8 @@
     return {
       eid: null,
       eid_status: OBJECT_STATUS_PENDING,
-      name: '',
       alias: '',
+      short_description: '',
       description: '',
       connection_type: '',
       connection_info
@@ -281,9 +281,6 @@
         orig_connection: _.assign({}, defaultAttrs(ctype), this.connection),
         edit_connection: _.assign({}, defaultAttrs(ctype), this.connection),
         rules: {
-          name: [
-            { required: true, message: 'Please input a name', trigger: 'blur' }
-          ],
           alias: [
             { validator: this.formValidateAlias }
           ]
@@ -338,7 +335,7 @@
         }
 
         return this.mode == 'edit'
-          ? 'Edit "' + _.get(this.connection, 'name') + '" Connection'
+          ? 'Edit "' + _.get(this.connection, 'short_description') + '" Connection'
           : 'New Connection'
       },
       submit_label() {
@@ -419,7 +416,7 @@
         var ctype = item.connection_type
         var attrs = _.assign({}, defaultAttrs(ctype), {
           eid_status: OBJECT_STATUS_PENDING,
-          name: item.service_name,
+          short_description: item.service_name,
           connection_type: ctype
         })
 
