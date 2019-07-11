@@ -64,15 +64,10 @@
           <div class="flex-fill mt3 pt3 bt b--black-05"
             v-if="is_keyring_connection"
           >
-            <div
-              class="center w-100 mt3"
-              style="max-width: 60rem"
-            >
-              <div class="mb2 lh-copy ttu fw6 f6">Keypair Values</div>
-              <JsonDetailsPanel
-                :json="connection.connection_info"
-              />
-            </div>
+            <div class="mb2 lh-copy ttu fw6 f6">Keypair Values</div>
+            <JsonDetailsPanel
+              :json="connection.connection_info"
+            />
           </div>
           <FileChooser class="flex-fill mt3"
             :connection="connection"
