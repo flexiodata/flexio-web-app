@@ -35,7 +35,7 @@
       },
       createPipe(attrs) {
         if (!_.isObject(attrs)) {
-          attrs = { name: 'Untitled Pipe' }
+          attrs = { short_description: 'Untitled Pipe' }
         }
 
         // make sure we don't show the onboarding tour if the user comes
@@ -44,7 +44,7 @@
         this.$_Config_set(cfg_path, true).then(() => {
           this.$store.dispatch('v2_action_createPipe', { attrs }).then(response => {
             var pipe = response.data
-            var analytics_payload = _.pick(pipe, ['eid', 'name', 'alias', 'created'])
+            var analytics_payload = _.pick(pipe, ['eid', 'short_description', 'alias', 'created'])
             this.$store.track('Created Pipe', analytics_payload)
             this.openPipe(pipe.eid)
           }).catch(error => {
