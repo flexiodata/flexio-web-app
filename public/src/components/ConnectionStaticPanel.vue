@@ -36,7 +36,7 @@
           class="ttu fw6"
           @click="$emit('edit-click')"
         >
-          Edit Properties
+          Edit Connection
         </el-button>
       </div>
     </div>

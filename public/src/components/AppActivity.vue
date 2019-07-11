@@ -63,7 +63,7 @@
     <el-dialog
       custom-class="el-dialog--no-header el-dialog--no-footer"
       width="56rem"
-      top="8vh"
+      top="4vh"
       :modal-append-to-body="false"
       :visible.sync="show_process_details_dialog"
     >

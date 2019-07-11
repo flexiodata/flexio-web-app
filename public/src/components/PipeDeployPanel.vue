@@ -231,7 +231,7 @@
     <el-dialog
       title="Run from Google Sheets"
       width="42rem"
-      top="8vh"
+      top="4vh"
       :modal-append-to-body="false"
       :visible.sync="show_gsheets_instructions_dialog"
     >

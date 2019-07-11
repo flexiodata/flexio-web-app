@@ -52,7 +52,7 @@
       custom-class="el-dialog--compressed-body"
       title="Choose location"
       width="51rem"
-      top="8vh"
+      top="4vh"
       :modal-append-to-body="false"
       :visible.sync="show_file_chooser_dialog"
     >

@@ -73,7 +73,7 @@
     <el-dialog
       custom-class="el-dialog--no-footer"
       width="32rem"
-      top="8vh"
+      top="4vh"
       title="Really delete your account?"
       :modal-append-to-body="false"
       :visible.sync="show_account_delete_dialog"
