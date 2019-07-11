@@ -12,7 +12,9 @@
     >
       <template v-for="(val, key) in json">
         <h4 class="f8 fw6 ttu moon-gray bb b--black-05 mb1 mt3 pb1">{{key}}</h4>
-        <pre class="overflow-x-auto mb0 tl lh-title f7">{{val}}</pre>
+        <pre class="mb0 tl lh-title f7 i moon-gray" v-if="val === undefined || val === null || val === ''"
+        >{{val === undefined ? '(undefined)' : val === null ? '(null)' : val === '' ? '(empty string)' : val}}</pre>
+        <pre class="overflow-x-auto mb0 tl lh-title f7" v-else>{{val}}</pre>
       </template>
     </div>
     <CodeEditor

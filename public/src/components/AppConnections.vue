@@ -61,6 +61,19 @@
             :connection="connection"
             @edit-click="mode = 'edit'"
           />
+          <div class="flex-fill mt3 pt3 bt b--black-05"
+            v-if="is_keyring_connection"
+          >
+            <div
+              class="center w-100 mt3"
+              style="max-width: 60rem"
+            >
+              <h4>Keyring values</h4>
+              <JsonDetailsPanel
+                :json="connection.connection_info"
+              />
+            </div>
+          </div>
           <FileChooser class="flex-fill mt3"
             :connection="connection"
             v-if="is_storage_connection"
@@ -111,7 +124,7 @@
 </template>
 
 <script>
-  import { CONNECTION_TYPE_HTTP } from '../constants/connection-type'
+  import { CONNECTION_TYPE_HTTP, CONNECTION_TYPE_KEYRING } from '../constants/connection-type'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
@@ -119,6 +132,7 @@
   import ConnectionEditPanel from '@comp/ConnectionEditPanel'
   import ConnectionStaticPanel from '@comp/ConnectionStaticPanel'
   import FileChooser from '@comp/FileChooser'
+  import JsonDetailsPanel from '@comp/JsonDetailsPanel'
   import EmptyItem from '@comp/EmptyItem'
   import PageNotFound from '@comp/PageNotFound'
   import MixinConnection from '@comp/mixins/connection'
@@ -134,6 +148,7 @@
       ConnectionEditPanel,
       ConnectionStaticPanel,
       FileChooser,
+      JsonDetailsPanel,
       EmptyItem,
       PageNotFound
     },
@@ -179,6 +194,9 @@
       },
       is_storage_connection() {
         return this.$_Connection_isStorage(this.connection)
+      },
+      is_keyring_connection() {
+        return this.ctype == CONNECTION_TYPE_KEYRING
       },
       has_connection() {
         return this.ctype.length > 0
