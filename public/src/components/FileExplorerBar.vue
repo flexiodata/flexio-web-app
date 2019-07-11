@@ -22,16 +22,17 @@
           </div>
         </div>
 
-        <i class="material-icons md-18 black-20 rotate-270" style="margin: 0 -2px" v-if="!item.is_connection">expand_more</i>
+        <template v-else>
+          <i class="material-icons md-18 black-20 rotate-270" style="margin: 0 -2px">expand_more</i>
 
-        <div
-          class="f7 darken-05"
-          style="padding: 0.3125rem 0.375rem"
-          @click="openFolder(item.full_path)"
-          v-if="!item.is_connection"
-        >
-          {{item.name}}
-        </div>
+          <div
+            class="f7 darken-05"
+            style="padding: 0.3125rem 0.375rem"
+            @click="openFolder(item.full_path)"
+          >
+            {{item.name}}
+          </div>
+        </template>
       </div>
     </div>
   </div>
@@ -56,7 +57,7 @@
     },
     computed: {
       cname() {
-        return _.get(this.connection, 'name', '')
+        return _.get(this.connection, 'short_description', '')
       },
       ctype() {
         return _.get(this.connection, 'connection_type', '')

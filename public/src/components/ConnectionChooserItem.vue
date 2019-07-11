@@ -6,7 +6,7 @@
         <i class="el-icon-error dark-red bg-white ba bw1 b--white br-100" v-else></i>
       </div>
       <service-icon :type="ctype" class="dib v-mid br2 square-5" />
-      <div class="f6 fw6 mt2 cursor-default">{{item.name}}</div>
+      <div class="f6 fw6 mt2 cursor-default">{{item.short_description}}</div>
     </div>
     <div class="flex flex-row items-center" v-else>
       <i class="material-icons md-18 b mr3" v-if="showSelectionCheckmark && is_selected">check</i>
@@ -19,7 +19,7 @@
         </div>
       </div>
       <div class="flex-fill flex flex-column">
-        <div class="f5 fw6">{{item.name}}</div>
+        <div class="f5 fw6">{{item.short_description}}</div>
         <div class="flex flex-row items-center">
           <div class="light-silver" style="margin: 3px 3px 0 0" v-if="is_storage">
             <i class="db material-icons hint--top" aria-label="Storage connection" style="font-size: 14px">layers</i>

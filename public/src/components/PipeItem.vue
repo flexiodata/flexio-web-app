@@ -27,10 +27,10 @@
         style="padding: 16px 10px"
         v-if="isHeader"
       >
-        Name
+        Short description
         <SortArrows
-          sort-key="name"
-          :is-active="sort == 'name'"
+          sort-key="short_description"
+          :is-active="sort == 'short_description'"
           :direction="sortDirection"
           @sort="onSort"
         />
@@ -44,7 +44,7 @@
       >
         <div style="padding: 16px 10px">
           <div class="flex-l flex-row items-center">
-            <h3 class="f6 f5-ns fw6 lh-title dark-gray mv0 mr2 truncate title">{{item.name}}</h3>
+            <h3 class="f6 f5-ns fw6 lh-title dark-gray mv0 mr2 truncate title">{{item.short_description}}</h3>
           </div>
           <div class="dn db-ns" v-if="has_description">
             <h5 class="f6 fw4 mt1 mb0 lh-copy light-silver truncate description" ref="description">{{item.description}}</h5>
@@ -309,8 +309,8 @@
         this.$router.push(this.pipe_route)
       },
       getAnalyticsPayload(pipe) {
-        var analytics_payload = _.pick(pipe, ['eid', 'name', 'alias'])
-        _.assign(analytics_payload, { title: pipe.name })
+        var analytics_payload = _.pick(pipe, ['eid', 'short_description', 'alias'])
+        _.assign(analytics_payload, { title: pipe.short_description })
 
         return analytics_payload
       },

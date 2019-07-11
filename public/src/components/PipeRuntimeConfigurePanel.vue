@@ -2,7 +2,7 @@
   <div class="flex flex-column h-100">
     <div class="w-100 mb3" v-if="showHeader">
       <div class="flex flex-row items-start">
-        <span class="flex-fill f4 lh-title">Configure Runtime for '{{pipe.name}}'</span>
+        <span class="flex-fill f4 lh-title">Configure Runtime for '{{pipe.short_description}}'</span>
         <i class="el-icon-close pointer f3 black-30 hover-black-60" @click="onClose"></i>
       </div>
     </div>

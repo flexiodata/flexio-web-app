@@ -105,7 +105,7 @@
       duplicatePipe(item) {
         var attrs = {
           copy_eid: item.eid,
-          name: item.name
+          short_description: item.short_description
         }
 
         this.$store.dispatch('v2_action_createPipe', { attrs }).catch(error => {
@@ -129,11 +129,11 @@
       },
       tryCreatePipe(attrs) {
         if (!_.isObject(attrs))
-          attrs = { name: 'Untitled Pipe' }
+          attrs = { short_description: 'Untitled Pipe' }
 
         this.$store.dispatch('v2_action_createPipe', { attrs }).then(response => {
           var pipe = response.data
-          var analytics_payload = _.pick(pipe, ['eid', 'name', 'alias', 'created'])
+          var analytics_payload = _.pick(pipe, ['eid', 'short_description', 'alias', 'created'])
           this.$store.track('Created Pipe', analytics_payload)
           this.openPipe(pipe.eid)
         }).catch(error => {
@@ -142,9 +142,9 @@
       },
       tryDeletePipe(attrs) {
         var eid = _.get(attrs, 'eid', '')
-        var name = _.get(attrs, 'name', 'Pipe')
+        var short_description = _.get(attrs, 'short_description', 'Pipe')
 
-        this.$confirm('Are you sure you want to delete the pipe named "' + name + '"?', 'Really delete pipe?', {
+        this.$confirm('Are you sure you want to delete the pipe named "' + short_description + '"?', 'Really delete pipe?', {
           confirmButtonClass: 'ttu fw6',
           cancelButtonClass: 'ttu fw6',
           confirmButtonText: 'Delete pipe',
@@ -162,7 +162,7 @@
         /*
         // when creating a new pipe, start out with a basic Python 'Hello World' script
         var attrs = {
-          name: 'Untitled Pipe',
+          short_description: 'Untitled Pipe',
           task: {
             op: 'sequence',
             items: [{
@@ -176,7 +176,7 @@
 
         // when creating a new pipe, start out with a basic read task
         var attrs = {
-          name: 'Untitled Pipe',
+          short_description: 'Untitled Pipe',
           task: {
             op: 'sequence',
             items: [{
