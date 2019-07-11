@@ -2,7 +2,7 @@
   <div>
     <div class="w-100 mb4" v-if="showHeader">
       <div class="flex flex-row items-start">
-        <span class="flex-fill f4 lh-title">Properties for '{{pipe.name}}'</span>
+        <span class="flex-fill f4 lh-title">Properties for '{{pipe.short_description}}'</span>
         <i class="el-icon-close pointer f3 black-30 hover-black-60" @click="onClose"></i>
       </div>
     </div>
@@ -16,14 +16,14 @@
       @validate="onValidateItem"
     >
       <el-form-item
-        key="name"
-        prop="name"
-        label="Name"
+        key="short_description"
+        prop="short_description"
+        label="Short description"
       >
         <el-input
-          placeholder="Enter name"
+          placeholder="Enter short description"
           :autofocus="true"
-          v-model="edit_pipe.name"
+          v-model="edit_pipe.short_description"
         />
       </el-form-item>
       <el-form-item
@@ -84,8 +84,8 @@
 
   const defaultAttrs = () => {
     return {
-      name: '',
       alias: '',
+      short_description: '',
       description: ''
     }
   }
@@ -125,9 +125,6 @@
       return {
         edit_pipe: defaultAttrs(),
         rules: {
-          name: [
-            { required: true, message: 'Please input a name', trigger: 'blur' }
-          ],
           alias: [
             { validator: this.formValidateAlias }
           ]
