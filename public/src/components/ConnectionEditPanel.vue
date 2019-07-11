@@ -60,7 +60,8 @@
         @item-activate="createPendingConnection"
         v-show="!has_connection"
       />
-      <div v-if="has_connection">
+      <div class="ph3 ph4-l" v-if="has_connection">
+        <div class="mb2 lh-copy ttu fw6 f6">Connection Information</div>
         <el-form
           ref="form"
           class="el-form--compact el-form__label-tiny relative"
@@ -128,35 +129,27 @@
           </el-form-item>
         </el-form>
 
-        <div
-          class="mt3 pa3 ba b--black-10 br2"
-          v-if="is_keyring"
-        >
-          <div class="flex flex-row items-center mb3 lh-copy ttu fw6 f6">
-            <i class="material-icons mr1 f4">list_alt</i> Keypair Values
-          </div>
+        <ConnectionInfoPanel
+          ref="connection-info-panel"
+          :connection-info.sync="connection_info"
+          :form-errors.sync="connection_info_form_errors"
+          v-if="is_http"
+        />
+
+        <div class="mt4" v-else-if="is_keyring">
+          <div class="mb2 lh-copy ttu fw6 f6">Keypair Values</div>
           <KeypairList
+            class="pa4 ba b--black-10 br2"
             :header="{ key: 'Key', val: 'Value' }"
             v-model="connection_info"
           />
         </div>
 
-        <ConnectionInfoPanel
-          ref="connection-info-panel"
-          :connection-info.sync="connection_info"
-          :form-errors.sync="connection_info_form_errors"
-          v-else-if="is_http"
-        />
-
-        <div
-          class="mt3 pa3 ba b--black-10 br2"
-          v-else
-        >
-          <div class="flex flex-row items-center mb3 lh-copy ttu fw6 f6">
-            <i class="material-icons mr1 f4">lock</i> Authentication
-          </div>
+        <div class="mt4" v-else>
+          <div class="mb2 lh-copy ttu fw6 f6">Authentication</div>
           <ConnectionAuthenticationPanel
             ref="connection-authentication-panel"
+            class="pa4 ba b--black-10 br2"
             :connection="edit_connection"
             :mode="mode"
             @change="updateConnection"

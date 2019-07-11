@@ -3,7 +3,7 @@
     <div v-if="is_oauth">
       <div v-if="!is_connected">
         <div class="lh-copy f6">To use this connection, you must first connect {{service_name}} to Flex.io.</div>
-        <div class="mv3 tc">
+        <div class="mt3 tc">
           <el-button
             class="ttu fw6"
             type="primary"
@@ -18,7 +18,7 @@
           <i class="el-icon-success v-mid dark-green f2 mr2"></i>
           <span class="dn dib-ns f4 fw6">You are connected to {{service_name}}!</span>
         </div>
-        <div class="mv3 tc">
+        <div class="mt3 tc">
           <el-button
             class="ttu fw6"
             @click="onDisconnectClick"
