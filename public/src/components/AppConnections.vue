@@ -53,15 +53,15 @@
           />
         </div>
         <div
-          class="flex-fill flex flex-column"
+          class="flex-fill flex flex-column pa3"
           v-if="mode == 'static'"
         >
           <ConnectionStaticPanel
-            class="flex-none pa3"
+            class="flex-none"
             :connection="connection"
             @edit-click="mode = 'edit'"
           />
-          <FileChooser class="flex-fill pl3 pr3 pb3"
+          <FileChooser class="flex-fill mt3"
             :connection="connection"
             v-if="is_storage_connection"
           />
@@ -71,7 +71,7 @@
           v-else-if="mode == 'edit'"
         >
           <ConnectionEditPanel
-            class="center pa3 pa4-l trans-p"
+            class="center w-100 pa3"
             style="max-width: 60rem"
             mode="edit"
             :show-title="false"
