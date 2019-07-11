@@ -109,8 +109,8 @@
       },
       pipe_name() {
         var eid = _.get(this.process, 'parent.eid', '')
-        var name = _.get(this.process, 'parent.name', '')
-        return eid.length == 0 ? '(Anonymous Pipe)' : name.length > 0 ? name : '(No name)'
+        var short_description = _.get(this.process, 'parent.short_description', '')
+        return eid.length == 0 ? '(Anonymous Pipe)' : short_description.length > 0 ? short_description : '(No short description)'
       }
     },
     methods: {
