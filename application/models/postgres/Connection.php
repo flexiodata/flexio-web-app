@@ -19,11 +19,13 @@ class Connection extends ModelBase
 {
     public function create(array $params) : string
     {
+        $default_alias = 'connection-' . \Flexio\Base\Util::generateRandomString(4);
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid_status'        => array('type' => 'string', 'required' => false, 'default' => \Model::STATUS_AVAILABLE),
-                'alias'             => array('type' => 'alias',  'required' => false, 'default' => ''),
-                'name'              => array('type' => 'string', 'required' => false, 'default' => ''),
+                'alias'             => array('type' => 'alias',  'required' => false, 'default' => $default_alias),
+                'name'              => array('type' => 'alias',  'required' => false, 'default' => $default_alias),
                 'short_description' => array('type' => 'string', 'required' => false),
                 'description'       => array('type' => 'string', 'required' => false, 'default' => ''),
                 'connection_type'   => array('type' => 'string', 'required' => false, 'default' => ''),
@@ -48,11 +50,11 @@ class Connection extends ModelBase
 
 
         // TODO: alias migration project; remove when migration is complete
-        // if short_description is set, map it to the name
-        if (isset($process_arr['short_description']))
+        // if name is set, map it to the alias
+        if (isset($process_arr['name']))
         {
-            $process_arr['name'] = $process_arr['short_description'];
-            unset($process_arr['short_description']);
+            $process_arr['alias'] = $process_arr['name'];
+            unset($process_arr['name']);
         }
 
 
@@ -161,11 +163,11 @@ class Connection extends ModelBase
 
 
         // TODO: alias migration project; remove when migration is complete
-        // if short_description is set, map it to the name
-        if (isset($process_arr['short_description']))
+        // if name is set, map it to the alias
+        if (isset($process_arr['name']))
         {
-            $process_arr['name'] = $process_arr['short_description'];
-            unset($process_arr['short_description']);
+            $process_arr['alias'] = $process_arr['name'];
+            unset($process_arr['name']);
         }
 
 
@@ -239,8 +241,8 @@ class Connection extends ModelBase
                               'eid_type'          => \Model::TYPE_CONNECTION,
                               'eid_status'        => $row['eid_status'],
                               'alias'             => $row['alias'],
-                              'name'              => $row['name'],
-                              'short_description' => $row['name'],
+                              'name'              => $row['alias'],
+                              'short_description' => $row['short_description'],
                               'description'       => $row['description'],
                               'connection_type'   => $row['connection_type'],
                               'connection_status' => $row['connection_status'],

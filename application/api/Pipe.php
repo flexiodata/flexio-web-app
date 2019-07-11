@@ -43,7 +43,7 @@ class Pipe
                 'copy_eid'        => array('type' => 'eid',    'required' => false),
                 'eid_status'      => array('type' => 'string', 'required' => false),
                 'alias'           => array('type' => 'alias',  'required' => false),
-                'name'            => array('type' => 'string', 'required' => false),
+                'name'            => array('type' => 'alias',  'required' => false),
                 'short_description' => array('type' => 'string', 'required' => false),
                 'description'     => array('type' => 'string', 'required' => false),
                 'ui'              => array('type' => 'object', 'required' => false),
@@ -264,7 +264,7 @@ class Pipe
         if (($validator->check($post_params, array(
                 'eid_status'      => array('type' => 'string', 'required' => false),
                 'alias'           => array('type' => 'alias',  'required' => false),
-                'name'            => array('type' => 'string', 'required' => false),
+                'name'            => array('type' => 'alias',  'required' => false),
                 'short_description' => array('type' => 'string', 'required' => false),
                 'description'     => array('type' => 'string', 'required' => false),
                 'ui'              => array('type' => 'object', 'required' => false),
