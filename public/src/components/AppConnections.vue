@@ -144,22 +144,7 @@
       },
       connections(val, old_val) {
         if (!this.has_connection) {
-          var identifier = _.get(this.$route, 'params.identifier', '')
-          if (identifier.length == 0) {
-            var c = _.first(this.connections)
-            if (c) {
-              var alias = _.get(c, 'alias', '')
-              identifier = alias.length > 0 ? alias : _.get(c, 'eid', '')
-            }
-          }
-          if (identifier.length > 0) {
-            this.loadConnection(identifier)
-
-            // update the route
-            var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
-            _.set(new_route, 'params.identifier', identifier)
-            this.$router.replace(new_route)
-          }
+          this.loadConnection(this.route_identifier)
         }
       }
     },
@@ -297,29 +282,36 @@
         this.$router.replace(new_route)
       },
       loadConnection(identifier) {
-        if (identifier) {
-          var c = _.find(this.connections, { eid: identifier })
-          if (!c) {
-            c = _.find(this.connections, { alias: identifier })
-          }
-          if (c) {
-            this.connection = _.cloneDeep(c)
-            this.last_selected = _.cloneDeep(c)
-          }
-        } else {
-          var c = _.first(this.connections)
-          this.connection = _.cloneDeep(c)
-          this.last_selected = _.cloneDeep(c)
-        }
-      },
-      selectConnection(item) {
-        var alias = _.get(item, 'alias', '')
-        var identifier = alias.length > 0 ? alias : _.get(item, 'eid', '')
+        var conn
 
-        // update the route
-        var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
-        _.set(new_route, 'params.identifier', identifier)
-        this.$router.push(new_route)
+        if (identifier) {
+          conn = _.find(this.connections, { eid: identifier })
+          if (!conn) {
+            conn = _.find(this.connections, { alias: identifier })
+          }
+        }
+
+        this.selectConnection(conn, false)
+      },
+      selectConnection(item, push_route) {
+        var conn = item
+
+        if (!conn) {
+          conn = _.first(this.connections)
+        }
+
+        this.connection = _.cloneDeep(conn)
+        this.last_selected = _.cloneDeep(conn)
+
+        if (push_route !== false) {
+          // update the route
+          var alias = _.get(conn, 'alias', '')
+          var identifier = alias.length > 0 ? alias : _.get(conn, 'eid', '')
+
+          var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
+          _.set(new_route, 'params.identifier', identifier)
+          this.$router.push(new_route)
+        }
       },
       cancelChanges(item) {
         this.connection = _.cloneDeep(this.last_selected)
