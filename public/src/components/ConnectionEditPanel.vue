@@ -10,11 +10,11 @@
         :class="showTitle ? 'mt2 pt2 bt b--black-10' : ''"
         v-if="has_connection"
       >
-        <ServiceIcon class="flex-none mt1 br2 square-5" :type="ctype" :url="url" :empty-cls="''" />
+        <ServiceIcon class="flex-none mt1 br2 square-4" :type="ctype" :url="url" :empty-cls="''" />
         <div class="flex-fill flex flex-column" style="margin-left: 12px">
           <div class="f4 fw6 lh-title">{{service_name}}</div>
           <div class="f6 fw4 mt1">{{service_description}}</div>
-          <div class="flex flex-row items-center">
+          <div class="flex flex-row items-center" v-if="false">
             <el-tag
               class="hint--top"
               style="margin-top: 6px"

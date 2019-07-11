@@ -11,7 +11,10 @@
 
     <div class="flex-fill flex flex-row" v-if="connections.length > 0">
       <template  v-if="has_connection">
-        <div class="flex flex-column br b--black-05">
+        <div
+          class="flex flex-column br b--black-05"
+          :class="mode == 'edit' ? 'o-40 no-pointer-events': ''"
+        >
           <!-- control bar -->
           <div class="flex-none ph3 pv2 relative bg-white bb b--black-05">
             <div class="flex flex-row">
@@ -50,21 +53,24 @@
           />
         </div>
         <div
-          class="flex-fill"
+          class="flex-fill flex flex-column"
           v-if="mode == 'static'"
         >
           <ConnectionStaticPanel
-            class="pa3 pa4-l trans-p"
-            style="max-width: 60rem"
+            class="flex-none pa3 trans-p"
+            :connection="connection"
+            @edit-click="mode = 'edit'"
+          />
+          <FileChooser class="flex-fill bt b--black-05 pa2"
             :connection="connection"
           />
         </div>
         <div
           class="flex-fill overflow-y-auto"
-          v-else
+          v-else-if="mode == 'edit'"
         >
           <ConnectionEditPanel
-            class="pa3 pa4-l trans-p"
+            class="center pa3 ph4-l pv5-l trans-p"
             style="max-width: 60rem"
             mode="edit"
             :show-title="false"
@@ -111,6 +117,7 @@
   import AbstractList from '@comp/AbstractList'
   import ConnectionEditPanel from '@comp/ConnectionEditPanel'
   import ConnectionStaticPanel from '@comp/ConnectionStaticPanel'
+  import FileChooser from '@comp/FileChooser'
   import EmptyItem from '@comp/EmptyItem'
   import PageNotFound from '@comp/PageNotFound'
 
@@ -123,6 +130,7 @@
       AbstractList,
       ConnectionEditPanel,
       ConnectionStaticPanel,
+      FileChooser,
       EmptyItem,
       PageNotFound
     },
@@ -238,6 +246,7 @@
 
           this.selectConnection(connection)
           this.show_connection_new_dialog = false
+          this.mode = 'static'
         }).catch(error => {
           this.$message({
             message: is_pending ? 'There was a problem creating the connection.' : 'There was a problem updating the connection.',
@@ -308,6 +317,7 @@
       },
       cancelChanges(item) {
         this.connection = _.cloneDeep(this.last_selected)
+        this.mode = 'static'
       },
       saveChanges(item) {
         this.tryUpdateConnection(item)
