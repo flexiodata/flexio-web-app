@@ -77,7 +77,7 @@
               prop="short_description"
             >
               <template slot="label">
-                Name
+                Short description
                 <span class="lh-1 hint--top" aria-label="The short description of your connection">
                   <i class="el-icon-info blue"></i>
                 </span>
