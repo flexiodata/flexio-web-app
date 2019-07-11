@@ -14,8 +14,13 @@
             <col class="w-100">
           </colgroup>
           <tr>
-            <td>Type</td>
-            <td>OAuth2</td>
+            <td class="nowrap">Connection Type</td>
+            <td>
+              <div class="flex flex-row items-center lh-copy">
+                <ServiceIcon class="flex-none mr1 br1 square-1" :type="ctype" :url="url" :empty-cls="''" />
+                <span class="f6 fw6">{{service_name}}</span>
+              </div>
+            </td>
           </tr>
           <tr>
             <td>Status</td>
@@ -48,6 +53,7 @@
   import * as ctypes from '../constants/connection-type'
   import * as connections from '../constants/connection-info'
   import ServiceIcon from '@comp/ServiceIcon'
+  import MixinConnection from '@comp/mixins/connection'
 
   export default {
     props: {
@@ -56,6 +62,7 @@
         default: () => { return {} }
       }
     },
+    mixins: [MixinConnection],
     components: {
       ServiceIcon
     },
@@ -93,7 +100,7 @@
 
 <style lang="stylus" scoped>
   td
-    padding: 0.125rem 0.5rem 0.25rem 0
+    padding: 0 0.5rem 0.25rem 0
     font-size: .875rem
   td:first-child::after
     content: ":"
