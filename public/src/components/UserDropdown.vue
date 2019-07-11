@@ -68,7 +68,7 @@
       },
       restartOnboardingTour() {
         var attrs = {
-          "name": "Example: Email Results of a Python Function",
+          "short_description": "Example: Email Results of a Python Function",
           "description": "Get the top 5 stories from the Firebase Hacker News Feed and deliver via email",
           "task": {
             "op": "sequence",
