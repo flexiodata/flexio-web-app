@@ -1,6 +1,6 @@
 {
     "eid_type": "CTN",
-    "name": "Flexio Public S3",
+    "short_description": "Flexio Public S3",
     "alias": "flexio-public-s3",
     "description": "",
     "connection_status": "A",

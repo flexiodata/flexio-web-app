@@ -94,7 +94,7 @@
       },
       tryCreatePipe(attrs) {
         if (!_.isObject(attrs))
-          attrs = { name: 'Untitled Pipe' }
+          attrs = { short_description: 'Untitled Pipe' }
 
         this.$store.dispatch('v2_action_createPipe', { attrs }).then(response => {
           var pipe = response.data

@@ -180,8 +180,8 @@ If you have any questions, please send us a note using the chat button at the bo
       },
       pipe_attrs() {
         var attrs = {
-          name: _.get(this.edit_item, 'short_description', ''),
           alias: _.get(this.edit_item, 'id', ''),
+          short_description: _.get(this.edit_item, 'short_description', ''),
           description: ''
         }
 

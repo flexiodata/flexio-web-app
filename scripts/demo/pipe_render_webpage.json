@@ -1,6 +1,6 @@
 {
     "eid_type": "PIP",
-    "name": "Example: Render Webpage",
+    "short_description": "Example: Render Webpage",
     "alias": "example-render-webpage",
     "description": "Render a webpage, resize it, and return it as a thumbnail",
     "task": {

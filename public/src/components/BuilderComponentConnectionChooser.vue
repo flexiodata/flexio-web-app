@@ -181,7 +181,7 @@
         if (ctype.length > 0) {
           var attrs = {
             eid_status: OBJECT_STATUS_PENDING,
-            name: cname,
+            short_description: cname,
             connection_type: ctype
           }
 

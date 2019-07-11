@@ -1,6 +1,6 @@
 {
     "eid_type": "PIP",
-    "name": "Example: Visualize Data from an API Feed",
+    "short_description": "Example: Visualize Data from an API Feed",
     "alias": "example-visualize-data-from-an-api-feed",
     "description": "Visualize data from an API feed using Python Matplotlib",
     "task": {
