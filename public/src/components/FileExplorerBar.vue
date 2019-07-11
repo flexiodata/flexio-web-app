@@ -18,7 +18,7 @@
             :type="ctype"
           />
           <div class="f7 ml1">
-            {{service_name}}
+            {{cname}}
           </div>
         </div>
 
@@ -38,7 +38,6 @@
 </template>
 
 <script>
-  import * as connections from '../constants/connection-info'
   import ServiceIcon from '@comp/ServiceIcon'
 
   export default {
@@ -56,11 +55,11 @@
       ServiceIcon
     },
     computed: {
+      cname() {
+        return _.get(this.connection, 'name', '')
+      },
       ctype() {
         return _.get(this.connection, 'connection_type', '')
-      },
-      service_name() {
-        return _.result(this, 'cinfo.service_name', '')
       },
       items() {
         var path = this.path
@@ -102,9 +101,6 @@
       }
     },
     methods: {
-      cinfo() {
-        return _.find(connections, { connection_type: this.ctype })
-      },
       openFolder(path) {
         this.$emit('open-folder', _.defaultTo(path, '/'))
       }
