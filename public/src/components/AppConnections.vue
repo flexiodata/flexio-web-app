@@ -63,6 +63,7 @@
           />
           <FileChooser class="flex-fill pl3 pr3 pb3"
             :connection="connection"
+            v-if="is_storage_connection"
           />
         </div>
         <div
@@ -120,11 +121,13 @@
   import FileChooser from '@comp/FileChooser'
   import EmptyItem from '@comp/EmptyItem'
   import PageNotFound from '@comp/PageNotFound'
+  import MixinConnection from '@comp/mixins/connection'
 
   export default {
     metaInfo: {
       title: 'Connections'
     },
+    mixins: [MixinConnection],
     components: {
       Spinner,
       AbstractList,
@@ -188,6 +191,9 @@
       },
       cname() {
         return _.get(this.connection, 'name', '')
+      },
+      is_storage_connection() {
+        return this.$_Connection_isStorage(this.connection)
       },
       has_connection() {
         return this.ctype.length > 0
