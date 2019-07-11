@@ -315,7 +315,7 @@
     <el-dialog
       custom-class="el-dialog--no-header el-dialog--no-footer"
       width="42rem"
-      top="8vh"
+      top="4vh"
       :modal-append-to-body="false"
       :close-on-click-modal="false"
       :visible.sync="show_pipe_properties_dialog"
@@ -349,7 +349,7 @@
     <el-dialog
       custom-class="el-dialog--no-header el-dialog--no-footer"
       width="42rem"
-      top="8vh"
+      top="4vh"
       :modal-append-to-body="false"
       :close-on-click-modal="false"
       :visible.sync="show_pipe_schedule_dialog"

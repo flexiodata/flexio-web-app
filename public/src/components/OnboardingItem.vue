@@ -39,7 +39,7 @@
     <el-dialog
       custom-class="el-dialog--no-header el-dialog--no-footer"
       width="51rem"
-      top="8vh"
+      top="4vh"
       :modal-append-to-body="false"
       :close-on-click-modal="false"
       :visible.sync="show_connection_new_dialog"
@@ -56,7 +56,7 @@
     <el-dialog
       custom-class="el-dialog--no-header el-dialog--no-footer"
       width="42rem"
-      top="8vh"
+      top="4vh"
       :modal-append-to-body="false"
       :visible.sync="show_pipe_save_dialog"
     >
@@ -74,7 +74,7 @@
     <el-dialog
       custom-class="el-dialog--no-header el-dialog--no-footer"
       width="56rem"
-      top="8vh"
+      top="4vh"
       :modal-append-to-body="false"
       :close-on-click-modal="false"
       :close-on-press-escape="false"

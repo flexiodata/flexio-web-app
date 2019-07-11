@@ -17,14 +17,14 @@
       >
         <AbstractList
           ref="list"
-          class="br b--black-05 overflow-y-auto"
+          class="overflow-y-auto br b--black-05"
           layout="list"
           item-component="AbstractConnectionChooserItem"
           :selected-item.sync="active_connection"
           :items="connections"
           :item-options="{
             itemCls: 'min-w5 pa3 bb b--black-05 bg-white hover-bg-nearer-white',
-            selectedCls: 'relative b--black-10 bg-nearer-white',
+            selectedCls: 'relative bg-nearer-white',
             showIdentifier: true,
             showUrl: false
           }"

@@ -12,8 +12,8 @@ export default {
 
       // default window settings
       var wnd_dimensions = {
-        width: Math.floor(window.outerWidth * 0.8),
-        height: Math.floor(window.outerHeight * 0.5)
+        width: Math.floor(window.outerWidth * 0.5),
+        height: Math.floor(window.outerHeight * 0.75)
       }
 
       // minimum window dimensions
@@ -21,8 +21,8 @@ export default {
         wnd_dimensions.height = 600
       }
 
-      if (wnd_dimensions.width < 800) {
-        wnd_dimensions.width = 800
+      if (wnd_dimensions.width < 600) {
+        wnd_dimensions.width = 600
       }
 
       // window positioning

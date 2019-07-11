@@ -72,6 +72,16 @@ const GOOGLESHEETS = {
   is_email: false
 }
 
+const KEYRING = {
+  service_name: 'Keyring',
+  service_description: 'Simple Keypair Storage',
+  connection_type: types.CONNECTION_TYPE_KEYRING,
+  icon: require('../assets/icon/icon-keyring-128.png'),
+  is_oauth: false,
+  is_storage: false,
+  is_email: false
+}
+
 const MYSQL = {
   service_name: 'MySQL',
   service_description: "The world's most popular open source database",
@@ -274,6 +284,7 @@ export const CONNECTION_INFO_DROPBOX              = DROPBOX
 export const CONNECTION_INFO_GITHUB               = GITHUB
 export const CONNECTION_INFO_GOOGLEDRIVE          = GOOGLEDRIVE
 export const CONNECTION_INFO_GOOGLESHEETS         = GOOGLESHEETS
+export const CONNECTION_INFO_KEYRING              = KEYRING
 export const CONNECTION_INFO_MYSQL                = MYSQL
 export const CONNECTION_INFO_POSTGRES             = POSTGRES
 export const CONNECTION_INFO_SFTP                 = SFTP

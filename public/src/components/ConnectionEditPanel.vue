@@ -10,11 +10,11 @@
         :class="showTitle ? 'mt2 pt2 bt b--black-10' : ''"
         v-if="has_connection"
       >
-        <ServiceIcon class="flex-none mt1 br2 square-5" :type="ctype" :url="url" :empty-cls="''" />
+        <ServiceIcon class="flex-none mt1 br2 square-4" :type="ctype" :url="url" :empty-cls="''" />
         <div class="flex-fill flex flex-column" style="margin-left: 12px">
           <div class="f4 fw6 lh-title">{{service_name}}</div>
           <div class="f6 fw4 mt1">{{service_description}}</div>
-          <div class="flex flex-row items-center">
+          <div class="flex flex-row items-center" v-if="false">
             <el-tag
               class="hint--top"
               style="margin-top: 6px"
@@ -60,7 +60,8 @@
         @item-activate="createPendingConnection"
         v-show="!has_connection"
       />
-      <div v-if="has_connection">
+      <div class="ph3 ph4-l" v-if="has_connection">
+        <div class="mb2 lh-copy ttu fw6 f6">Connection Information</div>
         <el-form
           ref="form"
           class="el-form--compact el-form__label-tiny relative"
@@ -135,15 +136,20 @@
           v-if="is_http"
         />
 
-        <div
-          class="mt3 pa3 ba b--black-10 br2"
-          v-else
-        >
-          <div class="flex flex-row items-center mb3 lh-copy ttu fw6 f6">
-            <i class="material-icons mr1 f4">lock</i> Authentication
-          </div>
+        <div class="mt4" v-else-if="is_keyring">
+          <div class="mb2 lh-copy ttu fw6 f6">Keypair Values</div>
+          <KeypairList
+            class="pa4 ba b--black-10 br2"
+            :header="{ key: 'Key', val: 'Value' }"
+            v-model="connection_info"
+          />
+        </div>
+
+        <div class="mt4" v-else>
+          <div class="mb2 lh-copy ttu fw6 f6">Authentication</div>
           <ConnectionAuthenticationPanel
             ref="connection-authentication-panel"
+            class="pa4 ba b--black-10 br2"
             :connection="edit_connection"
             :mode="mode"
             @change="updateConnection"
@@ -180,12 +186,27 @@
   import { slugify } from '@/utils'
   import ServiceList from '@comp/ServiceList'
   import ServiceIcon from '@comp/ServiceIcon'
+  import KeypairList from '@comp/KeypairList'
   import ConnectionAuthenticationPanel from '@comp/ConnectionAuthenticationPanel'
   import ConnectionInfoPanel from '@comp/ConnectionInfoPanel'
   import MixinConnection from '@comp/mixins/connection'
   import MixinValidation from '@comp/mixins/validation'
 
-  const defaultAttrs = () => {
+  const defaultAttrs = (ctype) => {
+    var connection_info = ctype === ctypes.CONNECTION_TYPE_KEYRING ? {} : {
+      method: '',
+      url: '',
+      auth: 'none',
+      username: '',
+      password: '',
+      token: '',
+      access_token: '',
+      refresh_token: '',
+      expires: '',
+      headers: {},
+      data: {}
+    }
+
     return {
       eid: null,
       eid_status: OBJECT_STATUS_PENDING,
@@ -193,19 +214,7 @@
       alias: '',
       description: '',
       connection_type: '',
-      connection_info: {
-        method: '',
-        url: '',
-        auth: 'none',
-        username: '',
-        password: '',
-        token: '',
-        access_token: '',
-        refresh_token: '',
-        expires: '',
-        headers: {},
-        data: {}
-      }
+      connection_info
     }
   }
 
@@ -247,6 +256,7 @@
     components: {
       ServiceList,
       ServiceIcon,
+      KeypairList,
       ConnectionAuthenticationPanel,
       ConnectionInfoPanel
     },
@@ -265,9 +275,11 @@
       }
     },
     data() {
+      var ctype = this.connection.connection_type
+
       return {
-        orig_connection: _.assign({}, defaultAttrs(), this.connection),
-        edit_connection: _.assign({}, defaultAttrs(), this.connection),
+        orig_connection: _.assign({}, defaultAttrs(ctype), this.connection),
+        edit_connection: _.assign({}, defaultAttrs(ctype), this.connection),
         rules: {
           name: [
             { required: true, message: 'Please input a name', trigger: 'blur' }
@@ -298,6 +310,9 @@
       },
       is_http() {
         return this.ctype == ctypes.CONNECTION_TYPE_HTTP
+      },
+      is_keyring() {
+        return this.ctype == ctypes.CONNECTION_TYPE_KEYRING
       },
       is_oauth() {
         return this.$_Connection_isOauth(this.ctype)
@@ -396,14 +411,16 @@
         })
       },
       reset(attrs) {
-        this.orig_connection = _.assign({}, defaultAttrs(), attrs)
-        this.edit_connection = _.assign({}, defaultAttrs(), attrs)
+        var ctype = _.get(attrs, 'connection_type')
+        this.orig_connection = _.assign({}, defaultAttrs(ctype), attrs)
+        this.edit_connection = _.assign({}, defaultAttrs(ctype), attrs)
       },
       createPendingConnection(item) {
-        var attrs = _.assign({}, this.edit_connection, {
+        var ctype = item.connection_type
+        var attrs = _.assign({}, defaultAttrs(ctype), {
           eid_status: OBJECT_STATUS_PENDING,
           name: item.service_name,
-          connection_type: item.connection_type
+          connection_type: ctype
         })
 
         this.$store.dispatch('v2_action_createConnection', { attrs }).then(response => {

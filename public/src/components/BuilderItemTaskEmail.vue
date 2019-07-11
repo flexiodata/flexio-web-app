@@ -100,7 +100,7 @@
       custom-class="el-dialog--compressed-body"
       title="Choose files"
       width="60vw"
-      top="8vh"
+      top="4vh"
       :append-to-body="true"
       :visible.sync="show_file_chooser_dialog"
     >

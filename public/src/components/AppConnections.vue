@@ -8,48 +8,83 @@
 
   <!-- fetched -->
   <div class="flex flex-column" v-else-if="is_fetched">
-    <!-- control bar -->
-    <div class="flex-none pa3 relative bg-white bb b--black-05">
-      <div class="flex flex-row">
-        <div class="flex-fill flex flex-row items-center">
-          <h1 class="mv0 f2 fw4 mr3">{{title}}</h1>
-        </div>
-        <div class="flex-none flex flex-row items-center ml3">
-          <el-button type="primary" class="ttu fw6" @click="show_connection_new_dialog = true">New Connection</el-button>
-        </div>
-      </div>
-    </div>
 
     <div class="flex-fill flex flex-row" v-if="connections.length > 0">
-      <AbstractList
-        ref="list"
-        class="br b--black-05 overflow-y-auto"
-        layout="list"
-        item-component="AbstractConnectionChooserItem"
-        :selected-item.sync="connection"
-        :items="connections"
-        :item-options="{
-          itemCls: 'min-w5 pa3 pr2 bb b--black-05 bg-white hover-bg-nearer-white',
-          selectedCls: 'relative b--black-10 bg-nearer-white',
-          showDropdown: true,
-          dropdownItems: ['delete']
-        }"
-        @item-activate="selectConnection"
-        @item-delete="tryDeleteConnection"
-        v-if="connections.length > 0"
-      />
-      <div class="flex-fill overflow-y-auto" v-if="connection">
-        <ConnectionEditPanel
-          class="pa3 pa4-l"
-          style="max-width: 60rem"
-          mode="edit"
-          :show-title="false"
-          :show-steps="false"
-          :connection="connection"
-          @cancel="cancelChanges"
-          @submit="tryUpdateConnection"
-        />
-      </div>
+      <template  v-if="has_connection">
+        <div
+          class="flex flex-column br b--black-05"
+          :class="mode == 'edit' ? 'o-40 no-pointer-events': ''"
+        >
+          <!-- control bar -->
+          <div class="flex-none ph3 pv2 relative bg-white bb b--black-05">
+            <div class="flex flex-row">
+              <div class="flex-fill flex flex-row items-center">
+                <h2 class="mv0 f3 mr3">Connections</h2>
+              </div>
+              <div class="flex-none flex flex-row items-center ml3">
+                <el-button
+                  size="small"
+                  type="primary"
+                  class="ttu fw6"
+                  @click="show_connection_new_dialog = true"
+                >
+                  New
+                </el-button>
+              </div>
+            </div>
+          </div>
+
+          <AbstractList
+            ref="list"
+            layout="list"
+            item-component="AbstractConnectionChooserItem"
+            class="overflow-y-auto"
+            :class=""
+            :selected-item.sync="connection"
+            :items="connections"
+            :item-options="{
+              itemCls: 'min-w5 pa3 bb b--black-05 bg-white hover-bg-nearer-white',
+              selectedCls: 'relative bg-nearer-white',
+              showDropdown: true,
+              dropdownItems: ['delete']
+            }"
+            @item-activate="selectConnection"
+            @item-delete="tryDeleteConnection"
+          />
+        </div>
+        <div
+          class="flex-fill flex flex-column pa3"
+          v-if="mode == 'static'"
+        >
+          <ConnectionStaticPanel
+            class="flex-none"
+            :connection="connection"
+            @edit-click="mode = 'edit'"
+          />
+          <FileChooser class="flex-fill mt3"
+            :connection="connection"
+            v-if="is_storage_connection"
+          />
+        </div>
+        <div
+          class="flex-fill overflow-y-auto"
+          v-else-if="mode == 'edit'"
+        >
+          <ConnectionEditPanel
+            class="center w-100 pa3"
+            style="max-width: 60rem"
+            mode="edit"
+            :show-title="false"
+            :show-steps="false"
+            :connection="connection"
+            @cancel="cancelChanges"
+            @submit="tryUpdateConnection"
+          />
+        </div>
+      </template>
+
+      <!-- connection not found -->
+      <PageNotFound class="flex-fill bg-nearer-white" v-else />
     </div>
     <EmptyItem class="flex flex-column justify-center h-100" v-else>
       <i slot="icon" class="material-icons">repeat</i>
@@ -60,7 +95,7 @@
     <el-dialog
       custom-class="el-dialog--no-header el-dialog--no-footer"
       width="51rem"
-      top="8vh"
+      top="4vh"
       :modal-append-to-body="false"
       :close-on-click-modal="false"
       :visible.sync="show_connection_new_dialog"
@@ -82,27 +117,55 @@
   import Spinner from 'vue-simple-spinner'
   import AbstractList from '@comp/AbstractList'
   import ConnectionEditPanel from '@comp/ConnectionEditPanel'
+  import ConnectionStaticPanel from '@comp/ConnectionStaticPanel'
+  import FileChooser from '@comp/FileChooser'
   import EmptyItem from '@comp/EmptyItem'
+  import PageNotFound from '@comp/PageNotFound'
+  import MixinConnection from '@comp/mixins/connection'
 
   export default {
     metaInfo: {
       title: 'Connections'
     },
+    mixins: [MixinConnection],
     components: {
       Spinner,
       AbstractList,
       ConnectionEditPanel,
-      EmptyItem
+      ConnectionStaticPanel,
+      FileChooser,
+      EmptyItem,
+      PageNotFound
     },
     watch: {
+      route_identifier: {
+        handler: 'loadConnection',
+        immediate: true
+      },
       connections(val, old_val) {
         if (!this.has_connection) {
-          this.selectConnection(_.first(this.connections))
+          var identifier = _.get(this.$route, 'params.identifier', '')
+          if (identifier.length == 0) {
+            var c = _.first(this.connections)
+            if (c) {
+              var alias = _.get(c, 'alias', '')
+              identifier = alias.length > 0 ? alias : _.get(c, 'eid', '')
+            }
+          }
+          if (identifier.length > 0) {
+            this.loadConnection(identifier)
+
+            // update the route
+            var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
+            _.set(new_route, 'params.identifier', identifier)
+            this.$router.replace(new_route)
+          }
         }
       }
     },
     data() {
       return {
+        mode: 'static',
         connection: {},
         last_selected: {},
         show_connection_new_dialog: false
@@ -114,6 +177,12 @@
         'is_fetching': 'connections_fetching',
         'is_fetched': 'connections_fetched'
       }),
+      route_identifier() {
+        return _.get(this.$route, 'params.identifier', undefined)
+      },
+      route_view() {
+        return _.get(this.$route, 'params.view', undefined)
+      },
       connections() {
         return this.getAvailableConnections()
       },
@@ -122,6 +191,9 @@
       },
       cname() {
         return _.get(this.connection, 'name', '')
+      },
+      is_storage_connection() {
+        return this.$_Connection_isStorage(this.connection)
       },
       has_connection() {
         return this.ctype.length > 0
@@ -139,7 +211,6 @@
     },
     mounted() {
       this.$store.track('Visited Connections Page')
-      this.selectConnection(_.first(this.connections))
     },
     methods: {
       ...mapGetters([
@@ -181,6 +252,7 @@
 
           this.selectConnection(connection)
           this.show_connection_new_dialog = false
+          this.mode = 'static'
         }).catch(error => {
           this.$message({
             message: is_pending ? 'There was a problem creating the connection.' : 'There was a problem updating the connection.',
@@ -217,12 +289,41 @@
           })
         })
       },
+      updateRoute() {
+        // update the route
+        var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
+        var view = this.active_view
+        _.set(new_route, 'params.view', view)
+        this.$router.replace(new_route)
+      },
+      loadConnection(identifier) {
+        if (identifier) {
+          var c = _.find(this.connections, { eid: identifier })
+          if (!c) {
+            c = _.find(this.connections, { alias: identifier })
+          }
+          if (c) {
+            this.connection = _.cloneDeep(c)
+            this.last_selected = _.cloneDeep(c)
+          }
+        } else {
+          var c = _.first(this.connections)
+          this.connection = _.cloneDeep(c)
+          this.last_selected = _.cloneDeep(c)
+        }
+      },
       selectConnection(item) {
-        this.connection = _.cloneDeep(item)
-        this.last_selected = _.cloneDeep(item)
+        var alias = _.get(item, 'alias', '')
+        var identifier = alias.length > 0 ? alias : _.get(item, 'eid', '')
+
+        // update the route
+        var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
+        _.set(new_route, 'params.identifier', identifier)
+        this.$router.push(new_route)
       },
       cancelChanges(item) {
         this.connection = _.cloneDeep(this.last_selected)
+        this.mode = 'static'
       },
       saveChanges(item) {
         this.tryUpdateConnection(item)
