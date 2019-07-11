@@ -65,10 +65,10 @@
             v-if="is_keyring_connection"
           >
             <div
-              class="center w-100"
+              class="center w-100 mt3"
               style="max-width: 60rem"
             >
-              <h4>Keyring values</h4>
+              <div class="mb2 lh-copy ttu fw6 f6">Keypair Values</div>
               <JsonDetailsPanel
                 :json="connection.connection_info"
               />
