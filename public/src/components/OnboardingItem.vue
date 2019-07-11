@@ -138,7 +138,7 @@
         connection_alias: 'home',
         pipe: {},
         pipe_alias: '',
-        pipe_name: ''
+        pipe_short_description: ''
       }
     },
     computed: {
@@ -180,7 +180,7 @@ If you have any questions, please send us a note using the chat button at the bo
       },
       pipe_attrs() {
         var attrs = {
-          name: _.get(this.edit_item, 'name', ''),
+          name: _.get(this.edit_item, 'short_description', ''),
           alias: _.get(this.edit_item, 'id', ''),
           description: ''
         }
@@ -232,7 +232,7 @@ If you have any questions, please send us a note using the chat button at the bo
 
         this.show_connection_new_dialog = true
         //this.$store.track('Clicked `Create Connection` Button In Onboarding', {
-        //  title: this.item.name,
+        //  title: this.item.short_description,
         //  code: edit_code
         //})
       },
@@ -241,7 +241,7 @@ If you have any questions, please send us a note using the chat button at the bo
 
         this.show_pipe_save_dialog = true
         //this.$store.track('Clicked `Save & Deploy` Button In Onboarding', {
-        //  title: this.item.name,
+        //  title: this.item.short_description,
         //  code: edit_code
         //})
       },
@@ -253,7 +253,7 @@ If you have any questions, please send us a note using the chat button at the bo
         var ctype = _.get(attrs, 'connection_type', '')
         var is_pending = _.get(attrs, 'eid_status', '') === OBJECT_STATUS_PENDING
 
-        attrs = _.pick(attrs, ['name', 'alias', 'description', 'connection_info'])
+        attrs = _.pick(attrs, ['short_description', 'alias', 'description', 'connection_info'])
         _.assign(attrs, { eid_status: OBJECT_STATUS_AVAILABLE })
 
         // update the connection and make it available
@@ -276,16 +276,16 @@ If you have any questions, please send us a note using the chat button at the bo
       },
       tryCreatePipe(attrs) {
         if (!_.isObject(attrs))
-          attrs = { name: 'Untitled Pipe' }
+          attrs = { short_description: 'Untitled Pipe' }
 
         var task = this.$refs['code'].getTaskJSON()
         _.assign(attrs, { task })
 
         this.$store.dispatch('v2_action_createPipe', { attrs }).then(response => {
           var pipe = response.data
-          var analytics_payload = _.pick(pipe, ['eid', 'name', 'description', 'alias', 'created'])
+          var analytics_payload = _.pick(pipe, ['eid', 'short_description', 'description', 'alias', 'created'])
 
-          this.pipe_name = _.get(pipe, 'name', '')
+          this.pipe_short_description = _.get(pipe, 'short_description', '')
           this.pipe_alias = _.get(pipe, 'alias', '')
           this.pipe = _.cloneDeep(pipe)
 
