@@ -24,8 +24,8 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="parent.name"
-        label="Pipe Name"
+        prop="parent.short_description"
+        label="Pipe Short Description"
         fixed
         :min-width="160"
       >
@@ -34,10 +34,10 @@
             (Anonymous Pipe)
           </em>
           <router-link class="i light-silver" :to="getPipeRoute(scope.row)" v-else-if="!hasPipeName(scope.row)">
-            (No name)
+            (No short description)
           </router-link>
           <router-link class="blue" :to="getPipeRoute(scope.row)" v-else>
-            <div class="truncate">{{scope.row.parent.name}}</div>
+            <div class="truncate">{{scope.row.parent.short_description}}</div>
           </router-link>
         </template>
       </el-table-column>
@@ -227,7 +227,7 @@
         return _.get(row, 'parent.eid', '').length > 0
       },
       hasPipeName(row) {
-        return _.get(row, 'parent.name', '').length > 0
+        return _.get(row, 'parent.short_description', '').length > 0
       },
       getPipeRoute(row) {
         return '/pipes/' + _.get(row, 'parent.eid')
