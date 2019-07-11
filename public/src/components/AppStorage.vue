@@ -53,7 +53,7 @@
   const LOCAL_STORAGE_ITEM = {
     connection_type: CONNECTION_TYPE_FLEX,
     eid: 'flex',
-    name: 'Flex.io'
+    short_description: 'Flex.io'
   }
 
   export default {
@@ -81,14 +81,14 @@
       }),
       connections() {
         var items = _.filter(this.getAvailableConnections(), this.$_Connection_isStorage)
-        items = _.sortBy(items, 'name')
+        items = _.sortBy(items, 'short_description')
         return [LOCAL_STORAGE_ITEM].concat(items)
       },
       ctype() {
         return _.get(this.connection, 'connection_type', '')
       },
       cname() {
-        return _.get(this.connection, 'name', '')
+        return _.get(this.connection, 'short_description', '')
       },
       has_connection() {
         return this.ctype.length > 0

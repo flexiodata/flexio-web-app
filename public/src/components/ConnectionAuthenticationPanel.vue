@@ -794,7 +794,7 @@
           // for now, re-fetch the connection to update its state
           this.$store.dispatch('v2_action_fetchConnection', { eid }).then(response => {
             var connection = response.data
-            this.$emit('change', _.omit(connection, ['name', 'alias', 'description']))
+            this.$emit('change', _.omit(connection, ['short_description', 'alias', 'description']))
 
             this.$nextTick(() => {
               if (this.is_connected) {
@@ -814,7 +814,7 @@
       },
       tryTest(attrs) {
         var eid = attrs.eid
-        attrs = _.pick(attrs, ['name', 'description', 'connection_info'])
+        attrs = _.pick(attrs, ['short_description', 'description', 'connection_info'])
 
         // update the connection
         this.$store.dispatch('v2_action_updateConnection', { eid, attrs }).then(response => {
@@ -822,7 +822,7 @@
 
           // test the connection
           this.$store.dispatch('v2_action_testConnection', { eid, attrs }).then(response => {
-            //var connection = _.omit(response.data, ['name', 'alias', 'description', 'connection_info'])
+            //var connection = _.omit(response.data, ['short_description', 'alias', 'description', 'connection_info'])
             this.test_state = 'success'
             //this.$emit('change', connection)
           }).catch(error => {

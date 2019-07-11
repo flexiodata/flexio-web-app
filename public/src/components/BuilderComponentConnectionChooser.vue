@@ -205,7 +205,7 @@
         var eid = attrs.eid
         var is_pending = attrs.eid_status === OBJECT_STATUS_PENDING
 
-        attrs = _.pick(attrs, ['name', 'alias', 'description', 'connection_info'])
+        attrs = _.pick(attrs, ['short_description', 'alias', 'description', 'connection_info'])
         _.assign(attrs, { eid_status: OBJECT_STATUS_AVAILABLE })
 
         // update the connection and make it available

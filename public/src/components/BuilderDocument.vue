@@ -198,7 +198,7 @@
       },
       save_attrs() {
         return _.assign({
-          name: _.get(this.def, 'name', 'Untitled Pipe'),
+          short_description: _.get(this.def, 'name', 'Untitled Pipe'),
           description: _.get(this.def, 'description', ''),
           ui: _.get(this.def, 'ui', {}),
           task: this.task,
