@@ -17,7 +17,7 @@
             <tr>
               <td class="nowrap">Connection Type</td>
               <td>
-                <div class="flex flex-row items-center lh-copy">
+                <div class="flex flex-row items-center">
                   <ServiceIcon class="flex-none mr1 br1 square-1" :type="ctype" :url="url" :empty-cls="''" />
                   <span class="f6 fw6">{{service_name}}</span>
                 </div>
@@ -26,12 +26,16 @@
             <tr>
               <td>Status</td>
               <td>
-                <div class="flex flex-row items-center lh-copy">
+                <div class="flex flex-row items-center">
                   <i class="el-icon-success dark-green mr1" v-if="is_available"></i>
                   <i class="el-icon-error dark-red mr1" v-else></i>
                   <span class="f6 fw6">{{is_available ? 'Connected' : 'Not Connected'}}</span>
                 </div>
               </td>
+            </tr>
+            <tr v-if="has_basepath">
+              <td>Path</td>
+              <td :class="base_path.length == 0 ? 'i moon-gray' : ''">{{base_path.length == 0 ? '(root folder)' : base_path}}</td>
             </tr>
           </tbody>
         </table>
@@ -82,8 +86,18 @@
       is_available() {
         return this.cstatus == CONNECTION_STATUS_AVAILABLE
       },
+      identifier() {
+        var alias = _.get(this.connection, 'alias', '')
+        return alias.length > 0 ? alias : _.get(this.connection, 'eid', '')
+      },
       url() {
-        return _.get(this, 'connection.connection_info.url', '')
+        return _.get(this.connection, 'connection_info.url', '')
+      },
+      base_path() {
+        return _.get(this.connection, 'connection_info.base_path')
+      },
+      has_basepath() {
+        return _.isString(this.base_path)
       },
       service_name() {
         return _.result(this, 'cinfo.service_name', '')
@@ -104,6 +118,7 @@
   td
     padding: 0 0.5rem 0.25rem 0
     font-size: .875rem
+    line-height: 1.5
   td:first-child::after
     content: ":"
 </style>
