@@ -17,26 +17,26 @@
         <div class="flex flex-row">
           <el-form-item
             class="flex-fill mr3"
-            key="name"
-            label="Name"
-            prop="name"
+            key="short_description"
+            prop="short_description"
+            label="Short description"
           >
             <el-input
-              placeholder="Name"
+              placeholder="Enter short description"
               autocomplete="off"
               :autofocus="true"
-              v-model="edit_pipe.name"
+              v-model="edit_pipe.short_description"
             />
           </el-form-item>
 
           <el-form-item
             class="flex-fill"
             key="alias"
-            label="Alias"
             prop="alias"
+            label="Alias"
           >
             <el-input
-              placeholder="Alias"
+              placeholder="Enter alias"
               autocomplete="off"
               spellcheck="false"
               v-model="edit_pipe.alias"
@@ -54,8 +54,8 @@
 
         <el-form-item
           key="description"
-          label="Description"
           prop="description"
+          label="Description"
         >
           <el-input
             type="textarea"
@@ -93,7 +93,7 @@
   const defaultAttrs = () => {
     return {
       eid: null,
-      name: 'New Pipe',
+      short_description: '',
       alias: '',
       description: ''
     }
@@ -134,9 +134,6 @@
       return {
         edit_pipe: _.assign({}, defaultAttrs(), this.pipe),
         rules: {
-          name: [
-            { required: true, message: 'Please input a name', trigger: 'blur' }
-          ],
           alias: [
             { validator: this.formValidateAlias }
           ]
@@ -153,7 +150,7 @@
         }
 
         return this.mode == 'edit'
-          ? 'Edit "' + _.get(this.pipe, 'name') + '" Pipe'
+          ? 'Edit "' + _.get(this.pipe, 'short_description') + '" Pipe'
           : 'New Pipe'
       },
       submit_label() {
