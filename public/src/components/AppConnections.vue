@@ -65,7 +65,7 @@
             v-if="is_keyring_connection"
           >
             <div
-              class="center w-100 mt3"
+              class="center w-100"
               style="max-width: 60rem"
             >
               <h4>Keyring values</h4>
