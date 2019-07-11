@@ -57,11 +57,11 @@
           v-if="mode == 'static'"
         >
           <ConnectionStaticPanel
-            class="flex-none pa3 trans-p"
+            class="flex-none pa3 bg-nearer-white bb b--black-05"
             :connection="connection"
             @edit-click="mode = 'edit'"
           />
-          <FileChooser class="flex-fill bt b--black-05 pa2"
+          <FileChooser class="flex-fill pa2"
             :connection="connection"
           />
         </div>
@@ -70,7 +70,7 @@
           v-else-if="mode == 'edit'"
         >
           <ConnectionEditPanel
-            class="center pa3 ph4-l pv5-l trans-p"
+            class="center pa3 pa4-l trans-p"
             style="max-width: 60rem"
             mode="edit"
             :show-title="false"

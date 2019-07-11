@@ -21,8 +21,9 @@
             <td>Status</td>
             <td>
               <div class="flex flex-row items-center lh-copy">
-                <i class="el-icon-success v-mid dark-green mr1"></i>
-                <span class="f6 fw6">Connected</span>
+                <i class="el-icon-success dark-green mr1" v-if="is_available"></i>
+                <i class="el-icon-error dark-red mr1" v-else></i>
+                <span class="f6 fw6">{{is_available ? 'Connected' : 'Not Connected'}}</span>
               </div>
             </td>
           </tr>
@@ -43,6 +44,7 @@
 </template>
 
 <script>
+  import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import * as ctypes from '../constants/connection-type'
   import * as connections from '../constants/connection-info'
   import ServiceIcon from '@comp/ServiceIcon'
@@ -59,11 +61,17 @@
     },
     computed: {
       ctype() {
-        return _.get(this, 'connection.connection_type', '')
+        return _.get(this.connection, 'connection_type', '')
       },
       cdesc() {
-        var desc = _.get(this, 'connection.description', '')
+        var desc = _.get(this.connection, 'description', '')
         return desc.length > 200 ? desc.substring(0, 200) + '...' : desc
+      },
+      cstatus() {
+        return _.get(this.connection, 'connection_status', '')
+      },
+      is_available() {
+        return this.cstatus == CONNECTION_STATUS_AVAILABLE
       },
       url() {
         return _.get(this, 'connection.connection_info.url', '')
@@ -73,7 +81,7 @@
       },
       service_description() {
         return _.result(this, 'cinfo.service_description', '')
-      },
+      }
     },
     methods: {
       cinfo() {
