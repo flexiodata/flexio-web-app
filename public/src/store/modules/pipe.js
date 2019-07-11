@@ -10,8 +10,8 @@ const getDefaultState = () => {
     syntax_error: '',
     edit_keys: [
       'eid',
-      'name',
       'alias',
+      'short_description',
       'description',
       'schedule',
       'deploy_mode',

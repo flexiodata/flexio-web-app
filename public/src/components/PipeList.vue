@@ -96,7 +96,7 @@
         })
       },
       filtered_pipes() {
-        return this.$_Filter_filter(this.mapped_pipes, this.filter, ['name', 'description'])
+        return this.$_Filter_filter(this.mapped_pipes, this.filter, ['short_description', 'description'])
       },
       sorted_pipes() {
         if (this.sort.length == 0) {

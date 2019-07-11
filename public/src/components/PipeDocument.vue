@@ -436,7 +436,7 @@
   export default {
     metaInfo() {
       return {
-        title: _.get(this.orig_pipe, 'name', '')
+        title: _.get(this.orig_pipe, 'short_description', '')
       }
     },
     mixins: [MixinConfig],
@@ -553,7 +553,7 @@
         return _.get(this.orig_pipe, 'eid', undefined)
       },
       title() {
-        return _.get(this.orig_pipe, 'name', '')
+        return _.get(this.orig_pipe, 'short_description', '')
       },
       save_cancel_style() {
         return 'z-index: ' + this.save_cancel_zindex
@@ -736,7 +736,7 @@
         this.$store.track('Opened Schedule Dialog')
       },
       saveProperties(attrs) {
-        attrs = _.pick(attrs, ['name', 'description', 'alias'])
+        attrs = _.pick(attrs, ['short_description', 'description', 'alias'])
 
         var pipe = _.cloneDeep(this.edit_pipe)
         _.assign(pipe, attrs)
