@@ -13,25 +13,27 @@
             <col>
             <col class="w-100">
           </colgroup>
-          <tr>
-            <td class="nowrap">Connection Type</td>
-            <td>
-              <div class="flex flex-row items-center lh-copy">
-                <ServiceIcon class="flex-none mr1 br1 square-1" :type="ctype" :url="url" :empty-cls="''" />
-                <span class="f6 fw6">{{service_name}}</span>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>Status</td>
-            <td>
-              <div class="flex flex-row items-center lh-copy">
-                <i class="el-icon-success dark-green mr1" v-if="is_available"></i>
-                <i class="el-icon-error dark-red mr1" v-else></i>
-                <span class="f6 fw6">{{is_available ? 'Connected' : 'Not Connected'}}</span>
-              </div>
-            </td>
-          </tr>
+          <tbody>
+            <tr>
+              <td class="nowrap">Connection Type</td>
+              <td>
+                <div class="flex flex-row items-center lh-copy">
+                  <ServiceIcon class="flex-none mr1 br1 square-1" :type="ctype" :url="url" :empty-cls="''" />
+                  <span class="f6 fw6">{{service_name}}</span>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>Status</td>
+              <td>
+                <div class="flex flex-row items-center lh-copy">
+                  <i class="el-icon-success dark-green mr1" v-if="is_available"></i>
+                  <i class="el-icon-error dark-red mr1" v-else></i>
+                  <span class="f6 fw6">{{is_available ? 'Connected' : 'Not Connected'}}</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
         </table>
       </div>
       <div class="flex-none">
