@@ -92,8 +92,8 @@
 
             <el-form-item
               class="flex-fill"
-              key="alias"
-              prop="alias"
+              key="name"
+              prop="name"
             >
               <template slot="label">
                 Alias
@@ -105,7 +105,7 @@
                 placeholder="Alias"
                 autocomplete="off"
                 spellcheck="false"
-                v-model="edit_connection.alias"
+                v-model="edit_connection.name"
               />
             </el-form-item>
           </div>
@@ -210,7 +210,7 @@
     return {
       eid: null,
       eid_status: OBJECT_STATUS_PENDING,
-      alias: '',
+      name: '',
       short_description: '',
       description: '',
       connection_type: '',
@@ -269,7 +269,7 @@
       eid() {
         this.$nextTick(() => {
           if (this.$refs.form) {
-            this.$refs.form.validateField('alias')
+            this.$refs.form.validateField('name')
           }
         })
       }
@@ -281,7 +281,8 @@
         orig_connection: _.assign({}, defaultAttrs(ctype), this.connection),
         edit_connection: _.assign({}, defaultAttrs(ctype), this.connection),
         rules: {
-          alias: [
+          name: [
+            { required: true, message: 'Please input a name', trigger: 'blur' },
             { validator: this.formValidateAlias }
           ]
         },
@@ -367,7 +368,7 @@
     mounted() {
       this.$nextTick(() => {
         if (this.$refs.form) {
-          this.$refs.form.validateField('alias')
+          this.$refs.form.validateField('name')
         }
       })
     },
@@ -424,8 +425,8 @@
           var connection = _.cloneDeep(response.data)
           var service_slug = slugify(item.service_name)
 
-          // create a default alias
-          connection.alias = 'my-' + service_slug
+          // create a default name
+          connection.name = 'my-' + service_slug
 
           this.updateConnection(connection)
         }).catch(error => {
@@ -438,13 +439,13 @@
           return
         }
 
-        if (this.mode == 'edit' && value == _.get(this.connection, 'alias', '')) {
+        if (this.mode == 'edit' && value == _.get(this.connection, 'name', '')) {
           callback()
           return
         }
 
         this.$_Validation_validateAlias(OBJECT_TYPE_CONNECTION, value, (response, errors) => {
-          var message = _.get(errors, 'alias.message', '')
+          var message = _.get(errors, 'name.message', '')
           if (message.length > 0) {
             callback(new Error(message))
           } else {
@@ -459,8 +460,8 @@
           var service_name = this.$_Connection_getServiceName(connection)
           var service_slug = slugify(service_name)
 
-          // create a default alias
-          connection.alias = 'my-' + service_slug
+          // create a default name
+          connection.name = 'my-' + service_slug
         }
 
         // we have to do this to force watcher validation
