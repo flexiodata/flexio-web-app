@@ -60,24 +60,14 @@ class Pipe extends ModelBase
         if ($process_arr['deploy_ui'] != \Model::PIPE_DEPLOY_STATUS_ACTIVE && $process_arr['deploy_ui'] != \Model::PIPE_DEPLOY_STATUS_INACTIVE)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
-
-        // TODO: alias migration project; remove when migration is complete
-        // if name is set, map it to the alias
-        if (isset($process_arr['name']))
-        {
-            $process_arr['alias'] = $process_arr['name'];
-            unset($process_arr['name']);
-        }
-
-
         $db = $this->getDatabase();
         $db->beginTransaction();
         try
         {
             // make sure a name is unique within an owner and object type
             $qownedby = $db->quote($process_arr['owned_by']);
-            $qname = $db->quote($process_arr['alias']);
-            $existing_item = $db->fetchOne("select eid from tbl_pipe where owned_by = $qownedby and alias = $qname");
+            $qname = $db->quote($process_arr['name']);
+            $existing_item = $db->fetchOne("select eid from tbl_pipe where owned_by = $qownedby and name = $qname");
             if ($existing_item !== false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
@@ -105,8 +95,8 @@ class Pipe extends ModelBase
 
     public function delete(string $eid) : bool
     {
-        // set the status to deleted and clear out any existing alias
-        $params = array('eid_status' => \Model::STATUS_DELETED, 'alias' => '');
+        // set the status to deleted and clear out any existing name
+        $params = array('eid_status' => \Model::STATUS_DELETED, 'name' => '');
         return $this->set($eid, $params);
     }
 
@@ -166,16 +156,6 @@ class Pipe extends ModelBase
         if ($this->exists($eid) === false)
             return false;
 
-
-        // TODO: alias migration project; remove when migration is complete
-        // if name is set, map it to the alias
-        if (isset($process_arr['name']))
-        {
-            $process_arr['alias'] = $process_arr['name'];
-            unset($process_arr['name']);
-        }
-
-
         $db = $this->getDatabase();
         $db->beginTransaction();
         try
@@ -191,13 +171,13 @@ class Pipe extends ModelBase
                 if ($owner_to_check !== false)
                 {
                     // we found an owner; see if the name exists for the owner and object type
-                    $alias = $params['alias'];
+                    $name = $params['name'];
                     $qownedby = $db->quote($owner_to_check);
-                    $qalias = $db->quote($alias);
-                    $existing_eid = $db->fetchOne("select eid from tbl_pipe where owned_by = $qownedby and alias = $qalias");
+                    $qname = $db->quote($name);
+                    $existing_eid = $db->fetchOne("select eid from tbl_pipe where owned_by = $qownedby and name = $qname");
 
-                    // don't allow an alias to be set if it's already used for another eid
-                    // (but if the alias is passed for the same eid, it's ok, because it's
+                    // don't allow a name to be set if it's already used for another eid
+                    // (but if the name is passed for the same eid, it's ok, because it's
                     // just setting it to what it already is)
                     if ($existing_eid !== false && $existing_eid !== $eid)
                         throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
@@ -272,7 +252,7 @@ class Pipe extends ModelBase
             $output[] = array('eid'             => $row['eid'],
                               'eid_type'        => \Model::TYPE_PIPE,
                               'eid_status'      => $row['eid_status'],
-                              'name'            => $row['alias'],
+                              'name'            => $row['name'],
                               'short_description' => $row['short_description'],
                               'description'     => $row['description'],
                               'ui'              => $row['ui'],
@@ -316,7 +296,7 @@ class Pipe extends ModelBase
         $db = $this->getDatabase();
         $qowner = $db->quote($owner);
         $qname = $db->quote($name);
-        $result = $this->getDatabase()->fetchOne("select eid from tbl_pipe where owned_by = $qowner and alias = $qname");
+        $result = $this->getDatabase()->fetchOne("select eid from tbl_pipe where owned_by = $qowner and name = $qname");
         if ($result === false)
             return false;
 

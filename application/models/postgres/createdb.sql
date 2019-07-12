@@ -151,7 +151,6 @@ CREATE TABLE tbl_pipe (
   id serial,
   eid varchar(12) NOT NULL default '',
   eid_status varchar(1) NOT NULL default '',
-  alias text default '',
   name text default '',
   description text default '',
   task json,
@@ -170,7 +169,7 @@ CREATE TABLE tbl_pipe (
   UNIQUE (eid)
 );
 
-CREATE INDEX idx_pipe_alias ON tbl_pipe (alias);
+CREATE INDEX idx_pipe_name ON tbl_pipe (name);
 CREATE INDEX idx_pipe_deploy_mode ON tbl_pipe (deploy_mode);
 CREATE INDEX idx_pipe_deploy_schedule ON tbl_pipe (deploy_schedule);
 CREATE INDEX idx_pipe_deploy_email ON tbl_pipe (deploy_email);
@@ -190,7 +189,6 @@ CREATE TABLE tbl_connection (
   id serial,
   eid varchar(12) NOT NULL default '',
   eid_status varchar(1) NOT NULL default '',
-  alias text default '',
   name text default '',
   description text default '',
   connection_type varchar(40) NOT NULL default '',
@@ -205,7 +203,7 @@ CREATE TABLE tbl_connection (
   UNIQUE (eid)
 );
 
-CREATE INDEX idx_connection_alias ON tbl_connection (alias);
+CREATE INDEX idx_connection_name ON tbl_connection (name);
 CREATE INDEX idx_connection_owned_by ON tbl_connection (owned_by);
 CREATE INDEX idx_connection_created ON tbl_connection (created);
 
