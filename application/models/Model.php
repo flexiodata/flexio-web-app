@@ -37,6 +37,8 @@ class Filter
         if (isset($filter_items['parent_eid']) && array_key_exists('parent_eid', $allowed_item_keys))
             $filter_expr .= (' and (parent_eid = ' . $db->quote($filter_items['parent_eid']) . ')');
 
+        // TODO: remove alias when alias migration is complete
+
         if (isset($filter_items['alias']) && array_key_exists('alias', $allowed_item_keys))
             $filter_expr .= (' and (alias = ' . $db->quote($filter_items['alias']) . ')');
 

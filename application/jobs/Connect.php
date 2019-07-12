@@ -19,8 +19,8 @@ namespace Flexio\Jobs;
 // DESCRIPTION:
 {
     "op": "connect",        // string, required
-    "alias": "",            // string, required
-    "connection": "",       // string (either connection or connection_type is required; if connection is specified, it's an alias to an existing connection)
+    "name": "",             // string, required
+    "connection": "",       // string (either connection or connection_type is required; if connection is specified, it's the name of an existing connection)
     "connection_type": "",  // string (either connection or connection_type is required; if connection_type is specified, additional connection_info properties specify the connection params)
     "connection_info": {}   // object (key/values with connection-specific parameters)
 }
@@ -29,7 +29,7 @@ namespace Flexio\Jobs;
 $validator = \Flexio\Base\Validator::create();
 if (($validator->check($params, array(
         'op'              => array('required' => true,  'enum' => ['connect']),
-        'alias'           => array('required' => true,  'type' => 'identifier'),
+        'name'           => array('required' => true,  'type' => 'identifier'),
         'connection'      => array('required' => false, 'type' => 'string'), // either 'connection' or 'connection_type' is required
         'connection_type' => array('required' => false, 'type' => 'string'), // either 'connection' or 'connection_type' is required
         'connection_info' => array('required' => false, 'type' => 'object')
@@ -45,8 +45,8 @@ class Connect extends \Flexio\Jobs\Base
 
         $params = $this->getJobParameters();
 
-        $alias = $params['alias'] ?? false;
-        unset($params['alias']);
+        $name = $params['name'] ?? false;
+        unset($params['name']);
 
         $connection_type = $params['type'] ?? false;
         unset($params['type']);
@@ -54,14 +54,14 @@ class Connect extends \Flexio\Jobs\Base
         $connection_identifier = $params['connection'] ?? false;
         unset($params['connection']);
 
-        // get the alias to use to reference the connection; must be a valid identifier (no strictly necessary
-        // here, but enforced to parallel the requirements of 'alias')
-        if ($alias === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Missing connection 'alias' parameter.");
+        // get the name to use to reference the connection; must be a valid identifier (not strictly necessary
+        // here, but enforced to parallel the requirements of 'name')
+        if ($name === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Missing connection 'name' parameter.");
         if ($connection_identifier === false && $connection_type === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Missing connection 'connection' or 'type' parameter.");
-        if (\Flexio\Base\Identifier::isValid($alias) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Invalid connection 'alias' parameter; 'alias' must be a valid identifier (lowercase string between 3 and 80 chars made up of only letters, numbers, hyphens and underscores)");
+        if (\Flexio\Base\Identifier::isValid($name) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Invalid connection 'name' parameter; 'name' must be a valid identifier (lowercase string between 3 and 80 chars made up of only letters, numbers, hyphens and underscores)");
 
         $connection_properties = array();
 
@@ -103,6 +103,6 @@ class Connect extends \Flexio\Jobs\Base
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED, "Could not create connection");
 
         // add the connection to the process
-        $process->addLocalConnection($alias, $connection_properties);
+        $process->addLocalConnection($name, $connection_properties);
     }
 }

@@ -885,8 +885,7 @@ class User
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         // STEP 2: create the object
-        $call_params['name'] = $definition['name'] ?? 'Sample Connection';
-        $call_params['alias'] = $definition['alias'] ?? '';
+        $call_params['name'] = $definition['name'] ?? 'sample-connection';
         $call_params['description'] = $definition['description'] ?? '';
 
         if (isset($definition['connection_status']))
@@ -924,8 +923,7 @@ class User
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         // STEP 2: create the object
-        $call_params['name'] = $definition['name'] ?? 'Sample Pipe';
-        $call_params['alias'] = $definition['alias'] ?? '';
+        $call_params['name'] = $definition['name'] ?? 'sample-pipe';
         $call_params['description'] = $definition['description'] ?? '';
         $call_params['task'] = array();
         if (isset($definition['task']))
@@ -1006,7 +1004,7 @@ class User
 
     public static function validateObjects(\Flexio\Api\Request $request) : void
     {
-        // function for validating user objects (e.g. pipe alias, connection alias, script syntax)
+        // function for validating user objects (e.g. pipe name, connection name, script syntax)
         // requires appropriate permissions
 
         $post_params = $request->getPostParams();
@@ -1123,8 +1121,10 @@ class User
 
         switch ($type)
         {
+            // TODO: remove 'alias' when alias migration is complete
+            case 'name':
             case 'alias':
-                $valid = self::validateAlias($type, $eid_type, $owner_user_eid, $requesting_user_eid, $value, $message);
+                $valid = self::validateName($type, $eid_type, $owner_user_eid, $requesting_user_eid, $value, $message);
                 break;
 
             // python/javascript
@@ -1245,24 +1245,24 @@ class User
         return true;
     }
 
-    private static function validateAlias(string $type, string $eid_type, string $owner_user_eid, string $requesting_user_eid, string $value, string &$message = '') : bool
+    private static function validateName(string $type, string $eid_type, string $owner_user_eid, string $requesting_user_eid, string $value, string &$message = '') : bool
     {
         try
         {
-            $prefix = 'An alias';
+            $prefix = 'A name';
 
             // check for valid identifier
             if (\Flexio\Base\Identifier::isValid($value, $message, $prefix) === false)
                 return false;
 
-            // an alias can only be specific for a valid user; if the user doesn't load
+            // a name can only be specific for a valid user; if the user doesn't load
             // an exception will be thrown
             $owner_user = \Flexio\Object\User::load($owner_user_eid);
 
             // make sure the requesting user has rights to the user (the object may
             // not exist, which means we need to check against write privileges on
             // the user); throw an exception, which will cause the function to return
-            // false, which won't reveal any info about aliases created by a particular
+            // false, which won't reveal any info about names created by a particular
             // user
             if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
@@ -1271,7 +1271,7 @@ class User
                 \Flexio\Object\Pipe::getEidFromName($owner_user->getEid(), $value) !== false)
             {
                 // identifier already exists
-                $message = _('This alias is already taken.');
+                $message = _('This name is already taken.');
                 return false;
             }
 
@@ -1279,7 +1279,7 @@ class User
                 \Flexio\Object\Connection::getEidFromName($owner_user->getEid(), $value) !== false)
             {
                 // identifier already exists
-                $message = _('This alias is already taken.');
+                $message = _('This name is already taken.');
                 return false;
             }
         }

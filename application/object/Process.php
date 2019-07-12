@@ -439,7 +439,6 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             'eid' => $properties['parent_eid'],
             'eid_type' => \Model::TYPE_PIPE,
             'eid_status' => $pipe_info['eid_status'] ?? "",
-            'alias' => $pipe_info['alias'] ?? "",
             'name' => $pipe_info['name'] ?? "",
             'description' => $pipe_info['description'] ?? "",
             'deploy_mode' => $pipe_info['deploy_mode'] ?? "",

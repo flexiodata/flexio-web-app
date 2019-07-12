@@ -19,13 +19,12 @@ class Pipe extends ModelBase
 {
     public function create(array $params) : string
     {
-        $default_alias = 'pipe-' . \Flexio\Base\Util::generateRandomString(4);
+        $default_name = 'pipe-' . \Flexio\Base\Util::generateRandomString(4);
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid_status'      => array('type' => 'string', 'required' => false, 'default' => \Model::STATUS_AVAILABLE),
-                'alias'           => array('type' => 'alias',  'required' => false, 'default' => $default_alias),
-                'name'            => array('type' => 'alias',  'required' => false, 'default' => $default_alias),
+                'name'            => array('type' => 'identifier', 'required' => false, 'default' => $default_name),
                 'short_description' => array('type' => 'string', 'required' => false),
                 'description'     => array('type' => 'string', 'required' => false, 'default' => ''),
                 'ui'              => array('type' => 'string', 'required' => false, 'default' => '{}'),
@@ -75,15 +74,12 @@ class Pipe extends ModelBase
         $db->beginTransaction();
         try
         {
-            if ($process_arr['alias'] !== '')
-            {
-                // if an identifier is specified, make sure that it's unique within an owner
-                $qownedby = $db->quote($process_arr['owned_by']);
-                $qalias = $db->quote($process_arr['alias']);
-                $existing_item = $db->fetchOne("select eid from tbl_pipe where owned_by = $qownedby and alias = $qalias");
-                if ($existing_item !== false)
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-            }
+            // make sure a name is unique within an owner and object type
+            $qownedby = $db->quote($process_arr['owned_by']);
+            $qname = $db->quote($process_arr['alias']);
+            $existing_item = $db->fetchOne("select eid from tbl_pipe where owned_by = $qownedby and alias = $qname");
+            if ($existing_item !== false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
             // create the object base
             $eid = $this->getModel()->createObjectBase(\Model::TYPE_PIPE, $process_arr);
@@ -144,7 +140,6 @@ class Pipe extends ModelBase
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid_status'      => array('type' => 'string', 'required' => false),
-                'alias'           => array('type' => 'alias',  'required' => false),
                 'name'            => array('type' => 'string', 'required' => false),
                 'short_description' => array('type' => 'string', 'required' => false),
                 'description'     => array('type' => 'string', 'required' => false),
@@ -185,9 +180,9 @@ class Pipe extends ModelBase
         $db->beginTransaction();
         try
         {
-            if (isset($params['alias']) && $params['alias'] !== '')
+            if (isset($params['name']))
             {
-                // if an identifier is specified, make sure that it's unique within an owner
+                // if an identifier is specified, make sure that it's unique within an owner and object type
                 $qeid = $db->quote($eid);
                 $owner_to_check = $process_arr['owned_by'] ?? false;
                 if ($owner_to_check === false) // owner isn't specified; find out what it is
@@ -195,7 +190,7 @@ class Pipe extends ModelBase
 
                 if ($owner_to_check !== false)
                 {
-                    // we found an owner; see if the alias exists for the owner
+                    // we found an owner; see if the name exists for the owner and object type
                     $alias = $params['alias'];
                     $qownedby = $db->quote($owner_to_check);
                     $qalias = $db->quote($alias);
@@ -277,7 +272,6 @@ class Pipe extends ModelBase
             $output[] = array('eid'             => $row['eid'],
                               'eid_type'        => \Model::TYPE_PIPE,
                               'eid_status'      => $row['eid_status'],
-                              'alias'           => $row['alias'],
                               'name'            => $row['alias'],
                               'short_description' => $row['short_description'],
                               'description'     => $row['description'],
@@ -311,19 +305,18 @@ class Pipe extends ModelBase
         return $rows[0];
     }
 
-    public function getEidFromName(string $owner, string $alias) // TODO: add return type
+    public function getEidFromName(string $owner, string $name) // TODO: add return type
     {
-        // eids must correspond to a valid owner and alias (although these fields can
-        // be empty strings, only allow lookups for specifically named, owned pipes)
+        // eids must correspond to a valid owner and name
         if (!\Flexio\Base\Eid::isValid($owner))
             return false;
-        if (strlen($alias) === 0)
+        if (strlen($name) === 0)
             return false;
 
         $db = $this->getDatabase();
         $qowner = $db->quote($owner);
-        $qalias = $db->quote($alias);
-        $result = $this->getDatabase()->fetchOne("select eid from tbl_pipe where owned_by = $qowner and alias = $qalias");
+        $qname = $db->quote($name);
+        $result = $this->getDatabase()->fetchOne("select eid from tbl_pipe where owned_by = $qowner and alias = $qname");
         if ($result === false)
             return false;
 

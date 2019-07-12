@@ -834,7 +834,7 @@ class ScriptHost
                 continue;
 
             $properties = $c->get();
-            $results[] = [ 'eid' => $properties['eid'], 'alias' => $properties['alias'], 'name' => $properties['name'], 'description' => $properties['description'] ];
+            $results[] = [ 'eid' => $properties['eid'], 'name' => $properties['name'], 'description' => $properties['description'] ];
         }
 
         return $results;
@@ -847,7 +847,7 @@ class ScriptHost
         $local_connections = $this->getProcess()->getLocalConnections();
         foreach ($local_connections as $key => $value)
         {
-            $results[] = [ 'eid' => $key, 'alias' => $key, 'name' => $key, 'description' => '' ];
+            $results[] = [ 'eid' => $key, 'name' => $key, 'description' => '' ];
         }
 
         return $results;

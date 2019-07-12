@@ -31,11 +31,11 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return json_encode($object);
     }
 
-    public static function getEidFromName(string $owner, string $alias)
+    public static function getEidFromName(string $owner, string $name)
     {
         $object = new static();
         $connection_model = $object->getModel()->connection;
-        return $connection_model->getEidFromName($owner, $alias);
+        return $connection_model->getEidFromName($owner, $name);
     }
 
     public static function list(array $filter) : array
@@ -549,7 +549,6 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "eid" => null,
                 "eid_type" => null,
                 "eid_status" => null,
-                "alias" => null,
                 "name" => null,
                 "short_description" => null,
                 "description" => null,

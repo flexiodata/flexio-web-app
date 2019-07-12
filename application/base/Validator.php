@@ -420,6 +420,8 @@ class Validator
 
     private function check_alias($value) : bool
     {
+        // TODO: remove when alias migration is complete
+
         if (!is_string($value))
             return false;
 
