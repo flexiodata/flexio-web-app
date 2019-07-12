@@ -224,8 +224,8 @@ class Test
             "eid" : null,
             "eid_type" : null,
             "eid_status" : null,
-            "alias" : null,
             "name" : null,
+            "short_description" : null,
             "description" : null,
             "task" : {
             },

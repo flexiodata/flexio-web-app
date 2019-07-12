@@ -34,7 +34,7 @@ class Test
         // TEST: create a new pipe
 
         // BEGIN TEST
-        $alias = \Flexio\Base\Util::generateHandle();
+        $name = \Flexio\Base\Util::generateHandle();
         $task = \Flexio\Tests\Task::create([
             [
                 "op" => "echo",
@@ -46,11 +46,11 @@ class Test
             'url' => "$apibase/$userid/pipes",
             'token' => $token,
             'content_type' => 'application/json',
-            'params' => json_encode(["alias" => $alias, "task" => $task, "deploy_mode" => "R", "deploy_email" => "A"])
+            'params' => json_encode(["name" => $name, "task" => $task, "deploy_mode" => "R", "deploy_email" => "A"])
         );
         \Flexio\Tests\Util::callApi($params);
 
-        $content = getSampleEmailWithAttachment($username, $alias);
+        $content = getSampleEmailWithAttachment($username, $name);
         $path = \Flexio\Base\File::getTempFilename('txt');
         file_put_contents($path, $content);
         $handle = fopen($path, 'r');
@@ -63,15 +63,15 @@ class Test
         unlink($path);
 
         $expected = "From: Test User <test@flex.io>; Message: \nThis is an email with a CSV attachment.\n\n\n\n; Files: {\"Vend_mast.csv\":{\"name\":\"Vend_mast.csv\",\"extension\":\"csv\",\"size\":8695,\"content_type\":\"application/octet-stream\"}}";
-        \Flexio\Tests\Check::assertString('A.1', 'EMAIL <username>/<alias>@pipes.flex.io; check for handling email input to a pipe',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', 'EMAIL <username>/<name>@pipes.flex.io; check for handling email input to a pipe',  $actual, $expected, $results);
     }
 }
 
-function getSampleEmailWithAttachment(string $username, string $alias)
+function getSampleEmailWithAttachment(string $username, string $name)
 {
     // following is the raw text of an email with the following values:
     // from: test@flex.io
-    // to: $username/$alias@pipes.flex.io
+    // to: $username/$name@pipes.flex.io
     // subject: Attachment Test
     // body: This is an email with a CSV attachment.
     // attachment: Vend_mast.csv
@@ -79,11 +79,11 @@ function getSampleEmailWithAttachment(string $username, string $alias)
     $data = <<<EOD
 From test@flex.io  Wed Aug  3 23:52:22 2016
 Return-Path: <test@flex.io>
-X-Original-To: $username/$alias@pipes.flex.io
-Delivered-To: $username/$alias@pipes.flex.io
+X-Original-To: $username/$name@pipes.flex.io
+Delivered-To: $username/$name@pipes.flex.io
 Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on0052.outbound.protection.outlook.com [104.47.36.52])
         by pipes.flex.io (Postfix) with ESMTPS id 6DD0B805B6
-        for <$username/$alias@pipes.flex.io>; Wed,  3 Aug 2016 23:52:22 +0000 (UTC)
+        for <$username/$name@pipes.flex.io>; Wed,  3 Aug 2016 23:52:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=flexio.onmicrosoft.com; s=selector1-flex-io;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
@@ -97,7 +97,7 @@ Received: from BN6PR12MB1233.namprd12.prod.outlook.com ([10.168.227.19]) by
  BN6PR12MB1233.namprd12.prod.outlook.com ([10.168.227.19]) with mapi id
  15.01.0549.022; Wed, 3 Aug 2016 23:53:19 +0000
 From: Test User <test@flex.io>
-To: "$username/$alias@pipes.flex.io" <$username/$alias@pipes.flex.io>
+To: "$username/$name@pipes.flex.io" <$username/$name@pipes.flex.io>
 Subject: Attachment Test
 Thread-Topic: Attachment Test
 Thread-Index: AdHt4e012cGejNcTRqasix1Acbd9mA==

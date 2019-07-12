@@ -161,7 +161,7 @@ class Test
 
         // BEGIN TEST
         $info = array(
-            'name' => 'Test pipe'
+            'short_description' => 'Test pipe'
         );
         $eid = $model->create($info);
         $info = array(
@@ -170,7 +170,7 @@ class Test
         $result = $model->set($eid, $info);
         $actual = $model->get($eid);
         $expected = array(
-            'name' => 'Test pipe',
+            'short_description' => 'Test pipe',
             'description' => 'This is a test'
         );
         \Flexio\Tests\Check::assertInArray('D.1', '\Flexio\Model\Pipe::set(); for object update, make sure non-specified properties aren\'t changed',  $actual, $expected, $results);

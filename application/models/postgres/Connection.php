@@ -47,24 +47,14 @@ class Connection extends ModelBase
         // encrypt the connection info
         $process_arr['connection_info'] = \Flexio\Base\Util::encrypt($process_arr['connection_info'], $GLOBALS['g_store']->connection_enckey);
 
-
-        // TODO: alias migration project; remove when migration is complete
-        // if name is set, map it to the alias
-        if (isset($process_arr['name']))
-        {
-            $process_arr['alias'] = $process_arr['name'];
-            unset($process_arr['name']);
-        }
-
-
         $db = $this->getDatabase();
         $db->beginTransaction();
         try
         {
             // make sure a name is unique within an owner and object type
             $qownedby = $db->quote($process_arr['owned_by']);
-            $qname = $db->quote($process_arr['alias']);
-            $existing_item = $db->fetchOne("select eid from tbl_connection where owned_by = $qownedby and alias = $qname");
+            $qname = $db->quote($process_arr['name']);
+            $existing_item = $db->fetchOne("select eid from tbl_connection where owned_by = $qownedby and name = $qname");
             if ($existing_item !== false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
@@ -92,9 +82,27 @@ class Connection extends ModelBase
 
     public function delete(string $eid) : bool
     {
-        // set the status to deleted and clear out any existing alias
-        $params = array('eid_status' => \Model::STATUS_DELETED, 'alias' => '');
-        return $this->set($eid, $params);
+        // if the item doesn't exist, return false
+        if (!\Flexio\Base\Eid::isValid($eid))
+            return false;
+        if ($this->exists($eid) === false)
+            return false;
+
+        // set the status to deleted and clear out any existing name
+        $db = $this->getDatabase();
+        $db->beginTransaction();
+        try
+        {
+            $process_arr = array('eid_status' => \Model::STATUS_DELETED, 'name' => '');
+            $db->update('tbl_connection', $process_arr, 'eid = ' . $db->quote($eid));
+            $db->commit();
+            return true;
+        }
+        catch (\Exception $e)
+        {
+            $db->rollback();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, (IS_DEBUG() ? $e->getMessage() : null));
+        }
     }
 
     public function purge(string $owner_eid) : bool
@@ -156,16 +164,6 @@ class Connection extends ModelBase
         if ($this->exists($eid) === false)
             return false;
 
-
-        // TODO: alias migration project; remove when migration is complete
-        // if name is set, map it to the alias
-        if (isset($process_arr['name']))
-        {
-            $process_arr['alias'] = $process_arr['name'];
-            unset($process_arr['name']);
-        }
-
-
         $db = $this->getDatabase();
         $db->beginTransaction();
         try
@@ -184,7 +182,7 @@ class Connection extends ModelBase
                     $name = $params['name'];
                     $qownedby = $db->quote($owner_to_check);
                     $qname = $db->quote($name);
-                    $existing_eid = $db->fetchOne("select eid from tbl_connection where owned_by = $qownedby and alias = $qname");
+                    $existing_eid = $db->fetchOne("select eid from tbl_connection where owned_by = $qownedby and name = $qname");
 
                     // don't allow a name to be set if it's already used for another eid
                     // (but if the name is passed for the same eid, it's ok, because it's
@@ -235,7 +233,7 @@ class Connection extends ModelBase
             $output[] = array('eid'               => $row['eid'],
                               'eid_type'          => \Model::TYPE_CONNECTION,
                               'eid_status'        => $row['eid_status'],
-                              'name'              => $row['alias'],
+                              'name'              => $row['name'],
                               'short_description' => $row['short_description'],
                               'description'       => $row['description'],
                               'connection_type'   => $row['connection_type'],
@@ -275,7 +273,7 @@ class Connection extends ModelBase
         $db = $this->getDatabase();
         $qowner = $db->quote($owner);
         $qname = $db->quote($name);
-        $result = $this->getDatabase()->fetchOne("select eid from tbl_connection where owned_by = $qowner and alias = $qname");
+        $result = $this->getDatabase()->fetchOne("select eid from tbl_connection where owned_by = $qowner and name = $qname");
 
         if ($result === false)
             return false;

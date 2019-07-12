@@ -102,13 +102,18 @@ function getValidAliasFromName($db, string $table, string $owned_by, string $nam
     // 1. if the name is empty, start off with a prefix, that we'll append numbers to later
     // 2. if the name isn't empty, start off with the name and invalid characters with hyphens
 
-    $idx = 1;
-    $alias = ($table === "tbl_pipe" ? "pipe" : "connection") . "-" . $idx;
+    $alias = ($table === "tbl_pipe" ? "pipe" : "connection");
     if (strlen($name) > 0)
         $alias = preg_replace('/[^\da-zA-Z_-]/i', '-', $name);
     $alias = strtolower($alias);
 
     $base_alias = $alias;
+
+    $idx = 1;
+
+    if ($alias === 'pipe' || $alias === 'connection')
+        $alias = $alias . "-" . $idx;
+
     while (1)
     {
         // fall through if we can't find something

@@ -166,7 +166,6 @@ CREATE TABLE tbl_pipe (
   id int UNSIGNED NOT NULL auto_increment,
   eid char(12) NOT NULL default '',
   eid_status char(1) NOT NULL default '',
-  alias text default '',
   name text default '',
   short_description text default '',
   description text default '',
@@ -186,7 +185,7 @@ CREATE TABLE tbl_pipe (
   UNIQUE KEY (eid)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE INDEX idx_pipe_alias ON tbl_pipe (alias);
+CREATE INDEX idx_pipe_name ON tbl_pipe (name);
 CREATE INDEX idx_pipe_deploy_mode ON tbl_pipe (deploy_mode);
 CREATE INDEX idx_pipe_deploy_schedule ON tbl_pipe (deploy_schedule);
 CREATE INDEX idx_pipe_deploy_email ON tbl_pipe (deploy_email);
@@ -206,7 +205,6 @@ CREATE TABLE tbl_connection (
   id int UNSIGNED NOT NULL auto_increment,
   eid char(12) NOT NULL default '',
   eid_status char(1) NOT NULL default '',
-  alias text default '',
   name text default '',
   short_description text default '',
   description text default '',
@@ -222,7 +220,7 @@ CREATE TABLE tbl_connection (
   UNIQUE KEY (eid)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE INDEX idx_connection_alias ON tbl_connection (alias);
+CREATE INDEX idx_connection_name ON tbl_connection (name);
 CREATE INDEX idx_connection_owned_by ON tbl_connection (owned_by);
 CREATE INDEX idx_connection_created ON tbl_connection (created);
 

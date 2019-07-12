@@ -42,7 +42,7 @@ class Test
             // 'token' => '', // no token included
             'content_type' => 'application/json',
             'params' => '{
-                "name": "Test Connection"
+                "name": "test-connection"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -62,7 +62,7 @@ class Test
             'token' => $token2, // token for another user
             'content_type' => 'application/json',
             'params' => '{
-                "name": "Test Connection"
+                "name": "test-connection"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -82,8 +82,7 @@ class Test
             'token' => $token1,
             'content_type' => 'application/json',
             'params' => '{
-                "name": "Test Connection",
-                "alias": "",
+                "name": "name1",
                 "description": "Test Connection Description",
                 "connection_type": "'.\Flexio\Services\Factory::TYPE_HTTP.'",
                 "connection_status": "'.\Model::CONNECTION_STATUS_AVAILABLE.'",
@@ -102,8 +101,7 @@ class Test
         {
             "eid_type": "CTN",
             "eid_status": "A",
-            "alias": "",
-            "name": "Test Connection",
+            "name": "name1",
             "description": "Test Connection Description",
             "connection_type": "http",
             "connection_status": "A",

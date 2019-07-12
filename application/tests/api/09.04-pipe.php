@@ -38,8 +38,7 @@ class Test
             'token' => $token1,
             'content_type' => 'application/json',
             'params' => '{
-                "name": "Test Pipe",
-                "alias": "alias1",
+                "name": "name1",
                 "task": {
                     "op": "echo",
                     "msg": "${form.msg}"
@@ -58,8 +57,7 @@ class Test
             'token' => $token2,
             'content_type' => 'application/json',
             'params' => '{
-                "name": "Test Pipe",
-                "alias": "alias2",
+                "name": "name2",
                 "task": {
                     "op": "echo",
                     "msg": "${form.msg}"
@@ -78,8 +76,7 @@ class Test
             'token' => $token1,
             'content_type' => 'application/json',
             'params' => '{
-                "name": "Test Pipe",
-                "alias": "alias3",
+                "name": "name3",
                 "task": {
                     "op": "echo",
                     "msg": "Hello, ${form.noun}. Would you like to ${form.verb}?"
@@ -98,8 +95,7 @@ class Test
             'token' => $token1,
             'content_type' => 'application/json',
             'params' => '{
-                "name": "Test Pipe",
-                "alias": "alias4",
+                "name": "name4",
                 "task": {
                     "op": "echo",
                     "msg": "${input.msg}"

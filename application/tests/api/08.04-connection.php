@@ -50,8 +50,7 @@ class Test
             'token' => $token1,
             'content_type' => 'application/json',
             'params' => '{
-                "name": "Test Connection",
-                "alias": "alias1"
+                "name": "name1"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -64,8 +63,7 @@ class Test
             'token' => $token2,
             'content_type' => 'application/json',
             'params' => '{
-                "name": "Test Connection",
-                "alias": "alias2"
+                "name": "name2",
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);

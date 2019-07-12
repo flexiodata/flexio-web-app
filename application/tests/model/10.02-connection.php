@@ -82,6 +82,7 @@ class Test
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
+            'name' => $handle
         );
         $eid = $model->create($info);
         $actual = $model->get($eid);
@@ -89,8 +90,8 @@ class Test
             'eid' => $eid,
             'eid_type' => \Model::TYPE_CONNECTION,
             'eid_status' => \Model::STATUS_AVAILABLE,
-            'alias' => '',
-            'name' => '',
+            'name' => $handle,
+            'short_description'=>'',
             'description' => '',
             'connection_type' => '',
             'connection_status' => \Model::CONNECTION_STATUS_UNAVAILABLE,
@@ -119,12 +120,12 @@ class Test
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
-            'name' => 'Test Connection'
+            'name' => $handle
         );
         $eid = $model->create($info);
         $actual = $model->get($eid);
         $expected = array(
-            'name' => 'Test Connection'
+            'name' => $handle
         );
         \Flexio\Tests\Check::assertInArray('C.2', '\Flexio\Model\Connection::create(); in connection creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
