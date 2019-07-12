@@ -1121,9 +1121,7 @@ class User
 
         switch ($type)
         {
-            // TODO: remove 'alias' when alias migration is complete
             case 'name':
-            case 'alias':
                 $valid = self::validateName($type, $eid_type, $owner_user_eid, $requesting_user_eid, $value, $message);
                 break;
 

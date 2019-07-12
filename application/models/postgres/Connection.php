@@ -209,7 +209,7 @@ class Connection extends ModelBase
     public function list(array $filter) : array
     {
         $db = $this->getDatabase();
-        $allowed_items = array('eid', 'eid_status', 'owned_by', 'created_min', 'created_max', 'alias');
+        $allowed_items = array('eid', 'eid_status', 'owned_by', 'created_min', 'created_max', 'name');
         $filter_expr = \Filter::build($db, $filter, $allowed_items);
         $limit_expr = \Limit::build($db, $filter);
 
