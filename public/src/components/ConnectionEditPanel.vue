@@ -96,13 +96,13 @@
               prop="name"
             >
               <template slot="label">
-                Alias
+                Name
                 <span class="lh-1 hint--top hint--large" aria-label="A unique identifier that can be used to reference this connection in a pipe definition, instead of directly referencing it by its ID">
                   <i class="el-icon-info blue"></i>
                 </span>
               </template>
               <el-input
-                placeholder="Alias"
+                placeholder="Enter name"
                 autocomplete="off"
                 spellcheck="false"
                 v-model="edit_connection.name"
@@ -283,7 +283,7 @@
         rules: {
           name: [
             { required: true, message: 'Please input a name', trigger: 'blur' },
-            { validator: this.formValidateAlias }
+            { validator: this.formValidateName }
           ]
         },
         form_errors: {},
@@ -433,7 +433,7 @@
           // TODO: add error handling?
         })
       },
-      formValidateAlias(rule, value, callback) {
+      formValidateName(rule, value, callback) {
         if (value.length == 0) {
           callback()
           return

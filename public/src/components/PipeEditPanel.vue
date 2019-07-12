@@ -136,7 +136,7 @@
         rules: {
           name: [
             { required: true, message: 'Please input a name', trigger: 'blur' },
-            { validator: this.formValidateAlias }
+            { validator: this.formValidateName }
           ]
         }
       }
@@ -181,7 +181,7 @@
       reset(attrs) {
         this.edit_pipe = _.assign({}, defaultAttrs(), attrs)
       },
-      formValidateAlias(rule, value, callback) {
+      formValidateName(rule, value, callback) {
         if (value.length == 0) {
           callback()
           return

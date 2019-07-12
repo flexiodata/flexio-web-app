@@ -127,7 +127,7 @@
         rules: {
           name: [
             { required: true, message: 'Please input a name', trigger: 'blur' },
-            { validator: this.formValidateAlias }
+            { validator: this.formValidateName }
           ]
         },
         form_errors: {}
@@ -175,7 +175,7 @@
       validate(callback) {
         this.$refs.form.validate(callback)
       },
-      formValidateAlias(rule, value, callback) {
+      formValidateName(rule, value, callback) {
         if (value.length == 0) {
           callback()
           return
