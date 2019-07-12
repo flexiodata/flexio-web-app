@@ -37,6 +37,8 @@
           <div class="flex-fill overflow-y-auto">
             <article
               class="min-w5 pa3 bb b--black-05 bg-white hover-bg-nearer-white"
+              :class="isPipeSelected(pipe) ? 'relative bg-nearer-white' : ''"
+              @click="selectPipe(pipe)"
               v-for="pipe in pipes"
             >
               <div class="f5 fw6 cursor-default mr1">{{pipe.name}}</div>
@@ -124,36 +126,6 @@
       ...mapGetters([
         'getAllPipes'
       ]),
-      loadPipe(identifier) {
-        var pipe
-
-        if (identifier) {
-          pipe = _.find(this.pipes, { eid: identifier })
-          if (!pipe) {
-            pipe = _.find(this.pipes, { name: identifier })
-          }
-        }
-
-        this.selectPipe(pipe, !identifier)
-      },
-      selectPipe(item, push_route) {
-        var pipe = item
-
-        if (!pipe) {
-          pipe = _.first(this.pipes)
-        }
-
-        this.pipe = _.cloneDeep(pipe)
-        this.last_selected = _.cloneDeep(pipe)
-
-        // update the route
-        var name = _.get(pipe, 'name', '')
-        var identifier = name.length > 0 ? name : _.get(pipe, 'eid', '')
-
-        var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
-        _.set(new_route, 'params.identifier', identifier)
-        this.$router[push_route === false ? 'replace' : 'push'](new_route)
-      },
       openPipe(eid) {
         // TODO: this component shouldn't have anything to do with the route or store state
         var ru = this.routed_user
@@ -208,6 +180,42 @@
         }).catch(() => {
           // do nothing
         })
+      },
+      loadPipe(identifier) {
+        var pipe
+
+        if (identifier) {
+          pipe = _.find(this.pipes, { eid: identifier })
+          if (!pipe) {
+            pipe = _.find(this.pipes, { name: identifier })
+          }
+        }
+
+        this.selectPipe(pipe, false)
+      },
+      selectPipe(item, push_route) {
+        var pipe = item
+
+        if (!pipe) {
+          pipe = _.first(this.pipes)
+        }
+
+        this.pipe = _.cloneDeep(pipe)
+        this.last_selected = _.cloneDeep(pipe)
+
+        // update the route
+        if (push_route !== false) {
+          // update the route
+          var name = _.get(pipe, 'name', '')
+          var identifier = name.length > 0 ? name : _.get(pipe, 'eid', '')
+
+          var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
+          _.set(new_route, 'params.identifier', identifier)
+          this.$router.push(new_route)
+        }
+      },
+      isPipeSelected(pipe) {
+        return _.get(this.pipe, 'eid') === pipe.eid
       },
       onNewPipeClick() {
         // when creating a new pipe, start out with a basic Python 'Hello World' script

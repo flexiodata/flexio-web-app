@@ -284,13 +284,6 @@
           })
         })
       },
-      updateRoute() {
-        // update the route
-        var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
-        var view = this.active_view
-        _.set(new_route, 'params.view', view)
-        this.$router.replace(new_route)
-      },
       loadConnection(identifier) {
         var conn
 
@@ -301,7 +294,7 @@
           }
         }
 
-        this.selectConnection(conn, !identifier)
+        this.selectConnection(conn, false)
       },
       selectConnection(item, push_route) {
         var conn = item
@@ -314,12 +307,15 @@
         this.last_selected = _.cloneDeep(conn)
 
         // update the route
-        var name = _.get(conn, 'name', '')
-        var identifier = name.length > 0 ? name : _.get(conn, 'eid', '')
+        if (push_route !== false) {
+          // update the route
+          var name = _.get(conn, 'name', '')
+          var identifier = name.length > 0 ? name : _.get(conn, 'eid', '')
 
-        var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
-        _.set(new_route, 'params.identifier', identifier)
-        this.$router[push_route === false ? 'replace' : 'push'](new_route)
+          var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
+          _.set(new_route, 'params.identifier', identifier)
+          this.$router.push(new_route)
+        }
       },
       cancelChanges(item) {
         this.connection = _.cloneDeep(this.last_selected)
