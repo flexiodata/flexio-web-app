@@ -164,6 +164,7 @@
     data() {
       return {
         mode: 'static',
+        is_selecting: false,
         connection: {},
         last_selected: {},
         show_connection_new_dialog: false
@@ -294,11 +295,14 @@
           }
         }
 
-        this.selectConnection(conn, false)
+        this.selectConnection(conn)
       },
-      selectConnection(item, push_route) {
-        var conn = item
+      selectConnection(item) {
+        if (this.connections.length == 0) {
+          return
+        }
 
+        var conn = item
         if (!conn) {
           conn = _.first(this.connections)
         }
@@ -306,15 +310,17 @@
         this.connection = _.cloneDeep(conn)
         this.last_selected = _.cloneDeep(conn)
 
-        // update the route
-        if (push_route !== false) {
+        if (!this.is_selecting) {
           // update the route
           var name = _.get(conn, 'name', '')
           var identifier = name.length > 0 ? name : _.get(conn, 'eid', '')
 
           var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
           _.set(new_route, 'params.identifier', identifier)
-          this.$router.push(new_route)
+          this.$router[!this.route_identifier?'replace':'push'](new_route)
+
+          this.is_selecting = true
+          this.$nextTick(() => { this.is_selecting = false })
         }
       },
       cancelChanges(item) {

@@ -89,6 +89,7 @@
     data() {
       return {
         mode: 'static',
+        is_selecting: false,
         pipe: {},
         last_selected: {}
       }
@@ -190,11 +191,14 @@
           }
         }
 
-        this.selectPipe(pipe, false)
+        this.selectPipe(pipe)
       },
       selectPipe(item, push_route) {
-        var pipe = item
+        if (this.pipes.length == 0) {
+          return
+        }
 
+        var pipe = item
         if (!pipe) {
           pipe = _.first(this.pipes)
         }
@@ -202,15 +206,17 @@
         this.pipe = _.cloneDeep(pipe)
         this.last_selected = _.cloneDeep(pipe)
 
-        // update the route
-        if (push_route !== false) {
+        if (!this.is_selecting) {
           // update the route
           var name = _.get(pipe, 'name', '')
           var identifier = name.length > 0 ? name : _.get(pipe, 'eid', '')
 
           var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
           _.set(new_route, 'params.identifier', identifier)
-          this.$router.push(new_route)
+          this.$router[!this.route_identifier?'replace':'push'](new_route)
+
+          this.is_selecting = true
+          this.$nextTick(() => { this.is_selecting = false })
         }
       },
       isPipeSelected(pipe) {
