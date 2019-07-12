@@ -21,15 +21,7 @@
 
       <div class="flex-fill flex flex-column">
         <div class="f5 fw6 cursor-default mr1">{{cname}}</div>
-        <div class="flex flex-row items-center">
-          <div class="light-silver" style="margin: 3px 3px 0 0" v-if="is_storage && false">
-            <i class="db material-icons hint--top" aria-label="Storage connection" style="font-size: 14px">layers</i>
-          </div>
-          <div class="light-silver" style="margin: 3px 3px 0 0" v-if="is_email && false">
-            <i class="db material-icons hint--top" aria-label="Email connection" style="font-size: 14px">email</i>
-          </div>
-          <div class="flex-fill light-silver f8 lh-copy" style="margin-top: 3px" v-if="showShortDescription && short_desc.length > 0">{{short_desc}}</div>
-        </div>
+        <div class="light-silver f8 lh-copy" style="margin-top: 3px" v-if="showShortDescription && short_desc.length > 0">{{short_desc}}</div>
         <div class="bt b--black-05" style="padding-top: 2px; margin-top: 2px; max-width: 12rem" v-if="showUrl && url.length > 0">
           <div class="light-silver f8 lh-copy truncate">{{url}}</div>
         </div>

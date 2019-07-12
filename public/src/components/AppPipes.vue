@@ -44,6 +44,7 @@
               v-for="pipe in pipes"
             >
               <div class="f5 fw6 cursor-default mr1 lh-title truncate">{{pipe.name}}</div>
+              <div class="light-silver f8 lh-copy" style="margin-top: 3px" v-if="pipe.short_description.length > 0">{{pipe.short_description}}</div>
             </article>
           </div>
         </div>
