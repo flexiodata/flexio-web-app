@@ -19,16 +19,8 @@
         </div>
       </div>
       <div class="flex-fill flex flex-column">
-        <div class="f5 fw6">{{item.short_description}}</div>
-        <div class="flex flex-row items-center">
-          <div class="light-silver" style="margin: 3px 3px 0 0" v-if="is_storage">
-            <i class="db material-icons hint--top" aria-label="Storage connection" style="font-size: 14px">layers</i>
-          </div>
-          <div class="light-silver" style="margin: 3px 3px 0 0" v-if="is_email">
-            <i class="db material-icons hint--top" aria-label="Email connection" style="font-size: 14px">email</i>
-          </div>
-          <div class="flex-fill light-silver f8 lh-copy code" v-if="identifier.length > 0">{{identifier}}</div>
-        </div>
+        <div class="f5 fw6 cursor-default">{{item.name}}</div>
+        <div class="light-silver f8 lh-copy" style="margin-top: 3px" v-if="short_desc.length > 0">{{short_desc}}</div>
       </div>
       <el-button
         plain
@@ -93,8 +85,8 @@
       cstatus() {
         return _.get(this.item, 'connection_status', '')
       },
-      identifier() {
-        return this.cname.length > 0 ? this.cname : this.eid
+      short_desc() {
+        return _.get(this.item, 'short_description', '')
       },
       is_selected() {
         var cid = this.connectionIdentifier
