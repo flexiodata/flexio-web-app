@@ -42,7 +42,8 @@
               </tr>
               <tr v-if="has_basepath">
                 <td>Base Path</td>
-                <td :class="base_path.length == 0 ? 'i moon-gray' : 'f6 fw6'">{{base_path.length == 0 ? '(root folder)' : identifier + ':' + base_path}}</td>
+                <td class="f6 fw6" v-if="base_path.length == 0">{{identifier + ':/'}}</td>
+                <td class="f6 fw6" v-else>{{identifier + ':' + base_path}}</td>
               </tr>
             </tbody>
           </table>
