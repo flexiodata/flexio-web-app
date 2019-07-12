@@ -128,7 +128,7 @@
 
 <script>
   import { getDeployScheduleStr } from '../utils/pipe'
-  import { ROUTE_PIPE_PAGE } from '../constants/route'
+  import { ROUTE_APP_PIPES } from '../constants/route'
   import LabelSwitch from '@comp/LabelSwitch'
   import SortArrows from '@comp/SortArrows'
 
@@ -240,7 +240,7 @@
         var user_identifier = ru && ru.length > 0 ? ru : null
         //var identifier = this.identifier
         var identifier = _.get(this.item, 'eid', '')
-        return { name: ROUTE_PIPE_PAGE, params: { user_identifier, identifier } }
+        return { name: ROUTE_APP_PIPES, params: { user_identifier, identifier } }
       },
       execution_cnt() {
         return parseInt(_.get(this.item, 'stats.total_count', '0'))

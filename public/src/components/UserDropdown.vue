@@ -30,7 +30,7 @@
 <script>
   import {
     ROUTE_APP_ACCOUNT,
-    ROUTE_PIPE_PAGE,
+    ROUTE_APP_PIPES,
     ROUTE_SIGNIN_PAGE
   } from '../constants/route'
   import { HOSTNAME } from '../constants/common'
@@ -92,7 +92,7 @@
           var ru = this.routed_user
           var user_identifier = ru && ru.length > 0 ? ru : null
           var identifier = pipe.eid
-          this.$router.push({ name: ROUTE_PIPE_PAGE, params: { user_identifier, identifier } })
+          this.$router.push({ name: ROUTE_APP_PIPES, params: { user_identifier, identifier } })
         }).catch(error => {
           // TODO: add error handling?
         })

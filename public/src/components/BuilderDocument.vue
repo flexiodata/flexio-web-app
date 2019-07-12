@@ -71,7 +71,7 @@
   import yaml from 'js-yaml'
   import stickybits from 'stickybits'
   import { mapState, mapGetters } from 'vuex'
-  import { ROUTE_APP_BUILDER, ROUTE_PIPE_PAGE } from '../constants/route'
+  import { ROUTE_APP_BUILDER, ROUTE_APP_PIPES } from '../constants/route'
   import { PROCESS_MODE_BUILD } from '../constants/process'
   import Flexio from 'flexio-sdk-js'
   import Spinner from 'vue-simple-spinner'
@@ -333,7 +333,7 @@
         var user_identifier = ru && ru.length > 0 ? ru : null
         var identifier = eid
 
-        this.$router.push({ name: ROUTE_PIPE_PAGE, params: { user_identifier, identifier } })
+        this.$router.push({ name: ROUTE_APP_PIPES, params: { user_identifier, identifier } })
       },
       updateItemState(values, index) {
         this.$store.commit('builder/UPDATE_ATTRS', values)

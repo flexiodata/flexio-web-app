@@ -1,11 +1,10 @@
 import router from '@/router' // VueRouter
 import store from '@/store' // Vuex store
 import {
+  ROUTE_APP_BUILDER,
   ROUTE_INITSESSION_PAGE,
   ROUTE_SIGNIN_PAGE,
-  ROUTE_SIGNUP_PAGE,
-  ROUTE_APP_BUILDER,
-  ROUTE_APP_PIPES
+  ROUTE_SIGNUP_PAGE
 } from '../constants/route'
 import {
   CHANGE_ACTIVE_DOCUMENT,

@@ -27,7 +27,7 @@
 </template>
 
 <script>
-  import { ROUTE_APP_ACCOUNT, ROUTE_PIPE_PAGE } from '../constants/route'
+  import { ROUTE_APP_ACCOUNT, ROUTE_APP_PIPES } from '../constants/route'
   import { mapState, mapGetters } from 'vuex'
 
   export default {
@@ -38,7 +38,7 @@
       show_breadcrumbs() {
         switch (this.$route.name) {
           case ROUTE_APP_ACCOUNT:
-          case ROUTE_PIPE_PAGE:
+          case ROUTE_APP_PIPES:
             return true
         }
 
@@ -52,7 +52,7 @@
         return _.get(this.getActiveDocument(), 'short_description', '')
       },
       is_pipes() {
-        return this.$route.name == ROUTE_PIPE_PAGE
+        return this.$route.name == ROUTE_APP_PIPES
       }
     },
     methods: {
