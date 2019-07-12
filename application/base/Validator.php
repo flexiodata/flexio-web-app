@@ -237,8 +237,6 @@ class Validator
                     $invalid_values[] = $key . ":" . self::makeString($p);
                 if ($value['type'] == 'password' && !$this->check_password($p))
                     $invalid_values[] = $key . ":" . self::makeString($p);
-                if ($value['type'] == 'alias' && !$this->check_alias($p))
-                    $invalid_values[] = $key . ":" . self::makeString($p);
                 if ($value['type'] == 'json' && !$this->check_json($p))
                     $invalid_values[] = $key . ":" . self::makeString($p);
                 if ($value['type'] == 'object' && !$this->check_object($p))
@@ -413,20 +411,6 @@ class Validator
             return false;
 
         if (!\Flexio\Base\Password::isValid($value))
-            return false;
-
-        return true;
-    }
-
-    private function check_alias($value) : bool
-    {
-        // TODO: remove when alias migration is complete
-
-        if (!is_string($value))
-            return false;
-
-        // note: include strlen check so that aliases can be zero length so they can be set to ''
-        if ((strlen($value) > 0 && !\Flexio\Base\Identifier::isValid($value)))
             return false;
 
         return true;
