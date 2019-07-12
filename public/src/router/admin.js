@@ -1,6 +1,6 @@
 import store from '@/store'
 import * as types from '@/store/mutation-types'
-import { ROUTE_ADMIN_PAGE } from '@/constants/route'
+import { ROUTE_APP_ADMIN } from '@/constants/route'
 import AdminHome from '@comp/AdminHome'
 import AdminActivity from '@comp/AdminActivity'
 import AdminTest from '@comp/AdminTest'
@@ -19,7 +19,7 @@ export default {
     {
       // redirect to /admin/users
       path: '',
-      name: ROUTE_ADMIN_PAGE,
+      name: ROUTE_APP_ADMIN,
       redirect: 'users'
     },
     {

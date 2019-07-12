@@ -4,8 +4,8 @@ import {
   ROUTE_INITSESSION_PAGE,
   ROUTE_SIGNIN_PAGE,
   ROUTE_SIGNUP_PAGE,
-  ROUTE_BUILDER_PAGE,
-  ROUTE_PIPE_LIST_PAGE
+  ROUTE_APP_BUILDER,
+  ROUTE_APP_PIPES
 } from '../constants/route'
 import {
   CHANGE_ACTIVE_DOCUMENT,
@@ -44,7 +44,7 @@ router.beforeEach((to, from, next) => {
   }
 
   const redirectToSignIn = () => {
-    var redirect_to_signup = to.name == ROUTE_BUILDER_PAGE
+    var redirect_to_signup = to.name == ROUTE_APP_BUILDER
     next({
       name: redirect_to_signup ? ROUTE_SIGNUP_PAGE : ROUTE_SIGNIN_PAGE,
       query: { redirect: to.fullPath }

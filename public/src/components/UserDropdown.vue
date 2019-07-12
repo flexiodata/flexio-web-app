@@ -29,7 +29,7 @@
 
 <script>
   import {
-    ROUTE_ACCOUNT_PAGE,
+    ROUTE_APP_ACCOUNT,
     ROUTE_PIPE_PAGE,
     ROUTE_SIGNIN_PAGE
   } from '../constants/route'
@@ -98,7 +98,7 @@
         })
       },
       gotoAccount() {
-        this.$router.push({ name: ROUTE_ACCOUNT_PAGE })
+        this.$router.push({ name: ROUTE_APP_ACCOUNT })
       },
       signOut() {
         this.$store.dispatch('v2_action_signOut').then(response => {

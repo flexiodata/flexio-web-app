@@ -71,7 +71,7 @@
   import yaml from 'js-yaml'
   import stickybits from 'stickybits'
   import { mapState, mapGetters } from 'vuex'
-  import { ROUTE_BUILDER_PAGE, ROUTE_PIPE_PAGE } from '../constants/route'
+  import { ROUTE_APP_BUILDER, ROUTE_PIPE_PAGE } from '../constants/route'
   import { PROCESS_MODE_BUILD } from '../constants/process'
   import Flexio from 'flexio-sdk-js'
   import Spinner from 'vue-simple-spinner'
@@ -165,7 +165,7 @@
         pipe: state => state.builder.pipe
       }),
       is_builder_document() {
-        return this.$route.name == ROUTE_BUILDER_PAGE
+        return this.$route.name == ROUTE_APP_BUILDER
       },
       slug() {
         if (this.is_builder_document) {

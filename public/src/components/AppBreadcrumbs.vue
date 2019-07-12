@@ -27,7 +27,7 @@
 </template>
 
 <script>
-  import { ROUTE_ACCOUNT_PAGE, ROUTE_PIPE_PAGE } from '../constants/route'
+  import { ROUTE_APP_ACCOUNT, ROUTE_PIPE_PAGE } from '../constants/route'
   import { mapState, mapGetters } from 'vuex'
 
   export default {
@@ -37,7 +37,7 @@
       ]),
       show_breadcrumbs() {
         switch (this.$route.name) {
-          case ROUTE_ACCOUNT_PAGE:
+          case ROUTE_APP_ACCOUNT:
           case ROUTE_PIPE_PAGE:
             return true
         }
@@ -45,7 +45,7 @@
         return false
       },
       doc_name() {
-        if (this.$route.name == ROUTE_ACCOUNT_PAGE) {
+        if (this.$route.name == ROUTE_APP_ACCOUNT) {
           return 'Account Settings'
         }
 

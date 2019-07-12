@@ -1,4 +1,4 @@
-import { ROUTE_PIPE_LIST_PAGE } from '../../constants/route'
+import { ROUTE_APP_PIPES } from '../../constants/route'
 
 // allows any component to set the active project; if the project hasn't yet
 // been fetched from the server, this mixin will do that as well and then
@@ -26,7 +26,7 @@ export default {
       if (redirect && redirect.length > 0) {
         this.$router[method]({ path: redirect })
       } else {
-        this.$router[method]({ name: ROUTE_PIPE_LIST_PAGE })
+        this.$router[method]({ name: ROUTE_APP_PIPES })
       }
     }
   }
