@@ -695,7 +695,7 @@
         return 'Test connection'
       },
       oauth_url() {
-        var eid =  _.get(this, 'connection.eid', '')
+        var eid =  _.get(this.connection, 'eid', '')
         return 'https://' + HOSTNAME + '/oauth2/connect' + '?service=' + this.ctype + '&eid=' + eid
       }
     },
@@ -734,7 +734,7 @@
         this.$emit('change', { connection_info: this.connection_info })
       },
       getConnectionType() {
-        return _.get(this, 'connection.connection_type', '')
+        return _.get(this.connection, 'connection_type', '')
       },
       getDefaultPort() {
         // we use a method here since we can't use computed values in the data()

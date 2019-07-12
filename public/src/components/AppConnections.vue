@@ -61,6 +61,14 @@
             :connection="connection"
             @edit-click="mode = 'edit'"
           />
+          <div class="flex-fill mt3 pt3 bt b--black-05"
+            v-if="is_keyring_connection"
+          >
+            <div class="mb2 lh-copy ttu fw6 f6">Keypair Values</div>
+            <JsonDetailsPanel
+              :json="connection.connection_info"
+            />
+          </div>
           <FileChooser class="flex-fill mt3"
             :connection="connection"
             v-if="is_storage_connection"
@@ -111,7 +119,7 @@
 </template>
 
 <script>
-  import { CONNECTION_TYPE_HTTP } from '../constants/connection-type'
+  import { CONNECTION_TYPE_HTTP, CONNECTION_TYPE_KEYRING } from '../constants/connection-type'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
@@ -119,6 +127,7 @@
   import ConnectionEditPanel from '@comp/ConnectionEditPanel'
   import ConnectionStaticPanel from '@comp/ConnectionStaticPanel'
   import FileChooser from '@comp/FileChooser'
+  import JsonDetailsPanel from '@comp/JsonDetailsPanel'
   import EmptyItem from '@comp/EmptyItem'
   import PageNotFound from '@comp/PageNotFound'
   import MixinConnection from '@comp/mixins/connection'
@@ -134,6 +143,7 @@
       ConnectionEditPanel,
       ConnectionStaticPanel,
       FileChooser,
+      JsonDetailsPanel,
       EmptyItem,
       PageNotFound
     },
@@ -144,22 +154,7 @@
       },
       connections(val, old_val) {
         if (!this.has_connection) {
-          var identifier = _.get(this.$route, 'params.identifier', '')
-          if (identifier.length == 0) {
-            var c = _.first(this.connections)
-            if (c) {
-              var alias = _.get(c, 'alias', '')
-              identifier = alias.length > 0 ? alias : _.get(c, 'eid', '')
-            }
-          }
-          if (identifier.length > 0) {
-            this.loadConnection(identifier)
-
-            // update the route
-            var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
-            _.set(new_route, 'params.identifier', identifier)
-            this.$router.replace(new_route)
-          }
+          this.loadConnection(this.route_identifier)
         }
       }
     },
@@ -194,6 +189,9 @@
       },
       is_storage_connection() {
         return this.$_Connection_isStorage(this.connection)
+      },
+      is_keyring_connection() {
+        return this.ctype == CONNECTION_TYPE_KEYRING
       },
       has_connection() {
         return this.ctype.length > 0
@@ -297,29 +295,36 @@
         this.$router.replace(new_route)
       },
       loadConnection(identifier) {
-        if (identifier) {
-          var c = _.find(this.connections, { eid: identifier })
-          if (!c) {
-            c = _.find(this.connections, { alias: identifier })
-          }
-          if (c) {
-            this.connection = _.cloneDeep(c)
-            this.last_selected = _.cloneDeep(c)
-          }
-        } else {
-          var c = _.first(this.connections)
-          this.connection = _.cloneDeep(c)
-          this.last_selected = _.cloneDeep(c)
-        }
-      },
-      selectConnection(item) {
-        var alias = _.get(item, 'alias', '')
-        var identifier = alias.length > 0 ? alias : _.get(item, 'eid', '')
+        var conn
 
-        // update the route
-        var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
-        _.set(new_route, 'params.identifier', identifier)
-        this.$router.push(new_route)
+        if (identifier) {
+          conn = _.find(this.connections, { eid: identifier })
+          if (!conn) {
+            conn = _.find(this.connections, { alias: identifier })
+          }
+        }
+
+        this.selectConnection(conn, false)
+      },
+      selectConnection(item, push_route) {
+        var conn = item
+
+        if (!conn) {
+          conn = _.first(this.connections)
+        }
+
+        this.connection = _.cloneDeep(conn)
+        this.last_selected = _.cloneDeep(conn)
+
+        if (push_route !== false) {
+          // update the route
+          var alias = _.get(conn, 'alias', '')
+          var identifier = alias.length > 0 ? alias : _.get(conn, 'eid', '')
+
+          var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
+          _.set(new_route, 'params.identifier', identifier)
+          this.$router.push(new_route)
+        }
       },
       cancelChanges(item) {
         this.connection = _.cloneDeep(this.last_selected)
