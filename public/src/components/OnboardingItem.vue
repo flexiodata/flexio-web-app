@@ -135,9 +135,9 @@
         show_connection_new_dialog: false,
         show_pipe_save_dialog: false,
         show_pipe_deploy_dialog: false,
-        connection_alias: 'home',
+        connection_name: 'home',
         pipe: {},
-        pipe_alias: '',
+        pipe_name: '',
         pipe_short_description: ''
       }
     },
@@ -153,8 +153,8 @@
         item.code = item.code.replace('{{username}}', this.username)
 
         _.each(item.steps, (step) => {
-          step.blurb = step.blurb.replace(/{{connection_alias}}/g, this.connection_alias)
-          step.blurb = step.blurb.replace(/{{pipe_alias}}/g, this.pipe_alias)
+          step.blurb = step.blurb.replace(/{{connection_name}}/g, this.connection_name)
+          step.blurb = step.blurb.replace(/{{pipe_name}}/g, this.pipe_name)
           step.blurb = step.blurb.replace(/{{username}}/g, this.username || '')
         })
 
@@ -180,14 +180,14 @@ If you have any questions, please send us a note using the chat button at the bo
       },
       pipe_attrs() {
         var attrs = {
-          alias: _.get(this.edit_item, 'id', ''),
+          name: _.get(this.edit_item, 'id', ''),
           short_description: _.get(this.edit_item, 'short_description', ''),
           description: ''
         }
 
-        // clean up alias
-        attrs.alias = attrs.alias.trim()
-        attrs.alias = attrs.alias.toLowerCase().replace(/\s/g, '-')
+        // clean up name
+        attrs.name = attrs.name.trim()
+        attrs.name = attrs.name.toLowerCase().replace(/\s/g, '-')
 
         return attrs
       }
@@ -253,7 +253,7 @@ If you have any questions, please send us a note using the chat button at the bo
         var ctype = _.get(attrs, 'connection_type', '')
         var is_pending = _.get(attrs, 'eid_status', '') === OBJECT_STATUS_PENDING
 
-        attrs = _.pick(attrs, ['short_description', 'alias', 'description', 'connection_info'])
+        attrs = _.pick(attrs, ['name', 'short_description', 'description', 'connection_info'])
         _.assign(attrs, { eid_status: OBJECT_STATUS_AVAILABLE })
 
         // update the connection and make it available
@@ -265,7 +265,7 @@ If you have any questions, please send us a note using the chat button at the bo
             // TODO: add error handling?
           })
 
-          this.connection_alias = _.get(connection, 'alias', '')
+          this.connection_name = _.get(connection, 'name', '')
 
           this.show_connection_new_dialog = false
 
@@ -283,10 +283,10 @@ If you have any questions, please send us a note using the chat button at the bo
 
         this.$store.dispatch('v2_action_createPipe', { attrs }).then(response => {
           var pipe = response.data
-          var analytics_payload = _.pick(pipe, ['eid', 'short_description', 'description', 'alias', 'created'])
+          var analytics_payload = _.pick(pipe, ['eid', 'name', 'short_description', 'description', 'created'])
 
           this.pipe_short_description = _.get(pipe, 'short_description', '')
-          this.pipe_alias = _.get(pipe, 'alias', '')
+          this.pipe_name = _.get(pipe, 'name', '')
           this.pipe = _.cloneDeep(pipe)
 
           this.$nextTick(() => { this.show_pipe_save_dialog = false })
