@@ -82,9 +82,27 @@ class Connection extends ModelBase
 
     public function delete(string $eid) : bool
     {
+        // if the item doesn't exist, return false
+        if (!\Flexio\Base\Eid::isValid($eid))
+            return false;
+        if ($this->exists($eid) === false)
+            return false;
+
         // set the status to deleted and clear out any existing name
-        $params = array('eid_status' => \Model::STATUS_DELETED, 'name' => '');
-        return $this->set($eid, $params);
+        $db = $this->getDatabase();
+        $db->beginTransaction();
+        try
+        {
+            $process_arr = array('eid_status' => \Model::STATUS_DELETED, 'name' => '');
+            $db->update('tbl_connection', $process_arr, 'eid = ' . $db->quote($eid));
+            $db->commit();
+            return true;
+        }
+        catch (\Exception $e)
+        {
+            $db->rollback();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, (IS_DEBUG() ? $e->getMessage() : null));
+        }
     }
 
     public function purge(string $owner_eid) : bool
