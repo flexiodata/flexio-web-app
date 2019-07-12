@@ -619,8 +619,8 @@
         }
       },
       pipe_identifier() {
-        var alias = this.edit_pipe.alias
-        return alias.length > 0 ? alias : _.get(this.edit_pipe, 'eid', '')
+        var pname = this.edit_pipe.name
+        return pname.length > 0 ? pname : _.get(this.edit_pipe, 'eid', '')
       },
       pipe_schedule() {
         return _.get(this.edit_pipe, 'schedule', {})
@@ -736,7 +736,7 @@
         this.$store.track('Opened Schedule Dialog')
       },
       saveProperties(attrs) {
-        attrs = _.pick(attrs, ['short_description', 'description', 'alias'])
+        attrs = _.pick(attrs, ['name', 'short_description', 'description'])
 
         var pipe = _.cloneDeep(this.edit_pipe)
         _.assign(pipe, attrs)

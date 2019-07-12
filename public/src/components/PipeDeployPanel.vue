@@ -246,7 +246,7 @@
             v-model.trim="gsheets_code"
           />
         </li>
-        <li><p class="lh-copy">Once the script file has been saved, you can run any Flex.io pipe using its alias. This pipe can be run by typing <code style="padding: 2px 4px; border-radius: 2px" class="bg-black-10">{{gsheets_custom_function}}</code> into a cell in your spreadsheet.</p></li>
+        <li><p class="lh-copy">Once the script file has been saved, you can run any Flex.io pipe using its name. This pipe can be run by typing <code style="padding: 2px 4px; border-radius: 2px" class="bg-black-10">{{gsheets_custom_function}}</code> into a cell in your spreadsheet.</p></li>
         <li><p class="lh-copy">More instructions can be found on the <a href="https://developers.google.com/apps-script/guides/sheets/functions" target="_blank">Custom Functions in Google Sheets</a> page.</p></li>
       </ol>
     </el-dialog>
@@ -270,12 +270,12 @@
   const INACTIVE = 'I'
 
   const GOOGLE_SHEETS_DEPLOY_CODE = `
-function FLEX(alias) {
+function FLEX(name) {
 
   // flexio api key to use
   var flexio_api_key = '{{api_key}}';
 
-  // get the arguments, except the first, which is the pipe alias
+  // get the arguments, except the first, which is the pipe name
   var args = Array.prototype.slice.call(arguments, 1);
 
   // call the flexio pipe with the function arguments
@@ -287,7 +287,7 @@ function FLEX(alias) {
     },
     'payload': JSON.stringify(args)
   };
-  var url = 'https://api.flex.io/v1/me/pipes/'+ alias +'/run';
+  var url = 'https://api.flex.io/v1/me/pipes/'+ name +'/run';
   var result = UrlFetchApp.fetch(url, options).getContentText();
   var result = JSON.parse(result);
 

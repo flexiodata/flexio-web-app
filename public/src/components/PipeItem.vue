@@ -228,8 +228,8 @@
         }
       },
       identifier() {
-        var alias = this.item.alias
-        return alias.length > 0 ? alias : _.get(this.item, 'eid', '')
+        var pname = this.item.name
+        return pname.length > 0 ? pname : _.get(this.item, 'eid', '')
       },
       routed_user() {
         return this.$store.state.routed_user
@@ -309,7 +309,7 @@
         this.$router.push(this.pipe_route)
       },
       getAnalyticsPayload(pipe) {
-        var analytics_payload = _.pick(pipe, ['eid', 'short_description', 'alias'])
+        var analytics_payload = _.pick(pipe, ['name', 'eid', 'short_description'])
         _.assign(analytics_payload, { title: pipe.short_description })
 
         return analytics_payload

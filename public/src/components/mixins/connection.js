@@ -6,14 +6,14 @@ export default {
     $_Connection_getConnectionByIdentifier(id) {
       var connections = _.filter(this.$store.state.objects, { eid_type: OBJECT_TYPE_CONNECTION })
       return _.find(connections, (c) => {
-        var alias = _.get(c, 'alias', '')
-        return alias.length > 0 ? alias == id : c.eid == id
+        var cname = _.get(c, 'name', '')
+        return cname.length > 0 ? cname == id : c.eid == id
       })
     },
     $_Connection_getConnectionIdentifier(c) {
-      var alias = _.get(c, 'alias', '')
+      var cname = _.get(c, 'name', '')
       var eid = _.get(c, 'eid', '')
-      return alias.length > 0 ? alias : eid
+      return cname.length > 0 ? cname : eid
     },
     $_Connection_getInfo(c, key, def) {
       var connection_type = c.connection_type || c
