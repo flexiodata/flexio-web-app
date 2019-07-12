@@ -42,8 +42,8 @@
               </tr>
               <tr v-if="has_basepath">
                 <td>Base Path</td>
-                <td class="f6 fw6" v-if="base_path.length == 0">{{identifier + ':/'}}</td>
-                <td class="f6 fw6" v-else>{{identifier + ':' + base_path}}</td>
+                <td class="f6" v-if="base_path.length == 0"><em class="moon-gray">(root folder)</em></td>
+                <td class="f6 fw6" v-else>{{base_path}}</td>
               </tr>
             </tbody>
           </table>
@@ -96,10 +96,6 @@
       },
       is_available() {
         return this.cstatus == CONNECTION_STATUS_AVAILABLE
-      },
-      identifier() {
-        var cname = _.get(this.connection, 'name', '')
-        return cname.length > 0 ? cname : _.get(this.connection, 'eid', '')
       },
       url() {
         return _.get(this.connection, 'connection_info.url', '')
