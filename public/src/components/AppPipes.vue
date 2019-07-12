@@ -26,7 +26,7 @@
                   size="small"
                   type="primary"
                   class="ttu fw6"
-                  @click="show_pipe_new_dialog = true"
+                  @click="onNewPipeClick"
                 >
                   New
                 </el-button>
@@ -90,8 +90,7 @@
       return {
         mode: 'static',
         pipe: {},
-        last_selected: {},
-        show_pipe_new_dialog: false
+        last_selected: {}
       }
     },
     computed: {
