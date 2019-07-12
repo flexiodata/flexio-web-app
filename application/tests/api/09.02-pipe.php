@@ -38,8 +38,8 @@ class Test
             'token' => $token1,
             'content_type' => 'application/json',
             'params' => '{
-                "name": "Test Pipe",
-                "alias": "alias1"
+                "name": "name1",
+                "short_description": "Test Pipe"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -52,8 +52,8 @@ class Test
             'token' => $token2,
             'content_type' => 'application/json',
             'params' => '{
-                "name": "Test Pipe",
-                "alias": "alias2"
+                "name": "name2",
+                "short_description": "Test Pipe"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -66,8 +66,8 @@ class Test
             'token' => $token1,
             'content_type' => 'application/json',
             'params' => '{
-                "name": "Test Pipe",
-                "alias": "alias3"
+                "name": "name3",
+                "short_description": "Test Pipe"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -143,7 +143,7 @@ class Test
             'token' => $token1,
             'content_type' => 'application/json',
             'params' => '{
-                "alias": "alias3"
+                "name": "name3"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -154,7 +154,7 @@ class Test
                 "code": "write-failed"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.4', 'POST /:userid/pipes/:objeid; fail if alias already exists',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.4', 'POST /:userid/pipes/:objeid; fail if name already exists',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -163,7 +163,7 @@ class Test
             'token' => $token1,
             'content_type' => 'application/json',
             'params' => '{
-                "alias": "alias2"
+                "name": "name2"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -173,9 +173,9 @@ class Test
             "eid": "'.$objeid1.'",
             "eid_type": "PIP",
             "eid_status": "A",
-            "alias": "alias2"
+            "name": "name2"
         }';
-        \Flexio\Tests\Check::assertInArray('A.5', 'POST /:userid/pipes/:objeid; make sure unique alias only applies within an owner',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.5', 'POST /:userid/pipes/:objeid; make sure unique name only applies within an owner',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -184,7 +184,7 @@ class Test
             'token' => $token1,
             'content_type' => 'application/json',
             'params' => '{
-                "alias": "alias1"
+                "name": "name1"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -194,9 +194,9 @@ class Test
             "eid": "'.$objeid1.'",
             "eid_type": "PIP",
             "eid_status": "A",
-            "alias": "alias1"
+            "name": "name1"
         }';
-        \Flexio\Tests\Check::assertInArray('A.6', 'POST /:userid/pipes/:objeid; allow alias to be set to what it already is',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.6', 'POST /:userid/pipes/:objeid; allow name to be set to what it already is',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -205,7 +205,7 @@ class Test
             'token' => $token1,
             'content_type' => 'application/json',
             'params' => '{
-                "alias": ""
+                "name": "another-name"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -215,9 +215,9 @@ class Test
             "eid": "'.$objeid1.'",
             "eid_type": "PIP",
             "eid_status": "A",
-            "alias": ""
+            "name": "another-name"
         }';
-        \Flexio\Tests\Check::assertInArray('A.7', 'POST /:userid/pipes/:objeid; allow alias to be reset',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.7', 'POST /:userid/pipes/:objeid; allow name to be set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $new_username = \Flexio\Base\Identifier::generate();
@@ -229,8 +229,8 @@ class Test
             'token' => $token1, // valid token for user
             'content_type' => 'application/json',
             'params' => '{
-                "name": "Test Pipe Updated",
-                "alias": "alias1-updated",
+                "name": "name1-updated",
+                "short_description": "Test Pipe Updated",
                 "description": "Test Pipe Description Updated",
                 "ui": {
                     "a": "b"
@@ -263,8 +263,8 @@ class Test
             "eid": "'.$objeid1.'",
             "eid_type": "PIP",
             "eid_status": "A",
-            "alias": "alias1-updated",
-            "name": "Test Pipe Updated",
+            "name": "name1-updated",
+            "short_description": "Test Pipe Updated",
             "description": "Test Pipe Description Updated",
             "ui": {
                 "a": "b"
@@ -429,8 +429,8 @@ class Test
             'token' => $token1, // valid token for user
             'content_type' => 'application/json',
             'params' => '{
-                "name": "Test Pipe Updated",
-                "alias": "alias1-updated",
+                "name": "name1-updated",
+                "short_description": "Test Pipe Updated",
                 "description": "Test Pipe Description Updated",
                 "task": {
                     "op": "echo"
@@ -451,8 +451,8 @@ class Test
             "eid": "'.$objeid1.'",
             "eid_type": "PIP",
             "eid_status": "A",
-            "alias": "alias1-updated",
-            "name": "Test Pipe Updated",
+            "name": "name1-updated",
+            "short_description": "Test Pipe Updated",
             "description": "Test Pipe Description Updated",
             "task": {
                 "op": "echo"

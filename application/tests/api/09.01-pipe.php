@@ -82,8 +82,7 @@ class Test
             'token' => $token1,
             'content_type' => 'application/json',
             'params' => '{
-                "name": "Test Pipe",
-                "alias": "",
+                "name": "name1",
                 "description": "Test Pipe Description",
                 "ui": {
                     "a": "b"
@@ -115,8 +114,7 @@ class Test
         {
             "eid_type": "PIP",
             "eid_status": "A",
-            "alias": "",
-            "name": "Test Pipe",
+            "name": "name1",
             "description": "Test Pipe Description",
             "ui": {
                 "a": "b"
@@ -157,8 +155,7 @@ class Test
             'token' => $token1,
             'content_type' => 'application/json',
             'params' => '{
-                "name": "Test Pipe",
-                "alias": "",
+                "name": "name2",
                 "description": "Test Pipe Description",
                 "schedule": {
                     "frequency": "daily",
@@ -180,8 +177,7 @@ class Test
         {
             "eid_type": "PIP",
             "eid_status": "A",
-            "alias": "",
-            "name": "Test Pipe",
+            "name": "name2",
             "description": "Test Pipe Description",
             "schedule": {
                 "frequency": "daily",
@@ -210,8 +206,7 @@ class Test
             'token' => $token1,
             'content_type' => 'application/json',
             'params' => '{
-                "name": "Test Pipe",
-                "alias": "",
+                "name": "name3",
                 "description": "Test Pipe Description",
                 "schedule": {
                     "frequency": "daily",
@@ -233,8 +228,7 @@ class Test
         {
             "eid_type": "PIP",
             "eid_status": "A",
-            "alias": "",
-            "name": "Test Pipe",
+            "name": "name3",
             "description": "Test Pipe Description",
             "schedule": {
                 "frequency": "daily",
@@ -263,8 +257,7 @@ class Test
             'token' => $token1,
             'content_type' => 'application/json',
             'params' => '{
-                "name": "Test Pipe",
-                "alias": "",
+                "name": "name4",
                 "description": "Test Pipe Description",
                 "schedule": {
                     "frequency": "daily",
@@ -286,8 +279,7 @@ class Test
         {
             "eid_type": "PIP",
             "eid_status": "A",
-            "alias": "",
-            "name": "Test Pipe",
+            "name": "name4",
             "description": "Test Pipe Description",
             "schedule": {
                 "frequency": "daily",
@@ -316,8 +308,7 @@ class Test
             'token' => $token1,
             'content_type' => 'application/json',
             'params' => '{
-                "name": "Test Pipe",
-                "alias": "",
+                "name": "name5",
                 "description": "Test Pipe Description",
                 "schedule": {
                     "frequency": "daily",
@@ -339,8 +330,7 @@ class Test
         {
             "eid_type": "PIP",
             "eid_status": "A",
-            "alias": "",
-            "name": "Test Pipe",
+            "name": "name5",
             "description": "Test Pipe Description",
             "schedule": {
                 "frequency": "daily",

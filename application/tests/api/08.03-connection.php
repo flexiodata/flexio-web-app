@@ -38,8 +38,8 @@ class Test
             'token' => $token1,
             'content_type' => 'application/json',
             'params' => '{
-                "name": "Test Connection",
-                "alias": "alias1"
+                "name": "name1",
+                "short_description": "Test Connection"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -52,8 +52,8 @@ class Test
             'token' => $token2,
             'content_type' => 'application/json',
             'params' => '{
-                "name": "Test Connection",
-                "alias": "alias2"
+                "name": "name2",
+                "short_description": "Test Connection"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -66,8 +66,8 @@ class Test
             'token' => $token1,
             'content_type' => 'application/json',
             'params' => '{
-                "name": "Test Connection",
-                "alias": "alias3"
+                "name": "name3",
+                "short_description": "Test Connection"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -159,7 +159,7 @@ class Test
         // BEGIN TEST
         $params = array(
             'method' => 'DELETE',
-            'url' => "$apibase/$userid1/connections/alias3",
+            'url' => "$apibase/$userid1/connections/name3",
             'token' => $token1
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -170,10 +170,10 @@ class Test
             "eid_type": "CTN",
             "eid_status": "D"
         }';
-        \Flexio\Tests\Check::assertInArray('A.6', 'DELETE /:userid/connections/:objeid; allow deletion by alias',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.6', 'DELETE /:userid/connections/:objeid; allow deletion by name',  $actual, $expected, $results);
         $params = array(
             'method' => 'DELETE',
-            'url' => "$apibase/$userid1/connections/alias3",
+            'url' => "$apibase/$userid1/connections/name3",
             'token' => $token1
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -188,15 +188,15 @@ class Test
         \Flexio\Tests\Check::assertInArray('A.7', 'DELETE /:userid/connections/:objeid; make sure a connection is deleted',  $actual, $expected, $results);
 
         // BEGIN
-        $unique_alias = \Flexio\Base\Identifier::generate();
+        $unique_name = \Flexio\Base\Identifier::generate();
         $params = array(
             'method' => 'POST',
             'url' => "$apibase/$userid1/connections",
             'token' => $token1,
             'content_type' => 'application/json',
             'params' => '{
-                "name": "Test Connection",
-                "alias": "'.$unique_alias.'"
+                "name": "'.$unique_name.'",
+                "short_description": "Test Connection"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -204,7 +204,7 @@ class Test
         $objeid1 = $response['eid'] ?? '';
         $params = array(
             'method' => 'DELETE',
-            'url' => "$apibase/$userid1/connections/$unique_alias",
+            'url' => "$apibase/$userid1/connections/$unique_name",
             'token' => $token1
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -222,8 +222,8 @@ class Test
             'token' => $token1,
             'content_type' => 'application/json',
             'params' => '{
-                "name": "Test Connection",
-                "alias": "'.$unique_alias.'"
+                "name": "'.$unique_name.'",
+                "short_description": "Test Connection"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -232,8 +232,8 @@ class Test
         {
             "eid_type": "CTN",
             "eid_status": "A",
-            "alias": "'.$unique_alias.'"
+            "name": "'.$unique_name.'"
         }';
-        \Flexio\Tests\Check::assertInArray('A.9', 'DELETE /:userid/connections/:objeid; clear out alias when deleting a connection',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.9', 'DELETE /:userid/connections/:objeid; clear out name when deleting a connection',  $actual, $expected, $results);
     }
 }
