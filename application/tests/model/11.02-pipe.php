@@ -81,6 +81,7 @@ class Test
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
+            'name' => $handle
         );
         $eid = $model->create($info);
         $actual = $model->get($eid);
@@ -88,7 +89,7 @@ class Test
             'eid' => $eid,
             'eid_type' => \Model::TYPE_PIPE,
             'eid_status' => \Model::STATUS_AVAILABLE,
-            'name' => '',
+            'name' => $handle,
             'short_description'=>'',
             'description'  => '',
             'task' => '{}',
@@ -122,12 +123,12 @@ class Test
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
-            'name' => 'Test pipe name'
+            'name' => $handle
         );
         $eid = $model->create($info);
         $actual = $model->get($eid);
         $expected = array(
-            'name' => 'Test pipe name'
+            'name' => $handle
         );
         \Flexio\Tests\Check::assertInArray('C.2', '\Flexio\Model\Pipe::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
