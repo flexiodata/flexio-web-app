@@ -13,8 +13,8 @@ export default {
         }
       })
     }, 300),
-    $_Validation_validateAlias: function(eid_type, alias, callback) {
-      var validate_attrs = [{ eid_type, key: 'alias', value: alias, type: 'alias' }]
+    $_Validation_validateName: function(eid_type, name, callback) {
+      var validate_attrs = [{ eid_type, key: 'name', value: name, type: 'name' }]
       return this.$_Validation_validateAll(_.omitBy(validate_attrs, _.isEmpty), callback)
     },
     $_Validation_validateUsername: function(key, username, callback) {

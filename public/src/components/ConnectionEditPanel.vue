@@ -444,7 +444,7 @@
           return
         }
 
-        this.$_Validation_validateAlias(OBJECT_TYPE_CONNECTION, value, (response, errors) => {
+        this.$_Validation_validateName(OBJECT_TYPE_CONNECTION, value, (response, errors) => {
           var message = _.get(errors, 'name.message', '')
           if (message.length > 0) {
             callback(new Error(message))
