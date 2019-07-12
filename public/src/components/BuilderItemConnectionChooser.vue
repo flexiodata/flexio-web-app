@@ -149,7 +149,7 @@
           this.$emit('item-change', form_values, this.index)
           this.$emit('update:connectionIdentifier', '')
         } else {
-          var cid = _.get(connection, 'alias', '') || _.get(connection, 'eid', '')
+          var cid = _.get(connection, 'name', '') || _.get(connection, 'eid', '')
           form_values[key] = cid
           this.edit_connection = _.cloneDeep(connection)
           this.$emit('item-change', form_values, this.index)

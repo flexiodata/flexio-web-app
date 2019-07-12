@@ -119,7 +119,7 @@
     computed: {
       cid() {
         var conn = this.edit_connection
-        return _.get(conn, 'alias', '') || _.get(conn, 'eid', '')
+        return _.get(conn, 'name', '') || _.get(conn, 'eid', '')
       },
       connections() {
         var conns = this.getAvailableConnections()
@@ -162,7 +162,7 @@
           this.$emit('choose-connection', null)
           this.$emit('update:connectionIdentifier', '')
         } else {
-          var cid = _.get(connection, 'alias', '') || _.get(connection, 'eid', '')
+          var cid = _.get(connection, 'name', '') || _.get(connection, 'eid', '')
           this.edit_connection = connection
           this.$emit('choose-connection', connection)
           this.$emit('update:connectionIdentifier', cid)
@@ -205,7 +205,7 @@
         var eid = attrs.eid
         var is_pending = attrs.eid_status === OBJECT_STATUS_PENDING
 
-        attrs = _.pick(attrs, ['short_description', 'alias', 'description', 'connection_info'])
+        attrs = _.pick(attrs, ['short_description', 'name', 'description', 'connection_info'])
         _.assign(attrs, { eid_status: OBJECT_STATUS_AVAILABLE })
 
         // update the connection and make it available

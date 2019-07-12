@@ -35,14 +35,14 @@
       v-if="has_available_connection"
     >
       <el-form-item
-        key="alias"
-        prop="alias"
+        key="name"
+        prop="name"
         label="How would you like to refer to this connection in this pipe?"
       >
         <div class="w5">
           <el-input
-            placeholder="Alias"
-            v-model="edit_values['alias']"
+            placeholder="Enter name"
+            v-model="edit_values['name']"
           />
         </div>
       </el-form-item>
@@ -61,7 +61,7 @@
     return {
       op: 'connect',
       connection: '',
-      alias: ''
+      name: ''
     }
   }
 
