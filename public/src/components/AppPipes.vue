@@ -133,7 +133,7 @@
 
         this.$store.dispatch('v2_action_createPipe', { attrs }).then(response => {
           var pipe = response.data
-          var analytics_payload = _.pick(pipe, ['eid', 'short_description', 'alias', 'created'])
+          var analytics_payload = _.pick(pipe, ['eid', 'name', 'short_description', 'created'])
           this.$store.track('Created Pipe', analytics_payload)
           this.openPipe(pipe.eid)
         }).catch(error => {
