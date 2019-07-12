@@ -36,12 +36,14 @@
 
           <div class="flex-fill overflow-y-auto">
             <article
+              style="max-width: 20rem"
               class="min-w5 pa3 bb b--black-05 bg-white hover-bg-nearer-white"
+              :title="pipe.name"
               :class="isPipeSelected(pipe) ? 'relative bg-nearer-white' : ''"
               @click="selectPipe(pipe)"
               v-for="pipe in pipes"
             >
-              <div class="f5 fw6 cursor-default mr1">{{pipe.name}}</div>
+              <div class="f5 fw6 cursor-default mr1 lh-title truncate">{{pipe.name}}</div>
             </article>
           </div>
         </div>
