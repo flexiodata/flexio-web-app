@@ -4,7 +4,7 @@
  * Copyright (c) 2015, Gold Prairie LLC. All rights reserved.
  *
  * Project:  Flex.io App
- * Author:   Aaron N. Williams
+ * Author:   Aaron L. Williams
  * Created:  2015-05-13
  *
  * @package flexio
