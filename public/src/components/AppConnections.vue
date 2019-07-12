@@ -133,8 +133,10 @@
   import MixinConnection from '@comp/mixins/connection'
 
   export default {
-    metaInfo: {
-      title: 'Connections'
+    metaInfo() {
+      return {
+        title: _.get(this.connection, 'name', 'Connections')
+      }
     },
     mixins: [MixinConnection],
     components: {
