@@ -16,17 +16,6 @@
       @validate="onValidateItem"
     >
       <el-form-item
-        key="short_description"
-        prop="short_description"
-        label="Short description"
-      >
-        <el-input
-          placeholder="Enter short description"
-          :autofocus="true"
-          v-model="edit_pipe.short_description"
-        />
-      </el-form-item>
-      <el-form-item
         key="name"
         prop="name"
         label="API Endpoint"
@@ -45,6 +34,19 @@
           </template>
         </el-input>
       </el-form-item>
+
+      <el-form-item
+        key="short_description"
+        prop="short_description"
+        label="Short description"
+      >
+        <el-input
+          placeholder="Enter short description"
+          :autofocus="true"
+          v-model="edit_pipe.short_description"
+        />
+      </el-form-item>
+
       <el-form-item
         key="description"
         prop="description"
