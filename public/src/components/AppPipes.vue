@@ -34,15 +34,18 @@
             </div>
           </div>
 
-          <div>
-            List
+          <div class="flex-fill overflow-y-auto">
+            <article
+              class="min-w5 pa3 bb b--black-05 bg-white hover-bg-nearer-white"
+              v-for="pipe in pipes"
+            >
+              <div class="f5 fw6 cursor-default mr1">{{pipe.name}}</div>
+            </article>
           </div>
         </div>
 
         <!-- content area -->
-        <div>
-          Content Area
-        </div>
+        <PipeDocument class="flex-fill" />
       </template>
 
       <!-- pipe not found -->
@@ -131,7 +134,7 @@
           }
         }
 
-        this.selectPipe(pipe, false)
+        this.selectPipe(pipe, !identifier)
       },
       selectPipe(item, push_route) {
         var pipe = item
@@ -143,15 +146,13 @@
         this.pipe = _.cloneDeep(pipe)
         this.last_selected = _.cloneDeep(pipe)
 
-        if (push_route !== false) {
-          // update the route
-          var name = _.get(pipe, 'name', '')
-          var identifier = name.length > 0 ? name : _.get(pipe, 'eid', '')
+        // update the route
+        var name = _.get(pipe, 'name', '')
+        var identifier = name.length > 0 ? name : _.get(pipe, 'eid', '')
 
-          var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
-          _.set(new_route, 'params.identifier', identifier)
-          this.$router.push(new_route)
-        }
+        var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
+        _.set(new_route, 'params.identifier', identifier)
+        this.$router[push_route === false ? 'replace' : 'push'](new_route)
       },
       openPipe(eid) {
         // TODO: this component shouldn't have anything to do with the route or store state

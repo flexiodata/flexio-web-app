@@ -35,11 +35,10 @@
           </div>
 
           <AbstractList
+            class="flex-fill overflow-y-auto"
             ref="list"
             layout="list"
             item-component="AbstractConnectionChooserItem"
-            class="overflow-y-auto"
-            :class=""
             :selected-item.sync="connection"
             :items="connections"
             :item-options="{
@@ -302,7 +301,7 @@
           }
         }
 
-        this.selectConnection(conn, false)
+        this.selectConnection(conn, !identifier)
       },
       selectConnection(item, push_route) {
         var conn = item
@@ -314,15 +313,13 @@
         this.connection = _.cloneDeep(conn)
         this.last_selected = _.cloneDeep(conn)
 
-        if (push_route !== false) {
-          // update the route
-          var name = _.get(conn, 'name', '')
-          var identifier = name.length > 0 ? name : _.get(conn, 'eid', '')
+        // update the route
+        var name = _.get(conn, 'name', '')
+        var identifier = name.length > 0 ? name : _.get(conn, 'eid', '')
 
-          var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
-          _.set(new_route, 'params.identifier', identifier)
-          this.$router.push(new_route)
-        }
+        var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
+        _.set(new_route, 'params.identifier', identifier)
+        this.$router[push_route === false ? 'replace' : 'push'](new_route)
       },
       cancelChanges(item) {
         this.connection = _.cloneDeep(this.last_selected)

@@ -803,7 +803,7 @@
         // update the route
         var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
         var view = this.active_view
-        _.set(new_route, 'params.view', view)
+        //_.set(new_route, 'params.view', view)
         this.$router.replace(new_route)
       },
       revert() {
