@@ -8,11 +8,11 @@
 
   <!-- fetched -->
   <div class="flex flex-column" v-else-if="is_fetched">
-
     <div class="flex-fill flex flex-row" v-if="connections.length > 0">
-      <template  v-if="has_connection">
+      <template v-if="has_connection">
+        <!-- list -->
         <div
-          class="flex flex-column br b--black-05"
+          class="flex flex-column min-w5 br b--black-05"
           :class="mode == 'edit' ? 'o-40 no-pointer-events': ''"
         >
           <!-- control bar -->
@@ -52,6 +52,8 @@
             @item-delete="tryDeleteConnection"
           />
         </div>
+
+        <!-- content area -->
         <div
           class="flex-fill flex flex-column pa3"
           v-if="mode == 'static'"
@@ -177,17 +179,11 @@
       route_identifier() {
         return _.get(this.$route, 'params.identifier', undefined)
       },
-      route_view() {
-        return _.get(this.$route, 'params.view', undefined)
-      },
       connections() {
         return this.getAvailableConnections()
       },
       ctype() {
         return _.get(this.connection, 'connection_type', '')
-      },
-      cname() {
-        return _.get(this.connection, 'short_description', '')
       },
       is_storage_connection() {
         return this.$_Connection_isStorage(this.connection)

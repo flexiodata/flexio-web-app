@@ -1,76 +1,92 @@
 <template>
   <!-- fetching -->
-  <div v-if="is_fetching || force_loading">
+  <div v-if="is_fetching">
     <div class="flex flex-column justify-center h-100">
       <Spinner size="large" message="Loading pipes..." />
     </div>
   </div>
 
   <!-- fetched -->
-  <div class="flex flex-column overflow-y-scroll" :id="doc_id" v-else-if="is_fetched">
-    <!-- use `z-7` to ensure the title z-index is greater than the CodeMirror scrollbar -->
-    <div class="mt4 relative z-7 bg-white sticky">
-      <div class="center w-100 pa3 pl4-l pr4-l bb bb-0-l b--black-10 sticky" style="max-width: 1280px">
-        <!-- control bar -->
-        <div class="flex flex-row">
-          <div class="flex-fill flex flex-row items-center">
-            <h1 class="mv0 f2 fw4 mr3">{{title}}</h1>
+  <div class="flex flex-column" v-else-if="is_fetched">
+    <div class="flex-fill flex flex-row" v-if="pipes.length > 0">
+      <template v-if="has_pipe">
+        <!-- list -->
+        <div
+          class="flex flex-column min-w5 br b--black-05"
+          :class="mode == 'edit' ? 'o-40 no-pointer-events': ''"
+        >
+          <!-- control bar -->
+          <div class="flex-none ph3 pv2 relative bg-white bb b--black-05">
+            <div class="flex flex-row">
+              <div class="flex-fill flex flex-row items-center">
+                <h2 class="mv0 f3 mr3">Pipes</h2>
+              </div>
+              <div class="flex-none flex flex-row items-center ml3">
+                <el-button
+                  size="small"
+                  type="primary"
+                  class="ttu fw6"
+                  @click="show_pipe_new_dialog = true"
+                >
+                  New
+                </el-button>
+              </div>
+            </div>
           </div>
-          <div class="flex-none flex flex-row items-center">
-            <el-input
-              class="w-100 mw5 mr3"
-              placeholder="Search..."
-              clearable
-              prefix-icon="el-icon-search"
-              @keydown.esc.native="filter = ''"
-              v-model="filter"
-            />
-            <el-button type="primary" class="ttu fw6" @click="onNewPipeClick">New pipe</el-button>
+
+          <div>
+            List
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- list -->
-    <PipeList
-      class="center w-100 pl4-l pr4-l pb4-l"
-      style="max-width: 1280px; padding-bottom: 8rem"
-      :filter="filter"
-      :show-header="true"
-      :show-selection-checkboxes="false"
-      @item-duplicate="duplicatePipe"
-      @item-delete="tryDeletePipe"
-    />
+        <!-- content area -->
+        <div>
+          Content Area
+        </div>
+      </template>
+
+      <!-- pipe not found -->
+      <PageNotFound class="flex-fill bg-nearer-white" v-else />
+    </div>
   </div>
 </template>
 
 <script>
-  import stickybits from 'stickybits'
   import { ROUTE_APP_PIPES } from '../constants/route'
   import { OBJECT_STATUS_AVAILABLE } from '../constants/object-status'
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
-  import PipeList from '@comp/PipeList'
+  import PipeDocument from '@comp/PipeDocument'
+  import PageNotFound from '@comp/PageNotFound'
 
   export default {
-    metaInfo: {
-      title: 'Pipes'
+    metaInfo() {
+      return {
+        title: _.get(this.pipe, 'name', 'Pipes')
+      }
     },
     components: {
       Spinner,
-      PipeList
+      PipeDocument,
+      PageNotFound
     },
     watch: {
-      is_fetched: {
-        handler: 'initSticky',
+      route_identifier: {
+        handler: 'loadPipe',
         immediate: true
+      },
+      pipes(val, old_val) {
+        if (!this.has_pipe) {
+          this.loadPipe(this.route_identifier)
+        }
       }
     },
     data() {
       return {
-        doc_id: _.uniqueId('app-pipes-'),
-        force_loading: false,
-        filter: ''
+        mode: 'static',
+        pipe: {},
+        last_selected: {},
+        show_pipe_new_dialog: false
       }
     },
     computed: {
@@ -82,19 +98,61 @@
       routed_user() {
         return this.$store.state.routed_user
       },
-      title() {
-        var ru = this.routed_user
-        return ru && ru.length > 0 ? ru + '/' + 'pipes' : 'Pipes'
+      route_identifier() {
+        return _.get(this.$route, 'params.identifier', undefined)
+      },
+      pipes() {
+        return this.getAllPipes()
+      },
+      pname() {
+        return _.get(this.pipe, 'name', '')
+      },
+      has_pipe() {
+        return this.pname.length > 0
       }
     },
-    mounted() {
-      this.initSticky()
+    created() {
       this.tryFetchPipes()
+    },
+    mounted() {
       this.$store.track('Visited Pipes Page')
-      this.force_loading = true
-      setTimeout(() => { this.force_loading = false }, 10)
     },
     methods: {
+      ...mapGetters([
+        'getAllPipes'
+      ]),
+      loadPipe(identifier) {
+        var pipe
+
+        if (identifier) {
+          pipe = _.find(this.pipes, { eid: identifier })
+          if (!pipe) {
+            pipe = _.find(this.pipes, { name: identifier })
+          }
+        }
+
+        this.selectPipe(pipe, false)
+      },
+      selectPipe(item, push_route) {
+        var pipe = item
+
+        if (!pipe) {
+          pipe = _.first(this.pipes)
+        }
+
+        this.pipe = _.cloneDeep(pipe)
+        this.last_selected = _.cloneDeep(pipe)
+
+        if (push_route !== false) {
+          // update the route
+          var name = _.get(pipe, 'name', '')
+          var identifier = name.length > 0 ? name : _.get(pipe, 'eid', '')
+
+          var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
+          _.set(new_route, 'params.identifier', identifier)
+          this.$router.push(new_route)
+        }
+      },
       openPipe(eid) {
         // TODO: this component shouldn't have anything to do with the route or store state
         var ru = this.routed_user
@@ -111,14 +169,6 @@
         this.$store.dispatch('v2_action_createPipe', { attrs }).catch(error => {
           // TODO: add error handling?
         })
-      },
-      initSticky() {
-        setTimeout(() => {
-          stickybits('.sticky', {
-            scrollEl: '#' + this.doc_id,
-            useStickyClasses: true
-          })
-        }, 100)
       },
       tryFetchPipes() {
         if (!this.is_fetched && !this.is_fetching) {
@@ -159,7 +209,6 @@
         })
       },
       onNewPipeClick() {
-        /*
         // when creating a new pipe, start out with a basic Python 'Hello World' script
         var attrs = {
           short_description: 'Untitled Pipe',
@@ -169,19 +218,6 @@
               op: 'execute',
               lang: 'python',
               code: 'IyBiYXNpYyBoZWxsbyB3b3JsZCBleGFtcGxlCmRlZiBmbGV4X2hhbmRsZXIoZmxleCk6CiAgICBmbGV4LmVuZCgiSGVsbG8sIFdvcmxkLiIpCg=='
-            }]
-          }
-        }
-        */
-
-        // when creating a new pipe, start out with a basic read task
-        var attrs = {
-          short_description: 'Untitled Pipe',
-          task: {
-            op: 'sequence',
-            items: [{
-              op: 'read',
-              title: 'Select Source'
             }]
           }
         }
