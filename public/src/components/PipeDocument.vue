@@ -553,7 +553,7 @@
         return _.get(this.orig_pipe, 'eid', undefined)
       },
       title() {
-        return _.get(this.orig_pipe, 'short_description', '')
+        return _.get(this.orig_pipe, 'name', '')
       },
       save_cancel_style() {
         return 'z-index: ' + this.save_cancel_zindex
