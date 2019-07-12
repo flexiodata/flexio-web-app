@@ -47,7 +47,7 @@
                 v-if="showInput('base_path')"
               >
                 <template slot="label">
-                  Base path
+                  <span>Base path</span>
                   <span class="lh-1 hint--top" aria-label="An optional root directory akin to chroot (e.g. /home/myname)">
                     <i class="el-icon-info blue"></i>
                   </span>
@@ -81,7 +81,7 @@
                 v-if="showInput('bucket')"
               >
                 <template slot="label">
-                  Bucket
+                  <span>Bucket</span>
                   <span class="lh-1 hint--top" aria-label="The Google Cloud Storage bucket name to which you wish to connect">
                     <i class="el-icon-info blue"></i>
                   </span>
@@ -100,7 +100,7 @@
                 v-if="showInput('base_path')"
               >
                 <template slot="label">
-                  Base path
+                  <span>Base path</span>
                   <span class="lh-1 hint--top" aria-label="An optional root directory akin to chroot (e.g. /home/myname)">
                     <i class="el-icon-info blue"></i>
                   </span>
@@ -133,7 +133,7 @@
                 v-if="showInput('owner')"
               >
                 <template slot="label">
-                  Owner
+                  <span>Owner</span>
                   <span class="lh-1 hint--top" aria-label="The owner of the GitHub repository to which you wish to connect">
                     <i class="el-icon-info blue"></i>
                   </span>
@@ -151,7 +151,7 @@
                 v-if="showInput('repository')"
               >
                 <template slot="label">
-                  Repository
+                  <span>Repository</span>
                   <span class="lh-1 hint--top" aria-label="The GitHub repository to which you wish to connect">
                     <i class="el-icon-info blue"></i>
                   </span>
@@ -185,7 +185,7 @@
             v-if="showInput('aws_key')"
           >
             <template slot="label">
-              AWS Access Key
+              <span>AWS Access Key</span>
               <span class="lh-1 hint--top" aria-label="The access token for your AWS account">
                 <i class="el-icon-info blue"></i>
               </span>
@@ -206,7 +206,7 @@
             v-if="showInput('aws_secret')"
           >
             <template slot="label">
-              AWS Secret Key
+              <span>AWS Secret Key</span>
               <span class="lh-1 hint--top" aria-label="The secret key for your AWS account">
                 <i class="el-icon-info blue"></i>
               </span>
@@ -226,7 +226,7 @@
             v-if="showInput('bucket')"
           >
             <template slot="label">
-              Bucket
+              <span>Bucket</span>
               <span class="lh-1 hint--top" aria-label="The AWS bucket name to which you wish to connect">
                 <i class="el-icon-info blue"></i>
               </span>
@@ -246,7 +246,7 @@
             v-if="showInput('region')"
           >
             <template slot="label">
-              Region
+              <span>Region</span>
               <span class="lh-1 hint--top" aria-label="The region your AWS services are located">
                 <i class="el-icon-info blue"></i>
               </span>
@@ -288,7 +288,7 @@
             v-if="showInput('email')"
           >
             <template slot="label">
-              Email address
+              <span>Email address</span>
               <span class="lh-1 hint--top" aria-label="Your email address">
                 <i class="el-icon-info blue"></i>
               </span>
@@ -308,7 +308,7 @@
             v-if="showInput('security')"
           >
             <template slot="label">
-              Security
+              <span>Security</span>
               <span class="lh-1 hint--top" aria-label="The security type, if any, required for your account">
                 <i class="el-icon-info blue"></i>
               </span>
@@ -331,7 +331,7 @@
             v-if="showInput('host')"
           >
             <template slot="label">
-              Host
+              <span>Host</span>
               <span class="lh-1 hint--top" aria-label="The host name or IP address">
                 <i class="el-icon-info blue"></i>
               </span>
@@ -351,7 +351,7 @@
             v-if="showInput('port')"
           >
             <template slot="label">
-              Port
+              <span>Port</span>
               <span class="lh-1 hint--top" aria-label="The port required for data transmission">
                 <i class="el-icon-info blue"></i>
               </span>
@@ -371,7 +371,7 @@
             v-if="showInput('username')"
           >
             <template slot="label">
-              Username
+              <span>Username</span>
               <span class="lh-1 hint--top" aria-label="The login associated with your account">
                 <i class="el-icon-info blue"></i>
               </span>
@@ -391,7 +391,7 @@
             v-if="showInput('password')"
           >
             <template slot="label">
-              Password
+              <span>Password</span>
               <span class="lh-1 hint--top" aria-label="The password associated with your account">
                 <i class="el-icon-info blue"></i>
               </span>
@@ -413,7 +413,7 @@
             v-if="showInput('database')"
           >
             <template slot="label">
-              Database
+              <span>Database</span>
               <span class="lh-1 hint--top" aria-label="The database name to which you wish to connect">
                 <i class="el-icon-info blue"></i>
               </span>
@@ -442,7 +442,7 @@
             v-if="showInput('base_path')"
           >
             <template slot="label">
-              Base path
+              <span>Base path</span>
               <span class="lh-1 hint--top" aria-label="An optional root directory akin to chroot (e.g. /home/myname)">
                 <i class="el-icon-info blue"></i>
               </span>

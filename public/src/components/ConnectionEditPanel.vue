@@ -77,7 +77,7 @@
               prop="short_description"
             >
               <template slot="label">
-                Short description
+                <span>Short description</span>
                 <span class="lh-1 hint--top" aria-label="The short description of your connection">
                   <i class="el-icon-info blue"></i>
                 </span>
@@ -96,7 +96,7 @@
               prop="name"
             >
               <template slot="label">
-                Name
+                <span>Name</span>
                 <span class="lh-1 hint--top hint--large" aria-label="A unique identifier that can be used to reference this connection in a pipe definition, instead of directly referencing it by its ID">
                   <i class="el-icon-info blue"></i>
                 </span>
@@ -115,7 +115,7 @@
             prop="description"
           >
             <template slot="label">
-              Description
+              <span>Description</span>
               <span class="lh-1 hint--top" aria-label="A description of your connection">
                 <i class="el-icon-info blue"></i>
               </span>

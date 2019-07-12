@@ -44,7 +44,7 @@
         prop="confirm_text"
       >
         <template slot="label">
-          Verify this is what you want to do by typing <strong>delete my account</strong> below
+          <span>Verify this is what you want to do by typing <strong>delete my account</strong> below</span>
         </template>
         <el-input
           autocomplete="off"
