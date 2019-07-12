@@ -17,20 +17,6 @@
         <div class="flex flex-row">
           <el-form-item
             class="flex-fill mr3"
-            key="short_description"
-            prop="short_description"
-            label="Short description"
-          >
-            <el-input
-              placeholder="Enter short description"
-              autocomplete="off"
-              :autofocus="true"
-              v-model="edit_pipe.short_description"
-            />
-          </el-form-item>
-
-          <el-form-item
-            class="flex-fill"
             key="name"
             prop="name"
             label="Name"
@@ -49,6 +35,20 @@
                 <i class="material-icons md-24 blue v-mid">info</i>
               </span>
             </el-input>
+          </el-form-item>
+
+          <el-form-item
+            class="flex-fill"
+            key="short_description"
+            prop="short_description"
+            label="Short description"
+          >
+            <el-input
+              placeholder="Enter short description"
+              autocomplete="off"
+              :autofocus="true"
+              v-model="edit_pipe.short_description"
+            />
           </el-form-item>
         </div>
 

@@ -73,25 +73,6 @@
           <div class="flex flex-row">
             <el-form-item
               class="flex-fill mr3"
-              key="short_description"
-              prop="short_description"
-            >
-              <template slot="label">
-                <span>Short description</span>
-                <span class="lh-1 hint--top" aria-label="The short description of your connection">
-                  <i class="el-icon-info blue"></i>
-                </span>
-              </template>
-              <el-input
-                placeholder="Enter short description"
-                autocomplete="off"
-                :autofocus="true"
-                v-model="edit_connection.short_description"
-              />
-            </el-form-item>
-
-            <el-form-item
-              class="flex-fill"
               key="name"
               prop="name"
             >
@@ -106,6 +87,25 @@
                 autocomplete="off"
                 spellcheck="false"
                 v-model="edit_connection.name"
+              />
+            </el-form-item>
+
+            <el-form-item
+              class="flex-fill"
+              key="short_description"
+              prop="short_description"
+            >
+              <template slot="label">
+                <span>Short description</span>
+                <span class="lh-1 hint--top" aria-label="The short description of your connection">
+                  <i class="el-icon-info blue"></i>
+                </span>
+              </template>
+              <el-input
+                placeholder="Enter short description"
+                autocomplete="off"
+                :autofocus="true"
+                v-model="edit_connection.short_description"
               />
             </el-form-item>
           </div>
