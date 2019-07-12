@@ -1,7 +1,7 @@
 {
     "eid_type": "CTN",
+    "name": "flexio-public-s3",
     "short_description": "Flexio Public S3",
-    "alias": "flexio-public-s3",
     "description": "",
     "connection_status": "A",
     "connection_type": "amazons3",

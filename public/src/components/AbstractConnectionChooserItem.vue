@@ -132,7 +132,7 @@
         return _.get(this.item, 'connection_info.url', '')
       },
       identifier() {
-        var cid = _.get(this.item, 'alias', '')
+        var cid = _.get(this.item, 'name', '')
         return cid.length > 0 ? cid : _.get(this.item, 'eid', '')
       },
       is_flexio() {

@@ -1,7 +1,7 @@
 {
     "eid_type": "PIP",
+    "name": "example-save-data-to-local-storage",
     "short_description": "Example: Save Data to Local Storage",
-    "alias": "example-save-data-to-local-storage",
     "description": "Aggregate, de-duplicate and save recent stories from Hacker News to local storage",
     "task": {
       "op": "sequence",
