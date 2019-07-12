@@ -84,8 +84,8 @@
       eid() {
         return _.get(this.item, 'eid', '')
       },
-      alias() {
-        return _.get(this.item, 'alias', '')
+      cname() {
+        return _.get(this.item, 'name', '')
       },
       ctype() {
         return _.get(this.item, 'connection_type', '')
@@ -94,11 +94,11 @@
         return _.get(this.item, 'connection_status', '')
       },
       identifier() {
-        return this.alias.length > 0 ? this.alias : this.eid
+        return this.cname.length > 0 ? this.cname : this.eid
       },
       is_selected() {
         var cid = this.connectionIdentifier
-        return cid.length > 0 && (cid == this.eid || cid == this.alias)
+        return cid.length > 0 && (cid == this.eid || cid == this.cname)
       },
       is_available() {
         return this.cstatus == CONNECTION_STATUS_AVAILABLE

@@ -36,8 +36,8 @@
       v-if="has_available_connection"
     >
       <el-form-item
-        key="alias"
-        prop="alias"
+        key="lang"
+        prop="lang"
         label="What langauge would you like to output?"
       >
         <el-select v-model="edit_values.lang">
@@ -152,15 +152,15 @@
         return _.get(this.edit_values, 'lang', 'python')
       },
       base64_nodejs() {
-        var alias = this.$_Connection_getConnectionIdentifier(this.store_connection)
+        var cname = this.$_Connection_getConnectionIdentifier(this.store_connection)
         var code = `// this function returns an OAuth access token to access the service specified
 // in a connection; click the "Test" button to echo the OAuth token
 
 exports.flex_handler = function(flex) {
 
   // get the OAuth access token for the connection from the connection
-  // identifier, which can be the connection alias or connection eid
-  var connection_identifier = '${alias}'
+  // identifier, which can be the connection name or connection eid
+  var connection_identifier = '${cname}'
   var auth_token = flex.connections[connection_identifier].getAccessToken()
 
   // echo the OAuth token; use this token to make authenticated API calls
@@ -171,15 +171,15 @@ exports.flex_handler = function(flex) {
         return btoaUnicode(code)
       },
       base64_python() {
-        var alias = this.$_Connection_getConnectionIdentifier(this.store_connection)
+        var cname = this.$_Connection_getConnectionIdentifier(this.store_connection)
         var code = `# this function returns an OAuth access token to access the service specified
 # in a connection; click the "Test" button to echo the OAuth token
 
 def flex_handler(flex):
 
     # get the OAuth access token for the connection from the connection
-    # identifier, which can be the connection alias or connection eid
-    connection_identifier = '${alias}'
+    # identifier, which can be the connection name or connection eid
+    connection_identifier = '${cname}'
     auth_token = flex.connections[connection_identifier].get_access_token()
 
     # echo the OAuth token; use this token to make authenticated API calls

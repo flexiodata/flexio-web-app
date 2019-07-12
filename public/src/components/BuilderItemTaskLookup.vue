@@ -165,7 +165,7 @@ def flex_handler(flex):
 
     # table to use for lookup values
     lookup_table_path = '{{lookup_table_path}}'
-    # lookup_table_path = 'my-connection-alias:/my-file.txt'
+    # lookup_table_path = 'my-connection-name:/my-file.txt'
 
     # columns from the lookup table to use to search for values
     lookup_keys = '{{lookup_keys}}'.split(',')

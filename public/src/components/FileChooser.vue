@@ -155,11 +155,11 @@
         this.$emit('open-folder', this.connection_path)
       },
       getConnectionIdentifier() {
-        var cid = _.get(this.active_connection, 'alias', '')
+        var cid = _.get(this.active_connection, 'name', '')
         return cid.length > 0 ? cid : _.get(this.active_connection, 'eid', '')
       },
       getConnectionBasePath() {
-        // Flex.io connection now has an alias of 'flex'... keeping this for reference for a bit...
+        // Flex.io connection now has a name of 'flex'... keeping this for reference for a bit...
         /*
         if (_.get(this.active_connection, 'connection_type', '') == CONNECTION_TYPE_FLEX) {
           return 'flex:/'

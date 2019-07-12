@@ -97,8 +97,8 @@
         return this.cstatus == CONNECTION_STATUS_AVAILABLE
       },
       identifier() {
-        var alias = _.get(this.connection, 'alias', '')
-        return alias.length > 0 ? alias : _.get(this.connection, 'eid', '')
+        var cname = _.get(this.connection, 'name', '')
+        return cname.length > 0 ? cname : _.get(this.connection, 'eid', '')
       },
       url() {
         return _.get(this.connection, 'connection_info.url', '')
