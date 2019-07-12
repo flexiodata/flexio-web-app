@@ -31,20 +31,20 @@
 
           <el-form-item
             class="flex-fill"
-            key="alias"
-            prop="alias"
-            label="Alias"
+            key="name"
+            prop="name"
+            label="Name"
           >
             <el-input
-              placeholder="Enter alias"
+              placeholder="Enter name"
               autocomplete="off"
               spellcheck="false"
-              v-model="edit_pipe.alias"
+              v-model="edit_pipe.name"
             >
               <span
                 slot="suffix"
                 class="h-100 hint--bottom-left hint--large cursor-default"
-                aria-label="Pipes can be referenced via an alias in the Flex.io command line interface (CLI), all SDKs as well as the REST API."
+                aria-label="Pipes can be referenced via a name in the Flex.io command line interface (CLI), all SDKs as well as the REST API."
               >
                 <i class="material-icons md-24 blue v-mid">info</i>
               </span>
@@ -93,8 +93,8 @@
   const defaultAttrs = () => {
     return {
       eid: null,
+      name: '',
       short_description: '',
-      alias: '',
       description: ''
     }
   }
@@ -134,7 +134,8 @@
       return {
         edit_pipe: _.assign({}, defaultAttrs(), this.pipe),
         rules: {
-          alias: [
+          name: [
+            { required: true, message: 'Please input a name', trigger: 'blur' },
             { validator: this.formValidateAlias }
           ]
         }
@@ -163,7 +164,7 @@
     mounted() {
       this.$nextTick(() => {
         if (this.$refs.form) {
-          this.$refs.form.validateField('alias')
+          this.$refs.form.validateField('name')
         }
       })
     },
@@ -186,14 +187,14 @@
           return
         }
 
-        // we haven't changed the alias; trying to validate it will tell us it already exists
-        if (this.mode == 'edit' && value == _.get(this.pipe, 'alias', '')) {
+        // we haven't changed the name; trying to validate it will tell us it already exists
+        if (this.mode == 'edit' && value == _.get(this.pipe, 'name', '')) {
           callback()
           return
         }
 
         this.$_Validation_validateName(OBJECT_TYPE_PIPE, value, (response, errors) => {
-          var message = _.get(errors, 'alias.message', '')
+          var message = _.get(errors, 'name.message', '')
           if (message.length > 0) {
             callback(new Error(message))
           } else {
