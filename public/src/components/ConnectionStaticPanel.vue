@@ -33,6 +33,10 @@
                 </div>
               </td>
             </tr>
+            <tr v-if="has_owner && has_repository">
+              <td>Repository</td>
+              <td><span class="f6 fw6">{{owner}}/{{repository}}</span></td>
+            </tr>
             <tr v-if="has_basepath">
               <td>Path</td>
               <td :class="base_path.length == 0 ? 'i moon-gray' : ''">{{base_path.length == 0 ? '(root folder)' : base_path}}</td>
@@ -77,8 +81,10 @@
         return _.get(this.connection, 'connection_type', '')
       },
       cdesc() {
+        var word_count = 50
         var desc = _.get(this.connection, 'description', '')
-        return desc.length > 200 ? desc.substring(0, 200) + '...' : desc
+        var desc_arr = desc.split(' ')
+        return desc_arr.length <= word_count ? desc_arr.join(' ') : desc_arr.slice(0, word_count).join(' ') + '...'
       },
       cstatus() {
         return _.get(this.connection, 'connection_status', '')
@@ -93,8 +99,20 @@
       url() {
         return _.get(this.connection, 'connection_info.url', '')
       },
+      owner() {
+        return _.get(this.connection, 'connection_info.owner')
+      },
+      repository() {
+        return _.get(this.connection, 'connection_info.repository')
+      },
       base_path() {
         return _.get(this.connection, 'connection_info.base_path')
+      },
+      has_owner() {
+        return _.isString(this.owner)
+      },
+      has_repository() {
+        return _.isString(this.repository)
       },
       has_basepath() {
         return _.isString(this.base_path)
