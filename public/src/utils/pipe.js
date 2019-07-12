@@ -33,8 +33,8 @@ export const getMonthDayStr = (s) => {
 }
 
 export const getIdentifier = (pipe) => {
-  var alias = _.get(pipe, 'alias', '')
-  return alias.length > 0 ? alias : _.get(pipe, 'eid', '')
+  var pname = _.get(pipe, 'name', '')
+  return pname.length > 0 ? pname : _.get(pipe, 'eid', '')
 }
 
 export const getDeployScheduleStr = (s) => {

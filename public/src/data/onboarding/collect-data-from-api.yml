@@ -66,6 +66,6 @@ steps:
         .write('/home/flexio-${process.time.unix}/sample-api.csv')
       ```
 
-      **NOTE:** Currently the files are placed in timestamped subfolders; if you want to place the files in a different location, simply update the path like this: `.write('/{{connection_alias}}/foo/sample-api.csv')`.
+      **NOTE:** Currently the files are placed in timestamped subfolders; if you want to place the files in a different location, simply update the path like this: `.write('/{{connection_name}}/foo/sample-api.csv')`.
 
       Add this task and click the **Run** button again. The data from the API will now appear as a CSV file in your local Storage.

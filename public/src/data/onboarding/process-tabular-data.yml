@@ -78,7 +78,7 @@ steps:
 
       To copy the files to cloud storage, we first need to set up a connection to an external account like Dropbox, Amazon S3, or Google Drive.
 
-      Click **Create Connection** below to set up your account. After connecting, we'll insert the path into the next snippet using the new connection alias.
+      Click **Create Connection** below to set up your account. After connecting, we'll insert the path into the next snippet using the new connection name.
 
   - #----------------------------------------#
 
@@ -96,9 +96,9 @@ steps:
         .read('/flexio-public-s3/contact-list-1.csv')
         .convert('csv', 'table')
         .select('firstname', 'lastname', 'city')
-        .write('/{{connection_alias}}/flexio-${process.time.unix}/contact-list-1.csv')
+        .write('/{{connection_name}}/flexio-${process.time.unix}/contact-list-1.csv')
       ```
 
-      **NOTE:** You'll notice that the alias `{{connection_alias}}` from the connection created in the previous step is referenced in the `write` command. Currently the files are placed in timestamped subfolders; if you want to place the files in a different location, simply update the path like this: `.write('/{{connection_alias}}/foo/contact-list-1.csv')`.
+      **NOTE:** You'll notice that the name `{{connection_name}}` from the connection created in the previous step is referenced in the `write` command. Currently the files are placed in timestamped subfolders; if you want to place the files in a different location, simply update the path like this: `.write('/{{connection_name}}/foo/contact-list-1.csv')`.
 
       Add this task, click the **Run** button again and then check your cloud storage account to see the copied file.

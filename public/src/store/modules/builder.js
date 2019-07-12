@@ -152,7 +152,7 @@ const mutations = {
             /*
             var root_state = this.state
             var connection = _.get(root_state, 'objects[' + eid + ']', null)
-            var identifier = _.get(connection, 'alias', '') || _.get(connection, 'eid', '')
+            var identifier = _.get(connection, 'name', '') || _.get(connection, 'eid', '')
             */
             task_str = task_str.replace(regex, JSON.stringify(identifier))
           }
@@ -160,7 +160,7 @@ const mutations = {
 
         case 'file-chooser':
           var files = state.attrs[p.variable]
-          var connection_alias = _.get(p, 'connection_alias', false)
+          var cname = _.get(p, 'connection_name', false)
           var paths = []
 
           // for file selection file choosers, append '/*' to any folders that are selected
@@ -172,13 +172,13 @@ const mutations = {
             })
           }
 
-          if (connection_alias) {
-            // `.connect()` alias is specified; use it instead of the connection eid/alias
+          if (cname) {
+            // `.connect()` name is specified; use it instead of the connection eid/name
             paths = _.map(files, (f) => { return _.get(f, 'path', null) })
             paths = _.compact(paths)
-            paths = _.map(paths, (p) => { return connection_alias + ':' + p })
+            paths = _.map(paths, (p) => { return cname + ':' + p })
           } else {
-            // no connection alias specified; convert array of file objects into an array of paths
+            // no connection name specified; convert array of file objects into an array of paths
             paths = _.map(files, (f) => { return _.get(f, 'full_path', null) })
             paths = _.compact(paths)
           }
