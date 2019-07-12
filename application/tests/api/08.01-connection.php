@@ -42,7 +42,7 @@ class Test
             // 'token' => '', // no token included
             'content_type' => 'application/json',
             'params' => '{
-                "name": "Test Connection"
+                "name": "test-connection"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -62,7 +62,7 @@ class Test
             'token' => $token2, // token for another user
             'content_type' => 'application/json',
             'params' => '{
-                "name": "Test Connection"
+                "name": "test-connection"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);

@@ -84,7 +84,7 @@ class Test
             // 'token' => '', // no token included
             'content_type' => 'application/json',
             'params' => '{
-                "name": "Updated Test Pipe"
+                "short_description": "Updated Test Pipe"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -104,7 +104,7 @@ class Test
             'token' => $token1,
             'content_type' => 'application/json',
             'params' => '{
-                "name": "Updated Test Pipe"
+                "short_description": "Updated Test Pipe"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
