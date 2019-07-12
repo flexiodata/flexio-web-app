@@ -27,13 +27,13 @@
         />
       </el-form-item>
       <el-form-item
-        key="alias"
-        prop="alias"
+        key="name"
+        prop="name"
         label="API Endpoint"
       >
         <el-input
-          placeholder="Enter alias"
-          v-model="edit_pipe.alias"
+          placeholder="Enter name"
+          v-model="edit_pipe.name"
         >
           <template slot="prepend"><div class="nl2 nr2">https://api.flex.io/v1/me/pipes/</div></template>
           <template slot="append">
@@ -84,7 +84,7 @@
 
   const defaultAttrs = () => {
     return {
-      alias: '',
+      name: '',
       short_description: '',
       description: ''
     }
@@ -125,7 +125,8 @@
       return {
         edit_pipe: defaultAttrs(),
         rules: {
-          alias: [
+          name: [
+            { required: true, message: 'Please input a name', trigger: 'blur' },
             { validator: this.formValidateAlias }
           ]
         },
@@ -134,8 +135,8 @@
     },
     computed: {
       identifier() {
-        var alias = this.edit_pipe.alias
-        return alias.length > 0 ? alias : _.get(this.edit_pipe, 'eid', '')
+        var pname = this.edit_pipe.name
+        return pname.length > 0 ? pname : _.get(this.edit_pipe, 'eid', '')
       },
       path() {
         return 'https://api.flex.io/v1/me/pipes/' + this.identifier
@@ -180,13 +181,13 @@
           return
         }
 
-        if (value == _.get(this.pipe, 'alias', '')) {
+        if (value == _.get(this.pipe, 'name', '')) {
           callback()
           return
         }
 
         this.$_Validation_validateName(OBJECT_TYPE_PIPE, value, (response, errors) => {
-          var message = _.get(errors, 'alias.message', '')
+          var message = _.get(errors, 'name.message', '')
           if (message.length > 0) {
             callback(new Error(message))
           } else {
