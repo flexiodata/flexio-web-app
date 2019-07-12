@@ -28,7 +28,7 @@
           <div class="light-silver" style="margin: 3px 3px 0 0" v-if="is_email && false">
             <i class="db material-icons hint--top" aria-label="Email connection" style="font-size: 14px">email</i>
           </div>
-          <div class="flex-fill light-silver f8 lh-copy code" v-if="showIdentifier && identifier.length > 0">{{identifier}}</div>
+          <div class="flex-fill light-silver f8 lh-copy" style="margin-top: 3px" v-if="showShortDescription && short_desc.length > 0">{{short_desc}}</div>
         </div>
         <div class="bt b--black-05" style="padding-top: 2px; margin-top: 2px; max-width: 12rem" v-if="showUrl && url.length > 0">
           <div class="light-silver f8 lh-copy truncate">{{url}}</div>
@@ -84,7 +84,7 @@
         type: Boolean,
         default: true
       },
-      showIdentifier: {
+      showShortDescription: {
         type: Boolean,
         default: true
       },
@@ -120,13 +120,16 @@
         return _.get(this.item, 'eid', '')
       },
       cname() {
-        return _.get(this.item, 'short_description', '')
+        return _.get(this.item, 'name', '')
       },
       ctype() {
         return _.get(this.item, 'connection_type', '')
       },
       cstatus() {
         return _.get(this.item, 'connection_status', '')
+      },
+      short_desc() {
+        return _.get(this.item, 'short_description', '')
       },
       url() {
         return _.get(this.item, 'connection_info.url', '')
