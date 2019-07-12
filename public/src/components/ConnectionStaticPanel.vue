@@ -1,48 +1,52 @@
 <template>
   <div>
     <div class="flex flex-row">
-      <ServiceIcon class="flex-none mt1 br2 square-4" :type="ctype" :url="url" :empty-cls="''" />
-      <div class="flex-fill flex flex-column" style="margin-left: 12px">
-        <div class="f4 fw6 lh-title">{{connection.short_description}}</div>
-        <div class="f6 fw4 mt1 lh-copy silver" v-if="cdesc.length > 0">{{cdesc}}</div>
-        <div class="f6 fw4 mt1" v-else><em class="moon-gray">(No description)</em></div>
-      </div>
-      <div class="flex-fill flex flex-column" style="margin-left: 12px">
-        <table>
-          <colgroup>
-            <col>
-            <col class="w-100">
-          </colgroup>
-          <tbody>
-            <tr>
-              <td class="nowrap">Connection Type</td>
-              <td>
-                <div class="flex flex-row items-center">
-                  <ServiceIcon class="flex-none mr1 br1 square-1" :type="ctype" :url="url" :empty-cls="''" />
-                  <span class="f6 fw6">{{service_name}}</span>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>Status</td>
-              <td>
-                <div class="flex flex-row items-center">
-                  <i class="el-icon-success dark-green mr1" v-if="is_available"></i>
-                  <i class="el-icon-error dark-red mr1" v-else></i>
-                  <span class="f6 fw6">{{is_available ? 'Connected' : 'Not Connected'}}</span>
-                </div>
-              </td>
-            </tr>
-            <tr v-if="has_owner && has_repository">
-              <td>Repository</td>
-              <td><span class="f6 fw6">{{owner}}/{{repository}}</span></td>
-            </tr>
-            <tr v-if="has_basepath">
-              <td>Path</td>
-              <td :class="base_path.length == 0 ? 'i moon-gray' : ''">{{base_path.length == 0 ? '(root folder)' : base_path}}</td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="flex-fill flex flex-column flex-row-l">
+        <div class="flex-fill flex flex-row mr4-l mb3 mb0-l">
+          <ServiceIcon class="flex-none mt1 br2 square-4" :type="ctype" :url="url" :empty-cls="''" />
+          <div class="flex-fill flex flex-column" style="margin-left: 12px">
+            <div class="f4 fw6 lh-title">{{connection.short_description}}</div>
+            <div class="f6 fw4 mt1 lh-copy silver" v-if="cdesc.length > 0">{{cdesc}}</div>
+            <div class="f6 fw4 mt1" v-else><em class="moon-gray">(No description)</em></div>
+          </div>
+        </div>
+        <div class="flex-fill flex flex-column">
+          <table>
+            <colgroup>
+              <col>
+              <col class="w-100">
+            </colgroup>
+            <tbody>
+              <tr>
+                <td class="nowrap">Connection Type</td>
+                <td>
+                  <div class="flex flex-row items-center">
+                    <ServiceIcon class="flex-none mr1 br1 square-1" :type="ctype" :url="url" :empty-cls="''" />
+                    <span class="f6 fw6">{{service_name}}</span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>Status</td>
+                <td>
+                  <div class="flex flex-row items-center">
+                    <i class="el-icon-success dark-green mr1" v-if="is_available"></i>
+                    <i class="el-icon-error dark-red mr1" v-else></i>
+                    <span class="f6 fw6">{{is_available ? 'Connected' : 'Not Connected'}}</span>
+                  </div>
+                </td>
+              </tr>
+              <tr v-if="has_owner && has_repository">
+                <td>Repository</td>
+                <td><span class="f6 fw6">{{owner}}/{{repository}}</span></td>
+              </tr>
+              <tr v-if="has_basepath">
+                <td>Base Path</td>
+                <td :class="base_path.length == 0 ? 'i moon-gray' : 'f6 fw6'">{{base_path.length == 0 ? '(root folder)' : identifier + ':' + base_path}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
       <div class="flex-none">
         <el-button
