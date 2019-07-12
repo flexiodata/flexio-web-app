@@ -44,7 +44,7 @@
         this.$_Config_set(cfg_path, true).then(() => {
           this.$store.dispatch('v2_action_createPipe', { attrs }).then(response => {
             var pipe = response.data
-            var analytics_payload = _.pick(pipe, ['eid', 'short_description', 'alias', 'created'])
+            var analytics_payload = _.pick(pipe, ['eid', 'name', 'short_description', 'created'])
             this.$store.track('Created Pipe', analytics_payload)
             this.openPipe(pipe.eid)
           }).catch(error => {
@@ -64,7 +64,7 @@
             }
           } else {
             var pipes = response.data
-            var pipe = _.find(pipes, { alias: 'example-email-results-of-python-function' })
+            var pipe = _.find(pipes, { name: 'example-email-results-of-python-function' })
 
             var cfg_path = 'app.prompt.onboarding.pipeDocument.build.shown'
             this.$_Config_reset(cfg_path)

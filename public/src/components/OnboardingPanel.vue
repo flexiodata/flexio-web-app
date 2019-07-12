@@ -85,10 +85,10 @@
         'tokens_fetched'
       ]),
       pipe() {
-        return _.find(this.getAllPipes(), (p) => { return _.includes(_.get(p, 'alias'), 'convert-csv-to-json') })
+        return _.find(this.getAllPipes(), (p) => { return _.includes(_.get(p, 'name'), 'convert-csv-to-json') })
       },
       pipe_identifier() {
-        return _.get(this.pipe, 'alias', '') || _.get(this.pipe, 'eid', '')
+        return _.get(this.pipe, 'name', '') || _.get(this.pipe, 'eid', '')
       },
       pipe_code() {
         if (this.pipe_identifier.length == 0)
