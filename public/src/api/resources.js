@@ -16,7 +16,7 @@ export const AxiosResource = (user_eid) => {
 
   var getBaseUrl = (url) => {
     var api_root = API_V2_ROOT
-    var api_user_root = 'me'
+    var api_user_root = user_eid || 'me'
 
     var allowed = false
     var allowed_routes = ['/connections', '/pipes', '/processes', '/streams', '/vfs']
@@ -24,7 +24,7 @@ export const AxiosResource = (user_eid) => {
       allowed = allowed || url.indexOf(route) == 0
     })
 
-    if (allowed) {
+    if (allowed && api_user_root != 'admin') {
       api_user_root = store.state.routed_user
 
       // no username is specified; default to 'me'
