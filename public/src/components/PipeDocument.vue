@@ -436,7 +436,7 @@
   export default {
     metaInfo() {
       return {
-        title: _.get(this.orig_pipe, 'short_description', '')
+        title: _.get(this.orig_pipe, 'name', 'pipes')
       }
     },
     mixins: [MixinConfig],

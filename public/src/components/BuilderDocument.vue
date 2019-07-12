@@ -114,7 +114,7 @@
   export default {
     metaInfo() {
       return {
-        title: _.get(this.def, 'name', '')
+        title: _.get(this.def, 'name', 'Builder')
       }
     },
     props: {
