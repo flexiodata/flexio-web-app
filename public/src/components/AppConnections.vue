@@ -226,7 +226,7 @@
         var ctype = _.get(attrs, 'connection_type', '')
         var is_pending = _.get(attrs, 'eid_status', '') === OBJECT_STATUS_PENDING
 
-        attrs = _.pick(attrs, ['short_description', 'alias', 'description', 'connection_info'])
+        attrs = _.pick(attrs, ['name', 'short_description', 'description', 'connection_info'])
         _.assign(attrs, { eid_status: OBJECT_STATUS_AVAILABLE })
 
         // update the connection and make it available
@@ -244,7 +244,7 @@
           })
 
           if (is_pending) {
-            var analytics_payload = _.pick(attrs, ['eid', 'short_description', 'alias', 'description', 'connection_type'])
+            var analytics_payload = _.pick(attrs, ['eid', 'name', 'short_description', 'description', 'connection_type'])
             this.$store.track('Created Connection', analytics_payload)
           }
 
@@ -300,7 +300,7 @@
         if (identifier) {
           conn = _.find(this.connections, { eid: identifier })
           if (!conn) {
-            conn = _.find(this.connections, { alias: identifier })
+            conn = _.find(this.connections, { name: identifier })
           }
         }
 
@@ -318,8 +318,8 @@
 
         if (push_route !== false) {
           // update the route
-          var alias = _.get(conn, 'alias', '')
-          var identifier = alias.length > 0 ? alias : _.get(conn, 'eid', '')
+          var name = _.get(conn, 'name', '')
+          var identifier = name.length > 0 ? name : _.get(conn, 'eid', '')
 
           var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
           _.set(new_route, 'params.identifier', identifier)
