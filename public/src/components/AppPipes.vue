@@ -34,17 +34,30 @@
             </div>
           </div>
 
-          <div class="flex-fill overflow-y-auto">
+          <div class="flex-fill overflow-y-auto" style="max-width: 20rem">
             <article
-              style="max-width: 20rem"
               class="min-w5 pa3 bb b--black-05 bg-white hover-bg-nearer-white"
               :title="pipe.name"
               :class="isPipeSelected(pipe) ? 'relative bg-nearer-white' : ''"
               @click="selectPipe(pipe)"
               v-for="pipe in pipes"
             >
-              <div class="f5 fw6 cursor-default mr1 lh-title truncate">{{pipe.name}}</div>
-              <div class="light-silver f8 lh-copy" style="margin-top: 3px" v-if="pipe.short_description.length > 0">{{pipe.short_description}}</div>
+              <div class="flex flex-row items-center cursor-default">
+                <div class="flex-fill">
+                  <div class="f5 fw6 cursor-default mr1 lh-title truncate">{{pipe.name}}</div>
+                  <div class="light-silver f8 lh-copy" style="margin-top: 3px" v-if="pipe.short_description.length > 0">{{pipe.short_description}}</div>
+                </div>
+                <div class="flex-none ml2" @click.stop>
+                    <el-dropdown trigger="click" @command="onCommand">
+                      <span class="el-dropdown-link dib pointer pa1 black-30 hover-black">
+                        <i class="material-icons v-mid">expand_more</i>
+                      </span>
+                      <el-dropdown-menu style="min-width: 10rem" slot="dropdown">
+                        <el-dropdown-item class="flex flex-row items-center ph2" command="delete" :item="pipe"><i class="material-icons mr3">delete</i> Delete</el-dropdown-item>
+                      </el-dropdown-menu>
+                    </el-dropdown>
+                </div>
+              </div>
             </article>
           </div>
         </div>
@@ -168,9 +181,9 @@
       },
       tryDeletePipe(attrs) {
         var eid = _.get(attrs, 'eid', '')
-        var short_description = _.get(attrs, 'short_description', 'Pipe')
+        var pname = _.get(attrs, 'name', 'Pipe')
 
-        this.$confirm('Are you sure you want to delete the pipe named "' + short_description + '"?', 'Really delete pipe?', {
+        this.$confirm('Are you sure you want to delete the pipe named "' + pname + '"?', 'Really delete pipe?', {
           confirmButtonClass: 'ttu fw6',
           cancelButtonClass: 'ttu fw6',
           confirmButtonText: 'Delete pipe',
@@ -224,6 +237,11 @@
       },
       isPipeSelected(pipe) {
         return _.get(this.pipe, 'eid') === pipe.eid
+      },
+      onCommand(cmd, menu_item) {
+        switch (cmd) {
+          case 'delete': return this.tryDeletePipe(menu_item.$attrs.item)
+        }
       },
       onNewPipeClick() {
         // when creating a new pipe, start out with a basic Python 'Hello World' script
