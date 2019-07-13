@@ -190,7 +190,18 @@
           cancelButtonText: 'Cancel',
           type: 'warning'
         }).then(() => {
-          this.$store.dispatch('v2_action_deletePipe', { eid }).catch(error => {
+          var idx = _.findIndex(this.pipes, this.pipe)
+
+          this.$store.dispatch('v2_action_deletePipe', { eid }).then(response => {
+            if (idx >= 0) {
+              if (idx >= this.pipes.length) {
+                idx--
+              }
+
+              var pipe = _.get(this.pipes, '['+idx+']', {})
+              this.selectPipe(pipe)
+            }
+          }).catch(error => {
             // TODO: add error handling?
           })
         }).catch(() => {
@@ -209,7 +220,7 @@
 
         this.selectPipe(pipe)
       },
-      selectPipe(item, push_route) {
+      selectPipe(item) {
         if (this.pipes.length == 0) {
           return
         }

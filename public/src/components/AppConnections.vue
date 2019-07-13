@@ -260,9 +260,9 @@
       },
       tryDeleteConnection(attrs) {
         var eid = _.get(attrs, 'eid', '')
-        var short_description = _.get(attrs, 'short_description', 'Connection')
+        var cname = _.get(attrs, 'name', 'Connection')
 
-        this.$confirm('Are you sure you want to delete the connection named "' + short_description + '"?', 'Really delete connection?', {
+        this.$confirm('Are you sure you want to delete the connection named "' + cname + '"?', 'Really delete connection?', {
           confirmButtonClass: 'ttu fw6',
           cancelButtonClass: 'ttu fw6',
           confirmButtonText: 'Delete connection',
