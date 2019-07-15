@@ -128,7 +128,8 @@
         type: Function
       },
       start: {
-        type: Number
+        type: Number,
+        default: 0
       },
       limit: {
         type: Number,

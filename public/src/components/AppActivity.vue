@@ -131,8 +131,8 @@
       }
     },
     data() {
-      var created_min = this.createdMin ? moment(this.createdMin).toDate() : null
-      var created_max = this.createdMax ? moment(this.createdMax).hour(23).minute(59).second(59).toDate() : null
+      var created_min = this.createdMin ? moment(this.createdMin).toDate() : moment().subtract(7, 'days')
+      var created_max = this.createdMax ? moment(this.createdMax).hour(23).minute(59).second(59).toDate() : moment()
       var date_range = [created_min, created_max]
 
       return {
@@ -213,7 +213,7 @@
       filterBy(item, index) {
         var res = true
 
-        if (_.isArray(this.date_range)) {
+        if (_.isArray(this.date_range) && this.date_range.length == 2) {
           if (_.isNil(item.started) || _.isNil(item.finished)) {
             return false
           }
