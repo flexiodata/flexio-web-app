@@ -25,7 +25,6 @@
           style="min-width: 5rem; margin: 0 0.75rem"
           type="primary"
           size="small"
-          data-tour-step="pipe-onboarding-3"
           :class="{ 'invisible': isModeRun }"
           :disabled="!allowRun"
           @click="$emit('run-click')"
@@ -40,7 +39,6 @@
           <LabelSwitch
             class="dib ml2 hint--bottom-left"
             active-color="#13ce66"
-            data-tour-step="pipe-onboarding-7"
             :aria-label="is_deployed ? 'Turn pipe off' : 'Turn pipe on'"
             :width="58"
             v-model="is_deployed"

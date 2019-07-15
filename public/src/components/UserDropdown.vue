@@ -20,7 +20,6 @@
         <h5 class="ma0">Help</h5>
       </div>
       <el-dropdown-item class="flex flex-row items-center" command="docs"><i class="material-icons mr3">help</i>Online Docs</el-dropdown-item>
-      <el-dropdown-item class="flex flex-row items-center" command="tour"><i class="material-icons mr3">school</i>Run Intro Tour</el-dropdown-item>
       <el-dropdown-item divided></el-dropdown-item>
       <el-dropdown-item class="flex flex-row items-center" command="sign-out"><i class="material-icons mr3">forward</i> Sign out</el-dropdown-item>
     </el-dropdown-menu>
@@ -112,7 +111,6 @@
         {
           case 'account':  return this.gotoAccount()
           case 'docs':     return this.openHelpDocs()
-          case 'tour':     return this.restartOnboardingTour()
           case 'sign-out': return this.signOut()
         }
       }

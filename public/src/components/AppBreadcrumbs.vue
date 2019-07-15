@@ -17,7 +17,6 @@
       <span
         class="hint--bottom fw4"
         aria-label="Back to pipe list"
-        data-tour-step="pipe-onboarding-8"
       >Pipes</span>
     </el-breadcrumb-item>
     <el-breadcrumb-item>

@@ -38,18 +38,13 @@
           attrs = { short_description: 'Untitled Pipe' }
         }
 
-        // make sure we don't show the onboarding tour if the user comes
-        // to the app through a means that creates a pipe
-        var cfg_path = 'app.prompt.onboarding.pipeDocument.build.shown'
-        this.$_Config_set(cfg_path, true).then(() => {
-          this.$store.dispatch('v2_action_createPipe', { attrs }).then(response => {
-            var pipe = response.data
-            var analytics_payload = _.pick(pipe, ['eid', 'name', 'short_description', 'created'])
-            this.$store.track('Created Pipe', analytics_payload)
-            this.openPipe(pipe.eid)
-          }).catch(error => {
-            this.$store.track('Created Pipe (Error)')
-          })
+        this.$store.dispatch('v2_action_createPipe', { attrs }).then(response => {
+          var pipe = response.data
+          var analytics_payload = _.pick(pipe, ['eid', 'name', 'short_description', 'created'])
+          this.$store.track('Created Pipe', analytics_payload)
+          this.openPipe(pipe.eid)
+        }).catch(error => {
+          this.$store.track('Created Pipe (Error)')
         })
       },
       fetchPipes() {
