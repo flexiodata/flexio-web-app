@@ -33,7 +33,7 @@
   export default {
     computed: {
       ...mapState([
-        'active_document_eid'
+        'active_document_identifier'
       ]),
       show_breadcrumbs() {
         switch (this.$route.name) {

@@ -19,7 +19,7 @@ export default () => {
     trash_fetching: false,
 
     active_user_eid: '',
-    active_document_eid: '',
+    active_document_identifier: '',
     routed_user: '',
 
     objects: {}

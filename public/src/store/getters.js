@@ -120,7 +120,10 @@ export const getActiveProject = state => {
 }
 
 export const getActiveDocument = state => {
-  return _.find(state.objects, { eid: state.active_document_eid })
+  return _.find(state.objects, (obj) => {
+    var active_id = state.active_document_identifier
+    return obj.eid === active_id || obj.name === active_id
+  })
 }
 
 export const getActiveUserProjects = state => {
@@ -139,7 +142,12 @@ export const getActiveDocumentProcesses = state => {
   return _
     .chain(state.objects)
     .filter({ eid_type: OBJECT_TYPE_PROCESS })
-    .filter(function(p) { return _.get(p, 'parent.eid') == state.active_document_eid })
+    .filter(function(p) {
+      var eid = _.get(p, 'parent.eid')
+      var name =_.get(p, 'parent.name')
+      var active_id = state.active_document_identifier
+      return eid === active_id || name === active_id
+    })
     .sortBy([ function(p) { return new Date(p.started) } ])
     .value()
 }

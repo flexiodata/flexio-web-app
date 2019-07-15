@@ -3,7 +3,7 @@ import getDefaultState from '../state'
 
 export default {
   [types.CHANGE_ACTIVE_DOCUMENT]: (state, eid) => {
-    state.active_document_eid = eid
+    state.active_document_identifier = eid
   },
 
   [types.CHANGE_ROUTED_USER]: (state, identifier) => {
