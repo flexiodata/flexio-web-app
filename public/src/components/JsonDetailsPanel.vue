@@ -88,8 +88,9 @@
 
 <style lang="stylus" scoped>
   td
-    padding: 0.375rem 0.375rem 0.375rem 0
+    padding: 0.25rem 0.5rem 0.25rem 0
     font-size: .875rem
+    vertical-align: top
   td:first-child::after
     content: ":"
 </style>

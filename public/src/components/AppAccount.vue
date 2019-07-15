@@ -3,7 +3,7 @@
     class="bg-nearer-white ph4 overflow-y-scroll relative"
     style="padding-bottom: 8rem"
   >
-    <div class="center" style="max-width: 56rem">
+    <div class="center trans-mw" :style="style">
       <div class="mt4 mt5-ns bg-white br2 relative css-white-box">
         <!-- uncomment this to extend tab list right border all the way down -->
         <div class="absolute top-2 bottom-2 tab-list-border" v-if="false"></div>
@@ -18,6 +18,15 @@
             <div class="ml3 mr4">
               <h3 class="mt0 fw6 f3">Profile</h3>
               <AccountProfileForm style="max-width: 28rem" />
+              <div class="h2"></div>
+            </div>
+          </el-tab-pane>
+
+          <el-tab-pane name="activity">
+            <div slot="label"><div style="min-width: 5rem">Activity</div></div>
+            <div class="ml3 mr4">
+              <h3 class="mt0 fw6 f3">Activity</h3>
+              <AppActivity />
               <div class="h2"></div>
             </div>
           </el-tab-pane>
@@ -95,6 +104,7 @@
   import AccountBillingForm from '@comp/AccountBillingForm'
   import AccountPasswordForm from '@comp/AccountPasswordForm'
   import AccountDeleteForm from '@comp/AccountDeleteForm'
+  import AppActivity from '@comp/AppActivity'
 
   export default {
     metaInfo() {
@@ -109,7 +119,8 @@
       AccountPlanForm,
       AccountBillingForm,
       AccountPasswordForm,
-      AccountDeleteForm
+      AccountDeleteForm,
+      AppActivity
     },
     watch: {
       route_section: {
@@ -121,6 +132,7 @@
       return {
         section_label_lookup: {
           profile: 'Your Profile',
+          activity: 'Your Activity',
           settings: 'Account Settings',
           api: 'API Keys',
           billing: 'Billing'
@@ -138,6 +150,12 @@
       },
       route_section() {
         return _.get(this.$route, 'params.section', 'profile')
+      },
+      style() {
+        switch (this.route_section) {
+          default:        return  "max-width: 56rem"
+          case 'activity': return  "max-width: 80rem"
+        }
       }
     },
     mounted() {
@@ -172,4 +190,7 @@
   .tab-list-border
     left: 150px
     border-left: 2px solid #e4e7ed
+
+  .trans-mw
+    transition: max-width .3s ease-in-out
 </style>
