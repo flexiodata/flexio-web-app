@@ -43,7 +43,7 @@ const routes = [
   { path: '/account/:section?',                           name: rn.ROUTE_APP_ACCOUNT,         component: AppAccount,          meta },
   { path: '/:user_identifier?/activity',                  name: rn.ROUTE_APP_ACTIVITY,        component: AppActivity,         meta },
   { path: '/:user_identifier?/connections/:identifier?',  name: rn.ROUTE_APP_CONNECTIONS,     component: AppConnections,      meta },
-  { path: '/:user_identifier?/pipes/:identifier?/:view?', name: rn.ROUTE_APP_PIPES,           component: AppPipes,            meta },
+  { path: '/:user_identifier?/pipes/:identifier?',        name: rn.ROUTE_APP_PIPES,           component: AppPipes,            meta },
   admin_routes,
   { path: "*", component: PageNotFound } // 404
 ]

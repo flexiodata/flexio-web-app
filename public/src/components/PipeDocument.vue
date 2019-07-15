@@ -320,10 +320,6 @@
         handler: 'loadPipe',
         immediate: true
       },
-      active_view: {
-        handler: 'updateRoute',
-        immediate: true
-      },
       is_deployed: {
         handler: 'initStickyAndTour',
         immediate: true
@@ -355,7 +351,6 @@
       first_step.title = first_step.title.replace(/{{first_name}}/, first_name)
 
       return {
-        active_view: _.get(this.$route, 'params.view', PIPEDOC_VIEW_BUILD),
         active_collapse_items: ['tasks'],
         active_ui_idx: 0,
         active_task_idx: -1,
@@ -627,13 +622,6 @@
         //this.scrollToItem(this.output_item_id, 300)
 
         this.$store.track('Tested Pipe')
-      },
-      updateRoute() {
-        // update the route
-        var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
-        var view = this.active_view
-        //_.set(new_route, 'params.view', view)
-        this.$router.replace(new_route)
       },
       revert() {
         this.$nextTick(() => {
