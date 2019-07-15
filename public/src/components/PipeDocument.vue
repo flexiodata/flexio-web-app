@@ -13,8 +13,8 @@
         class="flex-none bg-nearer-white"
         default-active="0"
         :style="{
-          width: show_sidebar || is_deployed ? '0' : '49px',
-          opacity: show_sidebar || is_deployed ? '0' : '1',
+          width: show_sidebar ? '0' : '49px',
+          opacity: show_sidebar ? '0' : '1',
           borderRight: 0
         }"
       >
@@ -90,12 +90,11 @@
             </div>
 
             <div class="flex-fill overflow-y-auto">
-              <!-- input panel; visible when pipe is not deployed -->
+              <!-- input panel -->
               <div
                 class="mb4 ph2"
                 name="input"
                 data-tour-step="pipe-onboarding-2"
-                v-if="!is_deployed"
               >
                 <h4 class="mv0 pa3">Input</h4>
 
@@ -109,13 +108,12 @@
                 </div>
               </div>
 
-              <!-- output panel; visible when pipe is not deployed -->
+              <!-- output panel -->
               <div
                 class="mb4 ph2"
                 name="output"
                 data-tour-step="pipe-onboarding-4"
                 :id="output_item_id"
-                v-if="!is_deployed"
               >
                 <h4 class="mv0 ph3 pb3">Output</h4>
 
@@ -168,52 +166,11 @@
                 <template slot="title">
                   <div class="flex flex-row items-center" data-tour-step="pipe-onboarding-1">
                     <span class="f4">Tasks</span>
-                    <div class="flex flex-row items-center ml3" @click.stop v-if="is_deployed">
-                      <ConfirmPopover
-                        class="pointer"
-                        style="margin-right: 2px"
-                        placement="bottom-start"
-                        message="Editing a pipe while it is deployed can have unintended consequences. Are you sure you want to continue?"
-                        title="Confirm unlock?"
-                        confirmButtonText="Unlock"
-                        :width="420"
-                        :offset="-50"
-                        @confirm-click="toggleLock"
-                        v-if="is_locked"
-                      >
-                        <div class="flex flex-row items-center" slot="reference">
-                          <i class="material-icons blue">lock</i>
-                        </div>
-                      </ConfirmPopover>
-                      <div
-                        class="flex flex-row items-center"
-                        style="display: flex"
-                        :class="is_changed ? 'hint--top' : ''"
-                        :aria-label="is_changed ? 'Cancel or save changes to the pipe before locking' : ''"
-                        v-else
-                      >
-                        <el-button
-                          type="text"
-                          slot="reference"
-                          style="border: 0; padding: 0; margin-right: 2px"
-                          :disabled="is_changed"
-                          @click="toggleLock"
-                        >
-                          <i class="material-icons">lock_open</i>
-                        </el-button>
-                      </div>
-                      <span class="cursor-default" v-if="is_locked">Click the lock to make changes</span>
-                      <span class="cursor-default" v-else="is_locked">Click the lock to prevent further changes</span>
-                    </div>
-                    <span v-if="false" class="ml1 lh-1 hint--bottom hint--large" aria-label="The task list defines the actual logic for the pipe that will be run. Steps can be added either using the interface below or by editing the 'task' node in the YAML sidebar.">
-                      <i class="el-icon-info blue"></i>
-                    </span>
                   </div>
                 </template>
                 <div class="pt3 ph3">
                   <PipeBuilderList
                     ref="task-list"
-                    :class="is_deployed && is_locked ? 'o-40 no-pointer-events no-select' : ''"
                     :container-id="scrollbar_container_id"
                     :has-errors.sync="has_errors"
                     :active-item-idx.sync="active_task_idx"
@@ -222,37 +179,6 @@
                     v-model="edit_task_list"
                   />
                   <div data-tour-step="pipe-onboarding-5" class="relative o-0 w3" style="left: 64px; top: -450px"></div>
-                </div>
-              </el-collapse-item>
-
-              <!-- deployment panel -->
-              <el-collapse-item
-                class="mb4 pv1 ph3 bg-white br2 css-white-box"
-                name="deployment"
-                data-tour-step="pipe-onboarding-6"
-              >
-                <template slot="title">
-                  <div class="flex flex-row items-center">
-                    <span class="f4">Deployment</span>
-                    <LabelSwitch
-                      class="dib ml3 hint--bottom"
-                      style="height: 20px"
-                      active-color="#13ce66"
-                      :aria-label="is_deployed ? 'Turn pipe off' : 'Turn pipe on'"
-                      :width="58"
-                      @click.stop
-                      v-model="is_deployed"
-                    />
-                  </div>
-                </template>
-                <div class="pt3 ph3">
-                  <PipeDeployPanel
-                    :is-mode-run.sync="is_deployed"
-                    :pipe="edit_pipe"
-                    :show-properties-panel.sync="show_pipe_properties_dialog"
-                    :show-schedule-panel.sync="show_pipe_schedule_dialog"
-                    @updated-deployment="onDeploymentUpdated"
-                  />
                 </div>
               </el-collapse-item>
             </el-collapse>
@@ -330,7 +256,6 @@
   import PipeDocumentHeader from '@comp/PipeDocumentHeader'
   import PipePropertiesPanel from '@comp/PipePropertiesPanel'
   import PipeSchedulePanel from '@comp/PipeSchedulePanel'
-  import PipeDeployPanel from '@comp/PipeDeployPanel'
   import ProcessContent from '@comp/ProcessContent'
   import PageNotFound from '@comp/PageNotFound'
   import PopperTour from '@comp/PopperTour'
@@ -385,7 +310,6 @@
       PipeDocumentHeader,
       PipePropertiesPanel,
       PipeSchedulePanel,
-      PipeDeployPanel,
       ProcessContent,
       PageNotFound,
       PopperTour,
@@ -432,7 +356,7 @@
 
       return {
         active_view: _.get(this.$route, 'params.view', PIPEDOC_VIEW_BUILD),
-        active_collapse_items: ['tasks', 'output', 'deployment'],
+        active_collapse_items: ['tasks'],
         active_ui_idx: 0,
         active_task_idx: -1,
         scrollbar_container_id: _.uniqueId('pane-'),
@@ -446,7 +370,6 @@
         has_tested_once: false,
         has_errors: false,
         is_saving: false,
-        is_locked: true,
         show_save_cancel: false,
         save_cancel_zindex: 2050,
         pipe_not_found: false,
@@ -574,7 +497,6 @@
             var pipe = _.cloneDeep(this.edit_pipe)
             _.assign(pipe, { deploy_mode })
             this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
-            this.is_locked = true
             this.saveChanges()
           }
 
@@ -698,9 +620,6 @@
           this.$store.dispatch('v2_action_runProcess', { eid, cfg: run_cfg })
         })
 
-        // make sure the output is expanded
-        this.active_collapse_items = [].concat(this.active_collapse_items).concat(['output'])
-
         // make sure we know we've tested the pipe at least once
         this.has_tested_once = true
 
@@ -749,26 +668,7 @@
           this.$store.track('Closed Testing Panel')
         }
       },
-      toggleLock() {
-        if (this.is_changed) {
-          return
-        }
-
-        this.is_locked = !this.is_locked
-
-        if (!this.is_locked) {
-          this.active_collapse_items = this.active_collapse_items.concat(['tasks'])
-        } else {
-          this.active_collapse_items = _.without(this.active_collapse_items, 'tasks')
-        }
-      },
       initStickyAndTour() {
-        if (this.is_deployed) {
-          this.active_collapse_items = _.without(this.active_collapse_items, 'tasks')
-        } else {
-          this.active_collapse_items = this.active_collapse_items.concat(['tasks'])
-        }
-
         setTimeout(() => {
           stickybits('.sticky', {
             scrollEl: '#' + this.scrollbar_container_id,
@@ -798,26 +698,6 @@
           }, timeout ? timeout : 10)
         }
       },
-      onDeploymentUpdated(value) {
-        var pipe = _.cloneDeep(this.edit_pipe)
-        _.assign(pipe, value)
-
-        // add default scheduling options to the pipe when
-        // turning scheduling on for the first time
-        if (_.get(pipe, 'deploy_schedule') == ACTIVE) {
-          if (_.isNil(_.get(pipe, 'schedule'))) {
-            _.set(pipe, 'schedule', SCHEDULE_DEFAULTS)
-          }
-        }
-
-        // `deploy_api` is required for `deploy_ui` (Google Sheets) right now
-        if (_.get(pipe, 'deploy_ui') == ACTIVE) {
-          _.set(pipe, 'deploy_api', ACTIVE)
-        }
-
-        this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
-        this.saveChanges()
-      },
       onTourStart() {
         this.tour_current_step = 0
         var current_step = this.tour_current_step
@@ -845,7 +725,6 @@
         this.$store.track('Clicked Tour Next Button', { current_step })
 
         if (current_step == 1) {
-          this.active_collapse_items = ['input', 'tasks', 'output', 'deployment']
           this.process_data = {
             count: 3
           }
