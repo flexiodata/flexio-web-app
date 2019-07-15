@@ -1,314 +1,264 @@
 <template>
-  <!-- pipe fetching -->
+  <!-- fetching -->
   <div class="bg-nearer-white" v-if="is_fetching">
     <div class="flex flex-column justify-center h-100">
       <Spinner size="large" message="Loading..." />
     </div>
   </div>
 
-  <!-- pipe fetched -->
+  <!-- fetched -->
   <div class="bg-nearer-white" v-else-if="is_fetched">
-    <!-- pipe is deployed; runtime view; no ui steps -->
-    <div
-      class="h-100 pa4 overflow-y-scroll"
-      v-if="is_runtime && is_deployed && edit_ui_list.length == 0"
-    >
-      <div class="mv4 center mw-doc">
-        <div class="pa4 bg-white br2 tc css-white-box">
-          <IconMessage title="This pipe cannot be run in a browser.">
-            If you are the owner of this pipe, please set up a web interface. If this pipe was shared with you, please contact the person who shared it with you to have it set up for your use.
-          </IconMessage>
-        </div>
-      </div>
-    </div>
+    <div class="flex flex-row h-100">
+      <el-menu
+        class="flex-none bg-nearer-white"
+        default-active="0"
+        :style="{
+          width: show_sidebar || is_deployed ? '0' : '49px',
+          opacity: show_sidebar || is_deployed ? '0' : '1',
+          borderRight: 0
+        }"
+      >
+        <el-menu-item
+          index="0"
+          @click="showYaml(true)"
+        >
+          <i class="material-icons nl2 nr2 hint--right" :aria-label="show_yaml ? 'Hide Pipe Definition' : 'Show Pipe Definition'">code</i>
+        </el-menu-item>
+        <el-menu-item
+          index="0"
+          @click="showTesting(true)"
+        >
+          <i class="material-icons nl2 nr2 hint--right" :aria-label="show_testing ? 'Hide Testing Panel' : 'Show Testing Panel'">assignment</i>
+        </el-menu-item>
+      </el-menu>
 
-    <!-- runtime view; pipe is deployed -->
-    <BuilderDocument
-      class="h-100 overflow-y-scroll"
-      :definition="edit_pipe"
-      v-else-if="is_runtime && is_deployed"
-    />
-
-    <!-- runtime view; pipe is not deployed -->
-    <div
-      class="h-100 pa4 overflow-y-scroll"
-      v-else-if="is_runtime && !is_deployed"
-    >
-      <div class="mv4 center mw-doc">
-        <div class="pa4 bg-white br2 tc css-white-box">
-          <IconMessage title="This pipe cannot be run in a browser.">
-            If you are the owner of this pipe, please turn it on. If this pipe was shared with you, please contact the person who shared it with you to have it turned on.
-          </IconMessage>
-        </div>
-      </div>
-    </div>
-
-    <!-- build view -->
-    <div class="h-100" v-else>
-      <div class="flex flex-row h-100">
-        <el-menu
-          class="flex-none bg-nearer-white"
-          default-active="0"
+      <multipane
+        class="flex-fill vertical-panes"
+        layout="vertical"
+      >
+        <div
+          class="pane bg-white"
+          :class="{
+            'trans-a': false //!show_sidebar || transitioning_sidebar
+          }"
           :style="{
-            width: show_sidebar || is_deployed ? '0' : '49px',
-            opacity: show_sidebar || is_deployed ? '0' : '1',
-            borderRight: 0
+            maxWidth: '50%',
+            minWidth: show_sidebar ? '200px' : '1px',
+            width: show_sidebar ? '22%' : '1px',
+            marginLeft: show_sidebar ? '0' : '-2px',
+            opacity: show_sidebar ? '1' : '0.01',
+            boxShadow: '2px 2px 6px rgba(0,0,0,0.1)',
+            zIndex: show_sidebar ? 2 : 0
           }"
         >
-          <el-menu-item
-            index="0"
-            @click="showYaml(true)"
-          >
-            <i class="material-icons nl2 nr2 hint--right" :aria-label="show_yaml ? 'Hide Pipe Definition' : 'Show Pipe Definition'">code</i>
-          </el-menu-item>
-          <el-menu-item
-            index="0"
-            @click="showTesting(true)"
-          >
-            <i class="material-icons nl2 nr2 hint--right" :aria-label="show_testing ? 'Hide Testing Panel' : 'Show Testing Panel'">assignment</i>
-          </el-menu-item>
-        </el-menu>
-
-        <multipane
-          class="flex-fill vertical-panes"
-          layout="vertical"
-        >
-          <div
-            class="pane bg-white"
-            :class="{
-              'trans-a': false //!show_sidebar || transitioning_sidebar
-            }"
-            :style="{
-              maxWidth: '50%',
-              minWidth: show_sidebar ? '200px' : '1px',
-              width: show_sidebar ? '22%' : '1px',
-              marginLeft: show_sidebar ? '0' : '-2px',
-              opacity: show_sidebar ? '1' : '0.01',
-              boxShadow: '2px 2px 6px rgba(0,0,0,0.1)',
-              zIndex: show_sidebar ? 2 : 0
-            }"
-          >
-            <template v-if="show_yaml">
-              <div class="flex flex-row items-center bg-nearer-white bb b--black-05 pa2">
-                <div class="f6 fw6 flex-fill">Pipe Definition</div>
-                <el-radio-group
-                  class="mh2"
-                  size="micro"
-                  v-model="yaml_view"
-                >
-                  <el-radio-button label="json"><span class="fw6">JSON</span></el-radio-button>
-                  <el-radio-button label="yaml"><span class="fw6">YAML</span></el-radio-button>
-                </el-radio-group>
-                <div class="pointer f5 black-30 hover-black-60 hint--bottom-left" aria-label="Hide Pipe Definition" @click="showYaml(false)">
-                  <i class="el-icon-close fw6"></i>
-                </div>
-              </div>
-              <PipeCodeEditor
-                class="h-100"
-                ref="code-editor"
-                editor-cls="bg-white h-100"
-                :type="yaml_view"
-                :class="{
-                  'no-pointer-events': !show_yaml
-                }"
-                :show-json-view-toggle="false"
-                :task-only="false"
-                :has-errors.sync="has_errors"
-                @save="saveChanges"
-                v-model="edit_pipe"
-              />
-            </template>
-            <div class="flex flex-column h-100" v-if="show_testing">
-              <div class="flex-none flex flex-row items-center bg-nearer-white bb b--black-05 pa2">
-                <div class="f6 fw6 flex-fill">Testing</div>
-                <div class="pointer f5 black-30 hover-black-60 hint--bottom-left" aria-label="Hide Testing" @click="showTesting(false)">
-                  <i class="el-icon-close fw6"></i>
-                </div>
-              </div>
-
-              <div class="flex-fill overflow-y-auto">
-                <!-- input panel; visible when pipe is not deployed -->
-                <div
-                  class="mb4 ph2"
-                  name="input"
-                  data-tour-step="pipe-onboarding-2"
-                  v-if="!is_deployed"
-                >
-                  <h4 class="mv0 pa3">Input</h4>
-
-                  <div class="ph3">
-                    <p class="mt0 ttu fw6 f7 moon-gray">Test this pipe with the following POST parameters</p>
-                    <ProcessInput
-                      ref="process-input"
-                      v-model="process_input"
-                      :process-data.sync="process_data"
-                    />
-                  </div>
-                </div>
-
-                <!-- output panel; visible when pipe is not deployed -->
-                <div
-                  class="mb4 ph2"
-                  name="output"
-                  data-tour-step="pipe-onboarding-4"
-                  :id="output_item_id"
-                  v-if="!is_deployed"
-                >
-                  <h4 class="mv0 ph3 pb3">Output</h4>
-
-                  <div class="ph3">
-                    <ProcessContent :process-eid="active_process_eid">
-                      <div class="ba b--black-10 pa3 tc f6 lh-copy" slot="empty">
-                        <em>Click the <code class="ph1 ba b--black-10 bg-nearer-white br2">Test</code> button to see the result of your pipe logic here.</em>
-                      </div>
-                    </ProcessContent>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <multipane-resizer
-            :class="{
-              'no-pointer-events': !show_sidebar
-            }"
-            :style="{
-              zIndex: show_sidebar ? 3 : 0
-            }"
-          />
-          <div
-            class="pane pa4 pt0 overflow-y-scroll"
-            :id="scrollbar_container_id"
-            :style="{ flexGrow: 1 }"
-          >
-            <PipeDocumentHeader
-              class="relative z-7 bg-nearer-white sticky"
-              data-tour-step="pipe-onboarding-0"
-              :title="title"
-              :is-mode-run.sync="is_deployed"
-              :show-save-cancel="show_save_cancel"
-              @properties-click="openPropertiesDialog"
-              @cancel-click="cancelChanges"
-              @save-click="saveChanges"
-              @run-click="testPipe"
-            />
-
-            <!-- run panel; visible when pipe is deployed -->
-            <div class="mv4 center mw-doc" v-if="is_deployed">
-              <div class="pa4 pt3 bg-white br2 css-white-box">
-                <PipeDocumentRunPanel
-                  class="tc"
-                  :eid="eid"
-                  :is-mode-run.sync="is_deployed"
-                />
-              </div>
-            </div>
-
-            <div class="mv4 center mw-doc" style="padding-bottom: 12rem">
-              <el-collapse
-                class="el-collapse--plain"
-                v-model="active_collapse_items"
+          <template v-if="show_yaml">
+            <div class="flex flex-row items-center bg-nearer-white bb b--black-05 pa2">
+              <div class="f6 fw6 flex-fill">Pipe Definition</div>
+              <el-radio-group
+                class="mh2"
+                size="micro"
+                v-model="yaml_view"
               >
-                <!-- tasks panel -->
-                <el-collapse-item
-                  class="mb4 pv1 ph3 bg-white br2 css-white-box"
-                  name="tasks"
-                >
-                  <template slot="title">
-                    <div class="flex flex-row items-center" data-tour-step="pipe-onboarding-1">
-                      <span class="f4">Tasks</span>
-                      <div class="flex flex-row items-center ml3" @click.stop v-if="is_deployed">
-                        <ConfirmPopover
-                          class="pointer"
-                          style="margin-right: 2px"
-                          placement="bottom-start"
-                          message="Editing a pipe while it is deployed can have unintended consequences. Are you sure you want to continue?"
-                          title="Confirm unlock?"
-                          confirmButtonText="Unlock"
-                          :width="420"
-                          :offset="-50"
-                          @confirm-click="toggleLock"
-                          v-if="is_locked"
-                        >
-                          <div class="flex flex-row items-center" slot="reference">
-                            <i class="material-icons blue">lock</i>
-                          </div>
-                        </ConfirmPopover>
-                        <div
-                          class="flex flex-row items-center"
-                          style="display: flex"
-                          :class="is_changed ? 'hint--top' : ''"
-                          :aria-label="is_changed ? 'Cancel or save changes to the pipe before locking' : ''"
-                          v-else
-                        >
-                          <el-button
-                            type="text"
-                            slot="reference"
-                            style="border: 0; padding: 0; margin-right: 2px"
-                            :disabled="is_changed"
-                            @click="toggleLock"
-                          >
-                            <i class="material-icons">lock_open</i>
-                          </el-button>
-                        </div>
-                        <span class="cursor-default" v-if="is_locked">Click the lock to make changes</span>
-                        <span class="cursor-default" v-else="is_locked">Click the lock to prevent further changes</span>
-                      </div>
-                      <span v-if="false" class="ml1 lh-1 hint--bottom hint--large" aria-label="The task list defines the actual logic for the pipe that will be run. Steps can be added either using the interface below or by editing the 'task' node in the YAML sidebar.">
-                        <i class="el-icon-info blue"></i>
-                      </span>
-                    </div>
-                  </template>
-                  <div class="pt3 ph3">
-                    <PipeBuilderList
-                      ref="task-list"
-                      :class="is_deployed && is_locked ? 'o-40 no-pointer-events no-select' : ''"
-                      :container-id="scrollbar_container_id"
-                      :has-errors.sync="has_errors"
-                      :active-item-idx.sync="active_task_idx"
-                      @cancel="cancelChanges"
-                      @save="saveChanges"
-                      v-model="edit_task_list"
-                    />
-                    <div data-tour-step="pipe-onboarding-5" class="relative o-0 w3" style="left: 64px; top: -450px"></div>
-                  </div>
-                </el-collapse-item>
+                <el-radio-button label="json"><span class="fw6">JSON</span></el-radio-button>
+                <el-radio-button label="yaml"><span class="fw6">YAML</span></el-radio-button>
+              </el-radio-group>
+              <div class="pointer f5 black-30 hover-black-60 hint--bottom-left" aria-label="Hide Pipe Definition" @click="showYaml(false)">
+                <i class="el-icon-close fw6"></i>
+              </div>
+            </div>
+            <PipeCodeEditor
+              class="h-100"
+              ref="code-editor"
+              editor-cls="bg-white h-100"
+              :type="yaml_view"
+              :class="{
+                'no-pointer-events': !show_yaml
+              }"
+              :show-json-view-toggle="false"
+              :task-only="false"
+              :has-errors.sync="has_errors"
+              @save="saveChanges"
+              v-model="edit_pipe"
+            />
+          </template>
+          <div class="flex flex-column h-100" v-if="show_testing">
+            <div class="flex-none flex flex-row items-center bg-nearer-white bb b--black-05 pa2">
+              <div class="f6 fw6 flex-fill">Testing</div>
+              <div class="pointer f5 black-30 hover-black-60 hint--bottom-left" aria-label="Hide Testing" @click="showTesting(false)">
+                <i class="el-icon-close fw6"></i>
+              </div>
+            </div>
 
-                <!-- deployment panel -->
-                <el-collapse-item
-                  class="mb4 pv1 ph3 bg-white br2 css-white-box"
-                  name="deployment"
-                  data-tour-step="pipe-onboarding-6"
-                >
-                  <template slot="title">
-                    <div class="flex flex-row items-center">
-                      <span class="f4">Deployment</span>
-                      <LabelSwitch
-                        class="dib ml3 hint--bottom"
-                        style="height: 20px"
-                        active-color="#13ce66"
-                        :aria-label="is_deployed ? 'Turn pipe off' : 'Turn pipe on'"
-                        :width="58"
-                        @click.stop
-                        v-model="is_deployed"
-                      />
+            <div class="flex-fill overflow-y-auto">
+              <!-- input panel; visible when pipe is not deployed -->
+              <div
+                class="mb4 ph2"
+                name="input"
+                data-tour-step="pipe-onboarding-2"
+                v-if="!is_deployed"
+              >
+                <h4 class="mv0 pa3">Input</h4>
+
+                <div class="ph3">
+                  <p class="mt0 ttu fw6 f7 moon-gray">Test this pipe with the following POST parameters</p>
+                  <ProcessInput
+                    ref="process-input"
+                    v-model="process_input"
+                    :process-data.sync="process_data"
+                  />
+                </div>
+              </div>
+
+              <!-- output panel; visible when pipe is not deployed -->
+              <div
+                class="mb4 ph2"
+                name="output"
+                data-tour-step="pipe-onboarding-4"
+                :id="output_item_id"
+                v-if="!is_deployed"
+              >
+                <h4 class="mv0 ph3 pb3">Output</h4>
+
+                <div class="ph3">
+                  <ProcessContent :process-eid="active_process_eid">
+                    <div class="ba b--black-10 pa3 tc f6 lh-copy" slot="empty">
+                      <em>Click the <code class="ph1 ba b--black-10 bg-nearer-white br2">Test</code> button to see the result of your pipe logic here.</em>
                     </div>
-                  </template>
-                  <div class="pt3 ph3">
-                    <PipeDeployPanel
-                      :is-mode-run.sync="is_deployed"
-                      :pipe="edit_pipe"
-                      :show-properties-panel.sync="show_pipe_properties_dialog"
-                      :show-runtime-configure-panel.sync="show_runtime_configure_dialog"
-                      :show-schedule-panel.sync="show_pipe_schedule_dialog"
-                      @updated-deployment="onDeploymentUpdated"
-                    />
-                  </div>
-                </el-collapse-item>
-              </el-collapse>
+                  </ProcessContent>
+                </div>
+              </div>
             </div>
           </div>
-        </multipane>
-      </div>
+        </div>
+        <multipane-resizer
+          :class="{
+            'no-pointer-events': !show_sidebar
+          }"
+          :style="{
+            zIndex: show_sidebar ? 3 : 0
+          }"
+        />
+        <div
+          class="pane pa4 pt0 overflow-y-scroll"
+          :id="scrollbar_container_id"
+          :style="{ flexGrow: 1 }"
+        >
+          <PipeDocumentHeader
+            class="relative z-7 bg-nearer-white sticky"
+            data-tour-step="pipe-onboarding-0"
+            :title="title"
+            :is-mode-run.sync="is_deployed"
+            :show-save-cancel="show_save_cancel"
+            @properties-click="openPropertiesDialog"
+            @cancel-click="cancelChanges"
+            @save-click="saveChanges"
+            @run-click="testPipe"
+          />
+
+          <div class="mv4 center mw-doc" style="padding-bottom: 12rem">
+            <el-collapse
+              class="el-collapse--plain"
+              v-model="active_collapse_items"
+            >
+              <!-- tasks panel -->
+              <el-collapse-item
+                class="mb4 pv1 ph3 bg-white br2 css-white-box"
+                name="tasks"
+              >
+                <template slot="title">
+                  <div class="flex flex-row items-center" data-tour-step="pipe-onboarding-1">
+                    <span class="f4">Tasks</span>
+                    <div class="flex flex-row items-center ml3" @click.stop v-if="is_deployed">
+                      <ConfirmPopover
+                        class="pointer"
+                        style="margin-right: 2px"
+                        placement="bottom-start"
+                        message="Editing a pipe while it is deployed can have unintended consequences. Are you sure you want to continue?"
+                        title="Confirm unlock?"
+                        confirmButtonText="Unlock"
+                        :width="420"
+                        :offset="-50"
+                        @confirm-click="toggleLock"
+                        v-if="is_locked"
+                      >
+                        <div class="flex flex-row items-center" slot="reference">
+                          <i class="material-icons blue">lock</i>
+                        </div>
+                      </ConfirmPopover>
+                      <div
+                        class="flex flex-row items-center"
+                        style="display: flex"
+                        :class="is_changed ? 'hint--top' : ''"
+                        :aria-label="is_changed ? 'Cancel or save changes to the pipe before locking' : ''"
+                        v-else
+                      >
+                        <el-button
+                          type="text"
+                          slot="reference"
+                          style="border: 0; padding: 0; margin-right: 2px"
+                          :disabled="is_changed"
+                          @click="toggleLock"
+                        >
+                          <i class="material-icons">lock_open</i>
+                        </el-button>
+                      </div>
+                      <span class="cursor-default" v-if="is_locked">Click the lock to make changes</span>
+                      <span class="cursor-default" v-else="is_locked">Click the lock to prevent further changes</span>
+                    </div>
+                    <span v-if="false" class="ml1 lh-1 hint--bottom hint--large" aria-label="The task list defines the actual logic for the pipe that will be run. Steps can be added either using the interface below or by editing the 'task' node in the YAML sidebar.">
+                      <i class="el-icon-info blue"></i>
+                    </span>
+                  </div>
+                </template>
+                <div class="pt3 ph3">
+                  <PipeBuilderList
+                    ref="task-list"
+                    :class="is_deployed && is_locked ? 'o-40 no-pointer-events no-select' : ''"
+                    :container-id="scrollbar_container_id"
+                    :has-errors.sync="has_errors"
+                    :active-item-idx.sync="active_task_idx"
+                    @cancel="cancelChanges"
+                    @save="saveChanges"
+                    v-model="edit_task_list"
+                  />
+                  <div data-tour-step="pipe-onboarding-5" class="relative o-0 w3" style="left: 64px; top: -450px"></div>
+                </div>
+              </el-collapse-item>
+
+              <!-- deployment panel -->
+              <el-collapse-item
+                class="mb4 pv1 ph3 bg-white br2 css-white-box"
+                name="deployment"
+                data-tour-step="pipe-onboarding-6"
+              >
+                <template slot="title">
+                  <div class="flex flex-row items-center">
+                    <span class="f4">Deployment</span>
+                    <LabelSwitch
+                      class="dib ml3 hint--bottom"
+                      style="height: 20px"
+                      active-color="#13ce66"
+                      :aria-label="is_deployed ? 'Turn pipe off' : 'Turn pipe on'"
+                      :width="58"
+                      @click.stop
+                      v-model="is_deployed"
+                    />
+                  </div>
+                </template>
+                <div class="pt3 ph3">
+                  <PipeDeployPanel
+                    :is-mode-run.sync="is_deployed"
+                    :pipe="edit_pipe"
+                    :show-properties-panel.sync="show_pipe_properties_dialog"
+                    :show-schedule-panel.sync="show_pipe_schedule_dialog"
+                    @updated-deployment="onDeploymentUpdated"
+                  />
+                </div>
+              </el-collapse-item>
+            </el-collapse>
+          </div>
+        </div>
+      </multipane>
     </div>
 
     <!-- pipe properties dialog -->
@@ -325,23 +275,6 @@
         @close="show_pipe_properties_dialog = false"
         @cancel="show_pipe_properties_dialog = false"
         @submit="saveProperties"
-      />
-    </el-dialog>
-
-    <!-- pipe runtime configure dialog -->
-    <el-dialog
-      custom-class="el-dialog--no-header el-dialog--no-footer el-dialog--full-body is-almost-fullscreen"
-      :fullscreen="true"
-      :modal-append-to-body="false"
-      :close-on-click-modal="false"
-      :visible.sync="show_runtime_configure_dialog"
-    >
-      <PipeRuntimeConfigurePanel
-        :pipe="edit_pipe"
-        @close="show_runtime_configure_dialog = false"
-        @cancel="show_runtime_configure_dialog = false"
-        @submit="saveRuntime"
-        v-if="show_runtime_configure_dialog"
       />
     </el-dialog>
 
@@ -395,9 +328,7 @@
   import PipeBuilderList from '@comp/PipeBuilderList'
   import PipeCodeEditor from '@comp/PipeCodeEditor'
   import PipeDocumentHeader from '@comp/PipeDocumentHeader'
-  import PipeDocumentRunPanel from '@comp/PipeDocumentRunPanel'
   import PipePropertiesPanel from '@comp/PipePropertiesPanel'
-  import PipeRuntimeConfigurePanel from '@comp/PipeRuntimeConfigurePanel'
   import PipeSchedulePanel from '@comp/PipeSchedulePanel'
   import PipeDeployPanel from '@comp/PipeDeployPanel'
   import ProcessContent from '@comp/ProcessContent'
@@ -452,9 +383,7 @@
       PipeBuilderList,
       PipeCodeEditor,
       PipeDocumentHeader,
-      PipeDocumentRunPanel,
       PipePropertiesPanel,
-      PipeRuntimeConfigurePanel,
       PipeSchedulePanel,
       PipeDeployPanel,
       ProcessContent,
@@ -510,7 +439,6 @@
         output_item_id: _.uniqueId('item-'),
         show_pipe_schedule_dialog: false,
         show_pipe_properties_dialog: false,
-        show_runtime_configure_dialog: false,
         yaml_view: 'yaml',
         show_yaml: false,
         show_testing: false,
@@ -625,9 +553,6 @@
       pipe_schedule() {
         return _.get(this.edit_pipe, 'schedule', {})
       },
-      is_runtime() {
-        return this.active_view == PIPEDOC_VIEW_RUN
-      },
       active_process_eid() {
         if (!this.has_tested_once) {
           return ''
@@ -727,10 +652,6 @@
         this.show_pipe_properties_dialog = true
         this.$store.track('Opened Properties Dialog')
       },
-      openRuntimeConfigureDialog() {
-        this.show_runtime_configure_dialog = true
-        this.$store.track('Opened Runtime Configure Dialog')
-      },
       openScheduleDialog() {
         this.show_pipe_schedule_dialog = true
         this.$store.track('Opened Schedule Dialog')
@@ -744,17 +665,6 @@
 
         this.saveChanges().then(() => {
           this.show_pipe_properties_dialog = false
-        })
-      },
-      saveRuntime(attrs) {
-        attrs = _.pick(attrs, ['ui'])
-
-        var pipe = _.cloneDeep(this.edit_pipe)
-        _.assign(pipe, attrs)
-        this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
-
-        this.saveChanges().then(() => {
-          this.show_runtime_configure_dialog = false
         })
       },
       saveSchedule(attrs) {
