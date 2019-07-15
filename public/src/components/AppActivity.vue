@@ -9,12 +9,12 @@
   <!-- fetched -->
   <div class="flex flex-column overflow-y-scroll" :id="doc_id" v-else-if="is_fetched">
     <!-- use `z-7` to ensure the title z-index is greater than the CodeMirror scrollbar -->
-    <div class="mt4 relative z-7 bg-white sticky">
-      <div class="center w-100 pa3 pl4-l pr4-l bb bb-0-l b--black-10 sticky" style="max-width: 1280px">
+    <div class="relative z-7 bg-white sticky">
+      <div class="center w-100 pb3 bb bb-0-l b--black-10 sticky" style="max-width: 1280px">
         <!-- control bar -->
         <div class="flex flex-row items-center">
           <div class="flex-fill flex flex-row items-center">
-            <h1 class="mv0 f2 fw4 mr3">{{title}}</h1>
+            <slot name="title"><h1 class="mv0 f2 fw4 mr3">{{title}}</h1></slot>
           </div>
           <SimplePager
             :current-page.sync="current_page"
@@ -49,7 +49,7 @@
 
     <!-- list -->
     <ProcessList
-      class="center w-100 pl4-l pr4-l pb4-l"
+      class="center w-100"
       style="max-width: 1280px; padding-bottom: 8rem"
       :items="output_processes"
       :start="start"

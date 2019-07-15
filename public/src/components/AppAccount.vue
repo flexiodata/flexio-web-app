@@ -24,11 +24,11 @@
 
           <el-tab-pane name="activity">
             <div slot="label"><div style="min-width: 5rem">Activity</div></div>
-            <div class="ml3 mr4">
-              <h3 class="mt0 fw6 f3">Activity</h3>
-              <AppActivity />
-              <div class="h2"></div>
-            </div>
+              <AppActivity class="ml3 mr4 pr3">
+                <div slot="title">
+                  <h3 class="mv0 fw6 f3">Activity</h3>
+                </div>
+              </AppActivity>
           </el-tab-pane>
 
           <el-tab-pane name="settings">

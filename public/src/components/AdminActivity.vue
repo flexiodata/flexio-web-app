@@ -2,7 +2,7 @@
   <div class="bg-white">
     <!-- list -->
     <AppActivity
-      class="h-100"
+      class="pt4 h-100"
       :items="processes"
       :show-user="true"
       :created-min.sync="created_min"
