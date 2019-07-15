@@ -3,6 +3,13 @@
     <div class="flex-fill flex flex-row items-center">
       <h1 class="mv0 fw4 f3" v-if="title.length > 0">{{title}}</h1>
       <h1 class="mv0 fw4 f3 moon-gray" v-else>(No title)</h1>
+      <LabelSwitch
+        class="dib ml2 hint--bottom-left"
+        active-color="#13ce66"
+        :aria-label="is_deployed ? 'Turn pipe off' : 'Turn pipe on'"
+        :width="58"
+        v-model="is_deployed"
+      />
       <el-button
         plain
         class="btn-header hint--bottom"
@@ -25,25 +32,11 @@
           style="min-width: 5rem; margin: 0 0.75rem"
           type="primary"
           size="small"
-          :class="{ 'invisible': isModeRun }"
           :disabled="!allowRun"
           @click="$emit('run-click')"
         >
           Test
         </el-button>
-        <div
-          class="flex flex-row items-center justify-center"
-          style="padding: 5px 5px 6px 10px; border-radius: 3px"
-        >
-          <span class="f6 ttu fw6">Your pipe is</span>
-          <LabelSwitch
-            class="dib ml2 hint--bottom-left"
-            active-color="#13ce66"
-            :aria-label="is_deployed ? 'Turn pipe off' : 'Turn pipe on'"
-            :width="58"
-            v-model="is_deployed"
-          />
-        </div>
       </div>
       <div
         key="save-cancel"
