@@ -22,42 +22,6 @@ class Test
     {
         // TODO: add tests for grant, revoke, etc
 
-        // BEGIN TEST
-        $actual = \Flexio\Object\Action::TYPE_UNDEFINED;
-        $expected = '';
-        \Flexio\Tests\Check::assertString('A.1', 'Right type',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Flexio\Object\Action::TYPE_READ;
-        $expected = 'object.read';
-        \Flexio\Tests\Check::assertString('A.2', 'Right type',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Flexio\Object\Action::TYPE_WRITE;
-        $expected = 'object.write';
-        \Flexio\Tests\Check::assertString('A.3', 'Right type',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Flexio\Object\Action::TYPE_DELETE;
-        $expected = 'object.delete';
-        \Flexio\Tests\Check::assertString('A.4', 'Right type',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Flexio\Object\Action::TYPE_EXECUTE;
-        $expected = 'object.execute';
-        \Flexio\Tests\Check::assertString('A.5', 'Right type',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Flexio\Object\Action::TYPE_READ_RIGHTS;
-        $expected = 'rights.read';
-        \Flexio\Tests\Check::assertString('A.6', 'Right type',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Flexio\Object\Action::TYPE_WRITE_RIGHTS;
-        $expected = 'rights.write';
-        \Flexio\Tests\Check::assertString('A.7', 'Right type',  $actual, $expected, $results);
-
-
 
         // TEST: \Model::addRights()
 
