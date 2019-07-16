@@ -107,34 +107,6 @@ CREATE INDEX idx_token_created ON tbl_token (created);
 
 
 --
--- Table structure for table tbl_acl
---
-
-DROP TABLE IF EXISTS tbl_acl;
-CREATE TABLE tbl_acl (
-  id serial,
-  eid varchar(12) NOT NULL,
-  eid_status varchar(1) NOT NULL default '',
-  object_eid varchar(12) NOT NULL default '',
-  access_type varchar(3) NOT NULL default '',
-  access_code varchar(255) NOT NULL default '',
-  actions json,
-  owned_by varchar(12) NOT NULL default '',
-  created_by varchar(12) NOT NULL default '',
-  created timestamp NULL default NULL,
-  updated timestamp NULL default NULL,
-  PRIMARY KEY (id),
-  UNIQUE (eid)
-);
-
-CREATE INDEX idx_acl_object_eid ON tbl_acl (object_eid);
-CREATE INDEX idx_acl_access_code ON tbl_acl (access_code);
-CREATE INDEX idx_acl_owned_by ON tbl_acl (owned_by);
-CREATE INDEX idx_acl_created ON tbl_acl (created);
-
-
-
---
 -- Table structure for table tbl_pipe
 --
 

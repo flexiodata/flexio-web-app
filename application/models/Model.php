@@ -732,7 +732,6 @@ class Model
             'association' => 'select count(*) as count from tbl_association',
             'user' => 'select count(*) as count from tbl_user',
             'token' => 'select count(*) as count from tbl_token',
-            'acl' => 'select count(*) as count from tbl_acl',
             'pipe' => 'select count(*) as count from tbl_pipe',
             'connection' => 'select count(*) as count from tbl_connection',
             'process' => 'select count(*) as count from tbl_process',
