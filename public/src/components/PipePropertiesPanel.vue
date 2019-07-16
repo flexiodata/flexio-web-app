@@ -2,7 +2,7 @@
   <div>
     <div class="w-100 mb4" v-if="showHeader">
       <div class="flex flex-row items-start">
-        <span class="flex-fill f4 lh-title">Properties for '{{pipe.short_description}}'</span>
+        <span class="flex-fill f4 lh-title">Properties for '{{pipe.name}}'</span>
         <i class="el-icon-close pointer f3 black-30 hover-black-60" @click="onClose"></i>
       </div>
     </div>
