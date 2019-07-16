@@ -69,6 +69,19 @@ class Api
         'POS /:userid/account/cards'                  => '\Flexio\Api\User::addcard',
         'DEL /:userid/account/cards/*'                => '\Flexio\Api\User::deletecard',
 
+        // teams
+        'POS /:userid/teams'                          => '\Flexio\Api\Team::create',
+        'GET /:userid/teams'                          => '\Flexio\Api\Team::list',
+        'POS /:userid/teams/:objid'                   => '\Flexio\Api\Team::set',
+        'GET /:userid/teams/:objid'                   => '\Flexio\Api\Team::get',
+        'DEL /:userid/teams/:objid'                   => '\Flexio\Api\Team::delete',
+
+        'POS /:userid/teammembers'                    => '\Flexio\Api\TeamMember::create',
+        'GET /:userid/teammembers'                    => '\Flexio\Api\TeamMember::list',
+        'POS /:userid/teammembers/:objid'             => '\Flexio\Api\TeamMember::set',
+        'GET /:userid/teammembers/:objid'             => '\Flexio\Api\TeamMember::get',
+        'DEL /:userid/teammembers/:objid'             => '\Flexio\Api\TeamMember::delete',
+
         // authorization
         'GET /:userid/auth/keys'                      => '\Flexio\Api\Token::list',
         'POS /:userid/auth/keys'                      => '\Flexio\Api\Token::create',

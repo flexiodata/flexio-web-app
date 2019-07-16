@@ -99,6 +99,30 @@ CREATE INDEX idx_user_created ON tbl_user (created);
 
 
 --
+-- Table structure for table tbl_team
+--
+
+-- member_status values:
+--    A - active
+--    I - inactive
+
+DROP TABLE IF EXISTS tbl_team;
+CREATE TABLE tbl_team (
+  id serial,
+  team_eid varchar(12) NOT NULL default '',
+  member_eid varchar(12) NOT NULL default '',
+  member_status varchar(1) NOT NULL default 'I',
+  member_permissions text default '',
+  created timestamp NULL default NULL,
+  updated timestamp NULL default NULL,
+  PRIMARY KEY (id),
+  UNIQUE KEY (team_eid,member_eid),
+  UNIQUE KEY (member_eid,team_eid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+--
 -- Table structure for table tbl_token
 --
 
