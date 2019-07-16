@@ -33,7 +33,7 @@ class Stream
         // check the rights on the object
         if ($stream->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($stream->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
+        if ($stream->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $result = $stream->get();
@@ -79,7 +79,7 @@ class Stream
         // check the rights on the object
         if ($stream->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($stream->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
+        if ($stream->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         if ($download === true)

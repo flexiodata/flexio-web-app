@@ -42,7 +42,7 @@ class Test
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
-        $actions = json_encode(array(\Flexio\Object\Right::TYPE_READ));
+        $actions = json_encode(array(\Flexio\Object\Action::TYPE_READ));
         $info = array(
             'eid_status' => \Model::STATUS_PENDING,
             'object_eid' => $object_eid,
