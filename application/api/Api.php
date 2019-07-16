@@ -70,11 +70,6 @@ class Api
         'DEL /:userid/account/cards/*'                => '\Flexio\Api\User::deletecard',
 
         // authorization
-        'GET /:userid/auth/rights'                    => '\Flexio\Api\Right::list',
-        'POS /:userid/auth/rights'                    => '\Flexio\Api\Right::create',
-        'POS /:userid/auth/rights/:objid'             => '\Flexio\Api\Right::set',
-        'GET /:userid/auth/rights/:objid'             => '\Flexio\Api\Right::get',
-        'DEL /:userid/auth/rights/:objid'             => '\Flexio\Api\Right::delete',
         'GET /:userid/auth/keys'                      => '\Flexio\Api\Token::list',
         'POS /:userid/auth/keys'                      => '\Flexio\Api\Token::create',
         'GET /:userid/auth/keys/:objid'               => '\Flexio\Api\Token::get',
