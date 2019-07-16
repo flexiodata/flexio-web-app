@@ -22,6 +22,7 @@
       >
         <el-input
           placeholder="Enter name"
+          :autofocus="true"
           v-model="edit_pipe.name"
         >
           <template slot="prepend"><div class="nl2 nr2">https://api.flex.io/v1/me/pipes/</div></template>
@@ -41,8 +42,9 @@
         label="Short description"
       >
         <el-input
+          type="textarea"
           placeholder="Enter short description"
-          :autofocus="true"
+          :rows="6"
           v-model="edit_pipe.short_description"
         />
       </el-form-item>
