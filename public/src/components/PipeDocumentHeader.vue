@@ -11,15 +11,6 @@
             :width="58"
             v-model="is_deployed"
           />
-          <el-button
-            plain
-            class="btn-header hint--bottom"
-            style="background: transparent"
-            aria-label="Edit Properties"
-            @click="$emit('properties-click')"
-          >
-            <i class="material-icons v-mid">edit</i>
-          </el-button>
         </div>
         <div style="max-width: 60rem">
           <div class="f6 fw4 mt1 lh-copy silver" v-if="pdesc.length > 0">{{pdesc}}</div>
@@ -35,12 +26,21 @@
           <el-button
             class="ttu fw6"
             style="min-width: 5rem"
+            size="small"
+            @click="$emit('properties-click')"
+          >
+            Edit
+          </el-button>
+          <el-button
+            key="test-button"
+            style="min-width: 5rem"
             type="primary"
             size="small"
             :disabled="!allowRun"
             @click="$emit('run-click')"
+            v-show="!showTestPanel"
           >
-            Test
+            <span class="ttu fw6">Test</span>
           </el-button>
         </div>
         <div
@@ -79,6 +79,10 @@
         default: () => { return {} }
       },
       showSaveCancel: {
+        type: Boolean,
+        default: false
+      },
+      showTestPanel: {
         type: Boolean,
         default: false
       },

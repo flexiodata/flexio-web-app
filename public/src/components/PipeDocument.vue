@@ -26,10 +26,11 @@
             :pipe="orig_pipe"
             :is-mode-run.sync="is_deployed"
             :show-save-cancel="show_save_cancel"
+            :show-test-panel="show_testing"
             @properties-click="openPropertiesDialog"
             @cancel-click="cancelChanges"
             @save-click="saveChanges"
-            @run-click="testPipe"
+            @run-click="showTesting(true)"
           />
 
           <div class="mv4 center mw-doc" style="padding-bottom: 12rem">
@@ -116,8 +117,7 @@
           </div>
           <div class="flex flex-column h-100" v-if="show_testing">
             <div class="flex-none flex flex-row items-center bg-nearer-white bb b--black-05 pa2">
-              <i class="material-icons mr1">assignment</i>
-              <div class="f6 fw6 flex-fill">Testing</div>
+              <div class="f6 fw6 flex-fill">Test Pipe</div>
               <div class="pointer f5 black-30 hover-black-60 hint--bottom-left" aria-label="Hide Testing" @click="showTesting(false)">
                 <i class="el-icon-close fw6"></i>
               </div>
@@ -136,7 +136,19 @@
                     :process-data.sync="process_data"
                   />
                 </div>
+
+                <div class="ph3 mt3">
+                  <el-button
+                    class="ttu fw6"
+                    type="primary"
+                    size="small"
+                    @click="testPipe"
+                  >
+                    Run Test
+                  </el-button>
+                </div>
               </div>
+
 
               <!-- output panel -->
               <div class="mb4 ph2">
@@ -145,7 +157,7 @@
                 <div class="ph3">
                   <ProcessContent :process-eid="active_process_eid">
                     <div class="ba b--black-10 pa3 tc f6 lh-copy" slot="empty">
-                      <em>Click the <code class="ph1 ba b--black-10 bg-nearer-white br2">Test</code> button to see the result of your pipe logic here.</em>
+                      <em>Click the <code class="ph1 ba b--black-10 bg-nearer-white br2">Run Test</code> button to see the result of your pipe logic here.</em>
                     </div>
                   </ProcessContent>
                 </div>
@@ -154,30 +166,6 @@
           </div>
         </div>
       </multipane>
-
-      <div
-        class="flex-none bg-nearer-white pt2"
-        :style="{
-          width: show_sidebar ? '0' : '50px',
-          opacity: show_sidebar ? '0' : '1'
-        }"
-      >
-        <el-button
-          type="text"
-          style="padding: 8px 12px"
-          @click="showYaml(true)"
-        >
-          <i class="material-icons hint--left" :aria-label="show_yaml ? 'Hide Pipe Definition' : 'Show Pipe Definition'">code</i>
-        </el-button>
-        <div></div>
-        <el-button
-          type="text"
-          style="padding: 8px 12px"
-          @click="showTesting(true)"
-        >
-          <i class="material-icons hint--left" :aria-label="show_testing ? 'Hide Testing Panel' : 'Show Testing Panel'">assignment</i>
-        </el-button>
-      </div>
     </div>
 
     <!-- pipe properties dialog -->
