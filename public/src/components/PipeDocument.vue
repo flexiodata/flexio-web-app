@@ -79,7 +79,6 @@
             width: show_sidebar ? '22%' : '1px',
             marginRight: show_sidebar ? '0' : '-2px',
             opacity: show_sidebar ? '1' : '0.01',
-            boxShadow: '-2px 2px 6px rgba(0,0,0,0.1)',
             zIndex: show_sidebar ? 2 : 0,
             flexGrow: show_sidebar ? 1 : undefined
           }"

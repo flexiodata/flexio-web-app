@@ -6,18 +6,17 @@
       inline
     >
       <el-form-item label="How would you like to send the form data?">
-        <el-radio-group
+        <el-select
           size="small"
           v-model="ui.form_type"
         >
-          <el-radio-button
-            :label="option.val"
+          <el-option
+            :label="option.label"
+            :value="option.val"
             :key="option.val"
             v-for="option in form_options"
-          >
-            {{option.label}}
-          </el-radio-button>
-        </el-radio-group>
+          />
+        </el-select>
       </el-form-item>
       <el-form-item
         label="What content type header would you like to use?"
@@ -26,7 +25,6 @@
         <!-- TODO: Added 1px top margin to make it line up. I don't care... -->
         <el-select
           size="small"
-          style="margin-top: 1px"
           v-model="ui.raw_type"
         >
           <el-option
@@ -40,17 +38,20 @@
     </el-form>
     <KeypairList
       :header="{ key: 'Key', val: 'Value' }"
+      :input-attrs="{ size: 'small' }"
       v-model="ui.form_data"
       v-show="ui.form_type == 'multipart/form-data'"
     />
     <KeypairList
       :header="{ key: 'Key', val: 'Value' }"
+      :input-attrs="{ size: 'small' }"
       v-model="ui.x_www_form_urlencoded"
       v-show="ui.form_type == 'application/x-www-form-urlencoded'"
     />
     <div v-show="ui.form_type == 'raw'">
       <KeypairList
         :header="{ key: 'Key', val: 'Value' }"
+        :input-attrs="{ size: 'small' }"
         v-model="ui.json"
         v-if="false"
       />

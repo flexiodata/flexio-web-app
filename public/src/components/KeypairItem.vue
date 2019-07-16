@@ -10,11 +10,12 @@
     </div>
     </div>
   </div>
-  <div class="flex flex-column flex-row-ns hide-child mb2" v-else>
+  <div class="flex flex-column items-center-ns flex-row-ns hide-child mb2" v-else>
     <div class="mr2-ns w-30-ns">
       <el-input
         :placeholder="keyPlaceholder"
         @input="onInputChange"
+        v-bind="$attrs['input-attrs']"
         v-model="key"
       />
     </div>
@@ -22,6 +23,7 @@
       <el-input
         :placeholder="valPlaceholder"
         @input="onInputChange"
+        v-bind="$attrs['input-attrs']"
         v-model="val"
       />
     </div>
@@ -42,6 +44,7 @@
 
 <script>
   export default {
+    inheritAttrs: false,
     props: {
       'item': {
         type: Object,
