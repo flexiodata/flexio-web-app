@@ -29,7 +29,7 @@
       >
         <el-button
           class="ttu fw6"
-          style="min-width: 5rem; margin: 0 0.75rem"
+          style="min-width: 5rem"
           type="primary"
           size="small"
           :disabled="!allowRun"
