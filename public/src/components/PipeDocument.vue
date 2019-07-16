@@ -156,28 +156,29 @@
         </div>
       </multipane>
 
-      <el-menu
-        class="flex-none bg-nearer-white"
-        default-active="0"
+      <div
+        class="flex-none bg-nearer-white pt2"
         :style="{
-          width: show_sidebar ? '0' : '49px',
-          opacity: show_sidebar ? '0' : '1',
-          borderRight: 0
+          width: show_sidebar ? '0' : '50px',
+          opacity: show_sidebar ? '0' : '1'
         }"
       >
-        <el-menu-item
-          index="0"
+        <el-button
+          type="text"
+          style="padding: 8px 12px"
           @click="showYaml(true)"
         >
-          <i class="material-icons nl2 nr2 hint--left" :aria-label="show_yaml ? 'Hide Pipe Definition' : 'Show Pipe Definition'">code</i>
-        </el-menu-item>
-        <el-menu-item
-          index="0"
+          <i class="material-icons hint--left" :aria-label="show_yaml ? 'Hide Pipe Definition' : 'Show Pipe Definition'">code</i>
+        </el-button>
+        <div></div>
+        <el-button
+          type="text"
+          style="padding: 8px 12px"
           @click="showTesting(true)"
         >
-          <i class="material-icons nl2 nr2 hint--left" :aria-label="show_testing ? 'Hide Testing Panel' : 'Show Testing Panel'">assignment</i>
-        </el-menu-item>
-      </el-menu>
+          <i class="material-icons hint--left" :aria-label="show_testing ? 'Hide Testing Panel' : 'Show Testing Panel'">assignment</i>
+        </el-button>
+      </div>
     </div>
 
     <!-- pipe properties dialog -->
@@ -612,9 +613,6 @@
   .vertical-panes
     width: 100%
     height: 100%
-
-  .vertical-panes > .pane ~ .pane
-    border-left: 1px solid rgba(0,0,0,0.05)
 
   .sticky
     margin: 0 -2rem
