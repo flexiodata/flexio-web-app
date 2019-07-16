@@ -4,7 +4,7 @@
       <h1 class="mv0 fw4 f3" v-if="title.length > 0">{{title}}</h1>
       <h1 class="mv0 fw4 f3 moon-gray" v-else>(No title)</h1>
       <LabelSwitch
-        class="dib ml2 hint--bottom-left"
+        class="dib ml3 hint--bottom"
         active-color="#13ce66"
         :aria-label="is_deployed ? 'Turn pipe off' : 'Turn pipe on'"
         :width="58"
@@ -15,7 +15,6 @@
         class="btn-header hint--bottom"
         style="background: transparent"
         aria-label="Edit Properties"
-        :class="{ 'invisible': isModeRun }"
         @click="$emit('properties-click')"
       >
         <i class="material-icons v-mid">edit</i>
@@ -105,7 +104,7 @@
   .btn-header
     border: 0
     padding: 0
-    margin-left: 0.5rem
+    margin-left: 1rem
     opacity: 0.3
     &:hover
       opacity: 1
