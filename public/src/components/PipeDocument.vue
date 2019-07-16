@@ -23,7 +23,7 @@
         >
           <PipeDocumentHeader
             class="relative z-7 bg-nearer-white sticky"
-            :title="title"
+            :pipe="orig_pipe"
             :is-mode-run.sync="is_deployed"
             :show-save-cancel="show_save_cancel"
             @properties-click="openPropertiesDialog"
@@ -83,7 +83,7 @@
             flexGrow: show_sidebar ? 1 : undefined
           }"
         >
-          <template v-if="show_yaml">
+          <div class="flex flex-column h-100" v-if="show_yaml">
             <div class="flex flex-row items-center bg-nearer-white bb b--black-05 pa2">
               <i class="material-icons mr1">code</i>
               <div class="f6 fw6 flex-fill">Pipe Definition</div>
@@ -100,7 +100,7 @@
               </div>
             </div>
             <PipeCodeEditor
-              class="h-100"
+              class="flex-fill"
               ref="code-editor"
               editor-cls="bg-white h-100"
               :type="yaml_view"
@@ -113,7 +113,7 @@
               @save="saveChanges"
               v-model="edit_pipe"
             />
-          </template>
+          </div>
           <div class="flex flex-column h-100" v-if="show_testing">
             <div class="flex-none flex flex-row items-center bg-nearer-white bb b--black-05 pa2">
               <i class="material-icons mr1">assignment</i>
@@ -615,8 +615,8 @@
 
   .sticky
     margin: 0 -2rem
-    padding: 0.5rem 1rem
-    border-bottom: 1px solid rgba(0,0,0,0.05)
+    padding: 1rem
+    border-bottom: 1px solid transparent
     transition: all 0.15s ease
 
   .sticky.js-is-sticky

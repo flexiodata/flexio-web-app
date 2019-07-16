@@ -1,64 +1,71 @@
 <template>
-  <div class="flex flex-row items-center">
-    <div class="flex-fill flex flex-row items-center">
-      <h1 class="mv0 fw4 f3" v-if="title.length > 0">{{title}}</h1>
-      <h1 class="mv0 fw4 f3 moon-gray" v-else>(No title)</h1>
-      <LabelSwitch
-        class="dib ml3 hint--bottom"
-        active-color="#13ce66"
-        :aria-label="is_deployed ? 'Turn pipe off' : 'Turn pipe on'"
-        :width="58"
-        v-model="is_deployed"
-      />
-      <el-button
-        plain
-        class="btn-header hint--bottom"
-        style="background: transparent"
-        aria-label="Edit Properties"
-        @click="$emit('properties-click')"
-      >
-        <i class="material-icons v-mid">edit</i>
-      </el-button>
-    </div>
+  <div>
+    <div class="flex flex-row">
+      <div class="flex-fill flex flex-column">
+        <div class="flex flex-row f4 fw6 lh-title">
+          <div>{{pipe.name}}</div>
+          <LabelSwitch
+            class="dib ml3 hint--bottom"
+            active-color="#13ce66"
+            :aria-label="is_deployed ? 'Turn pipe off' : 'Turn pipe on'"
+            :width="58"
+            v-model="is_deployed"
+          />
+          <el-button
+            plain
+            class="btn-header hint--bottom"
+            style="background: transparent"
+            aria-label="Edit Properties"
+            @click="$emit('properties-click')"
+          >
+            <i class="material-icons v-mid">edit</i>
+          </el-button>
+        </div>
+        <div style="max-width: 60rem">
+          <div class="f6 fw4 mt1 lh-copy silver" v-if="pdesc.length > 0">{{pdesc}}</div>
+          <div class="f6 fw4 mt1" v-else><em class="moon-gray">(No description)</em></div>
+        </div>
+      </div>
       <transition name="el-fade-in" mode="out-in">
-      <div
-        key="actions"
-        class="flex-none flex flex-row items-center pv1"
-        v-if="!showSaveCancel"
-      >
-        <el-button
-          class="ttu fw6"
-          style="min-width: 5rem"
-          type="primary"
-          size="small"
-          :disabled="!allowRun"
-          @click="$emit('run-click')"
+        <div
+          key="actions"
+          class="flex-none flex flex-row items-start"
+          v-if="!showSaveCancel"
         >
-          Test
-        </el-button>
-      </div>
-      <div
-        key="save-cancel"
-        class="flex-none flex flex-row items-center pv1"
-        v-if="showSaveCancel"
-      >
-        <el-button
-          class="ttu fw6"
-          size="small"
-          @click="$emit('cancel-click')"
+          <el-button
+            class="ttu fw6"
+            style="min-width: 5rem"
+            type="primary"
+            size="small"
+            :disabled="!allowRun"
+            @click="$emit('run-click')"
+          >
+            Test
+          </el-button>
+        </div>
+        <div
+          key="save-cancel"
+          class="flex-none flex flex-row items-start"
+          v-if="showSaveCancel"
         >
-          Cancel
-        </el-button>
-        <el-button
-          class="ttu fw6"
-          size="small"
-          type="primary"
-          @click="$emit('save-click')"
-        >
-          Save changes
-        </el-button>
-      </div>
-    </transition>
+          <el-button
+            class="ttu fw6"
+            size="small"
+            @click="$emit('cancel-click')"
+          >
+            Cancel
+          </el-button>
+          <el-button
+            class="ttu fw6"
+            size="small"
+            type="primary"
+            @click="$emit('save-click')"
+          >
+            Save changes
+          </el-button>
+        </div>
+      </transition>
+    </div>
   </div>
 </template>
 
@@ -67,9 +74,9 @@
 
   export default {
     props: {
-      title: {
-        type: String,
-        required: true
+      pipe: {
+        type: Object,
+        default: () => { return {} }
       },
       showSaveCancel: {
         type: Boolean,
@@ -88,6 +95,12 @@
       LabelSwitch
     },
     computed: {
+      pdesc() {
+        var word_count = 50
+        var desc = _.get(this.pipe, 'description', '')
+        var desc_arr = desc.split(' ')
+        return desc_arr.length <= word_count ? desc_arr.join(' ') : desc_arr.slice(0, word_count).join(' ') + '...'
+      },
       is_deployed: {
         get() {
           return this.isModeRun
