@@ -257,7 +257,9 @@
       onNewPipeClick() {
         // when creating a new pipe, start out with a basic Python 'Hello World' script
         var attrs = {
-          short_description: 'Untitled Pipe',
+          deploy_mode: 'R',
+          deploy_api: 'A',
+          deploy_ui: 'A',
           task: {
             op: 'sequence',
             items: [{
