@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        // ENDPOINT: POST /:userid/processes
+        // ENDPOINT: POST /:teamid/processes
 
 
         // SETUP
@@ -53,7 +53,7 @@ class Test
                 "code": "insufficient-rights"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/processes; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:teamid/processes; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -73,7 +73,7 @@ class Test
                 "code": "insufficient-rights"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/processes; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:teamid/processes; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -125,6 +125,6 @@ class Test
             }
         }
         ';
-        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:userid/processes; create a new process (don\'t allow triggered_by to be set in API)',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:teamid/processes; create a new process (don\'t allow triggered_by to be set in API)',  $actual, $expected, $results);
     }
 }

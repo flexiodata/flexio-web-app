@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        // ENDPOINT: POST /:userid/connections/:objeid
+        // ENDPOINT: POST /:teamid/connections/:objeid
 
 
         // SETUP
@@ -95,7 +95,7 @@ class Test
                 "code": "insufficient-rights"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/connections/:objeid; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:teamid/connections/:objeid; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -115,7 +115,7 @@ class Test
                 "code": "unavailable"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/connections/:objeid; fail if object isn\'t owned by specified owner',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:teamid/connections/:objeid; fail if object isn\'t owned by specified owner',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -134,7 +134,7 @@ class Test
                 "code": "insufficient-rights"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:userid/connections/:objeid; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:teamid/connections/:objeid; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -154,7 +154,7 @@ class Test
                 "code": "write-failed"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.4', 'POST /:userid/connections/:objeid; fail if name already exists',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.4', 'POST /:teamid/connections/:objeid; fail if name already exists',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -175,7 +175,7 @@ class Test
             "eid_status": "A",
             "name": "name2"
         }';
-        \Flexio\Tests\Check::assertInArray('A.5', 'POST /:userid/connections/:objeid; make sure unique name only applies within an owner',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.5', 'POST /:teamid/connections/:objeid; make sure unique name only applies within an owner',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -196,7 +196,7 @@ class Test
             "eid_status": "A",
             "name": "name1"
         }';
-        \Flexio\Tests\Check::assertInArray('A.6', 'POST /:userid/connections/:objeid; allow name to be set to what it already is',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.6', 'POST /:teamid/connections/:objeid; allow name to be set to what it already is',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -217,7 +217,7 @@ class Test
             "eid_status": "A",
             "name": "another-name"
         }';
-        \Flexio\Tests\Check::assertInArray('A.7', 'POST /:userid/connections/:objeid; allow name to be set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.7', 'POST /:teamid/connections/:objeid; allow name to be set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $new_username = \Flexio\Base\Identifier::generate();
@@ -267,6 +267,6 @@ class Test
                 "eid_type": "USR"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.8', 'POST /:userid/connections/:objeid; return updated connection info; don\'t allow \'expires\' to be set from api for now',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.8', 'POST /:teamid/connections/:objeid; return updated connection info; don\'t allow \'expires\' to be set from api for now',  $actual, $expected, $results);
     }
 }

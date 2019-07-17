@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        // ENDPOINT: DEL /:userid/auth/keys/:objeid
+        // ENDPOINT: DEL /:teamid/auth/keys/:objeid
 
 
         // SETUP
@@ -76,7 +76,7 @@ class Test
                 "code": "insufficient-rights"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'DELETE /:userid/auth/keys/:objeid; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'DELETE /:teamid/auth/keys/:objeid; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -92,7 +92,7 @@ class Test
                 "code": "unavailable"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.2', 'DELETE /:userid/auth/keys/:objeid; fail if object isn\'t owned by specified owner',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', 'DELETE /:teamid/auth/keys/:objeid; fail if object isn\'t owned by specified owner',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -108,7 +108,7 @@ class Test
                 "code": "insufficient-rights"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.3', 'DELETE /:userid/auth/keys/:objeid; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.3', 'DELETE /:teamid/auth/keys/:objeid; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -124,7 +124,7 @@ class Test
             "eid_type": "TKN",
             "eid_status": "D"
         }';
-        \Flexio\Tests\Check::assertInArray('A.4', 'DELETE /:userid/auth/keys/:objeid; delete token',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.4', 'DELETE /:teamid/auth/keys/:objeid; delete token',  $actual, $expected, $results);
         $params = array(
             'method' => 'GET',
             'url' => "$apibase/$userid1/auth/keys/$objeid1",
@@ -139,6 +139,6 @@ class Test
                 "message":"Unavailable"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.5', 'DELETE /:userid/auth/keys/:objeid; make sure a token is deleted',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.5', 'DELETE /:teamid/auth/keys/:objeid; make sure a token is deleted',  $actual, $expected, $results);
     }
 }

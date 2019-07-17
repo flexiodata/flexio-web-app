@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        // ENDPOINT: POST /:userid/pipes
+        // ENDPOINT: POST /:teamid/pipes
 
 
         // SETUP

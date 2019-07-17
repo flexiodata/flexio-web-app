@@ -20,8 +20,8 @@ class Test
 {
     public function run(&$results)
     {
-        // ENDPOINT: POST /:userid/connections/:objeid/connect
-        // ENDPOINT: POST /:userid/connections/:objeid/disconnect
+        // ENDPOINT: POST /:teamid/connections/:objeid/connect
+        // ENDPOINT: POST /:teamid/connections/:objeid/disconnect
 
 
         // SETUP
@@ -115,7 +115,7 @@ class Test
                 "code": "insufficient-rights"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/connections/:objeid/connect; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:teamid/connections/:objeid/connect; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -131,7 +131,7 @@ class Test
                 "code": "unavailable"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/connections/:objeid/connect; fail if object isn\'t owned by specified owner',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:teamid/connections/:objeid/connect; fail if object isn\'t owned by specified owner',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -147,7 +147,7 @@ class Test
                 "code": "insufficient-rights"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:userid/connections/:objeid/connect; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:teamid/connections/:objeid/connect; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
 
 
 
@@ -167,7 +167,7 @@ class Test
             $response = json_decode($result['response'],true);
             $actual = $response['connection_status'] ?? '';
             $expected = \Model::CONNECTION_STATUS_AVAILABLE;
-            \Flexio\Tests\Check::assertString("B.$idx", "POST /:userid/connections/:objeid/connect; copy of $type: check connecting to service",  $actual, $expected, $results);
+            \Flexio\Tests\Check::assertString("B.$idx", "POST /:teamid/connections/:objeid/connect; copy of $type: check connecting to service",  $actual, $expected, $results);
         }
 
 
@@ -187,7 +187,7 @@ class Test
             $response = json_decode($result['response'],true);
             $actual = $response['connection_status'] ?? '';
             $expected = \Model::CONNECTION_STATUS_UNAVAILABLE;
-            \Flexio\Tests\Check::assertString("C.$idx", "POST /:userid/connections/:objeid/connect; copy of $type: check disconnecting to service",  $actual, $expected, $results);
+            \Flexio\Tests\Check::assertString("C.$idx", "POST /:teamid/connections/:objeid/connect; copy of $type: check disconnecting to service",  $actual, $expected, $results);
         }
 
 
@@ -215,7 +215,7 @@ class Test
                     "code": "connection-failed"
                 }
             }';
-            \Flexio\Tests\Check::assertInArray("D.$idx", "POST /:userid/connections/:objeid/connect; copy of $type: test connecting within invalid info",  $actual, $expected, $results);
+            \Flexio\Tests\Check::assertInArray("D.$idx", "POST /:teamid/connections/:objeid/connect; copy of $type: test connecting within invalid info",  $actual, $expected, $results);
         }
     }
 }

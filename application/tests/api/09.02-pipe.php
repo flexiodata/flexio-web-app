@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        // ENDPOINT: POST /:userid/pipes/:objeid
+        // ENDPOINT: POST /:teamid/pipes/:objeid
 
 
         // SETUP
@@ -95,7 +95,7 @@ class Test
                 "code": "insufficient-rights"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/pipes/:objeid; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:teamid/pipes/:objeid; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -115,7 +115,7 @@ class Test
                 "code": "unavailable"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/pipes/:objeid; fail if object isn\'t owned by specified owner',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:teamid/pipes/:objeid; fail if object isn\'t owned by specified owner',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -134,7 +134,7 @@ class Test
                 "code": "insufficient-rights"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:userid/pipes/:objeid; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:teamid/pipes/:objeid; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -154,7 +154,7 @@ class Test
                 "code": "write-failed"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.4', 'POST /:userid/pipes/:objeid; fail if name already exists',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.4', 'POST /:teamid/pipes/:objeid; fail if name already exists',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -175,7 +175,7 @@ class Test
             "eid_status": "A",
             "name": "name2"
         }';
-        \Flexio\Tests\Check::assertInArray('A.5', 'POST /:userid/pipes/:objeid; make sure unique name only applies within an owner',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.5', 'POST /:teamid/pipes/:objeid; make sure unique name only applies within an owner',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -196,7 +196,7 @@ class Test
             "eid_status": "A",
             "name": "name1"
         }';
-        \Flexio\Tests\Check::assertInArray('A.6', 'POST /:userid/pipes/:objeid; allow name to be set to what it already is',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.6', 'POST /:teamid/pipes/:objeid; allow name to be set to what it already is',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -217,7 +217,7 @@ class Test
             "eid_status": "A",
             "name": "another-name"
         }';
-        \Flexio\Tests\Check::assertInArray('A.7', 'POST /:userid/pipes/:objeid; allow name to be set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.7', 'POST /:teamid/pipes/:objeid; allow name to be set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $new_username = \Flexio\Base\Identifier::generate();
@@ -292,7 +292,7 @@ class Test
                 "eid_type": "USR"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.8', 'POST /:userid/pipes/:objeid; return updated pipe info',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.8', 'POST /:teamid/pipes/:objeid; return updated pipe info',  $actual, $expected, $results);
 
 
         // TEST: change pipe info; check variations in schedule and schedule status
@@ -318,7 +318,7 @@ class Test
             "eid_type": "PIP",
             "deploy_schedule": "I"
         }';
-        \Flexio\Tests\Check::assertInArray('B.1', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.1', 'POST /:teamid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
         // BEGIN TEST
         $new_username = \Flexio\Base\Identifier::generate();
@@ -342,7 +342,7 @@ class Test
             "eid_status": "A",
             "deploy_schedule": "I"
         }';
-        \Flexio\Tests\Check::assertInArray('B.2', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.2', 'POST /:teamid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
         // BEGIN TEST
         $new_username = \Flexio\Base\Identifier::generate();
@@ -366,7 +366,7 @@ class Test
             "eid_status": "A",
             "deploy_schedule": "I"
         }';
-        \Flexio\Tests\Check::assertInArray('B.3', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.3', 'POST /:teamid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
         // BEGIN TEST
         // note: in following test, leave setting of the schedule status to "A"
@@ -393,7 +393,7 @@ class Test
             "eid_status": "A",
             "deploy_schedule": "A"
         }';
-        \Flexio\Tests\Check::assertInArray('B.4', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.4', 'POST /:teamid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
         // BEGIN TEST
         $new_username = \Flexio\Base\Identifier::generate();
@@ -417,7 +417,7 @@ class Test
             "eid_status": "A",
             "deploy_schedule": "I"
         }';
-        \Flexio\Tests\Check::assertInArray('B.5', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.5', 'POST /:teamid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
         // BEGIN TEST
         $new_username = \Flexio\Base\Identifier::generate();
@@ -465,7 +465,7 @@ class Test
             },
             "deploy_schedule": "I"
         }';
-        \Flexio\Tests\Check::assertInArray('B.6', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.6', 'POST /:teamid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
         // BEGIN TEST
         $new_username = \Flexio\Base\Identifier::generate();
@@ -501,7 +501,7 @@ class Test
             },
             "deploy_schedule": "I"
         }';
-        \Flexio\Tests\Check::assertInArray('B.7', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.7', 'POST /:teamid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
         // BEGIN TEST
         $new_username = \Flexio\Base\Identifier::generate();
@@ -537,7 +537,7 @@ class Test
             },
             "deploy_schedule": "I"
         }';
-        \Flexio\Tests\Check::assertInArray('B.8', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.8', 'POST /:teamid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
         // BEGIN TEST
         $new_username = \Flexio\Base\Identifier::generate();
@@ -573,7 +573,7 @@ class Test
             },
             "deploy_schedule": "I"
         }';
-        \Flexio\Tests\Check::assertInArray('B.9', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.9', 'POST /:teamid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
         // BEGIN TEST
         $new_username = \Flexio\Base\Identifier::generate();
@@ -609,7 +609,7 @@ class Test
             },
             "deploy_schedule": "I"
         }';
-        \Flexio\Tests\Check::assertInArray('B.10', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.10', 'POST /:teamid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
         // BEGIN TEST
         $new_username = \Flexio\Base\Identifier::generate();
@@ -645,7 +645,7 @@ class Test
             },
             "deploy_schedule": "I"
         }';
-        \Flexio\Tests\Check::assertInArray('B.11', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.11', 'POST /:teamid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
         // BEGIN TEST
         $new_username = \Flexio\Base\Identifier::generate();
@@ -681,7 +681,7 @@ class Test
             },
             "deploy_schedule": "I"
         }';
-        \Flexio\Tests\Check::assertInArray('B.12', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.12', 'POST /:teamid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
         // BEGIN TEST
         $new_username = \Flexio\Base\Identifier::generate();
@@ -717,7 +717,7 @@ class Test
             },
             "deploy_schedule": "I"
         }';
-        \Flexio\Tests\Check::assertInArray('B.13', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.13', 'POST /:teamid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
 
         // BEGIN TEST
@@ -754,7 +754,7 @@ class Test
             },
             "deploy_schedule": "I"
         }';
-        \Flexio\Tests\Check::assertInArray('B.14', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.14', 'POST /:teamid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
         // BEGIN TEST
         $new_username = \Flexio\Base\Identifier::generate();
@@ -784,7 +784,7 @@ class Test
                 "message":"Invalid syntax"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('B.15', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.15', 'POST /:teamid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
         // BEGIN TEST
         $new_username = \Flexio\Base\Identifier::generate();
@@ -814,7 +814,7 @@ class Test
                 "message":"Invalid syntax"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('B.16', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.16', 'POST /:teamid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
         // BEGIN TEST
         $new_username = \Flexio\Base\Identifier::generate();
@@ -850,7 +850,7 @@ class Test
             },
             "deploy_schedule": "I"
         }';
-        \Flexio\Tests\Check::assertInArray('B.17', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.17', 'POST /:teamid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
         // BEGIN TEST
         $new_username = \Flexio\Base\Identifier::generate();
@@ -880,7 +880,7 @@ class Test
                 "message":"Invalid syntax"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('B.18', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.18', 'POST /:teamid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
         // BEGIN TEST
         $new_username = \Flexio\Base\Identifier::generate();
@@ -912,7 +912,7 @@ class Test
                 "message":"Invalid syntax"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('B.19', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.19', 'POST /:teamid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
         // BEGIN TEST
         $new_username = \Flexio\Base\Identifier::generate();
@@ -966,7 +966,7 @@ class Test
             },
             "deploy_schedule": "I"
         }';
-        \Flexio\Tests\Check::assertInArray('B.20', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.20', 'POST /:teamid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
         // BEGIN TEST
         $new_username = \Flexio\Base\Identifier::generate();
@@ -1001,7 +1001,7 @@ class Test
                 "message":"Invalid syntax"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('B.21', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.21', 'POST /:teamid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
         // BEGIN TEST
         $new_username = \Flexio\Base\Identifier::generate();
@@ -1036,7 +1036,7 @@ class Test
                 "message":"Invalid syntax"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('B.22', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.22', 'POST /:teamid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
         // BEGIN TEST
         $new_username = \Flexio\Base\Identifier::generate();
@@ -1071,7 +1071,7 @@ class Test
                 "message":"Invalid syntax"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('B.23', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.23', 'POST /:teamid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
         // BEGIN TEST
         $new_username = \Flexio\Base\Identifier::generate();
@@ -1106,7 +1106,7 @@ class Test
                 "message":"Invalid syntax"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('B.24', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.24', 'POST /:teamid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
         // BEGIN TEST
         $new_username = \Flexio\Base\Identifier::generate();
@@ -1141,7 +1141,7 @@ class Test
                 "message":"Invalid syntax"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('B.25', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.25', 'POST /:teamid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
         // BEGIN TEST
         $new_username = \Flexio\Base\Identifier::generate();
@@ -1176,6 +1176,6 @@ class Test
                 "message":"Invalid syntax"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('B.26', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.26', 'POST /:teamid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
     }
 }

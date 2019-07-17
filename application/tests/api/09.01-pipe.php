@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        // ENDPOINT: POST /:userid/pipes
+        // ENDPOINT: POST /:teamid/pipes
 
 
         // SETUP
@@ -53,7 +53,7 @@ class Test
                 "code": "insufficient-rights"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/pipes; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:teamid/pipes; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -73,7 +73,7 @@ class Test
                 "code": "insufficient-rights"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/pipes; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:teamid/pipes; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -143,7 +143,7 @@ class Test
             }
         }
         ';
-        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:userid/pipes; create a new pipe',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:teamid/pipes; create a new pipe',  $actual, $expected, $results);
 
 
         // TEST: create a new pipe; check variations in schedule and schedule status
@@ -197,7 +197,7 @@ class Test
             }
         }
         ';
-        \Flexio\Tests\Check::assertInArray('B.1', 'POST /:userid/pipes; create a new pipe; check variations in schedule and schedule status',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.1', 'POST /:teamid/pipes; create a new pipe; check variations in schedule and schedule status',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -248,7 +248,7 @@ class Test
             }
         }
         ';
-        \Flexio\Tests\Check::assertInArray('B.2', 'POST /:userid/pipes; create a new pipe; check variations in schedule and schedule status',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.2', 'POST /:teamid/pipes; create a new pipe; check variations in schedule and schedule status',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -299,7 +299,7 @@ class Test
             }
         }
         ';
-        \Flexio\Tests\Check::assertInArray('B.3', 'POST /:userid/pipes; create a new pipe; check variations in schedule and schedule status',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.3', 'POST /:teamid/pipes; create a new pipe; check variations in schedule and schedule status',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -350,6 +350,6 @@ class Test
             }
         }
         ';
-        \Flexio\Tests\Check::assertInArray('B.4', 'POST /:userid/pipes; create a new pipe; check variations in schedule and schedule status',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.4', 'POST /:teamid/pipes; create a new pipe; check variations in schedule and schedule status',  $actual, $expected, $results);
     }
 }
