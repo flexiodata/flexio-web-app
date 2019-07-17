@@ -49,7 +49,6 @@ class Base
         // TODO: if the user interface ever allows rights to be limited
         // for the owner, this needs to be removed; right now, the UI allows
         // the owner to do everything, so this is an optimization
-
         if ($user_eid === $this->getOwner())
             return true;
 

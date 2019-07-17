@@ -30,6 +30,10 @@ class Action
     public const TYPE_USER_CREDENTIAL_UPDATE = 'action.user.credential.update';
     public const TYPE_USER_CREDENTIAL_RESET  = 'action.user.credential.reset';
 
+    public const TYPE_TEAMMEMBER_ADD         = 'action.teammember.add';
+    public const TYPE_TEAMMEMBER_UPDATE      = 'action.teammember.update';
+    public const TYPE_TEAMMEMBER_REMOVE      = 'action.teammember.remove';
+
     public const TYPE_USER_AUTHKEY_CREATE    = 'action.user.authkey.create';
     public const TYPE_USER_AUTHKEY_DELETE    = 'action.user.authkey.delete';
 
@@ -43,6 +47,7 @@ class Action
     public const TYPE_CONNECTION_DELETE      = 'action.connection.delete';
     public const TYPE_CONNECTION_CONNECT     = 'action.connection.connect';
     public const TYPE_CONNECTION_DISCONNECT  = 'action.connection.disconnect';
+
 
     // TODO: add actions for following API endpoints:
 
