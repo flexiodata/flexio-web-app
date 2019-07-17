@@ -25,6 +25,15 @@ class Team
 
         $request->track(\Flexio\Api\Action::TYPE_TEAMMEMBER_ADD);
 
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($post_params, array(
+                'member_eid'           => array('type' => 'string', 'required' => true),
+                'member_permissions'   => array('type' => 'object', 'required' => false)
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        $validated_post_params = $validator->getParams();
+
         // check the rights on the owner; ability to add a member is governed
         // currently by user write privileges
         $owner_user = \Flexio\Object\User::load($owner_user_eid);
@@ -33,10 +42,14 @@ class Team
         if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        // TODO: add the team member
+        // create the object
+        $member_properties = $validated_post_params;
+        $member_properties['team_eid'] = $owner_user_eid;
+        \Flexio\System\System::getModel()->teammember->create($member_properties);
 
-        // TODO: get the result of creating
-        $result = array();
+        // get the result of creating
+        $member_eid = $member_properties['member_eid'];
+        $result = \Flexio\System\System::getModel()->teammember->get($owner_user_eid, $member_eid);
 
         $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
