@@ -12,12 +12,13 @@
             v-model="is_deployed"
           />
         </div>
-        <pre class="code f7">{{parsed_syntax}}</pre>
+        <code class="mt3 mb0 code f7 b" v-html="spreadsheet_command_syntax"></code>
+        <div class="mt3 mb0 f6" v-show="pdesc.length > 0">{{pdesc}}</div>
       </div>
       <transition name="el-fade-in" mode="out-in">
         <div
           key="actions"
-          class="flex-none flex flex-row items-start"
+          class="flex-none flex flex-row items-start ml3"
           v-if="!showSaveCancel"
         >
           <el-button
@@ -42,7 +43,7 @@
         </div>
         <div
           key="save-cancel"
-          class="flex-none flex flex-row items-start"
+          class="flex-none flex flex-row items-start ml3"
           v-if="showSaveCancel"
         >
           <el-button
@@ -67,7 +68,7 @@
 </template>
 
 <script>
-  import doctrine from 'doctrine'
+  import { getJsDocObject, getSpreadsheetSyntaxStr } from '../utils/pipe'
   import LabelSwitch from '@comp/LabelSwitch'
 
   export default {
@@ -97,9 +98,12 @@
       LabelSwitch
     },
     computed: {
-      parsed_syntax() {
-        var desc = _.get(this.pipe, 'description', '')
-        return doctrine.parse(desc, { unwrap: true })
+      pdesc() {
+        var jsdoc_obj = getJsDocObject(this.pipe)
+        return _.get(jsdoc_obj, 'description', '')
+      },
+      spreadsheet_command_syntax() {
+        return getSpreadsheetSyntaxStr(this.pipe, true)
       },
       is_deployed: {
         get() {
