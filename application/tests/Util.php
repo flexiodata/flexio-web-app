@@ -254,16 +254,6 @@ EOD;
             'created_by' => $user_eid
         );
         $user->set($additional_user_properties);
-
-        $user->grant($user_eid, array(
-                \Flexio\Object\Action::TYPE_READ_RIGHTS,
-                \Flexio\Object\Action::TYPE_WRITE_RIGHTS,
-                \Flexio\Object\Action::TYPE_READ,
-                \Flexio\Object\Action::TYPE_WRITE,
-                \Flexio\Object\Action::TYPE_DELETE
-            )
-        );
-
         return $user_eid;
     }
 

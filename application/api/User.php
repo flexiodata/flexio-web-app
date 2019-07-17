@@ -114,15 +114,6 @@ class User
             );
             $user->set($additional_user_properties);
 
-            $user->grant($user_eid, array(
-                    \Flexio\Object\Action::TYPE_READ_RIGHTS,
-                    \Flexio\Object\Action::TYPE_WRITE_RIGHTS,
-                    \Flexio\Object\Action::TYPE_READ,
-                    \Flexio\Object\Action::TYPE_WRITE,
-                    \Flexio\Object\Action::TYPE_DELETE
-                )
-            );
-
             // create a default api key for the user
             $token_properties = array();
             $token_properties['owned_by'] = $user->getEid();
@@ -900,16 +891,6 @@ class User
         $call_params['created_by'] = $user_eid;
         $connection = \Flexio\Object\Connection::create($call_params);
 
-        $connection->grant($user_eid, array(
-                \Flexio\Object\Action::TYPE_READ_RIGHTS,
-                \Flexio\Object\Action::TYPE_WRITE_RIGHTS,
-                \Flexio\Object\Action::TYPE_READ,
-                \Flexio\Object\Action::TYPE_WRITE,
-                \Flexio\Object\Action::TYPE_DELETE,
-                \Flexio\Object\Action::TYPE_EXECUTE
-            )
-        );
-
         return $connection->getEid();
     }
 
@@ -931,16 +912,6 @@ class User
         $call_params['owned_by'] = $user_eid;
         $call_params['created_by'] = $user_eid;
         $pipe = \Flexio\Object\Pipe::create($call_params);
-
-        $pipe->grant($user_eid, array(
-                \Flexio\Object\Action::TYPE_READ_RIGHTS,
-                \Flexio\Object\Action::TYPE_WRITE_RIGHTS,
-                \Flexio\Object\Action::TYPE_READ,
-                \Flexio\Object\Action::TYPE_WRITE,
-                \Flexio\Object\Action::TYPE_DELETE,
-                \Flexio\Object\Action::TYPE_EXECUTE
-            )
-        );
 
         return $pipe->getEid();
     }

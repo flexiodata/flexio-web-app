@@ -86,7 +86,6 @@ class Trigger
             'created_by' => $pipe_properties['owned_by']['eid'] // TODO: we need to determine user based on email (e.g. owner, or public)
         );
         $process = \Flexio\Object\Process::create($process_properties);
-        $process->setRights($pipe->getRights()); // processes inherit rights from the pipe
 
         // create the process
         $engine = \Flexio\Jobs\StoredProcess::create($process);

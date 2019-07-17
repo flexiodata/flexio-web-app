@@ -132,11 +132,6 @@ class Process
         $process_params['triggered_by'] = $triggered_by;
         $process = \Flexio\Object\Process::create($process_params);
 
-        // if the process is created from a pipe, it runs with pipe owner privileges
-        // and inherits the rights from the pipe
-        if ($pipe !== false)
-            $process->setRights($pipe->getRights());
-
         // run the process and return the process info
         if ($autorun === true)
         {

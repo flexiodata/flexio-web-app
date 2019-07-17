@@ -287,7 +287,6 @@ class Cron
 
         // STEP 2: create the process
         $process = \Flexio\Object\Process::create($process_properties);
-        $process->setRights($pipe->getRights());
 
         // STEP 3: run the process
         $engine = \Flexio\Jobs\StoredProcess::create($process);

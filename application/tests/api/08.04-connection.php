@@ -94,17 +94,6 @@ class Test
             $testsuite_connection_info['owned_by'] = $userid1;
             $testsuite_connection_info['created_by'] = $userid1;
             $new_connection = \Flexio\Object\Connection::create($testsuite_connection_info);
-
-            // grant default rights to the owner
-            $new_connection->grant($userid1, array(
-                    \Flexio\Object\Action::TYPE_READ_RIGHTS,
-                    \Flexio\Object\Action::TYPE_WRITE_RIGHTS,
-                    \Flexio\Object\Action::TYPE_READ,
-                    \Flexio\Object\Action::TYPE_WRITE,
-                    \Flexio\Object\Action::TYPE_DELETE
-                )
-            );
-
             $new_connection_eid = $new_connection->getEid();
             $test_connection_eids[$new_connection_eid] = $storage_location;
         }

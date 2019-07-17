@@ -72,17 +72,6 @@ class Pipe
         $pipe_properties['created_by'] = $requesting_user_eid;
         $pipe = \Flexio\Object\Pipe::create($pipe_properties);
 
-        // grant default rights to the owner
-        $pipe->grant($owner_user_eid, array(
-                \Flexio\Object\Action::TYPE_READ_RIGHTS,
-                \Flexio\Object\Action::TYPE_WRITE_RIGHTS,
-                \Flexio\Object\Action::TYPE_READ,
-                \Flexio\Object\Action::TYPE_WRITE,
-                \Flexio\Object\Action::TYPE_DELETE,
-                \Flexio\Object\Action::TYPE_EXECUTE
-            )
-        );
-
         // get the pipe properties
         $properties = $pipe->get();
         $result = self::cleanProperties($properties);
@@ -142,16 +131,6 @@ class Pipe
         $new_pipe_properties['owned_by'] = $owner_user_eid;
         $new_pipe_properties['created_by'] = $requesting_user_eid;
         $new_pipe = \Flexio\Object\Pipe::create($new_pipe_properties);
-
-        $new_pipe->grant($owner_user_eid, array(
-                \Flexio\Object\Action::TYPE_READ_RIGHTS,
-                \Flexio\Object\Action::TYPE_WRITE_RIGHTS,
-                \Flexio\Object\Action::TYPE_READ,
-                \Flexio\Object\Action::TYPE_WRITE,
-                \Flexio\Object\Action::TYPE_DELETE,
-                \Flexio\Object\Action::TYPE_EXECUTE
-            )
-        );
 
         $properties = $new_pipe->get();
         $result = self::cleanProperties($properties);
@@ -417,7 +396,6 @@ class Pipe
             'created_by' => $requesting_user_eid
         );
         $process = \Flexio\Object\Process::create($process_properties);
-        $process->setRights($pipe->getRights());
 
         // create a job engine, attach it to the process object
         $engine = \Flexio\Jobs\StoredProcess::create($process);

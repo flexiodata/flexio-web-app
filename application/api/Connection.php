@@ -56,16 +56,6 @@ class Connection
         $connection_properties['created_by'] = $requesting_user_eid;
         $connection = \Flexio\Object\Connection::create($connection_properties);
 
-        // grant default rights to the owner
-        $connection->grant($owner_user_eid, array(
-                \Flexio\Object\Action::TYPE_READ_RIGHTS,
-                \Flexio\Object\Action::TYPE_WRITE_RIGHTS,
-                \Flexio\Object\Action::TYPE_READ,
-                \Flexio\Object\Action::TYPE_WRITE,
-                \Flexio\Object\Action::TYPE_DELETE
-            )
-        );
-
         // return the result
         $properties = $connection->get();
         $result = self::cleanProperties($properties);

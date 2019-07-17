@@ -50,11 +50,6 @@ class Base
         // for the owner, this needs to be removed; right now, the UI allows
         // the owner to do everything, so this is an optimization
 
-        // TODO: when other access types are added, we'll need to add
-        // a parameter to the function to qualify the access code; for
-        // now, all access types are either eids or the public access
-        // type category
-
         if ($user_eid === $this->getOwner())
             return true;
 
@@ -64,24 +59,6 @@ class Base
 
         // action not allowed
         return false;
-    }
-
-    public function grant(string $user_eid, array $actions) : \Flexio\Object\Base
-    {
-        // DEPRECATED:
-        return $this;
-    }
-
-    public function getRights() : array
-    {
-        // DEPRECATED:
-        return array();
-    }
-
-    public function setRights(array $rights) : \Flexio\Object\Base
-    {
-        // DEPRECATED:
-        return $this;
     }
 
     protected function getModel() : \Model
