@@ -156,7 +156,6 @@ env_vars_obj = EnvVars()
 
 
 
-
 class Connection(object):
     def __init__(self, info):
         self.eid = info['eid']
@@ -169,6 +168,7 @@ class Connection(object):
 
     def get_access_token(self):
         return proxy.invoke('getConnectionAccessToken', [self.eid])
+
 
 
 class ContextConnections(object):
@@ -582,6 +582,20 @@ class ContextEmail(object):
     def send(self, *args, **kwargs):
         info = proxy.invoke('invoke_service', ['email.send', args[0] if len(args) == 1 else kwargs])
 
+
+
+class ContextKeyValue(object):
+    def __init__(self):
+        pass
+
+    def set(self, k, v):
+        return proxy.invoke('kvSet', [k, v])
+
+    def get(self, k):
+        return proxy.invoke('kvGet', [k])
+
+
+
 class Context(object):
     def __init__(self):
         self._input = None
@@ -592,6 +606,7 @@ class Context(object):
         self.pipe = PipeFunctions()
         self.email = ContextEmail()
         self.fs = ContextFs()
+        self.kv = ContextKeyValue()
 
     @property
     def input(self):
