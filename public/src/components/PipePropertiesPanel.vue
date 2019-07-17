@@ -24,16 +24,7 @@
           placeholder="Enter name"
           :autofocus="true"
           v-model="edit_pipe.name"
-        >
-          <template slot="prepend"><div class="nl2 nr2">https://api.flex.io/v1/me/pipes/</div></template>
-          <template slot="append">
-            <el-button
-              class="hint--top"
-              aria-label="Copy to Clipboard"
-              :data-clipboard-text="path"
-            ><i class="material-icons md-18 nl2 nr2">assignment</i></el-button>
-          </template>
-        </el-input>
+        />
       </el-form-item>
 
       <el-form-item
@@ -42,25 +33,24 @@
         label="Short description"
       >
         <el-input
-          type="textarea"
           placeholder="Enter short description"
-          :rows="6"
           v-model="edit_pipe.short_description"
         />
       </el-form-item>
 
-      <el-form-item
-        key="description"
-        prop="description"
-        label="Description"
-      >
-        <el-input
-          type="textarea"
-          placeholder="Enter description"
-          :rows="3"
+      <div>
+        <label class="el-form-item__label">Description</label>
+        <CodeEditor
+          class="bg-white ba b--black-10"
+          style="font-size: 13px"
+          :options="{
+            minRows: 12,
+            maxRows: 24,
+            lineNumbers: false
+          }"
           v-model="edit_pipe.description"
         />
-      </el-form-item>
+      </div>
     </el-form>
 
     <div class="mt4 w-100 flex flex-row justify-end" v-if="showFooter">
@@ -84,6 +74,7 @@
 
 <script>
   import { OBJECT_TYPE_PIPE } from '../constants/object-type'
+  import CodeEditor from '@comp/CodeEditor'
   import MixinValidation from '@comp/mixins/validation'
 
   const defaultAttrs = () => {
@@ -96,9 +87,9 @@
 
   export default {
     props: {
-      'title': {
-        type: String,
-        default: ''
+      'pipe': {
+        type: Object,
+        default: () => { return defaultAttrs() }
       },
       'show-header': {
         type: Boolean,
@@ -108,12 +99,11 @@
         type: Boolean,
         default: true
       },
-      'pipe': {
-        type: Object,
-        default: () => { return defaultAttrs() }
-      }
     },
     mixins: [MixinValidation],
+    components: {
+      CodeEditor
+    },
     watch: {
       pipe: {
         handler: 'initPipe',

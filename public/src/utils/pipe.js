@@ -1,4 +1,5 @@
 import * as sched from '../constants/schedule'
+import doctrine from 'doctrine'
 import moment from 'moment'
 
 export const getTimeStr = (s) => {
@@ -70,4 +71,28 @@ export const getDeployApiUrl = (identifier) => {
 
 export const getDeployRuntimeUrl = (eid) => {
   return 'https://' + window.location.hostname + '/app/pipes/' + eid + '/run'
+}
+
+export const getJsDocObject = (pipe) => {
+  var desc = _.get(pipe, 'description', '')
+  return doctrine.parse(desc, { unwrap: true })
+}
+
+export const getSpreadsheetSyntaxStr = (pipe, return_html) => {
+  function getParamMarkup(param) {
+    if (return_html === true) {
+      return `<span title="${param.description}">${param.name}</span>`
+    } else {
+      return `${param.name}`
+    }
+  }
+
+  var name = pipe.name
+  var jsdoc_obj = getJsDocObject(pipe)
+  var tags = _.get(jsdoc_obj, 'tags', [])
+  var params = _.filter(tags, { title: 'param' })
+  var param_names = _.map(params, p => getParamMarkup(p))
+  var output_params = [`"${name}"`]
+  output_params = output_params.concat(param_names)
+  return '=FLEX(' + output_params.join(', ') + ')'
 }
