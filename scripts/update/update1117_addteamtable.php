@@ -59,15 +59,16 @@ EOT;
     $sql = <<<EOT
     CREATE TABLE tbl_teammember (
         id serial,
-        team_eid varchar(12) NOT NULL default '',
         member_eid varchar(12) NOT NULL default '',
         member_status varchar(1) NOT NULL default 'I',
         rights text default '',
+        owned_by varchar(12) NOT NULL default '',
+        created_by varchar(12) NOT NULL default '',
         created timestamp NULL default NULL,
         updated timestamp NULL default NULL,
         PRIMARY KEY (id),
-        UNIQUE (team_eid,member_eid),
-        UNIQUE (member_eid,team_eid)
+        UNIQUE (member_eid,owned_by),
+        UNIQUE (owned_by,member_eid)
       );
 EOT;
     $db->exec($sql);

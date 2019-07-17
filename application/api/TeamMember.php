@@ -52,9 +52,10 @@ class TeamMember
 
         // create the object
         $member_properties = array();
-        $member_properties['team_eid'] = $owner_user_eid;
         $member_properties['member_eid'] = $member_user_eid;
         $member_properties['rights'] = $validated_post_params['rights'] ?? array();
+        $member_properties['owned_by'] = $owner_user_eid;
+        $member_properties['created_by'] = $requesting_user_eid;
         \Flexio\System\System::getModel()->teammember->create($member_properties);
 
         // get the result of creating

@@ -21,10 +21,10 @@ class TeamMember extends ModelBase
     {
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
-                'team_eid'      => array('type' => 'eid', 'required' => true),
                 'member_eid'    => array('type' => 'eid', 'required' => true),
                 'member_status' => array('type' => 'string', 'required' => false, 'default' => 'A'),
                 'rights'        => array('type' => 'string', 'required' => false, 'default' => '{}'),
+                'owned_by'      => array('type' => 'string', 'required' => false, 'default' => ''),
                 'created_by'    => array('type' => 'string', 'required' => false, 'default' => '')
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
@@ -55,21 +55,21 @@ class TeamMember extends ModelBase
         }
     }
 
-    public function delete(string $team_eid, string $member_eid) : bool
+    public function delete(string $member_eid, string $owned_by) : bool
     {
         // if the item doesn't exist, return false
-        if (!\Flexio\Base\Eid::isValid($team_eid))
-            return false;
         if (!\Flexio\Base\Eid::isValid($member_eid))
+            return false;
+        if (!\Flexio\Base\Eid::isValid($owned_by))
             return false;
 
         $db = $this->getDatabase();
         try
         {
-            $qteam_eid = $db->quote($team_eid);
             $qmember_eid = $db->quote($member_eid);
+            $qowned_by = $db->quote($owned_by);
 
-            $sql = "delete from tbl_teammember where team_eid = $qteam_eid and member_eid = $qmember_eid";
+            $sql = "delete from tbl_teammember where member_eid = $qmember_eid and owned_by = $qowned_by";
             $rows_affected = $db->exec($sql);
 
             return ($rows_affected > 0 ? true : false);
@@ -80,17 +80,18 @@ class TeamMember extends ModelBase
         }
     }
 
-    public function purge(string $owner_eid) : bool
+    public function purge(string $owned_by) : bool
     {
         // this function deletes rows for a given owner
-        if (!\Flexio\Base\Eid::isValid($owner_eid))
+        if (!\Flexio\Base\Eid::isValid($owned_by))
             return false;
 
         $db = $this->getDatabase();
         try
         {
-            $qowner_eid = $db->quote($owner_eid);
-            $sql = "delete from tbl_teammember where team_eid = $qowner_eid or member_eid = $qowner_eid";
+            // delete members that are the owner as well as members that are owned
+            $qowned_by = $db->quote($owned_by);
+            $sql = "delete from tbl_teammember where member_eid = $qowned_by or owned_by = $qowned_by";
             $rows_affected = $db->exec($sql);
 
             return ($rows_affected > 0 ? true : false);
@@ -101,17 +102,18 @@ class TeamMember extends ModelBase
         }
     }
 
-    public function set(string $team_eid, string $member_eid, array $params) : bool
+    public function set(string $member_eid, string $owned_by, array $params) : bool
     {
-        if (!\Flexio\Base\Eid::isValid($team_eid))
-            return false;
         if (!\Flexio\Base\Eid::isValid($member_eid))
+            return false;
+        if (!\Flexio\Base\Eid::isValid($owned_by))
             return false;
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'member_status' => array('type' => 'string', 'required' => false),
                 'rights'        => array('type' => 'string', 'required' => false),
+                'owned_by'      => array('type' => 'string', 'required' => false),
                 'created_by'    => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
@@ -124,13 +126,13 @@ class TeamMember extends ModelBase
         {
             // see if the action exists; return false otherwise; this check is to
             // achieve the same behavior as other model set functions
-            $qteam_eid = $db->quote($team_eid);
             $qmember_eid = $db->quote($member_eid);
-            $row = $db->fetchRow("select team_eid, member_eid from tbl_teammember where team_eid = $qteam_eid and member_eid = $qmember_eid");
+            $qowned_by= $db->quote($qowned_by);
+            $row = $db->fetchRow("select member_eid from tbl_teammember where member_eid = $qmember_eid and owned_by = $qowned_by");
             if (!$row)
                 return false;
 
-            $db->update('tbl_teammember', $process_arr, "team_eid = $qteam_eid and member_eid = $qmember_eid");
+            $db->update('tbl_teammember', $process_arr, "member_eid = $qmember_eid and owned_by = $qowned_by");
             return true;
         }
         catch (\Exception $e)
@@ -142,7 +144,7 @@ class TeamMember extends ModelBase
     public function list(array $filter) : array
     {
         $db = $this->getDatabase();
-        $allowed_items = array('team_eid', 'member_eid', 'created_min', 'created_max');
+        $allowed_items = array('owned_by', 'created_min', 'created_max');
         $filter_expr = \Filter::build($db, $filter, $allowed_items);
         $limit_expr = \Limit::build($db, $filter);
 
@@ -163,10 +165,11 @@ class TeamMember extends ModelBase
         $output = array();
         foreach ($rows as $row)
         {
-            $output[] = array('team_eid'      => $row['team_eid'],
-                              'member_eid'    => $row['member_eid'],
+            $output[] = array('member_eid'    => $row['member_eid'],
                               'member_status' => $row['member_status'],
                               'rights'        => $row['rights'],
+                              'owned_by'      => $row['owned_by'],
+                              'created_by'    => $row['created_by'],
                               'created'       => \Flexio\Base\Util::formatDate($row['created']),
                               'updated'       => \Flexio\Base\Util::formatDate($row['updated']));
         }
@@ -174,35 +177,44 @@ class TeamMember extends ModelBase
         return $output;
     }
 
-    public function get(string $team_eid, string $member_eid) : array
+    public function get(string $member_eid, $owned_by) : array
     {
-        if (!\Flexio\Base\Eid::isValid($team_eid) && !\Flexio\Base\Eid::isValid($member_eid))
+        if (!\Flexio\Base\Eid::isValid($member_eid) && !\Flexio\Base\Eid::isValid($owned_by))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
-        $filter = array('team_eid' => $team_eid, 'member_eid' => $member_eid);
-        $rows = $this->list($filter);
-        if (count($rows) === 0)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        try
+        {
+            $qmember_eid = $db->quote($member_eid);
+            $qowned_by= $db->quote($qowned_by);
+            $row = $db->fetchRow("select * from tbl_teammember where member_eid = $qmember_eid and owned_by = $qowned_by");
+            if (!$row)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
-        return $rows[0];
+            return array('member_eid'    => $row['member_eid'],
+                         'member_status' => $row['member_status'],
+                         'rights'        => $row['rights'],
+                         'owned_by'      => $row['owned_by'],
+                         'created_by'    => $row['created_by'],
+                         'created'       => \Flexio\Base\Util::formatDate($row['created']),
+                         'updated'       => \Flexio\Base\Util::formatDate($row['updated']));
+         }
+         catch (\Exception $e)
+         {
+             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+         }
     }
 
-    public function getRights(string $team_eid, string $member_eid) : ?string
+    public function getRights(string $member_eid, string $owned_by) : ?string
     {
         $db = $this->getDatabase();
         try
         {
             // see if the action exists; return false otherwise; this check is to
             // achieve the same behavior as other model set functions
-            $qteam_eid = $db->quote($team_eid);
             $qmember_eid = $db->quote($member_eid);
-            $row = $db->fetchRow("select * from tbl_teammember where team_eid = $qteam_eid and member_eid = $qmember_eid");
+            $qowned_by = $db->quote($owned_by);
+            $row = $db->fetchRow("select * from tbl_teammember where member_eid = $qmember_eid and owned_by = $qowned_by");
             if (!$row)
-                return null;
-
-            // if the member status is inactive, return null
-            $member_status = $row['member_status'];
-            if ($member_status !== 'A')
                 return null;
 
             return $row['rights'];
