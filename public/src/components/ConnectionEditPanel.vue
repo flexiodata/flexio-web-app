@@ -86,6 +86,7 @@
                 placeholder="Enter name"
                 autocomplete="off"
                 spellcheck="false"
+                :autofocus="true"
                 v-model="edit_connection.name"
               />
             </el-form-item>
@@ -104,7 +105,6 @@
               <el-input
                 placeholder="Enter short description"
                 autocomplete="off"
-                :autofocus="true"
                 v-model="edit_connection.short_description"
               />
             </el-form-item>

@@ -7,7 +7,7 @@
       circle
       id="open-intercom-inbox"
       class="fixed bottom-0 right-0"
-      style="z-index: 2147482000; padding: 12px; margin: 24px; box-shadow: 0 1px 0 rgba(255,255,255,1), 0 2px 12px rgba(0,0,0,0.4)"
+      style="z-index: 2147482000; padding: 12px; margin: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.4)"
       v-if="show_intercom_button"
     ><i class="material-icons md-24 relative" style="top: 1px">chat</i>
     </el-button>
