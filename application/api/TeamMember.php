@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Api;
 
 
-class Team
+class TeamMember
 {
     public static function create(\Flexio\Api\Request $request) : void
     {

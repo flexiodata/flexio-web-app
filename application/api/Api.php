@@ -70,11 +70,11 @@ class Api
         'DEL /:teamid/account/cards/*'                => '\Flexio\Api\User::deletecard',
 
         // team members
-        'POS /:teamid/members'                        => '\Flexio\Api\Team::create',
-        'GET /:teamid/members'                        => '\Flexio\Api\Team::list',
-        'POS /:teamid/members/:objid'                 => '\Flexio\Api\Team::set',
-        'GET /:teamid/members/:objid'                 => '\Flexio\Api\Team::get',
-        'DEL /:teamid/members/:objid'                 => '\Flexio\Api\Team::delete',
+        'POS /:teamid/members'                        => '\Flexio\Api\TeamMember::create',
+        'GET /:teamid/members'                        => '\Flexio\Api\TeamMember::list',
+        'POS /:teamid/members/:objid'                 => '\Flexio\Api\TeamMember::set',
+        'GET /:teamid/members/:objid'                 => '\Flexio\Api\TeamMember::get',
+        'DEL /:teamid/members/:objid'                 => '\Flexio\Api\TeamMember::delete',
 
         // authorization
         'GET /:teamid/auth/keys'                      => '\Flexio\Api\Token::list',
