@@ -20,6 +20,7 @@ class TeamMember
 {
     public static function create(\Flexio\Api\Request $request) : void
     {
+        $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
 
@@ -27,8 +28,8 @@ class TeamMember
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
-                'member_eid' => array('type' => 'string', 'required' => true),
-                'rights'     => array('type' => 'object', 'required' => false)
+                'member' => array('type' => 'string', 'required' => true),
+                'rights' => array('type' => 'object', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
@@ -42,14 +43,22 @@ class TeamMember
         if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
+        // TODO: get the team member user eid to add; logic is as follows:
+        // 1. member param is an existing user eid; invite the member
+        // 2. member param is an existing username; invite the member
+        // 3. member param is a valid email address; create a placeholder user and invite the member
+        // 4. member param is something else; fail
+        $member_user_eid = '';
+
         // create the object
-        $member_properties = $validated_post_params;
+        $member_properties = array();
         $member_properties['team_eid'] = $owner_user_eid;
+        $member_properties['member_eid'] = $member_user_eid;
+        $member_properties['rights'] = $validated_post_params['rights'] ?? array();
         \Flexio\System\System::getModel()->teammember->create($member_properties);
 
         // get the result of creating
-        $member_eid = $member_properties['member_eid'];
-        $result = \Flexio\System\System::getModel()->teammember->get($owner_user_eid, $member_eid);
+        $result = \Flexio\System\System::getModel()->teammember->get($owner_user_eid, $member_user_eid);
 
         $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
@@ -61,6 +70,7 @@ class TeamMember
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
+        $member_user_eid = $request->getObjectFromUrl();
 
         $request->track(\Flexio\Api\Action::TYPE_TEAMMEMBER_REMOVE);
 
@@ -85,8 +95,22 @@ class TeamMember
 
     public static function set(\Flexio\Api\Request $request) : void
     {
+        $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
+        $member_user_eid = $request->getObjectFromUrl();
+
+        $request->track(\Flexio\Api\Action::TYPE_TEAMMEMBER_UPDATE);
+        $request->setRequestParams($post_params);
+
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($post_params, array(
+                'member_status' => array('type' => 'string', 'required' => false),
+                'rights'        => array('type' => 'object', 'required' => false)
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        $validated_post_params = $validator->getParams();
 
         // check the rights on the owner; ability to update a member is governed
         // currently by user write privileges
@@ -111,6 +135,7 @@ class TeamMember
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
+        $member_user_eid = $request->getObjectFromUrl();
 
         // check the rights on the owner; ability to get a member is governed
         // currently by user read privileges
