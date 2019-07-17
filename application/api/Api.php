@@ -60,7 +60,7 @@ class Api
         // validation
         'POS /:userid/validate'                       => '\Flexio\Api\User::validateObjects',
 
-        // users
+        // account
         'POS /:userid/account'                        => '\Flexio\Api\User::set',
         'GET /:userid/account'                        => '\Flexio\Api\User::get',
         'DEL /:userid/account'                        => '\Flexio\Api\User::purge',
@@ -69,12 +69,12 @@ class Api
         'POS /:userid/account/cards'                  => '\Flexio\Api\User::addcard',
         'DEL /:userid/account/cards/*'                => '\Flexio\Api\User::deletecard',
 
-        // teams
-        'POS /:userid/team'                           => '\Flexio\Api\Team::create',
-        'GET /:userid/team'                           => '\Flexio\Api\Team::list',
-        'POS /:userid/team/:objid'                    => '\Flexio\Api\Team::set',
-        'GET /:userid/team/:objid'                    => '\Flexio\Api\Team::get',
-        'DEL /:userid/team/:objid'                    => '\Flexio\Api\Team::delete',
+        // team members
+        'POS /:userid/members'                        => '\Flexio\Api\Team::create',
+        'GET /:userid/members'                        => '\Flexio\Api\Team::list',
+        'POS /:userid/members/:objid'                 => '\Flexio\Api\Team::set',
+        'GET /:userid/members/:objid'                 => '\Flexio\Api\Team::get',
+        'DEL /:userid/members/:objid'                 => '\Flexio\Api\Team::delete',
 
         // authorization
         'GET /:userid/auth/keys'                      => '\Flexio\Api\Token::list',
