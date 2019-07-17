@@ -83,15 +83,15 @@ CREATE INDEX idx_user_created ON tbl_user (created);
 
 
 --
--- Table structure for table tbl_team
+-- Table structure for table tbl_teammember
 --
 
 -- member_status values:
 --    A - active
 --    I - inactive
 
-DROP TABLE IF EXISTS tbl_team;
-CREATE TABLE tbl_team (
+DROP TABLE IF EXISTS tbl_teammember;
+CREATE TABLE tbl_teammember (
   id serial,
   team_eid varchar(12) NOT NULL default '',
   member_eid varchar(12) NOT NULL default '',

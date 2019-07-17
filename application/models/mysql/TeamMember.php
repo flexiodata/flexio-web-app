@@ -40,7 +40,7 @@ class TeamMember extends ModelBase
             $process_arr['updated'] = $timestamp;
 
             // add the properties
-            if ($db->insert('tbl_team', $process_arr) === false)
+            if ($db->insert('tbl_teammember', $process_arr) === false)
                 throw new \Exception();
 
             return $eid;
@@ -65,7 +65,7 @@ class TeamMember extends ModelBase
             $qteam_eid = $db->quote($team_eid);
             $qmember_eid = $db->quote($member_eid);
 
-            $sql = "delete from tbl_team where team_eid = $qteam_eid and member_eid = $qmember_eid";
+            $sql = "delete from tbl_teammember where team_eid = $qteam_eid and member_eid = $qmember_eid";
             $rows_affected = $db->exec($sql);
 
             return ($rows_affected > 0 ? true : false);
@@ -87,7 +87,7 @@ class TeamMember extends ModelBase
         try
         {
             $qowner_eid = $db->quote($owner_eid);
-            $sql = "delete from tbl_team where team_eid = $qowner_eid or member_eid = $qowner_eid";
+            $sql = "delete from tbl_teammember where team_eid = $qowner_eid or member_eid = $qowner_eid";
             $rows_affected = $db->exec($sql);
 
             return ($rows_affected > 0 ? true : false);
@@ -121,11 +121,11 @@ class TeamMember extends ModelBase
             // achieve the same behavior as other model set functions
             $qteam_eid = $db->quote($team_eid);
             $qmember_eid = $db->quote($member_eid);
-            $row = $db->fetchRow("select team_eid, member_eid from tbl_team where team_eid = $qteam_eid and member_eid = $qmember_eid");
+            $row = $db->fetchRow("select team_eid, member_eid from tbl_teammember where team_eid = $qteam_eid and member_eid = $qmember_eid");
             if (!$row)
                 return false;
 
-            $db->update('tbl_team', $process_arr, "team_eid = $qteam_eid and member_eid = $qmember_eid");
+            $db->update('tbl_teammember', $process_arr, "team_eid = $qteam_eid and member_eid = $qmember_eid");
             return true;
         }
         catch (\Exception $e)
@@ -144,7 +144,7 @@ class TeamMember extends ModelBase
         $rows = array();
         try
         {
-            $query = "select * from tbl_team where $filter_expr order by id $limit_expr";
+            $query = "select * from tbl_teammember where $filter_expr order by id $limit_expr";
             $rows = $db->fetchAll($query);
          }
          catch (\Exception $e)
@@ -191,7 +191,7 @@ class TeamMember extends ModelBase
             // achieve the same behavior as other model set functions
             $qteam_eid = $db->quote($team_eid);
             $qmember_eid = $db->quote($member_eid);
-            $row = $db->fetchRow("select * from tbl_team where team_eid = $qteam_eid and member_eid = $qmember_eid");
+            $row = $db->fetchRow("select * from tbl_teammember where team_eid = $qteam_eid and member_eid = $qmember_eid");
             if (!$row)
                 return null;
 

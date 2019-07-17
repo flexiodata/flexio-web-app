@@ -50,14 +50,14 @@ try
 {
     // STEP 1: make sure the stream table doesn't exist
     $sql = <<<EOT
-        DROP TABLE IF EXISTS tbl_team;
+        DROP TABLE IF EXISTS tbl_teammember;
 EOT;
     $db->exec($sql);
 
 
     // STEP 2: add the stream table
     $sql = <<<EOT
-    CREATE TABLE tbl_team (
+    CREATE TABLE tbl_teammember (
         id serial,
         team_eid varchar(12) NOT NULL default '',
         member_eid varchar(12) NOT NULL default '',
