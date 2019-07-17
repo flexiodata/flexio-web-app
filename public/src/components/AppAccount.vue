@@ -24,11 +24,11 @@
 
           <el-tab-pane name="activity">
             <div slot="label"><div style="min-width: 5rem">Activity</div></div>
-            <AppActivity class="ml3 mr4 pr4" style="min-height: 20rem">
+            <ProcessActivity class="ml3 mr4 pr4" style="min-height: 20rem">
               <div slot="title">
                 <h3 class="mv0 fw6 f3">Activity</h3>
               </div>
-            </AppActivity>
+            </ProcessActivity>
           </el-tab-pane>
 
           <el-tab-pane name="settings">
@@ -104,7 +104,7 @@
   import AccountBillingForm from '@comp/AccountBillingForm'
   import AccountPasswordForm from '@comp/AccountPasswordForm'
   import AccountDeleteForm from '@comp/AccountDeleteForm'
-  import AppActivity from '@comp/AppActivity'
+  import ProcessActivity from '@comp/ProcessActivity'
 
   export default {
     metaInfo() {
@@ -120,7 +120,7 @@
       AccountBillingForm,
       AccountPasswordForm,
       AccountDeleteForm,
-      AppActivity
+      ProcessActivity
     },
     watch: {
       route_section: {

@@ -1,7 +1,6 @@
 <template>
   <div class="bg-white">
-    <!-- list -->
-    <AppActivity
+    <ProcessActivity
       class="pt4 h-100"
       :items="processes"
       :show-user="true"
@@ -14,14 +13,14 @@
 
 <script>
   import moment from 'moment'
-  import AppActivity from '@comp/AppActivity'
+  import ProcessActivity from '@comp/ProcessActivity'
 
   export default {
     metaInfo: {
       title: '[Admin] Activity Overview'
     },
     components: {
-      AppActivity
+      ProcessActivity
     },
     data() {
       return {

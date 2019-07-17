@@ -7,8 +7,6 @@ import admin_routes from './admin'
 
 import AppPipes from '@comp/AppPipes'
 import AppConnections from '@comp/AppConnections'
-import AppStorage from '@comp/AppStorage'
-import AppActivity from '@comp/AppActivity'
 import AppAccount from '@comp/AppAccount'
 
 import PipeDocument from '@comp/PipeDocument'
