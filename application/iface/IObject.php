@@ -35,7 +35,7 @@ interface IObject
     public function getOwner();
 
     public function allows(string $access_code, string $action);
-    public function grant(string $access_code, string $access_type, array $actions);
+    public function grant(string $access_code, array $actions);
 
     public function setRights(array $rights);
     public function getRights();

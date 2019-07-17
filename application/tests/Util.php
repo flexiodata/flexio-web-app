@@ -255,8 +255,7 @@ EOD;
         );
         $user->set($additional_user_properties);
 
-        $user->grant($user_eid, \Model::ACCESS_CODE_TYPE_EID,
-            array(
+        $user->grant($user_eid, array(
                 \Flexio\Object\Action::TYPE_READ_RIGHTS,
                 \Flexio\Object\Action::TYPE_WRITE_RIGHTS,
                 \Flexio\Object\Action::TYPE_READ,

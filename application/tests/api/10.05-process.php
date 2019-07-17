@@ -67,7 +67,7 @@ class Test
         $request_create->setRequestingUser($user_eid);
         $process_info1 = \Flexio\Api\Process::create($request_create);
         $process = \Flexio\Object\Process::load($process_info1['eid']);
-        $process->grant($user_eid, \Model::ACCESS_CODE_TYPE_EID, array(
+        $process->grant($user_eid, array(
             \Flexio\Object\Action::TYPE_READ,
             \Flexio\Object\Action::TYPE_WRITE,
             \Flexio\Object\Action::TYPE_DELETE,

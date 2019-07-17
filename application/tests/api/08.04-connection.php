@@ -96,8 +96,7 @@ class Test
             $new_connection = \Flexio\Object\Connection::create($testsuite_connection_info);
 
             // grant default rights to the owner
-            $new_connection->grant($userid1, \Model::ACCESS_CODE_TYPE_EID,
-                array(
+            $new_connection->grant($userid1, array(
                     \Flexio\Object\Action::TYPE_READ_RIGHTS,
                     \Flexio\Object\Action::TYPE_WRITE_RIGHTS,
                     \Flexio\Object\Action::TYPE_READ,

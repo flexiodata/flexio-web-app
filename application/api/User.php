@@ -114,8 +114,7 @@ class User
             );
             $user->set($additional_user_properties);
 
-            $user->grant($user_eid, \Model::ACCESS_CODE_TYPE_EID,
-                array(
+            $user->grant($user_eid, array(
                     \Flexio\Object\Action::TYPE_READ_RIGHTS,
                     \Flexio\Object\Action::TYPE_WRITE_RIGHTS,
                     \Flexio\Object\Action::TYPE_READ,
@@ -901,7 +900,7 @@ class User
         $call_params['created_by'] = $user_eid;
         $connection = \Flexio\Object\Connection::create($call_params);
 
-        $connection->grant($user_eid, \Model::ACCESS_CODE_TYPE_EID, array(
+        $connection->grant($user_eid, array(
                 \Flexio\Object\Action::TYPE_READ_RIGHTS,
                 \Flexio\Object\Action::TYPE_WRITE_RIGHTS,
                 \Flexio\Object\Action::TYPE_READ,
@@ -933,7 +932,7 @@ class User
         $call_params['created_by'] = $user_eid;
         $pipe = \Flexio\Object\Pipe::create($call_params);
 
-        $pipe->grant($user_eid, \Model::ACCESS_CODE_TYPE_EID, array(
+        $pipe->grant($user_eid, array(
                 \Flexio\Object\Action::TYPE_READ_RIGHTS,
                 \Flexio\Object\Action::TYPE_WRITE_RIGHTS,
                 \Flexio\Object\Action::TYPE_READ,

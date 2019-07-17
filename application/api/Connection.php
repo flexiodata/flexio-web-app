@@ -57,8 +57,7 @@ class Connection
         $connection = \Flexio\Object\Connection::create($connection_properties);
 
         // grant default rights to the owner
-        $connection->grant($owner_user_eid, \Model::ACCESS_CODE_TYPE_EID,
-            array(
+        $connection->grant($owner_user_eid, array(
                 \Flexio\Object\Action::TYPE_READ_RIGHTS,
                 \Flexio\Object\Action::TYPE_WRITE_RIGHTS,
                 \Flexio\Object\Action::TYPE_READ,

@@ -305,37 +305,5 @@ class Test
         $actual = \Model::PROCESS_TRIGGERED_INTERFACE;
         $expected = 'I';
         \Flexio\Tests\Check::assertString('J.5', 'Pipe deploy mode constant',  $actual, $expected, $results);
-
-
-
-        // TEST: Model access code type constants; the database stores raw values
-        // for some of these constants, so these tests ensure that the constants
-        // are consistent between various models and the values in the
-        // databases
-
-        // BEGIN TEST
-        $actual = \Model::ACCESS_CODE_TYPE_UNDEFINED;
-        $expected = '';
-        \Flexio\Tests\Check::assertString('L.1', 'Access code type constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Model::ACCESS_CODE_TYPE_EID;
-        $expected = 'EID';
-        \Flexio\Tests\Check::assertString('L.2', 'Access code type constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Model::ACCESS_CODE_TYPE_TOKEN;
-        $expected = 'TKN';
-        \Flexio\Tests\Check::assertString('L.3', 'Access code type constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Model::ACCESS_CODE_TYPE_EMAIL;
-        $expected = 'EML';
-        \Flexio\Tests\Check::assertString('L.4', 'Access code type constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Model::ACCESS_CODE_TYPE_CATEGORY;
-        $expected = 'CAT';
-        \Flexio\Tests\Check::assertString('L.5', 'Access code type constant',  $actual, $expected, $results);
     }
 }

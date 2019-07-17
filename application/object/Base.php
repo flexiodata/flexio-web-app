@@ -43,7 +43,7 @@ class Base
         return $this->eid;
     }
 
-    public function allows(string $access_code, string $action) : bool
+    public function allows(string $user_eid, string $action) : bool
     {
         // if the user is the owner, allow them to do anything;
         // TODO: if the user interface ever allows rights to be limited
@@ -55,18 +55,18 @@ class Base
         // now, all access types are either eids or the public access
         // type category
 
-        if ($access_code === $this->getOwner())
+        if ($user_eid === $this->getOwner())
             return true;
 
         // if the user is an administrator, allow access
-        if ($this->getModel()->user->isAdministrator($access_code) === true)
+        if ($this->getModel()->user->isAdministrator($user_eid) === true)
             return true;
 
         // action not allowed
         return false;
     }
 
-    public function grant(string $access_code, string $access_type, array $actions) : \Flexio\Object\Base
+    public function grant(string $user_eid, array $actions) : \Flexio\Object\Base
     {
         // DEPRECATED:
         return $this;

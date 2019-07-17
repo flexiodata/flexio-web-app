@@ -148,12 +148,6 @@ class Model
     public const STATUS_AVAILABLE = 'A';
     public const STATUS_DELETED   = 'D';
 
-    public const ACCESS_CODE_TYPE_UNDEFINED = '';
-    public const ACCESS_CODE_TYPE_EID       = 'EID';
-    public const ACCESS_CODE_TYPE_TOKEN     = 'TKN';
-    public const ACCESS_CODE_TYPE_EMAIL     = 'EML';
-    public const ACCESS_CODE_TYPE_CATEGORY  = 'CAT';
-
     public const REGISTRY_VALUE_UNDEFINED = '';
     public const REGISTRY_VALUE_STRING    = 'S';
     public const REGISTRY_VALUE_NUMBER    = 'N';
