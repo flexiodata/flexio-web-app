@@ -21,8 +21,8 @@ class TeamMember extends ModelBase
     {
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
-                'team_eid'      => array('type' => 'string', 'required' => false, 'default' => ''),
-                'member_eid'    => array('type' => 'string', 'required' => false, 'default' => ''),
+                'team_eid'      => array('type' => 'eid', 'required' => true),
+                'member_eid'    => array('type' => 'eid', 'required' => true),
                 'member_status' => array('type' => 'string', 'required' => false, 'default' => 'A'),
                 'rights'        => array('type' => 'string', 'required' => false, 'default' => '{}'),
                 'created_by'    => array('type' => 'string', 'required' => false, 'default' => '')
@@ -43,7 +43,11 @@ class TeamMember extends ModelBase
             if ($db->insert('tbl_teammember', $process_arr) === false)
                 throw new \Exception();
 
-            return $eid;
+            // return the eid of the newly added member; follows pattern of
+            // returning the eid of the created object, except in this case,
+            // the member exists, or was created elsewhere before this function
+            // is called
+            return $process_arr['member_eid'];
         }
         catch (\Exception $e)
         {
@@ -79,7 +83,6 @@ class TeamMember extends ModelBase
     public function purge(string $owner_eid) : bool
     {
         // this function deletes rows for a given owner
-
         if (!\Flexio\Base\Eid::isValid($owner_eid))
             return false;
 
@@ -100,7 +103,9 @@ class TeamMember extends ModelBase
 
     public function set(string $team_eid, string $member_eid, array $params) : bool
     {
-        if (!\Flexio\Base\Eid::isValid($eid))
+        if (!\Flexio\Base\Eid::isValid($team_eid))
+            return false;
+        if (!\Flexio\Base\Eid::isValid($member_eid))
             return false;
 
         $validator = \Flexio\Base\Validator::create();
@@ -174,7 +179,7 @@ class TeamMember extends ModelBase
         if (!\Flexio\Base\Eid::isValid($team_eid) && !\Flexio\Base\Eid::isValid($member_eid))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
-        $filter = array('team_eid' => $eid, 'member_eid' => $eid);
+        $filter = array('team_eid' => $team_eid, 'member_eid' => $member_eid);
         $rows = $this->list($filter);
         if (count($rows) === 0)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
