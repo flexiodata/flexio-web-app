@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="position: relative; line-height: 1">
+    <div class="flex flex-row items-center" style="position: relative; line-height: 1">
       <el-switch
         ref="switch"
         :value="value"

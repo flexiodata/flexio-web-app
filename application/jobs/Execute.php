@@ -1281,6 +1281,42 @@ class ScriptHost
             return $res;
         return $associative ? $res : array_values($res);
     }
+
+
+    
+    public function func_kvSet(string $key, $value)
+    {
+        global $g_config;
+
+        $session_redis_host = $g_config->session_redis_host ?? '';
+        $session_redis_port = $g_config->session_redis_port ?? '';
+        if (strlen($session_redis_host) == 0)
+            return false;
+        
+        $owner_user_eid = $this->getProcess()->getOwner();
+        $store_key = "kv.$owner_user_eid.$key";
+
+        $redis = new \Redis();
+        $redis->connect($session_redis_host, $session_redis_port);
+        $redis->set($store_key, $value);
+    }
+
+    public function func_kvGet(string $key)
+    {
+        global $g_config;
+        
+        $session_redis_host = $g_config->session_redis_host ?? '';
+        $session_redis_port = $g_config->session_redis_port ?? '';
+        if (strlen($session_redis_host) == 0)
+            return false;
+        
+        $owner_user_eid = $this->getProcess()->getOwner();
+        $store_key = "kv.$owner_user_eid.$key";
+
+        $redis = new \Redis();
+        $redis->connect($session_redis_host, $session_redis_port);
+        return $redis->get($store_key);
+    }
 }
 
 
