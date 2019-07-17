@@ -420,6 +420,7 @@
         var attrs = _.assign({}, defaultAttrs(ctype), {
           eid_status: OBJECT_STATUS_PENDING,
           name: `${service_slug}-` + getNameSuffix(16),
+          short_description: item.service_name,
           connection_type: ctype
         })
 
