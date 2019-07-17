@@ -473,6 +473,14 @@
           })
 
           var pipe = response.data
+
+          // change the identifier in the route
+          if (pipe.name != this.orig_pipe.name) {
+            var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
+            _.set(new_route, 'params.identifier', pipe.name)
+            this.$router.replace(new_route)
+          }
+
           this.$store.commit('pipe/INIT_PIPE', pipe)
           this.revert()
         }).catch(error => {

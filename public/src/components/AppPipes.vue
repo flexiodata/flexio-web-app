@@ -44,8 +44,18 @@
             >
               <div class="flex flex-row items-center cursor-default">
                 <div class="flex-fill">
-                  <div class="f5 fw6 cursor-default mr1 lh-title truncate">{{pipe.name}}</div>
-                  <div class="light-silver f8 lh-copy" style="margin-top: 3px" v-if="pipe.short_description.length > 0">{{pipe.short_description}}</div>
+                  <div class="flex flex-row items-center">
+                    <div
+                      class="br-100 mr2"
+                      style="width: 8px; height: 8px"
+                      :style="isPipeDeployed(pipe) ? 'background-color: #13ce66' : 'background-color: #dcdfe6'"
+                    ></div>
+                    <div class="flex-fill f5 fw6 cursor-default mr1 lh-title truncate">{{pipe.name}}</div>
+                  </div>
+                  <div class="flex flex-row items-center">
+                    <div class="mr2" style="width: 8px; height: 8px"></div>
+                    <div class="light-silver f8 lh-copy" style="margin-top: 3px" v-if="pipe.short_description.length > 0">{{pipe.short_description}}</div>
+                  </div>
                 </div>
                 <div class="flex-none ml2" @click.stop>
                     <el-dropdown trigger="click" @command="onCommand">
@@ -79,6 +89,8 @@
   import Spinner from 'vue-simple-spinner'
   import PipeDocument from '@comp/PipeDocument'
   import PageNotFound from '@comp/PageNotFound'
+
+  const DEPLOY_MODE_RUN       = 'R'
 
   export default {
     metaInfo() {
@@ -248,6 +260,9 @@
       },
       isPipeSelected(pipe) {
         return _.get(this.pipe, 'eid') === pipe.eid
+      },
+      isPipeDeployed(pipe) {
+        return _.get(pipe, 'deploy_mode') == DEPLOY_MODE_RUN ? true : false
       },
       onCommand(cmd, menu_item) {
         switch (cmd) {
