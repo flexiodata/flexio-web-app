@@ -2,7 +2,7 @@
   <div>
     <div class="flex flex-row">
       <div class="flex-fill flex flex-column">
-        <div class="flex flex-row f4 fw6 lh-title">
+        <div class="flex flex-row items-center f4 fw6 lh-title">
           <div>{{pipe.name}}</div>
           <LabelSwitch
             class="dib ml3 hint--bottom"
