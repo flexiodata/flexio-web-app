@@ -12,10 +12,7 @@
             v-model="is_deployed"
           />
         </div>
-        <div style="max-width: 60rem">
-          <div class="f6 fw4 mt1 lh-copy silver" v-if="pdesc.length > 0">{{pdesc}}</div>
-          <div class="f6 fw4 mt1" v-else><em class="moon-gray">(No description)</em></div>
-        </div>
+        <pre class="code f7">{{parsed_syntax}}</pre>
       </div>
       <transition name="el-fade-in" mode="out-in">
         <div
@@ -70,6 +67,7 @@
 </template>
 
 <script>
+  import doctrine from 'doctrine'
   import LabelSwitch from '@comp/LabelSwitch'
 
   export default {
@@ -99,11 +97,9 @@
       LabelSwitch
     },
     computed: {
-      pdesc() {
-        var word_count = 50
+      parsed_syntax() {
         var desc = _.get(this.pipe, 'description', '')
-        var desc_arr = desc.split(' ')
-        return desc_arr.length <= word_count ? desc_arr.join(' ') : desc_arr.slice(0, word_count).join(' ') + '...'
+        return doctrine.parse(desc, { unwrap: true })
       },
       is_deployed: {
         get() {
