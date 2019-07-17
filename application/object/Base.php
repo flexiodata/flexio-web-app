@@ -53,9 +53,21 @@ class Base
         if ($user_eid === $this->getOwner())
             return true;
 
-        // if the user is an administrator, allow access
+        // if the user is a system administrator, allow access
         if ($this->getModel()->user->isAdministrator($user_eid) === true)
             return true;
+
+        // see if the input user is a member of the owner team and if
+        // so, if the requested action is in the list of rights
+        $rights = $this->getModel()->teammember->getPermissions($this->getOwner(), $user_eid);
+        if ($rights)
+        {
+            foreach ($rights as $r)
+            {
+                if ($action === $r)
+                    return true;
+            }
+        }
 
         // action not allowed
         return false;

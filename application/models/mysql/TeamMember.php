@@ -24,7 +24,7 @@ class TeamMember extends ModelBase
                 'team_eid'           => array('type' => 'string', 'required' => false, 'default' => ''),
                 'member_eid'         => array('type' => 'string', 'required' => false, 'default' => ''),
                 'member_status'      => array('type' => 'string', 'required' => false, 'default' => 'A'),
-                'member_permissions' => array('type' => 'string', 'required' => false, 'default' => ''),
+                'member_permissions' => array('type' => 'string', 'required' => false, 'default' => '{}'),
                 'created_by' => array('type' => 'string', 'required' => false, 'default' => '')
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
@@ -180,5 +180,31 @@ class TeamMember extends ModelBase
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         return $rows[0];
+    }
+
+    public function getPermissions(string $team_eid, string $member_eid) : ?string
+    {
+        $db = $this->getDatabase();
+        try
+        {
+            // see if the action exists; return false otherwise; this check is to
+            // achieve the same behavior as other model set functions
+            $qteam_eid = $db->quote($team_eid);
+            $qmember_eid = $db->quote($member_eid);
+            $row = $db->fetchRow("select * from tbl_team where team_eid = $qteam_eid and member_eid = $qmember_eid");
+            if (!$row)
+                return null;
+
+            // if the member status is inactive, return null
+            $member_status = $row['member_status'];
+            if ($member_status !== 'A')
+                return null;
+
+            return $row['member_permissions'];
+        }
+        catch (\Exception $e)
+        {
+            return null;
+        }
     }
 }
