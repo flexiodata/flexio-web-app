@@ -223,6 +223,7 @@
         var eid = attrs.eid
         var ctype = _.get(attrs, 'connection_type', '')
         var is_pending = _.get(attrs, 'eid_status', '') === OBJECT_STATUS_PENDING
+        var orig_name = _.get(this.connection, 'name')
 
         attrs = _.pick(attrs, ['name', 'short_description', 'description', 'connection_info'])
         _.assign(attrs, { eid_status: OBJECT_STATUS_AVAILABLE })
@@ -244,6 +245,13 @@
           if (is_pending) {
             var analytics_payload = _.pick(attrs, ['eid', 'name', 'short_description', 'description', 'connection_type'])
             this.$store.track('Created Connection', analytics_payload)
+          }
+
+          // change the identifier in the route
+          if (connection.name != orig_name) {
+            var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
+            _.set(new_route, 'params.identifier', connection.name)
+            this.$router.replace(new_route)
           }
 
           this.selectConnection(connection)
