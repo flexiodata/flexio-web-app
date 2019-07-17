@@ -43,12 +43,26 @@ class TeamMember
         if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        // TODO: get the team member user eid to add; logic is as follows:
+        // get the team member user eid to add; logic is as follows:
         // 1. member param is an existing user eid; invite the member
         // 2. member param is an existing username; invite the member
-        // 3. member param is a valid email address; create a placeholder user and invite the member
-        // 4. member param is something else; fail
-        $member_user_eid = '';
+        // 3. member param is an existing email; invite the member
+        // 4. member param is a valid email address; create a placeholder user and invite the member
+        // 5. member param is something else; fail
+        $member_user_eid = self::getMemberEidFromParam($member_param);
+        if ($member_user_eid === false)
+        {
+            // user doesn't exist based on anything supplied; see if we have an email address
+            // and if so invite the user in; otherwise fail
+            if (\Flexio\Base\Email::isValid($member_param) === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+            // TODO: add the user
+        }
+
+        // if for whatever reason, we still don't have a valid member, throw an exception
+        if ($member_user_eid === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
         // create the object
         $member_properties = array();
@@ -83,11 +97,11 @@ class TeamMember
         if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        // TODO: remove the team member
+        // remove the team member
+        \Flexio\System\System::getModel()->teammember->delete($member_user_eid, $owner_user_eid);
 
         // TODO: get the result of deleting
         $result = array();
-
         $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
@@ -121,7 +135,8 @@ class TeamMember
         if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        // TODO: update the team member
+        // update the team member
+        \Flexio\System\System::getModel()->teammember->set($member_user_eid, $owner_user_eid, $validated_post_params);
 
         // TODO: get the result of updating
         $result = array();
@@ -146,9 +161,12 @@ class TeamMember
         if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        // TODO: get the team member info
-        $result = array();
+        // get the team member rights, etc; unpack the rights, which are stored as a json string;
+        // TODO: unpack the user info
+        $result = \Flexio\System\System::getModel()->teammember->get($member_user_eid, $owner_user_eid);
+        $result['rights'] = @json_decode($result['rights'], true);
 
+        // return the result
         $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
@@ -173,29 +191,43 @@ class TeamMember
 
         $validated_query_params = $validator->getParams();
 
-        // make sure the owner exists
+        // check the rights on the owner; ability to get a member is governed
+        // currently by user read privileges
         $owner_user = \Flexio\Object\User::load($owner_user_eid);
         if ($owner_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the team members
         $result = array();
 
         $filter = array('owned_by' => $owner_user_eid, 'eid_status' => \Model::STATUS_AVAILABLE);
         $filter = array_merge($validated_query_params, $filter); // give precedence to fixed owner/status
-
-
-        $teammembers = array();
+        $teammembers = \Flexio\System\System::getModel()->teammember->list($filter);
 
         foreach ($teammembers as $t)
         {
-            if ($t->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
-                continue;
+            // TODO: check permissions for each item?
 
-            $result[] = $t->get();
+            $item = $t;
+            $item['rights'] = @json_decode($item['rights'], true);
+            $result[] = $item;
         }
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api\Response::sendContent($result);
+    }
+
+    private static function getMemberEidFromParam(string $param) // TODO: add return type
+    {
+        if (\Flexio\System\System::getModel()->user->exists($param))
+            return $param; // param is an eid
+
+        $eid = \Flexio\System\System::getModel()->user->getEidFromIdentifier($member_param);
+        if ($eid !== false)
+            return $eid; // param is a username or email; return eid from info
+
+        return false;
     }
 }
