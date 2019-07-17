@@ -27,8 +27,8 @@ class TeamMember
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
-                'member_eid'           => array('type' => 'string', 'required' => true),
-                'member_permissions'   => array('type' => 'object', 'required' => false)
+                'member_eid' => array('type' => 'string', 'required' => true),
+                'rights'     => array('type' => 'object', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 

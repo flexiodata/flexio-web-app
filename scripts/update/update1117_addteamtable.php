@@ -62,7 +62,7 @@ EOT;
         team_eid varchar(12) NOT NULL default '',
         member_eid varchar(12) NOT NULL default '',
         member_status varchar(1) NOT NULL default 'I',
-        member_permissions text default '',
+        rights text default '',
         created timestamp NULL default NULL,
         updated timestamp NULL default NULL,
         PRIMARY KEY (id),

@@ -21,11 +21,11 @@ class TeamMember extends ModelBase
     {
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
-                'team_eid'           => array('type' => 'string', 'required' => false, 'default' => ''),
-                'member_eid'         => array('type' => 'string', 'required' => false, 'default' => ''),
-                'member_status'      => array('type' => 'string', 'required' => false, 'default' => 'A'),
-                'member_permissions' => array('type' => 'string', 'required' => false, 'default' => '{}'),
-                'created_by' => array('type' => 'string', 'required' => false, 'default' => '')
+                'team_eid'      => array('type' => 'string', 'required' => false, 'default' => ''),
+                'member_eid'    => array('type' => 'string', 'required' => false, 'default' => ''),
+                'member_status' => array('type' => 'string', 'required' => false, 'default' => 'A'),
+                'rights'        => array('type' => 'string', 'required' => false, 'default' => '{}'),
+                'created_by'    => array('type' => 'string', 'required' => false, 'default' => '')
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
@@ -105,9 +105,9 @@ class TeamMember extends ModelBase
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
-                'member_status'       => array('type' => 'string', 'required' => false),
-                'member_permissions'  => array('type' => 'string', 'required' => false),
-                'created_by'          => array('type' => 'string', 'required' => false)
+                'member_status' => array('type' => 'string', 'required' => false),
+                'rights'        => array('type' => 'string', 'required' => false),
+                'created_by'    => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
@@ -158,12 +158,12 @@ class TeamMember extends ModelBase
         $output = array();
         foreach ($rows as $row)
         {
-            $output[] = array('team_eid'           => $row['team_eid'],
-                              'member_eid'         => $row['member_eid'],
-                              'member_status'      => $row['member_status'],
-                              'member_permissions' => $row['member_permissions'],
-                              'created'    => \Flexio\Base\Util::formatDate($row['created']),
-                              'updated'    => \Flexio\Base\Util::formatDate($row['updated']));
+            $output[] = array('team_eid'      => $row['team_eid'],
+                              'member_eid'    => $row['member_eid'],
+                              'member_status' => $row['member_status'],
+                              'rights'        => $row['rights'],
+                              'created'       => \Flexio\Base\Util::formatDate($row['created']),
+                              'updated'       => \Flexio\Base\Util::formatDate($row['updated']));
         }
 
         return $output;
@@ -182,7 +182,7 @@ class TeamMember extends ModelBase
         return $rows[0];
     }
 
-    public function getPermissions(string $team_eid, string $member_eid) : ?string
+    public function getRights(string $team_eid, string $member_eid) : ?string
     {
         $db = $this->getDatabase();
         try
@@ -200,7 +200,7 @@ class TeamMember extends ModelBase
             if ($member_status !== 'A')
                 return null;
 
-            return $row['member_permissions'];
+            return $row['rights'];
         }
         catch (\Exception $e)
         {
