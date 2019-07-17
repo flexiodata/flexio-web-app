@@ -84,13 +84,13 @@ class Process
         if ($pipe !== false)
         {
             // TODO: we have the following two cases; should both of these run
-            // with pipe owner privileges or with the base :userid privileges?
+            // with pipe owner privileges or with the base :teamid privileges?
             // right now, we're using pipe owner privileges, but does this make
             // sense for both? the pipe owner is in the path for the first, but
             // the second, the owner of the pipe may be different than the user
             // in the root of the URL
-            // POST /:userid/pipes/:pipeid/processes
-            // POST /:userid/processes?parent_eid=:pipeid
+            // POST /:teamid/pipes/:pipeid/processes
+            // POST /:teamid/processes?parent_eid=:pipeid
 
             // if the process is created from a pipe, it runs with pipe owner
             // privileges and inherits the rights from the pipe
