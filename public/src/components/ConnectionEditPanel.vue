@@ -78,7 +78,7 @@
             >
               <template slot="label">
                 <span>Name</span>
-                <span class="lh-1 hint--top hint--large" aria-label="A unique identifier that can be used to reference this connection in a pipe definition, instead of directly referencing it by its ID">
+                <span class="lh-1 hint--top hint--large" aria-label="A unique identifier that can be used to reference this connection in a pipe">
                   <i class="el-icon-info blue"></i>
                 </span>
               </template>
@@ -95,13 +95,8 @@
               class="flex-fill"
               key="short_description"
               prop="short_description"
+              label="Short description"
             >
-              <template slot="label">
-                <span>Short description</span>
-                <span class="lh-1 hint--top" aria-label="The short description of your connection">
-                  <i class="el-icon-info blue"></i>
-                </span>
-              </template>
               <el-input
                 placeholder="Enter short description"
                 autocomplete="off"
@@ -113,13 +108,8 @@
           <el-form-item
             key="description"
             prop="description"
+            label="Description"
           >
-            <template slot="label">
-              <span>Description</span>
-              <span class="lh-1 hint--top" aria-label="A description of your connection">
-                <i class="el-icon-info blue"></i>
-              </span>
-            </template>
             <el-input
               type="textarea"
               placeholder="Description"
@@ -178,6 +168,7 @@
 </template>
 
 <script>
+  import randomstring from 'randomstring'
   import { OBJECT_TYPE_CONNECTION } from '../constants/object-type'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
@@ -191,6 +182,14 @@
   import ConnectionInfoPanel from '@comp/ConnectionInfoPanel'
   import MixinConnection from '@comp/mixins/connection'
   import MixinValidation from '@comp/mixins/validation'
+
+  const getNameSuffix = (length) => {
+    return randomstring.generate({
+      length,
+      charset: 'alphabetic',
+      capitalization: 'lowercase'
+    })
+  }
 
   const defaultAttrs = (ctype) => {
     var connection_info = ctype === ctypes.CONNECTION_TYPE_KEYRING ? {} : {
@@ -207,10 +206,12 @@
       data: {}
     }
 
+    var suffix = getNameSuffix()
+
     return {
       eid: null,
       eid_status: OBJECT_STATUS_PENDING,
-      name: '',
+      name: `connection-${suffix}`,
       short_description: '',
       description: '',
       connection_type: '',
@@ -415,19 +416,16 @@
       },
       createPendingConnection(item) {
         var ctype = item.connection_type
+        var service_slug = slugify(item.service_name)
         var attrs = _.assign({}, defaultAttrs(ctype), {
           eid_status: OBJECT_STATUS_PENDING,
-          short_description: item.service_name,
+          name: `${service_slug}-` + getNameSuffix(16),
           connection_type: ctype
         })
 
         this.$store.dispatch('v2_action_createConnection', { attrs }).then(response => {
           var connection = _.cloneDeep(response.data)
-          var service_slug = slugify(item.service_name)
-
-          // create a default name
-          connection.name = 'my-' + service_slug
-
+          connection.name = `${service_slug}-` + getNameSuffix(4),
           this.updateConnection(connection)
         }).catch(error => {
           // TODO: add error handling?
@@ -455,14 +453,6 @@
       },
       initConnection() {
         var connection = _.cloneDeep(this.connection)
-
-        if (this.mode == 'add' && _.has(connection, 'connection_type')) {
-          var service_name = this.$_Connection_getServiceName(connection)
-          var service_slug = slugify(service_name)
-
-          // create a default name
-          connection.name = 'my-' + service_slug
-        }
 
         // we have to do this to force watcher validation
         this.$nextTick(() => {

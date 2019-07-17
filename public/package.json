@@ -26,6 +26,7 @@
     "moment": "^2.17.1",
     "payment-icons": "^1.1.0",
     "popper.js": "^1.14.4",
+    "randomstring": "^1.1.5",
     "stickybits": "^3.3.1",
     "vue": "^2.5.13",
     "vue-codemirror": "^4.0.5",

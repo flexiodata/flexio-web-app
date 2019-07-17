@@ -41,7 +41,6 @@ const routes = [
   { path: '/onboard',                                     name: rn.ROUTE_ONBOARD_PAGE,        component: OnboardingPage,      meta },
   { path: '/builder/:template',                           name: rn.ROUTE_APP_BUILDER,         component: BuilderDocument,     meta },
   { path: '/account/:section?',                           name: rn.ROUTE_APP_ACCOUNT,         component: AppAccount,          meta },
-  { path: '/:user_identifier?/activity',                  name: rn.ROUTE_APP_ACTIVITY,        component: AppActivity,         meta },
   { path: '/:user_identifier?/connections/:identifier?',  name: rn.ROUTE_APP_CONNECTIONS,     component: AppConnections,      meta },
   { path: '/:user_identifier?/pipes/:identifier?',        name: rn.ROUTE_APP_PIPES,           component: AppPipes,            meta },
   admin_routes,
