@@ -178,7 +178,7 @@
     computed: {
       // mix this into the outer object with the object spread operator
       ...mapState({
-        'routed_user': 'routed_user'
+        'active_team_identifier': 'active_team_identifier'
       }),
       has_description() {
         return _.get(this.item, 'description', '').length > 0
@@ -237,7 +237,7 @@
       },
       pipe_route() {
         // TODO: this component shouldn't have anything to do with the route or store state
-        var ru = this.routed_user
+        var ru = this.active_team_identifier
         var user_identifier = ru && ru.length > 0 ? ru : null
         //var identifier = this.identifier
         var identifier = _.get(this.item, 'eid', '')

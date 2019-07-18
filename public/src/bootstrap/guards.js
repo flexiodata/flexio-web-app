@@ -8,7 +8,7 @@ import {
 } from '../constants/route'
 import {
   CHANGE_ACTIVE_DOCUMENT,
-  CHANGE_ROUTED_USER
+  CHANGE_ACTIVE_TEAM
 } from '../store/mutation-types'
 
 // global route guards
@@ -54,7 +54,7 @@ router.beforeEach((to, from, next) => {
     var user = store.getters.getActiveUser
     var active_username = _.get(user, 'username', store.state.active_user_eid)
 
-    store.commit(CHANGE_ROUTED_USER, to.params.user_identifier || active_username)
+    store.commit(CHANGE_ACTIVE_TEAM, to.params.user_identifier || active_username)
 
     tryFetchConnections()
     tryFetchTokens()

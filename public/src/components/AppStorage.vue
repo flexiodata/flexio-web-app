@@ -78,7 +78,7 @@
       ...mapState({
         'is_fetching': 'connections_fetching',
         'is_fetched': 'connections_fetched',
-        'routed_user': 'routed_user'
+        'active_team_identifier': 'active_team_identifier'
       }),
       connections() {
         var items = _.filter(this.getAvailableConnections(), this.$_Connection_isStorage)
@@ -95,7 +95,7 @@
         return this.ctype.length > 0
       },
       title() {
-        var ru = this.routed_user
+        var ru = this.active_team_identifier
         return ru && ru.length > 0 ? ru + '/' + 'storage' : 'Storage'
       }
     },

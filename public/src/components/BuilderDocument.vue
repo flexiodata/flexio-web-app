@@ -162,7 +162,8 @@
         is_fetching: state => state.builder.fetching,
         is_fetched: state => state.builder.fetched,
         prompts: state => state.builder.prompts,
-        pipe: state => state.builder.pipe
+        pipe: state => state.builder.pipe,
+        active_team_identifier: state => state.active_team_identifier
       }),
       is_builder_document() {
         return this.$route.name == ROUTE_APP_BUILDER
@@ -215,9 +216,6 @@
       },
       show_description() {
         return _.get(this.def, 'description', '').length > 0 && _.get(this.def, 'ui.settings.show_description', false)
-      },
-      routed_user() {
-        return this.$store.state.routed_user
       }
     },
     methods: {
@@ -329,7 +327,7 @@
         var eid = this.pipe.eid
 
         // TODO: this component shouldn't have anything to do with the route or store state
-        var ru = this.routed_user
+        var ru = this.active_team_identifier
         var user_identifier = ru && ru.length > 0 ? ru : null
         var identifier = eid
 

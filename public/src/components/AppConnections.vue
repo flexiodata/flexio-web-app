@@ -157,7 +157,7 @@
       ...mapState({
         'is_fetching': 'connections_fetching',
         'is_fetched': 'connections_fetched',
-        'routed_user': 'routed_user'
+        'active_team_identifier': 'active_team_identifier'
       }),
       route_identifier() {
         return _.get(this.$route, 'params.identifier', undefined)
@@ -178,7 +178,7 @@
         return this.ctype.length > 0
       },
       title() {
-        var ru = this.routed_user
+        var ru = this.active_team_identifier
         return ru && ru.length > 0 ? ru + '/' + 'connections' : 'Connections'
       }
     },
@@ -303,7 +303,7 @@
           var identifier = name.length > 0 ? name : _.get(conn, 'eid', '')
 
           var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
-          _.set(new_route, 'params.user_identifier', this.routed_user)
+          _.set(new_route, 'params.user_identifier', this.active_team_identifier)
           _.set(new_route, 'params.identifier', identifier)
           this.$router[!this.route_identifier?'replace':'push'](new_route)
 

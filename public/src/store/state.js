@@ -1,8 +1,8 @@
 export default () => {
   return {
     active_user_eid: '',
+    active_team_identifier: '',
     active_document_identifier: '',
-    routed_user: '',
 
     // TODO: move all of these into `objects_fetched` and `objects_fetching` objects?
     user_fetched: false,
