@@ -69,6 +69,9 @@ class Api
         'POS /:teamid/account/cards'                  => '\Flexio\Api\User::addcard',
         'DEL /:teamid/account/cards/*'                => '\Flexio\Api\User::deletecard',
 
+        // teams
+        'GET /:teamid/teams'                          => '\Flexio\Api\Team::list',
+
         // team members
         'POS /:teamid/members'                        => '\Flexio\Api\TeamMember::create',
         'GET /:teamid/members'                        => '\Flexio\Api\TeamMember::list',

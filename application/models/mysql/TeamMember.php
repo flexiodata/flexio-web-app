@@ -144,7 +144,7 @@ class TeamMember extends ModelBase
     public function list(array $filter) : array
     {
         $db = $this->getDatabase();
-        $allowed_items = array('owned_by', 'created_min', 'created_max');
+        $allowed_items = array('owned_by', 'member_eid', 'created_min', 'created_max');
         $filter_expr = \Filter::build($db, $filter, $allowed_items);
         $limit_expr = \Limit::build($db, $filter);
 

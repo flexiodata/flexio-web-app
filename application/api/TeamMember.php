@@ -224,7 +224,7 @@ class TeamMember
         // get the team members
         $result = array();
 
-        $filter = array('owned_by' => $owner_user_eid, 'eid_status' => \Model::STATUS_AVAILABLE);
+        $filter = array('owned_by' => $owner_user_eid);
         $filter = array_merge($validated_query_params, $filter); // give precedence to fixed owner/status
         $teammembers = \Flexio\System\System::getModel()->teammember->list($filter);
 
@@ -290,6 +290,8 @@ class TeamMember
             $member_info['last_name'] = $user_info['last_name'];
             $member_info['email'] = $user_info['email'];
             $member_info['email_hash'] = $user_info['email_hash'];
+            $member_info['created'] = $user_info['created'];
+            $member_info['updated'] = $user_info['updated'];
         }
         catch (\Exception $e)
         {
