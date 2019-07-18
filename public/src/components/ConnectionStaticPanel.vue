@@ -51,12 +51,13 @@
       </div>
       <div class="flex-none">
         <el-button
+          class="ttu fw6"
+          style="min-width: 5rem"
           size="small"
           type="primary"
-          class="ttu fw6"
           @click="$emit('edit-click')"
         >
-          Edit Connection
+          Edit
         </el-button>
       </div>
     </div>
