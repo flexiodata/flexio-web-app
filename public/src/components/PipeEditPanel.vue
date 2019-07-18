@@ -41,12 +41,13 @@
       <div>
         <label class="el-form-item__label">Description</label>
         <CodeEditor
-          class="bg-white ba b--black-10"
+          class="pa1 bg-white ba b--black-10 br2"
           style="font-size: 13px"
           :options="{
             minRows: 12,
             maxRows: 24,
-            lineNumbers: false
+            lineNumbers: false,
+            placeholder: description_placeholder
           }"
           v-model="edit_pipe.description"
         />
@@ -144,7 +145,16 @@
             { validator: this.formValidateName }
           ]
         },
-        form_errors: {}
+        form_errors: {},
+        description_placeholder: `Example:
+
+/**
+ * Description text goes here
+ * @customfunction
+ * @param {number} first First number
+ * @param {number} second Second number
+ * @returns {number} The sum of the two numbers.
+ */`
       }
     },
     computed: {
