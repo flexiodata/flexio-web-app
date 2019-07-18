@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        // ENDPOINT: POST /:userid/processes/:objeid
+        // ENDPOINT: POST /:teamid/processes/:objeid
 
 
         // SETUP
@@ -91,7 +91,7 @@ class Test
                 "code": "insufficient-rights"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/processes/:objeid; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:teamid/processes/:objeid; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -113,7 +113,7 @@ class Test
                 "code": "unavailable"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/processes/:objeid; fail if object isn\'t owned by specified owner',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:teamid/processes/:objeid; fail if object isn\'t owned by specified owner',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -135,7 +135,7 @@ class Test
                 "code": "insufficient-rights"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:userid/processes/:objeid; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:teamid/processes/:objeid; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
 
         // BEGIN TEST
         $new_username = \Flexio\Base\Identifier::generate();
@@ -167,6 +167,6 @@ class Test
                 "eid_type": "USR"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.4', 'POST /:userid/processes/:objeid; return updated process info',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.4', 'POST /:teamid/processes/:objeid; return updated process info',  $actual, $expected, $results);
     }
 }

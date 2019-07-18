@@ -20,8 +20,8 @@ class Test
 {
     public function run(&$results)
     {
-        // ENDPOINT: POST /:userid/connections/:objeid/connect
-        // ENDPOINT: POST /:userid/connections/:objeid/disconnect
+        // ENDPOINT: POST /:teamid/connections/:objeid/connect
+        // ENDPOINT: POST /:teamid/connections/:objeid/disconnect
 
 
         // SETUP
@@ -94,18 +94,6 @@ class Test
             $testsuite_connection_info['owned_by'] = $userid1;
             $testsuite_connection_info['created_by'] = $userid1;
             $new_connection = \Flexio\Object\Connection::create($testsuite_connection_info);
-
-            // grant default rights to the owner
-            $new_connection->grant($userid1, \Model::ACCESS_CODE_TYPE_EID,
-                array(
-                    \Flexio\Object\Right::TYPE_READ_RIGHTS,
-                    \Flexio\Object\Right::TYPE_WRITE_RIGHTS,
-                    \Flexio\Object\Right::TYPE_READ,
-                    \Flexio\Object\Right::TYPE_WRITE,
-                    \Flexio\Object\Right::TYPE_DELETE
-                )
-            );
-
             $new_connection_eid = $new_connection->getEid();
             $test_connection_eids[$new_connection_eid] = $storage_location;
         }
@@ -127,7 +115,7 @@ class Test
                 "code": "insufficient-rights"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/connections/:objeid/connect; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:teamid/connections/:objeid/connect; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -143,7 +131,7 @@ class Test
                 "code": "unavailable"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/connections/:objeid/connect; fail if object isn\'t owned by specified owner',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:teamid/connections/:objeid/connect; fail if object isn\'t owned by specified owner',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -159,7 +147,7 @@ class Test
                 "code": "insufficient-rights"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:userid/connections/:objeid/connect; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:teamid/connections/:objeid/connect; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
 
 
 
@@ -179,7 +167,7 @@ class Test
             $response = json_decode($result['response'],true);
             $actual = $response['connection_status'] ?? '';
             $expected = \Model::CONNECTION_STATUS_AVAILABLE;
-            \Flexio\Tests\Check::assertString("B.$idx", "POST /:userid/connections/:objeid/connect; copy of $type: check connecting to service",  $actual, $expected, $results);
+            \Flexio\Tests\Check::assertString("B.$idx", "POST /:teamid/connections/:objeid/connect; copy of $type: check connecting to service",  $actual, $expected, $results);
         }
 
 
@@ -199,7 +187,7 @@ class Test
             $response = json_decode($result['response'],true);
             $actual = $response['connection_status'] ?? '';
             $expected = \Model::CONNECTION_STATUS_UNAVAILABLE;
-            \Flexio\Tests\Check::assertString("C.$idx", "POST /:userid/connections/:objeid/connect; copy of $type: check disconnecting to service",  $actual, $expected, $results);
+            \Flexio\Tests\Check::assertString("C.$idx", "POST /:teamid/connections/:objeid/connect; copy of $type: check disconnecting to service",  $actual, $expected, $results);
         }
 
 
@@ -227,7 +215,7 @@ class Test
                     "code": "connection-failed"
                 }
             }';
-            \Flexio\Tests\Check::assertInArray("D.$idx", "POST /:userid/connections/:objeid/connect; copy of $type: test connecting within invalid info",  $actual, $expected, $results);
+            \Flexio\Tests\Check::assertInArray("D.$idx", "POST /:teamid/connections/:objeid/connect; copy of $type: test connecting within invalid info",  $actual, $expected, $results);
         }
     }
 }

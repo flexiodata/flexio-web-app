@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        // ENDPOINT: DEL /:userid/processes/:objeid
+        // ENDPOINT: DEL /:teamid/processes/:objeid
 
 
         // SETUP
@@ -85,7 +85,7 @@ class Test
                 "code": "insufficient-rights"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'DELETE /:userid/processes/:objeid; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'DELETE /:teamid/processes/:objeid; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -101,7 +101,7 @@ class Test
                 "code": "unavailable"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.2', 'DELETE /:userid/processes/:objeid; fail if object isn\'t owned by specified owner',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', 'DELETE /:teamid/processes/:objeid; fail if object isn\'t owned by specified owner',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -117,7 +117,7 @@ class Test
                 "code": "insufficient-rights"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.3', 'DELETE /:userid/processes/:objeid; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.3', 'DELETE /:teamid/processes/:objeid; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -133,7 +133,7 @@ class Test
             "eid_type": "PRC",
             "eid_status": "D"
         }';
-        \Flexio\Tests\Check::assertInArray('A.4', 'DELETE /:userid/processes/:objeid; delete process',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.4', 'DELETE /:teamid/processes/:objeid; delete process',  $actual, $expected, $results);
         $params = array(
             'method' => 'GET',
             'url' => "$apibase/$userid1/processes/$objeid1",
@@ -148,7 +148,7 @@ class Test
                 "message":"Unavailable"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.5', 'DELETE /:userid/processes/:objeid; make sure a process is deleted',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.5', 'DELETE /:teamid/processes/:objeid; make sure a process is deleted',  $actual, $expected, $results);
     }
 }
 

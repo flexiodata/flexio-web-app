@@ -29,8 +29,8 @@ class Api
     // the last time it ran for the other; if so, maybe processes should run with privileges
     // of the process owner, which could be the requesting user; we have the following endpoints
     // which would need to be sorted out:
-    // 'POS /:userid/pipes/:objid/processes'        => '\Flexio\Api\Process::create',
-    // 'GET /:userid/pipes/:objid/processes'        => '\Flexio\Api\Pipe::processes',
+    // 'POS /:teamid/pipes/:objid/processes'        => '\Flexio\Api\Process::create',
+    // 'GET /:teamid/pipes/:objid/processes'        => '\Flexio\Api\Pipe::processes',
 
     // TODO: do we need the stream API, or can we get the content exclusively through VFS
 
@@ -58,81 +58,83 @@ class Api
         // AUTHENTICATED ENDPOINTS:
 
         // validation
-        'POS /:userid/validate'                       => '\Flexio\Api\User::validateObjects',
+        'POS /:teamid/validate'                       => '\Flexio\Api\User::validateObjects',
 
-        // users
-        'POS /:userid/account'                        => '\Flexio\Api\User::set',
-        'GET /:userid/account'                        => '\Flexio\Api\User::get',
-        'DEL /:userid/account'                        => '\Flexio\Api\User::purge',
-        'POS /:userid/account/credentials'            => '\Flexio\Api\User::changepassword',
-        'GET /:userid/account/cards'                  => '\Flexio\Api\User::listcards',
-        'POS /:userid/account/cards'                  => '\Flexio\Api\User::addcard',
-        'DEL /:userid/account/cards/*'                => '\Flexio\Api\User::deletecard',
+        // account
+        'POS /:teamid/account'                        => '\Flexio\Api\User::set',
+        'GET /:teamid/account'                        => '\Flexio\Api\User::get',
+        'DEL /:teamid/account'                        => '\Flexio\Api\User::purge',
+        'POS /:teamid/account/credentials'            => '\Flexio\Api\User::changepassword',
+        'GET /:teamid/account/cards'                  => '\Flexio\Api\User::listcards',
+        'POS /:teamid/account/cards'                  => '\Flexio\Api\User::addcard',
+        'DEL /:teamid/account/cards/*'                => '\Flexio\Api\User::deletecard',
+
+        // team members
+        'POS /:teamid/members'                        => '\Flexio\Api\TeamMember::create',
+        'GET /:teamid/members'                        => '\Flexio\Api\TeamMember::list',
+        'POS /:teamid/members/:teamid'                => '\Flexio\Api\TeamMember::set',
+        'GET /:teamid/members/:teamid'                => '\Flexio\Api\TeamMember::get',
+        'DEL /:teamid/members/:teamid'                => '\Flexio\Api\TeamMember::delete',
 
         // authorization
-        'GET /:userid/auth/rights'                    => '\Flexio\Api\Right::list',
-        'POS /:userid/auth/rights'                    => '\Flexio\Api\Right::create',
-        'POS /:userid/auth/rights/:objid'             => '\Flexio\Api\Right::set',
-        'GET /:userid/auth/rights/:objid'             => '\Flexio\Api\Right::get',
-        'DEL /:userid/auth/rights/:objid'             => '\Flexio\Api\Right::delete',
-        'GET /:userid/auth/keys'                      => '\Flexio\Api\Token::list',
-        'POS /:userid/auth/keys'                      => '\Flexio\Api\Token::create',
-        'GET /:userid/auth/keys/:objid'               => '\Flexio\Api\Token::get',
-        'DEL /:userid/auth/keys/:objid'               => '\Flexio\Api\Token::delete',
+        'GET /:teamid/auth/keys'                      => '\Flexio\Api\Token::list',
+        'POS /:teamid/auth/keys'                      => '\Flexio\Api\Token::create',
+        'GET /:teamid/auth/keys/:objid'               => '\Flexio\Api\Token::get',
+        'DEL /:teamid/auth/keys/:objid'               => '\Flexio\Api\Token::delete',
 
         // actions
-        'GET /:userid/actions'                        => '\Flexio\Api\Action::list',
-        'GET /:userid/actions/summary'                => '\Flexio\Api\Action::summary',
+        'GET /:teamid/actions'                        => '\Flexio\Api\Action::list',
+        'GET /:teamid/actions/summary'                => '\Flexio\Api\Action::summary',
 
         // connections
-        'POS /:userid/connections'                    => '\Flexio\Api\Connection::create',
-        'GET /:userid/connections'                    => '\Flexio\Api\Connection::list',
-        'POS /:userid/connections/:objid'             => '\Flexio\Api\Connection::set',
-        'GET /:userid/connections/:objid'             => '\Flexio\Api\Connection::get',
-        'DEL /:userid/connections/:objid'             => '\Flexio\Api\Connection::delete',
-        'POS /:userid/connections/:objid/connect'     => '\Flexio\Api\Connection::connect',
-        'POS /:userid/connections/:objid/disconnect'  => '\Flexio\Api\Connection::disconnect',
+        'POS /:teamid/connections'                    => '\Flexio\Api\Connection::create',
+        'GET /:teamid/connections'                    => '\Flexio\Api\Connection::list',
+        'POS /:teamid/connections/:objid'             => '\Flexio\Api\Connection::set',
+        'GET /:teamid/connections/:objid'             => '\Flexio\Api\Connection::get',
+        'DEL /:teamid/connections/:objid'             => '\Flexio\Api\Connection::delete',
+        'POS /:teamid/connections/:objid/connect'     => '\Flexio\Api\Connection::connect',
+        'POS /:teamid/connections/:objid/disconnect'  => '\Flexio\Api\Connection::disconnect',
 
         // pipes
-        'POS /:userid/pipes'                          => '\Flexio\Api\Pipe::create',
-        'GET /:userid/pipes'                          => '\Flexio\Api\Pipe::list',
-        'DEL /:userid/pipes'                          => '\Flexio\Api\Pipe::bulkdelete', // experimental
-        'POS /:userid/pipes/:objid'                   => '\Flexio\Api\Pipe::set',
-        'GET /:userid/pipes/:objid'                   => '\Flexio\Api\Pipe::get',
-        'DEL /:userid/pipes/:objid'                   => '\Flexio\Api\Pipe::delete',
-        'POS /:userid/pipes/:objid/run'               => '\Flexio\Api\Pipe::run',
-        'GET /:userid/pipes/:objid/run'               => '\Flexio\Api\Pipe::run',
+        'POS /:teamid/pipes'                          => '\Flexio\Api\Pipe::create',
+        'GET /:teamid/pipes'                          => '\Flexio\Api\Pipe::list',
+        'DEL /:teamid/pipes'                          => '\Flexio\Api\Pipe::bulkdelete', // experimental
+        'POS /:teamid/pipes/:objid'                   => '\Flexio\Api\Pipe::set',
+        'GET /:teamid/pipes/:objid'                   => '\Flexio\Api\Pipe::get',
+        'DEL /:teamid/pipes/:objid'                   => '\Flexio\Api\Pipe::delete',
+        'POS /:teamid/pipes/:objid/run'               => '\Flexio\Api\Pipe::run',
+        'GET /:teamid/pipes/:objid/run'               => '\Flexio\Api\Pipe::run',
 
         // processes
-        'POS /:userid/processes'                      => '\Flexio\Api\Process::create',
-        'GET /:userid/processes'                      => '\Flexio\Api\Process::list',
-        'GET /:userid/processes/summary'              => '\Flexio\Api\Process::summary', // grand totals
-        'GET /:userid/processes/summary/daily'        => '\Flexio\Api\Process::summary_daily', // daily totals; TODO: combine with stats, rename
-        'POS /:userid/processes/:objid'               => '\Flexio\Api\Process::set',
-        'GET /:userid/processes/:objid'               => '\Flexio\Api\Process::get',
-        'DEL /:userid/processes/:objid'               => '\Flexio\Api\Process::delete',
-        'GET /:userid/processes/:objid/log'           => '\Flexio\Api\Process::log',
-        'POS /:userid/processes/:objid/run'           => '\Flexio\Api\Process::run',
-        'POS /:userid/processes/:objid/cancel'        => '\Flexio\Api\Process::cancel',
+        'POS /:teamid/processes'                      => '\Flexio\Api\Process::create',
+        'GET /:teamid/processes'                      => '\Flexio\Api\Process::list',
+        'GET /:teamid/processes/summary'              => '\Flexio\Api\Process::summary', // grand totals
+        'GET /:teamid/processes/summary/daily'        => '\Flexio\Api\Process::summary_daily', // daily totals; TODO: combine with stats, rename
+        'POS /:teamid/processes/:objid'               => '\Flexio\Api\Process::set',
+        'GET /:teamid/processes/:objid'               => '\Flexio\Api\Process::get',
+        'DEL /:teamid/processes/:objid'               => '\Flexio\Api\Process::delete',
+        'GET /:teamid/processes/:objid/log'           => '\Flexio\Api\Process::log',
+        'POS /:teamid/processes/:objid/run'           => '\Flexio\Api\Process::run',
+        'POS /:teamid/processes/:objid/cancel'        => '\Flexio\Api\Process::cancel',
 
         // processes EXPERIMENTAL endpoint for running code (creates and runs a process from code)
-        'GET /:userid/processes/exec'                 => '\Flexio\Api\Process::exec',
-        'POS /:userid/processes/exec'                 => '\Flexio\Api\Process::exec',
+        'GET /:teamid/processes/exec'                 => '\Flexio\Api\Process::exec',
+        'POS /:teamid/processes/exec'                 => '\Flexio\Api\Process::exec',
 
         // streams
-        'GET /:userid/streams/:objid'                 => '\Flexio\Api\Stream::get',
-        'GET /:userid/streams/:objid/content'         => '\Flexio\Api\Stream::content',
+        'GET /:teamid/streams/:objid'                 => '\Flexio\Api\Stream::get',
+        'GET /:teamid/streams/:objid/content'         => '\Flexio\Api\Stream::content',
 
         // vfs
-        'GET /:userid/vfs/list'                       => '\Flexio\Api\Vfs::list',
-        'GET /:userid/vfs/*'                          => '\Flexio\Api\Vfs::get',
-        'PUT /:userid/vfs/*'                          => '\Flexio\Api\Vfs::put',
+        'GET /:teamid/vfs/list'                       => '\Flexio\Api\Vfs::list',
+        'GET /:teamid/vfs/*'                          => '\Flexio\Api\Vfs::get',
+        'PUT /:teamid/vfs/*'                          => '\Flexio\Api\Vfs::put',
 
         // vfs-styled EXPERIMENTAL endpoint for running code (creates and runs a process from code)
-        'GET /:userid/run/*'                          => '\Flexio\Api\Vfs::exec',
-        'POS /:userid/run/*'                          => '\Flexio\Api\Vfs::exec',
-        'PUT /:userid/run/*'                          => '\Flexio\Api\Vfs::exec',
-        'DEL /:userid/run/*'                          => '\Flexio\Api\Vfs::exec',
+        'GET /:teamid/run/*'                          => '\Flexio\Api\Vfs::exec',
+        'POS /:teamid/run/*'                          => '\Flexio\Api\Vfs::exec',
+        'PUT /:teamid/run/*'                          => '\Flexio\Api\Vfs::exec',
+        'DEL /:teamid/run/*'                          => '\Flexio\Api\Vfs::exec',
 
         // INTERNAL ENDPOINTS
 
@@ -333,9 +335,9 @@ class Api
         if ($function !== false)
             return $function;
 
-        // PATH POSSIBILITY 2: the path starts with an owner identifier, but the rest of the path is fixed
+        // PATH POSSIBILITY 2: the path starts with a team owner identifier, but the rest of the path is fixed
         $api_params = $url_params;
-        $api_params['apiparam1'] = $user_eid !== '' ? ':userid' : $api_params['apiparam1'];
+        $api_params['apiparam1'] = $user_eid !== '' ? ':teamid' : $api_params['apiparam1'];
         $apiendpoint = self::buildApiEndpointString($request_method, $api_params);
 
         $function = self::$endpoints[$apiendpoint] ?? false;
@@ -345,11 +347,11 @@ class Api
             return $function;
         }
 
-        // PATH POSSIBILITY 3: the path starts with an owner identifier, and there's also an object identifer
+        // PATH POSSIBILITY 3: the path starts with a team owner identifier, and there's also an object identifer
         // in the third part of the path
         $api_params = $url_params;
         $object_eid = self::resolveObjectIdentifier($user_eid, $url_params['apiparam2'], $url_params['apiparam3']);
-        $api_params['apiparam1'] = $user_eid !== '' ? ':userid' : $api_params['apiparam1'];
+        $api_params['apiparam1'] = $user_eid !== '' ? ':teamid' : $api_params['apiparam1'];
         $api_params['apiparam3'] = $object_eid !== '' ? ':objid' : $api_params['apiparam3'];
         $apiendpoint = self::buildApiEndpointString($request_method, $api_params);
 
@@ -361,11 +363,28 @@ class Api
             return $function;
         }
 
-        // PATH POSSIBILITY 4: the path starts with an owner identifier, and there's also an object identifer
+        // PATH POSSIBILITY 4: the path starts with a team owner identifier, and there's also a team identifer
+        // in the third part of the path
+        $api_params = $url_params;
+        $user_eid1 = $user_eid;
+        $user_eid2 = self::resolveOwnerIdentifier($requesting_user, $url_params['apiparam3']);
+        $api_params['apiparam1'] = $user_eid1 !== '' ? ':teamid' : $api_params['apiparam1'];
+        $api_params['apiparam3'] = $user_eid2 !== '' ? ':teamid' : $api_params['apiparam3'];
+        $apiendpoint = self::buildApiEndpointString($request_method, $api_params);
+
+        $function = self::$endpoints[$apiendpoint] ?? false;
+        if ($function !== false)
+        {
+            $request->setOwnerFromUrl($user_eid1);
+            $request->setObjectFromUrl($user_eid2);
+            return $function;
+        }
+
+        // PATH POSSIBILITY 5: the path starts with a team owner identifier, and there's also an object identifer
         // in the fourth part of the path
         $api_params = $url_params;
         $object_eid = self::resolveObjectIdentifier($user_eid, $url_params['apiparam3'], $url_params['apiparam4']);
-        $api_params['apiparam1'] = $user_eid !== '' ? ':userid' : $api_params['apiparam1'];
+        $api_params['apiparam1'] = $user_eid !== '' ? ':teamid' : $api_params['apiparam1'];
         $api_params['apiparam4'] = $object_eid !== '' ? ':objid' : $api_params['apiparam4'];
         $apiendpoint = self::buildApiEndpointString($request_method, $api_params);
 
@@ -377,13 +396,13 @@ class Api
             return $function;
         }
 
-        // PATH POSSIBILITY 5; the path is an account card path, where the path may include a payment service
+        // PATH POSSIBILITY 6; the path is an account card path, where the path may include a payment service
         // provider card identifier as part of the path
         $api_params = $url_params;
-        $api_params['apiparam1'] = $user_eid !== '' ? ':userid' : $api_params['apiparam1'];
+        $api_params['apiparam1'] = $user_eid !== '' ? ':teamid' : $api_params['apiparam1'];
         $apiendpoint = self::buildApiEndpointString($request_method, $api_params);
-        if (substr($apiendpoint,0,27) === 'DEL /:userid/account/cards/')
-            $apiendpoint = 'DEL /:userid/account/cards/*';
+        if (substr($apiendpoint,0,27) === 'DEL /:teamid/account/cards/')
+            $apiendpoint = 'DEL /:teamid/account/cards/*';
         $function = self::$endpoints[$apiendpoint] ?? false;
         if ($function !== false)
         {
@@ -391,15 +410,15 @@ class Api
             return $function;
         }
 
-        // PATH POSSIBILITY 6; the path is an run endpoint followed by a path
+        // PATH POSSIBILITY 7; the path is an run endpoint followed by a path
         $api_params = $url_params;
-        $api_params['apiparam1'] = $user_eid !== '' ? ':userid' : $api_params['apiparam1'];
+        $api_params['apiparam1'] = $user_eid !== '' ? ':teamid' : $api_params['apiparam1'];
         $apiendpoint = self::buildApiEndpointString($request_method, $api_params);
 
-             if (substr($apiendpoint,0,16) === 'GET /:userid/run') $apiendpoint = 'GET /:userid/run/*';
-        else if (substr($apiendpoint,0,16) === 'POS /:userid/run') $apiendpoint = 'POS /:userid/run/*';
-        else if (substr($apiendpoint,0,16) === 'PUT /:userid/run') $apiendpoint = 'PUT /:userid/run/*';
-        else if (substr($apiendpoint,0,16) === 'DEL /:userid/run') $apiendpoint = 'DEL /:userid/run/*';
+             if (substr($apiendpoint,0,16) === 'GET /:teamid/run') $apiendpoint = 'GET /:teamid/run/*';
+        else if (substr($apiendpoint,0,16) === 'POS /:teamid/run') $apiendpoint = 'POS /:teamid/run/*';
+        else if (substr($apiendpoint,0,16) === 'PUT /:teamid/run') $apiendpoint = 'PUT /:teamid/run/*';
+        else if (substr($apiendpoint,0,16) === 'DEL /:teamid/run') $apiendpoint = 'DEL /:teamid/run/*';
 
         $function = self::$endpoints[$apiendpoint] ?? false;
         if ($function !== false)
@@ -408,13 +427,13 @@ class Api
             return $function;
         }
 
-        // PATH POSSIBILITY 7; the path is a vfs path with a path after the vfs prefix
+        // PATH POSSIBILITY 8; the path is a vfs path with a path after the vfs prefix
         $api_params = $url_params;
-        $api_params['apiparam1'] = $user_eid !== '' ? ':userid' : $api_params['apiparam1'];
+        $api_params['apiparam1'] = $user_eid !== '' ? ':teamid' : $api_params['apiparam1'];
         $apiendpoint = self::buildApiEndpointString($request_method, $api_params);
 
-             if (substr($apiendpoint,0,17) === 'GET /:userid/vfs/') $apiendpoint = 'GET /:userid/vfs/*';
-        else if (substr($apiendpoint,0,17) === 'PUT /:userid/vfs/') $apiendpoint = 'PUT /:userid/vfs/*';
+             if (substr($apiendpoint,0,17) === 'GET /:teamid/vfs/') $apiendpoint = 'GET /:teamid/vfs/*';
+        else if (substr($apiendpoint,0,17) === 'PUT /:teamid/vfs/') $apiendpoint = 'PUT /:teamid/vfs/*';
 
         $function = self::$endpoints[$apiendpoint] ?? false;
         if ($function !== false)

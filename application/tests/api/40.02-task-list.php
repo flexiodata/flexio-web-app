@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        // ENDPOINT: POST /:userid/processes/:objeid/run
+        // ENDPOINT: POST /:teamid/processes/:objeid/run
 
 
         // SETUP

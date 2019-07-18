@@ -51,7 +51,7 @@ class Test
 */
 
 
-        // ENDPOINT: POST /:userid/processes/:objeid/run
+        // ENDPOINT: POST /:teamid/processes/:objeid/run
 
 
         // SETUP

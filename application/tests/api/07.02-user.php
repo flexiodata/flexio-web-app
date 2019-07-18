@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        // ENDPOINT: POST /:userid/account
+        // ENDPOINT: POST /:teamid/account
 
 
         // SETUP
@@ -57,7 +57,7 @@ class Test
                 "code": "insufficient-rights"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/account; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:teamid/account; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -77,7 +77,7 @@ class Test
                 "code": "insufficient-rights"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/account; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:teamid/account; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -97,7 +97,7 @@ class Test
                 "code": "write-failed"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:userid/account; fail if username is already exists',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:teamid/account; fail if username is already exists',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -117,7 +117,7 @@ class Test
                 "code": "write-failed"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.4', 'POST /:userid/account; fail if email is already exists',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.4', 'POST /:teamid/account; fail if email is already exists',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -140,7 +140,7 @@ class Test
             "username": "'.$username1.'",
             "email": "'.$email1.'"
         }';
-        \Flexio\Tests\Check::assertInArray('A.5', 'POST /:userid/account; allow username and email to be set to what they already are',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.5', 'POST /:teamid/account; allow username and email to be set to what they already are',  $actual, $expected, $results);
 
         // BEGIN TEST
         $new_username = \Flexio\Base\Identifier::generate();
@@ -199,6 +199,6 @@ class Test
                 "custom_value": "abc"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.6', 'POST /:userid/account; change account response',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.6', 'POST /:teamid/account; change account response',  $actual, $expected, $results);
     }
 }

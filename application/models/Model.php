@@ -148,12 +148,6 @@ class Model
     public const STATUS_AVAILABLE = 'A';
     public const STATUS_DELETED   = 'D';
 
-    public const ACCESS_CODE_TYPE_UNDEFINED = '';
-    public const ACCESS_CODE_TYPE_EID       = 'EID';
-    public const ACCESS_CODE_TYPE_TOKEN     = 'TKN';
-    public const ACCESS_CODE_TYPE_EMAIL     = 'EML';
-    public const ACCESS_CODE_TYPE_CATEGORY  = 'CAT';
-
     public const REGISTRY_VALUE_UNDEFINED = '';
     public const REGISTRY_VALUE_STRING    = 'S';
     public const REGISTRY_VALUE_NUMBER    = 'N';
@@ -180,6 +174,11 @@ class Model
     public const PROCESS_TRIGGERED_EMAIL     = 'E';
     public const PROCESS_TRIGGERED_SCHEDULER = 'S';
     public const PROCESS_TRIGGERED_INTERFACE = 'I';
+
+    public const TEAM_MEMBER_STATUS_UNDEFINED = '';
+    public const TEAM_MEMBER_STATUS_PENDING = 'P';
+    public const TEAM_MEMBER_STATUS_INACTIVE = 'I';
+    public const TEAM_MEMBER_STATUS_ACTIVE = 'A';
 
     public const ROLE_UNDEFINED     = '';
     public const ROLE_ADMINISTRATOR = 'A';
@@ -732,7 +731,6 @@ class Model
             'association' => 'select count(*) as count from tbl_association',
             'user' => 'select count(*) as count from tbl_user',
             'token' => 'select count(*) as count from tbl_token',
-            'acl' => 'select count(*) as count from tbl_acl',
             'pipe' => 'select count(*) as count from tbl_pipe',
             'connection' => 'select count(*) as count from tbl_connection',
             'process' => 'select count(*) as count from tbl_process',

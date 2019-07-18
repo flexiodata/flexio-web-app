@@ -280,7 +280,7 @@ class Request extends \Flexio\Jobs\Base
         if ($connection)
         {
             // TODO: rights
-            //if ($connection->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
+            //if ($connection->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
             //    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
             // we have a connection; get the connection info and adjust the url

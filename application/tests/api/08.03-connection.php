@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        // ENDPOINT: DEL /:userid/connections/:objeid
+        // ENDPOINT: DEL /:teamid/connections/:objeid
 
 
         // SETUP
@@ -91,7 +91,7 @@ class Test
                 "code": "insufficient-rights"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'DELETE /:userid/connections/:objeid; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'DELETE /:teamid/connections/:objeid; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -107,7 +107,7 @@ class Test
                 "code": "unavailable"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.2', 'DELETE /:userid/connections/:objeid; fail if object isn\'t owned by specified owner',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', 'DELETE /:teamid/connections/:objeid; fail if object isn\'t owned by specified owner',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -123,7 +123,7 @@ class Test
                 "code": "insufficient-rights"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.3', 'DELETE /:userid/connections/:objeid; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.3', 'DELETE /:teamid/connections/:objeid; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -139,7 +139,7 @@ class Test
             "eid_type": "CTN",
             "eid_status": "D"
         }';
-        \Flexio\Tests\Check::assertInArray('A.4', 'DELETE /:userid/connections/:objeid; delete connection',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.4', 'DELETE /:teamid/connections/:objeid; delete connection',  $actual, $expected, $results);
         $params = array(
             'method' => 'GET',
             'url' => "$apibase/$userid1/connections/$objeid1",
@@ -154,7 +154,7 @@ class Test
                 "message":"Unavailable"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.5', 'DELETE /:userid/connections/:objeid; make sure a connection is deleted',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.5', 'DELETE /:teamid/connections/:objeid; make sure a connection is deleted',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -170,7 +170,7 @@ class Test
             "eid_type": "CTN",
             "eid_status": "D"
         }';
-        \Flexio\Tests\Check::assertInArray('A.6', 'DELETE /:userid/connections/:objeid; allow deletion by name',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.6', 'DELETE /:teamid/connections/:objeid; allow deletion by name',  $actual, $expected, $results);
         $params = array(
             'method' => 'DELETE',
             'url' => "$apibase/$userid1/connections/name3",
@@ -185,7 +185,7 @@ class Test
                 "message":"Invalid request"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.7', 'DELETE /:userid/connections/:objeid; make sure a connection is deleted',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.7', 'DELETE /:teamid/connections/:objeid; make sure a connection is deleted',  $actual, $expected, $results);
 
         // BEGIN
         $unique_name = \Flexio\Base\Identifier::generate();
@@ -215,7 +215,7 @@ class Test
             "eid_type": "CTN",
             "eid_status": "D"
         }';
-        \Flexio\Tests\Check::assertInArray('A.8', 'DELETE /:userid/connections/:objeid; delete connection',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.8', 'DELETE /:teamid/connections/:objeid; delete connection',  $actual, $expected, $results);
         $params = array(
             'method' => 'POST',
             'url' => "$apibase/$userid1/connections",
@@ -234,6 +234,6 @@ class Test
             "eid_status": "A",
             "name": "'.$unique_name.'"
         }';
-        \Flexio\Tests\Check::assertInArray('A.9', 'DELETE /:userid/connections/:objeid; clear out name when deleting a connection',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.9', 'DELETE /:teamid/connections/:objeid; clear out name when deleting a connection',  $actual, $expected, $results);
     }
 }

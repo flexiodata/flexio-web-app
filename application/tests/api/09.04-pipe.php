@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        // ENDPOINT: POST /:userid/pipes/:objeid/run
+        // ENDPOINT: POST /:teamid/pipes/:objeid/run
 
 
         // SETUP
@@ -127,7 +127,7 @@ class Test
                 "code": "insufficient-rights"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/pipes/:objeid/run; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:teamid/pipes/:objeid/run; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -146,7 +146,7 @@ class Test
                 "code": "unavailable"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/pipes/:objeid/run; fail if object isn\'t owned by specified owner',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:teamid/pipes/:objeid/run; fail if object isn\'t owned by specified owner',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -165,7 +165,7 @@ class Test
                 "code": "insufficient-rights"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:userid/pipes/:objeid/run; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:teamid/pipes/:objeid/run; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -179,7 +179,7 @@ class Test
         $response = $result['response'];
         $actual = $response;
         $expected = '';
-        \Flexio\Tests\Check::assertString('A.4', 'POST /:userid/pipes/:objeid/run; return the results of running a pipe without posted variables',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.4', 'POST /:teamid/pipes/:objeid/run; return the results of running a pipe without posted variables',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -194,7 +194,7 @@ class Test
         $response = $result['response'];
         $actual = $response;
         $expected = 'Hello, World!';
-        \Flexio\Tests\Check::assertString('A.5', 'POST /:userid/pipes/:objeid/run; return the results of running a pipe with posted variables',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.5', 'POST /:teamid/pipes/:objeid/run; return the results of running a pipe with posted variables',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -210,7 +210,7 @@ class Test
         $response = $result['response'];
         $actual = $response;
         $expected = 'Hello, World!';
-        \Flexio\Tests\Check::assertString('A.6', 'POST /:userid/pipes/:objeid/run; return the results of running a pipe with posted variables using json content type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.6', 'POST /:teamid/pipes/:objeid/run; return the results of running a pipe with posted variables using json content type',  $actual, $expected, $results);
 
 
         // TEST: run pipe with extra parameters
@@ -229,7 +229,7 @@ class Test
         $response = $result['response'];
         $actual = $response;
         $expected = 'value2';
-        \Flexio\Tests\Check::assertString('B.1', 'POST /:userid/pipes/:objeid/run; return the results of running a pipe with posted variables; redefined variables',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.1', 'POST /:teamid/pipes/:objeid/run; return the results of running a pipe with posted variables; redefined variables',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -246,7 +246,7 @@ class Test
         $response = $result['response'];
         $actual = $response;
         $expected = 'Hello, World!';
-        \Flexio\Tests\Check::assertString('B.2', 'POST /:userid/pipes/:objeid/run; return the results of running a pipe with posted variables; extra variables',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.2', 'POST /:teamid/pipes/:objeid/run; return the results of running a pipe with posted variables; extra variables',  $actual, $expected, $results);
 
 
         // TEST: run pipe with variable string variations
@@ -264,7 +264,7 @@ class Test
         $response = $result['response'];
         $actual = $response;
         $expected = '';
-        \Flexio\Tests\Check::assertString('C.1', 'POST /:userid/pipes/:objeid/run; return the results of running a pipe with posted variables; variable case sensitivity',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.1', 'POST /:teamid/pipes/:objeid/run; return the results of running a pipe with posted variables; variable case sensitivity',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -279,7 +279,7 @@ class Test
         $response = $result['response'];
         $actual = $response;
         $expected = '';
-        \Flexio\Tests\Check::assertString('C.2', 'POST /:userid/pipes/:objeid/run; return the results of running a pipe with posted variables; variable whole-word sensitivity',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.2', 'POST /:teamid/pipes/:objeid/run; return the results of running a pipe with posted variables; variable whole-word sensitivity',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -294,7 +294,7 @@ class Test
         $response = $result['response'];
         $actual = $response;
         $expected = '';
-        \Flexio\Tests\Check::assertString('C.3', 'POST /:userid/pipes/:objeid/run; return the results of running a pipe with posted variables; variable null value type handling',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.3', 'POST /:teamid/pipes/:objeid/run; return the results of running a pipe with posted variables; variable null value type handling',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -309,7 +309,7 @@ class Test
         $response = $result['response'];
         $actual = $response;
         $expected = '1';
-        \Flexio\Tests\Check::assertString('C.4', 'POST /:userid/pipes/:objeid/run; return the results of running a pipe with posted variables; variable number value type handling',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.4', 'POST /:teamid/pipes/:objeid/run; return the results of running a pipe with posted variables; variable number value type handling',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -324,7 +324,7 @@ class Test
         $response = $result['response'];
         $actual = $response;
         $expected = '1.1';
-        \Flexio\Tests\Check::assertString('C.5', 'POST /:userid/pipes/:objeid/run; return the results of running a pipe with posted variables; variable number value type handling',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.5', 'POST /:teamid/pipes/:objeid/run; return the results of running a pipe with posted variables; variable number value type handling',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -339,7 +339,7 @@ class Test
         $response = $result['response'];
         $actual = $response;
         $expected = '1'; // booleans are not casted to 'true' in callApi()
-        \Flexio\Tests\Check::assertString('C.6', 'POST /:userid/pipes/:objeid/run; return the results of running a pipe with posted variables; variable boolean value type handling',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.6', 'POST /:teamid/pipes/:objeid/run; return the results of running a pipe with posted variables; variable boolean value type handling',  $actual, $expected, $results);
 /*
 // TODO: fix callApi so it can handle a parameter with an array value
         // BEGIN TEST
@@ -355,7 +355,7 @@ class Test
         $response = $result['response'];
         $actual = $response;
         $expected = '';
-        \Flexio\Tests\Check::assertString('C.7', 'POST /:userid/pipes/:objeid/run; return the results of running a pipe with posted variables; variable boolean value type handling',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.7', 'POST /:teamid/pipes/:objeid/run; return the results of running a pipe with posted variables; variable boolean value type handling',  $actual, $expected, $results);
 */
         // BEGIN TEST
         $params = array(
@@ -370,7 +370,7 @@ class Test
         $response = $result['response'];
         $actual = $response;
         $expected = "\n";
-        \Flexio\Tests\Check::assertString('C.8', 'POST /:userid/pipes/:objeid/run; return the results of running a pipe with posted variables; variable\'s with special values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.8', 'POST /:teamid/pipes/:objeid/run; return the results of running a pipe with posted variables; variable\'s with special values',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -385,7 +385,7 @@ class Test
         $response = $result['response'];
         $actual = $response;
         $expected = "a\n";
-        \Flexio\Tests\Check::assertString('C.9', 'POST /:userid/pipes/:objeid/run; return the results of running a pipe with posted variables; variable\'s with special values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.9', 'POST /:teamid/pipes/:objeid/run; return the results of running a pipe with posted variables; variable\'s with special values',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -400,7 +400,7 @@ class Test
         $response = $result['response'];
         $actual = $response;
         $expected = "\nb";
-        \Flexio\Tests\Check::assertString('C.10', 'POST /:userid/pipes/:objeid/run; return the results of running a pipe with posted variables; variable\'s with special values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.10', 'POST /:teamid/pipes/:objeid/run; return the results of running a pipe with posted variables; variable\'s with special values',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -415,7 +415,7 @@ class Test
         $response = $result['response'];
         $actual = $response;
         $expected = "\"";
-        \Flexio\Tests\Check::assertString('C.11', 'POST /:userid/pipes/:objeid/run; return the results of running a pipe with posted variables; variable\'s with special values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.11', 'POST /:teamid/pipes/:objeid/run; return the results of running a pipe with posted variables; variable\'s with special values',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -430,7 +430,7 @@ class Test
         $response = $result['response'];
         $actual = $response;
         $expected = "\\";
-        \Flexio\Tests\Check::assertString('C.12', 'POST /:userid/pipes/:objeid/run; return the results of running a pipe with posted variables; variable\'s with special values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.12', 'POST /:teamid/pipes/:objeid/run; return the results of running a pipe with posted variables; variable\'s with special values',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -445,7 +445,7 @@ class Test
         $response = $result['response'];
         $actual = $response;
         $expected = "/";
-        \Flexio\Tests\Check::assertString('C.13', 'POST /:userid/pipes/:objeid/run; return the results of running a pipe with posted variables; variable\'s with special values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.13', 'POST /:teamid/pipes/:objeid/run; return the results of running a pipe with posted variables; variable\'s with special values',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -460,7 +460,7 @@ class Test
         $response = $result['response'];
         $actual = $response;
         $expected = "boundary=";
-        \Flexio\Tests\Check::assertString('C.14', 'POST /:userid/pipes/:objeid/run; return the results of running a pipe with posted variables; variable\'s with special values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.14', 'POST /:teamid/pipes/:objeid/run; return the results of running a pipe with posted variables; variable\'s with special values',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -475,7 +475,7 @@ class Test
         $response = $result['response'];
         $actual = $response;
         $expected = "https://www.flex.io";
-        \Flexio\Tests\Check::assertString('C.15', 'POST /:userid/pipes/:objeid/run; return the results of running a pipe with posted variables; variable\'s with special values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.15', 'POST /:teamid/pipes/:objeid/run; return the results of running a pipe with posted variables; variable\'s with special values',  $actual, $expected, $results);
 
 
         // TEST: run pipe with multiple variables
@@ -492,7 +492,7 @@ class Test
         $response = $result['response'];
         $actual = $response;
         $expected = "Hello, . Would you like to ?";
-        \Flexio\Tests\Check::assertString('D.1', 'POST /:userid/pipes/:objeid/run; return the results of running a pipe with posted variables; multiple variables',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('D.1', 'POST /:teamid/pipes/:objeid/run; return the results of running a pipe with posted variables; multiple variables',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -507,7 +507,7 @@ class Test
         $response = $result['response'];
         $actual = $response;
         $expected = "Hello, Scott. Would you like to ?";
-        \Flexio\Tests\Check::assertString('D.2', 'POST /:userid/pipes/:objeid/run; return the results of running a pipe with posted variables; multiple variables with one missing',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('D.2', 'POST /:teamid/pipes/:objeid/run; return the results of running a pipe with posted variables; multiple variables with one missing',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -522,7 +522,7 @@ class Test
         $response = $result['response'];
         $actual = $response;
         $expected = "Hello, . Would you like to continue?";
-        \Flexio\Tests\Check::assertString('D.3', 'POST /:userid/pipes/:objeid/run; return the results of running a pipe with posted variables; multiple variables with one missing',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('D.3', 'POST /:teamid/pipes/:objeid/run; return the results of running a pipe with posted variables; multiple variables with one missing',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -538,7 +538,7 @@ class Test
         $response = $result['response'];
         $actual = $response;
         $expected = "Hello, Scott. Would you like to continue?";
-        \Flexio\Tests\Check::assertString('D.4', 'POST /:userid/pipes/:objeid/run; return the results of running a pipe with posted variables; multiple variables with both populated',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('D.4', 'POST /:teamid/pipes/:objeid/run; return the results of running a pipe with posted variables; multiple variables with both populated',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -554,6 +554,6 @@ class Test
         $response = $result['response'];
         $actual = $response;
         $expected = "Hello, Scott. Would you like to continue?";
-        \Flexio\Tests\Check::assertString('D.5', 'POST /:userid/pipes/:objeid/run; return the results of running a pipe with posted variables; multiple variables with changed order',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('D.5', 'POST /:teamid/pipes/:objeid/run; return the results of running a pipe with posted variables; multiple variables with changed order',  $actual, $expected, $results);
     }
 }

@@ -132,11 +132,18 @@ function convertAclEntry($db, $acl_entry)
             // create a new ACL entry item
             $new_acl_eid = createObjectBaseLocal($db, \Model::TYPE_RIGHT, \Model::STATUS_AVAILABLE, $acl_entry['created'], $acl_entry['updated']);
 
+            // originally in Model:
+            // public const ACCESS_CODE_TYPE_UNDEFINED = '';
+            // public const ACCESS_CODE_TYPE_EID       = 'EID';
+            // public const ACCESS_CODE_TYPE_TOKEN     = 'TKN';
+            // public const ACCESS_CODE_TYPE_EMAIL     = 'EML';
+            // public const ACCESS_CODE_TYPE_CATEGORY  = 'CAT';
+
             // insert the new ACL entry
             $new_acl_entry = array();
             $new_acl_entry['eid'] = $new_acl_eid;
             $new_acl_entry['object_eid'] = $object_eid;
-            $new_acl_entry['access_type'] = \Model::ACCESS_CODE_TYPE_EID;
+            $new_acl_entry['access_type'] = 'EID'; // ACCESS_CODE_TYPE_EMAIL
             $new_acl_entry['access_code'] = $owner_eid;
             $new_acl_entry['actions'] = $acl_entry['actions'];
             $new_acl_entry['created'] = $acl_entry['created'];
@@ -163,11 +170,18 @@ function convertAclEntry($db, $acl_entry)
                 // create a new ACL entry item
                 $new_acl_eid = createObjectBaseLocal($db, \Model::TYPE_RIGHT, \Model::STATUS_AVAILABLE, $acl_entry['created'], $acl_entry['updated']);
 
+                // originally in Model:
+                // public const ACCESS_CODE_TYPE_UNDEFINED = '';
+                // public const ACCESS_CODE_TYPE_EID       = 'EID';
+                // public const ACCESS_CODE_TYPE_TOKEN     = 'TKN';
+                // public const ACCESS_CODE_TYPE_EMAIL     = 'EML';
+                // public const ACCESS_CODE_TYPE_CATEGORY  = 'CAT';
+
                 // insert the new ACL entry
                 $new_acl_entry = array();
                 $new_acl_entry['eid'] = $new_acl_eid;
                 $new_acl_entry['object_eid'] = $object_eid;
-                $new_acl_entry['access_type'] = \Model::ACCESS_CODE_TYPE_EID;
+                $new_acl_entry['access_type'] = 'EID'; // ACCESS_CODE_TYPE_EID
                 $new_acl_entry['access_code'] = $follower_eid;
                 $new_acl_entry['actions'] = $acl_entry['actions'];
                 $new_acl_entry['created'] = $acl_entry['created'];
@@ -186,11 +200,18 @@ function convertAclEntry($db, $acl_entry)
         // create a new ACL entry item
         $new_acl_eid = createObjectBaseLocal($db, \Model::TYPE_RIGHT, \Model::STATUS_AVAILABLE, $acl_entry['created'], $acl_entry['updated']);
 
+        // originally in Model:
+        // public const ACCESS_CODE_TYPE_UNDEFINED = '';
+        // public const ACCESS_CODE_TYPE_EID       = 'EID';
+        // public const ACCESS_CODE_TYPE_TOKEN     = 'TKN';
+        // public const ACCESS_CODE_TYPE_EMAIL     = 'EML';
+        // public const ACCESS_CODE_TYPE_CATEGORY  = 'CAT';
+
         // insert the new ACL entry
         $new_acl_entry = array();
         $new_acl_entry['eid'] = $new_acl_eid;
         $new_acl_entry['object_eid'] = $object_eid;
-        $new_acl_entry['access_type'] = \Model::ACCESS_CODE_TYPE_CATEGORY;
+        $new_acl_entry['access_type'] = 'CAT'; // ACCESS_CODE_TYPE_CATEGORY
         $new_acl_entry['access_code'] = \Flexio\Object\User::MEMBER_PUBLIC;
         $new_acl_entry['actions'] = $acl_entry['actions'];
         $new_acl_entry['created'] = $acl_entry['created'];
@@ -221,7 +242,14 @@ EOT;
 
 function deleteOldAclTableAclEntries($db)
 {
-    $sql = "delete from tbl_acl where access_type = '" . \Model::ACCESS_CODE_TYPE_UNDEFINED . "'";
+    // originally in Model:
+    // public const ACCESS_CODE_TYPE_UNDEFINED = '';
+    // public const ACCESS_CODE_TYPE_EID       = 'EID';
+    // public const ACCESS_CODE_TYPE_TOKEN     = 'TKN';
+    // public const ACCESS_CODE_TYPE_EMAIL     = 'EML';
+    // public const ACCESS_CODE_TYPE_CATEGORY  = 'CAT';
+
+    $sql = "delete from tbl_acl where access_type = ''"; // ACCESS_CODE_TYPE_UNDEFINED
     $db->exec($sql);
 }
 

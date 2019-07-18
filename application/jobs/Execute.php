@@ -830,7 +830,7 @@ class ScriptHost
 
         foreach ($connections as $c)
         {
-            if ($c->allows($owner_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
+            if ($c->allows($owner_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
                 continue;
 
             $properties = $c->get();

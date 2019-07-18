@@ -83,6 +83,31 @@ CREATE INDEX idx_user_created ON tbl_user (created);
 
 
 --
+-- Table structure for table tbl_teammember
+--
+
+-- member_status values:
+--    A - active
+--    I - inactive
+
+DROP TABLE IF EXISTS tbl_teammember;
+CREATE TABLE tbl_teammember (
+  id serial,
+  member_eid varchar(12) NOT NULL default '',
+  member_status varchar(1) NOT NULL default 'I',
+  rights text default '',
+  owned_by varchar(12) NOT NULL default '',
+  created_by varchar(12) NOT NULL default '',
+  created timestamp NULL default NULL,
+  updated timestamp NULL default NULL,
+  PRIMARY KEY (id),
+  UNIQUE (member_eid,owned_by),
+  UNIQUE (owned_by,member_eid)
+);
+
+
+
+--
 -- Table structure for table tbl_token
 --
 
@@ -103,34 +128,6 @@ CREATE TABLE tbl_token (
 
 CREATE INDEX idx_token_owned_by ON tbl_token (owned_by);
 CREATE INDEX idx_token_created ON tbl_token (created);
-
-
-
---
--- Table structure for table tbl_acl
---
-
-DROP TABLE IF EXISTS tbl_acl;
-CREATE TABLE tbl_acl (
-  id serial,
-  eid varchar(12) NOT NULL,
-  eid_status varchar(1) NOT NULL default '',
-  object_eid varchar(12) NOT NULL default '',
-  access_type varchar(3) NOT NULL default '',
-  access_code varchar(255) NOT NULL default '',
-  actions json,
-  owned_by varchar(12) NOT NULL default '',
-  created_by varchar(12) NOT NULL default '',
-  created timestamp NULL default NULL,
-  updated timestamp NULL default NULL,
-  PRIMARY KEY (id),
-  UNIQUE (eid)
-);
-
-CREATE INDEX idx_acl_object_eid ON tbl_acl (object_eid);
-CREATE INDEX idx_acl_access_code ON tbl_acl (access_code);
-CREATE INDEX idx_acl_owned_by ON tbl_acl (owned_by);
-CREATE INDEX idx_acl_created ON tbl_acl (created);
 
 
 

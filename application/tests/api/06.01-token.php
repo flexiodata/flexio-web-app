@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        // ENDPOINT: POST /:userid/auth/keys
+        // ENDPOINT: POST /:teamid/auth/keys
 
 
         // SETUP
@@ -49,7 +49,7 @@ class Test
                 "code": "insufficient-rights"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/auth/keys; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:teamid/auth/keys; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -65,7 +65,7 @@ class Test
                 "code": "insufficient-rights"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/auth/keys; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:teamid/auth/keys; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -83,6 +83,6 @@ class Test
             "owned_by": "'.$userid1.'"
         }
         ';
-        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:userid/auth/keys; create a new token',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:teamid/auth/keys; create a new token',  $actual, $expected, $results);
     }
 }

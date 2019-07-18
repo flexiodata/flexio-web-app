@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        // ENDPOINT: POST /:userid/account/credentials
+        // ENDPOINT: POST /:teamid/account/credentials
 
 
         // SETUP
@@ -54,7 +54,7 @@ class Test
                 "code": "insufficient-rights"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/account/credentials; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:teamid/account/credentials; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -75,7 +75,7 @@ class Test
                 "code": "insufficient-rights"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/account/credentials; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:teamid/account/credentials; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -96,7 +96,7 @@ class Test
                 "code": "unauthorized"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:userid/account/credentials; fail if old password doesn\'t match',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:teamid/account/credentials; fail if old password doesn\'t match',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -117,7 +117,7 @@ class Test
                 "code": "invalid-syntax"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.4', 'POST /:userid/account/credentials; fail if new password is a bad parameter',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.4', 'POST /:teamid/account/credentials; fail if new password is a bad parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
         $password1_matches_before = \Flexio\Tests\Util::getModel()->user->checkUserPasswordByEid($userid1, $password1);
@@ -138,7 +138,7 @@ class Test
         $password2_matches_after = \Flexio\Tests\Util::getModel()->user->checkUserPasswordByEid($userid1, $password2);
         $actual = ($password1_matches_before == true && $password2_matches_before == false && $password1_matches_after == false && $password2_matches_after == true);
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('A.5', 'POST /:userid/account/credentials; make sure that the password is changed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.5', 'POST /:teamid/account/credentials; make sure that the password is changed',  $actual, $expected, $results);
 
         $actual = $result['response'];
         $expected = '
@@ -147,6 +147,6 @@ class Test
             "eid_type": "USR",
             "eid_status": "A"
         }';
-        \Flexio\Tests\Check::assertInArray('A.6', 'POST /:userid/account/credentials; change password response',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.6', 'POST /:teamid/account/credentials; change password response',  $actual, $expected, $results);
     }
 }

@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        // ENDPOINT: POST /:userid/processes/:objeid/run
+        // ENDPOINT: POST /:teamid/processes/:objeid/run
 
 
         // SETUP
@@ -50,7 +50,7 @@ class Test
                 }
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/processes/:objeid/run; return error for missing \'op\' task parameter',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:teamid/processes/:objeid/run; return error for missing \'op\' task parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Tests\Task::create([
@@ -70,7 +70,7 @@ class Test
                 }
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/processes/:objeid/run; return error for invalid \'op\' task parameter',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:teamid/processes/:objeid/run; return error for invalid \'op\' task parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Tests\Task::create([
@@ -90,7 +90,7 @@ class Test
                 }
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:userid/processes/:objeid/run; return error for invalid \'op\' task parameter',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:teamid/processes/:objeid/run; return error for invalid \'op\' task parameter',  $actual, $expected, $results);
     }
 }
 
