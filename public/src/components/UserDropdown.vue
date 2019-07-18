@@ -15,10 +15,6 @@
         <div class="mt1 silver f8">{{email}}</div>
       </div>
       <el-dropdown-item class="flex flex-row items-center" command="account"><i class="material-icons mr3">account_circle</i> My Account</el-dropdown-item>
-      <el-dropdown-item divided></el-dropdown-item>
-      <div class="mv2" style="padding: 0 20px">
-        <h5 class="ma0">Help</h5>
-      </div>
       <el-dropdown-item class="flex flex-row items-center" command="docs"><i class="material-icons mr3">help</i>Online Docs</el-dropdown-item>
       <el-dropdown-item divided></el-dropdown-item>
       <el-dropdown-item class="flex flex-row items-center" command="sign-out"><i class="material-icons mr3">forward</i> Sign out</el-dropdown-item>
