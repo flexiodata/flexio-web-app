@@ -21,19 +21,21 @@
             flexGrow: show_sidebar ? undefined : 1
           }"
         >
-          <PipeDocumentHeader
-            class="relative z-7 bg-nearer-white sticky"
-            :pipe="orig_pipe"
-            :is-mode-run.sync="is_deployed"
-            :show-save-cancel="show_save_cancel"
-            :show-test-panel="show_testing"
-            @properties-click="openPropertiesDialog"
-            @cancel-click="cancelChanges"
-            @save-click="saveChanges"
-            @run-click="showTesting(true)"
-          />
+          <div class="relative z-7 bg-nearer-white sticky">
+            <PipeDocumentHeader
+              class="center mw-doc"
+              :pipe="orig_pipe"
+              :is-mode-run.sync="is_deployed"
+              :show-save-cancel="show_save_cancel"
+              :show-test-panel="show_testing"
+              @properties-click="openPropertiesDialog"
+              @cancel-click="cancelChanges"
+              @save-click="saveChanges"
+              @run-click="showTesting(true)"
+            />
+          </div>
 
-          <div class="mv4 center mw-doc" style="padding-bottom: 12rem">
+          <div class="mv2 center mw-doc" style="padding-bottom: 12rem">
             <el-collapse
               class="el-collapse--plain"
               v-model="active_collapse_items"
