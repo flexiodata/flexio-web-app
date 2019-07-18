@@ -12,8 +12,10 @@
             v-model="is_deployed"
           />
         </div>
-        <code class="mt3 mb0 code f7 b" v-html="spreadsheet_command_syntax"></code>
-        <div class="mt3 mb0 f6" v-show="pdesc.length > 0">{{pdesc}}</div>
+        <div class="mt3">
+          <div class="code f7 b" v-html="spreadsheet_command_syntax"></div>
+          <p class="mb0 f6" v-show="pdesc.length > 0">{{pdesc}}</p>
+        </div>
       </div>
       <transition name="el-fade-in" mode="out-in">
         <div

@@ -27,29 +27,27 @@
         />
       </el-form-item>
 
-      <el-form-item
-        key="short_description"
-        prop="short_description"
-        label="Short description"
-      >
-        <el-input
-          placeholder="Enter short description"
-          v-model="edit_pipe.short_description"
-        />
-      </el-form-item>
-
       <div>
         <label class="el-form-item__label">Description</label>
         <CodeEditor
-          class="bg-white ba b--black-10"
+          class="pa1 bg-white ba b--black-10 br2"
           style="font-size: 13px"
           :options="{
             minRows: 12,
             maxRows: 24,
-            lineNumbers: false
+            lineNumbers: false,
+            placeholder: description_placeholder
           }"
           v-model="edit_pipe.description"
         />
+      </div>
+
+      <div class="mt3" style="width: 300px">
+        <label class="el-form-item__label">Preview</label>
+        <div class="pa3 bg-white ba b--black-10 br2">
+          <div class="code f7 b" v-html="spreadsheet_command_syntax"></div>
+          <p class="mb0 f6" v-if="pdesc.length > 0">{{pdesc}}</p>
+        </div>
       </div>
     </el-form>
 
@@ -74,6 +72,8 @@
 
 <script>
   import randomstring from 'randomstring'
+  import { mapState } from 'vuex'
+  import { getJsDocObject, getSpreadsheetSyntaxStr } from '../utils/pipe'
   import { OBJECT_TYPE_PIPE } from '../constants/object-type'
   import CodeEditor from '@comp/CodeEditor'
   import MixinValidation from '@comp/mixins/validation'
@@ -144,10 +144,22 @@
             { validator: this.formValidateName }
           ]
         },
-        form_errors: {}
+        form_errors: {},
+        description_placeholder: `Example:
+
+/**
+ * Add two numbers
+ * @customfunction
+ * @param {number} first First number
+ * @param {number} second Second number
+ * @returns {number} The sum of the two numbers.
+ */`
       }
     },
     computed: {
+      ...mapState([
+        'routed_user'
+      ]),
       pname() {
         return _.get(this.orig_pipe, 'name', '')
       },
@@ -157,6 +169,13 @@
         }
 
         return this.mode == 'edit' ? `Edit "${this.pname}" Pipe` : 'New Pipe'
+      },
+      pdesc() {
+        var jsdoc_obj = getJsDocObject(this.edit_pipe)
+        return _.get(jsdoc_obj, 'description', '')
+      },
+      spreadsheet_command_syntax() {
+        return getSpreadsheetSyntaxStr(this.edit_pipe, true)
       },
       submit_label() {
         return this.mode == 'edit' ? 'Save changes' : 'Create pipe'
@@ -213,7 +232,7 @@
           return
         }
 
-        this.$_Validation_validateName(OBJECT_TYPE_PIPE, value, (response, errors) => {
+        this.$_Validation_validateName(this.routed_user, OBJECT_TYPE_PIPE, value, (response, errors) => {
           var message = _.get(errors, 'name.message', '')
           if (message.length > 0) {
             callback(new Error(message))

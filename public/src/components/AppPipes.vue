@@ -143,11 +143,9 @@
       // mix this into the outer object with the object spread operator
       ...mapState({
         'is_fetching': 'pipes_fetching',
-        'is_fetched': 'pipes_fetched'
+        'is_fetched': 'pipes_fetched',
+        'routed_user': 'routed_user'
       }),
-      routed_user() {
-        return this.$store.state.routed_user
-      },
       route_identifier() {
         return _.get(this.$route, 'params.identifier', undefined)
       },

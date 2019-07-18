@@ -169,6 +169,7 @@
 
 <script>
   import randomstring from 'randomstring'
+  import { mapState } from 'vuex'
   import { OBJECT_TYPE_CONNECTION } from '../constants/object-type'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
@@ -292,6 +293,9 @@
       }
     },
     computed: {
+      ...mapState([
+        'routed_user'
+      ]),
       eid() {
         return _.get(this.edit_connection, 'eid', '')
       },
@@ -444,7 +448,7 @@
           return
         }
 
-        this.$_Validation_validateName(OBJECT_TYPE_CONNECTION, value, (response, errors) => {
+        this.$_Validation_validateName(this.routed_user, OBJECT_TYPE_CONNECTION, value, (response, errors) => {
           var message = _.get(errors, 'name.message', '')
           if (message.length > 0) {
             callback(new Error(message))

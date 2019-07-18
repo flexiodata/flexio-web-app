@@ -156,7 +156,8 @@
       // mix this into the outer object with the object spread operator
       ...mapState({
         'is_fetching': 'connections_fetching',
-        'is_fetched': 'connections_fetched'
+        'is_fetched': 'connections_fetched',
+        'routed_user': 'routed_user'
       }),
       route_identifier() {
         return _.get(this.$route, 'params.identifier', undefined)
@@ -175,9 +176,6 @@
       },
       has_connection() {
         return this.ctype.length > 0
-      },
-      routed_user() {
-        return this.$store.state.routed_user
       },
       title() {
         var ru = this.routed_user
