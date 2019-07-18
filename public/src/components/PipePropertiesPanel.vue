@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="w-100 mb4" v-if="showHeader">
-      <div class="flex flex-row items-start">
-        <span class="flex-fill f4 lh-title">Properties for '{{pipe.name}}'</span>
+      <div class="flex flex-row items-center">
+        <span class="flex-fill f4 lh-title">{{our_title}}</span>
         <i class="el-icon-close pointer f3 black-30 hover-black-60" @click="onClose"></i>
       </div>
     </div>
@@ -18,7 +18,7 @@
       <el-form-item
         key="name"
         prop="name"
-        label="API Endpoint"
+        label="Name"
       >
         <el-input
           placeholder="Enter name"
@@ -87,18 +87,26 @@
 
   export default {
     props: {
-      'pipe': {
+      title: {
+        type: String,
+        default: ''
+      },
+      showHeader: {
+        type: Boolean,
+        default: true
+      },
+      showFooter: {
+        type: Boolean,
+        default: true
+      },
+      pipe: {
         type: Object,
         default: () => { return defaultAttrs() }
       },
-      'show-header': {
-        type: Boolean,
-        default: true
-      },
-      'show-footer': {
-        type: Boolean,
-        default: true
-      },
+      mode: {
+        type: String,
+        default: 'add' // 'add' or 'edit'
+      }
     },
     mixins: [MixinValidation],
     components: {
@@ -117,7 +125,8 @@
     },
     data() {
       return {
-        edit_pipe: defaultAttrs(),
+        orig_pipe: _.assign({}, defaultAttrs(), this.pipe),
+        edit_pipe: _.assign({}, defaultAttrs(), this.pipe),
         rules: {
           name: [
             { required: true, message: 'Please input a name', trigger: 'blur' },
@@ -128,12 +137,15 @@
       }
     },
     computed: {
-      identifier() {
-        var pname = this.edit_pipe.name
-        return pname.length > 0 ? pname : _.get(this.edit_pipe, 'eid', '')
+      pname() {
+        return _.get(this.orig_pipe, 'name', '')
       },
-      path() {
-        return 'https://api.flex.io/v1/me/pipes/' + this.identifier
+      our_title() {
+        if (this.title.length > 0) {
+          return this.title
+        }
+
+        return this.mode == 'edit' ? `Edit "${this.pname}" Pipe` : 'New Pipe'
       },
       has_errors() {
         return _.keys(this.form_errors).length > 0
@@ -155,7 +167,13 @@
         this.$emit('submit', this.edit_pipe)
       },
       initPipe() {
-        this.edit_pipe = _.cloneDeep(this.pipe)
+        var pipe = _.cloneDeep(this.pipe)
+
+        // we have to do this to force watcher validation
+        this.$nextTick(() => {
+          this.orig_pipe = _.cloneDeep(pipe)
+          this.edit_pipe = _.cloneDeep(pipe)
+        })
       },
       updatePipe() {
         this.$emit('change', this.edit_pipe)

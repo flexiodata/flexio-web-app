@@ -171,14 +171,15 @@
     <!-- pipe properties dialog -->
     <el-dialog
       custom-class="el-dialog--no-header el-dialog--no-footer"
-      width="42rem"
+      width="46rem"
       top="4vh"
       :modal-append-to-body="false"
       :close-on-click-modal="false"
       :visible.sync="show_pipe_properties_dialog"
     >
       <PipePropertiesPanel
-        :pipe="edit_pipe"
+        mode="edit"
+        :pipe="orig_pipe"
         @close="show_pipe_properties_dialog = false"
         @cancel="show_pipe_properties_dialog = false"
         @submit="saveProperties"
@@ -188,7 +189,7 @@
     <!-- pipe schedule dialog -->
     <el-dialog
       custom-class="el-dialog--no-header el-dialog--no-footer"
-      width="42rem"
+      width="46rem"
       top="4vh"
       :modal-append-to-body="false"
       :close-on-click-modal="false"
@@ -467,12 +468,12 @@
         attrs = _.omitBy(attrs, (val, key) => { return _.isNil(val) })
 
         return this.$store.dispatch('v2_action_updatePipe', { eid, attrs }).then(response => {
+          var pipe = response.data
+
           this.$message({
             message: 'The pipe was updated successfully.',
             type: 'success'
           })
-
-          var pipe = response.data
 
           // change the identifier in the route
           if (pipe.name != this.orig_pipe.name) {
@@ -507,7 +508,7 @@
         _.assign(pipe, attrs)
         this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
 
-        this.saveChanges().then(() => {
+        this.saveChanges().finally(() => {
           this.show_pipe_properties_dialog = false
         })
       },
