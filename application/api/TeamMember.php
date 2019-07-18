@@ -290,6 +290,8 @@ class TeamMember
             $member_info['last_name'] = $user_info['last_name'];
             $member_info['email'] = $user_info['email'];
             $member_info['email_hash'] = $user_info['email_hash'];
+            $member_info['created'] = $user_info['created'];
+            $member_info['updated'] = $user_info['updated'];
         }
         catch (\Exception $e)
         {
