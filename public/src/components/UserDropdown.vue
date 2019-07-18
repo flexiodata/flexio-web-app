@@ -46,12 +46,13 @@
         return _.get(this.getActiveUser(), 'email_hash', '')
       },
       full_name() {
-        var first_name = _.get(this.getActiveUser(), 'first_name', '')
-        var last_name = _.get(this.getActiveUser(), 'last_name', '')
-        return first_name + ' ' + last_name
+        var user = this.getActiveUser()
+        var first_name = _.get(user, 'first_name', '')
+        var last_name = _.get(user, 'last_name', '')
+        return `${first_name} ${last_name}`
       },
       user_profile_src() {
-        return 'https://secure.gravatar.com/avatar/'+this.email_hash+'?d=mm&s=32'
+        return 'https://secure.gravatar.com/avatar/' + this.email_hash + '?d=mm&s=32'
       }
     },
     methods: {
@@ -59,38 +60,7 @@
         'getActiveUser'
       ]),
       openHelpDocs() {
-        window.open('https://'+HOSTNAME+'/docs', '_blank')
-      },
-      restartOnboardingTour() {
-        var attrs = {
-          "short_description": "Example: Email Results of a Python Function",
-          "description": "Get the top 5 stories from the Firebase Hacker News Feed and deliver via email",
-          "task": {
-            "op": "sequence",
-            "items": [
-              {
-                "op": "execute",
-                "lang": "python",
-                "code": "aW1wb3J0IHJlcXVlc3RzCgojIGhhbmRsZXIgdG8gY29tbXVuaWNhdGUgd2l0aCBGbGV4LmlvIGNhbGxpbmcgY29udGV4dApkZWYgZmxleGlvX2hhbmRsZXIoY29udGV4dCk6CiAgCiAgICAjIGdldCB0aGUgbnVtYmVyIG9mIHN0b3JpZXMgdG8gcmV0dXJuIGZyb20gdGhlIGlucHV0IHBhcmFtcwogICAgIyByZXR1cm4gNSBzdG9yaWVzIGJ5IGRlZmF1bHQKICAgIHN0b3J5X2NvdW50ID0gNSAgCiAgICBmb3Iga2V5LCB2YWx1ZSBpbiBjb250ZXh0LmZvcm0uaXRlbXMoKToKICAgICAgICBpZiAoa2V5ICE9ICdjb3VudCcpOgogICAgICAgICAgICBjb250aW51ZQogICAgICAgIHRyeToKICAgICAgICAgICAgc3RvcnlfY291bnQgPSBpbnQodmFsdWUpCiAgICAgICAgICAgIHN0b3J5X2NvdW50ID0gbWF4KDEsIG1pbihzdG9yeV9jb3VudCwgMTAwKSkgICAgICAgICAgICAKICAgICAgICBleGNlcHQgVmFsdWVFcnJvcjoKICAgICAgICAgICAgcGFzcwogIAogICAgIyBnZXQgbmV3IHN0b3JpZXMgZnJvbSBIYWNrZXIgTmV3cyAoaHR0cHM6Ly9naXRodWIuY29tL0hhY2tlck5ld3MvQVBJKQogICAgcmVzcG9uc2UgPSByZXF1ZXN0cy5nZXQoImh0dHBzOi8vaGFja2VyLW5ld3MuZmlyZWJhc2Vpby5jb20vdjAvbmV3c3Rvcmllcy5qc29uIikKICAgIHN0b3JpZXMgPSByZXNwb25zZS5qc29uKClbOnN0b3J5X2NvdW50XQogICAgCiAgICAjIGdldCBuZXcgc3RvcnkgaW5mbwogICAgcmVzdWx0cyA9ICcnCiAgICBmb3IgaSBpbiBzdG9yaWVzOgogICAgICAgIHJlc3BvbnNlID0gcmVxdWVzdHMuZ2V0KCJodHRwczovL2hhY2tlci1uZXdzLmZpcmViYXNlaW8uY29tL3YwL2l0ZW0vIiArIHN0cihpKSArICIuanNvbiIpCiAgICAgICAgc3RvcnkgPSByZXNwb25zZS5qc29uKCkKICAgICAgICBpZiAoc3RvcnkgaXMgbm90IE5vbmUpOgogICAgICAgICAgICByZXN1bHRzICs9IHN0b3J5LmdldCgndGl0bGUnLCcobm8gdGl0bGUpJykgKyAiXG4iCiAgICAgICAgICAgIHJlc3VsdHMgKz0gc3RvcnkuZ2V0KCd1cmwnLCcobm8gdXJsKScpICsgIlxuXG4iCiAgICAgICAgCiAgICAjIHJldHVybiB0aGUgbGlzdCBvZiBuZXcgc3RvcmllcwogICAgY29udGV4dC5vdXRwdXQud3JpdGUocmVzdWx0cykKCiAgICAgIA=="
-              }
-            ]
-          }
-        }
-
-        var cfg_path = 'app.prompt.onboarding.pipeDocument.build.shown'
-        this.$_Config_reset(cfg_path)
-
-        this.$store.dispatch('v2_action_createPipe', { attrs }).then(response => {
-          var pipe = response.data
-
-          // TODO: this component shouldn't have anything to do with the route or store state
-          var ru = this.routed_user
-          var user_identifier = ru && ru.length > 0 ? ru : null
-          var identifier = pipe.eid
-          this.$router.push({ name: ROUTE_APP_PIPES, params: { user_identifier, identifier } })
-        }).catch(error => {
-          // TODO: add error handling?
-        })
+        window.open('https://' + HOSTNAME + '/docs', '_blank')
       },
       gotoAccount() {
         this.$router.push({ name: ROUTE_APP_ACCOUNT })
