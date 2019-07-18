@@ -66,7 +66,7 @@
         :disabled="has_errors"
         @click="onSubmit"
       >
-        Save changes
+        {{submit_label}}
       </el-button>
     </div>
   </div>
@@ -147,6 +147,9 @@
 
         return this.mode == 'edit' ? `Edit "${this.pname}" Pipe` : 'New Pipe'
       },
+      submit_label() {
+        return this.mode == 'edit' ? 'Save changes' : 'Create pipe'
+      },
       has_errors() {
         return _.keys(this.form_errors).length > 0
       }
@@ -193,6 +196,7 @@
           return
         }
 
+        // we haven't changed the name; trying to validate it will tell us it already exists
         if (value == _.get(this.pipe, 'name', '')) {
           callback()
           return
