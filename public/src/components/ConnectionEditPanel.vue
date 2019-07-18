@@ -70,40 +70,24 @@
           :rules="rules"
           @validate="onValidateItem"
         >
-          <div class="flex flex-row">
-            <el-form-item
-              class="flex-fill mr3"
-              key="name"
-              prop="name"
-            >
-              <template slot="label">
-                <span>Name</span>
-                <span class="lh-1 hint--top hint--large" aria-label="A unique identifier that can be used to reference this connection in a pipe">
-                  <i class="el-icon-info blue"></i>
-                </span>
-              </template>
-              <el-input
-                placeholder="Enter name"
-                autocomplete="off"
-                spellcheck="false"
-                :autofocus="true"
-                v-model="edit_connection.name"
-              />
-            </el-form-item>
-
-            <el-form-item
-              class="flex-fill"
-              key="short_description"
-              prop="short_description"
-              label="Short description"
-            >
-              <el-input
-                placeholder="Enter short description"
-                autocomplete="off"
-                v-model="edit_connection.short_description"
-              />
-            </el-form-item>
-          </div>
+          <el-form-item
+            key="name"
+            prop="name"
+          >
+            <template slot="label">
+              <span>Name</span>
+              <span class="lh-1 hint--top hint--large" aria-label="A unique identifier that can be used to reference this connection in a pipe">
+                <i class="el-icon-info blue"></i>
+              </span>
+            </template>
+            <el-input
+              placeholder="Enter name"
+              autocomplete="off"
+              spellcheck="false"
+              :autofocus="true"
+              v-model="edit_connection.name"
+            />
+          </el-form-item>
 
           <el-form-item
             key="description"
