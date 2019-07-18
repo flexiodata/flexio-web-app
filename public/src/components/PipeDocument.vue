@@ -177,7 +177,7 @@
       :close-on-click-modal="false"
       :visible.sync="show_pipe_properties_dialog"
     >
-      <PipePropertiesPanel
+      <PipeEditPanel
         mode="edit"
         :pipe="orig_pipe"
         @close="show_pipe_properties_dialog = false"
@@ -223,7 +223,7 @@
   import PipeBuilderList from '@comp/PipeBuilderList'
   import PipeCodeEditor from '@comp/PipeCodeEditor'
   import PipeDocumentHeader from '@comp/PipeDocumentHeader'
-  import PipePropertiesPanel from '@comp/PipePropertiesPanel'
+  import PipeEditPanel from '@comp/PipeEditPanel'
   import PipeSchedulePanel from '@comp/PipeSchedulePanel'
   import ProcessInput from '@comp/ProcessInput'
   import ProcessContent from '@comp/ProcessContent'
@@ -249,7 +249,7 @@
       PipeBuilderList,
       PipeCodeEditor,
       PipeDocumentHeader,
-      PipePropertiesPanel,
+      PipeEditPanel,
       PipeSchedulePanel,
       ProcessInput,
       ProcessContent,
