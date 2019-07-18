@@ -56,14 +56,14 @@ export default {
   v2_createToken:          function(user_identifier)                           { return AxiosResource(user_identifier)[V2_POS] (`/auth/keys`)                                          },
   v2_deleteToken:          function(user_identifier, object_identifier)        { return AxiosResource(user_identifier)[V2_DEL] (`/auth/keys/${object_identifier}`)                     },
 
+  // validation
+  v2_validate:             function(user_identifier, attrs)                    { return AxiosResource(user_identifier)[V2_POS] (`/validate`, attrs)                                               },
+
   // auth
 //v2_signUp:               function(attrs)                                     { return AxiosResource(null)[V2_POS] (`/signup`)                                                        },
 //v2_login:                function(attrs)                                     { return AxiosResource(null)[V2_POS] (`/login`)                                                         },
   v2_logout:               function()                                          { return AxiosResource(null)[V2_POS] (`/logout`)                                                        },
   v2_resetPassword:        function(attrs)                                     { return AxiosResource(null)[V2_POS] (`/resetpassword`, attrs)                                          },
-
-  // validation
-  v2_validate:             function(attrs)                                     { return AxiosResource(null)[V2_POS] (`/validate`, attrs)                                               },
 
   // admin
   v2_fetchAdminProcesses:  function(attrs)                                     { return AxiosResource('admin')[V2_GET] (`/info/processes`, attrs)                                      },

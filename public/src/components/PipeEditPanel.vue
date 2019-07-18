@@ -72,6 +72,7 @@
 
 <script>
   import randomstring from 'randomstring'
+  import { mapState } from 'vuex'
   import { getJsDocObject, getSpreadsheetSyntaxStr } from '../utils/pipe'
   import { OBJECT_TYPE_PIPE } from '../constants/object-type'
   import CodeEditor from '@comp/CodeEditor'
@@ -156,6 +157,9 @@
       }
     },
     computed: {
+      ...mapState([
+        'routed_user'
+      ]),
       pname() {
         return _.get(this.orig_pipe, 'name', '')
       },
@@ -228,7 +232,7 @@
           return
         }
 
-        this.$_Validation_validateName(OBJECT_TYPE_PIPE, value, (response, errors) => {
+        this.$_Validation_validateName(this.routed_user, OBJECT_TYPE_PIPE, value, (response, errors) => {
           var message = _.get(errors, 'name.message', '')
           if (message.length > 0) {
             callback(new Error(message))
