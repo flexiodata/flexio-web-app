@@ -63,6 +63,11 @@ class TeamMember extends ModelBase
         if (!\Flexio\Base\Eid::isValid($owned_by))
             return false;
 
+        // owners are always members of their own team, so don't allow owners
+        // to delete themselves from their own team
+        if ($member_eid === $owned_by)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
+
         $db = $this->getDatabase();
         try
         {
@@ -112,9 +117,7 @@ class TeamMember extends ModelBase
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'member_status' => array('type' => 'string', 'required' => false),
-                'rights'        => array('type' => 'string', 'required' => false),
-                'owned_by'      => array('type' => 'string', 'required' => false),
-                'created_by'    => array('type' => 'string', 'required' => false)
+                'rights'        => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 

@@ -116,6 +116,10 @@ class TeamMember
         if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
+        // don't allow users to remove themselves from their own team
+        if ($owner_user_eid === $member_user_eid)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
         // remove the team member
         \Flexio\System\System::getModel()->teammember->delete($member_user_eid, $owner_user_eid);
 
@@ -161,8 +165,9 @@ class TeamMember
         // update the team member
         \Flexio\System\System::getModel()->teammember->set($member_user_eid, $owner_user_eid, $validated_post_params);
 
-        // TODO: get the result of updating
-        $result = array();
+        // get the team member info
+        $result = self::getMemberInfo($member_user_eid, $owner_user_eid);
+        $result = self::formatProperties($result);
 
         $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
@@ -184,8 +189,7 @@ class TeamMember
         if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        // get the team member rights, etc; unpack the rights, which are stored as a json string;
-        // TODO: unpack the user info
+        // get the team member info
         $result = self::getMemberInfo($member_user_eid, $owner_user_eid);
         $result = self::formatProperties($result);
 
