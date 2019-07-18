@@ -158,7 +158,7 @@
     },
     computed: {
       ...mapState([
-        'routed_user'
+        'active_team_identifier'
       ]),
       pname() {
         return _.get(this.orig_pipe, 'name', '')
@@ -232,7 +232,7 @@
           return
         }
 
-        this.$_Validation_validateName(this.routed_user, OBJECT_TYPE_PIPE, value, (response, errors) => {
+        this.$_Validation_validateName(this.active_team_identifier, OBJECT_TYPE_PIPE, value, (response, errors) => {
           var message = _.get(errors, 'name.message', '')
           if (message.length > 0) {
             callback(new Error(message))

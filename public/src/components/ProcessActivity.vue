@@ -154,7 +154,7 @@
       ...mapState({
         'is_fetching': 'processes_fetching',
         'is_fetched': 'processes_fetched',
-        'routed_user': 'routed_user'
+        'active_team_identifier': 'active_team_identifier'
       }),
       all_processes() {
         return this.items ? this.items : this.getAllProcesses()
@@ -175,7 +175,7 @@
         return Math.min((this.start + this.page_size - 1) + 1, this.total_count)
       },
       title() {
-        var ru = this.routed_user
+        var ru = this.active_team_identifier
         return ru && ru.length > 0 ? ru + '/' + 'activity' : 'Activity'
       }
     },
