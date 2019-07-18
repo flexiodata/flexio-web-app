@@ -6,8 +6,8 @@ export default {
     state.active_document_identifier = identifier
   },
 
-  [types.CHANGE_ACTIVE_TEAM]: (state, identifier) => {
-    state.active_team_name = identifier
+  [types.CHANGE_ACTIVE_TEAM]: (state, name) => {
+    state.active_team_name = name
   },
 
   [types.RESET_STATE]: (state) => {

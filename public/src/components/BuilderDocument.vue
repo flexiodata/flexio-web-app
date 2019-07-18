@@ -324,14 +324,12 @@
         })
       },
       openPipe() {
-        var eid = this.pipe.eid
-
         // TODO: this component shouldn't have anything to do with the route or store state
         var ru = this.active_team_name
         var team_name = ru && ru.length > 0 ? ru : null
-        var identifier = eid
+        var object_name = this.pipe.name
 
-        this.$router.push({ name: ROUTE_APP_PIPES, params: { team_name, identifier } })
+        this.$router.push({ name: ROUTE_APP_PIPES, params: { team_name, object_name } })
       },
       updateItemState(values, index) {
         this.$store.commit('builder/UPDATE_ATTRS', values)

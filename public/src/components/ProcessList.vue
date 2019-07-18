@@ -232,8 +232,8 @@
       },
       getPipeRoute(row) {
         var name = _.get(row, 'parent.name', '')
-        var identifier = name.length > 0 ? name : _.get(row, 'parent.eid', '')
-        return `/pipes/${identifier}`
+        var object_name = name.length > 0 ? name : _.get(row, 'parent.eid', '')
+        return `/pipes/${object_name}`
       },
       getIndex(idx) {
         return idx + this.start + 1

@@ -27,13 +27,10 @@
 
 <script>
   import { ROUTE_APP_ACCOUNT, ROUTE_APP_PIPES } from '../constants/route'
-  import { mapState, mapGetters } from 'vuex'
+  import { mapGetters } from 'vuex'
 
   export default {
     computed: {
-      ...mapState([
-        'active_document_identifier'
-      ]),
       show_breadcrumbs() {
         switch (this.$route.name) {
           case ROUTE_APP_ACCOUNT:

@@ -117,13 +117,13 @@
       PageNotFound
     },
     watch: {
-      route_identifier: {
+      route_object_name: {
         handler: 'loadPipe',
         immediate: true
       },
       pipes(val, old_val) {
         if (!this.has_pipe) {
-          this.loadPipe(this.route_identifier)
+          this.loadPipe(this.route_object_name)
         }
       }
     },
@@ -142,8 +142,8 @@
         'is_fetched': 'pipes_fetched',
         'active_team_name': 'active_team_name'
       }),
-      route_identifier() {
-        return _.get(this.$route, 'params.identifier', undefined)
+      route_object_name() {
+        return _.get(this.$route, 'params.object_name', undefined)
       },
       pipes() {
         return this.getAllPipes()
@@ -268,8 +268,8 @@
 
           var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
           _.set(new_route, 'params.team_name', this.active_team_name)
-          _.set(new_route, 'params.identifier', identifier)
-          this.$router[!this.route_identifier?'replace':'push'](new_route)
+          _.set(new_route, 'params.object_name', identifier)
+          this.$router[!this.route_object_name?'replace':'push'](new_route)
 
           this.is_selecting = true
           this.$nextTick(() => { this.is_selecting = false })

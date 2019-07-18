@@ -239,9 +239,8 @@
         // TODO: this component shouldn't have anything to do with the route or store state
         var ru = this.active_team_name
         var team_name = ru && ru.length > 0 ? ru : null
-        //var identifier = this.identifier
-        var identifier = _.get(this.item, 'eid', '')
-        return { name: ROUTE_APP_PIPES, params: { team_name, identifier } }
+        var object_name = this.item.name
+        return { name: ROUTE_APP_PIPES, params: { team_name, object_name } }
       },
       execution_cnt() {
         return parseInt(_.get(this.item, 'stats.total_count', '0'))

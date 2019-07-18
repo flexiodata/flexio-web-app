@@ -133,13 +133,13 @@
       PageNotFound
     },
     watch: {
-      route_identifier: {
+      route_object_name: {
         handler: 'loadConnection',
         immediate: true
       },
       connections(val, old_val) {
         if (!this.has_connection) {
-          this.loadConnection(this.route_identifier)
+          this.loadConnection(this.route_object_name)
         }
       }
     },
@@ -159,8 +159,8 @@
         'is_fetched': 'connections_fetched',
         'active_team_name': 'active_team_name'
       }),
-      route_identifier() {
-        return _.get(this.$route, 'params.identifier', undefined)
+      route_object_name() {
+        return _.get(this.$route, 'params.object_name', undefined)
       },
       connections() {
         return this.getAvailableConnections()
@@ -227,10 +227,10 @@
             this.$store.track('Created Connection', analytics_payload)
           }
 
-          // change the identifier in the route
+          // change the object name in the route
           if (connection.name != orig_name) {
             var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
-            _.set(new_route, 'params.identifier', connection.name)
+            _.set(new_route, 'params.object_name', connection.name)
             this.$router.replace(new_route)
           }
 
@@ -304,8 +304,8 @@
 
           var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
           _.set(new_route, 'params.team_name', this.active_team_name)
-          _.set(new_route, 'params.identifier', identifier)
-          this.$router[!this.route_identifier?'replace':'push'](new_route)
+          _.set(new_route, 'params.object_name', identifier)
+          this.$router[!this.route_object_name?'replace':'push'](new_route)
 
           this.is_selecting = true
           this.$nextTick(() => { this.is_selecting = false })

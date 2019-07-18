@@ -118,10 +118,6 @@
       url() {
         return _.get(this.item, 'connection_info.url', '')
       },
-      identifier() {
-        var cid = _.get(this.item, 'name', '')
-        return cid.length > 0 ? cid : _.get(this.item, 'eid', '')
-      },
       is_flexio() {
         return this.ctype == CONNECTION_TYPE_FLEX
       },

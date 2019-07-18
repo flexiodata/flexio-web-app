@@ -258,7 +258,7 @@
       PageNotFound
     },
     watch: {
-      route_identifier: {
+      route_object_name: {
         handler: 'loadPipe',
         immediate: true
       },
@@ -314,8 +314,8 @@
         is_fetched: state => state.pipe.fetched,
         is_changed: state => state.pipe.changed
       }),
-      route_identifier() {
-        return _.get(this.$route, 'params.identifier', undefined)
+      route_object_name() {
+        return _.get(this.$route, 'params.object_name', undefined)
       },
       eid() {
         return _.get(this.orig_pipe, 'eid', undefined)
@@ -386,10 +386,6 @@
           }
         }
       },
-      pipe_identifier() {
-        var pname = this.edit_pipe.name
-        return pname.length > 0 ? pname : _.get(this.edit_pipe, 'eid', '')
-      },
       pipe_schedule() {
         return _.get(this.edit_pipe, 'schedule', {})
       },
@@ -445,7 +441,7 @@
       loadPipe() {
         this.$store.commit('pipe/FETCHING_PIPE', true)
 
-        this.$store.dispatch('v2_action_fetchPipe', { eid: this.route_identifier }).then(response => {
+        this.$store.dispatch('v2_action_fetchPipe', { eid: this.route_object_name }).then(response => {
           var pipe = response.data
           this.pipe_not_found = false
           this.$store.commit('pipe/INIT_PIPE', pipe)
@@ -477,10 +473,10 @@
             type: 'success'
           })
 
-          // change the identifier in the route
+          // change the object name in the route
           if (pipe.name != this.orig_pipe.name) {
             var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
-            _.set(new_route, 'params.identifier', pipe.name)
+            _.set(new_route, 'params.object_name', pipe.name)
             this.$router.replace(new_route)
           }
 
