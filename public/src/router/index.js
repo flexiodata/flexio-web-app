@@ -5,9 +5,10 @@ import Meta from 'vue-meta'
 import * as rn from '../constants/route'
 import admin_routes from './admin'
 
+import AppAccount from '@comp/AppAccount'
 import AppPipes from '@comp/AppPipes'
 import AppConnections from '@comp/AppConnections'
-import AppAccount from '@comp/AppAccount'
+import AppMembers from '@comp/AppMembers'
 
 import PipeDocument from '@comp/PipeDocument'
 import BuilderDocument from '@comp/BuilderDocument'
@@ -39,6 +40,7 @@ const routes = [
   { path: '/onboard',                                     name: rn.ROUTE_ONBOARD_PAGE,        component: OnboardingPage,      meta },
   { path: '/builder/:template',                           name: rn.ROUTE_APP_BUILDER,         component: BuilderDocument,     meta },
   { path: '/account/:section?',                           name: rn.ROUTE_APP_ACCOUNT,         component: AppAccount,          meta },
+  { path: '/:user_identifier?/members',                   name: rn.ROUTE_APP_MEMBERS,         component: AppMembers,          meta },
   { path: '/:user_identifier?/connections/:identifier?',  name: rn.ROUTE_APP_CONNECTIONS,     component: AppConnections,      meta },
   { path: '/:user_identifier?/pipes/:identifier?',        name: rn.ROUTE_APP_PIPES,           component: AppPipes,            meta },
   admin_routes,

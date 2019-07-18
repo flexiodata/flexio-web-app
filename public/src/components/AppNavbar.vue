@@ -7,6 +7,7 @@
         </router-link>
         <router-link :to="pipe_route" class="fw6 f6 ttu link nav-link" style="margin: 0 12px">Pipes</router-link>
         <router-link :to="connection_route" class="fw6 f6 ttu link nav-link" style="margin: 0 12px">Connections</router-link>
+        <router-link :to="member_route" class="fw6 f6 ttu link nav-link" style="margin: 0 12px">Members</router-link>
       </div>
       <div class="flex-none">
         <div v-if="user_fetching"></div>
@@ -26,7 +27,11 @@
 
 <script>
   import { mapState } from 'vuex'
-  import { ROUTE_APP_PIPES, ROUTE_APP_CONNECTIONS } from '../constants/route'
+  import {
+    ROUTE_APP_PIPES,
+    ROUTE_APP_CONNECTIONS,
+    ROUTE_APP_MEMBERS
+  } from '../constants/route'
   import UserDropdown from '@comp/UserDropdown'
 
   export default {
@@ -44,6 +49,9 @@
       },
       connection_route() {
         return { name: ROUTE_APP_CONNECTIONS, params: { user_identifier: this.routed_user } }
+      },
+      member_route() {
+        return { name: ROUTE_APP_MEMBERS, params: { user_identifier: this.routed_user } }
       },
       is_logged_in() {
         return this.active_user_eid.length > 0
