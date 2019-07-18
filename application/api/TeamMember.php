@@ -116,6 +116,10 @@ class TeamMember
         if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
+        // don't allow users to remove themselves from their own team
+        if ($owner_user_eid === $member_user_eid)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
         // remove the team member
         \Flexio\System\System::getModel()->teammember->delete($member_user_eid, $owner_user_eid);
 
