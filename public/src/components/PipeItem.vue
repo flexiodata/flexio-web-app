@@ -176,6 +176,10 @@
       }
     },
     computed: {
+      // mix this into the outer object with the object spread operator
+      ...mapState({
+        'routed_user': 'routed_user'
+      }),
       has_description() {
         return _.get(this.item, 'description', '').length > 0
       },
@@ -230,9 +234,6 @@
       identifier() {
         var pname = this.item.name
         return pname.length > 0 ? pname : _.get(this.item, 'eid', '')
-      },
-      routed_user() {
-        return this.$store.state.routed_user
       },
       pipe_route() {
         // TODO: this component shouldn't have anything to do with the route or store state

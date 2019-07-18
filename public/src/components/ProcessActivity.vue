@@ -153,7 +153,8 @@
       // mix this into the outer object with the object spread operator
       ...mapState({
         'is_fetching': 'processes_fetching',
-        'is_fetched': 'processes_fetched'
+        'is_fetched': 'processes_fetched',
+        'routed_user': 'routed_user'
       }),
       all_processes() {
         return this.items ? this.items : this.getAllProcesses()
@@ -172,9 +173,6 @@
       },
       end() {
         return Math.min((this.start + this.page_size - 1) + 1, this.total_count)
-      },
-      routed_user() {
-        return this.$store.state.routed_user
       },
       title() {
         var ru = this.routed_user
