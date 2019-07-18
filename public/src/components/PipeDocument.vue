@@ -168,20 +168,20 @@
       </multipane>
     </div>
 
-    <!-- pipe properties dialog -->
+    <!-- pipe edit dialog -->
     <el-dialog
       custom-class="el-dialog--no-header el-dialog--no-footer"
       width="46rem"
       top="4vh"
       :modal-append-to-body="false"
       :close-on-click-modal="false"
-      :visible.sync="show_pipe_properties_dialog"
+      :visible.sync="show_pipe_edit_dialog"
     >
       <PipeEditPanel
         mode="edit"
         :pipe="orig_pipe"
-        @close="show_pipe_properties_dialog = false"
-        @cancel="show_pipe_properties_dialog = false"
+        @close="show_pipe_edit_dialog = false"
+        @cancel="show_pipe_edit_dialog = false"
         @submit="saveProperties"
       />
     </el-dialog>
@@ -289,7 +289,7 @@
         active_task_idx: -1,
         scrollbar_container_id: _.uniqueId('pane-'),
         show_pipe_schedule_dialog: false,
-        show_pipe_properties_dialog: false,
+        show_pipe_edit_dialog: false,
         yaml_view: 'yaml',
         show_yaml: false,
         show_testing: false,
@@ -494,7 +494,7 @@
         })
       },
       openPropertiesDialog() {
-        this.show_pipe_properties_dialog = true
+        this.show_pipe_edit_dialog = true
         this.$store.track('Opened Properties Dialog')
       },
       openScheduleDialog() {
@@ -509,7 +509,7 @@
         this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
 
         this.saveChanges().finally(() => {
-          this.show_pipe_properties_dialog = false
+          this.show_pipe_edit_dialog = false
         })
       },
       saveSchedule(attrs) {

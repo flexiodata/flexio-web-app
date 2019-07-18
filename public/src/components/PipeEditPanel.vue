@@ -73,13 +73,24 @@
 </template>
 
 <script>
+  import randomstring from 'randomstring'
   import { OBJECT_TYPE_PIPE } from '../constants/object-type'
   import CodeEditor from '@comp/CodeEditor'
   import MixinValidation from '@comp/mixins/validation'
 
+  const getNameSuffix = (length) => {
+    return randomstring.generate({
+      length,
+      charset: 'alphabetic',
+      capitalization: 'lowercase'
+    })
+  }
+
   const defaultAttrs = () => {
+    var suffix = getNameSuffix(4)
+
     return {
-      name: '',
+      name: `pipe-${suffix}`,
       short_description: '',
       description: ''
     }
