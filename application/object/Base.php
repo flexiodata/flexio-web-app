@@ -61,6 +61,9 @@ class Base
         $rights = $this->getModel()->teammember->getRights($this->getOwner(), $user_eid);
         if ($rights)
         {
+            // TODO: for now, if the user is a team member, grant all rights
+            return true;
+
             foreach ($rights as $r)
             {
                 if ($action === $r)
