@@ -175,6 +175,11 @@ class Model
     public const PROCESS_TRIGGERED_SCHEDULER = 'S';
     public const PROCESS_TRIGGERED_INTERFACE = 'I';
 
+    public const TEAM_MEMBER_STATUS_UNDEFINED = '';
+    public const TEAM_MEMBER_STATUS_PENDING = 'P';
+    public const TEAM_MEMBER_STATUS_INACTIVE = 'I';
+    public const TEAM_MEMBER_STATUS_ACTIVE = 'A';
+
     public const ROLE_UNDEFINED     = '';
     public const ROLE_ADMINISTRATOR = 'A';
 

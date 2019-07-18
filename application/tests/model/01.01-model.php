@@ -305,5 +305,26 @@ class Test
         $actual = \Model::PROCESS_TRIGGERED_INTERFACE;
         $expected = 'I';
         \Flexio\Tests\Check::assertString('J.5', 'Pipe deploy mode constant',  $actual, $expected, $results);
+
+
+        // TEST: Model team member status constants; the database stores raw values
+        // for some of these constants, so these tests ensure that the constants
+        // are consistent between various models and the values in the databases
+
+        $actual = \Model::TEAM_MEMBER_STATUS_UNDEFINED;
+        $expected = '';
+        \Flexio\Tests\Check::assertString('K.1', 'Team member status constant',  $actual, $expected, $results);
+
+        $actual = \Model::TEAM_MEMBER_STATUS_PENDING;
+        $expected = 'P';
+        \Flexio\Tests\Check::assertString('K.2', 'Team member status constant',  $actual, $expected, $results);
+
+        $actual = \Model::TEAM_MEMBER_STATUS_INACTIVE;
+        $expected = 'I';
+        \Flexio\Tests\Check::assertString('K.3', 'Team member status constant',  $actual, $expected, $results);
+
+        $actual = \Model::TEAM_MEMBER_STATUS_ACTIVE;
+        $expected = 'A';
+        \Flexio\Tests\Check::assertString('K.4', 'Team member status constant',  $actual, $expected, $results);
     }
 }

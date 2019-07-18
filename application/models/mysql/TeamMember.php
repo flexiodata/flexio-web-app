@@ -22,7 +22,7 @@ class TeamMember extends ModelBase
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'member_eid'    => array('type' => 'eid', 'required' => true),
-                'member_status' => array('type' => 'string', 'required' => false, 'default' => 'A'),
+                'member_status' => array('type' => 'string', 'required' => false, 'default' => \Model::TEAM_MEMBER_STATUS_PENDING),
                 'rights'        => array('type' => 'string', 'required' => false, 'default' => '[]'),
                 'owned_by'      => array('type' => 'string', 'required' => false, 'default' => ''),
                 'created_by'    => array('type' => 'string', 'required' => false, 'default' => '')
