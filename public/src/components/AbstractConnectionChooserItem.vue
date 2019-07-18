@@ -21,7 +21,6 @@
 
       <div class="flex-fill flex flex-column">
         <div class="f5 fw6 cursor-default mr1">{{cname}}</div>
-        <div class="light-silver f8 lh-copy" style="margin-top: 3px" v-if="showShortDescription && short_desc.length > 0">{{short_desc}}</div>
         <div class="bt b--black-05" style="padding-top: 2px; margin-top: 2px; max-width: 12rem" v-if="showUrl && url.length > 0">
           <div class="light-silver f8 lh-copy truncate">{{url}}</div>
         </div>
@@ -76,10 +75,6 @@
         type: Boolean,
         default: true
       },
-      showShortDescription: {
-        type: Boolean,
-        default: true
-      },
       showUrl: {
         type: Boolean,
         default: true
@@ -119,9 +114,6 @@
       },
       cstatus() {
         return _.get(this.item, 'connection_status', '')
-      },
-      short_desc() {
-        return _.get(this.item, 'short_description', '')
       },
       url() {
         return _.get(this.item, 'connection_info.url', '')

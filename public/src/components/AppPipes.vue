@@ -49,10 +49,6 @@
                     ></div>
                     <div class="flex-fill f5 fw6 cursor-default mr1 lh-title truncate">{{pipe.name}}</div>
                   </div>
-                  <div class="flex flex-row items-center" v-if="pipe.short_description.length > 0">
-                    <div class="mr2" style="width: 8px; height: 8px"></div>
-                    <div class="light-silver f8 lh-copy" style="margin-top: 3px">{{pipe.short_description}}</div>
-                  </div>
                 </div>
                 <div class="flex-none ml2" @click.stop>
                     <el-dropdown trigger="click" @command="onCommand">
