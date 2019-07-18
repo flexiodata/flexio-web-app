@@ -5,6 +5,50 @@ export const CHANGE_ACTIVE_DOCUMENT = 'CHANGE_ACTIVE_DOCUMENT'
 export const CHANGE_ROUTED_USER     = 'CHANGE_ROUTED_USER'
 export const RESET_STATE            = 'RESET_STATE'
 
+/* **** USER MUTATIONS TYPES **** */
+
+export const FETCHING_USER = 'FETCHING_USER'
+export const FETCHED_USER  = 'FETCHED_USER'
+
+export const CREATING_USER = 'CREATING_USER'
+export const CREATED_USER  = 'CREATED_USER'
+
+export const UPDATING_USER = 'UPDATING_USER'
+export const UPDATED_USER  = 'UPDATED_USER'
+
+export const DELETING_USER = 'DELETING_USER'
+export const DELETED_USER  = 'DELETED_USER'
+
+export const CHANGING_PASSWORD = 'CHANGING_PASSWORD'
+export const CHANGED_PASSWORD  = 'CHANGED_PASSWORD'
+
+export const SIGNING_IN  = 'SIGNING_IN'
+export const SIGNED_IN   = 'SIGNED_IN'
+
+export const SIGNING_OUT = 'SIGNING_OUT'
+export const SIGNED_OUT  = 'SIGNED_OUT'
+
+export const SIGNING_UP = 'SIGNING_UP'
+export const SIGNED_UP  = 'SIGNED_UP'
+
+/* **** PIPE MUTATIONS TYPES **** */
+
+// multiple
+export const FETCHING_PIPES = 'FETCHING_PIPES'
+export const FETCHED_PIPES  = 'FETCHED_PIPES'
+
+export const FETCHING_PIPE  = 'FETCHING_PIPE'
+export const FETCHED_PIPE   = 'FETCHED_PIPE'
+
+export const CREATING_PIPE  = 'CREATING_PIPE'
+export const CREATED_PIPE   = 'CREATED_PIPE'
+
+export const UPDATING_PIPE  = 'UPDATING_PIPE'
+export const UPDATED_PIPE   = 'UPDATED_PIPE'
+
+export const DELETING_PIPE  = 'DELETING_PIPE'
+export const DELETED_PIPE   = 'DELETED_PIPE'
+
 /* **** CONNECTION MUTATIONS TYPES **** */
 
 // multiple
@@ -41,23 +85,16 @@ export const CREATED_MEMBERS   = 'CREATED_MEMBERS'
 export const DELETING_MEMBER  = 'DELETING_MEMBER'
 export const DELETED_MEMBER   = 'DELETED_MEMBER'
 
-/* **** PIPE MUTATIONS TYPES **** */
+/* **** TOKEN MUTATIONS TYPES **** */
 
-// multiple
-export const FETCHING_PIPES = 'FETCHING_PIPES'
-export const FETCHED_PIPES  = 'FETCHED_PIPES'
+export const FETCHING_TOKENS = 'FETCHING_TOKENS'
+export const FETCHED_TOKENS  = 'FETCHED_TOKENS'
 
-export const FETCHING_PIPE  = 'FETCHING_PIPE'
-export const FETCHED_PIPE   = 'FETCHED_PIPE'
+export const CREATING_TOKEN  = 'CREATING_TOKEN'
+export const CREATED_TOKEN   = 'CREATED_TOKEN'
 
-export const CREATING_PIPE  = 'CREATING_PIPE'
-export const CREATED_PIPE   = 'CREATED_PIPE'
-
-export const UPDATING_PIPE  = 'UPDATING_PIPE'
-export const UPDATED_PIPE   = 'UPDATED_PIPE'
-
-export const DELETING_PIPE  = 'DELETING_PIPE'
-export const DELETED_PIPE   = 'DELETED_PIPE'
+export const DELETING_TOKEN  = 'DELETING_TOKEN'
+export const DELETED_TOKEN   = 'DELETED_TOKEN'
 
 /* **** PROCESS MUTATIONS TYPES **** */
 
@@ -89,40 +126,3 @@ export const FETCHED_PROCESS_SUMMARY    = 'FETCHED_PROCESS_SUMMARY'
 
 export const FETCHING_STREAM = 'FETCHING_STREAM'
 export const FETCHED_STREAM  = 'FETCHED_STREAM'
-
-/* **** TOKEN MUTATIONS TYPES **** */
-
-export const FETCHING_TOKENS = 'FETCHING_TOKENS'
-export const FETCHED_TOKENS  = 'FETCHED_TOKENS'
-
-export const CREATING_TOKEN  = 'CREATING_TOKEN'
-export const CREATED_TOKEN   = 'CREATED_TOKEN'
-
-export const DELETING_TOKEN  = 'DELETING_TOKEN'
-export const DELETED_TOKEN   = 'DELETED_TOKEN'
-
-/* **** USER MUTATIONS TYPES **** */
-
-export const FETCHING_USER = 'FETCHING_USER'
-export const FETCHED_USER  = 'FETCHED_USER'
-
-export const CREATING_USER = 'CREATING_USER'
-export const CREATED_USER  = 'CREATED_USER'
-
-export const UPDATING_USER = 'UPDATING_USER'
-export const UPDATED_USER  = 'UPDATED_USER'
-
-export const DELETING_USER = 'DELETING_USER'
-export const DELETED_USER  = 'DELETED_USER'
-
-export const CHANGING_PASSWORD = 'CHANGING_PASSWORD'
-export const CHANGED_PASSWORD  = 'CHANGED_PASSWORD'
-
-export const SIGNING_IN  = 'SIGNING_IN'
-export const SIGNED_IN   = 'SIGNED_IN'
-
-export const SIGNING_OUT = 'SIGNING_OUT'
-export const SIGNED_OUT  = 'SIGNED_OUT'
-
-export const SIGNING_UP = 'SIGNING_UP'
-export const SIGNED_UP  = 'SIGNED_UP'
