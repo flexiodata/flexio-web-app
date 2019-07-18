@@ -56,35 +56,49 @@ class User extends ModelBase
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
-        $process_arr = $validator->getParams();
+        $user_arr = $validator->getParams();
 
-        if (\Model::isValidStatus($process_arr['eid_status']) === false)
+        if (\Model::isValidStatus($user_arr['eid_status']) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         // if a password is supplied, encrypt it; otherwise write out an empty string
-        if (isset($process_arr['password']))
-            $process_arr['password'] = self::encodePassword($process_arr['password']);
+        if (isset($user_arr['password']))
+            $user_arr['password'] = self::encodePassword($user_arr['password']);
              else
-            $process_arr['password'] = '';
+            $user_arr['password'] = '';
 
         $db = $this->getDatabase();
         try
         {
             // make sure the user doesn't already exist, based on username and email
-            $qusername = $db->quote($process_arr['username']);
-            $qemail = $db->quote($process_arr['email']);
+            $qusername = $db->quote($user_arr['username']);
+            $qemail = $db->quote($user_arr['email']);
             $existing_item = $db->fetchOne("select eid from tbl_user where username = $qusername or email = $qemail");
             if ($existing_item !== false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
-            $eid = $this->getModel()->createObjectBase(\Model::TYPE_USER, $process_arr);
+            $eid = $this->getModel()->createObjectBase(\Model::TYPE_USER, $user_arr);
             $timestamp = \Flexio\System\System::getTimestamp();
 
-            $process_arr['eid'] = $eid;
-            $process_arr['created'] = $timestamp;
-            $process_arr['updated'] = $timestamp;
+            // insert the record into the user table
+            $user_arr['eid'] = $eid;
+            $user_arr['created'] = $timestamp;
+            $user_arr['updated'] = $timestamp;
 
-            if ($db->insert('tbl_user', $process_arr) === false)
+            if ($db->insert('tbl_user', $user_arr) === false)
+                throw new \Exception();
+
+            // add the user as a member to their own team
+            $teammember_arr = array();
+            $teammember_arr['member_eid'] = $eid;
+            $teammember_arr['member_status'] = \Model::TEAM_MEMBER_STATUS_ACTIVE;
+            $teammember_arr['rights'] = '[]';
+            $teammember_arr['owned_by'] = $eid;
+            $teammember_arr['created_by'] = $eid;
+            $teammember_arr['created'] = $timestamp;
+            $teammember_arr['updated'] = $timestamp;
+
+            if ($db->insert('tbl_teammember', $teammember_arr) === false)
                 throw new \Exception();
 
             return $eid;
