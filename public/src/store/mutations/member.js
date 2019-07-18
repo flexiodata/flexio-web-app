@@ -1,53 +1,63 @@
 import * as types from '../mutation-types'
-import { addProject, updateProject, addMember, updateMember, removeObject } from './helpers'
+import {
+  addMember,
+  updateMember,
+  removeObject,
+  removeObjectKeys
+} from './helpers'
 
 export default {
 
   // ----------------------------------------------------------------------- //
 
-  [types.FETCHING_MEMBERS] (state, { project_eid, fetching }) {
-    // if we're trying to fetch members for a project that's not
-    // in our store, add a very basic project object to the store
-    if (fetching === true && !_.has(state.objects, project_eid))
-    {
-      addProject(state, project_eid, { members_fetching: fetching })
-    }
-     else
-    {
-      // otherwise, just set the project's member fetching flag
-      updateProject(state, project_eid, { members_fetching: fetching })
-    }
+  [types.FETCHING_MEMBERS] (state, { fetching }) {
+    state.members_fetching = fetching
   },
 
-  [types.FETCHED_MEMBERS] (state, { project_eid, members }) {
+  [types.FETCHED_MEMBERS] (state, { members }) {
     addMember(state, members)
 
-    // set the project's member fetched flag
-    updateProject(state, project_eid, { members_fetched: true })
+    // set our fetched flag so we know we've queried the backend
+    state.members_fetched = true
   },
 
   // ----------------------------------------------------------------------- //
 
-  [types.CREATING_MEMBERS] (state, { project_eid, attrs }) {},
+  [types.CREATING_MEMBER] (state, { attrs }) {},
 
-  [types.CREATED_MEMBERS] (state, { project_eid, attrs, members }) {
-    addMember(state, members, { is_fetched: true })
+  [types.CREATED_MEMBER] (state, { attrs, member }) {
+    addMember(state, member, { is_fetched: true })
   },
 
-  [types.DELETING_MEMBER] (state, { project_eid, eid }) {},
+  [types.FETCHING_MEMBER] (state, { eid, fetching }) {
+    // if we're trying to fetch a member that's not
+    // in our store, add a very basic member object to the store
+    if (fetching === true && !_.has(state.objects, eid)) {
+      addMember(state, eid, { is_fetching: fetching })
+    } else {
+      // otherwise, just set the member's fetching flag
+      updateMember(state, eid, { is_fetching: fetching })
+    }
+  },
 
-  [types.DELETED_MEMBER] (state, { project_eid, eid }) {
-    if (eid == state.active_user_eid)
-    {
-      // if the user that is being removed is the active user, this is a user
-      // that is leaving a project, so remove the project from the store
-      removeObject(state, project_eid)
-    }
-     else
-    {
-      // otherwise, remove the user from the store
-      removeObject(state, eid)
-    }
+  [types.FETCHED_MEMBER] (state, member) {
+    // if the member in the store has an error node, remove it; the new fetch will
+    // put it back if there are still errors
+    removeObjectKeys(state, member, ['error'])
+
+    addMember(state, member, { is_fetched: true })
+  },
+
+  [types.UPDATING_MEMBER] (state, { eid, attrs }) {},
+
+  [types.UPDATED_MEMBER] (state, { eid, attrs }) {
+    updateMember(state, eid, attrs)
+  },
+
+  [types.DELETING_MEMBER] (state, { attrs }) {},
+
+  [types.DELETED_MEMBER] (state, { attrs }) {
+    removeObject(state, attrs)
   }
 
   // ----------------------------------------------------------------------- //

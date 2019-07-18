@@ -1,7 +1,5 @@
 import * as types from '../mutation-types'
 import {
-  addProject,
-  updateProject,
   addPipe,
   updatePipe,
   removeObject,

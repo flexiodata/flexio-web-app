@@ -1,6 +1,5 @@
 import api from '../../api'
 import * as types from '../mutation-types'
-import { OBJECT_TYPE_PIPE } from '../../constants/object-type'
 
 // ----------------------------------------------------------------------- //
 

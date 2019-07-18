@@ -107,21 +107,21 @@ const removeKeys = (state, objs, keys) => {
   })
 }
 
-export const addPipe           = (state, objs, extra_defaults) => { addAbstract(state, objs, PIPE_DEFAULTS,                     extra_defaults) }
-export const addStream         = (state, objs, extra_defaults) => { addAbstract(state, objs, STREAM_DEFAULTS,                   extra_defaults) }
-export const addMember         = (state, objs, extra_defaults) => { addAbstract(state, objs, MEMBER_DEFAULTS,                   extra_defaults) }
-export const addConnection     = (state, objs, extra_defaults) => { addAbstract(state, objs, CONNECTION_DEFAULTS,               extra_defaults) }
-export const addProcess        = (state, objs, extra_defaults) => { addAbstract(state, objs, PROCESS_DEFAULTS,                  extra_defaults) }
-export const addUser           = (state, objs, extra_defaults) => { addAbstract(state, objs, USER_DEFAULTS,                     extra_defaults) }
-export const addToken          = (state, objs, extra_defaults) => { addAbstract(state, objs, TOKEN_DEFAULTS,                    extra_defaults) }
+export const addUser           = (state, objs, extra_defaults) => { addAbstract(state, objs, USER_DEFAULTS,       extra_defaults) }
+export const addPipe           = (state, objs, extra_defaults) => { addAbstract(state, objs, PIPE_DEFAULTS,       extra_defaults) }
+export const addMember         = (state, objs, extra_defaults) => { addAbstract(state, objs, MEMBER_DEFAULTS,     extra_defaults) }
+export const addConnection     = (state, objs, extra_defaults) => { addAbstract(state, objs, CONNECTION_DEFAULTS, extra_defaults) }
+export const addProcess        = (state, objs, extra_defaults) => { addAbstract(state, objs, PROCESS_DEFAULTS,    extra_defaults) }
+export const addStream         = (state, objs, extra_defaults) => { addAbstract(state, objs, STREAM_DEFAULTS,     extra_defaults) }
+export const addToken          = (state, objs, extra_defaults) => { addAbstract(state, objs, TOKEN_DEFAULTS,      extra_defaults) }
 
 export const updateObject      = (state, eid, attrs) => { updateAbstract(state, eid, attrs) }
+export const updateUser        = (state, eid, attrs) => { updateAbstract(state, eid, attrs) }
 export const updatePipe        = (state, eid, attrs) => { updateAbstract(state, eid, attrs) }
-export const updateStream      = (state, eid, attrs) => { updateAbstract(state, eid, attrs) }
 export const updateMember      = (state, eid, attrs) => { updateAbstract(state, eid, attrs) }
 export const updateConnection  = (state, eid, attrs) => { updateAbstract(state, eid, attrs) }
 export const updateProcess     = (state, eid, attrs) => { updateAbstract(state, eid, attrs) }
-export const updateUser        = (state, eid, attrs) => { updateAbstract(state, eid, attrs) }
+export const updateStream      = (state, eid, attrs) => { updateAbstract(state, eid, attrs) }
 
 export const removeObject      = (state, objs) => { removeAbstract(state, objs) }
 export const removeObjectKeys  = (state, objs, keys) => { removeKeys(state, objs, keys) }

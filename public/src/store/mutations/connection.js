@@ -1,5 +1,5 @@
 import * as types from '../mutation-types'
-import { addProject, updateProject, addConnection, updateConnection, removeObject } from './helpers'
+import { addConnection, updateConnection, removeObject } from './helpers'
 
 export default {
 
