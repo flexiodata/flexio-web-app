@@ -161,8 +161,9 @@ class TeamMember
         // update the team member
         \Flexio\System\System::getModel()->teammember->set($member_user_eid, $owner_user_eid, $validated_post_params);
 
-        // TODO: get the result of updating
-        $result = array();
+        // get the team member rights
+        $result = self::getMemberInfo($member_user_eid, $owner_user_eid);
+        $result = self::formatProperties($result);
 
         $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
