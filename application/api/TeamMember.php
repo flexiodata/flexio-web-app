@@ -161,7 +161,7 @@ class TeamMember
         // update the team member
         \Flexio\System\System::getModel()->teammember->set($member_user_eid, $owner_user_eid, $validated_post_params);
 
-        // get the team member rights
+        // get the team member info
         $result = self::getMemberInfo($member_user_eid, $owner_user_eid);
         $result = self::formatProperties($result);
 
@@ -185,8 +185,7 @@ class TeamMember
         if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        // get the team member rights, etc; unpack the rights, which are stored as a json string;
-        // TODO: unpack the user info
+        // get the team member info
         $result = self::getMemberInfo($member_user_eid, $owner_user_eid);
         $result = self::formatProperties($result);
 
