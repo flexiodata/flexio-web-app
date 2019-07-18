@@ -63,6 +63,11 @@ class TeamMember extends ModelBase
         if (!\Flexio\Base\Eid::isValid($owned_by))
             return false;
 
+        // owners are always members of their own team, so don't allow owners
+        // to delete themselves from their own team
+        if ($member_eid === $owned_by)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
+
         $db = $this->getDatabase();
         try
         {
