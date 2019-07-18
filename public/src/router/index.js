@@ -32,17 +32,17 @@ const meta = { requiresAuth: true }
 
 const routes = [
   { path: '/', redirect: '/pipes' }, // base path redirect
-  { path: '/signin',                                      name: rn.ROUTE_SIGNIN_PAGE,         component: SignInPage                },
-  { path: '/signup',                                      name: rn.ROUTE_SIGNUP_PAGE,         component: SignUpPage                },
-  { path: '/forgotpassword',                              name: rn.ROUTE_FORGOTPASSWORD_PAGE, component: ForgotPasswordPage        },
-  { path: '/resetpassword',                               name: rn.ROUTE_RESETPASSWORD_PAGE,  component: ResetPasswordPage         },
-  { path: '/initsession',                                 name: rn.ROUTE_INITSESSION_PAGE,    component: InitSessionPage           },
-  { path: '/onboard',                                     name: rn.ROUTE_ONBOARD_PAGE,        component: OnboardingPage,      meta },
-  { path: '/builder/:template',                           name: rn.ROUTE_APP_BUILDER,         component: BuilderDocument,     meta },
-  { path: '/account/:section?',                           name: rn.ROUTE_APP_ACCOUNT,         component: AppAccount,          meta },
-  { path: '/:user_identifier?/members',                   name: rn.ROUTE_APP_MEMBERS,         component: AppMembers,          meta },
-  { path: '/:user_identifier?/connections/:identifier?',  name: rn.ROUTE_APP_CONNECTIONS,     component: AppConnections,      meta },
-  { path: '/:user_identifier?/pipes/:identifier?',        name: rn.ROUTE_APP_PIPES,           component: AppPipes,            meta },
+  { path: '/signin',                                name: rn.ROUTE_SIGNIN_PAGE,         component: SignInPage                },
+  { path: '/signup',                                name: rn.ROUTE_SIGNUP_PAGE,         component: SignUpPage                },
+  { path: '/forgotpassword',                        name: rn.ROUTE_FORGOTPASSWORD_PAGE, component: ForgotPasswordPage        },
+  { path: '/resetpassword',                         name: rn.ROUTE_RESETPASSWORD_PAGE,  component: ResetPasswordPage         },
+  { path: '/initsession',                           name: rn.ROUTE_INITSESSION_PAGE,    component: InitSessionPage           },
+  { path: '/onboard',                               name: rn.ROUTE_ONBOARD_PAGE,        component: OnboardingPage,      meta },
+  { path: '/builder/:template',                     name: rn.ROUTE_APP_BUILDER,         component: BuilderDocument,     meta },
+  { path: '/account/:section?',                     name: rn.ROUTE_APP_ACCOUNT,         component: AppAccount,          meta },
+  { path: '/:team_name?/members',                   name: rn.ROUTE_APP_MEMBERS,         component: AppMembers,          meta },
+  { path: '/:team_name?/connections/:identifier?',  name: rn.ROUTE_APP_CONNECTIONS,     component: AppConnections,      meta },
+  { path: '/:team_name?/pipes/:identifier?',        name: rn.ROUTE_APP_PIPES,           component: AppPipes,            meta },
   admin_routes,
   { path: "*", component: PageNotFound } // 404
 ]

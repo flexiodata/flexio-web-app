@@ -178,7 +178,7 @@
     computed: {
       // mix this into the outer object with the object spread operator
       ...mapState({
-        'active_team_identifier': 'active_team_identifier'
+        'active_team_name': 'active_team_name'
       }),
       has_description() {
         return _.get(this.item, 'description', '').length > 0
@@ -237,11 +237,11 @@
       },
       pipe_route() {
         // TODO: this component shouldn't have anything to do with the route or store state
-        var ru = this.active_team_identifier
-        var user_identifier = ru && ru.length > 0 ? ru : null
+        var ru = this.active_team_name
+        var team_name = ru && ru.length > 0 ? ru : null
         //var identifier = this.identifier
         var identifier = _.get(this.item, 'eid', '')
-        return { name: ROUTE_APP_PIPES, params: { user_identifier, identifier } }
+        return { name: ROUTE_APP_PIPES, params: { team_name, identifier } }
       },
       execution_cnt() {
         return parseInt(_.get(this.item, 'stats.total_count', '0'))

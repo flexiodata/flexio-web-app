@@ -4,8 +4,8 @@ import api from '../../api'
 
 export default {
   methods: {
-    $_Validation_validateAll: _.debounce(function(user_identifier, validate_attrs, callback) {
-      api.v2_validate(user_identifier, validate_attrs).then(response => {
+    $_Validation_validateAll: _.debounce(function(team_name, validate_attrs, callback) {
+      api.v2_validate(team_name, validate_attrs).then(response => {
         var errors = _.keyBy(response.data, 'key')
 
         if (_.isFunction(callback)) {
@@ -13,9 +13,9 @@ export default {
         }
       })
     }, 300),
-    $_Validation_validateName: function(user_identifier, eid_type, name, callback) {
+    $_Validation_validateName: function(team_name, eid_type, name, callback) {
       var validate_attrs = [{ eid_type, key: 'name', type: 'name', value: name }]
-      return this.$_Validation_validateAll(user_identifier, _.omitBy(validate_attrs, _.isEmpty), callback)
+      return this.$_Validation_validateAll(team_name, _.omitBy(validate_attrs, _.isEmpty), callback)
     },
     $_Validation_validateUsername: function(key, username, callback) {
       var validate_attrs = [{ key, type: 'username', value: username }]

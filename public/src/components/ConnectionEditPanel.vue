@@ -278,7 +278,7 @@
     },
     computed: {
       ...mapState([
-        'active_team_identifier'
+        'active_team_name'
       ]),
       eid() {
         return _.get(this.edit_connection, 'eid', '')
@@ -432,7 +432,7 @@
           return
         }
 
-        this.$_Validation_validateName(this.active_team_identifier, OBJECT_TYPE_CONNECTION, value, (response, errors) => {
+        this.$_Validation_validateName(this.active_team_name, OBJECT_TYPE_CONNECTION, value, (response, errors) => {
           var message = _.get(errors, 'name.message', '')
           if (message.length > 0) {
             callback(new Error(message))

@@ -1,7 +1,7 @@
 export default () => {
   return {
     active_user_eid: '',
-    active_team_identifier: '',
+    active_team_name: '',
     active_document_identifier: '',
 
     // TODO: move all of these into `objects_fetched` and `objects_fetching` objects?

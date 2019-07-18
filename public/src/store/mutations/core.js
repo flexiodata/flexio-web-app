@@ -7,7 +7,7 @@ export default {
   },
 
   [types.CHANGE_ACTIVE_TEAM]: (state, identifier) => {
-    state.active_team_identifier = identifier
+    state.active_team_name = identifier
   },
 
   [types.RESET_STATE]: (state) => {

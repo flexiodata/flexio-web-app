@@ -41,17 +41,17 @@
     computed: {
       ...mapState([
         'active_user_eid',
-        'active_team_identifier',
+        'active_team_name',
         'user_fetching'
       ]),
       pipe_route() {
-        return { name: ROUTE_APP_PIPES, params: { user_identifier: this.active_team_identifier } }
+        return { name: ROUTE_APP_PIPES, params: { team_name: this.active_team_name } }
       },
       connection_route() {
-        return { name: ROUTE_APP_CONNECTIONS, params: { user_identifier: this.active_team_identifier } }
+        return { name: ROUTE_APP_CONNECTIONS, params: { team_name: this.active_team_name } }
       },
       member_route() {
-        return { name: ROUTE_APP_MEMBERS, params: { user_identifier: this.active_team_identifier } }
+        return { name: ROUTE_APP_MEMBERS, params: { team_name: this.active_team_name } }
       },
       is_logged_in() {
         return this.active_user_eid.length > 0

@@ -25,7 +25,7 @@ export const AxiosResource = (user_eid) => {
     })
 
     if (allowed && api_user_root != 'admin') {
-      api_user_root = store.state.active_team_identifier
+      api_user_root = store.state.active_team_name
 
       // no username is specified; default to 'me'
       if (!api_user_root || api_user_root.length == 0) {

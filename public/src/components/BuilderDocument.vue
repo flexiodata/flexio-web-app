@@ -163,7 +163,7 @@
         is_fetched: state => state.builder.fetched,
         prompts: state => state.builder.prompts,
         pipe: state => state.builder.pipe,
-        active_team_identifier: state => state.active_team_identifier
+        active_team_name: state => state.active_team_name
       }),
       is_builder_document() {
         return this.$route.name == ROUTE_APP_BUILDER
@@ -327,11 +327,11 @@
         var eid = this.pipe.eid
 
         // TODO: this component shouldn't have anything to do with the route or store state
-        var ru = this.active_team_identifier
-        var user_identifier = ru && ru.length > 0 ? ru : null
+        var ru = this.active_team_name
+        var team_name = ru && ru.length > 0 ? ru : null
         var identifier = eid
 
-        this.$router.push({ name: ROUTE_APP_PIPES, params: { user_identifier, identifier } })
+        this.$router.push({ name: ROUTE_APP_PIPES, params: { team_name, identifier } })
       },
       updateItemState(values, index) {
         this.$store.commit('builder/UPDATE_ATTRS', values)

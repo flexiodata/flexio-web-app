@@ -140,7 +140,7 @@
       ...mapState({
         'is_fetching': 'pipes_fetching',
         'is_fetched': 'pipes_fetched',
-        'active_team_identifier': 'active_team_identifier'
+        'active_team_name': 'active_team_name'
       }),
       route_identifier() {
         return _.get(this.$route, 'params.identifier', undefined)
@@ -267,7 +267,7 @@
           var identifier = name.length > 0 ? name : _.get(pipe, 'eid', '')
 
           var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
-          _.set(new_route, 'params.user_identifier', this.active_team_identifier)
+          _.set(new_route, 'params.team_name', this.active_team_name)
           _.set(new_route, 'params.identifier', identifier)
           this.$router[!this.route_identifier?'replace':'push'](new_route)
 
