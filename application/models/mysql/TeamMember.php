@@ -23,7 +23,7 @@ class TeamMember extends ModelBase
         if (($validator->check($params, array(
                 'member_eid'    => array('type' => 'eid', 'required' => true),
                 'member_status' => array('type' => 'string', 'required' => false, 'default' => 'A'),
-                'rights'        => array('type' => 'string', 'required' => false, 'default' => '{}'),
+                'rights'        => array('type' => 'string', 'required' => false, 'default' => '[]'),
                 'owned_by'      => array('type' => 'string', 'required' => false, 'default' => ''),
                 'created_by'    => array('type' => 'string', 'required' => false, 'default' => '')
             ))->hasErrors()) === true)
@@ -184,8 +184,9 @@ class TeamMember extends ModelBase
 
         try
         {
+            $db = $this->getDatabase();
             $qmember_eid = $db->quote($member_eid);
-            $qowned_by= $db->quote($qowned_by);
+            $qowned_by= $db->quote($owned_by);
             $row = $db->fetchRow("select * from tbl_teammember where member_eid = $qmember_eid and owned_by = $qowned_by");
             if (!$row)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);

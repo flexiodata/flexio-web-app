@@ -72,9 +72,9 @@ class Api
         // team members
         'POS /:teamid/members'                        => '\Flexio\Api\TeamMember::create',
         'GET /:teamid/members'                        => '\Flexio\Api\TeamMember::list',
-        'POS /:teamid/members/:objid'                 => '\Flexio\Api\TeamMember::set',
-        'GET /:teamid/members/:objid'                 => '\Flexio\Api\TeamMember::get',
-        'DEL /:teamid/members/:objid'                 => '\Flexio\Api\TeamMember::delete',
+        'POS /:teamid/members/:teamid'                => '\Flexio\Api\TeamMember::set',
+        'GET /:teamid/members/:teamid'                => '\Flexio\Api\TeamMember::get',
+        'DEL /:teamid/members/:teamid'                => '\Flexio\Api\TeamMember::delete',
 
         // authorization
         'GET /:teamid/auth/keys'                      => '\Flexio\Api\Token::list',
@@ -363,7 +363,24 @@ class Api
             return $function;
         }
 
-        // PATH POSSIBILITY 4: the path starts with a team owner identifier, and there's also an object identifer
+        // PATH POSSIBILITY 4: the path starts with a team owner identifier, and there's also a team identifer
+        // in the third part of the path
+        $api_params = $url_params;
+        $user_eid1 = $user_eid;
+        $user_eid2 = self::resolveOwnerIdentifier($requesting_user, $url_params['apiparam3']);
+        $api_params['apiparam1'] = $user_eid1 !== '' ? ':teamid' : $api_params['apiparam1'];
+        $api_params['apiparam3'] = $user_eid2 !== '' ? ':teamid' : $api_params['apiparam3'];
+        $apiendpoint = self::buildApiEndpointString($request_method, $api_params);
+
+        $function = self::$endpoints[$apiendpoint] ?? false;
+        if ($function !== false)
+        {
+            $request->setOwnerFromUrl($user_eid1);
+            $request->setObjectFromUrl($user_eid2);
+            return $function;
+        }
+
+        // PATH POSSIBILITY 5: the path starts with a team owner identifier, and there's also an object identifer
         // in the fourth part of the path
         $api_params = $url_params;
         $object_eid = self::resolveObjectIdentifier($user_eid, $url_params['apiparam3'], $url_params['apiparam4']);
@@ -379,7 +396,7 @@ class Api
             return $function;
         }
 
-        // PATH POSSIBILITY 5; the path is an account card path, where the path may include a payment service
+        // PATH POSSIBILITY 6; the path is an account card path, where the path may include a payment service
         // provider card identifier as part of the path
         $api_params = $url_params;
         $api_params['apiparam1'] = $user_eid !== '' ? ':teamid' : $api_params['apiparam1'];
@@ -393,7 +410,7 @@ class Api
             return $function;
         }
 
-        // PATH POSSIBILITY 6; the path is an run endpoint followed by a path
+        // PATH POSSIBILITY 7; the path is an run endpoint followed by a path
         $api_params = $url_params;
         $api_params['apiparam1'] = $user_eid !== '' ? ':teamid' : $api_params['apiparam1'];
         $apiendpoint = self::buildApiEndpointString($request_method, $api_params);
@@ -410,7 +427,7 @@ class Api
             return $function;
         }
 
-        // PATH POSSIBILITY 7; the path is a vfs path with a path after the vfs prefix
+        // PATH POSSIBILITY 8; the path is a vfs path with a path after the vfs prefix
         $api_params = $url_params;
         $api_params['apiparam1'] = $user_eid !== '' ? ':teamid' : $api_params['apiparam1'];
         $apiendpoint = self::buildApiEndpointString($request_method, $api_params);
