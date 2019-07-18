@@ -29,15 +29,15 @@ class TeamMember
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
                 'member' => array('type' => 'string', 'required' => true),
-                'member_status' => array('type' => 'string', 'required' => false, 'default' => 'I'),
-                'rights' => array('type' => 'object', 'required' => false, 'default' => [])
+                'member_status' => array('type' => 'string', 'required' => false),
+                'rights' => array('type' => 'object', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_post_params = $validator->getParams();
 
         // rights are stored as a json string
-        $rights = array();
+        $rights = '[]';
         if (isset($validated_post_params) && isset($validated_post_params['rights']))
             $rights = json_encode($validated_post_params['rights']);
 
@@ -80,8 +80,8 @@ class TeamMember
         \Flexio\System\System::getModel()->teammember->create($member_properties);
 
         // get the result of creating
-        $result = \Flexio\System\System::getModel()->teammember->get($member_user_eid, $owner_user_eid);
-        $result['rights'] = @json_decode($result['rights'], true);
+        $result = self::getMemberInfo($member_user_eid, $owner_user_eid);
+        $result = self::formatProperties($result);
 
         $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
@@ -175,8 +175,8 @@ class TeamMember
 
         // get the team member rights, etc; unpack the rights, which are stored as a json string;
         // TODO: unpack the user info
-        $result = \Flexio\System\System::getModel()->teammember->get($member_user_eid, $owner_user_eid);
-        $result['rights'] = @json_decode($result['rights'], true);
+        $result = self::getMemberInfo($member_user_eid, $owner_user_eid);
+        $result = self::formatProperties($result);
 
         // return the result
         $request->setResponseParams($result);
@@ -220,10 +220,7 @@ class TeamMember
         foreach ($teammembers as $t)
         {
             // TODO: check permissions for each item?
-
-            $item = $t;
-            $item['rights'] = @json_decode($item['rights'], true);
-            $result[] = $item;
+            $result[] = self::formatProperties($t);
         }
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
@@ -240,5 +237,66 @@ class TeamMember
             return $eid; // param is a username or email; return eid from info
 
         return false;
+    }
+
+    private static function getMemberInfo(string $member_user_eid, string $owner_user_eid) : ?array
+    {
+        $result = \Flexio\System\System::getModel()->teammember->get($member_user_eid, $owner_user_eid);
+        return $result;
+    }
+
+    private static function formatProperties(array $properties) : array
+    {
+        $mapped_properties = \Flexio\Base\Util::mapArray(
+            [
+                "member" => null,
+                "member_status" => null,
+                "rights" => null,
+                "owned_by" => null,
+                "created" => null,
+                "updated" => null
+            ],
+        $properties);
+
+        // sanity check: if the data record is missing, then owned_by (eid is
+        // normally used) will be null
+        if (!isset($mapped_properties['owned_by']))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+
+        // get the member info
+        $member_info = array();
+        $member_info['eid'] = $properties['member_eid'];
+        $member_info['eid_type'] = \Model::TYPE_USER;
+
+        try
+        {
+            $user = \Flexio\Object\User::load($properties['member_eid']);
+            $user_info = $user->get();
+            $member_info['eid_status'] = $user_info['eid_status'];
+            $member_info['username'] = $user_info['username'];
+            $member_info['first_name'] = $user_info['first_name'];
+            $member_info['last_name'] = $user_info['last_name'];
+            $member_info['email'] = $user_info['email'];
+            $member_info['email_hash'] = $user_info['email_hash'];
+        }
+        catch (\Exception $e)
+        {
+        }
+
+        // expand the member info
+        $mapped_properties['member'] = $member_info;
+
+        // expand the owner info
+        $mapped_properties['owned_by'] = array(
+            'eid' => $properties['owned_by'],
+            'eid_type' => \Model::TYPE_USER
+        );
+
+        // unpack the rights info json
+        $mapped_properties['rights'] = @json_decode($mapped_properties['rights'], true);
+
+        // return the info
+        return $mapped_properties;
     }
 }
