@@ -3,7 +3,7 @@ import store from '@/store'
 
 export const API_V2_ROOT = '/api/v2'
 
-export const AxiosResource = (user_eid) => {
+export const AxiosResource = (team_name) => {
   var base_cfg = {
     method: 'get',
     withCredentials: true
@@ -16,7 +16,7 @@ export const AxiosResource = (user_eid) => {
 
   var getBaseUrl = (url) => {
     var api_root = API_V2_ROOT
-    var api_user_root = user_eid || 'me'
+    var api_user_root = team_name || 'me'
 
     var allowed = false
     var allowed_routes = ['/connections', '/pipes', '/processes', '/streams', '/vfs']
@@ -33,7 +33,7 @@ export const AxiosResource = (user_eid) => {
       }
     }
 
-    return user_eid === null ? api_root : api_root + '/' + api_user_root
+    return team_name === null ? api_root : api_root + '/' + api_user_root
   }
 
   var getCfg = ({ method, url, data, cfg }) => {

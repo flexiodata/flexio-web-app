@@ -126,7 +126,7 @@
           })
         }
 
-        this.$store.dispatch('v2_action_fetchProcess', { user_eid, eid: this.processEid }).catch(error => {
+        this.$store.dispatch('v2_action_fetchProcess', { team_name: user_eid, eid: this.processEid }).catch(error => {
           // TODO: add error handling?
         })
       },

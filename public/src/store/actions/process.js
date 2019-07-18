@@ -25,11 +25,11 @@ export const v2_action_fetchAdminProcesses = ({ commit }, { attrs }) => {
 
 // ----------------------------------------------------------------------- //
 
-export const v2_action_fetchProcesses = ({ commit }, { user_eid, attrs }) => {
+export const v2_action_fetchProcesses = ({ commit }, { team_name, attrs }) => {
   var pipe_eid = _.get(attrs, 'parent_eid', '')
   commit(types.FETCHING_PROCESSES, { pipe_eid, fetching: true })
 
-  return api.v2_fetchProcesses(user_eid, attrs).then(response => {
+  return api.v2_fetchProcesses(team_name, attrs).then(response => {
     var processes = response.data
     commit(types.FETCHED_PROCESSES, { pipe_eid, processes })
     commit(types.FETCHING_PROCESSES, { pipe_eid, fetching: false })
@@ -42,17 +42,17 @@ export const v2_action_fetchProcesses = ({ commit }, { user_eid, attrs }) => {
 
 // ----------------------------------------------------------------------- //
 
-export const v2_action_createProcess = ({ commit, dispatch }, { user_eid, attrs }) => {
+export const v2_action_createProcess = ({ commit, dispatch }, { team_name, attrs }) => {
   commit(types.CREATING_PROCESS, { attrs })
 
-  return api.v2_createProcess(user_eid, attrs).then(response => {
+  return api.v2_createProcess(team_name, attrs).then(response => {
     var process = response.data
     commit(types.CREATED_PROCESS, { attrs, process })
 
     // the 'run' parameter was specified which means
     // we've started the process; poll for the process
     if (_.get(attrs, 'run', false) === true && process.eid) {
-      dispatch('v2_action_fetchProcess', { user_eid, eid: process.eid, poll: true }).catch(error => {
+      dispatch('v2_action_fetchProcess', { team_name, eid: process.eid, poll: true }).catch(error => {
         // TODO: add error handling?
       })
     }
@@ -63,10 +63,10 @@ export const v2_action_createProcess = ({ commit, dispatch }, { user_eid, attrs 
   })
 }
 
-export const v2_action_fetchProcess = ({ commit, dispatch }, { user_eid, eid, poll }) => {
+export const v2_action_fetchProcess = ({ commit, dispatch }, { team_name, eid, poll }) => {
   commit(types.FETCHING_PROCESS, { eid, fetching: true })
 
-  return api.v2_fetchProcess(user_eid, eid).then(response => {
+  return api.v2_fetchProcess(team_name, eid).then(response => {
     var process = response.data
     commit(types.FETCHED_PROCESS, process)
     commit(types.FETCHING_PROCESS, { eid, fetching: false })
@@ -80,7 +80,7 @@ export const v2_action_fetchProcess = ({ commit, dispatch }, { user_eid, eid, po
             PROCESS_STATUS_RUNNING
           ], status)) {
         _.delay(function() {
-          dispatch('v2_action_fetchProcess', { user_eid, eid, poll: true }).catch(error => {
+          dispatch('v2_action_fetchProcess', { team_name, eid, poll: true }).catch(error => {
             // TODO: add error handling?
           })
         }, 500)
@@ -96,10 +96,10 @@ export const v2_action_fetchProcess = ({ commit, dispatch }, { user_eid, eid, po
 
 // ----------------------------------------------------------------------- //
 
-export const v2_action_cancelProcess = ({ commit, dispatch }, { user_eid, eid }) => {
+export const v2_action_cancelProcess = ({ commit, dispatch }, { team_name, eid }) => {
   commit(types.CANCELING_PROCESS, { eid })
 
-  return api.v2_cancelProcess(user_eid, eid).then(response => {
+  return api.v2_cancelProcess(team_name, eid).then(response => {
     var process = response.data
     commit(types.CANCELED_PROCESS, { process })
     return response
@@ -108,19 +108,19 @@ export const v2_action_cancelProcess = ({ commit, dispatch }, { user_eid, eid })
   })
 }
 
-export const v2_action_runProcess = ({ commit, dispatch }, { user_eid, eid, cfg }) => {
+export const v2_action_runProcess = ({ commit, dispatch }, { team_name, eid, cfg }) => {
   commit(types.STARTING_PROCESS, { eid })
 
-  dispatch('v2_action_fetchProcess', { user_eid, eid, poll: true }).catch(error => {
+  dispatch('v2_action_fetchProcess', { team_name, eid, poll: true }).catch(error => {
     // TODO: add error handling?
   })
 
-  return api.v2_runProcess(user_eid, eid, cfg).then(response => {
+  return api.v2_runProcess(team_name, eid, cfg).then(response => {
     var process = { eid, process_status: PROCESS_STATUS_RUNNING }
     commit(types.STARTED_PROCESS, { process })
     return response
   }).catch(error => {
-    dispatch('v2_action_fetchProcess', { user_eid, eid }).catch(error => {
+    dispatch('v2_action_fetchProcess', { team_name, eid }).catch(error => {
       // TODO: add error handling?
     })
     throw error
@@ -129,10 +129,10 @@ export const v2_action_runProcess = ({ commit, dispatch }, { user_eid, eid, cfg 
 
 // ----------------------------------------------------------------------- //
 
-export const v2_action_fetchProcessLog = ({ commit, dispatch }, { user_eid, eid }) => {
+export const v2_action_fetchProcessLog = ({ commit, dispatch }, { team_name, eid }) => {
   commit(types.FETCHING_PROCESS_LOG, { eid, fetching: true })
 
-  return api.v2_fetchProcessLog(user_eid, eid).then(response => {
+  return api.v2_fetchProcessLog(team_name, eid).then(response => {
     var log = response.data
     commit(types.FETCHED_PROCESS_LOG, { eid, log })
     commit(types.FETCHING_PROCESS_LOG, { eid, fetching: false })
@@ -145,10 +145,10 @@ export const v2_action_fetchProcessLog = ({ commit, dispatch }, { user_eid, eid 
 
 // ----------------------------------------------------------------------- //
 
-export const v2_action_fetchProcessSummary = ({ commit, dispatch }, { user_eid }) => {
+export const v2_action_fetchProcessSummary = ({ commit, dispatch }, { team_name }) => {
   commit(types.FETCHING_PROCESS_SUMMARY, { fetching: true })
 
-  return api.v2_fetchProcessSummary(user_eid).then(response => {
+  return api.v2_fetchProcessSummary(team_name).then(response => {
     var items = response.data
     commit(types.FETCHED_PROCESS_SUMMARY, { items })
     commit(types.FETCHING_PROCESS_SUMMARY, { fetching: false })

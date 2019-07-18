@@ -3,10 +3,10 @@ import * as types from '../mutation-types'
 
 // ----------------------------------------------------------------------- //
 
-export const v2_action_fetchTokens = ({ commit }, { user_eid }) => {
+export const v2_action_fetchTokens = ({ commit }, { team_name }) => {
   commit(types.FETCHING_TOKENS, { fetching: true })
 
-  return api.v2_fetchTokens(user_eid).then(response => {
+  return api.v2_fetchTokens(team_name).then(response => {
     var tokens = response.data
     commit(types.FETCHED_TOKENS, { tokens })
     commit(types.FETCHING_TOKENS, { fetching: false })
@@ -19,10 +19,10 @@ export const v2_action_fetchTokens = ({ commit }, { user_eid }) => {
 
 // ----------------------------------------------------------------------- //
 
-export const v2_action_createToken = ({ commit, dispatch }, { user_eid }) => {
+export const v2_action_createToken = ({ commit, dispatch }, { team_name }) => {
   commit(types.CREATING_TOKEN)
 
-  return api.v2_createToken(user_eid).then(response => {
+  return api.v2_createToken(team_name).then(response => {
     var attrs = response.data
     commit(types.CREATED_TOKEN, { attrs })
     return response
@@ -31,10 +31,10 @@ export const v2_action_createToken = ({ commit, dispatch }, { user_eid }) => {
   })
 }
 
-export const v2_action_deleteToken = ({ commit }, { user_eid, eid }) => {
+export const v2_action_deleteToken = ({ commit }, { team_name, eid }) => {
   commit(types.DELETING_TOKEN, { eid })
 
-  return api.v2_deleteToken(user_eid, eid).then(response => {
+  return api.v2_deleteToken(team_name, eid).then(response => {
     commit(types.DELETED_TOKEN, { eid })
     return response
   }).catch(error => {
