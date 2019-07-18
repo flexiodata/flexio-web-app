@@ -61,6 +61,9 @@ class Filter
         if (isset($filter_items['connection_eid']) && array_key_exists('connection_eid', $allowed_item_keys))
             $filter_expr .= (' and (connection_eid = ' . $db->quote($filter_items['connection_eid']) . ')');
 
+        if (isset($filter_items['member_eid']) && array_key_exists('member_eid', $allowed_item_keys))
+            $filter_expr .= (' and (member_eid = ' . $db->quote($filter_items['member_eid']) . ')');
+
         if (isset($filter_items['created_min']) && array_key_exists('created_min', $allowed_item_keys))
         {
             $date = $filter_items['created_min'];
