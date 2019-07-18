@@ -61,7 +61,7 @@
         v-show="!has_connection"
       />
       <div class="ph3 ph4-l" v-if="has_connection">
-        <div class="mb2 lh-copy ttu fw6 f6">Connection Information</div>
+        <div class="mb2 lh-copy ttu fw6 f6">Connection Properties</div>
         <el-form
           ref="form"
           class="el-form--compact el-form__label-tiny relative"
@@ -250,7 +250,7 @@
       },
       mode: {
         type: String,
-        default: 'add'
+        default: 'add' // 'add' or 'edit'
       }
     },
     mixins: [MixinConnection, MixinValidation],
@@ -293,16 +293,19 @@
     },
     computed: {
       eid() {
-        return _.get(this, 'edit_connection.eid', '')
+        return _.get(this.edit_connection, 'eid', '')
       },
       ctype() {
-        return _.get(this, 'edit_connection.connection_type', '')
+        return _.get(this.edit_connection, 'connection_type', '')
       },
       cstatus() {
-        return _.get(this, 'edit_connection.connection_status', '')
+        return _.get(this.edit_connection, 'connection_status', '')
+      },
+      cname() {
+        return _.get(this.orig_connection, 'name', '')
       },
       url() {
-        return _.get(this, 'orig_connection.connection_info.url', '')
+        return _.get(this.orig_connection, 'connection_info.url', '')
       },
       is_connected() {
         return this.cstatus == CONNECTION_STATUS_AVAILABLE
@@ -336,9 +339,7 @@
           return this.title
         }
 
-        return this.mode == 'edit'
-          ? 'Edit "' + _.get(this.connection, 'short_description') + '" Connection'
-          : 'New Connection'
+        return this.mode == 'edit' ? `Edit "${this.cname}" Connection` : 'New Connection'
       },
       submit_label() {
         return this.mode == 'edit' ? 'Save changes' : 'Create connection'

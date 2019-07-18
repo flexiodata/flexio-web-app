@@ -11,10 +11,7 @@
     <div class="flex-fill flex flex-row" v-if="pipes.length > 0">
       <template v-if="has_pipe">
         <!-- list -->
-        <div
-          class="flex flex-column min-w5 br b--black-05"
-          :class="mode == 'edit' ? 'o-40 no-pointer-events': ''"
-        >
+        <div class="flex flex-column min-w5 br b--black-05">
           <!-- control bar -->
           <div class="flex-none ph3 pv2 relative bg-white bb b--black-05">
             <div class="flex flex-row">
@@ -26,7 +23,7 @@
                   size="small"
                   type="primary"
                   class="ttu fw6"
-                  @click="onNewPipeClick"
+                  @click="show_pipe_dialog = true"
                 >
                   New
                 </el-button>
@@ -79,6 +76,24 @@
       <!-- pipe not found -->
       <PageNotFound class="flex-fill bg-nearer-white" v-else />
     </div>
+
+    <!-- pipe edit dialog -->
+    <el-dialog
+      custom-class="el-dialog--no-header el-dialog--no-footer"
+      width="46rem"
+      top="4vh"
+      :modal-append-to-body="false"
+      :close-on-click-modal="false"
+      :visible.sync="show_pipe_dialog"
+    >
+      <PipeEditPanel
+        mode="add"
+        @close="show_pipe_dialog = false"
+        @cancel="show_pipe_dialog = false"
+        @submit="tryCreatePipe"
+        v-if="show_pipe_dialog"
+      />
+    </el-dialog>
   </div>
 </template>
 
@@ -88,6 +103,7 @@
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
   import PipeDocument from '@comp/PipeDocument'
+  import PipeEditPanel from '@comp/PipeEditPanel'
   import PageNotFound from '@comp/PageNotFound'
 
   const DEPLOY_MODE_RUN       = 'R'
@@ -101,6 +117,7 @@
     components: {
       Spinner,
       PipeDocument,
+      PipeEditPanel,
       PageNotFound
     },
     watch: {
@@ -116,10 +133,10 @@
     },
     data() {
       return {
-        mode: 'static',
         is_selecting: false,
         pipe: {},
-        last_selected: {}
+        last_selected: {},
+        show_pipe_dialog: false
       }
     },
     computed: {
@@ -179,14 +196,36 @@
         }
       },
       tryCreatePipe(attrs) {
-        if (!_.isObject(attrs))
-          attrs = { short_description: 'Untitled Pipe' }
+        // when creating a new pipe, start out with a basic Python 'Hello World' script
+        var default_attrs = {
+          deploy_mode: 'R',
+          deploy_api: 'A',
+          deploy_ui: 'A',
+          task: {
+            op: 'sequence',
+            items: [{
+              op: 'execute',
+              lang: 'python',
+              code: 'IyBiYXNpYyBoZWxsbyB3b3JsZCBleGFtcGxlCmRlZiBmbGV4X2hhbmRsZXIoZmxleCk6CiAgICBmbGV4LmVuZChbWyJIIiwiZSIsImwiLCJsIiwibyJdLFsiVyIsIm8iLCJyIiwibCIsImQiXV0pCg=='
+            }]
+          }
+        }
+
+        attrs = _.cloneDeep(attrs)
+        attrs = _.assign({}, default_attrs, attrs)
 
         this.$store.dispatch('v2_action_createPipe', { attrs }).then(response => {
           var pipe = response.data
-          var analytics_payload = _.pick(pipe, ['eid', 'name', 'short_description', 'created'])
+
+          this.$message({
+            message: 'The pipe was created successfully.',
+            type: 'success'
+          })
+
+          var analytics_payload = _.pick(pipe, ['eid', 'name', 'short_description', 'description', 'created'])
           this.$store.track('Created Pipe', analytics_payload)
           this.openPipe(pipe.eid)
+          this.show_pipe_dialog = false
         }).catch(error => {
           this.$store.track('Created Pipe (Error)')
         })
@@ -268,24 +307,6 @@
         switch (cmd) {
           case 'delete': return this.tryDeletePipe(menu_item.$attrs.item)
         }
-      },
-      onNewPipeClick() {
-        // when creating a new pipe, start out with a basic Python 'Hello World' script
-        var attrs = {
-          deploy_mode: 'R',
-          deploy_api: 'A',
-          deploy_ui: 'A',
-          task: {
-            op: 'sequence',
-            items: [{
-              op: 'execute',
-              lang: 'python',
-              code: 'IyBiYXNpYyBoZWxsbyB3b3JsZCBleGFtcGxlCmRlZiBmbGV4X2hhbmRsZXIoZmxleCk6CiAgICBmbGV4LmVuZChbWyJIIiwiZSIsImwiLCJsIiwibyJdLFsiVyIsIm8iLCJyIiwibCIsImQiXV0pCg=='
-            }]
-          }
-        }
-
-        this.tryCreatePipe(attrs)
       }
     }
   }

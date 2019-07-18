@@ -26,7 +26,7 @@
           <div class="light-silver f8 lh-copy truncate">{{url}}</div>
         </div>
       </div>
-      <div class="ml2" v-if="showDropdown && !is_flexio">
+      <div class="flex-none ml2" @click.stop v-if="showDropdown && !is_flexio">
         <el-dropdown trigger="click" @command="onCommand">
           <span class="el-dropdown-link dib pointer pa1 black-30 hover-black">
             <i class="material-icons v-mid">expand_more</i>

@@ -168,19 +168,20 @@
       </multipane>
     </div>
 
-    <!-- pipe properties dialog -->
+    <!-- pipe edit dialog -->
     <el-dialog
       custom-class="el-dialog--no-header el-dialog--no-footer"
-      width="42rem"
+      width="46rem"
       top="4vh"
       :modal-append-to-body="false"
       :close-on-click-modal="false"
-      :visible.sync="show_pipe_properties_dialog"
+      :visible.sync="show_pipe_edit_dialog"
     >
-      <PipePropertiesPanel
-        :pipe="edit_pipe"
-        @close="show_pipe_properties_dialog = false"
-        @cancel="show_pipe_properties_dialog = false"
+      <PipeEditPanel
+        mode="edit"
+        :pipe="orig_pipe"
+        @close="show_pipe_edit_dialog = false"
+        @cancel="show_pipe_edit_dialog = false"
         @submit="saveProperties"
       />
     </el-dialog>
@@ -188,7 +189,7 @@
     <!-- pipe schedule dialog -->
     <el-dialog
       custom-class="el-dialog--no-header el-dialog--no-footer"
-      width="42rem"
+      width="46rem"
       top="4vh"
       :modal-append-to-body="false"
       :close-on-click-modal="false"
@@ -222,7 +223,7 @@
   import PipeBuilderList from '@comp/PipeBuilderList'
   import PipeCodeEditor from '@comp/PipeCodeEditor'
   import PipeDocumentHeader from '@comp/PipeDocumentHeader'
-  import PipePropertiesPanel from '@comp/PipePropertiesPanel'
+  import PipeEditPanel from '@comp/PipeEditPanel'
   import PipeSchedulePanel from '@comp/PipeSchedulePanel'
   import ProcessInput from '@comp/ProcessInput'
   import ProcessContent from '@comp/ProcessContent'
@@ -248,7 +249,7 @@
       PipeBuilderList,
       PipeCodeEditor,
       PipeDocumentHeader,
-      PipePropertiesPanel,
+      PipeEditPanel,
       PipeSchedulePanel,
       ProcessInput,
       ProcessContent,
@@ -288,7 +289,7 @@
         active_task_idx: -1,
         scrollbar_container_id: _.uniqueId('pane-'),
         show_pipe_schedule_dialog: false,
-        show_pipe_properties_dialog: false,
+        show_pipe_edit_dialog: false,
         yaml_view: 'yaml',
         show_yaml: false,
         show_testing: false,
@@ -467,12 +468,12 @@
         attrs = _.omitBy(attrs, (val, key) => { return _.isNil(val) })
 
         return this.$store.dispatch('v2_action_updatePipe', { eid, attrs }).then(response => {
+          var pipe = response.data
+
           this.$message({
             message: 'The pipe was updated successfully.',
             type: 'success'
           })
-
-          var pipe = response.data
 
           // change the identifier in the route
           if (pipe.name != this.orig_pipe.name) {
@@ -493,7 +494,7 @@
         })
       },
       openPropertiesDialog() {
-        this.show_pipe_properties_dialog = true
+        this.show_pipe_edit_dialog = true
         this.$store.track('Opened Properties Dialog')
       },
       openScheduleDialog() {
@@ -507,8 +508,8 @@
         _.assign(pipe, attrs)
         this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
 
-        this.saveChanges().then(() => {
-          this.show_pipe_properties_dialog = false
+        this.saveChanges().finally(() => {
+          this.show_pipe_edit_dialog = false
         })
       },
       saveSchedule(attrs) {

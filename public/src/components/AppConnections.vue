@@ -11,10 +11,7 @@
     <div class="flex-fill flex flex-row" v-if="connections.length > 0">
       <template v-if="has_connection">
         <!-- list -->
-        <div
-          class="flex flex-column min-w5 br b--black-05"
-          :class="mode == 'edit' ? 'o-40 no-pointer-events': ''"
-        >
+        <div class="flex flex-column min-w5 br b--black-05">
           <!-- control bar -->
           <div class="flex-none ph3 pv2 relative bg-white bb b--black-05">
             <div class="flex flex-row">
@@ -26,7 +23,7 @@
                   size="small"
                   type="primary"
                   class="ttu fw6"
-                  @click="show_connection_new_dialog = true"
+                  @click="onNewConnection"
                 >
                   New
                 </el-button>
@@ -53,14 +50,11 @@
         </div>
 
         <!-- content area -->
-        <div
-          class="flex-fill flex flex-column pa3"
-          v-if="mode == 'static'"
-        >
+        <div class="flex-fill flex flex-column pa3">
           <ConnectionStaticPanel
             class="flex-none"
             :connection="connection"
-            @edit-click="mode = 'edit'"
+            @edit-click="onEditConnection"
           />
           <div class="flex-fill mt3 pt3 bt b--black-05"
             v-if="is_keyring_connection"
@@ -75,21 +69,6 @@
             v-if="is_storage_connection"
           />
         </div>
-        <div
-          class="flex-fill overflow-y-auto"
-          v-else-if="mode == 'edit'"
-        >
-          <ConnectionEditPanel
-            class="center w-100 pa3"
-            style="max-width: 60rem"
-            mode="edit"
-            :show-title="false"
-            :show-steps="false"
-            :connection="connection"
-            @cancel="cancelChanges"
-            @submit="tryUpdateConnection"
-          />
-        </div>
       </template>
 
       <!-- connection not found -->
@@ -100,20 +79,23 @@
       <span slot="text">No connections to show</span>
     </EmptyItem>
 
-    <!-- connection create dialog -->
+    <!-- connection dialog -->
     <el-dialog
       custom-class="el-dialog--no-header el-dialog--no-footer"
-      width="51rem"
+      width="46rem"
       top="4vh"
       :modal-append-to-body="false"
       :close-on-click-modal="false"
-      :visible.sync="show_connection_new_dialog"
+      :visible.sync="show_connection_dialog"
     >
       <ConnectionEditPanel
-        @close="show_connection_new_dialog = false"
-        @cancel="show_connection_new_dialog = false"
+        :mode="edit_mode"
+        :show-steps="edit_mode == 'edit' ? false : true"
+        :connection="edit_mode == 'edit' ? connection : undefined"
+        @close="cancelChanges"
+        @cancel="cancelChanges"
         @submit="tryUpdateConnection"
-        v-if="show_connection_new_dialog"
+        v-if="show_connection_dialog"
       />
     </el-dialog>
   </div>
@@ -163,11 +145,11 @@
     },
     data() {
       return {
-        mode: 'static',
         is_selecting: false,
         connection: {},
         last_selected: {},
-        show_connection_new_dialog: false
+        edit_mode: 'add',
+        show_connection_dialog: false
       }
     },
     computed: {
@@ -255,8 +237,7 @@
           }
 
           this.selectConnection(connection)
-          this.show_connection_new_dialog = false
-          this.mode = 'static'
+          this.show_connection_dialog = false
         }).catch(error => {
           this.$message({
             message: is_pending ? 'There was a problem creating the connection.' : 'There was a problem updating the connection.',
@@ -331,9 +312,17 @@
           this.$nextTick(() => { this.is_selecting = false })
         }
       },
+      onNewConnection() {
+        this.edit_mode = 'add'
+        this.show_connection_dialog = true
+      },
+      onEditConnection() {
+        this.edit_mode = 'edit'
+        this.show_connection_dialog = true
+      },
       cancelChanges(item) {
+        this.show_connection_dialog = false
         this.connection = _.cloneDeep(this.last_selected)
-        this.mode = 'static'
       },
       saveChanges(item) {
         this.tryUpdateConnection(item)
