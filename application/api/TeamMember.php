@@ -64,7 +64,18 @@ class TeamMember
             if (\Flexio\Base\Email::isValid($member_param) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
-            // TODO: add the user
+            // TODO: following user addition is simply to get things going; need
+            // invite emails, etc
+
+            // set the new user info
+            $new_user_info = $validated_post_params;
+            $new_user_info['eid_status'] = \Model::STATUS_PENDING;
+            $new_user_info['username'] = \Flexio\Base\Util::generateHandle();
+            $new_user_info['email'] = $member_param;
+
+            // create the user
+            $user = \Flexio\Object\User::create($new_user_info);
+            $member_user_eid = $user->getEid();
         }
 
         // if for whatever reason, we still don't have a valid member, throw an exception
