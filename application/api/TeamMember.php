@@ -121,9 +121,12 @@ class TeamMember
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // remove the team member
-        \Flexio\System\System::getModel()->teammember->delete($member_user_eid, $owner_user_eid);
+        $result = \Flexio\System\System::getModel()->teammember->delete($member_user_eid, $owner_user_eid);
+        if ($result === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
-        // TODO: get the result of deleting
+        // TODO: what should we return? normally we have an object; but in this
+        // case we only deleted a relationship
         $result = array();
         $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
