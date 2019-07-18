@@ -27,17 +27,6 @@
         />
       </el-form-item>
 
-      <el-form-item
-        key="short_description"
-        prop="short_description"
-        label="Short description"
-      >
-        <el-input
-          placeholder="Enter short description"
-          v-model="edit_pipe.short_description"
-        />
-      </el-form-item>
-
       <div>
         <label class="el-form-item__label">Description</label>
         <CodeEditor
@@ -51,6 +40,14 @@
           }"
           v-model="edit_pipe.description"
         />
+      </div>
+
+      <div class="mt3" style="width: 300px">
+        <label class="el-form-item__label">Preview</label>
+        <div class="pa3 bg-white ba b--black-10 br2">
+          <div class="code f7 b" v-html="spreadsheet_command_syntax"></div>
+          <p class="mb0 f6" v-if="pdesc.length > 0">{{pdesc}}</p>
+        </div>
       </div>
     </el-form>
 
@@ -75,6 +72,7 @@
 
 <script>
   import randomstring from 'randomstring'
+  import { getJsDocObject, getSpreadsheetSyntaxStr } from '../utils/pipe'
   import { OBJECT_TYPE_PIPE } from '../constants/object-type'
   import CodeEditor from '@comp/CodeEditor'
   import MixinValidation from '@comp/mixins/validation'
@@ -149,7 +147,7 @@
         description_placeholder: `Example:
 
 /**
- * Description text goes here
+ * Add two numbers
  * @customfunction
  * @param {number} first First number
  * @param {number} second Second number
@@ -167,6 +165,13 @@
         }
 
         return this.mode == 'edit' ? `Edit "${this.pname}" Pipe` : 'New Pipe'
+      },
+      pdesc() {
+        var jsdoc_obj = getJsDocObject(this.edit_pipe)
+        return _.get(jsdoc_obj, 'description', '')
+      },
+      spreadsheet_command_syntax() {
+        return getSpreadsheetSyntaxStr(this.edit_pipe, true)
       },
       submit_label() {
         return this.mode == 'edit' ? 'Save changes' : 'Create pipe'
