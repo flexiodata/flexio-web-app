@@ -106,7 +106,7 @@
   import PipeEditPanel from '@comp/PipeEditPanel'
   import PageNotFound from '@comp/PageNotFound'
 
-  const DEPLOY_MODE_RUN       = 'R'
+  const DEPLOY_MODE_RUN = 'R'
 
   export default {
     metaInfo() {
@@ -169,23 +169,6 @@
       ...mapGetters([
         'getAllPipes'
       ]),
-      openPipe(eid) {
-        // TODO: this component shouldn't have anything to do with the route or store state
-        var ru = this.routed_user
-        var user_identifier = ru && ru.length > 0 ? ru : null
-        var identifier = eid
-        this.$router.push({ name: ROUTE_APP_PIPES, params: { user_identifier, identifier } })
-      },
-      duplicatePipe(item) {
-        var attrs = {
-          copy_eid: item.eid,
-          short_description: item.short_description
-        }
-
-        this.$store.dispatch('v2_action_createPipe', { attrs }).catch(error => {
-          // TODO: add error handling?
-        })
-      },
       tryFetchPipes() {
         if (!this.is_fetched && !this.is_fetching) {
           this.$store.dispatch('v2_action_fetchPipes', {}).catch(error => {
@@ -222,7 +205,7 @@
 
           var analytics_payload = _.pick(pipe, ['eid', 'name', 'short_description', 'description', 'created'])
           this.$store.track('Created Pipe', analytics_payload)
-          this.openPipe(pipe.eid)
+          this.selectPipe(pipe)
           this.show_pipe_dialog = false
         }).catch(error => {
           this.$store.track('Created Pipe (Error)')
@@ -288,6 +271,7 @@
           var identifier = name.length > 0 ? name : _.get(pipe, 'eid', '')
 
           var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
+          _.set(new_route, 'params.user_identifier', this.routed_user)
           _.set(new_route, 'params.identifier', identifier)
           this.$router[!this.route_identifier?'replace':'push'](new_route)
 

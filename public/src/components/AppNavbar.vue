@@ -5,8 +5,8 @@
         <router-link to="/pipes" class="mr3 dib link v-mid min-w3 hint--bottom" aria-label="Home">
           <img src="../assets/logo-flexio-navbar.png" class="dib" alt="Flex.io">
         </router-link>
-        <router-link to="/pipes" class="fw6 f6 ttu link nav-link" style="margin: 0 12px">Pipes</router-link>
-        <router-link to="/connections" class="fw6 f6 ttu link nav-link" style="margin: 0 12px">Connections</router-link>
+        <router-link :to="pipe_route" class="fw6 f6 ttu link nav-link" style="margin: 0 12px">Pipes</router-link>
+        <router-link :to="connection_route" class="fw6 f6 ttu link nav-link" style="margin: 0 12px">Connections</router-link>
       </div>
       <div class="flex-none">
         <div v-if="user_fetching"></div>
@@ -26,6 +26,7 @@
 
 <script>
   import { mapState } from 'vuex'
+  import { ROUTE_APP_PIPES, ROUTE_APP_CONNECTIONS } from '../constants/route'
   import UserDropdown from '@comp/UserDropdown'
 
   export default {
@@ -35,8 +36,15 @@
     computed: {
       ...mapState([
         'active_user_eid',
+        'routed_user',
         'user_fetching'
       ]),
+      pipe_route() {
+        return { name: ROUTE_APP_PIPES, params: { user_identifier: this.routed_user } }
+      },
+      connection_route() {
+        return { name: ROUTE_APP_CONNECTIONS, params: { user_identifier: this.routed_user } }
+      },
       is_logged_in() {
         return this.active_user_eid.length > 0
       }

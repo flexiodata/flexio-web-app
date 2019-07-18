@@ -303,6 +303,7 @@
           var identifier = name.length > 0 ? name : _.get(conn, 'eid', '')
 
           var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
+          _.set(new_route, 'params.user_identifier', this.routed_user)
           _.set(new_route, 'params.identifier', identifier)
           this.$router[!this.route_identifier?'replace':'push'](new_route)
 
