@@ -21,12 +21,7 @@
             Add Member
           </el-button>
         </div>
-        <table class="el-table w-100">
-          <thead>
-            <tr>
-              <th>Name</th>
-            </tr>
-          </thead>
+        <table class="el-table w-100 mv4">
           <tbody>
             <tr
               :key="member.eid"
@@ -34,13 +29,13 @@
             >
               <td class="w-100">
                 <div class="flex flex-row items-center">
-                  <img :src="getGravatarUrl(member)" class="br-100"/>
-                  <div class="ml2" v-if="hasFullName(member)">
-                    <div class="fw6">{{member.first_name}} {{member.last_name}}</div>
-                    <div class="mt1 black-40">{{member.email}}</div>
+                  <img :src="getGravatarUrl(member)" class="br-100 mr3"/>
+                  <div v-if="hasFullName(member)">
+                    <div class="fw6 body-color">{{member.first_name}} {{member.last_name}}</div>
+                    <div class="mt1 black-50">{{member.email}}</div>
                   </div>
-                  <div class="ml2" v-else>
-                    <div class="fw6">{{member.email}}</div>
+                  <div v-else>
+                    <div class="fw6 body-color">{{member.email}}</div>
                   </div>
                 </div>
               </td>
@@ -61,7 +56,7 @@
     </div>
 
     <el-dialog
-      width="46rem"
+      width="42rem"
       top="4vh"
       title="Add Team Members"
       :modal-append-to-body="false"
