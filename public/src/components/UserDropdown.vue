@@ -23,18 +23,12 @@
 </template>
 
 <script>
-  import {
-    ROUTE_APP_ACCOUNT,
-    ROUTE_APP_PIPES,
-    ROUTE_SIGNIN_PAGE
-  } from '../constants/route'
+  import { ROUTE_APP_ACCOUNT, ROUTE_SIGNIN_PAGE } from '../constants/route'
   import { HOSTNAME } from '../constants/common'
   import { mapGetters } from 'vuex'
   import FreeTrialNotice from '@comp/FreeTrialNotice'
-  import MixinConfig from '@comp/mixins/config'
 
   export default {
-    mixins: [MixinConfig],
     components: {
       FreeTrialNotice
     },

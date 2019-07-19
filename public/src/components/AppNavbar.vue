@@ -1,13 +1,14 @@
 <template>
   <nav>
-    <div class="flex flex-row items-center bg-white pv1 ph2 ph3-ns" style="min-height: 50px">
+    <div class="flex flex-row items-center bg-white pv1 ph2 ph3-ns" style="min-height: 60px">
       <div class="flex-fill flex flex-row items-center" style="letter-spacing: 0.03em">
         <router-link to="/pipes" class="mr3 dib link v-mid min-w3 hint--bottom" aria-label="Home">
           <img src="../assets/logo-flexio-navbar.png" class="dib" alt="Flex.io">
         </router-link>
-        <router-link :to="pipe_route" class="fw6 f6 ttu link nav-link" style="margin: 0 12px">Pipes</router-link>
-        <router-link :to="connection_route" class="fw6 f6 ttu link nav-link" style="margin: 0 12px">Connections</router-link>
-        <router-link :to="member_route" class="fw6 f6 ttu link nav-link" style="margin: 0 12px">Members</router-link>
+        <TeamDropdown />
+        <router-link :to="pipe_route" class="fw6 f6 ttu link nav-link">Pipes</router-link>
+        <router-link :to="connection_route" class="fw6 f6 ttu link nav-link">Connections</router-link>
+        <router-link :to="member_route" class="fw6 f6 ttu link nav-link">Members</router-link>
       </div>
       <div class="flex-none">
         <div v-if="user_fetching"></div>
@@ -32,10 +33,12 @@
     ROUTE_APP_CONNECTIONS,
     ROUTE_APP_MEMBERS
   } from '../constants/route'
+  import TeamDropdown from '@comp/TeamDropdown'
   import UserDropdown from '@comp/UserDropdown'
 
   export default {
     components: {
+      TeamDropdown,
       UserDropdown
     },
     computed: {
@@ -64,6 +67,7 @@
   @import '../stylesheets/variables.styl'
 
   .nav-link
+    margin: 0 0 0 1rem
     padding-top: 4px
     padding-bottom: 2px
     border-bottom: 2px solid transparent

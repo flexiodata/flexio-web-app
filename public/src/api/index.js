@@ -32,11 +32,14 @@ export default {
   v2_disconnectConnection: function(team_name, object_name, attrs) { return AxiosResource(team_name)[V2_POS] (`/connections/${object_name}/disconnect`, attrs) },
 
   // members
-  v2_fetchMembers:           function(team_name)                     { return AxiosResource(team_name)[V2_GET] (`/members`)                                    },
-  v2_fetchMember:            function(team_name, object_name)        { return AxiosResource(team_name)[V2_GET] (`/members/${object_name}`)                     },
-  v2_createMember:           function(team_name, attrs)              { return AxiosResource(team_name)[V2_POS] (`/members`, attrs)                             },
-  v2_updateMember:           function(team_name, object_name, attrs) { return AxiosResource(team_name)[V2_POS] (`/members/${object_name}`, attrs)              },
-  v2_deleteMember:           function(team_name, object_name)        { return AxiosResource(team_name)[V2_DEL] (`/members/${object_name}`)                     },
+  v2_fetchMembers:         function(team_name)                     { return AxiosResource(team_name)[V2_GET] (`/members`)                                      },
+  v2_fetchMember:          function(team_name, object_name)        { return AxiosResource(team_name)[V2_GET] (`/members/${object_name}`)                       },
+  v2_createMember:         function(team_name, attrs)              { return AxiosResource(team_name)[V2_POS] (`/members`, attrs)                               },
+  v2_updateMember:         function(team_name, object_name, attrs) { return AxiosResource(team_name)[V2_POS] (`/members/${object_name}`, attrs)                },
+  v2_deleteMember:         function(team_name, object_name)        { return AxiosResource(team_name)[V2_DEL] (`/members/${object_name}`)                       },
+
+  // teams
+  v2_fetchTeams:           function(team_name)                     { return AxiosResource(team_name)[V2_GET] (`/teams`)                                        },
 
   // pipes
   v2_fetchPipes:           function(team_name)                     { return AxiosResource(team_name)[V2_GET] (`/pipes`)                                        },
@@ -59,16 +62,11 @@ export default {
 
   // vfs
   v2_vfsListFiles:         function(team_name, path)               { return AxiosResource(team_name)[V2_GET] (`/vfs/list`, { q: path })                        },
-//v2_vfsGetFile:           function(team_name, path)               { return AxiosResource(team_name)[V2_GET] (TODO)                                            },
-//v2_vfsPutFile:           function(team_name, path)               { return AxiosResource(team_name)[V2_PUT] (TODO)                                            },
-//v2_vfsCreateDirectory:   function(team_name, path)               { return AxiosResource(team_name)[V2_PUT] (TODO)                                            },
 
   // validation
   v2_validate:             function(team_name, attrs)              { return AxiosResource(team_name)[V2_POS] (`/validate`, attrs)                              },
 
   // auth
-//v2_signUp:               function(attrs)                         { return AxiosResource(null)[V2_POS] (`/signup`)                                            },
-//v2_login:                function(attrs)                         { return AxiosResource(null)[V2_POS] (`/login`)                                             },
   v2_logout:               function()                              { return AxiosResource(null)[V2_POS] (`/logout`)                                            },
   v2_resetPassword:        function(attrs)                         { return AxiosResource(null)[V2_POS] (`/resetpassword`, attrs)                              },
 
