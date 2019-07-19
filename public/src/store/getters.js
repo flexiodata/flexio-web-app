@@ -12,6 +12,11 @@ export const getAllUsers = state => {
   return _.filter(state.objects, { eid_type: OBJECT_TYPE_USER })
 }
 
+// TODO: there's gotta be some way to differentiate a user from a team
+export const getAllTeams = state => {
+  return getAllUsers(state)
+}
+
 export const getAllMembers = state => {
   return _.filter(getAllUsers(state), user => _.get(user, 'member_of.eid', '').length > 0)
 }

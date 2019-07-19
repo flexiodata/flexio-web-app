@@ -44,8 +44,7 @@
   export default {
     data() {
       return {
-        is_dropdown_open: false,
-        teams: []
+        is_dropdown_open: false
       }
     },
     computed: {
@@ -54,6 +53,9 @@
         'is_fetched': 'teams_fetched',
         'active_team_name': 'active_team_name'
       }),
+      teams() {
+        return this.getAllTeams()
+      },
       active_username() {
         return _.get(this.getActiveUser(), 'username', '')
       },
@@ -67,7 +69,8 @@
     methods: {
       ...mapGetters([
         'getActiveUser',
-        'getActiveTeamLabel'
+        'getActiveTeamLabel',
+        'getAllTeams'
       ]),
       tryFetchTeams() {
         if (!this.is_fetched && !this.is_fetching) {
