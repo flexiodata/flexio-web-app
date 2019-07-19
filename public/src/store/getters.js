@@ -12,6 +12,10 @@ export const getAllUsers = state => {
   return _.filter(state.objects, { eid_type: OBJECT_TYPE_USER })
 }
 
+export const getAllMembers = state => {
+  return _.filter(getAllUsers(state), user => _.get(user, 'member_of.eid', '').length > 0)
+}
+
 export const getAllPipes = state => {
   // NOTE: it's really important to include the '_' on the same line
   // as the 'return', otherwise JS will return without doing anything
