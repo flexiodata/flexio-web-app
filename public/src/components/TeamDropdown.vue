@@ -1,9 +1,15 @@
 <template>
-  <el-dropdown trigger="click">
-    <span class="el-dropdown-link pointer f5 fw6">
+  <el-dropdown
+    trigger="click"
+    @visible-change="onVisibleChange"
+  >
+    <span
+      class="el-dropdown-link pointer f5 fw6"
+      :class="is_dropdown_open ? 'is-open' : ''"
+    >
       <div class="flex flex-row items-center">
         <span>{{active_team_label}}</span>
-        <i class="material-icons black-30">expand_more</i>
+        <i class="material-icons black-30 expand-arrow">expand_more</i>
       </div>
     </span>
     <el-dropdown-menu style="min-width: 12rem" slot="dropdown">
@@ -37,6 +43,7 @@
   export default {
     data() {
       return {
+        is_dropdown_open: false,
         teams: []
       }
     },
@@ -68,6 +75,9 @@
       },
       isActiveTeam(team) {
         return team.username == this.active_team_name
+      },
+      onVisibleChange(is_open) {
+        this.is_dropdown_open = is_open
       }
     }
   }
@@ -78,4 +88,13 @@
 
   .el-dropdown-link
     color: $body-color
+    .expand-arrow
+      -webkit-transform: rotate(-90deg)
+      transform: rotate(-90deg)
+      transition: transform .25s ease
+    &.is-open
+    &:hover
+      .expand-arrow
+        -webkit-transform: rotate(0)
+        transform: rotate(0)
 </style>
