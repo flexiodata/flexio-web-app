@@ -58,7 +58,7 @@ class Base
 
         // see if the input user is a member of the owner team and if
         // so, if the requested action is in the list of rights
-        $rights = $this->getModel()->teammember->getRights($this->getOwner(), $user_eid);
+        $rights = $this->getModel()->teammember->getRights($user_eid, $this->getOwner());
         if ($rights)
         {
             // TODO: for now, if the user is a team member, grant all rights
