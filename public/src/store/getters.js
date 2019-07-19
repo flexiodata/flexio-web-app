@@ -93,8 +93,12 @@ export const getActiveUser = state => {
   return _.find(getAllUsers(state), { eid: state.active_user_eid })
 }
 
+export const getActiveTeam = state => {
+  return _.find(getAllUsers(state), { username: state.active_team_name })
+}
+
 export const getActiveTeamLabel = state => {
-  var user = getActiveUser(state)
+  var user = getActiveTeam(state)
   var first_name = _.get(user, 'first_name', '')
   var last_name = _.get(user, 'last_name', '')
   return `${first_name} ${last_name}` + "'s team"

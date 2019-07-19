@@ -13,6 +13,8 @@ export default () => {
     connections_fetching: false,
     members_fetched: false,
     members_fetching: false,
+    teams_fetched: false,
+    teams_fetching: false,
     tokens_fetched: false,
     tokens_fetching: false,
     processes_fetched: false,

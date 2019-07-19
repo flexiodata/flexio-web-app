@@ -49,26 +49,33 @@
       }
     },
     computed: {
-      ...mapState([
-        'active_team_name'
-      ]),
-      username() {
+      ...mapState({
+        'is_fetching': 'teams_fetching',
+        'is_fetched': 'teams_fetched',
+        'active_team_name': 'active_team_name'
+      }),
+      active_username() {
         return _.get(this.getActiveUser(), 'username', '')
       },
       active_team_label() {
-        var user = this.getActiveUser()
-        return this.getFullTeamName(user)
+        return this.getActiveTeamLabel()
       }
     },
     created() {
-      api.v2_fetchTeams(this.username).then(response => {
-        this.teams = response.data
-      })
+      this.tryFetchTeams()
     },
     methods: {
       ...mapGetters([
-        'getActiveUser'
+        'getActiveUser',
+        'getActiveTeamLabel'
       ]),
+      tryFetchTeams() {
+        if (!this.is_fetched && !this.is_fetching) {
+          this.$store.dispatch('v2_action_fetchTeams', { team_name: this.active_username }).catch(error => {
+            // TODO: add error handling?
+          })
+        }
+      },
       getFullTeamName(team) {
         var first_name = _.get(team, 'first_name', '')
         var last_name = _.get(team, 'last_name', '')
