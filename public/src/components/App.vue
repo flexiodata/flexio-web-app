@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="flex flex-column fixed absolute--fill overflow-hidden">
-    <AppNavbar v-if="show_intercom_button && show_navbar" />
+    <AppNavbar v-if="show_intercom_button && is_logged_in && !is_404" />
     <router-view class="flex-fill bt b--black-05"></router-view>
     <el-button
       type="primary"
@@ -8,7 +8,7 @@
       id="open-intercom-inbox"
       class="fixed bottom-0 right-0"
       style="z-index: 2147482000; padding: 12px; margin: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.4)"
-      v-if="show_intercom_button"
+      v-if="show_intercom_button && !is_404"
     ><i class="material-icons md-24 relative" style="top: 1px">chat</i>
     </el-button>
   </div>
@@ -48,13 +48,13 @@
         'active_user_eid'
       ]),
       route_name() {
-        return _.get(this.$route, 'name', '')
+        return _.get(this.$route, 'name')
+      },
+      is_404() {
+        return !this.route_name
       },
       is_logged_in() {
         return this.active_user_eid.length > 0
-      },
-      show_navbar() {
-        return this.is_logged_in
       },
       show_intercom_button() {
         switch (this.route_name) {
@@ -63,10 +63,6 @@
           case ROUTE_FORGOTPASSWORD_PAGE:
           case ROUTE_RESETPASSWORD_PAGE:
             return false
-
-          // 404
-          case null:
-            return true
         }
 
         return true
