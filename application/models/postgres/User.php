@@ -29,11 +29,11 @@ class User extends ModelBase
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid_status'         => array('type' => 'string',     'required' => false, 'default' => \Model::STATUS_AVAILABLE),
-                'username'           => array('type' => 'identifier', 'required' => true),
+                'username'           => array('type' => 'identifier', 'required' => false),
                 'full_name'          => array('type' => 'string',     'required' => false, 'default' => ''),
                 'first_name'         => array('type' => 'string',     'required' => false, 'default' => ''),
                 'last_name'          => array('type' => 'string',     'required' => false, 'default' => ''),
-                'email'              => array('type' => 'email',      'required' => true),
+                'email'              => array('type' => 'email',      'required' => false),
                 'phone'              => array('type' => 'string',     'required' => false, 'default' => ''),
                 'location_city'      => array('type' => 'string',     'required' => false, 'default' => ''),
                 'location_state'     => array('type' => 'string',     'required' => false, 'default' => ''),
@@ -61,6 +61,10 @@ class User extends ModelBase
         if (\Model::isValidStatus($user_arr['eid_status']) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
+        // supply default empty strings for username and email if they're not specified
+        $user_arr['username'] = $user_arr['username'] ?? '';
+        $user_arr['email'] = $user_arr['email'] ?? '';
+
         // if a password is supplied, encrypt it; otherwise write out an empty string
         if (isset($user_arr['password']))
             $user_arr['password'] = self::encodePassword($user_arr['password']);
@@ -70,13 +74,6 @@ class User extends ModelBase
         $db = $this->getDatabase();
         try
         {
-            // make sure the user doesn't already exist, based on username and email
-            $qusername = $db->quote($user_arr['username']);
-            $qemail = $db->quote($user_arr['email']);
-            $existing_item = $db->fetchOne("select eid from tbl_user where username = $qusername or email = $qemail");
-            if ($existing_item !== false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-
             $eid = $this->getModel()->createObjectBase(\Model::TYPE_USER, $user_arr);
             $timestamp = \Flexio\System\System::getTimestamp();
 
