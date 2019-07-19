@@ -45,6 +45,7 @@
                   type="danger"
                   size="small"
                   @click="removeMember(member)"
+                  v-show="!isOwner(member)"
                 >
                   Remove
                 </el-button>
@@ -156,12 +157,6 @@
       ...mapGetters([
         'getAllMembers'
       ]),
-      getGravatarUrl(member) {
-        return 'https://secure.gravatar.com/avatar/' + member.email_hash + '?d=mm&s=40'
-      },
-      hasFullName(member) {
-        return _.get(member, 'first_name', '').length > 0 && _.get(member, 'last_name', '').length > 0
-      },
       tryFetchMembers() {
         if (!this.is_fetched && !this.is_fetching) {
           this.$store.dispatch('v2_action_fetchMembers', { team_name: this.active_team_name }).catch(error => {
@@ -186,6 +181,15 @@
         })
 
         this.show_add_dialog = false
+      },
+      getGravatarUrl(member) {
+        return 'https://secure.gravatar.com/avatar/' + member.email_hash + '?d=mm&s=40'
+      },
+      hasFullName(member) {
+        return _.get(member, 'first_name', '').length > 0 && _.get(member, 'last_name', '').length > 0
+      },
+      isOwner(member) {
+        return _.get(member, 'username') == this.active_team_name
       },
       removeMember(member) {
         var eid = member.eid
