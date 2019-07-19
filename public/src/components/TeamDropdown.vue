@@ -17,12 +17,13 @@
           <i class="material-icons md-18 b mr3" style="color: transparent" v-else>check</i>
           <div class="pr2">{{getFullTeamName(team)}}</div>
         </article>
-        <el-dropdown-item divided></el-dropdown-item>
+        <el-dropdown-item divided v-if="false"></el-dropdown-item>
         <article
           class="el-dropdown-menu__item flex flex-row items-center"
+          v-if="false"
         >
           <i class="material-icons md-18 b mr3">add</i>
-          Create new team
+          <div class="pr2">Create new team</div>
         </article>
       </div>
     </el-dropdown-menu>

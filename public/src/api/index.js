@@ -6,6 +6,14 @@ const V2_PUT = 'put'
 const V2_DEL = 'delete'
 
 export default {
+  // PUBLIC API CALLS:
+
+  // auth
+  v2_logout:               function()                              { return AxiosResource(null)[V2_POS] (`/logout`)                                            },
+  v2_resetPassword:        function(attrs)                         { return AxiosResource(null)[V2_POS] (`/resetpassword`, attrs)                              },
+
+  // AUTHENTICATED API CALLS:
+
   // users
   v2_fetchUser:            function(team_name)                     { return AxiosResource(team_name)[V2_GET] (`/account`)                                      },
   v2_updateUser:           function(team_name, attrs)              { return AxiosResource(team_name)[V2_POS] (`/account`, attrs)                               },
@@ -22,22 +30,6 @@ export default {
   v2_createToken:          function(team_name)                     { return AxiosResource(team_name)[V2_POS] (`/auth/keys`)                                    },
   v2_deleteToken:          function(team_name, object_name)        { return AxiosResource(team_name)[V2_DEL] (`/auth/keys/${object_name}`)                     },
 
-  // connections
-  v2_fetchConnections:     function(team_name)                     { return AxiosResource(team_name)[V2_GET] (`/connections`)                                  },
-  v2_fetchConnection:      function(team_name, object_name)        { return AxiosResource(team_name)[V2_GET] (`/connections/${object_name}`)                   },
-  v2_createConnection:     function(team_name, attrs)              { return AxiosResource(team_name)[V2_POS] (`/connections`, attrs)                           },
-  v2_updateConnection:     function(team_name, object_name, attrs) { return AxiosResource(team_name)[V2_POS] (`/connections/${object_name}`, attrs)            },
-  v2_deleteConnection:     function(team_name, object_name)        { return AxiosResource(team_name)[V2_DEL] (`/connections/${object_name}`)                   },
-  v2_testConnection:       function(team_name, object_name, attrs) { return AxiosResource(team_name)[V2_POS] (`/connections/${object_name}/connect`, attrs)    },
-  v2_disconnectConnection: function(team_name, object_name, attrs) { return AxiosResource(team_name)[V2_POS] (`/connections/${object_name}/disconnect`, attrs) },
-
-  // members
-  v2_fetchMembers:         function(team_name)                     { return AxiosResource(team_name)[V2_GET] (`/members`)                                      },
-  v2_fetchMember:          function(team_name, object_name)        { return AxiosResource(team_name)[V2_GET] (`/members/${object_name}`)                       },
-  v2_createMember:         function(team_name, attrs)              { return AxiosResource(team_name)[V2_POS] (`/members`, attrs)                               },
-  v2_updateMember:         function(team_name, object_name, attrs) { return AxiosResource(team_name)[V2_POS] (`/members/${object_name}`, attrs)                },
-  v2_deleteMember:         function(team_name, object_name)        { return AxiosResource(team_name)[V2_DEL] (`/members/${object_name}`)                       },
-
   // teams
   v2_fetchTeams:           function(team_name)                     { return AxiosResource(team_name)[V2_GET] (`/teams`)                                        },
 
@@ -47,6 +39,22 @@ export default {
   v2_createPipe:           function(team_name, attrs)              { return AxiosResource(team_name)[V2_POS] (`/pipes`, attrs)                                 },
   v2_updatePipe:           function(team_name, object_name, attrs) { return AxiosResource(team_name)[V2_POS] (`/pipes/${object_name}`, attrs)                  },
   v2_deletePipe:           function(team_name, object_name)        { return AxiosResource(team_name)[V2_DEL] (`/pipes/${object_name}`)                         },
+
+  // members
+  v2_fetchMembers:         function(team_name)                     { return AxiosResource(team_name)[V2_GET] (`/members`)                                      },
+  v2_fetchMember:          function(team_name, object_name)        { return AxiosResource(team_name)[V2_GET] (`/members/${object_name}`)                       },
+  v2_createMember:         function(team_name, attrs)              { return AxiosResource(team_name)[V2_POS] (`/members`, attrs)                               },
+  v2_updateMember:         function(team_name, object_name, attrs) { return AxiosResource(team_name)[V2_POS] (`/members/${object_name}`, attrs)                },
+  v2_deleteMember:         function(team_name, object_name)        { return AxiosResource(team_name)[V2_DEL] (`/members/${object_name}`)                       },
+
+  // connections
+  v2_fetchConnections:     function(team_name)                     { return AxiosResource(team_name)[V2_GET] (`/connections`)                                  },
+  v2_fetchConnection:      function(team_name, object_name)        { return AxiosResource(team_name)[V2_GET] (`/connections/${object_name}`)                   },
+  v2_createConnection:     function(team_name, attrs)              { return AxiosResource(team_name)[V2_POS] (`/connections`, attrs)                           },
+  v2_updateConnection:     function(team_name, object_name, attrs) { return AxiosResource(team_name)[V2_POS] (`/connections/${object_name}`, attrs)            },
+  v2_deleteConnection:     function(team_name, object_name)        { return AxiosResource(team_name)[V2_DEL] (`/connections/${object_name}`)                   },
+  v2_testConnection:       function(team_name, object_name, attrs) { return AxiosResource(team_name)[V2_POS] (`/connections/${object_name}/connect`, attrs)    },
+  v2_disconnectConnection: function(team_name, object_name, attrs) { return AxiosResource(team_name)[V2_POS] (`/connections/${object_name}/disconnect`, attrs) },
 
   // processes
   v2_fetchProcesses:       function(team_name, attrs)              { return AxiosResource(team_name)[V2_GET] (`/processes`, attrs)                             },
@@ -66,9 +74,7 @@ export default {
   // validation
   v2_validate:             function(team_name, attrs)              { return AxiosResource(team_name)[V2_POS] (`/validate`, attrs)                              },
 
-  // auth
-  v2_logout:               function()                              { return AxiosResource(null)[V2_POS] (`/logout`)                                            },
-  v2_resetPassword:        function(attrs)                         { return AxiosResource(null)[V2_POS] (`/resetpassword`, attrs)                              },
+  // INTERNAL API CALLS:
 
   // admin
   v2_fetchAdminProcesses:  function(attrs)                         { return AxiosResource('admin')[V2_GET] (`/info/processes`, attrs)                          },
