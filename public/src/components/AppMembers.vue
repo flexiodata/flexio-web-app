@@ -16,6 +16,7 @@
           <el-button
             class="ttu fw6"
             type="primary"
+            @click="show_add_dialog = true"
           >
             Add Member
           </el-button>
@@ -36,7 +37,7 @@
                   <img :src="getGravatarUrl(member)" class="br-100"/>
                   <div class="ml2">
                     <div>{{member.first_name}} {{member.last_name}}</div>
-                    <div class="f6 black-30" style="margin-top: 2px">{{member.email}}</div>
+                    <div class="light-silver" style="margin-top: 3px">{{member.email}}</div>
                   </div>
                 </div>
               </td>
@@ -45,6 +46,66 @@
         </table>
       </div>
     </div>
+
+    <el-dialog
+      width="46rem"
+      top="4vh"
+      title="Add Team Members"
+      :modal-append-to-body="false"
+      :visible.sync="show_add_dialog"
+      @open="onAddDialogOpen"
+      @clos="onAddDialogClose"
+    >
+      <el-form
+        ref="form"
+        class="el-form--cozy el-form__label-tiny"
+        label-position="top"
+        :model="add_dialog_model"
+      >
+        <p class="f5">Enter the email addresses of the people you would like to invite to your team. New team members will get an email with a link to accept the invitation.</p>
+        <el-form-item
+          key="users"
+          prop="users"
+          label="Send invites to the following email addresses"
+        >
+          <el-select
+            ref="email-select"
+            class="w-100"
+            placeholder="Enter email addresses"
+            multiple
+            filterable
+            allow-create
+            default-first-option
+            popper-class="dn"
+            @keydown.native.188="addTag"
+            @keydown.native.tab="addTag"
+            v-model="add_dialog_model.users"
+          >
+            <el-option
+              :label="option.label"
+              :value="option.val"
+              :key="option.val"
+              v-for="option in add_dialog_model.options"
+            />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div class="mt4 w-100 flex flex-row justify-end">
+        <el-button
+          class="ttu fw6"
+          @click="show_add_dialog = false"
+        >
+          Cancel
+        </el-button>
+        <el-button
+          class="ttu fw6"
+          type="primary"
+          @click="onSubmit"
+        >
+          Send Invites
+        </el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -60,6 +121,15 @@
     },
     components: {
       Spinner
+    },
+    data() {
+      return {
+        show_add_dialog: false,
+        add_dialog_model: {
+          users: [],
+          options: []
+        }
+      }
     },
     computed: {
       // mix this into the outer object with the object spread operator
@@ -88,6 +158,26 @@
             // TODO: add error handling?
           })
         }
+      },
+      addTag() {
+        var $select = this.$refs['email-select']
+        var query = _.get($select, '$data.query', '')
+        if (query.length > 0) {
+          this.add_dialog_model.users = this.add_dialog_model.users.concat([query])
+        }
+        this.$nextTick(() => $select.$refs.input.focus())
+      },
+      onAddDialogOpen() {
+        this.$nextTick(() => this.$refs['email-select'].focus())
+      },
+      onAddDialogClose() {
+        this.add_dialog_model = {
+          users: [],
+          options: []
+        }
+      },
+      onSubmit() {
+
       }
     }
   }
