@@ -245,6 +245,32 @@ class TeamMember
         \Flexio\Api\Response::sendContent($result);
     }
 
+    public static function sendinvitation(\Flexio\Api\Request $request) : void
+    {
+        $post_params = $request->getPostParams();
+        $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+        $member_user_eid = $request->getObjectFromUrl();
+
+        $request->track(\Flexio\Api\Action::TYPE_TEAMMEMBER_SENDINVITATION);
+        $request->setRequestParams($post_params);
+
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($post_params, array(
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        $validated_post_params = $validator->getParams();
+
+        // TODO: send invitation
+
+        $result = array();
+        $request->setResponseParams($result);
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        $request->track();
+        \Flexio\Api\Response::sendContent($result);
+    }
+
     private static function getMemberEidFromParam(string $param) // TODO: add return type
     {
         if (\Flexio\System\System::getModel()->user->exists($param))

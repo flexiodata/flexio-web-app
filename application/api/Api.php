@@ -78,6 +78,7 @@ class Api
         'POS /:teamid/members/:teamid'                => '\Flexio\Api\TeamMember::set',
         'GET /:teamid/members/:teamid'                => '\Flexio\Api\TeamMember::get',
         'DEL /:teamid/members/:teamid'                => '\Flexio\Api\TeamMember::delete',
+        'POS /:teamid/members/:teamid/invitations'    => '\Flexio\Api\TeamMember::sendinvitation',
 
         // authorization
         'GET /:teamid/auth/keys'                      => '\Flexio\Api\Token::list',
