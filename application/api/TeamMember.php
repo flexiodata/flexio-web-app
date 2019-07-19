@@ -262,8 +262,37 @@ class TeamMember
 
         $validated_post_params = $validator->getParams();
 
-        // TODO: send invitation
+        // check the rights on the owner; ability to send an invitation is governed
+        // currently by user write privileges, which are the same rights used
+        // when initially inviting/adding the member
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+        $owner_user_info = $owner_user->get();
 
+        // get the requesting user/member info; as a sanity check, make sure they
+        // haven't been deleted; TODO: is this needed for the requesting user?
+        $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
+        if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        $requesting_user_info = $requesting_user->get();
+
+        $member_user = \Flexio\Object\User::load($member_user_eid);
+        if ($member_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        $member_user_info = $member_user->get();
+
+        // send the email
+        $email_params = array(
+            'email'       => $member_user_info['email'] ?? '',
+            'from_name'   => $requesting_user_info['first_name'],
+            'object_name' => $owner_user_info['username'] ?? ''
+        );
+        \Flexio\Api\Message::sendTeamInvitationEmail($email_params);
+
+        // send the response; TODO: what should we send?
         $result = array();
         $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
