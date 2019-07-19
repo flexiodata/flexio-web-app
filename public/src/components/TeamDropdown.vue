@@ -17,6 +17,7 @@
         <article
           class="el-dropdown-menu__item flex flex-row items-center"
           :key="team.eid"
+          @click="changeTeam(team)"
           v-for="team in teams"
         >
           <i class="material-icons md-18 b mr3" v-if="isActiveTeam(team)">check</i>
@@ -75,6 +76,12 @@
       },
       isActiveTeam(team) {
         return team.username == this.active_team_name
+      },
+      changeTeam(team) {
+        if (!this.isActiveTeam(team)) {
+          var team_name = team.username
+          window.location = '/app/' + team_name + '/pipes'
+        }
       },
       onVisibleChange(is_open) {
         this.is_dropdown_open = is_open
