@@ -5,7 +5,7 @@
         <router-link to="/pipes" class="mr3 dib link v-mid min-w3 hint--bottom" aria-label="Home">
           <img src="../assets/logo-flexio-navbar.png" class="dib" alt="Flex.io">
         </router-link>
-        <TeamDropdown />
+        <TeamDropdown class="ml3" />
         <router-link :to="pipe_route" class="fw6 f6 ttu link nav-link">Pipes</router-link>
         <router-link :to="connection_route" class="fw6 f6 ttu link nav-link">Connections</router-link>
         <router-link :to="member_route" class="fw6 f6 ttu link nav-link">Members</router-link>
