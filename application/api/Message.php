@@ -135,7 +135,6 @@ class Message
                 'from_name'   => array('type' => 'string', 'required' => true),
                 'from_email'  => array('type' => 'email',  'required' => true),
                 'object_name' => array('type' => 'string', 'required' => true),
-                'object_eid'  => array('type' => 'eid',    'required' => true),
                 'message'     => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             return false;
@@ -145,9 +144,8 @@ class Message
         $from_name = $validated_params['from_name'];
         $from_email = $validated_params['from_email'];
         $object_name = $validated_params['object_name'];
-        $object_eid = $validated_params['object_eid'];
         $message = $validated_params['message'] ?? '';
-        $share_link = self::getBaseUrl() . "/app/pipe/$object_eid";
+        $share_link = self::getBaseUrl() . "/app/pipe/$object_name";
 
         // get text template from the application res directory
         $msg_text = self::getTextEmail('pipe-share', [
