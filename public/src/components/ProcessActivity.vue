@@ -87,9 +87,6 @@
   import ProcessDetailsPanel from '@comp/ProcessDetailsPanel'
 
   export default {
-    metaInfo: {
-      title: 'Activity'
-    },
     inheritAttrs: false,
     props: {
       items: {
