@@ -85,7 +85,6 @@ class Message
         if (($validator->check($params, array(
                 'email'       => array('type' => 'email',  'required' => true),
                 'from_name'   => array('type' => 'string', 'required' => true),
-                'from_email'  => array('type' => 'email',  'required' => true),
                 'object_name' => array('type' => 'string', 'required' => true),
                 'message'     => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
@@ -94,7 +93,6 @@ class Message
         $validated_params = $validator->getParams();
         $to = $validated_params['email'];
         $from_name = $validated_params['from_name'];
-        $from_email = $validated_params['from_email'];
         $object_name = $validated_params['object_name'];
         $message = $validated_params['message'] ?? '';
         $share_link = self::getBaseUrl() . "/app/$object_name";
@@ -102,7 +100,6 @@ class Message
         // get text template from the application res directory
         $msg_text = self::getTextEmail('project-share', [
             'name' => $from_name,
-            'from_email' => $from_email,
             'message' => (strlen($message) == 0) ? '' : "\n$message\n",
             'object_name' => $object_name,
             'share_link' => $share_link
@@ -111,7 +108,6 @@ class Message
         // get html template from the application res directory
         $msg_html = self::getHtmlEmail('project-share', [
             'name' => $from_name,
-            'from_email' => $from_email,
             'message' => (strlen($message) == 0) ? '' : "$message<br>",
             'object_name' => $object_name,
             'share_link' => $share_link
@@ -133,7 +129,6 @@ class Message
         if (($validator->check($params, array(
                 'email'       => array('type' => 'email',  'required' => true),
                 'from_name'   => array('type' => 'string', 'required' => true),
-                'from_email'  => array('type' => 'email',  'required' => true),
                 'object_name' => array('type' => 'string', 'required' => true),
                 'message'     => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
@@ -142,7 +137,6 @@ class Message
         $validated_params = $validator->getParams();
         $to = $validated_params['email'];
         $from_name = $validated_params['from_name'];
-        $from_email = $validated_params['from_email'];
         $object_name = $validated_params['object_name'];
         $message = $validated_params['message'] ?? '';
         $share_link = self::getBaseUrl() . "/app/pipe/$object_name";
@@ -150,7 +144,6 @@ class Message
         // get text template from the application res directory
         $msg_text = self::getTextEmail('pipe-share', [
             'name' => $from_name,
-            'from_email' => $from_email,
             'message' => (strlen($message) == 0) ? '' : "\n$message\n",
             'object_name' => $object_name,
             'share_link' => $share_link
@@ -159,7 +152,6 @@ class Message
         // get html template from the application res directory
         $msg_html = self::getHtmlEmail('pipe-share', [
             'name' => $from_name,
-            'from_email' => $from_email,
             'message' => (strlen($message) == 0) ? '' : "$message<br>",
             'object_name' => $object_name,
             'share_link' => $share_link
