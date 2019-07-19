@@ -18,63 +18,7 @@ namespace Flexio\Api;
 
 class Message
 {
-    public const TYPE_EMAIL_WELCOME             = 'email_welcome';
-    public const TYPE_EMAIL_RESET_PASSWORD      = 'email_reset_password';
-    public const TYPE_EMAIL_SHARE_PIPE          = 'email_share_pipe';
-
-    protected $messge_type;
-    protected $message_params;
-
-    public function __construct()
-    {
-        $this->initialize();
-    }
-
-    public static function create(string $type, array $params) : \Flexio\Api\Message
-    {
-        switch ($type)
-        {
-            default:
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-
-            case self::TYPE_EMAIL_WELCOME:
-            case self::TYPE_EMAIL_RESET_PASSWORD:
-            case self::TYPE_EMAIL_SHARE_PIPE:
-                break;
-        }
-
-        $object = (new self);
-        $object->message_type = $type;
-        $object->message_params = $params;
-
-        return $object;
-    }
-
-    public function send() : bool
-    {
-        switch ($this->message_type)
-        {
-            default:
-                return false;
-
-            case self::TYPE_EMAIL_WELCOME:
-                return self::createWelcomeEmail($this->message_params);
-
-            case self::TYPE_EMAIL_RESET_PASSWORD:
-                return self::createResetPasswordEmail($this->message_params);
-
-            case self::TYPE_EMAIL_SHARE_PIPE:
-                return self::createSharePipeEmail($this->message_params);
-        }
-    }
-
-    private function initialize() : void
-    {
-        $this->message_type = false;
-        $this->message_params = false;
-    }
-
-    private static function createWelcomeEmail(array $params) : bool
+    public static function sendWelcomeEmail(array $params) : bool
     {
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
@@ -104,7 +48,7 @@ class Message
         return $email->send();
     }
 
-    private static function createResetPasswordEmail(array $params) : bool
+    public static function sendResetPasswordEmail(array $params) : bool
     {
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
@@ -135,7 +79,7 @@ class Message
         return $email->send();
     }
 
-    private static function createSharePipeEmail(array $params) : bool
+    public static function sendSharePipeEmail(array $params) : bool
     {
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
