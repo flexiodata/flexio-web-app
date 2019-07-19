@@ -78,7 +78,6 @@
             default-first-option
             popper-class="dn"
             @keydown.native.188="addTag"
-            @keydown.native.tab="addTag"
             v-model="add_dialog_model.users"
           >
             <el-option
@@ -177,7 +176,21 @@
         }
       },
       onSubmit() {
+        var timeout = 1
 
+        _.forEach(this.add_dialog_model.users, user => {
+          setTimeout(() => {
+            var attrs = { member: user }
+
+            this.$store.dispatch('v2_action_createMember', { team_name: this.active_team_name, attrs }).catch(error => {
+              // TODO: add error handling?
+            })
+          }, timeout)
+
+          timeout += 25
+        })
+
+        this.show_add_dialog = false
       }
     }
   }
