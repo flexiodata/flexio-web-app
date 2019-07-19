@@ -288,6 +288,7 @@ class TeamMember
         $email_params = array(
             'email'       => $member_user_info['email'] ?? '',
             'from_name'   => $requesting_user_info['first_name'],
+            'from_email'   => $requesting_user_info['email'],
             'object_name' => $owner_user_info['username'] ?? ''
         );
         \Flexio\Api\Message::sendTeamInvitationEmail($email_params);
