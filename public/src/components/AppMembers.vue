@@ -40,15 +40,23 @@
                 </div>
               </td>
               <td>
-                <el-button
-                  class="ttu fw6"
-                  type="danger"
-                  size="small"
-                  @click="removeMember(member)"
+                <ConfirmPopover
+                  placement="bottom-end"
+                  title="Confirm remove?"
+                  message="Are you sure you want to remove this member?"
+                  confirm-button-text="Remove"
+                  @confirm-click="removeMember(member)"
                   v-show="!isOwner(member)"
                 >
-                  Remove
-                </el-button>
+                  <el-button
+                    slot="reference"
+                    class="ttu fw6"
+                    type="danger"
+                    size="small"
+                  >
+                    Remove
+                  </el-button>
+                </ConfirmPopover>
               </td>
             </tr>
           </tbody>
@@ -87,6 +95,8 @@
             default-first-option
             popper-class="dn"
             @keydown.native.188="addUserTag"
+            @keydown.native.tab="addUserTag"
+            @keydown.native.space="addUserTag"
             v-model="add_dialog_model.users"
           >
             <el-option
@@ -120,6 +130,7 @@
 <script>
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
+  import ConfirmPopover from '@comp/ConfirmPopover'
 
   export default {
     metaInfo() {
@@ -128,7 +139,8 @@
       }
     },
     components: {
-      Spinner
+      Spinner,
+      ConfirmPopover
     },
     data() {
       return {
@@ -165,7 +177,7 @@
         }
       },
       sendInvites() {
-        var timeout = 1
+        var timeout = 10
 
         // quick hack to allow multiple users to be added until the API supports it
         _.forEach(this.add_dialog_model.users, user => {
@@ -177,7 +189,7 @@
             })
           }, timeout)
 
-          timeout += 25
+          timeout += 40
         })
 
         this.show_add_dialog = false
