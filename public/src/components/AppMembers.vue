@@ -10,7 +10,7 @@
   <div class="flex flex-column bg-nearer-white" v-else-if="is_fetched">
     <div>
       <div class="h3"></div>
-      <div class="center mw-doc pa4 bg-white br2 css-white-box">
+      <div class="center mw-doc pa4 bg-white br2 css-white-box" style="min-height: 20rem">
         <div class="flex flex-row items-start">
           <h3 class="flex-fill mt0 fw6 f3">Team Members</h3>
           <el-button
@@ -21,7 +21,7 @@
             Add Member
           </el-button>
         </div>
-        <table class="el-table w-100 mv4">
+        <table class="el-table w-100 mv3">
           <tbody>
             <tr
               :key="member.eid"
@@ -63,7 +63,7 @@
       :modal-append-to-body="false"
       :visible.sync="show_add_dialog"
       @open="onAddDialogOpen"
-      @clos="onAddDialogClose"
+      @close="onAddDialogClose"
     >
       <el-form
         ref="form"
