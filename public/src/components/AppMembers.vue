@@ -35,9 +35,12 @@
               <td>
                 <div class="flex flex-row items-center">
                   <img :src="getGravatarUrl(member)" class="br-100"/>
-                  <div class="ml2">
-                    <div>{{member.first_name}} {{member.last_name}}</div>
-                    <div class="light-silver" style="margin-top: 3px">{{member.email}}</div>
+                  <div class="ml2" v-if="hasFullName(member)">
+                    <div class="fw6">{{member.first_name}} {{member.last_name}}</div>
+                    <div class="mt1 black-40">{{member.email}}</div>
+                  </div>
+                  <div class="ml2" v-else>
+                    <div class="fw6">{{member.email}}</div>
                   </div>
                 </div>
               </td>
@@ -77,7 +80,7 @@
             allow-create
             default-first-option
             popper-class="dn"
-            @keydown.native.188="addTag"
+            @keydown.native.188="addUserTag"
             v-model="add_dialog_model.users"
           >
             <el-option
@@ -149,7 +152,10 @@
         'getAllMembers'
       ]),
       getGravatarUrl(member) {
-        return 'https://secure.gravatar.com/avatar/' + member.email_hash + '?d=mm&s=32'
+        return 'https://secure.gravatar.com/avatar/' + member.email_hash + '?d=mm&s=40'
+      },
+      hasFullName(member) {
+        return _.get(member, 'first_name', '').length > 0 && _.get(member, 'last_name', '').length > 0
       },
       tryFetchMembers() {
         if (!this.is_fetched && !this.is_fetching) {
@@ -158,7 +164,7 @@
           })
         }
       },
-      addTag() {
+      addUserTag() {
         var $select = this.$refs['email-select']
         var query = _.get($select, '$data.query', '')
         if (query.length > 0) {
@@ -178,6 +184,7 @@
       onSubmit() {
         var timeout = 1
 
+        // quick hack to allow multiple users to be added until the API supports it
         _.forEach(this.add_dialog_model.users, user => {
           setTimeout(() => {
             var attrs = { member: user }
