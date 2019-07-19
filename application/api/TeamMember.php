@@ -265,58 +265,46 @@ class TeamMember
 
     private static function formatProperties(array $properties) : array
     {
-        $mapped_properties = \Flexio\Base\Util::mapArray(
-            [
-                "member" => null,
-                "member_status" => null,
-                "rights" => null,
-                "owned_by" => null,
-                "created" => null,
-                "updated" => null
-            ],
-        $properties);
-
         // sanity check: if the data record is missing, then owned_by (eid is
         // normally used) will be null
-        if (!isset($mapped_properties['owned_by']))
+        if (!isset($properties['owned_by']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-
-        // get the member info
-        $member_info = array();
-        $member_info['eid'] = $properties['member_eid'];
-        $member_info['eid_type'] = \Model::TYPE_USER;
-
+        // get the user info for the member
+        $user_info = array();
         try
         {
-            $user = \Flexio\Object\User::load($properties['member_eid']);
-            $user_info = $user->get();
-            $member_info['eid_status'] = $user_info['eid_status'];
-            $member_info['username'] = $user_info['username'];
-            $member_info['first_name'] = $user_info['first_name'];
-            $member_info['last_name'] = $user_info['last_name'];
-            $member_info['email'] = $user_info['email'];
-            $member_info['email_hash'] = $user_info['email_hash'];
-            $member_info['created'] = $user_info['created'];
-            $member_info['updated'] = $user_info['updated'];
+            $user_info = \Flexio\Object\User::load($properties['member_eid'])->get();
         }
         catch (\Exception $e)
         {
         }
 
-        // expand the member info
-        $mapped_properties['member'] = $member_info;
+        $rights = $properties['rights'] ?? '[]';
+        $rights = @json_decode($rights, true);
+        if ($rights === false)
+            $rights = array();
 
-        // expand the owner info
-        $mapped_properties['owned_by'] = array(
+        // return the member info
+        $member_properties = array();
+        $member_properties['eid'] = $properties['member_eid'] ?? '';
+        $member_properties['eid_type'] = \Model::TYPE_USER;
+        $member_properties['eid_status'] = $user_info['eid_status'] ?? '';
+        $member_properties['username'] = $user_info['username'] ?? '';
+        $member_properties['first_name'] = $user_info['first_name'] ?? '';
+        $member_properties['last_name'] = $user_info['last_name'] ?? '';
+        $member_properties['email'] = $user_info['email'] ?? '';
+        $member_properties['email_hash'] = $user_info['email_hash'] ?? '';
+        $member_properties['rights'] = $rights;
+        $member_properties['member_status'] = $properties['member_status'] ?? '';
+        $member_properties['member_of'] = array(
             'eid' => $properties['owned_by'],
             'eid_type' => \Model::TYPE_USER
         );
+        $member_properties['invited'] = $properties['created']; // created date of relationship is the date the member was invited
+        $member_properties['created'] = $user_info['created'];
+        $member_properties['updated'] = $user_info['updated'];
 
-        // unpack the rights info json
-        $mapped_properties['rights'] = @json_decode($mapped_properties['rights'], true);
-
-        // return the info
-        return $mapped_properties;
+        return $member_properties;
     }
 }
