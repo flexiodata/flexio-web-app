@@ -107,7 +107,11 @@
   export default {
     metaInfo() {
       return {
-        title: _.get(this.pipe, 'name', 'Pipes')
+        title: _.get(this.pipe, 'name', 'Pipes'),
+        titleTemplate: (chunk) => {
+          // if undefined or blank then we don't need the pipe
+          return chunk ? `${chunk} | ${this.getActiveTeamLabel()}` : 'Flex.io';
+        }
       }
     },
     components: {
@@ -163,7 +167,8 @@
     },
     methods: {
       ...mapGetters([
-        'getAllPipes'
+        'getAllPipes',
+        'getActiveTeamLabel'
       ]),
       tryFetchPipes() {
         if (!this.is_fetched && !this.is_fetching) {
@@ -289,13 +294,3 @@
     }
   }
 </script>
-
-<style lang="stylus" scoped>
-  .sticky
-    transition: all 0.15s ease
-
-  .sticky.js-is-sticky
-  .sticky.js-is-stuck
-    border-bottom: 1px solid rgba(0,0,0,0.1)
-    box-shadow: 0 4px 16px -6px rgba(0,0,0,0.2)
-</style>

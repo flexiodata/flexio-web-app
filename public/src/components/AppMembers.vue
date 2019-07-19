@@ -135,7 +135,11 @@
   export default {
     metaInfo() {
       return {
-        title: 'Members'
+        title: 'Members',
+        titleTemplate: (chunk) => {
+          // if undefined or blank then we don't need the pipe
+          return chunk ? `${chunk} | ${this.getActiveTeamLabel()}` : 'Flex.io';
+        }
       }
     },
     components: {
@@ -167,7 +171,8 @@
     },
     methods: {
       ...mapGetters([
-        'getAllMembers'
+        'getAllMembers',
+        'getActiveTeamLabel'
       ]),
       tryFetchMembers() {
         if (!this.is_fetched && !this.is_fetching) {

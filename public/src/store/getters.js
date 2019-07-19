@@ -93,6 +93,13 @@ export const getActiveUser = state => {
   return _.find(getAllUsers(state), { eid: state.active_user_eid })
 }
 
+export const getActiveTeamLabel = state => {
+  var user = getActiveUser(state)
+  var first_name = _.get(user, 'first_name', '')
+  var last_name = _.get(user, 'last_name', '')
+  return `${first_name} ${last_name}` + "'s team"
+}
+
 export const getActiveDocument = state => {
   return _.find(state.objects, (obj) => {
     var active_id = state.active_document_identifier
