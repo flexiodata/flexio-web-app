@@ -32,7 +32,7 @@
               :key="member.eid"
               v-for="member in members"
             >
-              <td>
+              <td class="w-100">
                 <div class="flex flex-row items-center">
                   <img :src="getGravatarUrl(member)" class="br-100"/>
                   <div class="ml2" v-if="hasFullName(member)">
@@ -43,6 +43,16 @@
                     <div class="fw6">{{member.email}}</div>
                   </div>
                 </div>
+              </td>
+              <td>
+                <el-button
+                  class="ttu fw6"
+                  type="danger"
+                  size="small"
+                  @click="removeMember(member)"
+                >
+                  Remove
+                </el-button>
               </td>
             </tr>
           </tbody>
@@ -102,7 +112,7 @@
         <el-button
           class="ttu fw6"
           type="primary"
-          @click="onSubmit"
+          @click="sendInvites"
         >
           Send Invites
         </el-button>
@@ -164,24 +174,7 @@
           })
         }
       },
-      addUserTag() {
-        var $select = this.$refs['email-select']
-        var query = _.get($select, '$data.query', '')
-        if (query.length > 0) {
-          this.add_dialog_model.users = this.add_dialog_model.users.concat([query])
-        }
-        this.$nextTick(() => $select.$refs.input.focus())
-      },
-      onAddDialogOpen() {
-        this.$nextTick(() => this.$refs['email-select'].focus())
-      },
-      onAddDialogClose() {
-        this.add_dialog_model = {
-          users: [],
-          options: []
-        }
-      },
-      onSubmit() {
+      sendInvites() {
         var timeout = 1
 
         // quick hack to allow multiple users to be added until the API supports it
@@ -198,6 +191,29 @@
         })
 
         this.show_add_dialog = false
+      },
+      removeMember(member) {
+        var eid = member.eid
+        this.$store.dispatch('v2_action_deleteMember', { team_name: this.active_team_name, eid }).catch(error => {
+          // TODO: add error handling?
+        })
+      },
+      addUserTag() {
+        var $select = this.$refs['email-select']
+        var query = _.get($select, '$data.query', '')
+        if (query.length > 0) {
+          this.add_dialog_model.users = this.add_dialog_model.users.concat([query])
+        }
+        this.$nextTick(() => $select.$refs.input.focus())
+      },
+      onAddDialogOpen() {
+        this.$nextTick(() => this.$refs['email-select'].focus())
+      },
+      onAddDialogClose() {
+        this.add_dialog_model = {
+          users: [],
+          options: []
+        }
       }
     }
   }
