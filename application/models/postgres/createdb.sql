@@ -72,11 +72,12 @@ CREATE TABLE tbl_user (
   created timestamp NULL default NULL,
   updated timestamp NULL default NULL,
   PRIMARY KEY (id),
-  UNIQUE (eid),
-  UNIQUE (username),
-  UNIQUE (email)
+  UNIQUE (eid)
 );
 
+CREATE UNIQUE INDEX idx_user_username ON tbl_user (username) WHERE username != '';
+CREATE UNIQUE INDEX idx_user_email ON tbl_user (email) WHERE email != '';
+CREATE UNIQUE INDEX idx_user_verify_code ON tbl_user (verify_code) WHERE verify_code != '';
 CREATE INDEX idx_user_owned_by ON tbl_user (owned_by);
 CREATE INDEX idx_user_created ON tbl_user (created);
 
