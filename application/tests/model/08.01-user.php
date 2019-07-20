@@ -30,65 +30,15 @@ class Test
         // TEST: creation with no parameters
 
         // BEGIN TEST
-        $actual = array();
-        try
-        {
-            $info = array(
-            );
-            $eid = $model->create($info);
-        }
-        catch (\Flexio\Base\Exception $e)
-        {
-            $message = $e->getMessage();
-            $actual = json_decode($message,true);
-        }
-        $expected = array(
-            'code' => \Flexio\Base\Error::INVALID_SYNTAX
+        $info = array(
         );
-        \Flexio\Tests\Check::assertInArray('A.1', '\Flexio\Model\User::create(); throw an exception with invalid input',  $actual, $expected, $results);
+        $eid = $model->create($info);
+        $actual = \Flexio\Base\Eid::isValid($eid);
+        $expected = true;
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Flexio\Model\User::create(); allow creation with no input; empty username and email are allowed, but if they\'re specified they need to be both valid and unique',  $actual, $expected, $results);
 
 
         // TEST: creation with basic input
-
-        // BEGIN TEST
-        $actual = array();
-        try
-        {
-            $handle = \Flexio\Tests\Util::createEmailAddress();
-            $info = array(
-                'email' => $handle
-            );
-            $eid = $model->create($info);
-        }
-        catch (\Flexio\Base\Exception $e)
-        {
-            $message = $e->getMessage();
-            $actual = json_decode($message,true);
-        }
-        $expected = array(
-            'code' => \Flexio\Base\Error::INVALID_SYNTAX
-        );
-        \Flexio\Tests\Check::assertInArray('B.1', '\Flexio\Model\User::create(); throw an exception if a username isn\'t specified',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = array();
-        try
-        {
-            $handle = \Flexio\Base\Util::generateHandle();
-            $info = array(
-                'username' => $handle
-            );
-            $eid = $model->create($info);
-        }
-        catch (\Flexio\Base\Exception $e)
-        {
-            $message = $e->getMessage();
-            $actual = json_decode($message,true);
-        }
-        $expected = array(
-            'code' => \Flexio\Base\Error::INVALID_SYNTAX
-        );
-        \Flexio\Tests\Check::assertInArray('B.2', '\Flexio\Model\User::create(); throw an exception if an email isn\'t specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
@@ -100,7 +50,7 @@ class Test
         $eid = $model->create($info);
         $actual = \Flexio\Base\Eid::isValid($eid);
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.3', '\Flexio\Model\User::create(); make sure a valid eid is returned when user is created',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.1', '\Flexio\Model\User::create(); make sure a valid eid is returned when user is created',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = array();
@@ -127,7 +77,7 @@ class Test
         $expected = array(
             'code' => \Flexio\Base\Error::CREATE_FAILED
         );
-        \Flexio\Tests\Check::assertInArray('B.4', '\Flexio\Model\User::create(); do not allow multiple users with the same username',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.2', '\Flexio\Model\User::create(); do not allow multiple users with the same username',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = array();
@@ -154,7 +104,7 @@ class Test
         $expected = array(
             'code' => \Flexio\Base\Error::CREATE_FAILED
         );
-        \Flexio\Tests\Check::assertInArray('B.5', '\Flexio\Model\User::create(); do not allow multiple users with the same email',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.3', '\Flexio\Model\User::create(); do not allow multiple users with the same email',  $actual, $expected, $results);
 
 
         // TEST: multiple unique user creation

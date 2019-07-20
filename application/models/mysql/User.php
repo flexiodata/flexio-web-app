@@ -363,11 +363,8 @@ class User extends ModelBase
 
     public function getEidFromIdentifier(string $identifier) // TODO: add return type
     {
-        // gets the eid from either the username or the email
-
-        // identifiers can be a username or an email, so only perform the
-        // most basic string check
-        if (!is_string($identifier) || strlen($identifier) <= 0)
+        // basic check since identifier can be either a username or email
+        if (strlen($identifier) <= 0)
             return false;
 
         // the identifier is either the username or the email; identifiers are case insensitive
@@ -382,8 +379,7 @@ class User extends ModelBase
 
     public function getEidFromUsername(string $identifier) // TODO: add return type
     {
-        // make sure we have a string
-        if (!is_string($identifier) || strlen($identifier) <= 0)
+        if (!\Flexio\Base\Identifier::isValid($identifier))
             return false;
 
         // get the eid; identifiers are case insensitive
@@ -398,8 +394,7 @@ class User extends ModelBase
 
     public function getEidFromEmail(string $identifier) // TODO: add return type
     {
-        // make sure we have a string
-        if (!is_string($identifier) || strlen($identifier) <= 0)
+        if (!\Flexio\Base\Identifier::isValid($identifier))
             return false;
 
         // get the eid; identifiers are case insensitive
@@ -414,6 +409,10 @@ class User extends ModelBase
 
     public function checkUserPassword(string $identifier, string $password) : bool
     {
+        // basic check since identifier can be either a username or email
+        if (strlen($identifier) <= 0)
+            return false;
+
         // get the password; identifiers are case insensitive
         $db = $this->getDatabase();
         $qidentifier = $db->quote(strtolower($identifier));
@@ -427,6 +426,9 @@ class User extends ModelBase
 
     public function checkUserPasswordByEid(string $eid, string $password) : bool
     {
+        if (!\Flexio\Base\Eid::isValid($eid))
+            return false;
+
         $db = $this->getDatabase();
         $user_info = $db->fetchRow("select password from tbl_user where eid = ?", $eid);
         if ($user_info === false)
