@@ -136,8 +136,8 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
 
     public function unlink(string $path) : bool
     {
-        $params = array('path' => $path);
-        $this->deleteIndex($params);
+        $index = self::convertToValid($path);
+        $this->deleteIndex($index);
         return true;
     }
 
@@ -164,19 +164,20 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
         //if ($content_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
         //    return false;
 
-        // delete the index if it's there
-        $this->deleteIndex($params);
-
-        // create the index
-        if ($this->createIndex($params) === false)
-            return false;
-
         // make sure the index and type are valid
         $index = $params['path'] ?? '';
         $type = self::getDefaultTypeName();
 
         $index = self::convertToValid($index);
         $type = self::convertToValid($type);
+
+        // get the structure if specified
+        $structure = $params['structure'] ?? null;
+
+        // delete the index if it's there and create a new index
+        $this->deleteIndex($index);
+        if ($this->createIndex($index, $type, $structure) === false)
+            return false;
 
         // output the rows
         $buffer_size = 1000; // max rows to write at a time
@@ -213,11 +214,8 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
     // additional functions
     ////////////////////////////////////////////////////////////
 
-    public function deleteIndex(array $params) : bool
+    public function deleteIndex(array $index) : bool
     {
-        $index = $params['path'] ?? '';
-        $index = self::convertToValid($index);
-
         try
         {
             // write the content
@@ -251,26 +249,9 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
         }
     }
 
-    public function createIndex(array $params) : bool
+    public function createIndex(string $index, string $type, array $structure = null) : bool
     {
         // create an index with the specified mapping
-
-        // TODO: for now, only allow output to tables
-        //$content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
-        //if ($content_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
-        //    return false;
-
-        // make sure the index and type are valid
-        $index = $params['path'] ?? '';
-        $type = self::getDefaultTypeName();
-
-        $index = self::convertToValid($index);
-        $type = self::convertToValid($type);
-
-        // get the structure
-        $structure = $params['structure'] ?? false;
-        if (!is_array($structure))
-            return false;
 
         // build the api json payload; payload has the following form
         /*
@@ -293,18 +274,22 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
         }
         */
 
-        $type_info = array('mappings' => array($type => array('properties' => null)));
-        $type_property_list = array();
-
-        foreach ($structure as $field)
+        $type_info = array();
+        if (isset($structure))
         {
-            $fieldname = $field['name'];
-            $fieldtype = $field['type'];
-            $type_property_list[$fieldname] = self::getIndexTypeInfo($fieldtype);
-        }
+            $type_info = array('mappings' => array($type => array('properties' => null)));
+            $type_property_list = array();
 
-        $type_info['mappings'][$type]['_all'] = array('enabled' => false);
-        $type_info['mappings'][$type]['properties'] = $type_property_list;
+            foreach ($structure as $field)
+            {
+                $fieldname = $field['name'];
+                $fieldtype = $field['type'];
+                $type_property_list[$fieldname] = self::getIndexTypeInfo($fieldtype);
+            }
+
+            $type_info['mappings'][$type]['_all'] = array('enabled' => false);
+            $type_info['mappings'][$type]['properties'] = $type_property_list;
+        }
         $buf = json_encode($type_info);
 
         // set the index info
