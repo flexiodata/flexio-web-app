@@ -178,7 +178,6 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
 
     public function listIndexes() : array
     {
-
         if (!$this->authenticated())
             return array();
 
