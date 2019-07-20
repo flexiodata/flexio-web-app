@@ -26,17 +26,25 @@ router.beforeEach((to, from, next) => {
   // update the active document in the store
   store.commit(CHANGE_ACTIVE_DOCUMENT, to.params.object_name || to.name)
 
-  const tryFetchConnections = () => {
-    if (!store.state.connections_fetched && !store.state.connections_fetching) {
-      store.dispatch('v2_action_fetchConnections', {}).catch(error => {
+  const tryFetchTeams = (team_name) => {
+    if (!store.state.teams_fetched && !store.state.teams_fetching) {
+      store.dispatch('v2_action_fetchTeams', { team_name }).catch(error => {
         // TODO: add error handling?
       })
     }
   }
 
-  const tryFetchTokens = () => {
-    if (!store.state.tokens_fetched && !store.state.tokens_fetching) {
-      store.dispatch('v2_action_fetchTokens', {}).catch(error => {
+  const tryFetchMembers = (team_name) => {
+    if (!store.state.members_fetched && !store.state.members_fetching) {
+      store.dispatch('v2_action_fetchMembers', { team_name }).catch(error => {
+        // TODO: add error handling?
+      })
+    }
+  }
+
+  const tryFetchConnections = (team_name) => {
+    if (!store.state.connections_fetched && !store.state.connections_fetching) {
+      store.dispatch('v2_action_fetchConnections', { team_name }).catch(error => {
         // TODO: add error handling?
       })
     }
@@ -51,13 +59,14 @@ router.beforeEach((to, from, next) => {
   }
 
   const goNext = () => {
-    var user = store.getters.getActiveUser
-    var active_username = _.get(user, 'username', store.state.active_user_eid)
+    var active_username = store.getters.getActiveUsername
+    var team_name = to.params.team_name || active_username
 
-    store.commit(CHANGE_ACTIVE_TEAM, to.params.team_name || active_username)
+    store.commit(CHANGE_ACTIVE_TEAM, team_name)
 
-    tryFetchConnections()
-    tryFetchTokens()
+    tryFetchTeams(team_name)
+    tryFetchMembers(team_name)
+    tryFetchConnections(team_name)
     next()
   }
 

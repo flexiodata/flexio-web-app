@@ -44,7 +44,7 @@
             class="pointer"
             placement="bottom-end"
             message="Are you sure you want to delete this API key?"
-            :offset="9"
+            :offset="-4"
             :class="{
               'child black-30 hover-black-60': delete_popover_token != token,
               'black': delete_popover_token == token

@@ -21,7 +21,7 @@
         </el-button>
       </p>
       <p class="mt3 mb0">
-        <router-link to="/" class="el-button el-button--primary no-underline ttu fw6" style="min-width: 10rem">Back to home</router-link>
+        <router-link to="/" class="el-button el-button--primary no-underline ttu fw6" style="min-width: 11rem">Back to home</router-link>
       </p>
     </div>
   </div>
