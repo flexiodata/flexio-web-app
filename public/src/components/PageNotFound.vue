@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-column justify-center items-center bg-nearer-white overflow-auto">
     <div class="center tc pv4 ph4 mw7">
-      <div class="dib" style="font-size: 4rem">
+      <div class="dib" style="font-size: 4.5rem">
         <div class="flex flex-row items-center justify-center w4 h4 br-100 bg-dark-gray white">
           <div class="rotate-90 pb2 fw6">:-\</div>
         </div>
