@@ -246,10 +246,9 @@
         var pipe
 
         if (identifier) {
-          pipe = _.find(this.pipes, { eid: identifier })
-          if (!pipe) {
-            pipe = _.find(this.pipes, { name: identifier })
-          }
+          pipe = _.find(this.pipes, p => p.eid == identifier || p.name == identifier)
+        } else {
+          pipe = _.first(this.pipes)
         }
 
         this.selectPipe(pipe)
@@ -259,22 +258,25 @@
           return
         }
 
-        var pipe = item
-        if (!pipe) {
-          pipe = _.first(this.pipes)
+        // we couldn't find the item; show a 404
+        if (_.isNil(item)) {
+          this.pipe = {}
+          this.last_selected = {}
+          return
         }
 
-        this.pipe = _.cloneDeep(pipe)
-        this.last_selected = _.cloneDeep(pipe)
+
+        this.pipe = _.cloneDeep(item)
+        this.last_selected = _.cloneDeep(item)
 
         if (!this.is_selecting) {
           // update the route
-          var name = _.get(pipe, 'name', '')
-          var identifier = name.length > 0 ? name : _.get(pipe, 'eid', '')
+          var name = _.get(item, 'name', '')
+          var object_name = name.length > 0 ? name : _.get(item, 'eid', '')
 
           var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
           _.set(new_route, 'params.team_name', this.active_team_name)
-          _.set(new_route, 'params.object_name', identifier)
+          _.set(new_route, 'params.object_name', object_name)
           this.$router[!this.route_object_name?'replace':'push'](new_route)
 
           this.is_selecting = true
