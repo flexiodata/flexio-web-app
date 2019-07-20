@@ -68,6 +68,11 @@ try
     // which translate into the index names
     //     tbl_user_username_key
     //     tbl_user_email_key
+    // note: on test/prod, the username constraint has been tbl_user_user_name_key,
+    // so we have two entries, one for the current index in createdb, which
+    // should correspond to development versions, and the other for the test/prod
+    // databases; perhaps these constraint names weren't migrated when user_name
+    // was changed to username
     $sql = <<<EOT
         alter table tbl_user
             drop constraint if exists tbl_user_username_key,
