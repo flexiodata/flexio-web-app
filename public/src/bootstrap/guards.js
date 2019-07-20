@@ -1,15 +1,25 @@
 import router from '@/router' // VueRouter
 import store from '@/store' // Vuex store
-import {
-  ROUTE_APP_BUILDER,
-  ROUTE_INITSESSION_PAGE,
-  ROUTE_SIGNIN_PAGE,
-  ROUTE_SIGNUP_PAGE
-} from '../constants/route'
-import {
-  CHANGE_ACTIVE_DOCUMENT,
-  CHANGE_ACTIVE_TEAM
-} from '../store/mutation-types'
+import { ROUTE_INITSESSION_PAGE, ROUTE_SIGNIN_PAGE } from '../constants/route'
+import { CHANGE_ACTIVE_DOCUMENT, CHANGE_ACTIVE_TEAM } from '../store/mutation-types'
+
+const tryFetchTeams = (team_name) => {
+  if (!store.state.teams_fetched && !store.state.teams_fetching) {
+    store.dispatch('v2_action_fetchTeams', { team_name })
+  }
+}
+
+const tryFetchMembers = (team_name) => {
+  if (!store.state.members_fetched && !store.state.members_fetching) {
+    store.dispatch('v2_action_fetchMembers', { team_name })
+  }
+}
+
+const tryFetchConnections = (team_name) => {
+  if (!store.state.connections_fetched && !store.state.connections_fetching) {
+    store.dispatch('v2_action_fetchConnections', { team_name })
+  }
+}
 
 // global route guards
 
@@ -23,37 +33,9 @@ router.afterEach((to, from) => {
 })
 
 router.beforeEach((to, from, next) => {
-  // update the active document in the store
-  store.commit(CHANGE_ACTIVE_DOCUMENT, to.params.object_name || to.name)
-
-  const tryFetchTeams = (team_name) => {
-    if (!store.state.teams_fetched && !store.state.teams_fetching) {
-      store.dispatch('v2_action_fetchTeams', { team_name }).catch(error => {
-        // TODO: add error handling?
-      })
-    }
-  }
-
-  const tryFetchMembers = (team_name) => {
-    if (!store.state.members_fetched && !store.state.members_fetching) {
-      store.dispatch('v2_action_fetchMembers', { team_name }).catch(error => {
-        // TODO: add error handling?
-      })
-    }
-  }
-
-  const tryFetchConnections = (team_name) => {
-    if (!store.state.connections_fetched && !store.state.connections_fetching) {
-      store.dispatch('v2_action_fetchConnections', { team_name }).catch(error => {
-        // TODO: add error handling?
-      })
-    }
-  }
-
   const redirectToSignIn = () => {
-    var redirect_to_signup = to.name == ROUTE_APP_BUILDER
     next({
-      name: redirect_to_signup ? ROUTE_SIGNUP_PAGE : ROUTE_SIGNIN_PAGE,
+      name: ROUTE_SIGNIN_PAGE,
       query: { redirect: to.fullPath }
     })
   }
@@ -70,8 +52,10 @@ router.beforeEach((to, from, next) => {
     next()
   }
 
-  if (store.state.active_user_eid.length > 0)
-  {
+  // update the active document in the store
+  store.commit(CHANGE_ACTIVE_DOCUMENT, to.params.object_name || to.name)
+
+  if (store.state.active_user_eid.length > 0) {
     // user is signed in; move to the next route
     goNext()
   } else {
@@ -106,9 +90,12 @@ router.beforeEach((to, from, next) => {
       // this route does not require authentication; try to sign in just to make
       // sure we know who the active user is and move to the next route
       store.dispatch('v2_action_fetchCurrentUser').then(response => {
-        goNext()
+        if (store.state.active_user_eid.length > 0) {
+          // user is signed in; move to the next route
+          goNext()
+        }
       }).catch(error => {
-        goNext()
+        next()
       })
     }
   }
