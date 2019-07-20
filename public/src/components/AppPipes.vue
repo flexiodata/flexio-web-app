@@ -1,13 +1,13 @@
 <template>
   <!-- fetching -->
   <div v-if="is_fetching">
-    <div class="flex flex-column justify-center h-100">
+    <div class="flex flex-column justify-center bg-nearer-white h-100">
       <Spinner size="large" message="Loading pipes..." />
     </div>
   </div>
 
   <!-- fetched -->
-  <div class="flex flex-column" v-else-if="is_fetched">
+  <div class="flex flex-column bg-nearer-white" v-else-if="is_fetched">
     <div class="flex-fill flex flex-row" v-if="pipes.length > 0">
       <template v-if="has_pipe">
         <!-- list -->

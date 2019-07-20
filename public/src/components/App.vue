@@ -1,28 +1,37 @@
 <template>
   <div id="app" class="flex flex-column fixed absolute--fill overflow-hidden">
-    <AppNavbar v-if="show_intercom_button && is_logged_in && !is_404" />
-    <router-view class="flex-fill bt b--black-05"></router-view>
-    <el-button
-      type="primary"
-      circle
-      id="open-intercom-inbox"
-      class="fixed bottom-0 right-0"
-      style="z-index: 2147482000; padding: 12px; margin: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.4)"
-      v-if="show_intercom_button && !is_404"
-    ><i class="material-icons md-24 relative" style="top: 1px">chat</i>
-    </el-button>
+    <template v-if="requires_auth && !is_initialized">
+      <!-- match navbar height -->
+      <div style="height: 60px"></div>
+      <div class="flex-fill flex flex-column justify-center">
+        <Spinner size="large" message="Initializing..." />
+      </div>
+    </template>
+    <template v-else-if="requires_auth && (is_404 || !is_allowed)">
+      <PageNotFound class="flex-fill bg-nearer-white" />
+    </template>
+    <template v-else>
+      <AppNavbar v-if="show_navbar && is_logged_in" />
+      <router-view class="flex-fill bt b--black-05"></router-view>
+      <el-button
+        type="primary"
+        circle
+        id="open-intercom-inbox"
+        class="fixed bottom-0 right-0"
+        style="z-index: 2147482000; padding: 12px; margin: 16px 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.4)"
+        v-if="show_intercom_button"
+      >
+        <i class="material-icons md-24 relative" style="top: 1px">chat</i>
+      </el-button>
+    </template>
   </div>
 </template>
 
 <script>
-  import {
-    ROUTE_SIGNIN_PAGE,
-    ROUTE_SIGNUP_PAGE,
-    ROUTE_FORGOTPASSWORD_PAGE,
-    ROUTE_RESETPASSWORD_PAGE
-  } from '../constants/route'
   import { mapState, mapGetters } from 'vuex'
+  import Spinner from 'vue-simple-spinner'
   import AppNavbar from '@comp/AppNavbar'
+  import PageNotFound from '@comp/PageNotFound'
 
   export default {
     name: 'App',
@@ -41,32 +50,49 @@
       ]
     },
     components: {
-      AppNavbar
+      Spinner,
+      AppNavbar,
+      PageNotFound
     },
     computed: {
-      ...mapState([
-        'active_user_eid'
-      ]),
+      ...mapState({
+        'active_user_eid': 'active_user_eid',
+        'is_initializing': 'members_fetching',
+        'is_initialized': 'members_fetched'
+      }),
       route_name() {
         return _.get(this.$route, 'name')
       },
       is_404() {
         return !this.route_name
       },
-      is_logged_in() {
-        return this.active_user_eid.length > 0
+      requires_auth() {
+        return _.get(this.$route, 'meta.requiresAuth', false)
       },
-      show_intercom_button() {
-        switch (this.route_name) {
-          case ROUTE_SIGNIN_PAGE:
-          case ROUTE_SIGNUP_PAGE:
-          case ROUTE_FORGOTPASSWORD_PAGE:
-          case ROUTE_RESETPASSWORD_PAGE:
-            return false
+      is_allowed() {
+        var members = this.getAllMembers()
+        if (members.length > 0) {
+          // if the active user is part of the members list, they're allowed
+          var user = _.find(members, { eid: this.active_user_eid })
+          return !!_.get(user, 'eid', false)
         }
 
         return true
+      },
+      is_logged_in() {
+        return this.active_user_eid.length > 0
+      },
+      show_navbar() {
+        return this.requires_auth
+      },
+      show_intercom_button() {
+        return this.requires_auth
       }
+    },
+    methods: {
+      ...mapGetters([
+        'getAllMembers'
+      ])
     }
   }
 </script>
