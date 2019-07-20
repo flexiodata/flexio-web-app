@@ -70,8 +70,9 @@ try
     //     tbl_user_email_key
     $sql = <<<EOT
         alter table tbl_user
-            drop constraint tbl_user_username_key,
-            drop constraint tbl_user_email_key;
+            drop constraint if exists tbl_user_username_key,
+            drop constraint if exists tbl_user_user_name_key,
+            drop constraint if exists tbl_user_email_key;
 EOT;
     $db->exec($sql);
 }
