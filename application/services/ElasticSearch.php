@@ -69,45 +69,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
     public function list(string $path = '', array $options = []) : array
     {
         // note: right now, the list is flat; path isn't used
-
-        if (!$this->authenticated())
-            return array();
-
-        // get the indexes
-        $url = $this->getHostUrlString() . '/_stats';
-        $auth = $this->getBasicAuthString();
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        // curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Basic '. $auth]); // disable authorization header for public test
-        curl_setopt($ch, CURLOPT_HTTPGET, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-
-        $result = curl_exec($ch);
-        $result = json_decode($result, true);
-
-        $indexes = [];
-
-        if (isset($result['indices']))
-        {
-            $indices = $result['indices'];
-            foreach ($indices as $index_name => $index_info)
-            {
-                // only show indices that aren't hidden
-                //if (substr($index_name, 0, 1) === '.')
-                //    continue;
-
-                // TODO: include other information from the stats
-                $indexes[] = array('name' => $index_name,
-                                   'path' => '/' . $index_name,
-                                   'size' => null,
-                                   'modified' => null,
-                                   'type' => 'FILE');
-            }
-        }
-
-        return $indexes;
+        return $this->listIndexes();
     }
 
     public function getFileInfo(string $path) : array
@@ -213,6 +175,49 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
     ////////////////////////////////////////////////////////////
     // additional functions
     ////////////////////////////////////////////////////////////
+
+    public function listIndexes() : array
+    {
+
+        if (!$this->authenticated())
+            return array();
+
+        // get the indexes
+        $url = $this->getHostUrlString() . '/_stats';
+        $auth = $this->getBasicAuthString();
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        // curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Basic '. $auth]); // disable authorization header for public test
+        curl_setopt($ch, CURLOPT_HTTPGET, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+
+        $result = curl_exec($ch);
+        $result = json_decode($result, true);
+
+        $indexes = [];
+
+        if (isset($result['indices']))
+        {
+            $indices = $result['indices'];
+            foreach ($indices as $index_name => $index_info)
+            {
+                // only show indices that aren't hidden
+                //if (substr($index_name, 0, 1) === '.')
+                //    continue;
+
+                // TODO: include other information from the stats
+                $indexes[] = array('name' => $index_name,
+                                   'path' => '/' . $index_name,
+                                   'size' => null,
+                                   'modified' => null,
+                                   'type' => 'FILE');
+            }
+        }
+
+        return $indexes;
+    }
 
     public function deleteIndex(array $index) : bool
     {
@@ -373,7 +378,6 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
             return false;
         }
     }
-
 
     private static function getIndexTypeInfo(string $type) : array
     {
