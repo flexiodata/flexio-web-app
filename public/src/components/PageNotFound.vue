@@ -3,11 +3,11 @@
     <div class="center tc pv4 ph4 mw7">
       <div class="dib" style="font-size: 4rem">
         <div class="flex flex-row items-center justify-center w4 h4 br-100 bg-dark-gray white">
-          <div>:-/</div>
+          <div class="rotate-90 pb2 fw6">:-\</div>
         </div>
       </div>
       <h1 class="fw6 lh-title mv4">Page not found</h1>
-      <h2 class="fw6 orange mb3">You might not have permissions to see this page.</h2>
+      <h2 class="fw4 orange mb3">You might not have permissions to see this page.</h2>
       <p class="mv3">
         <el-button
           type="text"
@@ -20,7 +20,7 @@
           </div>
         </el-button>
       </p>
-      <p class="mv3">
+      <p class="mt3 mb0">
         <router-link to="/" class="el-button el-button--large el-button--primary no-underline ttu fw6">Back to home</router-link>
       </p>
     </div>

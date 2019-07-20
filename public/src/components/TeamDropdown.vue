@@ -22,7 +22,7 @@
         >
           <i class="material-icons md-18 b mr3" v-if="isActiveTeam(team)">check</i>
           <i class="material-icons md-18 b mr3" style="color: transparent" v-else>check</i>
-          <div class="pr2">{{getFullTeamName(team)}}</div>
+          <div class="pr3">{{getFullTeamName(team)}}</div>
         </article>
         <el-dropdown-item divided v-if="false"></el-dropdown-item>
         <article
@@ -30,7 +30,7 @@
           v-if="false"
         >
           <i class="material-icons md-18 b mr3">add</i>
-          <div class="pr2">Create new team</div>
+          <div class="pr3">Create new team</div>
         </article>
       </div>
     </el-dropdown-menu>
