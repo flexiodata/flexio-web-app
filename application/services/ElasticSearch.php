@@ -327,6 +327,54 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
         }
     }
 
+    private function writeRows(string $index, string $type, array $rows) : bool
+    {
+        try
+        {
+            // create the post buffer for the bulk api endpoint
+            $buf = '';
+            foreach ($rows as $r)
+            {
+                $buf .= '{"index": {"_index": "' . $index . '", "_type": "' . $type . '"}}';
+                $buf .= "\n";
+                $buf .= json_encode($r, 0); // encode json without returns (each row must be on one line)
+                $buf .= "\n";
+            }
+            $buf .= "\n"; // payload must end with newline
+
+            // write the content
+            $url = $this->getHostUrlString() . '/_bulk';
+            $auth = $this->getBasicAuthString();
+            $content_type = 'application/x-ndjson'; // use ndjson for bulk operations
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, $url);
+            //curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Basic '. $auth, 'Content-Type: '. $content_type ]); // disable authorization header for public test
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: '. $content_type ]);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $buf);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+            $result = curl_exec($ch);
+            curl_close($ch);
+
+            $result = json_decode($result,true);
+
+            if (!is_array($result))
+                return false;
+            if (isset($result['errors']) && $result['errors'] !== false)
+                return false;
+
+            return true;
+        }
+        catch (\Exception $e)
+        {
+            return false;
+        }
+    }
+
+
     private static function getIndexTypeInfo(string $type) : array
     {
         switch ($type)
@@ -385,53 +433,6 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
                     'store' => false
                 );
                 return $info;
-        }
-    }
-
-    private function writeRows(string $index, string $type, array $rows) : bool
-    {
-        try
-        {
-            // create the post buffer for the bulk api endpoint
-            $buf = '';
-            foreach ($rows as $r)
-            {
-                $buf .= '{"index": {"_index": "' . $index . '", "_type": "' . $type . '"}}';
-                $buf .= "\n";
-                $buf .= json_encode($r, 0); // encode json without returns (each row must be on one line)
-                $buf .= "\n";
-            }
-            $buf .= "\n"; // payload must end with newline
-
-            // write the content
-            $url = $this->getHostUrlString() . '/_bulk';
-            $auth = $this->getBasicAuthString();
-            $content_type = 'application/x-ndjson'; // use ndjson for bulk operations
-
-            $ch = curl_init();
-
-            curl_setopt($ch, CURLOPT_URL, $url);
-            //curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Basic '. $auth, 'Content-Type: '. $content_type ]); // disable authorization header for public test
-            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: '. $content_type ]);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $buf);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-            $result = curl_exec($ch);
-            curl_close($ch);
-
-            $result = json_decode($result,true);
-
-            if (!is_array($result))
-                return false;
-            if (isset($result['errors']) && $result['errors'] !== false)
-                return false;
-
-            return true;
-        }
-        catch (\Exception $e)
-        {
-            return false;
         }
     }
 
