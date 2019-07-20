@@ -10,7 +10,7 @@
   <div class="flex flex-column bg-nearer-white" v-else-if="is_fetched">
     <div class="flex-fill flex flex-row" v-if="pipes.length > 0">
       <template v-if="has_pipe">
-        <!-- list -->
+        <!-- sidebar -->
         <div class="flex flex-column min-w5 br b--black-05">
           <!-- control bar -->
           <div class="flex-none ph3 pv2 relative bg-white bb b--black-05">
@@ -31,7 +31,8 @@
             </div>
           </div>
 
-          <div class="flex-fill overflow-y-auto" style="max-width: 20rem">
+          <!-- list -->
+          <div class="flex-fill bg-white overflow-y-auto" style="max-width: 20rem">
             <article
               class="min-w5 pa3 bb b--black-05 bg-white hover-bg-nearer-white"
               :title="pipe.name"

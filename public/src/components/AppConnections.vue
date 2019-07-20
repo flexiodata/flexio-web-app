@@ -10,7 +10,7 @@
   <div class="flex flex-column" v-else-if="is_fetched">
     <div class="flex-fill flex flex-row" v-if="connections.length > 0">
       <template v-if="has_connection">
-        <!-- list -->
+        <!-- sidebar -->
         <div class="flex flex-column min-w5 br b--black-05">
           <!-- control bar -->
           <div class="flex-none ph3 pv2 relative bg-white bb b--black-05">
@@ -31,8 +31,9 @@
             </div>
           </div>
 
+          <!-- list -->
           <AbstractList
-            class="flex-fill overflow-y-auto"
+            class="flex-fill bg-white overflow-y-auto"
             ref="list"
             layout="list"
             item-component="AbstractConnectionChooserItem"

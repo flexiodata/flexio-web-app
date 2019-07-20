@@ -1,9 +1,9 @@
 <template>
   <div id="app" class="flex flex-column fixed absolute--fill overflow-hidden">
-    <template v-if="requires_auth && !is_initialized">
+    <template v-if="requires_auth && is_initializing">
       <!-- match navbar height -->
-      <div style="height: 60px"></div>
-      <div class="flex-fill flex flex-column justify-center">
+      <div class="bg-nearer-white" style="height: 60px"></div>
+      <div class="flex-fill flex flex-column justify-center bg-nearer-white">
         <Spinner size="large" message="Initializing..." />
       </div>
     </template>
@@ -77,7 +77,8 @@
           return !!_.get(user, 'eid', false)
         }
 
-        return true
+        // there are no members; we're done
+        return false
       },
       is_logged_in() {
         return this.active_user_eid.length > 0
