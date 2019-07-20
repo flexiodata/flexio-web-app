@@ -78,9 +78,7 @@ router.beforeEach((to, from, next) => {
         // error fetching current user; bail out
         redirectToSignIn()
       })
-    }
-     else
-    {
+    } else {
       // the 'init session' route already attempts to fetch the current user; we're done
       if (to.name == ROUTE_INITSESSION_PAGE) {
         next()
