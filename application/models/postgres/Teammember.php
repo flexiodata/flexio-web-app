@@ -15,7 +15,7 @@
 declare(strict_types=1);
 
 
-class TeamMember extends ModelBase
+class Teammember extends ModelBase
 {
     public function create(array $params) : string
     {
