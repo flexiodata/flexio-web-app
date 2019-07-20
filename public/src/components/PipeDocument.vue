@@ -435,7 +435,6 @@
     },
     methods: {
       ...mapGetters([
-        'getActiveUser',
         'getActiveDocumentProcesses'
       ]),
       loadPipe() {
