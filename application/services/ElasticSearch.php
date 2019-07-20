@@ -327,7 +327,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
         }
     }
 
-    private function writeRows(string $index, string $type, array $rows) : bool
+    public function writeRows(string $index, string $type, array $rows) : bool
     {
         try
         {
