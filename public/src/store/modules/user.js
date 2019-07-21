@@ -7,7 +7,19 @@ const getDefaultState = () => {
 
 const state = getDefaultState()
 
-const mutations = {}
+const mutations = {
+  RESET_STATE (state) {
+    Object.assign(state, getDefaultState())
+  },
+
+  FETCHING (state, fetching) {
+    state.fetching = fetching
+
+    if (fetching === true) {
+      state.fetched = false
+    }
+  },
+}
 
 const actions = {}
 
@@ -18,5 +30,5 @@ export default {
   state,
   mutations,
   actions,
-  getters
+  getters,
 }

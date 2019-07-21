@@ -308,11 +308,11 @@
     },
     computed: {
       ...mapState({
-        orig_pipe: state => state.pipe.orig_pipe,
-        edit_keys: state => state.pipe.edit_keys,
-        is_fetching: state => state.pipe.fetching,
-        is_fetched: state => state.pipe.fetched,
-        is_changed: state => state.pipe.changed
+        orig_pipe: state => state.pipedoc.orig_pipe,
+        edit_keys: state => state.pipedoc.edit_keys,
+        is_fetching: state => state.pipedoc.fetching,
+        is_fetched: state => state.pipedoc.fetched,
+        is_changed: state => state.pipedoc.changed
       }),
       route_object_name() {
         return _.get(this.$route, 'params.object_name', undefined)
@@ -328,7 +328,7 @@
       },
       edit_pipe: {
         get() {
-          var pipe = _.get(this.$store.state.pipe, 'edit_pipe', {})
+          var pipe = _.get(this.$store.state.pipedoc, 'edit_pipe', {})
           return pipe
         },
         set(value) {
@@ -445,6 +445,7 @@
           this.pipe_not_found = false
           this.$store.commit('pipedoc/INIT_PIPE', pipe)
         }).catch(error => {
+          debugger
           this.pipe_not_found = true
         }).finally(() => {
           this.$store.commit('pipedoc/FETCHING_PIPE', false)

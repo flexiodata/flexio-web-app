@@ -153,16 +153,16 @@
     },
     computed: {
       ...mapState({
-        def: state => state.builder.def,
-        task: state => state.builder.task,
-        attrs: state => state.builder.attrs,
-        title: state => state.builder.def.name,
-        description: state => state.builder.def.description,
-        active_prompt: state => state.builder.active_prompt,
-        is_fetching: state => state.builder.fetching,
-        is_fetched: state => state.builder.fetched,
-        prompts: state => state.builder.prompts,
-        pipe: state => state.builder.pipe,
+        def: state => state.builderdoc.def,
+        task: state => state.builderdoc.task,
+        attrs: state => state.builderdoc.attrs,
+        title: state => state.builderdoc.def.name,
+        description: state => state.builderdoc.def.description,
+        active_prompt: state => state.builderdoc.active_prompt,
+        is_fetching: state => state.builderdoc.fetching,
+        is_fetched: state => state.builderdoc.fetched,
+        prompts: state => state.builderdoc.prompts,
+        pipe: state => state.builderdoc.pipe,
         active_team_name: state => state.active_team_name
       }),
       is_builder_document() {
@@ -178,7 +178,7 @@
       // NOTE: this needs to be a computed value with a getter/setter since we're using '.sync'
       active_prompt_idx: {
         get() {
-          return this.$store.state.builder.active_prompt_idx
+          return this.$store.state.builderdoc.active_prompt_idx
         },
         set(value) {
           // read only
