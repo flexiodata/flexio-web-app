@@ -31,6 +31,11 @@
   import { ROUTE_SIGNIN_PAGE } from '../constants/route'
 
   export default {
+    metaInfo() {
+      return {
+        title: 'Page not found'
+      }
+    },
     methods: {
       signOut() {
         this.$store.dispatch('v2_action_signOut').then(response => {
