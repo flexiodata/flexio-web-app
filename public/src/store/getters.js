@@ -6,7 +6,7 @@ import {
   OBJECT_TYPE_PROCESS,
   OBJECT_TYPE_TOKEN
 } from '../constants/object-type'
-import { OBJECT_STATUS_AVAILABLE } from '../constants/object-status'
+import {OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
 
 export const getAllUsers = state => {
   return _.filter(state.objects, { eid_type: OBJECT_TYPE_USER })
@@ -43,13 +43,14 @@ export const getAllConnections = state => {
     .value()
 }
 
-export const getAvailableConnections = state => {
+export const getAllTokens = state => {
   // NOTE: it's really important to include the '_' on the same line
   // as the 'return', otherwise JS will return without doing anything
   return _
     .chain(state.objects)
-    .filter({ eid_type: OBJECT_TYPE_CONNECTION, eid_status: OBJECT_STATUS_AVAILABLE })
-    .sortBy([ function(c) { return new Date(c.created) } ])
+    .filter({ eid_type: OBJECT_TYPE_TOKEN })
+    .filter(function(t) { return _.get(t, 'user_eid') == state.active_user_eid })
+    .sortBy([ function(t) { return new Date(t.created) } ])
     .reverse()
     .value()
 }
@@ -62,14 +63,13 @@ export const getAllStreams = state => {
   return _.filter(state.objects, { eid_type: OBJECT_TYPE_STREAM })
 }
 
-export const getAllTokens = state => {
+export const getAvailableConnections = state => {
   // NOTE: it's really important to include the '_' on the same line
   // as the 'return', otherwise JS will return without doing anything
   return _
     .chain(state.objects)
-    .filter({ eid_type: OBJECT_TYPE_TOKEN })
-    .filter(function(t) { return _.get(t, 'user_eid') == state.active_user_eid })
-    .sortBy([ function(t) { return new Date(t.created) } ])
+    .filter({ eid_type: OBJECT_TYPE_CONNECTION, eid_status: OBJECT_STATUS_AVAILABLE })
+    .sortBy([ function(c) { return new Date(c.created) } ])
     .reverse()
     .value()
 }
@@ -134,4 +134,12 @@ export const getActiveDocumentProcesses = state => {
     })
     .sortBy([ function(p) { return new Date(p.started) } ])
     .value()
+}
+
+export const getActiveMember = state => {
+  return _.find(getAllMembers(state), { eid: state.active_user_eid })
+}
+
+export const isActiveMemberAvailable = state => {
+  return _.get(getActiveMember(state), 'member_status') == OBJECT_STATUS_AVAILABLE
 }

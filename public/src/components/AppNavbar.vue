@@ -6,9 +6,11 @@
           <img src="../assets/logo-flexio-navbar.png" class="dib" alt="Flex.io">
         </router-link>
         <TeamDropdown class="ml3" />
-        <router-link :to="pipe_route" class="fw6 f6 ttu link nav-link">Pipes</router-link>
-        <router-link :to="connection_route" class="fw6 f6 ttu link nav-link">Connections</router-link>
-        <router-link :to="member_route" class="fw6 f6 ttu link nav-link">Members</router-link>
+        <template v-if="isActiveMemberAvailable()">
+          <router-link :to="pipe_route" class="fw6 f6 ttu link nav-link">Pipes</router-link>
+          <router-link :to="connection_route" class="fw6 f6 ttu link nav-link">Connections</router-link>
+          <router-link :to="member_route" class="fw6 f6 ttu link nav-link">Members</router-link>
+        </template>
       </div>
       <div class="flex-none">
         <div v-if="user_fetching"></div>
@@ -27,7 +29,7 @@
 
 
 <script>
-  import { mapState } from 'vuex'
+  import { mapState, mapGetters } from 'vuex'
   import {
     ROUTE_APP_PIPES,
     ROUTE_APP_CONNECTIONS,
@@ -59,6 +61,11 @@
       is_logged_in() {
         return this.active_user_eid.length > 0
       }
+    },
+    methods: {
+      ...mapGetters([
+        'isActiveMemberAvailable'
+      ])
     }
   }
 </script>

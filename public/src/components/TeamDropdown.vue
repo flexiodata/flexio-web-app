@@ -9,7 +9,12 @@
     >
       <div class="flex flex-row items-center">
         <span>{{active_team_label}}</span>
-        <i class="material-icons black-30 expand-arrow">expand_more</i>
+        <i
+          class="material-icons black-30 arrow"
+          :class="{ 'member-arrow' : isActiveMemberAvailable() }"
+        >
+          expand_more
+        </i>
       </div>
     </span>
     <el-dropdown-menu style="min-width: 12rem" slot="dropdown">
@@ -70,7 +75,8 @@
       ...mapGetters([
         'getActiveUser',
         'getActiveTeamLabel',
-        'getAllTeams'
+        'getAllTeams',
+        'isActiveMemberAvailable'
       ]),
       tryFetchTeams() {
         if (!this.is_fetched && !this.is_fetching) {
@@ -105,13 +111,18 @@
 
   .el-dropdown-link
     color: $body-color
-    .expand-arrow
+    outline: none
+    .arrow
+      transition: transform .2s ease
+    .member-arrow
       -webkit-transform: rotate(-90deg)
       transform: rotate(-90deg)
-      transition: transform .25s ease
-    &.is-open
     &:hover
-      .expand-arrow
+      .member-arrow
         -webkit-transform: rotate(0)
         transform: rotate(0)
+    &.is-open
+      .arrow
+        -webkit-transform: rotate(180deg)
+        transform: rotate(180deg)
 </style>
