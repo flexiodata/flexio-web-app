@@ -224,17 +224,17 @@
         'getSdkOptions'
       ]),
       loadTemplate() {
-        this.$store.commit('builder/FETCHING_DEF', true)
+        this.$store.commit('builderdoc/FETCHING_DEF', true)
 
         if (!_.isNil(this.definition)) {
           // definition initialization handled in watcher
           this.initFromDefiniton()
-          this.$store.commit('builder/FETCHING_DEF', false)
+          this.$store.commit('builderdoc/FETCHING_DEF', false)
           this.initSticky()
         } else if (this.slug == 'test') {
-          this.$store.commit('builder/INIT_ROUTE', this.$route.name)
-          this.$store.commit('builder/INIT_DEF', buildTestDefinition())
-          this.$store.commit('builder/FETCHING_DEF', false)
+          this.$store.commit('builderdoc/INIT_ROUTE', this.$route.name)
+          this.$store.commit('builderdoc/INIT_DEF', buildTestDefinition())
+          this.$store.commit('builderdoc/FETCHING_DEF', false)
           this.initSticky()
         } else {
           var template_url
@@ -250,23 +250,23 @@
               var yaml_def = response.data
               var def = yaml.safeLoad(yaml_def)
               debugger
-              this.$store.commit('builder/INIT_ROUTE', this.$route.name)
-              this.$store.commit('builder/INIT_DEF', def)
-              this.$store.commit('builder/FETCHING_DEF', false)
+              this.$store.commit('builderdoc/INIT_ROUTE', this.$route.name)
+              this.$store.commit('builderdoc/INIT_DEF', def)
+              this.$store.commit('builderdoc/FETCHING_DEF', false)
               this.$store.track('Started Template', {
                 title: def.name
               })
             }).catch(error => {
-              this.$store.commit('builder/FETCHING_DEF', false)
+              this.$store.commit('builderdoc/FETCHING_DEF', false)
             })
           }
         }
       },
       updateTask() {
-        this.$store.commit('builder/UPDATE_TASK')
+        this.$store.commit('builderdoc/UPDATE_TASK')
       },
       onPrev() {
-        this.$store.commit('builder/GO_PREV_ITEM')
+        this.$store.commit('builderdoc/GO_PREV_ITEM')
       },
       onNext() {
         var actions = _.get(this.active_prompt, 'next_button.actions', [])
@@ -282,13 +282,13 @@
           this.openPipe()
         }
 
-        this.$store.commit('builder/GO_NEXT_ITEM')
+        this.$store.commit('builderdoc/GO_NEXT_ITEM')
       },
       createPipe(run_process) {
         var attrs = this.save_attrs
         this.$store.dispatch('v2_action_createPipe', { attrs }).then(response => {
           var pipe = response.data
-          this.$store.commit('builder/CREATE_PIPE', pipe)
+          this.$store.commit('builderdoc/CREATE_PIPE', pipe)
           this.$store.track('Created Pipe From Template', {
             title: this.def.name
           })
@@ -308,14 +308,14 @@
 
         this.$store.dispatch('v2_action_createProcess', { attrs }).then(response => {
           var process = response.data
-          this.$store.commit('builder/CREATE_PROCESS', process)
+          this.$store.commit('builderdoc/CREATE_PROCESS', process)
           this.$store.track('Ran Process From Template', {
             title: this.def.name
           })
 
           var eid = process.eid
           this.$store.dispatch('v2_action_runProcess', { eid }).then(response => {
-            this.$store.commit('builder/UPDATE_PROCESS_RESULT', response.data)
+            this.$store.commit('builderdoc/UPDATE_PROCESS_RESULT', response.data)
           }).catch(error => {
             // TODO: add error handling?
           })
@@ -332,12 +332,12 @@
         this.$router.push({ name: ROUTE_APP_PIPES, params: { team_name, object_name } })
       },
       updateItemState(values, index) {
-        this.$store.commit('builder/UPDATE_ATTRS', values)
-        this.$store.commit('builder/UPDATE_TASK')
+        this.$store.commit('builderdoc/UPDATE_ATTRS', values)
+        this.$store.commit('builderdoc/UPDATE_TASK')
       },
       initFromDefiniton() {
-        this.$store.commit('builder/INIT_ROUTE', this.$route.name)
-        this.$store.commit('builder/INIT_DEF', this.definition)
+        this.$store.commit('builderdoc/INIT_ROUTE', this.$route.name)
+        this.$store.commit('builderdoc/INIT_DEF', this.definition)
       },
       initSticky() {
         /*

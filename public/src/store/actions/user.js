@@ -117,8 +117,8 @@ export const v2_action_signOut = ({ commit, dispatch }) => {
   return api.v2_logout().then(response => {
     // reset store state
     commit('RESET_STATE')
-    commit('builder/RESET_STATE')
-    commit('pipe/RESET_STATE')
+    commit('builderdoc/RESET_STATE')
+    commit('pipedoc/RESET_STATE')
 
     commit(types.SIGNED_OUT)
     commit(types.SIGNING_OUT, false)
