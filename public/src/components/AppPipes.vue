@@ -229,19 +229,18 @@
           cancelButtonText: 'Cancel',
           type: 'warning'
         }).then(() => {
-          var idx = _.findIndex(this.pipes, this.pipe)
+          var selected_idx = _.findIndex(this.pipes, { eid: this.pipe.eid })
+          var deleting_idx = _.findIndex(this.pipes, { eid: attrs.eid })
 
           this.$store.dispatch('pipes/delete', { team_name, eid }).then(response => {
-            if (idx >= 0) {
-              if (idx >= this.pipes.length) {
-                idx--
+            if (deleting_idx >= 0 && deleting_idx == selected_idx) {
+              if (deleting_idx >= this.pipes.length) {
+                deleting_idx--
               }
 
-              var pipe = _.get(this.pipes, '['+idx+']', {})
+              var pipe = _.get(this.pipes, '['+deleting_idx+']', {})
               this.selectPipe(pipe)
             }
-          }).catch(error => {
-            // TODO: add error handling?
           })
         }).catch(() => {
           // do nothing

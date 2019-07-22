@@ -264,19 +264,18 @@
           cancelButtonText: 'Cancel',
           type: 'warning'
         }).then(() => {
-          var idx = _.findIndex(this.connections, this.connection)
+          var selected_idx = _.findIndex(this.connections, { eid: this.connection.eid })
+          var deleting_idx = _.findIndex(this.connections, { eid: attrs.eid })
 
           this.$store.dispatch('v2_action_deleteConnection', { eid }).then(response => {
-            if (idx >= 0) {
-              if (idx >= this.connections.length) {
-                idx--
+            if (deleting_idx >= 0 && deleting_idx == selected_idx) {
+              if (deleting_idx >= this.connections.length) {
+                deleting_idx--
               }
 
-              var connection = _.get(this.connections, '['+idx+']', {})
+              var connection = _.get(this.connections, '['+deleting_idx+']', {})
               this.selectConnection(connection)
             }
-          }).catch(error => {
-            // TODO: add error handling?
           })
         })
       },
