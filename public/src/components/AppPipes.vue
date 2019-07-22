@@ -273,10 +273,10 @@
           // update the route
           var name = _.get(item, 'name', '')
           var object_name = name.length > 0 ? name : _.get(item, 'eid', '')
+          var team_name = this.active_team_name
 
           var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
-          _.set(new_route, 'params.team_name', this.active_team_name)
-          _.set(new_route, 'params.object_name', object_name)
+          new_route.params = _.assign({}, new_route.params, { team_name, object_name })
           this.$router[!this.route_object_name?'replace':'push'](new_route)
 
           this.is_selecting = true
