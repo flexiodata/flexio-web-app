@@ -1,4 +1,10 @@
-import { addItem, updateItem, removeItem, removeMeta } from '../helpers'
+import api from '@/api'
+import {
+  addItem,
+  updateItem,
+  removeItem,
+  removeMeta,
+} from '../helpers'
 
 const getDefaultMeta = () => {
   return {
@@ -14,17 +20,7 @@ const getDefaultState = () => {
   return {
     fetching: false,
     fetched: false,
-    items: {
-      /*
-      eid: {
-        fetching: false,
-        fetched: false,
-        processes_fetching: false,
-        processes_fetched: false,
-        object: {}
-      }
-      */
-    },
+    items: {},
   }
 }
 
@@ -33,6 +29,11 @@ const state = getDefaultState()
 const mutations = {
   RESET_STATE (state) {
     _.assign(state, getDefaultState())
+  },
+
+  CREATED_ITEM (state, item) {
+    var meta = _.assign(getDefaultMeta(), { fetched: true })
+    addItem(state, item, meta)
   },
 
   FETCHING_ITEMS (state, fetching) {
@@ -45,13 +46,6 @@ const mutations = {
   FETCHED_ITEMS (state, items) {
     addItem(state, items, getDefaultMeta())
     state.fetched = true
-  },
-
-  CREATING_ITEM (state, item) {},
-
-  CREATED_ITEM (state, item) {
-    var meta = _.assign(getDefaultMeta(), { fetched: true })
-    addItem(state, item, meta)
   },
 
   FETCHING_ITEM (state, { eid, fetching }) {
@@ -75,20 +69,72 @@ const mutations = {
     addItem(state, item, { is_fetched: true })
   },
 
-  UPDATING_ITEM (state, { eid, item }) {},
-
   UPDATED_ITEM (state, { eid, item }) {
     updateItem(state, eid, item)
   },
 
-  DELETING_ITEM (state, item) {},
-
-  DELETED_ITEM (state, item) {
-    removeItem(state, item)
+  DELETED_ITEM (state, eid) {
+    removeItem(state, eid)
   },
 }
 
-const actions = {}
+const actions = {
+
+  'create' ({ commit, dispatch }, { team_name, attrs }) {
+    return api.v2_createPipe(team_name, attrs).then(response => {
+      commit('pipe/CREATED_ITEM', response.data)
+      return response
+    }).catch(error => {
+      throw error
+    })
+  },
+
+  'fetch' ({ commit }, { team_name, eid }) {
+    if (eid) {
+      // fetching a single item
+      commit('pipe/FETCHING_ITEM', { eid, fetching: true })
+
+      return api.v2_fetchPipe(team_name, eid).then(response => {
+        commit('pipe/FETCHED_ITEM', response.data)
+        commit('pipe/FETCHING_ITEM', { eid, fetching: false })
+        return response
+      }).catch(error => {
+        commit('pipe/FETCHING_ITEM', { eid, fetching: false })
+        throw error
+      })
+    } else {
+      // fetching a collection of items
+      commit('pipe/FETCHING_ITEMS', true)
+
+      return api.v2_fetchPipes(team_name).then(response => {
+        commit('pipe/FETCHED_ITEMS', response.data)
+        commit('pipe/FETCHING_ITEMS', false)
+        return response
+      }).catch(error => {
+        commit('pipe/FETCHING_ITEMS', false)
+        throw error
+      })
+    }
+  },
+
+  'update' ({ commit }, { team_name, eid, attrs }) {
+    return api.v2_updatePipe(team_name, eid, attrs).then(response => {
+      commit('pipe/UPDATED_ITEM', { eid, item: response.data })
+      return response
+    }).catch(error => {
+      throw error
+    })
+  },
+
+  'delete' ({ commit }, { team_name, eid }) {
+    return api.v2_deletePipe(team_name, eid).then(response => {
+      commit('pipe/DELETED_ITEM', eid)
+      return response
+    }).catch(error => {
+      throw error
+    })
+  },
+}
 
 const getters = {}
 
