@@ -11,7 +11,7 @@ const getKeyedObject = (objs) => {
   return _.keyBy(objs, 'eid')
 }
 
-const addItem = (state, objs, vuex_meta) => {
+export const addItem = (state, objs, vuex_meta) => {
   var to_insert = getKeyedObject(objs)
 
   // add meta info to each item
@@ -25,7 +25,7 @@ const addItem = (state, objs, vuex_meta) => {
   state['items'] = _.assign({}, state['items'], to_insert)
 }
 
-const updateItem = (state, eid, attrs) => {
+export const updateItem = (state, eid, attrs) => {
   // make sure we create a new object due to Javascript object reference caching
   var new_obj = _.cloneDeep(state['items'][eid])
 
@@ -36,7 +36,7 @@ const updateItem = (state, eid, attrs) => {
   state['items'][eid] = _.assign({}, new_obj)
 }
 
-const removeItem = (state, objs) => {
+export const removeItem = (state, objs) => {
   var to_delete = getKeyedObject(objs)
 
   // now get all of the keys (eids) as an array
@@ -46,25 +46,17 @@ const removeItem = (state, objs) => {
   state['items'] = _.omit(state['items'], to_delete)
 }
 
-const updateMeta = (state, eid, new_meta) => {
+export const updateMeta = (state, eid, new_meta) => {
   var vuex_meta = state['items'][eid]['vuex_meta']
   vuex_meta = _.assign({}, vuex_meta, new_meta)
   updateItem(state, eid, { vuex_meta })
 }
 
-const removeMeta = (state, objs, keys) => {
+export const removeMeta = (state, objs, keys) => {
   var keyed_objs = getKeyedObject(objs)
 
   _.each(keyed_objs, (obj, eid) => {
     // remove the corresponding keys from each object in the state
     state['items'][eid]['vuex_meta'] = _.omit(state['items'][eid]['vuex_meta'], keys)
   })
-}
-
-export default {
-  addItem,
-  updateItem,
-  removeItem,
-  updateMeta,
-  removeMeta
 }
