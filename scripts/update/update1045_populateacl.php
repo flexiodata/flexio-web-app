@@ -80,22 +80,29 @@ try
         $type = $object->getType();
         switch ($type)
         {
+            // note: following constants were previous defined and used
+            // here in place of values:
+            // const MEMBER_UNDEFINED = '';
+            // const MEMBER_OWNER     = 'owner';
+            // const MEMBER_GROUP     = 'member';
+            // const MEMBER_PUBLIC    = 'public';
+
             default:
                 break;
 
             case \Model::TYPE_PROCESS: // processes inherit owner privileges for the pipe at this time
             case \Model::TYPE_PIPE:
                 $rights = array(
-                    array('action' => 'rights.read',    'access_code' => \Flexio\Object\User::MEMBER_OWNER, 'access_type' => ''),
-                    array('action' => 'rights.write',   'access_code' => \Flexio\Object\User::MEMBER_OWNER, 'access_type' => ''),
-                    array('action' => 'object.read',    'access_code' => \Flexio\Object\User::MEMBER_OWNER, 'access_type' => ''),
-                    array('action' => 'object.write',   'access_code' => \Flexio\Object\User::MEMBER_OWNER, 'access_type' => ''),
-                    array('action' => 'object.delete',  'access_code' => \Flexio\Object\User::MEMBER_OWNER, 'access_type' => ''),
-                    array('action' => 'object.execute', 'access_code' => \Flexio\Object\User::MEMBER_OWNER, 'access_type' => ''),
-                    array('action' => 'object.read',    'access_code' => \Flexio\Object\User::MEMBER_GROUP, 'access_type' => ''),
-                    array('action' => 'object.write',   'access_code' => \Flexio\Object\User::MEMBER_GROUP, 'access_type' => ''),
-                    array('action' => 'object.delete',  'access_code' => \Flexio\Object\User::MEMBER_GROUP, 'access_type' => ''),
-                    array('action' => 'object.execute', 'access_code' => \Flexio\Object\User::MEMBER_GROUP, 'access_type' => '')
+                    array('action' => 'rights.read',    'access_code' => 'owner', 'access_type' => ''),
+                    array('action' => 'rights.write',   'access_code' => 'owner', 'access_type' => ''),
+                    array('action' => 'object.read',    'access_code' => 'owner', 'access_type' => ''),
+                    array('action' => 'object.write',   'access_code' => 'owner', 'access_type' => ''),
+                    array('action' => 'object.delete',  'access_code' => 'owner', 'access_type' => ''),
+                    array('action' => 'object.execute', 'access_code' => 'owner', 'access_type' => ''),
+                    array('action' => 'object.read',    'access_code' => 'owner', 'access_type' => ''),
+                    array('action' => 'object.write',   'access_code' => 'owner', 'access_type' => ''),
+                    array('action' => 'object.delete',  'access_code' => 'owner', 'access_type' => ''),
+                    array('action' => 'object.execute', 'access_code' => 'owner', 'access_type' => '')
                 );
                 \Flexio\System\System::getModel()->addRights($eid, $rights);
                 break;
@@ -103,13 +110,13 @@ try
             case \Model::TYPE_PROJECT:
             case \Model::TYPE_CONNECTION:
                 $rights = array(
-                    array('action' => 'rights.read',   'access_code' => \Flexio\Object\User::MEMBER_OWNER, 'access_type' => ''),
-                    array('action' => 'rights.write',  'access_code' => \Flexio\Object\User::MEMBER_OWNER, 'access_type' => ''),
-                    array('action' => 'object.read',   'access_code' => \Flexio\Object\User::MEMBER_OWNER, 'access_type' => ''),
-                    array('action' => 'object.write',  'access_code' => \Flexio\Object\User::MEMBER_OWNER, 'access_type' => ''),
-                    array('action' => 'object.delete', 'access_code' => \Flexio\Object\User::MEMBER_OWNER, 'access_type' => ''),
-                    array('action' => 'object.read',   'access_code' => \Flexio\Object\User::MEMBER_GROUP, 'access_type' => ''),
-                    array('action' => 'object.write',  'access_code' => \Flexio\Object\User::MEMBER_GROUP, 'access_type' => '')
+                    array('action' => 'rights.read',   'access_code' => 'owner', 'access_type' => ''),
+                    array('action' => 'rights.write',  'access_code' => 'owner', 'access_type' => ''),
+                    array('action' => 'object.read',   'access_code' => 'owner', 'access_type' => ''),
+                    array('action' => 'object.write',  'access_code' => 'owner', 'access_type' => ''),
+                    array('action' => 'object.delete', 'access_code' => 'owner', 'access_type' => ''),
+                    array('action' => 'object.read',   'access_code' => 'owner', 'access_type' => ''),
+                    array('action' => 'object.write',  'access_code' => 'owner', 'access_type' => '')
                 );
                 // don't allow delete by default for group members for connections
                 \Flexio\System\System::getModel()->addRights($eid, $rights);
@@ -117,11 +124,11 @@ try
 
             case \Model::TYPE_USER:
                 $rights = array(
-                    array('action' => 'rights.read',  'access_code' => \Flexio\Object\User::MEMBER_OWNER, 'access_type' => ''),
-                    array('action' => 'rights.write', 'access_code' => \Flexio\Object\User::MEMBER_OWNER, 'access_type' => ''),
-                    array('action' => 'object.read',  'access_code' => \Flexio\Object\User::MEMBER_OWNER, 'access_type' => ''),
-                    array('action' => 'object.write', 'access_code' => \Flexio\Object\User::MEMBER_OWNER, 'access_type' => ''),
-                    array('action' => 'object.delete','access_code' => \Flexio\Object\User::MEMBER_OWNER, 'access_type' => '')
+                    array('action' => 'rights.read',  'access_code' => 'owner', 'access_type' => ''),
+                    array('action' => 'rights.write', 'access_code' => 'owner', 'access_type' => ''),
+                    array('action' => 'object.read',  'access_code' => 'owner', 'access_type' => ''),
+                    array('action' => 'object.write', 'access_code' => 'owner', 'access_type' => ''),
+                    array('action' => 'object.delete','access_code' => 'owner', 'access_type' => '')
                 );
                 // only allow owners to access user info
                 \Flexio\System\System::getModel()->addRights($eid, $rights);

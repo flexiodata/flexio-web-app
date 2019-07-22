@@ -18,11 +18,6 @@ namespace Flexio\Object;
 
 class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 {
-    public const MEMBER_UNDEFINED = '';
-    public const MEMBER_OWNER     = 'owner';
-    public const MEMBER_GROUP     = 'member';
-    public const MEMBER_PUBLIC    = 'public';
-
     public function __construct()
     {
     }
@@ -142,22 +137,6 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         // config is stored as a json string, so it needs to be encoded
         if (isset($properties) && isset($properties['config']))
             $properties['config'] = json_encode($properties['config']);
-
-        // a unique username is required for users; if a username
-        // isn't specified, then supply a default
-        $username = \Flexio\Base\Identifier::generate();
-        $email= $username.'@flex.io';
-        if (!isset($properties))
-        {
-            $properties = array('username' => $username, 'email' => $email);
-        }
-        if (is_array($properties) && !isset($properties['username']))
-        {
-            if (!isset($properties['username']))
-                $properties['username'] = $username;
-            if (!isset($properties['email']))
-                $properties['email'] = $email;
-        }
 
         $object = new static();
         $user_model = $object->getModel()->user;

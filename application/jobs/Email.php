@@ -73,7 +73,7 @@ class Email extends \Flexio\Jobs\Base
 
 
             $email_params = array(
-                'from' => "Flex.io <no-reply@flex.io>",
+                'from' => \Flexio\Services\NoticeEmail::EMAIL_ADDRESS_NO_REPLY,
                 'to' => $to,
                 'subject' => $subject,
                 'msg_text' => $body_text
