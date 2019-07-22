@@ -117,7 +117,10 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         // passed; this is because we now have a keyring connection type
         // and so we need to be able to pass arbitrary lists of keys/values
         // without them accumulating
-        // $properties = $this->getConnectionPropertiesToUpdate($properties);
+
+        // TODO: temporarily re-enable because disabling caused oauth
+        // connection types to fail
+        $properties = $this->getConnectionPropertiesToUpdate($properties);
 
         // encode the connection info
         if (isset($properties) && isset($properties['connection_info']))
