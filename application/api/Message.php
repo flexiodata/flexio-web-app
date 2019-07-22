@@ -39,7 +39,7 @@ class Message
 
         // send an email that the user's account was created
         $email = \Flexio\Services\NoticeEmail::create(array(
-            'from' => 'Flex.io <no-reply@flex.io>',
+            'from' => \Flexio\Services\NoticeEmail::EMAIL_ADDRESS_NO_REPLY,
             'to' => $to,
             'subject' => 'Welcome to Flex.io',
             'msg_text' => $msg_text,
@@ -70,7 +70,7 @@ class Message
 
         // send an email that the user's account was created
         $email = \Flexio\Services\NoticeEmail::create(array(
-            'from' => 'Flex.io <no-reply@flex.io>',
+            'from' => \Flexio\Services\NoticeEmail::EMAIL_ADDRESS_NO_REPLY,
             'to' => $to,
             'subject' => 'Flex.io password reset',
             'msg_text' => $msg_text,
@@ -118,7 +118,7 @@ class Message
         ]);
 
         $email = \Flexio\Services\NoticeEmail::create(array(
-            'from' => "$from_name via Flex.io <no-reply@flex.io>",
+            'from' => "$from_name via " . \Flexio\Services\NoticeEmail::EMAIL_ADDRESS_NO_REPLY,
             'to' => $to,
             'subject' => "${from_name} invited you into the \"${object_name}\" team",
             'msg_text' => $msg_text,
@@ -166,7 +166,7 @@ class Message
         ]);
 
         $email = \Flexio\Services\NoticeEmail::create(array(
-            'from' => "$from_name via Flex.io <no-reply@flex.io>",
+            'from' => "$from_name via " . \Flexio\Services\NoticeEmail::EMAIL_ADDRESS_NO_REPLY,
             'to' => $to,
             'subject' => "${from_name} shared pipe \"${object_name}\" with you",
             'msg_text' => $msg_text,

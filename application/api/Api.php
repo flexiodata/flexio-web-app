@@ -566,7 +566,7 @@ class Api
     {
         // POSSIBILITY 1: no requesting user token and no session; public call
         if (strlen($requesting_user_token) === 0 && strlen($current_session_user_eid) === 0)
-            return \Flexio\Object\User::MEMBER_PUBLIC;
+            return '';
 
         // POSSIBILITY 2: no requesting user token but a valid session; return session
         if (strlen($requesting_user_token) === 0 && \Flexio\Base\Eid::isValid($current_session_user_eid) === true)
