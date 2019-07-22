@@ -729,6 +729,9 @@ class User
         if ($user->set(array('password' => $password, 'eid_status' => \Model::STATUS_AVAILABLE, 'verify_code' => '')) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, _('Could not update user at this time'));
 
+        // make sure the user is logged out so they have to resign in
+        \Flexio\System\System::destroyUserSession();
+
         $result = array();
         $result['email'] = $email;
         $request->setResponseParams($result);
