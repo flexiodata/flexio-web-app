@@ -138,22 +138,6 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         if (isset($properties) && isset($properties['config']))
             $properties['config'] = json_encode($properties['config']);
 
-        // a unique username is required for users; if a username
-        // isn't specified, then supply a default
-        $username = \Flexio\Base\Identifier::generate();
-        $email= $username.'@flex.io';
-        if (!isset($properties))
-        {
-            $properties = array('username' => $username, 'email' => $email);
-        }
-        if (is_array($properties) && !isset($properties['username']))
-        {
-            if (!isset($properties['username']))
-                $properties['username'] = $username;
-            if (!isset($properties['email']))
-                $properties['email'] = $email;
-        }
-
         $object = new static();
         $user_model = $object->getModel()->user;
         $local_eid = $user_model->create($properties);
