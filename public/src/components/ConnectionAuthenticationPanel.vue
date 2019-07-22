@@ -822,7 +822,7 @@
       tryTest(attrs) {
         var eid = attrs.eid
         var team_name = this.active_team_name
-        attrs = _.pick(attrs, ['name', 'description', 'connection_info'])
+        attrs = _.pick(attrs, ['short_description', 'description', 'connection_info'])
 
         // update the connection
         this.$store.dispatch('connections/update', { team_name, eid, attrs }).then(response => {
