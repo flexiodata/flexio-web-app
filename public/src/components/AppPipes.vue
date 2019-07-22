@@ -143,21 +143,21 @@
     computed: {
       // mix this into the outer object with the object spread operator
       ...mapState({
-        'is_fetching': 'pipes_fetching',
-        'is_fetched': 'pipes_fetched',
-        'active_team_name': 'active_team_name'
+        is_fetching: state => state.pipes.is_fetching,
+        is_fetched: state => state.pipes.is_fetched,
+        active_team_name: state => state.active_team_name
       }),
       route_object_name() {
         return _.get(this.$route, 'params.object_name', undefined)
-      },
-      pipes() {
-        return this.getAllPipes()
       },
       pname() {
         return _.get(this.pipe, 'name', '')
       },
       has_pipe() {
         return this.pname.length > 0
+      },
+      pipes() {
+        return this.getAllPipes()
       }
     },
     created() {
@@ -168,14 +168,14 @@
     },
     methods: {
       ...mapGetters([
-        'getAllPipes',
-        'getActiveTeamLabel'
+        'getActiveTeamLabel',
       ]),
+      ...mapGetters('pipes', {
+        'getAllPipes': 'getAll'
+      }),
       tryFetchPipes() {
         if (!this.is_fetched && !this.is_fetching) {
-          this.$store.dispatch('v2_action_fetchPipes', {}).catch(error => {
-            // TODO: add error handling?
-          })
+          this.$store.dispatch('pipes/fetch', {})
         }
       },
       tryCreatePipe(attrs) {
@@ -197,7 +197,7 @@
         attrs = _.cloneDeep(attrs)
         attrs = _.assign({}, default_attrs, attrs)
 
-        this.$store.dispatch('v2_action_createPipe', { attrs }).then(response => {
+        this.$store.dispatch('pipes/create', { team_name: this.active_team_name, attrs }).then(response => {
           var pipe = response.data
 
           this.$message({
@@ -226,7 +226,7 @@
         }).then(() => {
           var idx = _.findIndex(this.pipes, this.pipe)
 
-          this.$store.dispatch('v2_action_deletePipe', { eid }).then(response => {
+          this.$store.dispatch('pipes/delete', { team_name: this.active_team_name, eid }).then(response => {
             if (idx >= 0) {
               if (idx >= this.pipes.length) {
                 idx--
@@ -264,7 +264,6 @@
           this.last_selected = {}
           return
         }
-
 
         this.pipe = _.cloneDeep(item)
         this.last_selected = _.cloneDeep(item)

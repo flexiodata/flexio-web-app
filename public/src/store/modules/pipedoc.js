@@ -66,7 +66,7 @@ const actions = {}
 
 const getters = {
   getStorePipe (state, getters, root_state) {
-    return _.get(root_state, 'objects.' + state.eid, null)
+    return _.get(root_state, 'pipes.items' + state.eid, null)
   },
   isChanged (state, getters, root_state) {
     return state.changed

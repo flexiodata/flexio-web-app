@@ -10,8 +10,8 @@ const getDefaultMeta = () => {
   return {
     is_fetching: false,
     is_fetched: false,
-    is_processes_is_fetching: false,
-    is_processes_is_fetched: false,
+    is_processes_fetching: false,
+    is_processes_fetched: false,
     /*error: {},*/
   }
 }
@@ -81,7 +81,7 @@ const mutations = {
 const actions = {
   'create' ({ commit, dispatch }, { team_name, attrs }) {
     return api.v2_createPipe(team_name, attrs).then(response => {
-      commit('pipe/CREATED_ITEM', response.data)
+      commit('CREATED_ITEM', response.data)
       return response
     }).catch(error => {
       throw error
@@ -91,26 +91,26 @@ const actions = {
   'fetch' ({ commit }, { team_name, eid }) {
     if (eid) {
       // fetching a single item
-      commit('pipe/FETCHING_ITEM', { eid, is_fetching: true })
+      commit('FETCHING_ITEM', { eid, is_fetching: true })
 
       return api.v2_fetchPipe(team_name, eid).then(response => {
-        commit('pipe/FETCHED_ITEM', response.data)
-        commit('pipe/FETCHING_ITEM', { eid, is_fetching: false })
+        commit('FETCHED_ITEM', response.data)
+        commit('FETCHING_ITEM', { eid, is_fetching: false })
         return response
       }).catch(error => {
-        commit('pipe/FETCHING_ITEM', { eid, is_fetching: false })
+        commit('FETCHING_ITEM', { eid, is_fetching: false })
         throw error
       })
     } else {
       // fetching a collection of items
-      commit('pipe/FETCHING_ITEMS', true)
+      commit('FETCHING_ITEMS', true)
 
       return api.v2_fetchPipes(team_name).then(response => {
-        commit('pipe/FETCHED_ITEMS', response.data)
-        commit('pipe/FETCHING_ITEMS', false)
+        commit('FETCHED_ITEMS', response.data)
+        commit('FETCHING_ITEMS', false)
         return response
       }).catch(error => {
-        commit('pipe/FETCHING_ITEMS', false)
+        commit('FETCHING_ITEMS', false)
         throw error
       })
     }
@@ -118,7 +118,7 @@ const actions = {
 
   'update' ({ commit }, { team_name, eid, attrs }) {
     return api.v2_updatePipe(team_name, eid, attrs).then(response => {
-      commit('pipe/UPDATED_ITEM', { eid, item: response.data })
+      commit('UPDATED_ITEM', { eid, item: response.data })
       return response
     }).catch(error => {
       throw error
@@ -127,7 +127,7 @@ const actions = {
 
   'delete' ({ commit }, { team_name, eid }) {
     return api.v2_deletePipe(team_name, eid).then(response => {
-      commit('pipe/DELETED_ITEM', eid)
+      commit('DELETED_ITEM', eid)
       return response
     }).catch(error => {
       throw error
@@ -135,7 +135,12 @@ const actions = {
   },
 }
 
-const getters = {}
+const getters = {
+  'getAll' (state) {
+    var items = _.sortBy(state.items, [ function(p) { return new Date(p.created) } ])
+    return items.reverse()
+  }
+}
 
 export default {
   namespaced: true,

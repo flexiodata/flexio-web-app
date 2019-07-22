@@ -312,7 +312,8 @@
         edit_keys: state => state.pipedoc.edit_keys,
         is_fetching: state => state.pipedoc.fetching,
         is_fetched: state => state.pipedoc.fetched,
-        is_changed: state => state.pipedoc.changed
+        is_changed: state => state.pipedoc.changed,
+        active_team_name: state => state.active_team_name
       }),
       route_object_name() {
         return _.get(this.$route, 'params.object_name', undefined)
@@ -440,7 +441,7 @@
       loadPipe() {
         this.$store.commit('pipedoc/FETCHING_PIPE', true)
 
-        this.$store.dispatch('v2_action_fetchPipe', { eid: this.route_object_name }).then(response => {
+        this.$store.dispatch('pipes/fetch', { team_name: this.active_team_name, eid: this.route_object_name }).then(response => {
           var pipe = response.data
           this.pipe_not_found = false
           this.$store.commit('pipedoc/INIT_PIPE', pipe)
@@ -465,7 +466,7 @@
         // don't POST null values
         attrs = _.omitBy(attrs, (val, key) => { return _.isNil(val) })
 
-        return this.$store.dispatch('v2_action_updatePipe', { eid, attrs }).then(response => {
+        return this.$store.dispatch('pipes/update', { team_name: this.active_team_name eid, attrs }).then(response => {
           var pipe = response.data
 
           this.$message({
