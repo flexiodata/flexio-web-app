@@ -594,6 +594,11 @@ class ContextKeyValue(object):
     def get(self, k):
         return proxy.invoke('kvGet', [k])
 
+    def incr(self, k, v=1):
+        return proxy.invoke('kvIncr', [k,v])
+
+    def decr(self, k, v=1):
+        return proxy.invoke('kvDecr', [k,v])
 
 
 class Context(object):
