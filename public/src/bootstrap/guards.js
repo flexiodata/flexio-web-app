@@ -16,8 +16,8 @@ const tryFetchMembers = (team_name) => {
 }
 
 const tryFetchConnections = (team_name) => {
-  if (!store.state.connections_fetched && !store.state.connections_fetching) {
-    store.dispatch('v2_action_fetchConnections', { team_name })
+  if (!store.state.connections.is_fetched && !store.state.connections.is_fetching) {
+    store.dispatch('connections/fetch', { team_name })
   }
 }
 

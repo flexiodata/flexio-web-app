@@ -406,6 +406,8 @@
       createPendingConnection(item) {
         var ctype = item.connection_type
         var service_slug = slugify(item.service_name)
+        var team_name = this.active_team_name
+
         var attrs = _.assign({}, defaultAttrs(ctype), {
           eid_status: OBJECT_STATUS_PENDING,
           name: `${service_slug}-` + getNameSuffix(16),
@@ -413,12 +415,10 @@
           connection_type: ctype
         })
 
-        this.$store.dispatch('v2_action_createConnection', { attrs }).then(response => {
+        this.$store.dispatch('connections/create', { team_name, attrs }).then(response => {
           var connection = _.cloneDeep(response.data)
           connection.name = `${service_slug}-` + getNameSuffix(4),
           this.updateConnection(connection)
-        }).catch(error => {
-          // TODO: add error handling?
         })
       },
       formValidateName(rule, value, callback) {

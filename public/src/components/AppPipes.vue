@@ -105,6 +105,23 @@
 
   const DEPLOY_MODE_RUN = 'R'
 
+  const defaultAttrs = () => {
+    // when creating a new pipe, start out with a basic Python 'Hello World' script
+    return {
+      deploy_mode: 'R',
+      deploy_api: 'A',
+      deploy_ui: 'A',
+      task: {
+        op: 'sequence',
+        items: [{
+          op: 'execute',
+          lang: 'python',
+          code: 'IyBiYXNpYyBoZWxsbyB3b3JsZCBleGFtcGxlCmRlZiBmbGV4X2hhbmRsZXIoZmxleCk6CiAgICBmbGV4LmVuZChbWyJIIiwiZSIsImwiLCJsIiwibyJdLFsiVyIsIm8iLCJyIiwibCIsImQiXV0pCg=='
+        }]
+      }
+    }
+  }
+
   export default {
     metaInfo() {
       return {
@@ -181,25 +198,10 @@
         }
       },
       tryCreatePipe(attrs) {
-        // when creating a new pipe, start out with a basic Python 'Hello World' script
-        var default_attrs = {
-          deploy_mode: 'R',
-          deploy_api: 'A',
-          deploy_ui: 'A',
-          task: {
-            op: 'sequence',
-            items: [{
-              op: 'execute',
-              lang: 'python',
-              code: 'IyBiYXNpYyBoZWxsbyB3b3JsZCBleGFtcGxlCmRlZiBmbGV4X2hhbmRsZXIoZmxleCk6CiAgICBmbGV4LmVuZChbWyJIIiwiZSIsImwiLCJsIiwibyJdLFsiVyIsIm8iLCJyIiwibCIsImQiXV0pCg=='
-            }]
-          }
-        }
-
         var team_name = this.active_team_name
 
-        attrs = _.cloneDeep(attrs)
-        attrs = _.assign({}, default_attrs, attrs)
+        var attrs = _.cloneDeep(attrs)
+        attrs = _.assign({}, defaultAttrs(), attrs)
 
         this.$store.dispatch('pipes/create', { team_name, attrs }).then(response => {
           var pipe = response.data
@@ -213,8 +215,6 @@
           this.$store.track('Created Pipe', analytics_payload)
           this.selectPipe(pipe)
           this.show_pipe_dialog = false
-        }).catch(error => {
-          this.$store.track('Created Pipe (Error)')
         })
       },
       tryDeletePipe(attrs) {

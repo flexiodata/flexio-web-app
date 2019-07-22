@@ -473,6 +473,7 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
   import { HOSTNAME } from '../constants/common'
   import {
     CONNECTION_STATUS_AVAILABLE,
@@ -576,6 +577,10 @@
       }
     },
     computed: {
+      // mix this into the outer object with the object spread operator
+      ...mapState([
+        'active_team_name'
+      ]),
       eid() {
         return _.get(this.connection, 'eid', '')
       },
@@ -767,9 +772,10 @@
       },
       tryDisconnect(attrs) {
         var eid = attrs.eid
+        var team_name = this.active_team_name
 
         // disconnect from this connection (oauth only)
-        this.$store.dispatch('v2_action_disconnectConnection', { eid, attrs }).then(response => {
+        this.$store.dispatch('connections/disconnect', { team_name, eid, attrs }).then(response => {
           var connection = response.data
 
           this.$message({
@@ -787,12 +793,13 @@
       },
       tryOauthConnect() {
         var eid = this.eid
+        var team_name = this.active_team_name
 
         this.$_Oauth_showPopup(this.oauth_url, (params) => {
           // TODO: handle 'code' and 'state' and 'error' here...
 
           // for now, re-fetch the connection to update its state
-          this.$store.dispatch('v2_action_fetchConnection', { eid }).then(response => {
+          this.$store.dispatch('connections/fetch', { team_name, eid }).then(response => {
             var connection = response.data
             this.$emit('change', _.omit(connection, ['name', 'short_description', 'description']))
 
@@ -814,14 +821,15 @@
       },
       tryTest(attrs) {
         var eid = attrs.eid
-        attrs = _.pick(attrs, ['short_description', 'description', 'connection_info'])
+        var team_name = this.active_team_name
+        attrs = _.pick(attrs, ['name', 'description', 'connection_info'])
 
         // update the connection
-        this.$store.dispatch('v2_action_updateConnection', { eid, attrs }).then(response => {
+        this.$store.dispatch('connections/update', { team_name, eid, attrs }).then(response => {
           this.test_state = 'testing'
 
           // test the connection
-          this.$store.dispatch('v2_action_testConnection', { eid, attrs }).then(response => {
+          this.$store.dispatch('connections/test', { team_name, eid, attrs }).then(response => {
             //var connection = _.omit(response.data, ['name', 'short_description', 'description', 'connection_info'])
             this.test_state = 'success'
             //this.$emit('change', connection)

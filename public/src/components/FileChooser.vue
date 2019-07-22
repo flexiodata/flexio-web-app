@@ -118,9 +118,9 @@
       }
     },
     methods: {
-      ...mapGetters([
-        'getAvailableConnections'
-      ]),
+      ...mapGetters('connections', {
+        'getAvailableConnections': 'getAvailableConnections'
+      }),
       cinfo() {
         return _.find(connections, { connection_type: this.ctype })
       },

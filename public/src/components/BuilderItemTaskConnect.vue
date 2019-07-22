@@ -52,7 +52,6 @@
 
 <script>
   import marked from 'marked'
-  import { mapGetters } from 'vuex'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import BuilderComponentConnectionChooser from '@comp/BuilderComponentConnectionChooser'
   import MixinConnection from '@comp/mixins/connection'
@@ -137,9 +136,6 @@
       }
     },
     methods: {
-      ...mapGetters([
-        'getAvailableConnections'
-      ]),
       initSelf() {
         var form_values = _.get(this.item, 'form_values', {})
         this.orig_values = _.assign({}, getDefaultValues(), form_values)
