@@ -304,8 +304,7 @@ class Process
 
         $validated_query_params = $validator->getParams();
 
-        // only return stats for the user that's making the request
-        // make sure we have a valid user; otherwise, it's a public request, so don't allow it
+        // make sure we have a valid user, and only return stats for the user that's making the request
         $owner_user = \Flexio\Object\User::load($owner_user_eid);
         if ($owner_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
@@ -355,8 +354,7 @@ class Process
 
         $validated_query_params = $validator->getParams();
 
-        // only return stats for the user that's making the request
-        // make sure we have a valid user; otherwise, it's a public request, so don't allow it
+        // make sure we have a valid user, and only return stats for the user that's making the request
         $owner_user = \Flexio\Object\User::load($owner_user_eid);
         if ($owner_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
