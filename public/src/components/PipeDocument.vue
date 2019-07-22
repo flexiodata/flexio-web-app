@@ -466,7 +466,7 @@
         // don't POST null values
         attrs = _.omitBy(attrs, (val, key) => { return _.isNil(val) })
 
-        return this.$store.dispatch('pipes/update', { team_name: this.active_team_name eid, attrs }).then(response => {
+        return this.$store.dispatch('pipes/update', { team_name: this.active_team_name, eid, attrs }).then(response => {
           var pipe = response.data
 
           this.$message({
