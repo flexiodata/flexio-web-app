@@ -136,13 +136,11 @@ const actions = {
   },
 }
 
-const getAllPipes = state => {
-  var items = _.sortBy(state.items, [ function(p) { return new Date(p.created) } ])
-  return items.reverse()
-}
-
 const getters = {
-  getAllPipes
+  getAllPipes (state) {
+    var items = _.sortBy(state.items, [ function(p) { return new Date(p.created) } ])
+    return items.reverse()
+  },
 }
 
 export default {
