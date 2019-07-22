@@ -66,7 +66,7 @@
     },
     computed: {
       runtime_link() {
-        return 'https://' + window.location.hostname + '/app/pipes/' + this.eid + '/run'
+        return 'https://' + window.location.hostname + '/app/me/pipes/' + this.eid + '/run'
       },
       is_deployed: {
         get() {

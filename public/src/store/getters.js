@@ -103,7 +103,8 @@ export const getActiveUsername = state => {
 }
 
 export const getActiveTeam = state => {
-  return _.find(getAllUsers(state), { username: state.active_team_name })
+  var team_name = state.active_team_name
+  return _.find(getAllUsers(state), t => t.eid == team_name || t.username == team_name)
 }
 
 export const getActiveTeamLabel = state => {

@@ -70,7 +70,7 @@ export const getDeployApiUrl = (identifier) => {
 }
 
 export const getDeployRuntimeUrl = (eid) => {
-  return 'https://' + window.location.hostname + '/app/pipes/' + eid + '/run'
+  return 'https://' + window.location.hostname + '/app/me/pipes/' + eid + '/run'
 }
 
 export const getJsDocObject = (pipe) => {
