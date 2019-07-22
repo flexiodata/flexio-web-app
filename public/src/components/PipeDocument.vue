@@ -308,11 +308,11 @@
     },
     computed: {
       ...mapState({
-        orig_pipe: state => state.pipedoc.orig_pipe,
-        edit_keys: state => state.pipedoc.edit_keys,
-        is_fetching: state => state.pipedoc.fetching,
-        is_fetched: state => state.pipedoc.fetched,
-        is_changed: state => state.pipedoc.changed,
+        orig_pipe: state => state.pipedocument.orig_pipe,
+        edit_keys: state => state.pipedocument.edit_keys,
+        is_fetching: state => state.pipedocument.fetching,
+        is_fetched: state => state.pipedocument.fetched,
+        is_changed: state => state.pipedocument.changed,
         active_team_name: state => state.active_team_name
       }),
       route_object_name() {
@@ -329,13 +329,13 @@
       },
       edit_pipe: {
         get() {
-          var pipe = _.get(this.$store.state.pipedoc, 'edit_pipe', {})
+          var pipe = _.get(this.$store.state.pipedocument, 'edit_pipe', {})
           return pipe
         },
         set(value) {
           try {
             var pipe = _.cloneDeep(value)
-            this.$store.commit('pipedoc/UPDATE_EDIT_PIPE', pipe)
+            this.$store.commit('pipedocument/UPDATE_EDIT_PIPE', pipe)
           }
           catch(e)
           {
@@ -353,7 +353,7 @@
             var input = _.cloneDeep(value)
             var pipe = _.cloneDeep(this.edit_pipe)
             _.set(pipe, 'ui.input', input)
-            this.$store.commit('pipedoc/UPDATE_EDIT_PIPE', pipe)
+            this.$store.commit('pipedocument/UPDATE_EDIT_PIPE', pipe)
           }
           catch(e)
           {
@@ -379,7 +379,7 @@
             var task = _.cloneDeep(value)
             var pipe = _.cloneDeep(this.edit_pipe)
             _.assign(pipe, { task })
-            this.$store.commit('pipedoc/UPDATE_EDIT_PIPE', pipe)
+            this.$store.commit('pipedocument/UPDATE_EDIT_PIPE', pipe)
           }
           catch(e)
           {
@@ -410,7 +410,7 @@
             var deploy_mode = value === false ? DEPLOY_MODE_BUILD : DEPLOY_MODE_RUN
             var pipe = _.cloneDeep(this.edit_pipe)
             _.assign(pipe, { deploy_mode })
-            this.$store.commit('pipedoc/UPDATE_EDIT_PIPE', pipe)
+            this.$store.commit('pipedocument/UPDATE_EDIT_PIPE', pipe)
             this.saveChanges()
           }
 
@@ -439,7 +439,7 @@
         'getActiveDocumentProcesses'
       ]),
       loadPipe() {
-        this.$store.commit('pipedoc/FETCHING_PIPE', true)
+        this.$store.commit('pipedocument/FETCHING_PIPE', true)
 
         var team_name = this.active_team_name
         var name = this.route_object_name
@@ -447,15 +447,15 @@
         this.$store.dispatch('pipes/fetch', { team_name, name }).then(response => {
           var pipe = response.data
           this.pipe_not_found = false
-          this.$store.commit('pipedoc/INIT_PIPE', pipe)
+          this.$store.commit('pipedocument/INIT_PIPE', pipe)
         }).catch(error => {
           this.pipe_not_found = true
         }).finally(() => {
-          this.$store.commit('pipedoc/FETCHING_PIPE', false)
+          this.$store.commit('pipedocument/FETCHING_PIPE', false)
         })
       },
       cancelChanges() {
-        this.$store.commit('pipedoc/INIT_PIPE', this.orig_pipe)
+        this.$store.commit('pipedocument/INIT_PIPE', this.orig_pipe)
         this.revert()
         this.active_task_idx = -1
       },
@@ -486,7 +486,7 @@
             this.$router.replace(new_route)
           }
 
-          this.$store.commit('pipedoc/INIT_PIPE', pipe)
+          this.$store.commit('pipedocument/INIT_PIPE', pipe)
           this.revert()
         }).catch(error => {
           this.$message({
@@ -510,7 +510,7 @@
 
         var pipe = _.cloneDeep(this.edit_pipe)
         _.assign(pipe, attrs)
-        this.$store.commit('pipedoc/UPDATE_EDIT_PIPE', pipe)
+        this.$store.commit('pipedocument/UPDATE_EDIT_PIPE', pipe)
 
         this.saveChanges().finally(() => {
           this.show_pipe_edit_dialog = false
@@ -521,7 +521,7 @@
 
         var pipe = _.cloneDeep(this.edit_pipe)
         _.assign(pipe, attrs)
-        this.$store.commit('pipedoc/UPDATE_EDIT_PIPE', pipe)
+        this.$store.commit('pipedocument/UPDATE_EDIT_PIPE', pipe)
 
         this.saveChanges().then(() => {
           this.show_pipe_schedule_dialog = false
