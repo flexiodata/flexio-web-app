@@ -21,42 +21,19 @@
       route: 'users',
       name: 'User Activity',
       icon: 'group'
-    },
-    {
+    },{
       route: 'processes',
       name: 'Process Activity',
       icon: 'network_check'
-    },
-    {
+    },{
       route: 'tests',
       name: 'Tests',
       icon: 'gavel'
-    },
-    {
-      route: 'builder',
-      name: 'Builder',
-      icon: 'build'
-    }/*,
-    {
-      route: 'translator',
-      name: 'Code Translator',
-      icon: 'translate'
-    },
-    {
-      route: 'code',
-      name: 'Code Editor',
-      icon: 'code'
-    },
-    {
-      route: 'modals',
-      name: 'Modals',
-      icon: 'picture_in_picture'
-    }*/,
-    {
+    },{
       route: 'prototype',
       name: 'Prototype',
       icon: 'featured_play_list'
-    }
+    },
   ]
 
   export default {

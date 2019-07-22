@@ -11,7 +11,6 @@ import AppConnections from '@comp/AppConnections'
 import AppMembers from '@comp/AppMembers'
 
 import PipeDocument from '@comp/PipeDocument'
-import BuilderDocument from '@comp/BuilderDocument'
 
 import SignInPage from '@comp/SignInPage'
 import SignUpPage from '@comp/SignUpPage'
@@ -36,7 +35,6 @@ const routes = [
   { path: '/forgotpassword',                        name: rn.ROUTE_FORGOTPASSWORD_PAGE, component: ForgotPasswordPage        },
   { path: '/resetpassword',                         name: rn.ROUTE_RESETPASSWORD_PAGE,  component: ResetPasswordPage         },
   { path: '/initsession',                           name: rn.ROUTE_INITSESSION_PAGE,    component: InitSessionPage           },
-  { path: '/builder/:template',                     name: rn.ROUTE_APP_BUILDER,         component: BuilderDocument,     meta },
   { path: '/account/:section?',                     name: rn.ROUTE_APP_ACCOUNT,         component: AppAccount,          meta },
   { path: '/:team_name?/members',                   name: rn.ROUTE_APP_MEMBERS,         component: AppMembers,          meta },
   { path: '/:team_name?/connections/:object_name?', name: rn.ROUTE_APP_CONNECTIONS,     component: AppConnections,      meta },
