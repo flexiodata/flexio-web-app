@@ -441,7 +441,10 @@
       loadPipe() {
         this.$store.commit('pipedoc/FETCHING_PIPE', true)
 
-        this.$store.dispatch('pipes/fetch', { team_name: this.active_team_name, eid: this.route_object_name }).then(response => {
+        var team_name = this.active_team_name
+        var name = this.route_object_name
+
+        this.$store.dispatch('pipes/fetch', { team_name, name }).then(response => {
           var pipe = response.data
           this.pipe_not_found = false
           this.$store.commit('pipedoc/INIT_PIPE', pipe)
@@ -462,11 +465,12 @@
 
         var eid = this.eid
         var attrs = _.pick(this.edit_pipe, this.edit_keys)
+        var team_name = this.active_team_name
 
         // don't POST null values
         attrs = _.omitBy(attrs, (val, key) => { return _.isNil(val) })
 
-        return this.$store.dispatch('pipes/update', { team_name: this.active_team_name, eid, attrs }).then(response => {
+        return this.$store.dispatch('pipes/update', { team_name, eid, attrs }).then(response => {
           var pipe = response.data
 
           this.$message({

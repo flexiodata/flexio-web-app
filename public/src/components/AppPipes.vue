@@ -174,8 +174,10 @@
         'getAllPipes': 'getAll'
       }),
       tryFetchPipes() {
+        var team_name = this.active_team_name
+
         if (!this.is_fetched && !this.is_fetching) {
-          this.$store.dispatch('pipes/fetch', {})
+          this.$store.dispatch('pipes/fetch', { team_name })
         }
       },
       tryCreatePipe(attrs) {
@@ -194,10 +196,12 @@
           }
         }
 
+        var team_name = this.active_team_name
+
         attrs = _.cloneDeep(attrs)
         attrs = _.assign({}, default_attrs, attrs)
 
-        this.$store.dispatch('pipes/create', { team_name: this.active_team_name, attrs }).then(response => {
+        this.$store.dispatch('pipes/create', { team_name, attrs }).then(response => {
           var pipe = response.data
 
           this.$message({
@@ -216,6 +220,7 @@
       tryDeletePipe(attrs) {
         var eid = _.get(attrs, 'eid', '')
         var pname = _.get(attrs, 'name', 'Pipe')
+        var team_name = this.active_team_name
 
         this.$confirm('Are you sure you want to delete the pipe named "' + pname + '"?', 'Really delete pipe?', {
           confirmButtonClass: 'ttu fw6',
@@ -226,7 +231,7 @@
         }).then(() => {
           var idx = _.findIndex(this.pipes, this.pipe)
 
-          this.$store.dispatch('pipes/delete', { team_name: this.active_team_name, eid }).then(response => {
+          this.$store.dispatch('pipes/delete', { team_name, eid }).then(response => {
             if (idx >= 0) {
               if (idx >= this.pipes.length) {
                 idx--

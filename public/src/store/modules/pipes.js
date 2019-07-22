@@ -49,9 +49,9 @@ const mutations = {
     state.is_fetched = true
   },
 
+  // this is problematic since we key on `eid`, but can now do fetching calls using `name`
+  /*
   'FETCHING_ITEM' (state, { eid, name, is_fetching }) {
-    // this is problematic since we key on `eid`, but can now do fetching calls using `name`
-    /*
     var meta = _.assign(getDefaultMeta(), { is_fetching: true })
 
     // if we're trying to fetch an item that's not
@@ -62,15 +62,17 @@ const mutations = {
       // otherwise, just set the pipe's `is_fetching` flag
       updateMeta(state, { eid, name }, { is_fetching: true })
     }
-    */
   },
+  */
 
   'FETCHED_ITEM' (state, item) {
+    var meta = _.assign(getDefaultMeta(), { is_fetched: true })
+
+    addItem(state, item, meta)
+
     // if the item in the store has an error node, remove it;
     // the new fetch will put it back if there are still errors
     removeMeta(state, item, ['error'])
-
-    addItem(state, item, { is_is_fetched: true })
   },
 
   'UPDATED_ITEM' (state, { eid, item }) {
@@ -92,17 +94,13 @@ const actions = {
     })
   },
 
-  'fetch' ({ commit }, { team_name, eid }) {
-    if (eid) {
+  'fetch' ({ commit }, { team_name, eid, name }) {
+    if (eid || name) {
       // fetching a single item
-      commit('FETCHING_ITEM', { eid, is_fetching: true })
-
-      return api.v2_fetchPipe(team_name, eid).then(response => {
+      return api.v2_fetchPipe(team_name, eid || name).then(response => {
         commit('FETCHED_ITEM', response.data)
-        commit('FETCHING_ITEM', { eid, is_fetching: false })
         return response
       }).catch(error => {
-        commit('FETCHING_ITEM', { eid, is_fetching: false })
         throw error
       })
     } else {
