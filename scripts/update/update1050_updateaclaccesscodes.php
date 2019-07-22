@@ -119,8 +119,15 @@ function convertAclEntry($db, $acl_entry)
     if ($object === false)
         return;
 
+    // note: following constants were previous defined and used
+    // here in place of values:
+    // const MEMBER_UNDEFINED = '';
+    // const MEMBER_OWNER     = 'owner';
+    // const MEMBER_GROUP     = 'member';
+    // const MEMBER_PUBLIC    = 'public';
+
     $access_code = $acl_entry['access_code'];
-    if ($access_code === \Flexio\Object\User::MEMBER_OWNER)
+    if ($access_code === 'owner')
     {
         // if the access code is for the owner class, replace the owner
         // class identifier with the owner eid and add a new acl entry
@@ -153,7 +160,7 @@ function convertAclEntry($db, $acl_entry)
         }
     }
 
-    if ($access_code === \Flexio\Object\User::MEMBER_GROUP)
+    if ($access_code === 'member')
     {
         // if the access code is for the member class, add a new acl entry
         // for each of the object followers
@@ -192,7 +199,7 @@ function convertAclEntry($db, $acl_entry)
         }
     }
 
-    if ($access_code === \Flexio\Object\User::MEMBER_PUBLIC)
+    if ($access_code === 'public')
     {
         // if the access code is for the public class, add a new entry
         // with the appropriate access type value
@@ -212,7 +219,7 @@ function convertAclEntry($db, $acl_entry)
         $new_acl_entry['eid'] = $new_acl_eid;
         $new_acl_entry['object_eid'] = $object_eid;
         $new_acl_entry['access_type'] = 'CAT'; // ACCESS_CODE_TYPE_CATEGORY
-        $new_acl_entry['access_code'] = \Flexio\Object\User::MEMBER_PUBLIC;
+        $new_acl_entry['access_code'] = 'public';
         $new_acl_entry['actions'] = $acl_entry['actions'];
         $new_acl_entry['created'] = $acl_entry['created'];
         $new_acl_entry['updated'] = $acl_entry['updated'];

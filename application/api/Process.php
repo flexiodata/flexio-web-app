@@ -306,15 +306,11 @@ class Process
 
         // only return stats for the user that's making the request
         // make sure we have a valid user; otherwise, it's a public request, so don't allow it
-
-        if ($requesting_user_eid === \Flexio\Object\User::MEMBER_PUBLIC)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-        if ($owner_user_eid !== $requesting_user_eid)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
         $owner_user = \Flexio\Object\User::load($owner_user_eid);
         if ($owner_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        if ($owner_user_eid !== $requesting_user_eid)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $filter = array('owned_by' => $owner_user_eid, 'eid_status' => \Model::STATUS_AVAILABLE);
         $filter = array_merge($validated_query_params, $filter); // give precedence to fixed owner/status
@@ -361,15 +357,11 @@ class Process
 
         // only return stats for the user that's making the request
         // make sure we have a valid user; otherwise, it's a public request, so don't allow it
-
-        if ($requesting_user_eid === \Flexio\Object\User::MEMBER_PUBLIC)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-        if ($owner_user_eid !== $requesting_user_eid)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
         $owner_user = \Flexio\Object\User::load($owner_user_eid);
         if ($owner_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        if ($owner_user_eid !== $requesting_user_eid)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $filter = array('owned_by' => $owner_user_eid, 'eid_status' => \Model::STATUS_AVAILABLE);
         $filter = array_merge($validated_query_params, $filter); // give precedence to fixed owner/status
