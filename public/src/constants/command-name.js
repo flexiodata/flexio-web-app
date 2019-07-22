@@ -1,7 +1,0 @@
-export const COMMAND_NAME_CONVERT       = 'convert'
-export const COMMAND_NAME_EXECUTE       = 'exec'
-export const COMMAND_NAME_FIND_REPLACE  = 'findreplace'
-export const COMMAND_NAME_INPUT         = 'input'
-export const COMMAND_NAME_LIMIT         = 'limit'
-export const COMMAND_NAME_SELECT_COLUMN = 'selectcolumn'
-export const COMMAND_NAME_SORT          = 'sort'
