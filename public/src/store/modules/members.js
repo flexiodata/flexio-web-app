@@ -130,19 +130,16 @@ const actions = {
   },
 }
 
-const getAllMembers = state => {
-  var items = _.sortBy(state.items, [ function(p) { return new Date(p.created) } ])
-  return items.reverse()
-}
-
-const isActiveMemberAvailable = (state, getters, root_state) => {
-  var member = _.find(getAllMembers(state), { eid: root_state.active_user_eid })
-  return _.get(member, 'member_status') == OBJECT_STATUS_AVAILABLE
-}
-
 const getters = {
-  getAllMembers,
-  isActiveMemberAvailable
+  getAllMembers (state) {
+    var items = _.sortBy(state.items, [ function(p) { return new Date(p.created) } ])
+    return items
+  },
+
+  isActiveMemberAvailable (state, getters, root_state) {
+    var member = _.find(getters.getAllMembers, { eid: root_state.active_user_eid })
+    return _.get(member, 'member_status') == OBJECT_STATUS_AVAILABLE
+  },
 }
 
 export default {

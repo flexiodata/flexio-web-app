@@ -178,9 +178,9 @@
       }),
       tryFetchMembers() {
         if (!this.is_fetched && !this.is_fetching) {
-          this.$store.dispatch('members/fetch', { team_name: this.active_team_name }).catch(error => {
-            // TODO: add error handling?
-          })
+          var team_name = this.active_team_name
+
+          this.$store.dispatch('members/fetch', { team_name })
         }
       },
       sendInvites() {
@@ -189,11 +189,10 @@
         // quick hack to allow multiple users to be added until the API supports it
         _.forEach(this.add_dialog_model.users, user => {
           setTimeout(() => {
+            var team_name = this.active_team_name
             var attrs = { member: user }
 
-            this.$store.dispatch('v2_action_createMember', { team_name: this.active_team_name, attrs }).catch(error => {
-              // TODO: add error handling?
-            })
+            this.$store.dispatch('members/create', { team_name, attrs })
           }, timeout)
 
           timeout += 40
@@ -211,10 +210,10 @@
         return _.get(member, 'username') == this.active_team_name
       },
       removeMember(member) {
+        var team_name = this.active_team_name
         var eid = member.eid
-        this.$store.dispatch('v2_action_deleteMember', { team_name: this.active_team_name, eid }).catch(error => {
-          // TODO: add error handling?
-        })
+
+        this.$store.dispatch('members/delete', { team_name, eid })
       },
       addUserTag() {
         var $select = this.$refs['email-select']
