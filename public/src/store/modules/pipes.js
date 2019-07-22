@@ -5,7 +5,7 @@ import {
   removeItem,
   updateMeta,
   removeMeta,
-} from '../helpers'
+} from '@/store/helpers'
 
 const getDefaultMeta = () => {
   return {
@@ -59,7 +59,7 @@ const mutations = {
     if (is_fetching === true && !_.find(state.items, p => name ? p.name == name : p.eid == eid)) {
       addItem(state, { eid, name }, meta)
     } else {
-      // otherwise, just set the pipe's `is_fetching` flag
+      // otherwise, just set the item's `is_fetching` flag
       updateMeta(state, { eid, name }, { is_fetching: true })
     }
   },
@@ -67,7 +67,6 @@ const mutations = {
 
   'FETCHED_ITEM' (state, item) {
     var meta = _.assign(getDefaultMeta(), { is_fetched: true })
-
     addItem(state, item, meta)
 
     // if the item in the store has an error node, remove it;
@@ -137,11 +136,13 @@ const actions = {
   },
 }
 
+const getAllPipes = state => {
+  var items = _.sortBy(state.items, [ function(p) { return new Date(p.created) } ])
+  return items.reverse()
+}
+
 const getters = {
-  'getAll' (state) {
-    var items = _.sortBy(state.items, [ function(p) { return new Date(p.created) } ])
-    return items.reverse()
-  }
+  getAllPipes
 }
 
 export default {

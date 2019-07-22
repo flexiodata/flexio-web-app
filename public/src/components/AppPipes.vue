@@ -147,6 +147,9 @@
         is_fetched: state => state.pipes.is_fetched,
         active_team_name: state => state.active_team_name
       }),
+      pipes() {
+        return this.getAllPipes()
+      },
       route_object_name() {
         return _.get(this.$route, 'params.object_name', undefined)
       },
@@ -155,9 +158,6 @@
       },
       has_pipe() {
         return this.pname.length > 0
-      },
-      pipes() {
-        return this.getAllPipes()
       }
     },
     created() {
@@ -171,7 +171,7 @@
         'getActiveTeamLabel',
       ]),
       ...mapGetters('pipes', {
-        'getAllPipes': 'getAll'
+        'getAllPipes': 'getAllPipes'
       }),
       tryFetchPipes() {
         var team_name = this.active_team_name
