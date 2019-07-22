@@ -210,8 +210,8 @@
     methods: {
       updatePager(page) {
         // update the route
-        var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
-        _.set(new_route, 'query.page', page)
+        var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path', 'query'])
+        new_route.query = _.assign({}, new_route.query, { page })
         this.$router.replace(new_route)
       },
       sortBy({ column, prop, order }) {

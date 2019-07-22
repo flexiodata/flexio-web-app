@@ -169,11 +169,11 @@
       getSection() {
         return _.get(this.$route, 'params.section', 'profile')
       },
-      setRoute(section_name) {
+      setRoute(section) {
         // update the route
         var current_section = _.get(this.$route, 'params.section', '')
         var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
-        _.set(new_route, 'params.section', section_name)
+        new_route.params = _.assign({}, new_route.params, { section })
         this.$router[current_section.length == 0 ? 'replace' : 'push'](new_route)
       },
       onTabClick(tab) {
