@@ -18,7 +18,6 @@ import SignUpPage from '@comp/SignUpPage'
 import ForgotPasswordPage from '@comp/ForgotPasswordPage'
 import ResetPasswordPage from '@comp/ResetPasswordPage'
 import InitSessionPage from '@comp/InitSessionPage'
-import OnboardingPage from '@comp/OnboardingPage'
 import PageNotFound from '@comp/PageNotFound'
 
 // use VueRouter for handling browser history
@@ -37,7 +36,6 @@ const routes = [
   { path: '/forgotpassword',                        name: rn.ROUTE_FORGOTPASSWORD_PAGE, component: ForgotPasswordPage        },
   { path: '/resetpassword',                         name: rn.ROUTE_RESETPASSWORD_PAGE,  component: ResetPasswordPage         },
   { path: '/initsession',                           name: rn.ROUTE_INITSESSION_PAGE,    component: InitSessionPage           },
-  { path: '/onboard',                               name: rn.ROUTE_ONBOARD_PAGE,        component: OnboardingPage,      meta },
   { path: '/builder/:template',                     name: rn.ROUTE_APP_BUILDER,         component: BuilderDocument,     meta },
   { path: '/account/:section?',                     name: rn.ROUTE_APP_ACCOUNT,         component: AppAccount,          meta },
   { path: '/:team_name?/members',                   name: rn.ROUTE_APP_MEMBERS,         component: AppMembers,          meta },
