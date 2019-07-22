@@ -166,7 +166,6 @@ const actions = {
 
     commit('TESTING_ITEM', { eid, is_testing: true })
 
-debugger
     return api.v2_testConnection(team_name, eid, attrs).then(response => {
       commit('TESTED_ITEM', { eid, item: response.data })
       commit('TESTING_ITEM', { eid, is_testing: false })

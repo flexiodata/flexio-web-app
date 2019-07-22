@@ -449,7 +449,6 @@
           this.pipe_not_found = false
           this.$store.commit('pipedoc/INIT_PIPE', pipe)
         }).catch(error => {
-          debugger
           this.pipe_not_found = true
         }).finally(() => {
           this.$store.commit('pipedoc/FETCHING_PIPE', false)
