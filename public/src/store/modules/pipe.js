@@ -27,28 +27,28 @@ const getDefaultState = () => {
 const state = getDefaultState()
 
 const mutations = {
-  RESET_STATE (state) {
+  'RESET_STATE' (state) {
     _.assign(state, getDefaultState())
   },
 
-  CREATED_ITEM (state, item) {
+  'CREATED_ITEM' (state, item) {
     var meta = _.assign(getDefaultMeta(), { is_fetched: true })
     addItem(state, item, meta)
   },
 
-  FETCHING_ITEMS (state, is_fetching) {
+  'FETCHING_ITEMS' (state, is_fetching) {
     state.is_fetching = is_fetching
     if (is_fetching === true) {
       state.is_fetched = false
     }
   },
 
-  FETCHED_ITEMS (state, items) {
+  'FETCHED_ITEMS' (state, items) {
     addItem(state, items, getDefaultMeta())
     state.is_fetched = true
   },
 
-  FETCHING_ITEM (state, { eid, is_fetching }) {
+  'FETCHING_ITEM' (state, { eid, is_fetching }) {
     var meta = _.assign(getDefaultMeta(), { is_fetching: true })
 
     // if we're trying to fetch an item that's not
@@ -61,7 +61,7 @@ const mutations = {
     }
   },
 
-  FETCHED_ITEM (state, item) {
+  'FETCHED_ITEM' (state, item) {
     // if the item in the store has an error node, remove it;
     // the new fetch will put it back if there are still errors
     removeMeta(state, item, ['error'])
@@ -69,17 +69,16 @@ const mutations = {
     addItem(state, item, { is_is_fetched: true })
   },
 
-  UPDATED_ITEM (state, { eid, item }) {
+  'UPDATED_ITEM' (state, { eid, item }) {
     updateItem(state, eid, item)
   },
 
-  DELETED_ITEM (state, eid) {
+  'DELETED_ITEM' (state, eid) {
     removeItem(state, eid)
   },
 }
 
 const actions = {
-
   'create' ({ commit, dispatch }, { team_name, attrs }) {
     return api.v2_createPipe(team_name, attrs).then(response => {
       commit('pipe/CREATED_ITEM', response.data)
