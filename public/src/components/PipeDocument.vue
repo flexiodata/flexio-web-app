@@ -480,8 +480,10 @@
 
           // change the object name in the route
           if (pipe.name != this.orig_pipe.name) {
+            var object_name = pipe.name
+
             var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
-            _.set(new_route, 'params.object_name', pipe.name)
+            new_route.params = _.assign({}, new_route.params, { object_name })
             this.$router.replace(new_route)
           }
 
