@@ -407,6 +407,22 @@ class User extends ModelBase
         return $eid;
     }
 
+    public function getEidFromVerifyCode(string $identifier) // TODO: add return type
+    {
+        // basic check for verify code, which must have a non-zero length
+        if (strlen($identifier) <= 0)
+            return false;
+
+        // get the eid
+        $db = $this->getDatabase();
+        $qidentifier = $db->quote($identifier);
+        $eid = $db->fetchOne("select eid from tbl_user where verify_code = $qidentifier");
+        if ($eid === false)
+            return false;
+
+        return $eid;
+    }
+
     public function checkUserPassword(string $identifier, string $password) : bool
     {
         // basic check since identifier can be either a username or email
