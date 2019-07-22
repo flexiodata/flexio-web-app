@@ -63,9 +63,9 @@
       }
     },
     methods: {
-      ...mapGetters([
-        'isActiveMemberAvailable'
-      ])
+      ...mapGetters('members', {
+        'isActiveMemberAvailable': 'isActiveMemberAvailable'
+      })
     }
   }
 </script>

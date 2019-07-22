@@ -158,9 +158,9 @@
     computed: {
       // mix this into the outer object with the object spread operator
       ...mapState({
-        'is_fetching': 'members_fetching',
-        'is_fetched': 'members_fetched',
-        'active_team_name': 'active_team_name'
+        is_fetching: state => state.members.is_fetching,
+        is_fetched: state => state.members.is_fetched,
+        active_team_name: state => state.active_team_name
       }),
       members() {
         return this.getAllMembers()
@@ -171,12 +171,14 @@
     },
     methods: {
       ...mapGetters([
-        'getAllMembers',
-        'getActiveTeamLabel'
+        'getActiveTeamLabel',
       ]),
+      ...mapGetters('members', {
+        'getAllMembers': 'getAllMembers'
+      }),
       tryFetchMembers() {
         if (!this.is_fetched && !this.is_fetching) {
-          this.$store.dispatch('v2_action_fetchMembers', { team_name: this.active_team_name }).catch(error => {
+          this.$store.dispatch('members/fetch', { team_name: this.active_team_name }).catch(error => {
             // TODO: add error handling?
           })
         }

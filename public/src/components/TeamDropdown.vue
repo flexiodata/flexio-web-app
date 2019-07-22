@@ -75,9 +75,11 @@
       ...mapGetters([
         'getActiveUser',
         'getActiveTeamLabel',
-        'getAllTeams',
-        'isActiveMemberAvailable'
+        'getAllTeams'
       ]),
+      ...mapGetters('members', {
+        'isActiveMemberAvailable': 'isActiveMemberAvailable'
+      }),
       tryFetchTeams() {
         if (!this.is_fetched && !this.is_fetching) {
           this.$store.dispatch('v2_action_fetchTeams', { team_name: this.active_username }).catch(error => {

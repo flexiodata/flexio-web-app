@@ -10,8 +10,8 @@ const tryFetchTeams = (team_name) => {
 }
 
 const tryFetchMembers = (team_name) => {
-  if (!store.state.members_fetched && !store.state.members_fetching) {
-    store.dispatch('v2_action_fetchMembers', { team_name })
+  if (!store.state.members.is_fetched && !store.state.members.is_fetching) {
+    store.dispatch('members/fetch', { team_name })
   }
 }
 

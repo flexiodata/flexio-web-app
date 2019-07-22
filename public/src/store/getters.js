@@ -136,11 +136,3 @@ export const getActiveDocumentProcesses = state => {
     .sortBy([ function(p) { return new Date(p.started) } ])
     .value()
 }
-
-export const getActiveMember = state => {
-  return _.find(getAllMembers(state), { eid: state.active_user_eid })
-}
-
-export const isActiveMemberAvailable = state => {
-  return _.get(getActiveMember(state), 'member_status') == OBJECT_STATUS_AVAILABLE
-}

@@ -56,9 +56,9 @@
     },
     computed: {
       ...mapState({
-        'active_user_eid': 'active_user_eid',
-        'is_initializing': 'members_fetching',
-        'is_initialized': 'members_fetched'
+        active_user_eid: state => state.active_user_eid,
+        is_initializing: state => state.members.is_fetching,
+        is_initialized: state => state.members.is_fetched
       }),
       route_name() {
         return _.get(this.$route, 'name')
@@ -91,9 +91,9 @@
       }
     },
     methods: {
-      ...mapGetters([
-        'getAllMembers'
-      ])
+      ...mapGetters('members', {
+        'getAllMembers': 'getAllMembers'
+      }),
     }
   }
 </script>
