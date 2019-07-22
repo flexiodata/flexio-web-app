@@ -155,7 +155,7 @@ class User
         }
 
 
-        // POSSIBILITY 2: the user already already exists; fail if the user status is anything besides pending
+        // POSSIBILITY 2: the user already exists; fail if the user status is anything besides pending
         if ($user->getStatus() != \Model::STATUS_PENDING)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED, _('This email address is already taken.  Please try another.'));
 
