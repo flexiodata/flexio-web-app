@@ -8,18 +8,18 @@ import {
 
 const getDefaultMeta = () => {
   return {
-    fetching: false,
-    fetched: false,
-    processes_fetching: false,
-    processes_fetched: false,
+    is_fetching: false,
+    is_fetched: false,
+    is_processes_is_fetching: false,
+    is_processes_is_fetched: false,
     /*error: {},*/
   }
 }
 
 const getDefaultState = () => {
   return {
-    fetching: false,
-    fetched: false,
+    is_fetching: false,
+    is_fetched: false,
     items: {},
   }
 }
@@ -32,32 +32,32 @@ const mutations = {
   },
 
   CREATED_ITEM (state, item) {
-    var meta = _.assign(getDefaultMeta(), { fetched: true })
+    var meta = _.assign(getDefaultMeta(), { is_fetched: true })
     addItem(state, item, meta)
   },
 
-  FETCHING_ITEMS (state, fetching) {
-    state.fetching = fetching
-    if (fetching === true) {
-      state.fetched = false
+  FETCHING_ITEMS (state, is_fetching) {
+    state.is_fetching = is_fetching
+    if (is_fetching === true) {
+      state.is_fetched = false
     }
   },
 
   FETCHED_ITEMS (state, items) {
     addItem(state, items, getDefaultMeta())
-    state.fetched = true
+    state.is_fetched = true
   },
 
-  FETCHING_ITEM (state, { eid, fetching }) {
-    var meta = _.assign(getDefaultMeta(), { fetching: true })
+  FETCHING_ITEM (state, { eid, is_fetching }) {
+    var meta = _.assign(getDefaultMeta(), { is_fetching: true })
 
     // if we're trying to fetch an item that's not
     // in our store, add a placeholder item to the store
-    if (fetching === true && !_.has(state.items, eid)) {
+    if (is_fetching === true && !_.has(state.items, eid)) {
       addItem(state, eid, meta)
     } else {
-      // otherwise, just set the pipe's fetching flag
-      updateItem(state, eid, { fetching: true })
+      // otherwise, just set the pipe's is_fetching flag
+      updateItem(state, eid, { is_fetching: true })
     }
   },
 
@@ -66,7 +66,7 @@ const mutations = {
     // the new fetch will put it back if there are still errors
     removeMeta(state, item, ['error'])
 
-    addItem(state, item, { is_fetched: true })
+    addItem(state, item, { is_is_fetched: true })
   },
 
   UPDATED_ITEM (state, { eid, item }) {
@@ -92,14 +92,14 @@ const actions = {
   'fetch' ({ commit }, { team_name, eid }) {
     if (eid) {
       // fetching a single item
-      commit('pipe/FETCHING_ITEM', { eid, fetching: true })
+      commit('pipe/FETCHING_ITEM', { eid, is_fetching: true })
 
       return api.v2_fetchPipe(team_name, eid).then(response => {
         commit('pipe/FETCHED_ITEM', response.data)
-        commit('pipe/FETCHING_ITEM', { eid, fetching: false })
+        commit('pipe/FETCHING_ITEM', { eid, is_fetching: false })
         return response
       }).catch(error => {
-        commit('pipe/FETCHING_ITEM', { eid, fetching: false })
+        commit('pipe/FETCHING_ITEM', { eid, is_fetching: false })
         throw error
       })
     } else {
