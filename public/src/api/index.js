@@ -84,9 +84,9 @@ export default {
   // INTERNAL API CALLS:
 
   // admin
-  v2_fetchAdminProcesses:  function(attrs)                         { return AxiosResource('admin')[V2_GET] (`/info/processes`, attrs)                          },
-  v2_fetchAdminTests:      function()                              { return AxiosResource('admin')[V2_GET] (`/tests/configure`)                                },
-  v2_runAdminTest:         function(attrs)                         { return AxiosResource('admin')[V2_GET] (`/tests/run`, attrs)                               },
+  v2_fetchAdminProcesses:  function(team_name, attrs)              { return AxiosResource('admin')[V2_GET] (`/info/processes`, attrs)                          },
+  v2_fetchAdminTests:      function(team_name)                     { return AxiosResource('admin')[V2_GET] (`/tests/configure`)                                },
+  v2_runAdminTest:         function(team_name, attrs)              { return AxiosResource('admin')[V2_GET] (`/tests/run`, attrs)                               },
 }
 
 /*
