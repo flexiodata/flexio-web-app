@@ -229,7 +229,6 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
   import ServiceIcon from '@comp/ServiceIcon'
   import TaskIcon from '@comp/TaskIcon'
   import ConfirmPopover from '@comp/ConfirmPopover'
@@ -405,9 +404,6 @@
       }
     },
     methods: {
-      ...mapGetters([
-        'getAllConnections'
-      ]),
       onPrevClick() {
         this.$emit('item-prev', this.index)
       },

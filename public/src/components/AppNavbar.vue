@@ -13,15 +13,7 @@
         </template>
       </div>
       <div class="flex-none">
-        <div v-if="user_fetching"></div>
-        <UserDropdown v-else-if="is_logged_in" />
-        <div v-else>
-          <router-link to="/signin" class="dib link f6 f6-ns ttu fw6 br2 pv2 ph2 mr1 mr2-ns underline-hover gray">Sign in</router-link>
-          <router-link to="/signup" class="dib link f6 f6-ns ttu fw6 br2 pv2 ph2 ph3-ns no-underline white bg-orange darken-10">
-            <span class="di dn-ns">Sign up</span>
-            <span class="dn di-ns">Sign up for free</span>
-          </router-link>
-        </div>
+        <UserDropdown v-if="is_logged_in" />
       </div>
     </div>
   </nav>
@@ -44,11 +36,10 @@
       UserDropdown
     },
     computed: {
-      ...mapState([
-        'active_user_eid',
-        'active_team_name',
-        'user_fetching'
-      ]),
+      ...mapState({
+        active_user_eid: state => state.users.active_user_eid,
+        active_team_name:  state => state.teams.active_team_name
+      }),
       pipe_route() {
         return { name: ROUTE_APP_PIPES, params: { team_name: this.active_team_name } }
       },
@@ -63,9 +54,9 @@
       }
     },
     methods: {
-      ...mapGetters([
-        'isActiveMemberAvailable'
-      ])
+      ...mapGetters('members', {
+        'isActiveMemberAvailable': 'isActiveMemberAvailable'
+      })
     }
   }
 </script>

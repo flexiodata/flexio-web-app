@@ -123,7 +123,7 @@
       }
     },
     mounted() {
-      api.v2_fetchAdminTests().then(response => {
+      api.v2_fetchAdminTests('admin').then(response => {
         var tests = _.map(response.data, (id, idx) => {
           return { id, idx }
         })
@@ -154,7 +154,7 @@
 
         this.tests[test_id] = _.assign({}, test, { is_running: true })
 
-        api.v2_runAdminTest({ id: test_id }).then(response => {
+        api.v2_runAdminTest('admin', { id: test_id }).then(response => {
           var xhr_error = response.status == 200 ? false : true
           this.tests[test_id] = _.assign({}, test, { is_running: false, xhr_error }, response.data)
           this.runTest(this.queue.next())

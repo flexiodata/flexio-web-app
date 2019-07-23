@@ -38,7 +38,7 @@
     },
     methods: {
       signOut() {
-        this.$store.dispatch('v2_action_signOut').then(response => {
+        this.$store.dispatch('users/signOut').then(response => {
           this.$router.push({ name: ROUTE_SIGNIN_PAGE })
         }).catch(error => {
           // TODO: add error handling?

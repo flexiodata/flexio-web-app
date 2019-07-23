@@ -77,7 +77,7 @@
     props: {
       pipe: {
         type: Object,
-        default: () => { return {} }
+        default: () => {}
       },
       showSaveCancel: {
         type: Boolean,

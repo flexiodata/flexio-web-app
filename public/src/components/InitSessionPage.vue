@@ -38,7 +38,7 @@
     },
     methods: {
       fetchUserAndRedirect(redirect) {
-        this.$store.dispatch('v2_action_fetchCurrentUser').then(response => {
+        this.$store.dispatch('users/fetch', { eid: 'me' }).then(response => {
           this.$_Redirect_redirect(redirect, 'replace')
         }).catch(error => {
           this.$_Redirect_redirect(redirect, 'replace')

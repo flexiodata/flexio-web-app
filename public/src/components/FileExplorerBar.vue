@@ -18,7 +18,7 @@
             :type="ctype"
           />
           <div class="f7 ml1">
-            {{cname}}
+            {{base_folder_label}}
           </div>
         </div>
 
@@ -61,6 +61,16 @@
       },
       ctype() {
         return _.get(this.connection, 'connection_type', '')
+      },
+      base_path() {
+        var path = _.get(this.connection, 'connection_info.base_path', '')
+        if (path.length > 0 && path.indexOf('/') != 0) {
+          path = '/' + path
+        }
+        return path
+      },
+      base_folder_label() {
+        return this.cname + this.base_path
       },
       items() {
         var path = this.path

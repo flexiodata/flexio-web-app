@@ -308,11 +308,12 @@
     },
     computed: {
       ...mapState({
-        orig_pipe: state => state.pipe.orig_pipe,
-        edit_keys: state => state.pipe.edit_keys,
-        is_fetching: state => state.pipe.fetching,
-        is_fetched: state => state.pipe.fetched,
-        is_changed: state => state.pipe.changed
+        orig_pipe: state => state.pipedocument.orig_pipe,
+        edit_keys: state => state.pipedocument.edit_keys,
+        is_fetching: state => state.pipedocument.fetching,
+        is_fetched: state => state.pipedocument.fetched,
+        is_changed: state => state.pipedocument.changed,
+        active_team_name: state => state.teams.active_team_name
       }),
       route_object_name() {
         return _.get(this.$route, 'params.object_name', undefined)
@@ -328,13 +329,13 @@
       },
       edit_pipe: {
         get() {
-          var pipe = _.get(this.$store.state.pipe, 'edit_pipe', {})
+          var pipe = _.get(this.$store.state.pipedocument, 'edit_pipe', {})
           return pipe
         },
         set(value) {
           try {
             var pipe = _.cloneDeep(value)
-            this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
+            this.$store.commit('pipedocument/UPDATE_EDIT_PIPE', pipe)
           }
           catch(e)
           {
@@ -352,7 +353,7 @@
             var input = _.cloneDeep(value)
             var pipe = _.cloneDeep(this.edit_pipe)
             _.set(pipe, 'ui.input', input)
-            this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
+            this.$store.commit('pipedocument/UPDATE_EDIT_PIPE', pipe)
           }
           catch(e)
           {
@@ -378,7 +379,7 @@
             var task = _.cloneDeep(value)
             var pipe = _.cloneDeep(this.edit_pipe)
             _.assign(pipe, { task })
-            this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
+            this.$store.commit('pipedocument/UPDATE_EDIT_PIPE', pipe)
           }
           catch(e)
           {
@@ -409,7 +410,7 @@
             var deploy_mode = value === false ? DEPLOY_MODE_BUILD : DEPLOY_MODE_RUN
             var pipe = _.cloneDeep(this.edit_pipe)
             _.assign(pipe, { deploy_mode })
-            this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
+            this.$store.commit('pipedocument/UPDATE_EDIT_PIPE', pipe)
             this.saveChanges()
           }
 
@@ -434,24 +435,27 @@
       }
     },
     methods: {
-      ...mapGetters([
-        'getActiveDocumentProcesses'
-      ]),
+      ...mapGetters('processes', {
+        'getActiveDocumentProcesses': 'getActiveDocumentProcesses'
+      }),
       loadPipe() {
-        this.$store.commit('pipe/FETCHING_PIPE', true)
+        this.$store.commit('pipedocument/FETCHING_PIPE', true)
 
-        this.$store.dispatch('v2_action_fetchPipe', { eid: this.route_object_name }).then(response => {
+        var team_name = this.active_team_name
+        var name = this.route_object_name
+
+        this.$store.dispatch('pipes/fetch', { team_name, name }).then(response => {
           var pipe = response.data
           this.pipe_not_found = false
-          this.$store.commit('pipe/INIT_PIPE', pipe)
+          this.$store.commit('pipedocument/INIT_PIPE', pipe)
         }).catch(error => {
           this.pipe_not_found = true
         }).finally(() => {
-          this.$store.commit('pipe/FETCHING_PIPE', false)
+          this.$store.commit('pipedocument/FETCHING_PIPE', false)
         })
       },
       cancelChanges() {
-        this.$store.commit('pipe/INIT_PIPE', this.orig_pipe)
+        this.$store.commit('pipedocument/INIT_PIPE', this.orig_pipe)
         this.revert()
         this.active_task_idx = -1
       },
@@ -460,11 +464,12 @@
 
         var eid = this.eid
         var attrs = _.pick(this.edit_pipe, this.edit_keys)
+        var team_name = this.active_team_name
 
         // don't POST null values
         attrs = _.omitBy(attrs, (val, key) => { return _.isNil(val) })
 
-        return this.$store.dispatch('v2_action_updatePipe', { eid, attrs }).then(response => {
+        return this.$store.dispatch('pipes/update', { team_name, eid, attrs }).then(response => {
           var pipe = response.data
 
           this.$message({
@@ -481,7 +486,7 @@
             this.$router.replace(new_route)
           }
 
-          this.$store.commit('pipe/INIT_PIPE', pipe)
+          this.$store.commit('pipedocument/INIT_PIPE', pipe)
           this.revert()
         }).catch(error => {
           this.$message({
@@ -505,7 +510,7 @@
 
         var pipe = _.cloneDeep(this.edit_pipe)
         _.assign(pipe, attrs)
-        this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
+        this.$store.commit('pipedocument/UPDATE_EDIT_PIPE', pipe)
 
         this.saveChanges().finally(() => {
           this.show_pipe_edit_dialog = false
@@ -516,7 +521,7 @@
 
         var pipe = _.cloneDeep(this.edit_pipe)
         _.assign(pipe, attrs)
-        this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
+        this.$store.commit('pipedocument/UPDATE_EDIT_PIPE', pipe)
 
         this.saveChanges().then(() => {
           this.show_pipe_schedule_dialog = false
@@ -526,20 +531,19 @@
         this.show_yaml = false
         this.show_testing = true
 
+        var team_name = this.active_team_name
         var attrs = _.pick(this.edit_pipe, ['task'])
-        var run_cfg = this.process_input
+        var cfg = this.process_input
 
         _.assign(attrs, {
           parent_eid: this.eid,
-          process_mode: PROCESS_MODE_BUILD/*,
-          run: true // this will automatically run the process and start polling the process
-          */
+          process_mode: PROCESS_MODE_BUILD
         })
 
-        this.$store.dispatch('v2_action_createProcess', { attrs }).then(response => {
+        this.$store.dispatch('processes/create', { team_name, attrs }).then(response => {
           var process = response.data
           var eid = process.eid
-          this.$store.dispatch('v2_action_runProcess', { eid, cfg: run_cfg })
+          this.$store.dispatch('processes/run', { team_name, eid, cfg })
         })
 
         // make sure we know we've tested the pipe at least once

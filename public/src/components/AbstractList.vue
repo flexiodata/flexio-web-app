@@ -25,7 +25,7 @@
       },
       'items': {
         type: Array,
-        default: () => { return [] }
+        default: () => []
       },
       'item-component': {
         type: String,
@@ -33,7 +33,7 @@
       },
       'item-options': {
         type: Object,
-        default: () => { return {} }
+        default: () => {}
       },
       'auto-select-item': {
         type: [Boolean, Object, Function], // true/false or object/function for use with _.find()
@@ -41,7 +41,7 @@
       },
       'selected-item': {
         type: Object,
-        default: () => { return {} }
+        default: () => {}
       },
       'disabled': {
         type: Boolean,

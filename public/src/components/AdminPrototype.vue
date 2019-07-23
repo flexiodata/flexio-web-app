@@ -51,7 +51,7 @@
 
   export default {
     metaInfo: {
-      title: 'Admin Prototype'
+      title: '[Admin] Prototype'
     },
     components: {
       FlexioEntryForm,

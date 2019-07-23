@@ -64,7 +64,7 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+  import { mapState, mapGetters } from 'vuex'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
   import ServiceList from '@comp/ServiceList'
@@ -117,6 +117,9 @@
       }
     },
     computed: {
+      ...mapState({
+        active_team_name: state => state.teams.active_team_name
+      }),
       cid() {
         var conn = this.edit_connection
         return _.get(conn, 'name', '') || _.get(conn, 'eid', '')
@@ -142,9 +145,9 @@
       }
     },
     methods: {
-      ...mapGetters([
-        'getAvailableConnections'
-      ]),
+      ...mapGetters('connections', {
+        'getAvailableConnections': 'getAvailableConnections'
+      }),
       getStoreConnection() {
         return this.$_Connection_getConnectionByIdentifier(this.connectionIdentifier)
       },
@@ -179,13 +182,15 @@
         var ctype = _.get(conn, 'connection_type', this.connectionTypeFilter)
 
         if (ctype.length > 0) {
+          var team_name = this.active_team_name
+
           var attrs = {
             eid_status: OBJECT_STATUS_PENDING,
             short_description: cname,
             connection_type: ctype
           }
 
-          this.$store.dispatch('v2_action_createConnection', { attrs }).then(response => {
+          this.$store.dispatch('connections/create', { team_name, attrs }).then(response => {
             var connection = _.cloneDeep(response.data)
             this.edit_mode = 'add'
             this.show_create_steps = false
@@ -204,19 +209,18 @@
       tryUpdateConnection(attrs) {
         var eid = attrs.eid
         var is_pending = attrs.eid_status === OBJECT_STATUS_PENDING
+        var team_name = this.active_team_name
 
         attrs = _.pick(attrs, ['short_description', 'name', 'description', 'connection_info'])
         _.assign(attrs, { eid_status: OBJECT_STATUS_AVAILABLE })
 
         // update the connection and make it available
-        this.$store.dispatch('v2_action_updateConnection', { eid, attrs }).then(response => {
+        this.$store.dispatch('connections/update', { team_name, eid, attrs }).then(response => {
           var connection = response.data
 
           // TODO: shouldn't we do this in the ConnectionEditPanel?
           // try to connect to the connection
-          this.$store.dispatch('v2_action_testConnection', { eid, attrs }).catch(error => {
-            // TODO: add error handling?
-          })
+          this.$store.dispatch('connections/test', { team_name, eid, attrs })
 
           this.chooseConnection(connection)
           this.show_connection_dialog = false

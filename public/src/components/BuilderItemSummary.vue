@@ -90,7 +90,6 @@
         this.$emit('open-pipe')
       },
       onActionClick() {
-        debugger
         var href = this.action_btn_href
 
         if (href.length > 0) {

@@ -136,9 +136,9 @@
       },
     },
     methods: {
-      ...mapGetters([
-        'getAvailableConnections'
-      ]),
+      ...mapGetters('connections', {
+        'getAvailableConnections': 'getAvailableConnections'
+      }),
       chooseConnection(connection) {
         var key = _.get(this.item, 'variable', 'connection_eid')
         var form_values = _.get(this.item, 'form_values', {})
