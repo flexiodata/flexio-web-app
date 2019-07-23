@@ -1283,7 +1283,23 @@ class ScriptHost
     }
 
 
-    
+    public function func_kvGet(string $key)
+    {
+        global $g_config;
+        
+        $session_redis_host = $g_config->session_redis_host ?? '';
+        $session_redis_port = $g_config->session_redis_port ?? '';
+        if (strlen($session_redis_host) == 0)
+            return false;
+        
+        $owner_user_eid = $this->getProcess()->getOwner();
+        $store_key = "kv.$owner_user_eid.$key";
+
+        $redis = new \Redis();
+        $redis->connect($session_redis_host, $session_redis_port);
+        return $redis->get($store_key);
+    }
+
     public function func_kvSet(string $key, $value)
     {
         global $g_config;
@@ -1301,10 +1317,10 @@ class ScriptHost
         $redis->set($store_key, $value);
     }
 
-    public function func_kvGet(string $key)
+    public function func_kvIncr(string $key, $value)
     {
         global $g_config;
-        
+
         $session_redis_host = $g_config->session_redis_host ?? '';
         $session_redis_port = $g_config->session_redis_port ?? '';
         if (strlen($session_redis_host) == 0)
@@ -1315,7 +1331,30 @@ class ScriptHost
 
         $redis = new \Redis();
         $redis->connect($session_redis_host, $session_redis_port);
-        return $redis->get($store_key);
+        if ($value == 1)
+            $redis->incr($store_key);
+        else
+            $redis->incrBy($store_key, $value);
+    }
+
+    public function func_kvDecr(string $key, $value)
+    {
+        global $g_config;
+
+        $session_redis_host = $g_config->session_redis_host ?? '';
+        $session_redis_port = $g_config->session_redis_port ?? '';
+        if (strlen($session_redis_host) == 0)
+            return false;
+        
+        $owner_user_eid = $this->getProcess()->getOwner();
+        $store_key = "kv.$owner_user_eid.$key";
+
+        $redis = new \Redis();
+        $redis->connect($session_redis_host, $session_redis_port);
+        if ($value == 1)
+            $redis->decr($store_key);
+        else
+            $redis->decrBy($store_key, $value);
     }
 }
 
