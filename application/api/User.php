@@ -265,12 +265,6 @@ class User
         if ($owner_user_eid === $requesting_user_eid)
             \Flexio\System\System::destroyUserSession();
 
-        {
-            \Flexio\System\System::clearLoginIdentity();
-            @session_destroy();
-            @setcookie('FXSESSID', '', time()-86400, '/');
-        }
-
         // return the information for the deleted user
         $result = array();
         $result['eid'] = $owner_user_eid;
