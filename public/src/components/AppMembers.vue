@@ -170,11 +170,11 @@
       this.tryFetchMembers()
     },
     methods: {
-      ...mapGetters([
-        'getActiveTeamLabel',
-      ]),
       ...mapGetters('members', {
         'getAllMembers': 'getAllMembers'
+      }),
+      ...mapGetters('teams', {
+        'getActiveTeamLabel': 'getActiveTeamLabel'
       }),
       tryFetchMembers() {
         if (!this.is_fetched && !this.is_fetching) {

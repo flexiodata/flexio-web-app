@@ -4,8 +4,8 @@ import { ROUTE_INITSESSION_PAGE, ROUTE_SIGNIN_PAGE } from '../constants/route'
 import { CHANGE_ACTIVE_DOCUMENT, CHANGE_ACTIVE_TEAM } from '../store/mutation-types'
 
 const tryFetchTeams = (team_name) => {
-  if (!store.state.teams_fetched && !store.state.teams_fetching) {
-    store.dispatch('v2_action_fetchTeams', { team_name })
+  if (!store.state.teams.is_fetched && !store.state.teams.is_fetching) {
+    store.dispatch('teams/fetch', { team_name })
   }
 }
 

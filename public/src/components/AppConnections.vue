@@ -190,11 +190,11 @@
       this.$store.track('Visited Connections Page')
     },
     methods: {
-      ...mapGetters([
-        'getActiveTeamLabel',
-      ]),
       ...mapGetters('connections', {
         'getAvailableConnections': 'getAvailableConnections'
+      }),
+      ...mapGetters('teams', {
+        'getActiveTeamLabel': 'getActiveTeamLabel'
       }),
       tryFetchConnections() {
         var team_name = this.active_team_name

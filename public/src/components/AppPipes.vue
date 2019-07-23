@@ -184,9 +184,9 @@
       this.$store.track('Visited Pipes Page')
     },
     methods: {
-      ...mapGetters([
-        'getActiveTeamLabel',
-      ]),
+      ...mapGetters('teams', {
+        'getActiveTeamLabel': 'getActiveTeamLabel'
+      }),
       ...mapGetters('pipes', {
         'getAllPipes': 'getAllPipes'
       }),
