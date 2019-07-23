@@ -57,6 +57,7 @@ class TeamMember
         // 5. member param is something else; fail
         $member_param = $validated_post_params['member'];
         $member_user_eid = self::getMemberEidFromParam($member_param);
+
         if ($member_user_eid === false)
         {
             // user doesn't exist based on anything supplied; see if we have an email address
@@ -80,6 +81,11 @@ class TeamMember
 
         // if for whatever reason, we still don't have a valid member, throw an exception
         if ($member_user_eid === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+
+        // if the team member has already been added for whatever reason,
+        // throw an error
+        if (self::isTeamMember($member_user_eid, $owner_user_eid))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
         // create the object
@@ -317,6 +323,22 @@ class TeamMember
     {
         $result = \Flexio\System\System::getModel()->teammember->get($member_user_eid, $owner_user_eid);
         return $result;
+    }
+
+    private static function isTeamMember(string $member_user_eid, string $owner_user_eid) : bool
+    {
+        try
+        {
+            $result = self::getMemberInfo($member_user_eid, $owner_user_eid);
+            if ($result)
+                return true;
+        }
+        catch (\Exception $e)
+        {
+            // fall through
+        }
+
+        return false;
     }
 
     private static function formatProperties(array $properties) : array
