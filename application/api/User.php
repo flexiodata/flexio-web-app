@@ -554,8 +554,12 @@ class User
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function resendverify(\Flexio\Api\Request $request) : void
+    public static function requestverification(\Flexio\Api\Request $request) : void
     {
+        // note: sends an email with a verification code to the users
+        // email address with a link that will let them verify their
+        // account; processed by requestpasswordreset()
+
         $post_params = $request->getPostParams();
 
         $validator = \Flexio\Base\Validator::create();
@@ -596,8 +600,11 @@ class User
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function activate(\Flexio\Api\Request $request) : void
+    public static function processverification(\Flexio\Api\Request $request) : void
     {
+        // note: takes the verification code from requestverification()
+        // and verifies the account
+
         $post_params = $request->getPostParams();
 
         $validator = \Flexio\Base\Validator::create();
@@ -684,8 +691,8 @@ class User
 
     public static function processpasswordreset(\Flexio\Api\Request $request) : void
     {
-        // note: takes the verification code from requestpasswordreset() and
-        // resets the password to the new password
+        // note: takes the verification code from requestpasswordreset()
+        // and resets the password to the new password
 
         $post_params = $request->getPostParams();
 
