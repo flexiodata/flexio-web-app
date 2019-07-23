@@ -142,9 +142,9 @@
       }
     },
     computed: {
-      ...mapState([
-        'active_user_eid'
-      ]),
+      ...mapState({
+        active_user_eid: state => state.users.active_user_eid,
+      }),
       has_user() {
         return this.active_user_eid.length > 0
       },

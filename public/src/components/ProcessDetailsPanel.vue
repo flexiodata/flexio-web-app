@@ -122,7 +122,7 @@
         var user_eid = _.get(process, 'owned_by.eid', '')
 
         if (this.showUser && user_eid.length > 0) {
-          this.$store.dispatch('v2_action_fetchUser', { eid: user_eid })
+          this.$store.dispatch('users/fetch', { eid: user_eid })
         }
 
         this.$store.dispatch('processes/fetch', { team_name: user_eid, eid: this.processEid })

@@ -121,7 +121,7 @@ const getters = {
   },
 
   isActiveMemberAvailable (state, getters, root_state) {
-    var member = _.find(getters.getAllMembers, { eid: root_state.active_user_eid })
+    var member = _.find(getters.getAllMembers, { eid: root_state.users.active_user_eid })
     return _.get(member, 'member_status') == OBJECT_STATUS_AVAILABLE
   },
 }

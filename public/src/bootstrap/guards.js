@@ -33,6 +33,8 @@ router.afterEach((to, from) => {
 })
 
 router.beforeEach((to, from, next) => {
+  var active_user = {}
+
   const redirectToSignIn = () => {
     next({
       name: ROUTE_SIGNIN_PAGE,
@@ -41,7 +43,7 @@ router.beforeEach((to, from, next) => {
   }
 
   const goNext = () => {
-    var active_username = store.getters.getActiveUsername
+    var active_username = store.state.users.active_user_eid
     var team_name = to.params.team_name || active_username
 
     store.commit(CHANGE_ACTIVE_TEAM, team_name)
@@ -55,19 +57,21 @@ router.beforeEach((to, from, next) => {
   // update the active document in the store
   store.commit(CHANGE_ACTIVE_DOCUMENT, to.params.object_name || to.name)
 
-  if (store.state.active_user_eid.length > 0) {
+  if (store.state.users.active_user_eid.length > 0) {
     // user is signed in; move to the next route
     goNext()
   } else {
     // we're already fetching the user; we're done
-    if (store.state.user_fetching) {
+    if (store.state.users.is_signing_in) {
       return
     }
 
     if (to.matched.some(record => record.meta.requiresAuth)) {
       // this route requires authentication; check if the user is signed in...
-      store.dispatch('v2_action_fetchCurrentUser').then(response => {
-        if (store.state.active_user_eid.length > 0) {
+      store.dispatch('users/fetch', { eid: 'me' }).then(response => {
+        active_user = response.data
+
+        if (store.state.users.active_user_eid.length > 0) {
           // user is signed in; move to the next route
           goNext()
         } else {
@@ -87,8 +91,10 @@ router.beforeEach((to, from, next) => {
 
       // this route does not require authentication; try to sign in just to make
       // sure we know who the active user is and move to the next route
-      store.dispatch('v2_action_fetchCurrentUser').then(response => {
-        if (store.state.active_user_eid.length > 0) {
+      store.dispatch('users/fetch', { eid: 'me' }).then(response => {
+        active_user = response.data
+
+        if (store.state.users.active_user_eid.length > 0) {
           // user is signed in; move to the next route
           goNext()
         }

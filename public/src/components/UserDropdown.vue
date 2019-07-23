@@ -50,9 +50,9 @@
       }
     },
     methods: {
-      ...mapGetters([
-        'getActiveUser'
-      ]),
+      ...mapGetters('users', {
+        'getActiveUser': 'getActiveUser'
+      }),
       openHelpDocs() {
         window.open('https://' + HOSTNAME + '/docs', '_blank')
       },
@@ -60,7 +60,7 @@
         this.$router.push({ name: ROUTE_APP_ACCOUNT })
       },
       signOut() {
-        this.$store.dispatch('v2_action_signOut').then(response => {
+        this.$store.dispatch('users/signOut').then(response => {
           this.$router.push({ name: ROUTE_SIGNIN_PAGE })
         }).catch(error => {
           // TODO: add error handling?

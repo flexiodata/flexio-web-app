@@ -72,9 +72,9 @@
       this.tryFetchTeams()
     },
     methods: {
-      ...mapGetters([
-        'getActiveUser'
-      ]),
+      ...mapGetters('users', {
+        'getActiveUser': 'getActiveUser'
+      }),
       ...mapGetters('members', {
         'isActiveMemberAvailable': 'isActiveMemberAvailable'
       }),

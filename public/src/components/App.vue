@@ -56,7 +56,7 @@
     },
     computed: {
       ...mapState({
-        active_user_eid: state => state.active_user_eid,
+        active_user_eid: state => state.users.active_user_eid,
         is_initializing: state => state.members.is_fetching,
         is_initialized: state => state.members.is_fetched
       }),

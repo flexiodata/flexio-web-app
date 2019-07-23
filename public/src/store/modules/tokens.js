@@ -87,7 +87,7 @@ const actions = {
 
 const getters = {
   getAllTokens (state, getters, root_state) {
-    var items = _.filter(state.items, t => _.get(t, 'user_eid') == root_state.active_user_eid)
+    var items = _.filter(state.items, t => _.get(t, 'user_eid') == root_state.users.active_user_eid)
     items = _.sortBy(items, [ item => new Date(item.created) ])
     return items.reverse()
   },

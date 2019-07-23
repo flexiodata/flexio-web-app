@@ -115,9 +115,9 @@
       }
     },
     computed: {
-      ...mapState([
-        'active_user_eid'
-      ]),
+      ...mapState({
+        active_user_eid: state => state.users.active_user_eid,
+      }),
       current_plan() {
         return _.find(this.plans, (p) => {
           return p['Name'].toLowerCase() == this.current_plan_name
@@ -128,9 +128,9 @@
       this.current_plan_name = _.get(this.getActiveUser(), 'usage_tier', '')
     },
     methods: {
-      ...mapGetters([
-        'getActiveUser'
-      ]),
+      ...mapGetters('users', {
+        'getActiveUser': 'getActiveUser'
+      }),
       hasPlan(plan_name) {
         var plan_names = _.map(this.plans, (p) => {
           return p['Name'].toLowerCase()
@@ -155,7 +155,7 @@
           usage_tier: new_plan_name
         }
 
-        this.$store.dispatch('v2_action_updateUser', { eid, attrs }).then(response => {
+        this.$store.dispatch('users/update', { eid, attrs }).then(response => {
           this.current_plan_name = new_plan_name
           this.is_editing = false
         })

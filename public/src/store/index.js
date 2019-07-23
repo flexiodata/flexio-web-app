@@ -22,7 +22,7 @@ const store = new Vuex.Store({
 
 store.track = function(event_name, attrs) {
   attrs = _.assign({}, attrs, { event_name })
-  store.dispatch('analyticsTrack', attrs)
+  store.dispatch('users/track', attrs)
 }
 
 export default store

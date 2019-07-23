@@ -139,9 +139,9 @@
       }
     },
     methods: {
-      ...mapGetters([
-        'getActiveUser'
-      ]),
+      ...mapGetters('users', {
+        'getActiveUser': 'getActiveUser'
+      }),
       fetchProcessLog() {
         var team_name = this.active_team_name
         if (this.processEid.length > 0) {
