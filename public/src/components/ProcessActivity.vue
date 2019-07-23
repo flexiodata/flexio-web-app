@@ -188,12 +188,13 @@
         'getAllProcesses': 'getAllProcesses'
       }),
       tryFetchProcesses() {
-        var team_name = this.active_team_name
+        // if we pass an items array as a prop, we don't want to do this query here
+        if (!_.isArray(this.items)) {
+          var team_name = this.active_team_name
 
-        if (!this.is_fetched && !this.is_fetching) {
-          this.$store.dispatch('processes/fetch', { team_name }).catch(error => {
-            // TODO: add error handling?
-          })
+          if (!this.is_fetched && !this.is_fetching) {
+            this.$store.dispatch('processes/fetch', { team_name })
+          }
         }
       },
       updatePager(page) {
