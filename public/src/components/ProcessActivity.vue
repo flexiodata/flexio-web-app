@@ -151,7 +151,7 @@
       ...mapState({
         is_fetching: state => state.processes.is_fetching,
         is_fetched: state => state.processes.is_fetched,
-        active_team_name: state => state.active_team_name
+        active_team_name: state => state.teams.active_team_name
       }),
       all_processes() {
         return this.items ? this.items : this.getAllProcesses()

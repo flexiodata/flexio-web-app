@@ -160,7 +160,7 @@
       ...mapState({
         is_fetching: state => state.members.is_fetching,
         is_fetched: state => state.members.is_fetched,
-        active_team_name: state => state.active_team_name
+        active_team_name: state => state.teams.active_team_name
       }),
       members() {
         return this.getAllMembers()

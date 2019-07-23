@@ -578,9 +578,9 @@
     },
     computed: {
       // mix this into the outer object with the object spread operator
-      ...mapState([
-        'active_team_name'
-      ]),
+      ...mapState({
+        active_team_name: state => state.teams.active_team_name
+      }),
       eid() {
         return _.get(this.connection, 'eid', '')
       },

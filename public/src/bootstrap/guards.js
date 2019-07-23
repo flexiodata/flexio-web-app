@@ -1,7 +1,7 @@
 import router from '@/router' // VueRouter
 import store from '@/store' // Vuex store
 import { ROUTE_INITSESSION_PAGE, ROUTE_SIGNIN_PAGE } from '../constants/route'
-import { CHANGE_ACTIVE_DOCUMENT, CHANGE_ACTIVE_TEAM } from '../store/mutation-types'
+import { CHANGE_ACTIVE_DOCUMENT } from '../store/mutation-types'
 
 const tryFetchTeams = (team_name) => {
   if (!store.state.teams.is_fetched && !store.state.teams.is_fetching) {
@@ -47,7 +47,9 @@ router.beforeEach((to, from, next) => {
     var active_username = active_user.username
     team_name = team_name || active_username
 
-    store.commit(CHANGE_ACTIVE_TEAM, team_name)
+debugger
+
+    store.commit('teams/CHANGE_ACTIVE_TEAM', team_name)
 
     tryFetchTeams(team_name)
     tryFetchMembers(team_name)

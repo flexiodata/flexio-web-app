@@ -162,7 +162,7 @@
       ...mapState({
         is_fetching: state => state.pipes.is_fetching,
         is_fetched: state => state.pipes.is_fetched,
-        active_team_name: state => state.active_team_name
+        active_team_name: state => state.teams.active_team_name
       }),
       pipes() {
         return this.getAllPipes()

@@ -162,7 +162,7 @@
       ...mapState({
         is_fetching: state => state.connections.is_fetching,
         is_fetched: state => state.connections.is_fetched,
-        active_team_name: state => state.active_team_name
+        active_team_name: state => state.teams.active_team_name
       }),
       connections() {
         return this.getAvailableConnections()

@@ -16,6 +16,7 @@ const getDefaultMeta = () => {
 
 const getDefaultState = () => {
   return {
+    active_team_name: '',
     is_fetching: false,
     is_fetched: false,
     items: {},
@@ -39,7 +40,11 @@ const mutations = {
   'FETCHED_ITEMS' (state, items) {
     addItem(state, items, getDefaultMeta())
     state.is_fetched = true
-  }
+  },
+
+  'CHANGE_ACTIVE_TEAM' (state, team_name) {
+    state.active_team_name = team_name
+  },
 }
 
 const actions = {
@@ -63,8 +68,8 @@ const getters = {
     return _.sortBy(state.items, [ item => new Date(item.created) ])
   },
 
-  getActiveTeam (state, getters, root_state) {
-    var team_name = root_state.active_team_name
+  getActiveTeam (state, getters) {
+    var team_name = state.active_team_name
     return _.find(getters.getAllTeams, t => t.eid == team_name || t.username == team_name)
   },
 

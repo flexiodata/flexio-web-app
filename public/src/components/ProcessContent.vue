@@ -97,9 +97,9 @@
       }
     },
     computed: {
-      ...mapState([
-        'active_team_name'
-      ]),
+      ...mapState({
+        active_team_name: state => state.teams.active_team_name
+      }),
       is_superuser() {
         // limit to @flex.io users for now
         var user_email = _.get(this.getActiveUser(), 'email', '')

@@ -313,7 +313,7 @@
         is_fetching: state => state.pipedocument.fetching,
         is_fetched: state => state.pipedocument.fetched,
         is_changed: state => state.pipedocument.changed,
-        active_team_name: state => state.active_team_name
+        active_team_name: state => state.teams.active_team_name
       }),
       route_object_name() {
         return _.get(this.$route, 'params.object_name', undefined)

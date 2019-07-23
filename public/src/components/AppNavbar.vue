@@ -38,7 +38,7 @@
     computed: {
       ...mapState({
         active_user_eid: state => state.users.active_user_eid,
-        active_team_name:  state => state.active_team_name
+        active_team_name:  state => state.teams.active_team_name
       }),
       pipe_route() {
         return { name: ROUTE_APP_PIPES, params: { team_name: this.active_team_name } }

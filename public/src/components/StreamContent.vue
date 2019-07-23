@@ -61,9 +61,9 @@
       StreamText
     },
     computed: {
-      ...mapState([
-        'active_team_name'
-      ]),
+      ...mapState({
+        active_team_name: state => state.teams.active_team_name
+      }),
       stream() {
         return _.get(this.$store, 'state.streams.items.'+this.streamEid)
       },

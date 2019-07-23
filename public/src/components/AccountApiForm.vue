@@ -92,7 +92,7 @@
       ...mapState({
         is_fetching: state => state.tokens.is_fetching,
         is_fetched: state => state.tokens.is_fetched,
-        active_team_name: state => state.active_team_name
+        active_team_name: state => state.teams.active_team_name
       }),
       tokens() {
         return this.getAllTokens()

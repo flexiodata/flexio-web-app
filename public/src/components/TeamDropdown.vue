@@ -56,7 +56,7 @@
       ...mapState({
         is_fetching: state => state.teams.is_fetching,
         is_fetched: state => state.teams.is_fetched,
-        active_team_name: state => state.active_team_name
+        active_team_name: state => state.teams.active_team_name
       }),
       teams() {
         return this.getAllTeams()

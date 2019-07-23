@@ -277,9 +277,9 @@
       }
     },
     computed: {
-      ...mapState([
-        'active_team_name'
-      ]),
+      ...mapState({
+        active_team_name: state => state.teams.active_team_name
+      }),
       eid() {
         return _.get(this.edit_connection, 'eid', '')
       },

@@ -15,7 +15,7 @@ export const AxiosResource = (team_name) => {
   }
 
   var getBaseUrl = (url) => {
-    var api_user_root = team_name || store.state.active_team_name
+    var api_user_root = team_name || store.state.teams.active_team_name
 
     if (team_name === null) {
       return API_V2_ROOT

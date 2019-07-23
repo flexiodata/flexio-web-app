@@ -117,9 +117,9 @@
       }
     },
     computed: {
-      ...mapState([
-        'active_team_name'
-      ]),
+      ...mapState({
+        active_team_name: state => state.teams.active_team_name
+      }),
       cid() {
         var conn = this.edit_connection
         return _.get(conn, 'name', '') || _.get(conn, 'eid', '')
