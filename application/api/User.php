@@ -554,7 +554,6 @@ class User
         \Flexio\Api\Response::sendContent($result);
     }
 
-
     public static function resendverify(\Flexio\Api\Request $request) : void
     {
         $post_params = $request->getPostParams();
