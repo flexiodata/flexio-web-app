@@ -62,7 +62,7 @@ const mutations = {
 }
 
 const actions = {
-  'fetch' ({ commit }, { eid }) {
+  'fetch' ({ commit, dispatch }, { eid }) {
     if (eid == 'me') {
       commit('SIGNING_IN', true)
     }

@@ -32,8 +32,6 @@ router.afterEach((to, from) => {
 })
 
 router.beforeEach((to, from, next) => {
-  var team_name = to.params.team_name
-
   const redirectToSignIn = () => {
     next({
       name: ROUTE_SIGNIN_PAGE,
@@ -42,9 +40,9 @@ router.beforeEach((to, from, next) => {
   }
 
   const goNext = () => {
-    var active_user = _.cloneDeep(store.getters['users/getActiveUser'])
+    var active_user = store.getters['users/getActiveUser']
     var active_username = active_user.username
-    team_name = team_name || active_username
+    var team_name = to.params.team_name || active_username
 
     store.commit('teams/CHANGE_ACTIVE_TEAM', team_name)
 
