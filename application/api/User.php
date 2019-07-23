@@ -61,18 +61,17 @@ class User
 
         // configuration fields we don't want to pass on
         $send_email = $validated_post_params['send_email'];
-
-
-        // for now, never send an email
-        $send_email = false;
-
-
-
         $create_examples = $validated_post_params['create_examples'];
         $require_verification = $validated_post_params['require_verification'];
         unset($validated_post_params['send_email']);
         unset($validated_post_params['create_examples']);
         unset($validated_post_params['require_verification']);
+
+
+        // TODO: new, experimental verification settings:
+        $send_email = true;
+        $require_verification = true;
+
 
         // try to find the user
         $user = false;
