@@ -1,17 +1,24 @@
 <template>
   <div id="app" class="flex flex-column fixed absolute--fill overflow-hidden">
-    <template v-if="requires_auth && is_initializing">
+    <template v-if="is_initializing">
       <!-- match navbar height -->
       <div class="bg-nearer-white" style="height: 60px"></div>
       <div class="flex-fill flex flex-column justify-center bg-nearer-white">
         <Spinner size="large" message="Initializing..." />
       </div>
     </template>
+    <template v-else-if="is_signing_out">
+      <!-- match navbar height -->
+      <div class="bg-nearer-white" style="height: 60px"></div>
+      <div class="flex-fill flex flex-column justify-center bg-nearer-white">
+        <Spinner size="large" message="Signing out..." />
+      </div>
+    </template>
     <template v-else-if="requires_auth && (is_404 || !is_allowed)">
       <PageNotFound class="flex-fill bg-nearer-white" />
     </template>
     <template v-else>
-      <AppNavbar v-if="show_navbar && is_logged_in" />
+      <AppNavbar v-if="show_navbar && is_signed_in" />
       <router-view class="flex-fill bt b--black-05"></router-view>
       <el-button
         type="primary"
@@ -58,7 +65,8 @@
       ...mapState({
         active_user_eid: state => state.users.active_user_eid,
         is_initializing: state => state.members.is_fetching,
-        is_initialized: state => state.members.is_fetched
+        is_initialized: state => state.members.is_fetched,
+        is_signing_out: state => state.users.is_signing_out,
       }),
       route_name() {
         return _.get(this.$route, 'name')
@@ -80,7 +88,7 @@
         // there are no members; we're done
         return false
       },
-      is_logged_in() {
+      is_signed_in() {
         return this.active_user_eid.length > 0
       },
       show_navbar() {

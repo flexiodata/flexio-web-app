@@ -18,6 +18,7 @@ const getDefaultState = () => {
   return {
     active_user_eid: '',
     is_signing_in: false,
+    is_signing_out: false,
     is_fetching: false,
     is_fetched: false,
     items: {},
@@ -56,9 +57,13 @@ const mutations = {
     state.active_user_eid = item.eid
   },
 
+  'SIGNING_OUT' (state, is_signing_out) {
+    state.is_signing_out = is_signing_out
+  },
+
   'SIGNED_OUT' (state) {
     state.active_user_eid = ''
-  }
+  },
 }
 
 const actions = {
@@ -102,12 +107,16 @@ const actions = {
   },
 
   'signOut' ({ commit, dispatch }) {
+    commit('SIGNING_OUT', true)
+
     return api.v2_logout().then(response => {
-      commit('RESET_STATE')
       commit('SIGNED_OUT')
+      commit('SIGNING_OUT', false)
+      commit('RESET_STATE')
       dispatch('track', { event_name: 'Signed Out' })
       return response
     }).catch(error => {
+      commit('SIGNING_OUT', false)
       throw error
     })
   },

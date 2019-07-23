@@ -38,11 +38,10 @@
     },
     methods: {
       signOut() {
-        this.$store.dispatch('users/signOut').then(response => {
-          this.$router.push({ name: ROUTE_SIGNIN_PAGE })
-        }).catch(error => {
-          // TODO: add error handling?
-        })
+        // NOTE: we need to route back to the sign in page before we actually dispatch
+        //       the `users/signOut` call, otherwise a 404 page will show momentarily
+        this.$router.push({ name: ROUTE_SIGNIN_PAGE })
+        this.$store.dispatch('users/signOut')
       }
     }
   }
