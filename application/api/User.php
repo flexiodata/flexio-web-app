@@ -145,6 +145,14 @@ class User
 
             // return the user info
             $result = $user->get();
+
+            // TODO: for testing purposes only:
+            if (IS_DEBUG())
+            {
+                $verification_link = \Flexio\System\System::getUserVerificationLink($email, $verify_code);
+                $result['verification_link'] = $verification_link;
+            }
+
             $request->setRequestingUser($user_eid);
             $request->setResponseParams($result);
             $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
