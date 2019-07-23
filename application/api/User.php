@@ -105,14 +105,6 @@ class User
             $user = \Flexio\Object\User::create($new_user_info);
             $user_eid = $user->getEid();
 
-            // owner and created have to be set after creation because a user is
-            // created by themselves on signup, but the user eid isn't yet known
-            $additional_user_properties = array(
-                'owned_by' => $user_eid,
-                'created_by' => $user_eid
-            );
-            $user->set($additional_user_properties);
-
             // create a default api key for the user
             $token_properties = array();
             $token_properties['owned_by'] = $user->getEid();

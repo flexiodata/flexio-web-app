@@ -216,9 +216,7 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public function setOwner(string $user_eid) : \Flexio\Object\User
     {
-        $properties = array('owned_by' => $user_eid);
-        $this->set($properties);
-        return $this;
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
     }
 
     public function getOwner() : string

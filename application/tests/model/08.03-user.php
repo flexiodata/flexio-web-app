@@ -138,8 +138,8 @@ class Test
             'timezone' => 'UTC',
             'verify_code' => '',
             'config' => '{}',
-            'owned_by' => '',
-            'created_by' => ''
+            'owned_by' => $eid,
+            'created_by' => $eid
         );
         \Flexio\Tests\Check::assertInArray('C.2', '\Flexio\Model\User::create(); when creating user, make sure essential fields are created',  $actual, $expected, $results);
 
@@ -356,10 +356,10 @@ class Test
         $eid = $model->create($info);
         $actual = $model->get($eid);
         $expected = array(
-            'owned_by' => '',
-            'created_by' => ''
+            'owned_by' => $eid,
+            'created_by' => $eid
         );
-        \Flexio\Tests\Check::assertInArray('D.14', '\Flexio\Model\User::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.14', '\Flexio\Model\User::create(); when creating user, make sure owned_by/created_by are the same as the user created',  $actual, $expected, $results);
 
         // BEGIN TEST
         $random_eid1 = \Flexio\Base\Eid::generate();
@@ -375,9 +375,9 @@ class Test
         $eid = $model->create($info);
         $actual = $model->get($eid);
         $expected = array(
-            'owned_by' => $random_eid1,
-            'created_by' => $random_eid2
+            'owned_by' => $eid,
+            'created_by' => $eid
         );
-        \Flexio\Tests\Check::assertInArray('D.14', '\Flexio\Model\User::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.15', '\Flexio\Model\User::create(); when creating user, make sure owned_by/created_by are the same as the user created',  $actual, $expected, $results);
     }
 }

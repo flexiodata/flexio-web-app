@@ -67,15 +67,15 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\User::create();
         $actual = $object->getOwner();
-        $expected = '';
-        \Flexio\Tests\Check::assertString('A.7', 'User::create(); objects are created with no owner by default',  $actual, $expected, $results);
+        $expected = $object->getEid();
+        \Flexio\Tests\Check::assertString('A.7', 'User::create(); objects are created with the user as the owner',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object1 = \Flexio\Object\User::create();
         $object2 = \Flexio\Object\User::create(array('owned_by' => $object1->getEid()));
         $actual = $object2->getOwner();
-        $expected = $object1->getEid();
-        \Flexio\Tests\Check::assertString('A.8', 'User::create(); make sure the owner can be set properly',  $actual, $expected, $results);
+        $expected = $object2->getEid();
+        \Flexio\Tests\Check::assertString('A.8', 'User::create(); don\'t allow the user owner to be set to something else',  $actual, $expected, $results);
 
 
 
@@ -229,7 +229,6 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\User::create();
         $creator = \Flexio\Object\User::create();
-        $object->setOwner($creator->getEid());
         $properties = $object->get();
         $actual =  $properties;
         $expected = json_decode('
@@ -322,11 +321,18 @@ class Test
         // TEST: object owner change
 
         // BEGIN TEST
-        $random_eid = \Flexio\Base\Eid::generate();
-        $object = \Flexio\Object\User::create();
-        $object = $object->setOwner($random_eid);
-        $actual = $object->getOwner();
-        $expected = $random_eid;
-        \Flexio\Tests\Check::assertString('G.1', 'User::setOwner(); make sure the owner is set',  $actual, $expected, $results);
+        try
+        {
+            $random_eid = \Flexio\Base\Eid::generate();
+            $object = \Flexio\Object\User::create();
+            $object = $object->setOwner($random_eid);
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('G.1', 'User::setOwner(); the user owner is themselves and can\'t be changed; throw an exception when attempting to set the user owner',  $actual, $expected, $results);
     }
 }

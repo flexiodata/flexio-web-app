@@ -208,17 +208,17 @@ class Test
         );
         $eid = $model->create($info);
         $info = array(
-            'eid_status' => \Model::STATUS_PENDING,
+            'eid_status' => \Model::STATUS_AVAILABLE,
             'owned_by' => $random_eid1,
             'created_by' => $random_eid2
         );
         $result = $model->set($eid, $info);
         $actual = $model->get($eid);
         $expected = array(
-            'eid_status' => \Model::STATUS_PENDING,
-            'owned_by' => $random_eid1,
-            'created_by' => $random_eid2
+            'eid_status' => \Model::STATUS_AVAILABLE,
+            'owned_by' => $eid,
+            'created_by' => $eid
         );
-        \Flexio\Tests\Check::assertInArray('E.1', '\Flexio\Model\User::set(); make sure properties are updated',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.1', '\Flexio\Model\User::set(); make sure properties are updated; don\'t allow owned_by/created_by to be changed for users',  $actual, $expected, $results);
     }
 }

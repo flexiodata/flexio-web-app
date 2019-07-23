@@ -50,9 +50,7 @@ class User extends ModelBase
                 'stripe_customer_id' => array('type' => 'string',     'required' => false, 'default' => ''),
                 'usage_tier'         => array('type' => 'string',     'required' => false, 'default' => ''),
                 'referrer'           => array('type' => 'string',     'required' => false, 'default' => ''),
-                'config'             => array('type' => 'string',     'required' => false, 'default' => '{}'),
-                'owned_by'           => array('type' => 'string',     'required' => false, 'default' => ''),
-                'created_by'         => array('type' => 'string',     'required' => false, 'default' => '')
+                'config'             => array('type' => 'string',     'required' => false, 'default' => '{}')
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
@@ -77,11 +75,16 @@ class User extends ModelBase
             $eid = $this->getModel()->createObjectBase(\Model::TYPE_USER, $user_arr);
             $timestamp = \Flexio\System\System::getTimestamp();
 
-            // insert the record into the user table
+            // create the base user info to add; for users, consider them to be their
+            // own owner and that their account from them signing up (even if they're
+            // invited)
             $user_arr['eid'] = $eid;
             $user_arr['created'] = $timestamp;
             $user_arr['updated'] = $timestamp;
+            $user_arr['owned_by'] = $eid;
+            $user_arr['created_by'] = $eid;
 
+            // insert the record into the user table
             if ($db->insert('tbl_user', $user_arr) === false)
                 throw new \Exception();
 
@@ -171,9 +174,7 @@ class User extends ModelBase
                 'stripe_customer_id' => array('type' => 'string',     'required' => false),
                 'usage_tier'         => array('type' => 'string',     'required' => false),
                 'referrer'           => array('type' => 'string',     'required' => false),
-                'config'             => array('type' => 'string',     'required' => false),
-                'owned_by'           => array('type' => 'string',     'required' => false),
-                'created_by'         => array('type' => 'string',     'required' => false)
+                'config'             => array('type' => 'string',     'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
