@@ -47,7 +47,7 @@ class Api
         'POS /validate'                               => '\Flexio\Api\User::validateCredentials',
         'POS /signup'                                 => '\Flexio\Api\User::create',
         'POS /forgotpassword'                         => '\Flexio\Api\User::requestpasswordreset',
-        'POS /resetpassword'                          => '\Flexio\Api\User::resetpassword',
+        'POS /resetpassword'                          => '\Flexio\Api\User::processpasswordreset',
 
         // authentication pair for allowing signing in from third-party websites via api
         'GET /session'                                => '\Flexio\Api\System::session', // test

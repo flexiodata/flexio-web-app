@@ -52,6 +52,13 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $user_model->getEidFromEmail($identifier);
     }
 
+    public static function getEidFromVerifyCode(string $identifier) // TODO: add return type
+    {
+        $object = new static();
+        $user_model = $object->getModel()->user;
+        return $user_model->getEidFromVerifyCode($identifier);
+    }
+
     public static function generateTokenFromUserEid(string $user_eid) : string
     {
         // add a random seed and timestamp to the user info
