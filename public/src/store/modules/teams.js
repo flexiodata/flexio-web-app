@@ -43,7 +43,7 @@ const mutations = {
 }
 
 const actions = {
-  'fetch' ({ commit }, { team_name, eid, name }) {
+  'fetch' ({ commit }, { team_name, eid }) {
     // fetching a collection of items
     commit('FETCHING_ITEMS', true)
 

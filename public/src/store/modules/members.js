@@ -71,10 +71,10 @@ const actions = {
     })
   },
 
-  'fetch' ({ commit }, { team_name, eid, name }) {
-    if (eid || name) {
+  'fetch' ({ commit }, { team_name, eid }) {
+    if (eid) {
       // fetching a single item
-      return api.v2_fetchMember(team_name, eid || name).then(response => {
+      return api.v2_fetchMember(team_name, eid).then(response => {
         commit('FETCHED_ITEM', response.data)
         return response
       }).catch(error => {
