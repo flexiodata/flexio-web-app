@@ -645,8 +645,10 @@ class User
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, _('This user is unavailable'));
         }
 
-        if ($user->getStatus() != \Model::STATUS_PENDING)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, _('This user is already activated'));
+        // TODO: temporarily disable user pending status to activate; allow any
+        // user to be activated
+        //if ($user->getStatus() != \Model::STATUS_PENDING)
+        //    throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, _('This user is already activated'));
 
         if ($user->getVerifyCode() != $code)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, _('The activation credentials do not match'));
