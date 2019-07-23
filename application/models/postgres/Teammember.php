@@ -122,14 +122,14 @@ class Teammember extends ModelBase
         $db = $this->getDatabase();
         try
         {
-            $records_affected = 0;
+            $rows_affected = 0;
             $qowned_by = $db->quote($owned_by);
 
             // delete records for the owner
             $sql = "delete from tbl_teammember where owned_by = $qowned_by";
             $count = $db->exec($sql);
             if ($count !== false)
-                $records_affected += $count;
+                $rows_affected += $count;
 
             // if the owner is a member of another project, leave these records and change
             // the member_status flag to the default pending value when the member is first
@@ -141,9 +141,9 @@ class Teammember extends ModelBase
             // TODO: create a new placeholder user
 
             if ($count !== false)
-                $records_affected += $count;
+                $rows_affected += $count;
 
-            return ($records_affected > 0 ? true : false);
+            return ($rows_affected > 0 ? true : false);
         }
         catch (\Exception $e)
         {
