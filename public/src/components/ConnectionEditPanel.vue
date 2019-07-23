@@ -228,7 +228,7 @@
       },
       connection: {
         type: Object,
-        default: () => { return {} }
+        default: () => {}
       },
       filterBy: {
         type: Function

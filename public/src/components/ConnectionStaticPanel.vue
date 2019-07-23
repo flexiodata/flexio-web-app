@@ -75,7 +75,7 @@
     props: {
       connection: {
         type: Object,
-        default: () => { return {} }
+        default: () => {}
       }
     },
     mixins: [MixinConnection],
