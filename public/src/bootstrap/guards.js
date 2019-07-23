@@ -47,8 +47,6 @@ router.beforeEach((to, from, next) => {
     var active_username = active_user.username
     team_name = team_name || active_username
 
-debugger
-
     store.commit('teams/CHANGE_ACTIVE_TEAM', team_name)
 
     tryFetchTeams(team_name)

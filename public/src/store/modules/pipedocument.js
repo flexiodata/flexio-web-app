@@ -65,9 +65,6 @@ const mutations = {
 const actions = {}
 
 const getters = {
-  getStorePipe (state, getters, root_state) {
-    return _.get(root_state, 'pipes.items' + state.eid, null)
-  },
   isChanged (state, getters, root_state) {
     return state.changed
   }
