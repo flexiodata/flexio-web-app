@@ -263,6 +263,8 @@ class User
         // if the requesting user is the same as the user being deleted,
         // clear the login identity (equivalent to logging out)
         if ($owner_user_eid === $requesting_user_eid)
+            \Flexio\System\System::destroyUserSession();
+
         {
             \Flexio\System\System::clearLoginIdentity();
             @session_destroy();
