@@ -12,13 +12,22 @@
     <div class="pa1 f7 silver i" v-else-if="items.length == 0">
       {{empty_message}}
     </div>
-    <table v-else class="f6 w-100">
-      <tbody class="lh-copy f6">
+    <table v-else class="f7 w-100">
+      <thead class="lh-copy">
+        <tr class="no-select cursor-default">
+          <th class="css-item tl">Name</th>
+          <th class="css-item tl" v-if="hasColumn('path')">Path</th>
+          <th class="css-item tl" v-if="hasColumn('modified')">Date modified</th>
+          <th class="css-item tr" v-if="hasColumn('size')">Size</th>
+        </tr>
+      </thead>
+      <tbody class="lh-copy">
         <FileChooserItem
           v-for="(item, index) in items"
           :item="item"
           :index="index"
           :key="item.full_path"
+          :columns="columns"
           @click="itemClick"
           @ctrl-click="itemCtrlClick"
           @shift-click="itemShiftClick"
@@ -51,6 +60,15 @@
         type: [String, Boolean],
         default: '/'
       },
+      columns: {
+        type: Array,
+        default: () => [
+          'name',
+          'path',
+          'modified',
+          'size'
+        ]
+      },
       emptyMessage: {
         type: String,
         default: ''
@@ -69,7 +87,7 @@
       },
       filetypeFilter: {
         type: Array,
-        default: () => { return [] }
+        default: () => []
       },
       fireSelectionChangeOnInit: {
         type: Boolean,
@@ -122,6 +140,9 @@
       }
     },
     methods: {
+      hasColumn(col_name) {
+        return this.columns.indexOf(col_name) >= 0
+      },
       getSelectedItems() {
         return this.selected_items
       },
@@ -261,3 +282,8 @@
     }
   }
 </script>
+
+<style lang="stylus" scoped>
+  .css-item
+    padding: 0.125rem 0.25rem
+</style>
