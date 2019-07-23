@@ -63,9 +63,9 @@
       SignInForm
     },
     computed: {
-      ...mapState([
-        'active_user_eid'
-      ]),
+      ...mapState({
+        active_user_eid: state => state.users.active_user_eid,
+      }),
       signup_route() {
         return {
           name: ROUTE_SIGNUP_PAGE,

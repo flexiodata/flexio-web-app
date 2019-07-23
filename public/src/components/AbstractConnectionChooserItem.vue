@@ -65,7 +65,7 @@
       },
       selectedItem: {
         type: Object,
-        default: () => { return {} }
+        default: () => {}
       },
       selectedCls: {
         type: String,

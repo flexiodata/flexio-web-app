@@ -15,25 +15,13 @@ export const AxiosResource = (team_name) => {
   }
 
   var getBaseUrl = (url) => {
-    var api_root = API_V2_ROOT
-    var api_user_root = team_name || 'me'
+    var api_user_root = team_name || store.state.teams.active_team_name
 
-    var allowed = false
-    var allowed_routes = ['/connections', '/pipes', '/processes', '/streams', '/vfs']
-    allowed_routes.forEach((route) => {
-      allowed = allowed || url.indexOf(route) == 0
-    })
-
-    if (allowed && api_user_root != 'admin') {
-      api_user_root = store.state.active_team_name
-
-      // no username is specified; default to 'me'
-      if (!api_user_root || api_user_root.length == 0) {
-        api_user_root = 'me'
-      }
+    if (team_name === null) {
+      return API_V2_ROOT
+    } else {
+      return API_V2_ROOT + '/' + api_user_root
     }
-
-    return team_name === null ? api_root : api_root + '/' + api_user_root
   }
 
   var getCfg = ({ method, url, data, cfg }) => {

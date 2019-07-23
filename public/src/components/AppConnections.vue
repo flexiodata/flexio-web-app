@@ -160,31 +160,27 @@
     computed: {
       // mix this into the outer object with the object spread operator
       ...mapState({
-        'is_fetching': 'connections_fetching',
-        'is_fetched': 'connections_fetched',
-        'active_team_name': 'active_team_name'
+        is_fetching: state => state.connections.is_fetching,
+        is_fetched: state => state.connections.is_fetched,
+        active_team_name: state => state.teams.active_team_name
       }),
-      route_object_name() {
-        return _.get(this.$route, 'params.object_name', undefined)
-      },
       connections() {
         return this.getAvailableConnections()
       },
+      route_object_name() {
+        return _.get(this.$route, 'params.object_name', undefined)
+      },
       ctype() {
         return _.get(this.connection, 'connection_type', '')
+      },
+      has_connection() {
+        return this.ctype.length > 0
       },
       is_storage_connection() {
         return this.$_Connection_isStorage(this.connection)
       },
       is_keyring_connection() {
         return this.ctype == CONNECTION_TYPE_KEYRING
-      },
-      has_connection() {
-        return this.ctype.length > 0
-      },
-      title() {
-        var ru = this.active_team_name
-        return ru && ru.length > 0 ? ru + '/' + 'connections' : 'Connections'
       }
     },
     created() {
@@ -194,28 +190,37 @@
       this.$store.track('Visited Connections Page')
     },
     methods: {
-      ...mapGetters([
-        'getAvailableConnections',
-        'getActiveTeamLabel'
-      ]),
+      ...mapGetters('connections', {
+        'getAvailableConnections': 'getAvailableConnections'
+      }),
+      ...mapGetters('teams', {
+        'getActiveTeamLabel': 'getActiveTeamLabel'
+      }),
       tryFetchConnections() {
+        var team_name = this.active_team_name
+
         if (!this.is_fetched && !this.is_fetching) {
-          this.$store.dispatch('v2_action_fetchConnections', {}).catch(error => {
-            // TODO: add error handling?
-          })
+          this.$store.dispatch('connections/fetch', { team_name })
         }
       },
       tryUpdateConnection(attrs) {
         var eid = attrs.eid
         var ctype = _.get(attrs, 'connection_type', '')
-        var is_pending = _.get(attrs, 'eid_status', '') === OBJECT_STATUS_PENDING
+        var is_pending = _.get(attrs, 'eid_status') == OBJECT_STATUS_PENDING
         var orig_name = _.get(this.connection, 'name')
+        var team_name = this.active_team_name
 
         attrs = _.pick(attrs, ['name', 'short_description', 'description', 'connection_info'])
         _.assign(attrs, { eid_status: OBJECT_STATUS_AVAILABLE })
 
+        // TODO: backend should probably handle this for us
+        // keyring connections don't need to connect, so they are always available
+        if (ctype == CONNECTION_TYPE_KEYRING) {
+          _.assign(attrs, { connection_status: OBJECT_STATUS_AVAILABLE })
+        }
+
         // update the connection and make it available
-        this.$store.dispatch('v2_action_updateConnection', { eid, attrs }).then(response => {
+        this.$store.dispatch('connections/update', { team_name, eid, attrs }).then(response => {
           var connection = response.data
 
           this.$message({
@@ -223,10 +228,10 @@
             type: 'success'
           })
 
-          // try to connect to the connection
-          this.$store.dispatch('v2_action_testConnection', { eid, attrs }).catch(error => {
-            // TODO: add error handling?
-          })
+          if (ctype != CONNECTION_TYPE_KEYRING) {
+            // try to connect to the connection
+            this.$store.dispatch('connections/test', { team_name, eid, attrs })
+          }
 
           if (is_pending) {
             var analytics_payload = _.pick(attrs, ['eid', 'name', 'short_description', 'description', 'connection_type'])
@@ -256,6 +261,7 @@
       tryDeleteConnection(attrs) {
         var eid = _.get(attrs, 'eid', '')
         var cname = _.get(attrs, 'name', 'Connection')
+        var team_name = this.active_team_name
 
         this.$confirm('Are you sure you want to delete the connection named "' + cname + '"?', 'Really delete connection?', {
           confirmButtonClass: 'ttu fw6',
@@ -264,19 +270,18 @@
           cancelButtonText: 'Cancel',
           type: 'warning'
         }).then(() => {
-          var idx = _.findIndex(this.connections, this.connection)
+          var selected_idx = _.findIndex(this.connections, { eid: this.connection.eid })
+          var deleting_idx = _.findIndex(this.connections, { eid: attrs.eid })
 
-          this.$store.dispatch('v2_action_deleteConnection', { eid }).then(response => {
-            if (idx >= 0) {
-              if (idx >= this.connections.length) {
-                idx--
+          this.$store.dispatch('connections/delete', { team_name, eid }).then(response => {
+            if (deleting_idx >= 0 && deleting_idx == selected_idx) {
+              if (deleting_idx >= this.connections.length) {
+                deleting_idx--
               }
 
-              var connection = _.get(this.connections, '['+idx+']', {})
+              var connection = _.get(this.connections, '['+deleting_idx+']', {})
               this.selectConnection(connection)
             }
-          }).catch(error => {
-            // TODO: add error handling?
           })
         })
       },

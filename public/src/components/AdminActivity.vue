@@ -7,7 +7,9 @@
       :created-min.sync="created_min"
       :created-max.sync="created_max"
       :owned-by.sync="owned_by"
-    />
+    >
+      <h1 class="mv0 f2 fw4 mr3" slot="title">Process Activity</h1>
+    </ProcessActivity>
   </div>
 </template>
 
@@ -17,7 +19,7 @@
 
   export default {
     metaInfo: {
-      title: '[Admin] Activity Overview'
+      title: '[Admin] Process Activity'
     },
     components: {
       ProcessActivity
@@ -73,11 +75,8 @@
           created_max: this.created_max
         }
 
-        this.$store.dispatch('v2_action_fetchAdminProcesses', { attrs }).then(response => {
-          var processes = response.data
-          this.processes = processes
-        }).catch(error => {
-          // TODO: add error handling
+        this.$store.dispatch('processes/fetch', { team_name: 'admin', attrs }).then(response => {
+          this.processes = response.data
         })
 
         this.querying = true

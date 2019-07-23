@@ -58,9 +58,9 @@
       }
     },
     methods: {
-      ...mapGetters([
-        'getActiveUser'
-      ])
+      ...mapGetters('users', {
+        'getActiveUser': 'getActiveUser'
+      })
     }
   }
 </script>

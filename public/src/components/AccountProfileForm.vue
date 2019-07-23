@@ -125,9 +125,9 @@
       }
     },
     computed: {
-      ...mapState([
-        'active_user_eid'
-      ]),
+      ...mapState({
+        active_user_eid: state => state.users.active_user_eid,
+      }),
       current_email() {
         return _.get(this.getActiveUser(), 'email', ' ')
       }
@@ -136,9 +136,9 @@
       this.initFromActiveUser()
     },
     methods: {
-      ...mapGetters([
-        'getActiveUser'
-      ]),
+      ...mapGetters('users', {
+        'getActiveUser': 'getActiveUser'
+      }),
       initFromActiveUser() {
         var user = this.getActiveUser()
         var user_info = _.pick(user, ['first_name', 'last_name', 'username'])
@@ -186,7 +186,7 @@
 
           var eid = this.active_user_eid
           var attrs = _.pick(this.edit_info, ['first_name', 'last_name', 'username'])
-          this.$store.dispatch('v2_action_updateUser', { eid, attrs }).then(response => {
+          this.$store.dispatch('users/update', { eid, attrs }).then(response => {
             this.show_success = true
             setTimeout(() => { this.show_success = false }, 4000)
           }).catch(error => {

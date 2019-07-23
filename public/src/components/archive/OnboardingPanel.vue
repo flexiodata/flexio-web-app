@@ -121,7 +121,7 @@
         'getFirstToken'
       ]),
       tryFetchPipes() {
-        this.$store.dispatch('v2_action_fetchPipes', {}).catch(error => {
+        this.$store.dispatch('pipes/fetch', {}).catch(error => {
           // TODO: add error handling?
         })
       },

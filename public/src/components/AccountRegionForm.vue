@@ -73,17 +73,17 @@
       }
     },
     computed: {
-      ...mapState([
-        'active_user_eid'
-      ])
+      ...mapState({
+        active_user_eid: state => state.users.active_user_eid,
+      })
     },
     mounted() {
       this.initFromActiveUser()
     },
     methods: {
-      ...mapGetters([
-        'getActiveUser'
-      ]),
+      ...mapGetters('users', {
+        'getActiveUser': 'getActiveUser'
+      }),
       initFromActiveUser() {
         var user = this.getActiveUser()
         this.timezone = _.get(user, 'timezone', TIMEZONE_UTC)
@@ -91,7 +91,7 @@
       saveChanges() {
         var eid = this.active_user_eid
         var attrs = _.pick(this.$data, ['timezone'])
-        this.$store.dispatch('v2_action_updateUser', { eid, attrs }).then(response => {
+        this.$store.dispatch('users/update', { eid, attrs }).then(response => {
           this.show_success = true
           setTimeout(() => { this.show_success = false }, 4000)
         }).catch(error => {

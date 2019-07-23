@@ -48,7 +48,7 @@
         })
       },
       fetchPipes() {
-        this.$store.dispatch('v2_action_fetchPipes', {}).then(response => {
+        this.$store.dispatch('pipes/fetch', {}).then(response => {
           if (this.hasOnboardPipe()) {
             var onboard_pipe = this.getOnboardPipe()
 

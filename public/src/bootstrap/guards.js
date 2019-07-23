@@ -1,23 +1,22 @@
 import router from '@/router' // VueRouter
 import store from '@/store' // Vuex store
 import { ROUTE_INITSESSION_PAGE, ROUTE_SIGNIN_PAGE } from '../constants/route'
-import { CHANGE_ACTIVE_DOCUMENT, CHANGE_ACTIVE_TEAM } from '../store/mutation-types'
 
 const tryFetchTeams = (team_name) => {
-  if (!store.state.teams_fetched && !store.state.teams_fetching) {
-    store.dispatch('v2_action_fetchTeams', { team_name })
+  if (!store.state.teams.is_fetched && !store.state.teams.is_fetching) {
+    store.dispatch('teams/fetch', { team_name })
   }
 }
 
 const tryFetchMembers = (team_name) => {
-  if (!store.state.members_fetched && !store.state.members_fetching) {
-    store.dispatch('v2_action_fetchMembers', { team_name })
+  if (!store.state.members.is_fetched && !store.state.members.is_fetching) {
+    store.dispatch('members/fetch', { team_name })
   }
 }
 
 const tryFetchConnections = (team_name) => {
-  if (!store.state.connections_fetched && !store.state.connections_fetching) {
-    store.dispatch('v2_action_fetchConnections', { team_name })
+  if (!store.state.connections.is_fetched && !store.state.connections.is_fetching) {
+    store.dispatch('connections/fetch', { team_name })
   }
 }
 
@@ -41,10 +40,11 @@ router.beforeEach((to, from, next) => {
   }
 
   const goNext = () => {
-    var active_username = store.getters.getActiveUsername
+    var active_user = store.getters['users/getActiveUser']
+    var active_username = active_user.username
     var team_name = to.params.team_name || active_username
 
-    store.commit(CHANGE_ACTIVE_TEAM, team_name)
+    store.commit('teams/CHANGE_ACTIVE_TEAM', team_name)
 
     tryFetchTeams(team_name)
     tryFetchMembers(team_name)
@@ -53,21 +53,21 @@ router.beforeEach((to, from, next) => {
   }
 
   // update the active document in the store
-  store.commit(CHANGE_ACTIVE_DOCUMENT, to.params.object_name || to.name)
+  store.commit('CHANGE_ACTIVE_DOCUMENT', to.params.object_name || to.name)
 
-  if (store.state.active_user_eid.length > 0) {
+  if (store.state.users.active_user_eid.length > 0) {
     // user is signed in; move to the next route
     goNext()
   } else {
     // we're already fetching the user; we're done
-    if (store.state.user_fetching) {
+    if (store.state.users.is_signing_in) {
       return
     }
 
     if (to.matched.some(record => record.meta.requiresAuth)) {
       // this route requires authentication; check if the user is signed in...
-      store.dispatch('v2_action_fetchCurrentUser').then(response => {
-        if (store.state.active_user_eid.length > 0) {
+      store.dispatch('users/fetch', { eid: 'me' }).then(response => {
+        if (store.state.users.active_user_eid.length > 0) {
           // user is signed in; move to the next route
           goNext()
         } else {
@@ -87,8 +87,8 @@ router.beforeEach((to, from, next) => {
 
       // this route does not require authentication; try to sign in just to make
       // sure we know who the active user is and move to the next route
-      store.dispatch('v2_action_fetchCurrentUser').then(response => {
-        if (store.state.active_user_eid.length > 0) {
+      store.dispatch('users/fetch', { eid: 'me' }).then(response => {
+        if (store.state.users.active_user_eid.length > 0) {
           // user is signed in; move to the next route
           goNext()
         }

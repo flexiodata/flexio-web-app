@@ -108,9 +108,9 @@
       }
     },
     computed: {
-      ...mapState([
-        'active_user_eid'
-      ])
+      ...mapState({
+        active_user_eid: state => state.users.active_user_eid,
+      })
     },
     methods: {
       checkPasswordMatch(rule, value, callback) {
@@ -148,7 +148,7 @@
 
           var eid = this.active_user_eid
           var attrs = _.pick(this.$data, ['old_password', 'new_password', 'new_password2'])
-          this.$store.dispatch('v2_action_changePassword', { eid, attrs }).then(response => {
+          this.$store.dispatch('users/changePassword', { eid, attrs }).then(response => {
             this.show_success = true
             this.show_error = false
             this.resetForm()

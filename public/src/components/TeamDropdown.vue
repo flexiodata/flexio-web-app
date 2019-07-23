@@ -27,7 +27,7 @@
         >
           <i class="material-icons md-18 b mr3" v-if="isActiveTeam(team)">check</i>
           <i class="material-icons md-18 b mr3" style="color: transparent" v-else>check</i>
-          <div class="pr3">{{getFullTeamName(team)}}</div>
+          <div class="pr3">{{getTeamLabel(team)}}</div>
         </article>
         <el-dropdown-item divided v-if="false"></el-dropdown-item>
         <article
@@ -54,9 +54,9 @@
     },
     computed: {
       ...mapState({
-        'is_fetching': 'teams_fetching',
-        'is_fetched': 'teams_fetched',
-        'active_team_name': 'active_team_name'
+        is_fetching: state => state.teams.is_fetching,
+        is_fetched: state => state.teams.is_fetched,
+        active_team_name: state => state.teams.active_team_name
       }),
       teams() {
         return this.getAllTeams()
@@ -72,20 +72,24 @@
       this.tryFetchTeams()
     },
     methods: {
-      ...mapGetters([
-        'getActiveUser',
-        'getActiveTeamLabel',
-        'getAllTeams',
-        'isActiveMemberAvailable'
-      ]),
+      ...mapGetters('users', {
+        'getActiveUser': 'getActiveUser'
+      }),
+      ...mapGetters('members', {
+        'isActiveMemberAvailable': 'isActiveMemberAvailable'
+      }),
+      ...mapGetters('teams', {
+        'getActiveTeamLabel': 'getActiveTeamLabel',
+        'getAllTeams': 'getAllTeams'
+      }),
       tryFetchTeams() {
+        var team_name = this.active_username
+
         if (!this.is_fetched && !this.is_fetching) {
-          this.$store.dispatch('v2_action_fetchTeams', { team_name: this.active_username }).catch(error => {
-            // TODO: add error handling?
-          })
+          this.$store.dispatch('teams/fetch', { team_name })
         }
       },
-      getFullTeamName(team) {
+      getTeamLabel(team) {
         var first_name = _.get(team, 'first_name', '')
         var last_name = _.get(team, 'last_name', '')
         return `${first_name} ${last_name}` + "'s team"

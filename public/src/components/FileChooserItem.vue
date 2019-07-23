@@ -1,23 +1,23 @@
 <template>
   <tr
-    class="no-select cursor-default darken-05"
+    class="cursor-default darken-05"
     :class="cls"
     @click="onClick"
     @click.ctrl="onCtrlClick"
     @click.shift="onShiftClick"
     @dblclick.stop="onDblClick"
   >
-    <td class="css-item">
+    <td class="css-item tl nowrap">
       <div class="flex flex-row items-center">
         <img v-if="is_dir" src="../assets/file-icon/folder-open-16.png" class="dib" alt="Folder">
         <img v-else src="../assets/file-icon/file-16.png" class="dib" alt="File">
-        <span class="dib ml1 f7 truncate">{{item.name}}</span>
+        <span class="dib ml1 truncate">{{item.name}}</span>
       </div>
     </td>
-    <td class="css-item f7 tr nowrap">{{modified}}</td>
-    <td class="css-item f7 tr nowrap">
-      <span v-if="is_dir">&nbsp;</span>
-      <span v-else-if="!has_filesize">&nbsp;</span>
+    <td class="css-item tl nowrap" v-if="hasColumn('path')"><span class="truncate">{{item.full_path}}</span></td>
+    <td class="css-item tl nowrap" v-if="hasColumn('modified')">{{modified}}</td>
+    <td class="css-item tr nowrap" v-if="hasColumn('size')">
+      <span v-if="is_dir || !has_filesize">&nbsp;</span>
       <span v-else>{{size}}</span>
     </td>
   </tr>
@@ -37,6 +37,15 @@
       },
       index: {
         type: Number
+      },
+      columns: {
+        type: Array,
+        default: () => [
+          'name',
+          'path',
+          'modified',
+          'size'
+        ]
       }
     },
     data() {
@@ -69,6 +78,9 @@
       }
     },
     methods: {
+      hasColumn(col_name) {
+        return this.columns.indexOf(col_name) >= 0
+      },
       onClick(evt) {
         if (!this.double_click)
           this.$emit('click', this.item, evt)
