@@ -90,6 +90,10 @@
       }
     },
     watch: {
+      teamName: {
+        handler: 'refreshList',
+        immediate: true
+      },
       path: {
         handler: 'refreshList',
         immediate: true
