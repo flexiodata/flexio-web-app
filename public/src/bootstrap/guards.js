@@ -1,7 +1,6 @@
 import router from '@/router' // VueRouter
 import store from '@/store' // Vuex store
 import { ROUTE_INITSESSION_PAGE, ROUTE_SIGNIN_PAGE } from '../constants/route'
-import { CHANGE_ACTIVE_DOCUMENT } from '../store/mutation-types'
 
 const tryFetchTeams = (team_name) => {
   if (!store.state.teams.is_fetched && !store.state.teams.is_fetching) {
@@ -56,7 +55,7 @@ router.beforeEach((to, from, next) => {
   }
 
   // update the active document in the store
-  store.commit(CHANGE_ACTIVE_DOCUMENT, to.params.object_name || to.name)
+  store.commit('CHANGE_ACTIVE_DOCUMENT', to.params.object_name || to.name)
 
   if (store.state.users.active_user_eid.length > 0) {
     // user is signed in; move to the next route

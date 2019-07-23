@@ -1,5 +1,3 @@
-import store from '@/store'
-import * as types from '@/store/mutation-types'
 import { ROUTE_APP_ADMIN } from '@/constants/route'
 import AdminHome from '@comp/AdminHome'
 import AdminTest from '@comp/AdminTest'
