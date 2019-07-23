@@ -105,6 +105,51 @@ class Teammember extends ModelBase
         {
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
         }
+
+/*
+        // note: in the above implementation, the owners team is deleted and
+        // the owner is also removed from all other teams; in the implementation
+        // below, the team member remains as a placeholder so they can be
+        // reinvited; however, in this situation, a new placeholder user
+        // would need to be created with the email address so the user can
+        // be reinvited; this may be best implemented outside the model, which
+        // is why this implementation is currently not used
+
+        // this function deletes rows for a given owner
+        if (!\Flexio\Base\Eid::isValid($owned_by))
+            return false;
+
+        $db = $this->getDatabase();
+        try
+        {
+            $rows_affected = 0;
+            $qowned_by = $db->quote($owned_by);
+
+            // delete records for the owner
+            $sql = "delete from tbl_teammember where owned_by = $qowned_by";
+            $count = $db->exec($sql);
+            if ($count !== false)
+                $rows_affected += $count;
+
+            // if the owner is a member of another project, leave these records and change
+            // the member_status flag to the default pending value when the member is first
+            // created (\Model::TEAM_MEMBER_STATUS_PENDING) which allows them to be reinvited
+            $process_arr = array();
+            $process_arr['member_status'] = \Model::TEAM_MEMBER_STATUS_PENDING;
+            $count = $db->update('tbl_teammember', $process_arr, "member_eid = $qowned_by");
+
+            // TODO: create a new placeholder user
+
+            if ($count !== false)
+                $rows_affected += $count;
+
+            return ($rows_affected > 0 ? true : false);
+        }
+        catch (\Exception $e)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
+        }
+*/
     }
 
     public function set(string $member_eid, string $owned_by, array $params) : bool
