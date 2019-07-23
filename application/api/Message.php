@@ -31,7 +31,7 @@ class Message
         $to = $validated_params['email'];
         $verify_code = $validated_params['verify_code'];
 
-        $activation_link = self::getBaseUrl() . '/app/signin?ref=verification_email&email='.urlencode($to).'&verify_code='.$verify_code;
+        $activation_link = \Flexio\System\System::getUserVerificationLink($to, $verify_code);
 
         // get templates from the application res directory
         $msg_text = self::getTextEmail('account-verify', [ 'activation_link' => $activation_link ]);
@@ -62,7 +62,7 @@ class Message
         $verify_code = $validated_params['verify_code'];
 
         // prepare info structure for create account
-        $reset_link = self::getBaseUrl() . '/app/resetpassword?email='.urlencode($to).'&verify_code='.$verify_code;
+        $reset_link = \Flexio\System\System::getPasswordResetLink($to, $verify_code);
 
         // get templates from the application res directory
         $msg_text = self::getTextEmail('forgot-password', [ 'reset_link' => $reset_link ]);
@@ -97,7 +97,7 @@ class Message
         $from_email = $validated_params['from_email'];
         $object_name = $validated_params['object_name'];
         $message = $validated_params['message'] ?? '';
-        $share_link = self::getBaseUrl() . "/app/$object_name";
+        $share_link = \Flexio\System\System::getTeamInviteLink($object_name);
 
         // get text template from the application res directory
         $msg_text = self::getTextEmail('project-share', [
@@ -145,7 +145,7 @@ class Message
         $from_email = $validated_params['from_email'];
         $object_name = $validated_params['object_name'];
         $message = $validated_params['message'] ?? '';
-        $share_link = self::getBaseUrl() . "/app/pipe/$object_name";
+        $share_link = \Flexio\System\System::getPipeShareLink($object_name);
 
         // get text template from the application res directory
         $msg_text = self::getTextEmail('pipe-share', [
@@ -206,10 +206,5 @@ class Message
         }
 
         return $msg;
-    }
-
-    private static function getBaseUrl() : string
-    {
-        return 'https://' . $_SERVER['SERVER_NAME'];
     }
 }

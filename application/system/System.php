@@ -270,6 +270,31 @@ class System
         return $g_store->timestamp;
     }
 
+    public static function getBaseUrl() : string
+    {
+        return 'https://' . $_SERVER['SERVER_NAME'];
+    }
+
+    public static function getUserVerificationLink(string $email_to, string $verify_code) : string
+    {
+        self::getBaseUrl() . '/app/signin?ref=verification_email&email='.urlencode($email_to).'&verify_code='.$verify_code;
+    }
+
+    public static function getPasswordResetLink(string $email_to, string $verify_code) : string
+    {
+        return self::getBaseUrl() . '/app/resetpassword?email='.urlencode($email_to).'&verify_code='.$verify_code;
+    }
+
+    public static function getTeamInviteLink(string $team_name) : string
+    {
+        return self::getBaseUrl() . "/app/$team_name";
+    }
+
+    public static function getPipeShareLink(string $pipe_name) : string
+    {
+        return self::getBaseUrl() . "/app/pipe/$pipe_name";
+    }
+
     public static function getBaseDirectory() : string
     {
         global $g_store;
