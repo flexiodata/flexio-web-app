@@ -554,6 +554,49 @@ class User
         \Flexio\Api\Response::sendContent($result);
     }
 
+
+    public static function resendverify(\Flexio\Api\Request $request) : void
+    {
+        $post_params = $request->getPostParams();
+
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($post_params, array(
+                'email' => array('type' => 'email', 'required' => true)
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        $validated_post_params = $validator->getParams();
+        $email = $validated_post_params['email'];
+
+        $user = false;
+        try
+        {
+            $user_eid = \Flexio\Object\User::getEidFromEmail($email);
+            $user = \Flexio\Object\User::load($user_eid);
+            if ($user->getStatus() === \Model::STATUS_DELETED)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, _('This user is unavailable'));
+        }
+
+        // TODO: if the verify code is set, but blank, should we regenerate
+        // the verification code?
+
+        $verify_code = $user->getVerifyCode();
+        if (!isset($verify_code))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, _('Missing verification code'));
+
+        $email_params = array('email' => $email, 'verify_code' => $verify_code);
+        \Flexio\Api\Message::sendWelcomeEmail($email_params);
+
+        $result = array();
+        $result['email'] = $email;
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        \Flexio\Api\Response::sendContent($result);
+    }
+
     public static function activate(\Flexio\Api\Request $request) : void
     {
         $post_params = $request->getPostParams();
@@ -590,48 +633,6 @@ class User
 
         if ($user->set(array('eid_status' => \Model::STATUS_AVAILABLE, 'verify_code' => '')) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, _('Could not activate the user at this time'));
-
-        $result = array();
-        $result['email'] = $email;
-        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api\Response::sendContent($result);
-    }
-
-    public static function resendverify(\Flexio\Api\Request $request) : void
-    {
-        $post_params = $request->getPostParams();
-
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($post_params, array(
-                'email' => array('type' => 'email', 'required' => true)
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-
-        $validated_post_params = $validator->getParams();
-        $email = $validated_post_params['email'];
-
-        $user = false;
-        try
-        {
-            $user_eid = \Flexio\Object\User::getEidFromEmail($email);
-            $user = \Flexio\Object\User::load($user_eid);
-            if ($user->getStatus() === \Model::STATUS_DELETED)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        }
-        catch (\Flexio\Base\Exception $e)
-        {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, _('This user is unavailable'));
-        }
-
-        // TODO: if the verify code is a set, but blank, should we regenerate
-        // the verification code?
-
-        $verify_code = $user->getVerifyCode();
-        if (!isset($verify_code))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, _('Missing verification code'));
-
-        $email_params = array('email' => $email, 'verify_code' => $verify_code);
-        \Flexio\Api\Message::sendWelcomeEmail($email_params);
 
         $result = array();
         $result['email'] = $email;
