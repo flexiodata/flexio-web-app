@@ -33,7 +33,7 @@ router.afterEach((to, from) => {
 })
 
 router.beforeEach((to, from, next) => {
-  var active_user = {}
+  var team_name = to.params.team_name
 
   const redirectToSignIn = () => {
     next({
@@ -43,8 +43,9 @@ router.beforeEach((to, from, next) => {
   }
 
   const goNext = () => {
-    var active_username = store.state.users.active_user_eid
-    var team_name = to.params.team_name || active_username
+    var active_user = _.cloneDeep(store.getters['users/getActiveUser'])
+    var active_username = active_user.username
+    team_name = team_name || active_username
 
     store.commit(CHANGE_ACTIVE_TEAM, team_name)
 
@@ -69,8 +70,6 @@ router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
       // this route requires authentication; check if the user is signed in...
       store.dispatch('users/fetch', { eid: 'me' }).then(response => {
-        active_user = response.data
-
         if (store.state.users.active_user_eid.length > 0) {
           // user is signed in; move to the next route
           goNext()
@@ -92,8 +91,6 @@ router.beforeEach((to, from, next) => {
       // this route does not require authentication; try to sign in just to make
       // sure we know who the active user is and move to the next route
       store.dispatch('users/fetch', { eid: 'me' }).then(response => {
-        active_user = response.data
-
         if (store.state.users.active_user_eid.length > 0) {
           // user is signed in; move to the next route
           goNext()
