@@ -5,7 +5,6 @@
       :connection="active_connection"
       :path="connection_path"
       @open-folder="openFolder"
-      v-if="file_chooser_mode == 'filechooser'"
     />
     <div
       class="flex flex-row h-100 overflow-hidden"
@@ -34,11 +33,11 @@
       <div class="flex-fill overflow-y-auto" :class="{ 'ml2': showConnectionList }">
         <FileChooserList
           ref="file-chooser"
+          :teamName="team_name"
           :path="connection_path"
           @open-folder="openFolder"
           @selection-change="updateItems"
           v-bind="$attrs"
-          v-if="file_chooser_mode == 'filechooser'"
         />
       </div>
     </div>
@@ -58,11 +57,13 @@
   import AbstractList from '@comp/AbstractList'
   import MixinConnection from '@comp/mixins/connection'
 
+  /*
   const LOCAL_STORAGE_ITEM = {
     connection_type: CONNECTION_TYPE_FLEX,
     eid: 'flex',
     short_description: 'Flex.io'
   }
+  */
 
   export default {
     inheritAttrs: false,
@@ -103,18 +104,10 @@
         return _.get(this.active_connection, 'connection_type', '')
       },
       connections() {
-        var items = _.filter(this.getAvailableConnections(), this.$_Connection_isStorage)
-        items = _.sortBy(items, 'name')
-        return [LOCAL_STORAGE_ITEM].concat(items)
+        return _.filter(this.getAvailableConnections(), this.$_Connection_isStorage)
       },
-      file_chooser_mode() {
-        switch (this.ctype)
-        {
-          case CONNECTION_TYPE_HTTP: return 'textentry'
-          case CONNECTION_TYPE_RSS:  return 'textentry'
-        }
-
-        return 'filechooser'
+      team_name() {
+        return _.get(this.active_connection, 'owned_by.eid', 'me')
       }
     },
     methods: {
@@ -125,12 +118,6 @@
         return _.find(connections, { connection_type: this.ctype })
       },
       submit() {
-        /*
-        var url_list = this.$refs['url-input-list']
-        if (!_.isNil(url_list))
-          url_list.finishEdit()
-        */
-
         this.$emit('submit', this.items)
       },
       reset(attrs) {
@@ -140,12 +127,6 @@
         this.$emit('update:selectedItems', [])
       },
       onHide() {
-        /*
-        var url_list = this.$refs['url-input-list']
-        if (!_.isNil(url_list))
-          url_list.reset()
-        */
-
         this.reset()
       },
       openFolder(path) {
@@ -169,10 +150,20 @@
         return this.getConnectionIdentifier() + ':/'
       },
       initFromConnection(connection) {
+        var old_connection_path = this.connection_path
+
         // do a hard refresh of the file list
         this.active_connection = _.cloneDeep(connection || LOCAL_STORAGE_ITEM)
         this.connection_path = this.getConnectionBasePath()
-        this.$nextTick(() => { this.openFolder() })
+        this.$nextTick(() => {
+          if (old_connection_path != this.connection_path) {
+            this.openFolder()
+          } else {
+            // since the connection path hasn't changed, reactivity isn't going
+            // to trigger a refresh here so we need to do it manually
+            this.$refs['file-chooser'].refreshList()
+          }
+        })
       },
       updateItems(items, path) {
         this.items = items
