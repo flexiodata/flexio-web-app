@@ -31,7 +31,7 @@
         </div>
       </div>
       <div class="br2 bg-white pa3 pa4-ns css-white-box">
-        <sign-in-form
+        <SignInForm
           @sign-up-click="onSignUpClick"
           @forgot-password-click="onForgotPasswordClick"
           @signed-in="onSignedIn"

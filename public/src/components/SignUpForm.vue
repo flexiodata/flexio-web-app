@@ -106,6 +106,12 @@
   import axios from 'axios'
 
   export default {
+    props: {
+      signinOnSignup: {
+        type: Boolean,
+        default: true
+      }
+    },
     data() {
       return {
         first_name: '',
@@ -219,7 +225,9 @@
           axios.post('/api/v2/signup', attrs).then(response => {
             var user_info =  _.get(response, 'data', {})
             this.$emit('signed-up', user_info)
-            this.trySignIn()
+            if (this.signinOnSignup === true) {
+              this.trySignIn()
+            }
             this.trackSignUp(user_info)
           }).catch(error => {
             this.is_submitting = false
