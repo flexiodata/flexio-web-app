@@ -60,8 +60,7 @@ const actions = {
 
 const getters = {
   getAllTeams (state) {
-    var items = _.sortBy(state.items, [ function(p) { return new Date(p.created) } ])
-    return items.reverse()
+    return _.sortBy(state.items, [ item => new Date(item.created) ])
   },
 
   getActiveTeam (state, getters, root_state) {

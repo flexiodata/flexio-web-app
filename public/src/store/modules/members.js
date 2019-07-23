@@ -116,7 +116,7 @@ const actions = {
 
 const getters = {
   getAllMembers (state) {
-    var items = _.sortBy(state.items, [ function(p) { return new Date(p.created) } ])
+    var items = _.sortBy(state.items, [ item => new Date(item.created) ])
     return items
   },
 

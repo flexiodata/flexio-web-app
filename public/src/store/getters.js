@@ -27,7 +27,7 @@ export const getAllPipes = state => {
   return _
     .chain(state.objects)
     .filter({ eid_type: OBJECT_TYPE_PIPE })
-    .sortBy([ function(p) { return new Date(p.created) } ])
+    .sortBy([ item => new Date(item.created) ])
     .reverse()
     .value()
 }
