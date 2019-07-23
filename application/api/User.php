@@ -603,6 +603,13 @@ class User
 
         $result = array();
         $result['email'] = $email;
+
+        if (IS_DEBUG())
+        {
+            $verification_link = \Flexio\System\System::getUserVerificationLink($email, $verify_code);
+            $result['verification_link'] = $verification_link;
+        }
+
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api\Response::sendContent($result);
     }
