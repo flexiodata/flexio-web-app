@@ -43,6 +43,10 @@
 
   export default {
     props: {
+      teamName: {
+        type: String,
+        default: 'me'
+      },
       path: {
         type: [String, Boolean],
         default: '/'
@@ -201,7 +205,7 @@
 
         var path = _.defaultTo(this.path, '/')
 
-        api.v2_vfsListFiles('me', path).then(response => {
+        api.v2_vfsListFiles(this.teamName, path).then(response => {
           var items = _
             .chain(_.defaultTo(response.data, []))
             .map((f) => { return _.assign({}, { is_selected: false }, f) })
