@@ -111,6 +111,15 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         // TODO: add properties check
 
         // handle replacing/adding partial parameters in the connection_info
+
+        // TODO: temporarily disable setting partial connection_info; if
+        // connection_info is passed, all the relevant info needs to be
+        // passed; this is because we now have a keyring connection type
+        // and so we need to be able to pass arbitrary lists of keys/values
+        // without them accumulating
+
+        // TODO: temporarily re-enable because disabling caused oauth
+        // connection types to fail
         $properties = $this->getConnectionPropertiesToUpdate($properties);
 
         // encode the connection info

@@ -108,14 +108,14 @@
       }
     },
     computed: {
-      ...mapState([
-        'active_user_eid'
-      ])
+      ...mapState({
+        active_user_eid: state => state.users.active_user_eid,
+      })
     },
     methods: {
-      ...mapGetters([
-        'getActiveUser'
-      ]),
+      ...mapGetters('users', {
+        'getActiveUser': 'getActiveUser'
+      }),
       checkUsernameMatch(rule, value, callback) {
         var val = value.toLowerCase()
         var current_email = _.get(this.getActiveUser(), 'email').toLowerCase()
@@ -158,7 +158,7 @@
 
           var eid = this.active_user_eid
           var attrs = _.pick(this.edit_info, ['username', 'password'])
-          this.$store.dispatch('v2_action_deleteUser', { eid, attrs }).then(response => {
+          this.$store.dispatch('users/delete', { eid, attrs }).then(response => {
             this.signOut()
           }).catch(error => {
             // TODO: add error handling?
@@ -166,11 +166,10 @@
         })
       },
       signOut() {
-        this.$store.dispatch('v2_action_signOut').then(response => {
-          this.$router.push({ name: ROUTE_SIGNIN_PAGE })
-        }).catch(error => {
-          // TODO: add error handling?
-        })
+        // NOTE: we need to route back to the sign in page before we actually dispatch
+        //       the `users/signOut` call, otherwise a 404 page will show momentarily
+        this.$router.push({ name: ROUTE_SIGNIN_PAGE })
+        this.$store.dispatch('users/signOut')
       }
     }
   }

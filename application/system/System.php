@@ -20,105 +20,6 @@ class System
 {
     public const SESSION_VERSION = 5;
 
-/*
-    // DEPRECATED: user authentication moved to API layer to allow other authentication
-    // flows in the API; implementation superceded by createUserSession() below which
-    // simply creates a session from a valid user eid
-
-    public static function login(string $username, string $password, string &$error_message = null) : bool
-    {
-        // login() authenticates a username and password and, if valid,
-        // creates session variables which store the authentication information;
-        // if the authentication succeeded, the method returns true, otherwise
-        // it returns false
-
-        global $g_store, $g_config;
-
-        // clear any existing identity
-        \Flexio\System\System::clearLoginIdentity();
-
-        // if we haven't already started a session, start a new one
-        fxStartSession();
-
-        // generate a new session id to prevent session hijacking
-        if (session_id())
-        {
-            // David was getting this error message, so we added the @
-            // <br /> <b>Warning</b>:  session_regenerate_id(): Session object destruction failed.
-            // ID: redis (path: tcp://localhost:6379) in <b>/media/sf_flexio/application/system/System.php</b>
-            // on line <b>41</b><br /> {     "errors": [         {             "message": "Invalid username or
-            //  password.",             "code": "general"         }     ] }
-            @session_regenerate_id(true);
-        }
-
-        if (substr($username, 0, 7) == '@autht:')
-        {
-            // authentication via temporary login token -- check if valid
-            $result = \Flexio\System\System::verifyTemporaryLoginCredentials($username, $password);
-            if ($result === false)
-                return false;
-
-            // clear any existing identity
-            \Flexio\System\System::clearLoginIdentity();
-
-            $_SESSION['env']['session_version'] = \Flexio\System\System::SESSION_VERSION;
-            $_SESSION['env']['user_eid'] = '';
-
-            return true;
-        }
-
-        // check if password is correct and get info about the user
-        $user_model = \Flexio\System\System::getModel()->user;
-        if (!$user_model)
-            return false;
-
-        if (!$user_model->checkUserPassword($username, $password))
-        {
-            $error_message = _('Invalid username or password.');
-            return false;
-        }
-
-        try
-        {
-            $user_eid = $user_model->getEidFromIdentifier($username);
-            $user_info = $user_model->get($user_eid);
-        }
-        catch (\Flexio\Base\Exception $e)
-        {
-            return false;
-        }
-
-        // if the user has been deleted or the status is anything besides
-        // active, return false
-        if ($user_info['eid_status'] == \Model::STATUS_DELETED)
-        {
-            return false;
-        }
-         else
-        {
-            if ($user_info['eid_status'] != \Model::STATUS_AVAILABLE)
-            {
-                $error_message = _('Account not verified.  Please verify your account.');
-                return false;
-            }
-        }
-
-        // set new identity
-        $_SESSION['env']['session_version'] = \Flexio\System\System::SESSION_VERSION;
-        $_SESSION['env']['user_eid'] = $user_info['eid'];
-
-        // make sure we don't have any inactivity value
-        if (isset($_SESSION['last_activity']))
-            unset($_SESSION['last_activity']);
-
-        \Flexio\System\System::setupSessionAuth();
-
-        //session_write_close();
-
-        return true;
-    }
-*/
-
     public static function createUserSession(string $user_eid) : bool
     {
         // creates session variables which store the authentication information
@@ -367,6 +268,31 @@ class System
         //$g_store->timestamp = date("Y-m-d H:i:s", time());
         $g_store->timestamp = \Flexio\Base\Util::getCurrentTimestamp(); // use more precise timestamp
         return $g_store->timestamp;
+    }
+
+    public static function getBaseUrl() : string
+    {
+        return 'https://' . $_SERVER['SERVER_NAME'];
+    }
+
+    public static function getUserVerificationLink(string $email_to, string $verify_code) : string
+    {
+        return self::getBaseUrl() . '/app/signin?ref=verification_email&email='.urlencode($email_to).'&verify_code='.$verify_code;
+    }
+
+    public static function getPasswordResetLink(string $email_to, string $verify_code) : string
+    {
+        return self::getBaseUrl() . '/app/resetpassword?email='.urlencode($email_to).'&verify_code='.$verify_code;
+    }
+
+    public static function getTeamInviteLink(string $team_name) : string
+    {
+        return self::getBaseUrl() . "/app/$team_name";
+    }
+
+    public static function getPipeShareLink(string $pipe_name) : string
+    {
+        return self::getBaseUrl() . "/app/pipe/$pipe_name";
     }
 
     public static function getBaseDirectory() : string

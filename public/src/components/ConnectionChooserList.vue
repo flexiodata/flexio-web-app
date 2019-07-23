@@ -39,7 +39,7 @@
     computed: {
       // mix this into the outer object with the object spread operator
       ...mapState({
-        'is_fetching': 'connections_fetching'
+        is_fetching: state => state.connections.is_fetching,
       }),
       items() {
         var conns = this.getAvailableConnections()
@@ -47,9 +47,9 @@
       }
     },
     methods: {
-      ...mapGetters([
-        'getAvailableConnections'
-      ]),
+      ...mapGetters('connections', {
+        'getAvailableConnections': 'getAvailableConnections'
+      }),
       onItemActivate(item) {
         this.$emit('item-activate', item)
       }

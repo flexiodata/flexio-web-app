@@ -14,7 +14,7 @@
         <!-- control bar -->
         <div class="flex flex-row items-center">
           <div class="flex-fill flex flex-row items-center">
-            <h1 class="mv0 f2 fw4 mr3">Activity By User</h1>
+            <h1 class="mv0 f2 fw4 mr3">User Activity</h1>
           </div>
           <el-pagination
             layout="prev"
@@ -139,7 +139,7 @@
 
   export default {
     metaInfo: {
-      title: '[Admin] Activity By User'
+      title: '[Admin] User Activity'
     },
     inheritAttrs: false,
     props: {
@@ -208,6 +208,9 @@
       }, 500) // TODO: remove this hack
     },
     methods: {
+      ...mapGetters('processes', {
+        'getAllProcesses': 'getAllProcesses'
+      }),
       updatePager(page) {
         // update the route
         var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path', 'query'])

@@ -18,10 +18,6 @@ namespace Flexio\Api;
 
 class Api
 {
-    // TODO: figure out how to handle these endpoints:
-    // 'POS /users/resendverify'         => '\Flexio\Api\User::resendverify'
-    // 'POS /users/activate'             => '\Flexio\Api\User::activate'
-
     // TODO: rename vfs endpoint to files or storage or something else?
 
     // TODO: should processes run with pipe owner privileges; what about case where two
@@ -46,8 +42,10 @@ class Api
         'POS /logout'                                 => '\Flexio\Api\System::logout',
         'POS /validate'                               => '\Flexio\Api\User::validateCredentials',
         'POS /signup'                                 => '\Flexio\Api\User::create',
+        'POS /requestverification'                    => '\Flexio\Api\User::requestverification',
+        'POS /verification'                           => '\Flexio\Api\User::processverification',
         'POS /forgotpassword'                         => '\Flexio\Api\User::requestpasswordreset',
-        'POS /resetpassword'                          => '\Flexio\Api\User::resetpassword',
+        'POS /resetpassword'                          => '\Flexio\Api\User::processpasswordreset',
 
         // authentication pair for allowing signing in from third-party websites via api
         'GET /session'                                => '\Flexio\Api\System::session', // test

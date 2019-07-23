@@ -29,6 +29,7 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
   import * as mt from '../constants/mimetype'
   import { API_V2_ROOT } from '../api/resources'
   import Grid from 'vue-grid2'
@@ -60,15 +61,20 @@
       StreamText
     },
     computed: {
+      ...mapState({
+        active_team_name: state => state.teams.active_team_name
+      }),
       stream() {
-        return _.get(this.$store, 'state.objects.'+this.streamEid)
+        return _.get(this.$store, 'state.streams.items.'+this.streamEid)
       },
       stream_content_url() {
+        var base_url = API_V2_ROOT + '/' + this.active_team_name + '/streams/' + this.streamEid
+
         if (this.is_flexio_html) {
-          return API_V2_ROOT + '/me/streams/' + this.streamEid + '/content?content_type=text/html'
+          return base_url + '/content?content_type=text/html'
         }
 
-        return API_V2_ROOT + '/me/streams/' + this.streamEid + '/content'
+        return base_url + '/content'
       },
       stream_query_params() {
         return containsSubstrings([
@@ -77,10 +83,10 @@
         ], this.mime_type) ? { encode: 'UTF-8' } : {}
       },
       is_fetched() {
-        return _.get(this.stream, 'is_fetched', false)
+        return _.get(this.stream, 'vuex_meta.is_fetched', false)
       },
       is_fetching() {
-        return _.get(this.stream, 'is_fetching', false)
+        return _.get(this.stream, 'vuex_meta.is_fetching', false)
       },
       mime_type() {
         return _.get(this.stream, 'mime_type', '')
@@ -138,7 +144,9 @@
           return
         }
 
-        this.$store.dispatch('v2_action_fetchStream', { eid: this.streamEid }).catch(error => {
+        var team_name = this.active_team_name
+
+        this.$store.dispatch('streams/fetch', { team_name, eid: this.streamEid }).catch(error => {
           // TODO: add error handling?
         })
       }

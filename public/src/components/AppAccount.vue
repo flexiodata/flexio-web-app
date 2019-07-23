@@ -18,7 +18,7 @@
             <div class="ml3 mr4">
               <h3 class="mt0 fw6 f3">Profile</h3>
               <AccountProfileForm style="max-width: 28rem" />
-              <div class="h2"></div>
+              <div class="h3"></div>
             </div>
           </el-tab-pane>
 
@@ -49,7 +49,7 @@
               >
                 Delete your account
               </el-button>
-              <div class="h2"></div>
+              <div class="h3"></div>
             </div>
           </el-tab-pane>
 
@@ -59,7 +59,7 @@
               <h3 class="mt0 fw6 f3">API Keys</h3>
               <p class="lh-copy f6 mb3">This is a list of API keys associated with your account. Remove any keys that you do not recognize.</p>
               <AccountApiForm />
-              <div class="h2"></div>
+              <div class="h3"></div>
             </div>
           </el-tab-pane>
 
@@ -71,7 +71,7 @@
               <div class="h3"></div>
               <h3 class="mt0 fw6 f3">Payment Information</h3>
               <AccountBillingForm />
-              <div class="h2"></div>
+              <div class="h3"></div>
             </div>
           </el-tab-pane>
         </el-tabs>
@@ -142,9 +142,9 @@
       }
     },
     computed: {
-      ...mapState([
-        'active_user_eid'
-      ]),
+      ...mapState({
+        active_user_eid: state => state.users.active_user_eid,
+      }),
       has_user() {
         return this.active_user_eid.length > 0
       },

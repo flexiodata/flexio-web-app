@@ -157,9 +157,9 @@
       }
     },
     computed: {
-      ...mapState([
-        'active_team_name'
-      ]),
+      ...mapState({
+        active_team_name: state => state.teams.active_team_name
+      }),
       pname() {
         return _.get(this.orig_pipe, 'name', '')
       },

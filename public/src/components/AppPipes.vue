@@ -105,6 +105,23 @@
 
   const DEPLOY_MODE_RUN = 'R'
 
+  const defaultAttrs = () => {
+    // when creating a new pipe, start out with a basic Python 'Hello World' script
+    return {
+      deploy_mode: 'R',
+      deploy_api: 'A',
+      deploy_ui: 'A',
+      task: {
+        op: 'sequence',
+        items: [{
+          op: 'execute',
+          lang: 'python',
+          code: 'IyBiYXNpYyBoZWxsbyB3b3JsZCBleGFtcGxlCmRlZiBmbGV4X2hhbmRsZXIoZmxleCk6CiAgICBmbGV4LmVuZChbWyJIIiwiZSIsImwiLCJsIiwibyJdLFsiVyIsIm8iLCJyIiwibCIsImQiXV0pCg=='
+        }]
+      }
+    }
+  }
+
   export default {
     metaInfo() {
       return {
@@ -143,15 +160,15 @@
     computed: {
       // mix this into the outer object with the object spread operator
       ...mapState({
-        'is_fetching': 'pipes_fetching',
-        'is_fetched': 'pipes_fetched',
-        'active_team_name': 'active_team_name'
+        is_fetching: state => state.pipes.is_fetching,
+        is_fetched: state => state.pipes.is_fetched,
+        active_team_name: state => state.teams.active_team_name
       }),
-      route_object_name() {
-        return _.get(this.$route, 'params.object_name', undefined)
-      },
       pipes() {
         return this.getAllPipes()
+      },
+      route_object_name() {
+        return _.get(this.$route, 'params.object_name', undefined)
       },
       pname() {
         return _.get(this.pipe, 'name', '')
@@ -167,37 +184,26 @@
       this.$store.track('Visited Pipes Page')
     },
     methods: {
-      ...mapGetters([
-        'getAllPipes',
-        'getActiveTeamLabel'
-      ]),
+      ...mapGetters('teams', {
+        'getActiveTeamLabel': 'getActiveTeamLabel'
+      }),
+      ...mapGetters('pipes', {
+        'getAllPipes': 'getAllPipes'
+      }),
       tryFetchPipes() {
+        var team_name = this.active_team_name
+
         if (!this.is_fetched && !this.is_fetching) {
-          this.$store.dispatch('v2_action_fetchPipes', {}).catch(error => {
-            // TODO: add error handling?
-          })
+          this.$store.dispatch('pipes/fetch', { team_name })
         }
       },
       tryCreatePipe(attrs) {
-        // when creating a new pipe, start out with a basic Python 'Hello World' script
-        var default_attrs = {
-          deploy_mode: 'R',
-          deploy_api: 'A',
-          deploy_ui: 'A',
-          task: {
-            op: 'sequence',
-            items: [{
-              op: 'execute',
-              lang: 'python',
-              code: 'IyBiYXNpYyBoZWxsbyB3b3JsZCBleGFtcGxlCmRlZiBmbGV4X2hhbmRsZXIoZmxleCk6CiAgICBmbGV4LmVuZChbWyJIIiwiZSIsImwiLCJsIiwibyJdLFsiVyIsIm8iLCJyIiwibCIsImQiXV0pCg=='
-            }]
-          }
-        }
+        var team_name = this.active_team_name
 
-        attrs = _.cloneDeep(attrs)
-        attrs = _.assign({}, default_attrs, attrs)
+        var attrs = _.cloneDeep(attrs)
+        attrs = _.assign({}, defaultAttrs(), attrs)
 
-        this.$store.dispatch('v2_action_createPipe', { attrs }).then(response => {
+        this.$store.dispatch('pipes/create', { team_name, attrs }).then(response => {
           var pipe = response.data
 
           this.$message({
@@ -209,13 +215,12 @@
           this.$store.track('Created Pipe', analytics_payload)
           this.selectPipe(pipe)
           this.show_pipe_dialog = false
-        }).catch(error => {
-          this.$store.track('Created Pipe (Error)')
         })
       },
       tryDeletePipe(attrs) {
         var eid = _.get(attrs, 'eid', '')
         var pname = _.get(attrs, 'name', 'Pipe')
+        var team_name = this.active_team_name
 
         this.$confirm('Are you sure you want to delete the pipe named "' + pname + '"?', 'Really delete pipe?', {
           confirmButtonClass: 'ttu fw6',
@@ -224,19 +229,18 @@
           cancelButtonText: 'Cancel',
           type: 'warning'
         }).then(() => {
-          var idx = _.findIndex(this.pipes, this.pipe)
+          var selected_idx = _.findIndex(this.pipes, { eid: this.pipe.eid })
+          var deleting_idx = _.findIndex(this.pipes, { eid: attrs.eid })
 
-          this.$store.dispatch('v2_action_deletePipe', { eid }).then(response => {
-            if (idx >= 0) {
-              if (idx >= this.pipes.length) {
-                idx--
+          this.$store.dispatch('pipes/delete', { team_name, eid }).then(response => {
+            if (deleting_idx >= 0 && deleting_idx == selected_idx) {
+              if (deleting_idx >= this.pipes.length) {
+                deleting_idx--
               }
 
-              var pipe = _.get(this.pipes, '['+idx+']', {})
+              var pipe = _.get(this.pipes, '['+deleting_idx+']', {})
               this.selectPipe(pipe)
             }
-          }).catch(error => {
-            // TODO: add error handling?
           })
         }).catch(() => {
           // do nothing
@@ -264,7 +268,6 @@
           this.last_selected = {}
           return
         }
-
 
         this.pipe = _.cloneDeep(item)
         this.last_selected = _.cloneDeep(item)

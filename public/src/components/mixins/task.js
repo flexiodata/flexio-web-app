@@ -3,7 +3,6 @@
 
 import * as ops from '../../constants/task-op'
 import * as tasks from '../../constants/task-info'
-import { VARIABLE_REGEX } from '../../constants/common'
 
 export default {
   computed: {

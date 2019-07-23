@@ -138,7 +138,7 @@
       },
       popperOptions: {
         type: Object,
-        default: () => { return {} }
+        default: () => {}
       },
       skipButtonLabel: {
         type: String,

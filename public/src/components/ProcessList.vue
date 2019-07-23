@@ -166,9 +166,9 @@
       }
     },
     methods: {
-      ...mapGetters([
-        'getAllProcesses'
-      ]),
+      ...mapGetters('processes', {
+        'getAllProcesses': 'getAllProcesses'
+      }),
       fmtDate(row, col, val, idx) {
         return val ? moment(val).format('l LT') : '--'
       },
@@ -231,9 +231,10 @@
         return _.get(row, 'parent.name', '').length > 0
       },
       getPipeRoute(row) {
+        var team_name = _.get(row, 'owned_by.eid', '')
         var name = _.get(row, 'parent.name', '')
         var object_name = name.length > 0 ? name : _.get(row, 'parent.eid', '')
-        return `/pipes/${object_name}`
+        return `/${team_name}/pipes/${object_name}`
       },
       getIndex(idx) {
         return idx + this.start + 1

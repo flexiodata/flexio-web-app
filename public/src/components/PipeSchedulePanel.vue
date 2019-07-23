@@ -198,7 +198,7 @@
       },
       pipe: {
         type: Object,
-        default: () => { return {} }
+        default: () => {}
       }
     },
     components: {

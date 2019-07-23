@@ -158,9 +158,9 @@
     computed: {
       // mix this into the outer object with the object spread operator
       ...mapState({
-        'is_fetching': 'members_fetching',
-        'is_fetched': 'members_fetched',
-        'active_team_name': 'active_team_name'
+        is_fetching: state => state.members.is_fetching,
+        is_fetched: state => state.members.is_fetched,
+        active_team_name: state => state.teams.active_team_name
       }),
       members() {
         return this.getAllMembers()
@@ -170,15 +170,17 @@
       this.tryFetchMembers()
     },
     methods: {
-      ...mapGetters([
-        'getAllMembers',
-        'getActiveTeamLabel'
-      ]),
+      ...mapGetters('members', {
+        'getAllMembers': 'getAllMembers'
+      }),
+      ...mapGetters('teams', {
+        'getActiveTeamLabel': 'getActiveTeamLabel'
+      }),
       tryFetchMembers() {
         if (!this.is_fetched && !this.is_fetching) {
-          this.$store.dispatch('v2_action_fetchMembers', { team_name: this.active_team_name }).catch(error => {
-            // TODO: add error handling?
-          })
+          var team_name = this.active_team_name
+
+          this.$store.dispatch('members/fetch', { team_name })
         }
       },
       sendInvites() {
@@ -187,11 +189,10 @@
         // quick hack to allow multiple users to be added until the API supports it
         _.forEach(this.add_dialog_model.users, user => {
           setTimeout(() => {
+            var team_name = this.active_team_name
             var attrs = { member: user }
 
-            this.$store.dispatch('v2_action_createMember', { team_name: this.active_team_name, attrs }).catch(error => {
-              // TODO: add error handling?
-            })
+            this.$store.dispatch('members/create', { team_name, attrs })
           }, timeout)
 
           timeout += 40
@@ -209,10 +210,10 @@
         return _.get(member, 'username') == this.active_team_name
       },
       removeMember(member) {
+        var team_name = this.active_team_name
         var eid = member.eid
-        this.$store.dispatch('v2_action_deleteMember', { team_name: this.active_team_name, eid }).catch(error => {
-          // TODO: add error handling?
-        })
+
+        this.$store.dispatch('members/delete', { team_name, eid })
       },
       addUserTag() {
         var $select = this.$refs['email-select']
