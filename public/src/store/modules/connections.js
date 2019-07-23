@@ -51,22 +51,6 @@ const mutations = {
     state.is_fetched = true
   },
 
-  // this is problematic since we key on `eid`, but can now do fetching calls using `name`
-  /*
-  'FETCHING_ITEM' (state, { eid, name, is_fetching }) {
-    var meta = _.assign(getDefaultMeta(), { is_fetching: true })
-
-    // if we're trying to fetch an item that's not
-    // in our store, add a placeholder item to the store
-    if (is_fetching === true && !_.find(state.items, p => name ? p.name == name : p.eid == eid)) {
-      addItem(state, { eid, name }, meta)
-    } else {
-      // otherwise, just set the item's `is_fetching` flag
-      updateMeta(state, { eid, name }, { is_fetching: true })
-    }
-  },
-  */
-
   'FETCHED_ITEM' (state, item) {
     var meta = _.assign(getDefaultMeta(), { is_fetched: true })
     addItem(state, item, meta)

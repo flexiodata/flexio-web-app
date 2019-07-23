@@ -166,9 +166,9 @@
       }
     },
     methods: {
-      ...mapGetters([
-        'getAllProcesses'
-      ]),
+      ...mapGetters('processes', {
+        'getAllProcesses': 'getAllProcesses'
+      }),
       fmtDate(row, col, val, idx) {
         return val ? moment(val).format('l LT') : '--'
       },

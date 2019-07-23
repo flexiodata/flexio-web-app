@@ -49,7 +49,7 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+  import { mapState, mapGetters } from 'vuex'
   import { API_V2_ROOT } from '../api/resources'
   import {
     PROCESS_STATUS_PENDING,
@@ -97,13 +97,16 @@
       }
     },
     computed: {
+      ...mapState([
+        'active_team_name'
+      ]),
       is_superuser() {
         // limit to @flex.io users for now
         var user_email = _.get(this.getActiveUser(), 'email', '')
         return _.includes(user_email, '@flex.io')
       },
       process() {
-        return _.get(this.$store, 'state.objects.' + this.processEid)
+        return _.get(this.$store, 'state.processes.items.' + this.processEid)
       },
       process_status() {
         return _.get(this.process, 'process_status', '')
@@ -132,7 +135,7 @@
         return _.get(this.process_log, 'output.stdout.eid', '')
       },
       download_url() {
-        return API_V2_ROOT + '/me/streams/' + this.stream_eid + '/content?download=true'
+        return API_V2_ROOT + '/' + this.active_team_name + '/streams/' + this.stream_eid + '/content?download=true'
       }
     },
     methods: {
@@ -140,10 +143,9 @@
         'getActiveUser'
       ]),
       fetchProcessLog() {
+        var team_name = this.active_team_name
         if (this.processEid.length > 0) {
-          this.$store.dispatch('v2_action_fetchProcessLog', { eid: this.processEid }).catch(error => {
-            // TODO: add error handling?
-          })
+          this.$store.dispatch('processes/fetchLog', { team_name, eid: this.processEid })
         }
       }
     }

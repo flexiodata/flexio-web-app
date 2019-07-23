@@ -208,6 +208,9 @@
       }, 500) // TODO: remove this hack
     },
     methods: {
+      ...mapGetters('processes', {
+        'getAllProcesses': 'getAllProcesses'
+      }),
       updatePager(page) {
         // update the route
         var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path', 'query'])

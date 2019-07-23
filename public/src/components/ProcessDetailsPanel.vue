@@ -92,10 +92,10 @@
     },
     computed: {
       process() {
-        return _.get(this.$store, 'state.objects.' + this.processEid)
+        return _.get(this.$store, 'state.processes.items.' + this.processEid)
       },
       process_trimmed() {
-        return _.omit(this.process, ['is_fetched', 'is_fetching', 'eid_type', 'eid_status', 'started_by', 'log'])
+        return _.omit(this.process, ['is_fetched', 'is_fetching', 'eid_type', 'eid_status', 'started_by', 'log', 'vuex_meta'])
       },
       user() {
         var user_eid = _.get(this.process, 'owned_by.eid', '')
@@ -105,12 +105,12 @@
         return null
       },
       user_trimmed() {
-        return _.omit(this.user, ['is_fetched', 'is_fetching', 'eid_type', 'eid_status', 'email_hash', 'config', 'owned_by'])
+        return _.omit(this.user, ['eid_type', 'eid_status', 'email_hash', 'config', 'owned_by'])
       },
       pipe_name() {
         var eid = _.get(this.process, 'parent.eid', '')
-        var short_description = _.get(this.process, 'parent.short_description', '')
-        return eid.length == 0 ? '(Anonymous Pipe)' : short_description.length > 0 ? short_description : '(No short description)'
+        var name = _.get(this.process, 'parent.name', '')
+        return eid.length == 0 ? '(Anonymous Pipe)' : name.length > 0 ? name : '(Untitled)'
       }
     },
     methods: {
@@ -118,17 +118,14 @@
         this.active_tab_name = 'process'
 
         // query the owner if we have their eid
-        var process = _.get(this.$store, 'state.objects.' + this.processEid)
+        var process = _.get(this.$store, 'state.processes.items.' + this.processEid)
         var user_eid = _.get(process, 'owned_by.eid', '')
+
         if (this.showUser && user_eid.length > 0) {
-          this.$store.dispatch('v2_action_fetchUser', { eid: user_eid }).catch(error => {
-            // TODO: add error handling?
-          })
+          this.$store.dispatch('v2_action_fetchUser', { eid: user_eid })
         }
 
-        this.$store.dispatch('v2_action_fetchProcess', { team_name: user_eid, eid: this.processEid }).catch(error => {
-          // TODO: add error handling?
-        })
+        this.$store.dispatch('processes/fetch', { team_name: user_eid, eid: this.processEid })
       },
       onClose() {
         this.$emit('close')

@@ -435,9 +435,9 @@
       }
     },
     methods: {
-      ...mapGetters([
-        'getActiveDocumentProcesses'
-      ]),
+      ...mapGetters('processes', {
+        'getActiveDocumentProcesses': 'getActiveDocumentProcesses'
+      }),
       loadPipe() {
         this.$store.commit('pipedocument/FETCHING_PIPE', true)
 
@@ -531,20 +531,19 @@
         this.show_yaml = false
         this.show_testing = true
 
+        var team_name = this.active_team_name
         var attrs = _.pick(this.edit_pipe, ['task'])
-        var run_cfg = this.process_input
+        var cfg = this.process_input
 
         _.assign(attrs, {
           parent_eid: this.eid,
-          process_mode: PROCESS_MODE_BUILD/*,
-          run: true // this will automatically run the process and start polling the process
-          */
+          process_mode: PROCESS_MODE_BUILD
         })
 
-        this.$store.dispatch('v2_action_createProcess', { attrs }).then(response => {
+        this.$store.dispatch('processes/create', { team_name, attrs }).then(response => {
           var process = response.data
           var eid = process.eid
-          this.$store.dispatch('v2_action_runProcess', { eid, cfg: run_cfg })
+          this.$store.dispatch('processes/run', { team_name, eid, cfg })
         })
 
         // make sure we know we've tested the pipe at least once

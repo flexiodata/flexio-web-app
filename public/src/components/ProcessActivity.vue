@@ -149,9 +149,9 @@
     computed: {
       // mix this into the outer object with the object spread operator
       ...mapState({
-        'is_fetching': 'processes_fetching',
-        'is_fetched': 'processes_fetched',
-        'active_team_name': 'active_team_name'
+        is_fetching: state => state.processes.is_fetching,
+        is_fetched: state => state.processes.is_fetched,
+        active_team_name: state => state.active_team_name
       }),
       all_processes() {
         return this.items ? this.items : this.getAllProcesses()
@@ -184,12 +184,14 @@
       setTimeout(() => { this.force_loading = false }, 10)
     },
     methods: {
-      ...mapGetters([
-        'getAllProcesses'
-      ]),
+      ...mapGetters('processes', {
+        'getAllProcesses': 'getAllProcesses'
+      }),
       tryFetchProcesses() {
+        var team_name = this.active_team_name
+
         if (!this.is_fetched && !this.is_fetching) {
-          this.$store.dispatch('v2_action_fetchProcesses', {}).catch(error => {
+          this.$store.dispatch('processes/fetch', { team_name }).catch(error => {
             // TODO: add error handling?
           })
         }
