@@ -44,7 +44,7 @@
                   <div
                     v-if="isInviteResending(member)"
                   >
-                    Resending invite...
+                    Sending invite...
                   </div>
                   <div
                     class="flex flex-row items-center"
