@@ -255,7 +255,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
     public function handleEvent(string $event, array $process_info)
     {
         // if we're not in build mode, don't do anything with events;
-        // TODO: store as a property so we don't have to ping the database
         if ($this->procmode !== \Flexio\Jobs\Process::MODE_BUILD)
             return;
 
