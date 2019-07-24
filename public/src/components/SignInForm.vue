@@ -5,8 +5,10 @@
     </div>
     <h1 class="tc mb4 pb2">Sign in to Flex.io</h1>
     <template>
-      <div v-if="error_msg" class="mb3 ph3 pv2a lh-title fw6 br1 white bg-dark-red">
-        {{error_msg}}
+      <div class="mb3" v-if="error_msg">
+        <div class="el-alert el-alert--error is-light">
+          {{error_msg}}
+        </div>
       </div>
       <div class="mv3">
         <input

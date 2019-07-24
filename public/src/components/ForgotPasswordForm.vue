@@ -20,8 +20,10 @@
       <p>Enter the email address you signed up with below. An email will be sent containing a link to reset your password.</p>
       <p>You may need to check your spam folder or unblock <span class="fw6 nowrap">no-reply@flex.io</span>.</p>
       <div class="pt2">
-        <div v-if="error_msg" class="mb3 ph3 pv2a lh-title fw6 br1 white bg-dark-red">
-          {{error_msg}}
+        <div class="mb3" v-if="error_msg">
+          <div class="el-alert el-alert--error is-light">
+            {{error_msg}}
+          </div>
         </div>
         <div class="mb3">
           <input

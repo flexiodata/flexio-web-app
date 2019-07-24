@@ -3,10 +3,12 @@
     <div class="tc" style="margin-top: -68px">
       <img src="../assets/icon/icon-flexio-128.png" alt="Flex.io" class="br-100 ba bw1 b--white" style="width: 68px; box-shadow: 0 2px 4px rgba(0,0,0,0.2)">
     </div>
-    <h1 class="tc mb4 pb2">Sign up for Flex.io</h1>
+    <h1 class="tc mb4">Sign up for Flex.io</h1>
     <template>
-      <div v-if="error_msg" class="mb3 ph3 pv2a lh-title fw6 br1 white bg-dark-red">
-        {{error_msg}}
+      <div class="mb3" v-if="error_msg">
+        <div class="el-alert el-alert--error is-light">
+          {{error_msg}}
+        </div>
       </div>
       <div v-if="email_provided" class="mv3">
         <input

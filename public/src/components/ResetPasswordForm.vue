@@ -10,8 +10,10 @@
     </template>
     <template v-else>
       <p>Please enter a new password for your account.</p>
-      <div v-if="error_msg" class="mb3 ph3 pv2a lh-title fw6 br1 white bg-dark-red">
-        {{error_msg}}
+      <div class="mb3" v-if="error_msg">
+        <div class="el-alert el-alert--error is-light">
+          {{error_msg}}
+        </div>
       </div>
       <div v-show="false">
         <input v-model="email" type="hidden">
