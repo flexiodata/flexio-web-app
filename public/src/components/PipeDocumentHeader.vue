@@ -70,7 +70,7 @@
 </template>
 
 <script>
-  import { getJsDocObject, getSpreadsheetSyntaxStr } from '../utils/pipe'
+  import { getJsDocObject, getSpreadsheetSyntaxStr } from '@/utils/pipe'
   import LabelSwitch from '@/components/LabelSwitch'
 
   export default {
