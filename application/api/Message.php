@@ -37,6 +37,12 @@ class Message
         $msg_text = self::getTextEmail('account-verify', [ 'activation_link' => $activation_link ]);
         $msg_html = self::getHtmlEmail('account-verify', [ 'activation_link' => $activation_link ]);
 
+        // if a test email address is specified, override the test email
+        // note: test email override only available in debug mode
+        $test_email_address = self::getTestEmailAddress();
+        if ($test_email_address !== false)
+            $to = $test_email_address;
+
         // send an email that the user's account was created
         $email = \Flexio\Services\NoticeEmail::create(array(
             'from' => \Flexio\Services\NoticeEmail::EMAIL_ADDRESS_NO_REPLY,
@@ -68,6 +74,12 @@ class Message
         $msg_text = self::getTextEmail('forgot-password', [ 'reset_link' => $reset_link ]);
         $msg_html = self::getHtmlEmail('forgot-password', [ 'reset_link' => $reset_link ]);
 
+        // if a test email address is specified, override the test email
+        // note: test email override only available in debug mode
+        $test_email_address = self::getTestEmailAddress();
+        if ($test_email_address !== false)
+            $to = $test_email_address;
+
         // send an email that the user's account was created
         $email = \Flexio\Services\NoticeEmail::create(array(
             'from' => \Flexio\Services\NoticeEmail::EMAIL_ADDRESS_NO_REPLY,
@@ -98,6 +110,12 @@ class Message
         $object_name = $validated_params['object_name'];
         $message = $validated_params['message'] ?? '';
         $share_link = \Flexio\System\System::getTeamInviteLink($object_name);
+
+        // if a test email address is specified, override the test email
+        // note: test email override only available in debug mode
+        $test_email_address = self::getTestEmailAddress();
+        if ($test_email_address !== false)
+            $to = $test_email_address;
 
         // get text template from the application res directory
         $msg_text = self::getTextEmail('project-share', [
@@ -146,6 +164,12 @@ class Message
         $object_name = $validated_params['object_name'];
         $message = $validated_params['message'] ?? '';
         $share_link = \Flexio\System\System::getPipeShareLink($object_name);
+
+        // if a test email address is specified, override the test email
+        // note: test email override only available in debug mode
+        $test_email_address = self::getTestEmailAddress();
+        if ($test_email_address !== false)
+            $to = $test_email_address;
 
         // get text template from the application res directory
         $msg_text = self::getTextEmail('pipe-share', [
@@ -216,5 +240,14 @@ class Message
         $msg = str_replace('&#36;{year}', $date, $msg); // MJML compiler HTML-encodes the '$' character
 
         return $msg;
+    }
+
+    private static function getTestEmailAddress()
+    {
+        if (!IS_DEBUG())
+            return false;
+
+        $test_email_address = $GLOBALS['g_config']->test_email_address ?? false;
+        return $test_email_address;
     }
 }
