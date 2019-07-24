@@ -100,7 +100,7 @@
 
 <script>
   import { mapState, mapGetters } from 'vuex'
-  import plans from '../data/usage-plans.yml'
+  import plans from '@/data/usage-plans.yml'
   import FreeTrialNotice from '@/components/FreeTrialNotice'
 
   export default {
