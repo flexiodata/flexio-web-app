@@ -1,20 +1,20 @@
 <template>
   <div id="app" class="flex flex-column fixed absolute--fill overflow-hidden">
-    <template v-if="is_initializing">
-      <!-- match navbar height -->
-      <div class="bg-nearer-white" style="height: 60px"></div>
-      <div class="flex-fill flex flex-column justify-center bg-nearer-white">
-        <Spinner size="large" message="Initializing..." />
-      </div>
-    </template>
-    <template v-else-if="is_signing_out">
+    <template v-if="is_signing_out">
       <!-- match navbar height -->
       <div class="bg-nearer-white" style="height: 60px"></div>
       <div class="flex-fill flex flex-column justify-center bg-nearer-white">
         <Spinner size="large" message="Signing out..." />
       </div>
     </template>
-    <template v-else-if="requires_auth && (is_404 || !is_allowed)">
+    <template v-else-if="requires_auth && is_initializing">
+      <!-- match navbar height -->
+      <div class="bg-nearer-white" style="height: 60px"></div>
+      <div class="flex-fill flex flex-column justify-center bg-nearer-white">
+        <Spinner size="large" message="Initializing..." />
+      </div>
+    </template>
+    <template v-else-if="requires_auth && is_signed_in && (is_404 || !is_allowed)">
       <PageNotFound class="flex-fill bg-nearer-white" />
     </template>
     <template v-else>
