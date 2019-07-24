@@ -69,19 +69,47 @@ class Test
         $expected = false;
         \Flexio\Tests\Check::assertBoolean('B.1', '\Flexio\Model\User::set(); return false when trying to set parameters on an object that doesn\'t exist',  $actual, $expected, $results);
 
-        // BEGIN TEST
-        $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = \Flexio\Tests\Util::createEmailAddress();
-        $info = array(
-            'username' => $handle1,
-            'email' => $handle2
-        );
-        $eid = $model->create($info);
-        $delete_result = $model->delete($eid);
-        $set_result = $model->set($eid, $info);
-        $actual = \Flexio\Base\Eid::isValid($eid) && $delete_result === true && $set_result === true;
-        $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.2', '\Flexio\Model\User::set(); return true when setting parameters on an object that\'s been deleted; allowed in the model',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $handle1 = \Flexio\Base\Util::generateHandle();
+            $handle2 = \Flexio\Tests\Util::createEmailAddress();
+            $info = array(
+                'username' => $handle1,
+                'email' => $handle2
+            );
+            $eid = $model->create($info);
+            $delete_result = $model->delete($eid);
+            $set_result = $model->set($eid, $info);
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
+        }
+        catch (\Exception $e)
+        {
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+
+        \Flexio\Tests\Check::assertString('B.2', '\Flexio\Model\User::set(); don\'t allow user to be deleted via status flag',  $actual, $expected, $results);
+
+/*
+        // note: keep following test in case user deletion via status flag of STATUS_DELETED
+        // is reactivated; right now, users can't be deleted by setting the status flag
+        // and the only way to delete them is via purging
+
+        // // BEGIN TEST
+        // $handle1 = \Flexio\Base\Util::generateHandle();
+        // $handle2 = \Flexio\Tests\Util::createEmailAddress();
+        // $info = array(
+        //     'username' => $handle1,
+        //     'email' => $handle2
+        // );
+        // $eid = $model->create($info);
+        // $delete_result = $model->delete($eid);
+        // $set_result = $model->set($eid, $info);
+        // $actual = \Flexio\Base\Eid::isValid($eid) && $delete_result === true && $set_result === true;
+        // $expected = true;
+        // \Flexio\Tests\Check::assertBoolean('B.2', '\Flexio\Model\User::set(); return true when setting parameters on an object that\'s been deleted; allowed in the model',  $actual, $expected, $results);
+*/
 
 
         // TEST: object that exists

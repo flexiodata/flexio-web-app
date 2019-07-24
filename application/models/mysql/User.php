@@ -502,7 +502,7 @@ class User extends ModelBase
 
     public static function isValidUserStatus(string $status) : bool
     {
-        // note: similar to isValidStatus(), except that STATUS_DELETED
+        // note: similar to Model::isValidStatus(), except that STATUS_DELETED
         // isn't allowed for a user
 
         switch ($status)
