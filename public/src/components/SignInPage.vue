@@ -20,7 +20,7 @@
 
   export default {
     metaInfo: {
-      title: 'Sign In to the Flex.io Serverless Functions Platform',
+      title: 'Sign in to the Flex.io Serverless Functions Platform',
       meta: [
         {
           vmid: 'description',
@@ -52,8 +52,9 @@
     mounted() {
       this.$store.track('Visited Sign In Page')
 
-      if (this.active_user_eid.length > 0)
+      if (this.active_user_eid.length > 0) {
         this.$_Redirect_redirect()
+      }
     },
     methods: {
       onSignUpClick() {
