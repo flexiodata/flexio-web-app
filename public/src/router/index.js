@@ -17,6 +17,7 @@ import SignUpPage from '@comp/SignUpPage'
 import ForgotPasswordPage from '@comp/ForgotPasswordPage'
 import ResetPasswordPage from '@comp/ResetPasswordPage'
 import InitSessionPage from '@comp/InitSessionPage'
+import VerifyPage from '@comp/VerifyPage'
 import PageNotFound from '@comp/PageNotFound'
 
 // use VueRouter for handling browser history
