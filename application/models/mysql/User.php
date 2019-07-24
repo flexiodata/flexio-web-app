@@ -56,7 +56,7 @@ class User extends ModelBase
 
         $user_arr = $validator->getParams();
 
-        if (\Model::isValidStatus($user_arr['eid_status']) === false)
+        if (self::isValidUserStatus($user_arr['eid_status']) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         // if a password is supplied, encrypt it; otherwise write out an empty string
@@ -114,9 +114,18 @@ class User extends ModelBase
 
     public function delete(string $eid) : bool
     {
+        // TODO: don't allow a user to be deleted by setting the delete flag;
+        // users are tied to other objects (e.g. owner) and the username
+        // and email are globally unique; for delete that will work
+        // at this time, we use purge; if that delete flag method is opened
+        // then key part of the account info need to be cleared, such as
+        // username, email, password, etc
+
         // set the status to deleted
-        $params = array('eid_status' => \Model::STATUS_DELETED);
-        return $this->set($eid, $params);
+        //$params = array('eid_status' => \Model::STATUS_DELETED);
+        //return $this->set($eid, $params);
+
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
     }
 
     public function purge(string $owner_eid) : bool
@@ -184,7 +193,7 @@ class User extends ModelBase
         $process_arr = $validator->getParams();
         $process_arr['updated'] = \Flexio\System\System::getTimestamp();
 
-        if (isset($process_arr['eid_status']) && \Model::isValidStatus($process_arr['eid_status']) === false)
+        if (isset($process_arr['eid_status']) && self::isValidUserStatus($process_arr['eid_status']) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         // encode the password
@@ -489,6 +498,26 @@ class User extends ModelBase
             return true;
 
         return false;
+    }
+
+    public static function isValidUserStatus(string $status) : bool
+    {
+        // note: similar to isValidStatus(), except that STATUS_DELETED
+        // isn't allowed for a user
+
+        switch ($status)
+        {
+            default:
+                return false;
+
+            case \Model::STATUS_UNDEFINED:
+            case \Model::STATUS_DELETED:
+                return false;
+
+            case \Model::STATUS_PENDING:
+            case \Model::STATUS_AVAILABLE:
+                return true;
+        }
     }
 
     private static function encodePassword(string $password) : string
