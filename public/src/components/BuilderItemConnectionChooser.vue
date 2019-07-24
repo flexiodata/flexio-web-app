@@ -30,8 +30,8 @@
   import marked from 'marked'
   import { mapGetters } from 'vuex'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
-  import BuilderComponentConnectionChooser from '@comp/BuilderComponentConnectionChooser'
-  import MixinConnection from '@comp/mixins/connection'
+  import BuilderComponentConnectionChooser from '@/components/BuilderComponentConnectionChooser'
+  import MixinConnection from '@/components/mixins/connection'
 
   const getDefaultValues = () => {
     return {

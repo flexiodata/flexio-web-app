@@ -21,7 +21,7 @@
 
 <script>
   import marked from 'marked'
-  import ConnectionInfoPanel from '@comp/ConnectionInfoPanel'
+  import ConnectionInfoPanel from '@/components/ConnectionInfoPanel'
 
   export default {
     props: {

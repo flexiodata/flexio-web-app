@@ -39,7 +39,7 @@
 </template>
 
 <script>
-  import ServiceIcon from '@comp/ServiceIcon'
+  import ServiceIcon from '@/components/ServiceIcon'
 
   export default {
     props: {

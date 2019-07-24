@@ -75,7 +75,7 @@
 <script>
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
-  import ConfirmPopover from '@comp/ConfirmPopover'
+  import ConfirmPopover from '@/components/ConfirmPopover'
 
   export default {
     components: {

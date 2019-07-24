@@ -24,9 +24,9 @@
 </template>
 
 <script>
-  import SignUpForm from '@comp/SignUpForm'
-  import SignInForm from '@comp/SignInForm'
-  import ForgotPasswordForm from '@comp/ForgotPasswordForm'
+  import SignUpForm from '@/components/SignUpForm'
+  import SignInForm from '@/components/SignInForm'
+  import ForgotPasswordForm from '@/components/ForgotPasswordForm'
 
   export default {
     props: {

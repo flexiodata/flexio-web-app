@@ -21,7 +21,7 @@
 
 <script>
   import marked from 'marked'
-  import PipeSchedulePanel from '@comp/PipeSchedulePanel'
+  import PipeSchedulePanel from '@/components/PipeSchedulePanel'
 
   export default {
     props: {

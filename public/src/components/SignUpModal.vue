@@ -18,8 +18,8 @@
 </template>
 
 <script>
-  import FlexioModal from '@comp/FlexioModal'
-  import FlexioEntryForm from '@comp/FlexioEntryForm'
+  import FlexioModal from '@/components/FlexioModal'
+  import FlexioEntryForm from '@/components/FlexioEntryForm'
 
   export default {
     props: {

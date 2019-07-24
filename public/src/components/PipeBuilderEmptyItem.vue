@@ -9,7 +9,7 @@
 </template>
 
 <script>
-  import BuilderItemTaskChooser from '@comp/BuilderItemTaskChooser'
+  import BuilderItemTaskChooser from '@/components/BuilderItemTaskChooser'
 
   export default {
     components: {

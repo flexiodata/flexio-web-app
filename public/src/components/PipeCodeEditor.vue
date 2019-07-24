@@ -18,7 +18,7 @@
   import yaml from 'js-yaml'
   import Flexio from 'flexio-sdk-js'
   import utilSdkJs from '../utils/sdk-js'
-  import CodeEditor from '@comp/CodeEditor'
+  import CodeEditor from '@/components/CodeEditor'
 
   // TODO: remove 'omitDeep' once we get rid of task eids
   const omitDeep = (collection, excludeKeys) => {

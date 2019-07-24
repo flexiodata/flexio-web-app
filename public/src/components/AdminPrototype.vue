@@ -44,10 +44,10 @@
 </template>
 
 <script>
-  import FlexioEntryForm from '@comp/FlexioEntryForm'
-  import SignUpModal from '@comp/SignUpModal'
-  import PopperStep from '@comp/PopperStep'
-  import PopperTour from '@comp/PopperTour'
+  import FlexioEntryForm from '@/components/FlexioEntryForm'
+  import SignUpModal from '@/components/SignUpModal'
+  import PopperStep from '@/components/PopperStep'
+  import PopperTour from '@/components/PopperTour'
 
   export default {
     metaInfo: {

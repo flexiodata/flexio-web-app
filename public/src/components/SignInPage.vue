@@ -15,8 +15,8 @@
 <script>
   import { mapState } from 'vuex'
   import { ROUTE_SIGNUP_PAGE, ROUTE_FORGOTPASSWORD_PAGE } from '../constants/route'
-  import SignInForm from '@comp/SignInForm'
-  import MixinRedirect from '@comp/mixins/redirect'
+  import SignInForm from '@/components/SignInForm'
+  import MixinRedirect from '@/components/mixins/redirect'
 
   export default {
     metaInfo: {

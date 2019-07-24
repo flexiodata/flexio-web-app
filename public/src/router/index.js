@@ -5,20 +5,20 @@ import Meta from 'vue-meta'
 import * as rn from '../constants/route'
 import admin_routes from './admin'
 
-import AppAccount from '@comp/AppAccount'
-import AppPipes from '@comp/AppPipes'
-import AppConnections from '@comp/AppConnections'
-import AppMembers from '@comp/AppMembers'
+import AppAccount from '@/components/AppAccount'
+import AppPipes from '@/components/AppPipes'
+import AppConnections from '@/components/AppConnections'
+import AppMembers from '@/components/AppMembers'
 
-import PipeDocument from '@comp/PipeDocument'
+import PipeDocument from '@/components/PipeDocument'
 
-import SignInPage from '@comp/SignInPage'
-import SignUpPage from '@comp/SignUpPage'
-import ForgotPasswordPage from '@comp/ForgotPasswordPage'
-import ResetPasswordPage from '@comp/ResetPasswordPage'
-import InitSessionPage from '@comp/InitSessionPage'
-import VerifyPage from '@comp/VerifyPage'
-import PageNotFound from '@comp/PageNotFound'
+import SignInPage from '@/components/SignInPage'
+import SignUpPage from '@/components/SignUpPage'
+import ForgotPasswordPage from '@/components/ForgotPasswordPage'
+import ResetPasswordPage from '@/components/ResetPasswordPage'
+import InitSessionPage from '@/components/InitSessionPage'
+import VerifyPage from '@/components/VerifyPage'
+import PageNotFound from '@/components/PageNotFound'
 
 // use VueRouter for handling browser history
 Vue.use(Router)

@@ -229,10 +229,10 @@
 </template>
 
 <script>
-  import ServiceIcon from '@comp/ServiceIcon'
-  import TaskIcon from '@comp/TaskIcon'
-  import ConfirmPopover from '@comp/ConfirmPopover'
-  import builder_components from '@comp/builder-components'
+  import ServiceIcon from '@/components/ServiceIcon'
+  import TaskIcon from '@/components/TaskIcon'
+  import ConfirmPopover from '@/components/ConfirmPopover'
+  import builder_components from '@/components/builder-components'
 
   const components = _.assign({
     ServiceIcon,

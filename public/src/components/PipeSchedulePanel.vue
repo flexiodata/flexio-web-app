@@ -140,7 +140,7 @@
   import { TIMEZONE_UTC } from '../constants/timezone'
   import { timezones } from '../constants/timezone'
   import * as schedule from '../constants/schedule'
-  import TimeChooserList from '@comp/TimeChooserList'
+  import TimeChooserList from '@/components/TimeChooserList'
 
   const day_options = [
     { label: 'Monday',    val: schedule.SCHEDULE_WEEK_DAY_MON },

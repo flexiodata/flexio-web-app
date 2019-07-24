@@ -52,10 +52,10 @@
   } from '../constants/connection-type'
   import { mapGetters } from 'vuex'
   import * as connections from '../constants/connection-info'
-  import FileExplorerBar from '@comp/FileExplorerBar'
-  import FileChooserList from '@comp/FileChooserList'
-  import AbstractList from '@comp/AbstractList'
-  import MixinConnection from '@comp/mixins/connection'
+  import FileExplorerBar from '@/components/FileExplorerBar'
+  import FileChooserList from '@/components/FileChooserList'
+  import AbstractList from '@/components/AbstractList'
+  import MixinConnection from '@/components/mixins/connection'
 
   /*
   const LOCAL_STORAGE_ITEM = {

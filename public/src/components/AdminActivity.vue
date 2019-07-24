@@ -15,7 +15,7 @@
 
 <script>
   import moment from 'moment'
-  import ProcessActivity from '@comp/ProcessActivity'
+  import ProcessActivity from '@/components/ProcessActivity'
 
   export default {
     metaInfo: {

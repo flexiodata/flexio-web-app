@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import App from '@comp/App'
+import App from '@/components/App'
 import router from '@/router' // VueRouter
 import store from '@/store' // Vuex store
 import { fallbackCss } from '@/utils/dom'

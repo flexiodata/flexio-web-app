@@ -33,7 +33,7 @@
 </template>
 
 <script>
-  import PopperStep from '@comp/PopperStep'
+  import PopperStep from '@/components/PopperStep'
 
   const DEFAULT_CALLBACKS = {
     onStart: () => {},

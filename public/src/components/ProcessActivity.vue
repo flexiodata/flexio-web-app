@@ -81,10 +81,10 @@
   import stickybits from 'stickybits'
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
-  import SimplePager from '@comp/SimplePager'
-  import ProcessList from '@comp/ProcessList'
-  import ProcessStatusSelect from '@comp/ProcessStatusSelect'
-  import ProcessDetailsPanel from '@comp/ProcessDetailsPanel'
+  import SimplePager from '@/components/SimplePager'
+  import ProcessList from '@/components/ProcessList'
+  import ProcessStatusSelect from '@/components/ProcessStatusSelect'
+  import ProcessDetailsPanel from '@/components/ProcessDetailsPanel'
 
   export default {
     inheritAttrs: false,

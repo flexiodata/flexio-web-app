@@ -71,7 +71,7 @@
 
 <script>
   import { getJsDocObject, getSpreadsheetSyntaxStr } from '../utils/pipe'
-  import LabelSwitch from '@comp/LabelSwitch'
+  import LabelSwitch from '@/components/LabelSwitch'
 
   export default {
     props: {

@@ -18,7 +18,7 @@
 
 <script>
   import marked from 'marked'
-  import ProcessContent from '@comp/ProcessContent'
+  import ProcessContent from '@/components/ProcessContent'
 
   export default {
     props: {

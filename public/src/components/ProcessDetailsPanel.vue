@@ -49,8 +49,8 @@
 </template>
 
 <script>
-  import JsonDetailsPanel from '@comp/JsonDetailsPanel'
-  import ProcessContent from '@comp/ProcessContent'
+  import JsonDetailsPanel from '@/components/JsonDetailsPanel'
+  import ProcessContent from '@/components/ProcessContent'
 
   export default {
     props: {

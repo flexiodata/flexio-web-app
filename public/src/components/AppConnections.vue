@@ -107,14 +107,14 @@
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
-  import AbstractList from '@comp/AbstractList'
-  import ConnectionEditPanel from '@comp/ConnectionEditPanel'
-  import ConnectionStaticPanel from '@comp/ConnectionStaticPanel'
-  import FileChooser from '@comp/FileChooser'
-  import JsonDetailsPanel from '@comp/JsonDetailsPanel'
-  import EmptyItem from '@comp/EmptyItem'
-  import PageNotFound from '@comp/PageNotFound'
-  import MixinConnection from '@comp/mixins/connection'
+  import AbstractList from '@/components/AbstractList'
+  import ConnectionEditPanel from '@/components/ConnectionEditPanel'
+  import ConnectionStaticPanel from '@/components/ConnectionStaticPanel'
+  import FileChooser from '@/components/FileChooser'
+  import JsonDetailsPanel from '@/components/JsonDetailsPanel'
+  import EmptyItem from '@/components/EmptyItem'
+  import PageNotFound from '@/components/PageNotFound'
+  import MixinConnection from '@/components/mixins/connection'
 
   export default {
     metaInfo() {

@@ -133,7 +133,7 @@
 
 <script>
   import marked from 'marked'
-  import FileChooser from '@comp/FileChooser'
+  import FileChooser from '@/components/FileChooser'
 
   const getDefaultValues = () => {
     return {

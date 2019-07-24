@@ -15,7 +15,7 @@
 </template>
 
 <script>
-  import BuilderItem from '@comp/BuilderItem'
+  import BuilderItem from '@/components/BuilderItem'
 
   export default {
     inheritAttrs: false,

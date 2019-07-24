@@ -160,13 +160,13 @@
   import * as ctypes from '../constants/connection-type'
   import * as connections from '../constants/connection-info'
   import { slugify } from '@/utils'
-  import ServiceList from '@comp/ServiceList'
-  import ServiceIcon from '@comp/ServiceIcon'
-  import KeypairList from '@comp/KeypairList'
-  import ConnectionAuthenticationPanel from '@comp/ConnectionAuthenticationPanel'
-  import ConnectionInfoPanel from '@comp/ConnectionInfoPanel'
-  import MixinConnection from '@comp/mixins/connection'
-  import MixinValidation from '@comp/mixins/validation'
+  import ServiceList from '@/components/ServiceList'
+  import ServiceIcon from '@/components/ServiceIcon'
+  import KeypairList from '@/components/KeypairList'
+  import ConnectionAuthenticationPanel from '@/components/ConnectionAuthenticationPanel'
+  import ConnectionInfoPanel from '@/components/ConnectionInfoPanel'
+  import MixinConnection from '@/components/mixins/connection'
+  import MixinValidation from '@/components/mixins/validation'
 
   const getNameSuffix = (length) => {
     return randomstring.generate({

@@ -130,7 +130,7 @@
 <script>
   import marked from 'marked'
   import { atobUnicode, btoaUnicode } from '@/utils'
-  import FileChooser from '@comp/FileChooser'
+  import FileChooser from '@/components/FileChooser'
 
 
   // non-base64 Python code

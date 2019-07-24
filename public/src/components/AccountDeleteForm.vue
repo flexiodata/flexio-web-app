@@ -69,7 +69,7 @@
 <script>
   import { mapState, mapGetters } from 'vuex'
   import { ROUTE_SIGNIN_PAGE } from '../constants/route'
-  import MixinValidation from '@comp/mixins/validation'
+  import MixinValidation from '@/components/mixins/validation'
 
   const defaultInfo = () => {
     return {

@@ -12,7 +12,7 @@
 
 <script>
   import { ROUTE_SIGNIN_PAGE, ROUTE_SIGNUP_PAGE } from '../constants/route'
-  import ForgotPasswordForm from '@comp/ForgotPasswordForm'
+  import ForgotPasswordForm from '@/components/ForgotPasswordForm'
 
   export default {
     metaInfo: {

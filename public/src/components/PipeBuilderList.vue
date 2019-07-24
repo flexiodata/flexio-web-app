@@ -31,8 +31,8 @@
   import * as ops from '../constants/task-op'
   import * as task_info from '../constants/task-info'
   import builder_defs from '../data/builder'
-  import BuilderList from '@comp/BuilderList'
-  import PipeBuilderEmptyItem from '@comp/PipeBuilderEmptyItem'
+  import BuilderList from '@/components/BuilderList'
+  import PipeBuilderEmptyItem from '@/components/PipeBuilderEmptyItem'
 
   export default {
     props: {

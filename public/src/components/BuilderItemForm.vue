@@ -143,7 +143,7 @@
 
 <script>
   import marked from 'marked'
-  import CodeEditor from '@comp/CodeEditor'
+  import CodeEditor from '@/components/CodeEditor'
 
   const flatten = require('flat')
   const unflatten = require('flat').unflatten

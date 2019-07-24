@@ -23,7 +23,7 @@
 <script>
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
-  import ConnectionChooserItem from '@comp/ConnectionChooserItem'
+  import ConnectionChooserItem from '@/components/ConnectionChooserItem'
 
   export default {
     inheritAttrs: false,

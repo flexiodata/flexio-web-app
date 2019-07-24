@@ -9,7 +9,7 @@
 <script>
   import axios from 'axios'
   import Spinner from 'vue-simple-spinner'
-  import MixinRedirect from '@comp/mixins/redirect'
+  import MixinRedirect from '@/components/mixins/redirect'
 
   export default {
     mixins: [MixinRedirect],

@@ -37,8 +37,8 @@
 
 <script>
   import marked from 'marked'
-  import ServiceIcon from '@comp/ServiceIcon'
-  import TaskIcon from '@comp/TaskIcon'
+  import ServiceIcon from '@/components/ServiceIcon'
+  import TaskIcon from '@/components/TaskIcon'
 
   export default {
     props: {

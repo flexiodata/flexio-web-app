@@ -85,7 +85,7 @@
 <script>
   import marked from 'marked'
   import { btoaUnicode } from '@/utils'
-  import CodeEditor from '@comp/CodeEditor'
+  import CodeEditor from '@/components/CodeEditor'
 
   const default_python = btoaUnicode(`# basic hello world example
 def flex_handler(flex):

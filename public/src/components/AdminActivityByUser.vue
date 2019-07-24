@@ -108,8 +108,8 @@
   import { mapState, mapGetters } from 'vuex'
   import * as ps from '../constants/process'
   import Spinner from 'vue-simple-spinner'
-  import ProcessListByUser from '@comp/ProcessListByUser'
-  import ProcessDetailsPanel from '@comp/ProcessDetailsPanel'
+  import ProcessListByUser from '@/components/ProcessListByUser'
+  import ProcessDetailsPanel from '@/components/ProcessDetailsPanel'
 
   const fmtProcessStatus = (status) => {
     switch (status) {

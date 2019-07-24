@@ -29,7 +29,7 @@
 <script>
   import yaml from 'js-yaml'
   import marked from 'marked'
-  import CodeEditor from '@comp/CodeEditor'
+  import CodeEditor from '@/components/CodeEditor'
 
   export default {
     props: {

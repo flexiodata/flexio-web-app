@@ -67,11 +67,11 @@
   import { mapState, mapGetters } from 'vuex'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
-  import ServiceList from '@comp/ServiceList'
-  import ConnectionEditPanel from '@comp/ConnectionEditPanel'
-  import ConnectionChooserList from '@comp/ConnectionChooserList'
-  import ConnectionChooserItem from '@comp/ConnectionChooserItem'
-  import MixinConnection from '@comp/mixins/connection'
+  import ServiceList from '@/components/ServiceList'
+  import ConnectionEditPanel from '@/components/ConnectionEditPanel'
+  import ConnectionChooserList from '@/components/ConnectionChooserList'
+  import ConnectionChooserItem from '@/components/ConnectionChooserItem'
+  import MixinConnection from '@/components/mixins/connection'
   export default {
     props: {
       connectionIdentifier: {

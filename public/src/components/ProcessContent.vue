@@ -60,10 +60,10 @@
   } from '../constants/process'
 
   import Spinner from 'vue-simple-spinner'
-  import CodeEditor from '@comp/CodeEditor'
-  import IconMessage from '@comp/IconMessage'
-  import JsonDetailsPanel from '@comp/JsonDetailsPanel'
-  import StreamContent from '@comp/StreamContent'
+  import CodeEditor from '@/components/CodeEditor'
+  import IconMessage from '@/components/IconMessage'
+  import JsonDetailsPanel from '@/components/JsonDetailsPanel'
+  import StreamContent from '@/components/StreamContent'
 
   export default {
     props: {

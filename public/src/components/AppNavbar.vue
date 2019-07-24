@@ -27,8 +27,8 @@
     ROUTE_APP_CONNECTIONS,
     ROUTE_APP_MEMBERS
   } from '../constants/route'
-  import TeamDropdown from '@comp/TeamDropdown'
-  import UserDropdown from '@comp/UserDropdown'
+  import TeamDropdown from '@/components/TeamDropdown'
+  import UserDropdown from '@/components/UserDropdown'
 
   export default {
     components: {

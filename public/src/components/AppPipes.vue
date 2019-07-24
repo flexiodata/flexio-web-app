@@ -99,9 +99,9 @@
   import { OBJECT_STATUS_AVAILABLE } from '../constants/object-status'
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
-  import PipeDocument from '@comp/PipeDocument'
-  import PipeEditPanel from '@comp/PipeEditPanel'
-  import PageNotFound from '@comp/PageNotFound'
+  import PipeDocument from '@/components/PipeDocument'
+  import PipeEditPanel from '@/components/PipeEditPanel'
+  import PageNotFound from '@/components/PageNotFound'
 
   const DEPLOY_MODE_RUN = 'R'
 

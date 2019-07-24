@@ -57,7 +57,7 @@
 </template>
 
 <script>
-  import CodeEditor from '@comp/CodeEditor'
+  import CodeEditor from '@/components/CodeEditor'
 
   export default {
     props: {

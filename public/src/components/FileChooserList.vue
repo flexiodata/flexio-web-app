@@ -41,7 +41,7 @@
 <script>
   import api from '@/api'
   import Spinner from 'vue-simple-spinner'
-  import FileChooserItem from '@comp/FileChooserItem'
+  import FileChooserItem from '@/components/FileChooserItem'
 
   const VFS_TYPE_DIR  = 'DIR'
   const VFS_TYPE_FILE = 'FILE'

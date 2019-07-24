@@ -73,7 +73,7 @@
 <script>
   import _ from 'lodash'
   import api from '@/api'
-  import MixinValidation from '@comp/mixins/validation'
+  import MixinValidation from '@/components/mixins/validation'
 
   export default {
     mixins: [MixinValidation],

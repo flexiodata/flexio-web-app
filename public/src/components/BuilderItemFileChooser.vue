@@ -26,7 +26,7 @@
 
 <script>
   import marked from 'marked'
-  import BuilderComponentFileChooser from '@comp/BuilderComponentFileChooser'
+  import BuilderComponentFileChooser from '@/components/BuilderComponentFileChooser'
 
   const VFS_TYPE_DIR = 'DIR'
 

@@ -11,7 +11,7 @@
 </template>
 
 <script>
-  import TimeChooserItem from '@comp/TimeChooserItem'
+  import TimeChooserItem from '@/components/TimeChooserItem'
 
   export default {
     props: ['times'],

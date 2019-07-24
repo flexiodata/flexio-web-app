@@ -71,7 +71,7 @@
   import api from '@/api'
   import { isProduction } from '@/utils'
   import { Card, createToken } from 'vue-stripe-elements-plus'
-  import ConfirmPopover from '@comp/ConfirmPopover'
+  import ConfirmPopover from '@/components/ConfirmPopover'
 
   // all cards accepted by Stripe
   import visa from 'payment-icons/min/flat/visa.svg'

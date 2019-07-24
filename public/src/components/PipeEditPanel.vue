@@ -75,8 +75,8 @@
   import { mapState } from 'vuex'
   import { getJsDocObject, getSpreadsheetSyntaxStr } from '../utils/pipe'
   import { OBJECT_TYPE_PIPE } from '../constants/object-type'
-  import CodeEditor from '@comp/CodeEditor'
-  import MixinValidation from '@comp/mixins/validation'
+  import CodeEditor from '@/components/CodeEditor'
+  import MixinValidation from '@/components/mixins/validation'
 
   const getNameSuffix = (length) => {
     return randomstring.generate({

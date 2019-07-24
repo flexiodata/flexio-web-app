@@ -37,8 +37,8 @@
 <script>
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
-  import AppNavbar from '@comp/AppNavbar'
-  import PageNotFound from '@comp/PageNotFound'
+  import AppNavbar from '@/components/AppNavbar'
+  import PageNotFound from '@/components/PageNotFound'
 
   export default {
     name: 'App',

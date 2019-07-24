@@ -1,9 +1,9 @@
 import { ROUTE_APP_ADMIN } from '@/constants/route'
-import AdminHome from '@comp/AdminHome'
-import AdminTest from '@comp/AdminTest'
-import AdminActivity from '@comp/AdminActivity'
-import AdminActivityByUser from '@comp/AdminActivityByUser'
-import AdminPrototype from '@comp/AdminPrototype'
+import AdminHome from '@/components/AdminHome'
+import AdminTest from '@/components/AdminTest'
+import AdminActivity from '@/components/AdminActivity'
+import AdminActivityByUser from '@/components/AdminActivityByUser'
+import AdminPrototype from '@/components/AdminPrototype'
 
 export default {
   path: '/admin',

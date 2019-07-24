@@ -37,8 +37,8 @@
 <script>
   import axios from 'axios'
   import { ROUTE_SIGNIN_PAGE } from '../constants/route'
-  import SignUpForm from '@comp/SignUpForm'
-  import MixinRedirect from '@comp/mixins/redirect'
+  import SignUpForm from '@/components/SignUpForm'
+  import MixinRedirect from '@/components/mixins/redirect'
 
   export default {
     metaInfo: {

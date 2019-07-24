@@ -37,9 +37,9 @@
 
 <script>
   import { afterFirst } from '@/utils'
-  import FileChooser from '@comp/FileChooser'
-  import FileChooserItem from '@comp/FileChooserItem'
-  import MixinConnection from '@comp/mixins/connection'
+  import FileChooser from '@/components/FileChooser'
+  import FileChooserItem from '@/components/FileChooserItem'
+  import MixinConnection from '@/components/mixins/connection'
 
   const VFS_TYPE_DIR = 'DIR'
 

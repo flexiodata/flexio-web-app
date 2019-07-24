@@ -16,8 +16,7 @@ module.exports = {
     extensions: ['.js', '.vue', '.json'],
     alias: {
       'vue$': options.isProduction ? 'vue/dist/vue.min' : 'vue/dist/vue',
-      '@': options.paths.resolve('src'),
-      '@comp': options.paths.resolve('src/components')
+      '@': options.paths.resolve('src')
     }
   },
   module: {

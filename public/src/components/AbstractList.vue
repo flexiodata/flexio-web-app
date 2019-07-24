@@ -15,7 +15,7 @@
 </template>
 
 <script>
-  import AbstractConnectionChooserItem from '@comp/AbstractConnectionChooserItem'
+  import AbstractConnectionChooserItem from '@/components/AbstractConnectionChooserItem'
 
   export default {
     props: {

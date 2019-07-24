@@ -7,7 +7,7 @@
 </template>
 
 <script>
-  import ResetPasswordForm from '@comp/ResetPasswordForm'
+  import ResetPasswordForm from '@/components/ResetPasswordForm'
 
   export default {
     metaInfo: {

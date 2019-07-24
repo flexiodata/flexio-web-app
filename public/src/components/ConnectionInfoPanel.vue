@@ -172,8 +172,8 @@
 
 <script>
   import { CONNECTION_TYPE_HTTP } from '../constants/connection-type'
-  import ServiceIcon from '@comp/ServiceIcon'
-  import KeypairList from '@comp/KeypairList'
+  import ServiceIcon from '@/components/ServiceIcon'
+  import KeypairList from '@/components/KeypairList'
 
   const newKeypairItem = (key, val) => {
     key = _.defaultTo(key, '')

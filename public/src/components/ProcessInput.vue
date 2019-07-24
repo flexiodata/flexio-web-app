@@ -68,8 +68,8 @@
 </template>
 
 <script>
-  import KeypairList from '@comp/KeypairList'
-  import CodeEditor from '@comp/CodeEditor'
+  import KeypairList from '@/components/KeypairList'
+  import CodeEditor from '@/components/CodeEditor'
 
   const getDefaultUiValues = () => {
     return _.assign({}, {
