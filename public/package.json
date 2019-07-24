@@ -10,7 +10,7 @@
     "build:release": "cross-env NODE_ENV=production webpack --config build/webpack.dist.conf.js --progress --hide-modules",
     "build:signup:debug": "cross-env NODE_ENV=debug webpack --config build/signup/webpack.dist.conf.js --progress --hide-modules",
     "build:signup:release": "cross-env NODE_ENV=production webpack --config build/signup/webpack.dist.conf.js --progress --hide-modules",
-    "deploy": "npm run build:release && npm run build:signup:release"
+    "deploy": "npm run build:release"
   },
   "dependencies": {
     "axios": "^0.16.1",
