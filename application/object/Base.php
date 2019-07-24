@@ -57,18 +57,32 @@ class Base
             return true;
 
         // see if the input user is a member of the owner team and if
-        // so, if the requested action is in the list of rights
-        $rights = $this->getModel()->teammember->getRights($user_eid, $this->getOwner());
-        if ($rights)
+        // they have actively joined the team
+        try
         {
-            // TODO: for now, if the user is a team member, grant all rights
-            return true;
-
-            foreach ($rights as $r)
+            $member_info = $this->getModel()->teammember->get($user_eid, $this->getOwner());
+            if ($member_info['member_status'] === \Model::TEAM_MEMBER_STATUS_ACTIVE)
             {
-                if ($action === $r)
-                    return true;
+                // for now, grant all rights to a team member
+                return true;
+
+                // TODO: in the future, limit rights by checking if the action
+                // is in the list of rights
+
+                $rights = @json_decode($member_info['member_status'],true);
+                if (is_array($rights))
+                {
+                    foreach ($rights as $r)
+                    {
+                        if ($action === $r)
+                            return true;
+                    }
+                }
             }
+        }
+        catch (\Exception $e)
+        {
+            // fall through
         }
 
         // action not allowed
