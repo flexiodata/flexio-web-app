@@ -565,6 +565,8 @@ class User
         try
         {
             $user_eid = \Flexio\Object\User::getEidFromEmail($email);
+            if ($user_eid === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
             $user = \Flexio\Object\User::load($user_eid);
             if ($user->getStatus() === \Model::STATUS_DELETED)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
@@ -619,6 +621,8 @@ class User
         try
         {
             $user_eid = \Flexio\Object\User::getEidFromEmail($email);
+            if ($user_eid === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
             $user = \Flexio\Object\User::load($user_eid);
             if ($user->getStatus() === \Model::STATUS_DELETED)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
@@ -667,6 +671,8 @@ class User
         try
         {
             $user_eid = \Flexio\Object\User::getEidFromEmail($email);
+            if ($user_eid === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
             $user = \Flexio\Object\User::load($user_eid);
             if ($user->getStatus() === \Model::STATUS_DELETED)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
@@ -716,6 +722,8 @@ class User
         try
         {
             $user_eid = \Flexio\Object\User::getEidFromEmail($email);
+            if ($user_eid === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
             $user = \Flexio\Object\User::load($user_eid);
             if ($user->getStatus() === \Model::STATUS_DELETED)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
