@@ -16,8 +16,6 @@
 
 <script>
   import yaml from 'js-yaml'
-  import Flexio from 'flexio-sdk-js'
-  import utilSdkJs from '@/utils/sdk-js'
   import CodeEditor from '@/components/CodeEditor'
 
   // TODO: remove 'omitDeep' once we get rid of task eids
@@ -42,7 +40,7 @@
       },
       type: {
         type: String,
-        default: 'sdk-js' // 'sdk-js', 'json', 'yaml'
+        default: 'yaml' // 'json', 'yaml'
       },
       editorCls: {
         type: String,
@@ -85,7 +83,7 @@
         is_editing: false,
         orig_code: '',
         edit_code: '',
-        lang: this.type == 'sdk-js' ? 'javascript' : this.type,
+        lang: this.type,
         error_msg: ''
       }
     },
@@ -118,11 +116,6 @@
                 this.edit_code = JSON.stringify(task, null, 2)
               }
               break
-
-            case 'sdk-js':
-              // Flex.io JS SDK view
-              this.edit_code = Flexio.pipe(task).toCode()
-              break
           }
 
           // set original code so we know if we've edited it or not
@@ -143,7 +136,7 @@
         this.$emit('update:hasErrors', this.has_errors ? true : false)
       },
       onTypeChange() {
-        this.lang = this.type == 'sdk-js' ? 'javascript' : this.type
+        this.lang = this.type
         this.initFromPipeTask(true)
       },
       onLangChange() {
@@ -179,18 +172,6 @@
             catch (e)
             {
               this.error_msg = 'Parse error: ' + e.message
-            }
-            break
-
-          case 'sdk-js':
-            try {
-              // get the pipe task JSON
-              obj = utilSdkJs.getTaskJSON(this.edit_code)
-              this.error_msg = ''
-            }
-            catch(e)
-            {
-              this.error_msg = 'Syntax error: ' + e.message
             }
             break
         }
