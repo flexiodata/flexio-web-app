@@ -36,7 +36,7 @@
 
 <script>
   import axios from 'axios'
-  import { ROUTE_SIGNIN_PAGE } from '../constants/route'
+  import { ROUTE_SIGNIN_PAGE } from '@/constants/route'
   import SignUpForm from '@/components/SignUpForm'
   import MixinRedirect from '@/components/mixins/redirect'
 

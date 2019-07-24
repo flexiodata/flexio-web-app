@@ -14,7 +14,7 @@
 
 <script>
   import { mapState } from 'vuex'
-  import { ROUTE_SIGNUP_PAGE, ROUTE_FORGOTPASSWORD_PAGE } from '../constants/route'
+  import { ROUTE_SIGNUP_PAGE, ROUTE_FORGOTPASSWORD_PAGE } from '@/constants/route'
   import SignInForm from '@/components/SignInForm'
   import MixinRedirect from '@/components/mixins/redirect'
 

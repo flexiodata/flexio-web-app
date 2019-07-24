@@ -217,8 +217,8 @@
   import {
     SCHEDULE_FREQUENCY_FIVE_MINUTES,
     SCHEDULE_DEFAULTS
-  } from '../constants/schedule'
-  import { PROCESS_MODE_BUILD } from '../constants/process'
+  } from '@/constants/schedule'
+  import { PROCESS_MODE_BUILD } from '@/constants/process'
 
   import { Multipane, MultipaneResizer } from 'vue-multipane'
   import Spinner from 'vue-simple-spinner'

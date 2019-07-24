@@ -103,8 +103,8 @@
 </template>
 
 <script>
-  import { CONNECTION_TYPE_HTTP, CONNECTION_TYPE_KEYRING } from '../constants/connection-type'
-  import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
+  import { CONNECTION_TYPE_HTTP, CONNECTION_TYPE_KEYRING } from '@/constants/connection-type'
+  import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '@/constants/object-status'
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
   import AbstractList from '@/components/AbstractList'

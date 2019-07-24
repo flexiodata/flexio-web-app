@@ -74,7 +74,7 @@
   import randomstring from 'randomstring'
   import { mapState } from 'vuex'
   import { getJsDocObject, getSpreadsheetSyntaxStr } from '../utils/pipe'
-  import { OBJECT_TYPE_PIPE } from '../constants/object-type'
+  import { OBJECT_TYPE_PIPE } from '@/constants/object-type'
   import CodeEditor from '@/components/CodeEditor'
   import MixinValidation from '@/components/mixins/validation'
 

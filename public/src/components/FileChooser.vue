@@ -49,9 +49,9 @@
     CONNECTION_TYPE_FLEX,
     CONNECTION_TYPE_HTTP,
     CONNECTION_TYPE_RSS
-  } from '../constants/connection-type'
+  } from '@/constants/connection-type'
   import { mapGetters } from 'vuex'
-  import * as connections from '../constants/connection-info'
+  import * as connections from '@/constants/connection-info'
   import FileExplorerBar from '@/components/FileExplorerBar'
   import FileChooserList from '@/components/FileChooserList'
   import AbstractList from '@/components/AbstractList'

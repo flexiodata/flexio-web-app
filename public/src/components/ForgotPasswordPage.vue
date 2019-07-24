@@ -11,7 +11,7 @@
 </template>
 
 <script>
-  import { ROUTE_SIGNIN_PAGE, ROUTE_SIGNUP_PAGE } from '../constants/route'
+  import { ROUTE_SIGNIN_PAGE, ROUTE_SIGNUP_PAGE } from '@/constants/route'
   import ForgotPasswordForm from '@/components/ForgotPasswordForm'
 
   export default {

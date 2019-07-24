@@ -26,7 +26,7 @@
     ROUTE_APP_PIPES,
     ROUTE_APP_CONNECTIONS,
     ROUTE_APP_MEMBERS
-  } from '../constants/route'
+  } from '@/constants/route'
   import TeamDropdown from '@/components/TeamDropdown'
   import UserDropdown from '@/components/UserDropdown'
 

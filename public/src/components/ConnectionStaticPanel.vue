@@ -65,9 +65,9 @@
 </template>
 
 <script>
-  import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
-  import * as ctypes from '../constants/connection-type'
-  import * as connections from '../constants/connection-info'
+  import { CONNECTION_STATUS_AVAILABLE } from '@/constants/connection-status'
+  import * as ctypes from '@/constants/connection-type'
+  import * as connections from '@/constants/connection-info'
   import ServiceIcon from '@/components/ServiceIcon'
   import MixinConnection from '@/components/mixins/connection'
 

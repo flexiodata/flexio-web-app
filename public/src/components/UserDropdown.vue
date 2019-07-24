@@ -23,8 +23,8 @@
 </template>
 
 <script>
-  import { ROUTE_APP_ACCOUNT, ROUTE_SIGNIN_PAGE } from '../constants/route'
-  import { HOSTNAME } from '../constants/common'
+  import { ROUTE_APP_ACCOUNT, ROUTE_SIGNIN_PAGE } from '@/constants/route'
+  import { HOSTNAME } from '@/constants/common'
   import { mapGetters } from 'vuex'
   import FreeTrialNotice from '@/components/FreeTrialNotice'
 

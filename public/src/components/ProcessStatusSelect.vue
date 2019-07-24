@@ -23,7 +23,7 @@
 </template>
 
 <script>
-  import * as ps from '../constants/process'
+  import * as ps from '@/constants/process'
 
   const fmtProcessStatus = (status) => {
     switch (status) {

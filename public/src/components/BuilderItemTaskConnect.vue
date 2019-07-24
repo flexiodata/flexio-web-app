@@ -52,7 +52,7 @@
 
 <script>
   import marked from 'marked'
-  import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
+  import { CONNECTION_STATUS_AVAILABLE } from '@/constants/connection-status'
   import BuilderComponentConnectionChooser from '@/components/BuilderComponentConnectionChooser'
   import MixinConnection from '@/components/mixins/connection'
 

@@ -52,7 +52,7 @@
 
 <script>
   import { mapState, mapGetters } from 'vuex'
-  import { TIMEZONE_UTC, timezones } from '../constants/timezone'
+  import { TIMEZONE_UTC, timezones } from '@/constants/timezone'
 
   const timezone_options = _.map(timezones, (tz) => {
     return { label: tz, val: tz }

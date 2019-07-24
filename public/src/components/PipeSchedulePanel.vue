@@ -137,9 +137,9 @@
 </template>
 
 <script>
-  import { TIMEZONE_UTC } from '../constants/timezone'
-  import { timezones } from '../constants/timezone'
-  import * as schedule from '../constants/schedule'
+  import { TIMEZONE_UTC } from '@/constants/timezone'
+  import { timezones } from '@/constants/timezone'
+  import * as schedule from '@/constants/schedule'
   import TimeChooserList from '@/components/TimeChooserList'
 
   const day_options = [

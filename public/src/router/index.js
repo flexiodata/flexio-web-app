@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Meta from 'vue-meta'
 
-import * as rn from '../constants/route'
+import * as rn from '@/constants/route'
 import admin_routes from './admin'
 
 import AppAccount from '@/components/AppAccount'

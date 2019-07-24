@@ -30,7 +30,7 @@
 
 <script>
   import { mapState } from 'vuex'
-  import * as mt from '../constants/mimetype'
+  import * as mt from '@/constants/mimetype'
   import { API_V2_ROOT } from '../api/resources'
   import Grid from 'vue-grid2'
   import Spinner from 'vue-simple-spinner'

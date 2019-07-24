@@ -474,14 +474,14 @@
 
 <script>
   import { mapState } from 'vuex'
-  import { HOSTNAME } from '../constants/common'
+  import { HOSTNAME } from '@/constants/common'
   import {
     CONNECTION_STATUS_AVAILABLE,
     CONNECTION_STATUS_UNAVAILABLE,
     CONNECTION_STATUS_ERROR
-  } from '../constants/connection-status'
-  import * as ctypes from '../constants/connection-type'
-  import * as connections from '../constants/connection-info'
+  } from '@/constants/connection-status'
+  import * as ctypes from '@/constants/connection-type'
+  import * as connections from '@/constants/connection-info'
   import MixinOauth from '@/components/mixins/oauth'
   import MixinConnection from '@/components/mixins/connection'
 

@@ -1,5 +1,5 @@
-import { OBJECT_TYPE_CONNECTION } from '../../constants/object-type'
-import * as connections from '../../constants/connection-info'
+import { OBJECT_TYPE_CONNECTION } from '@/constants/object-type'
+import * as connections from '@/constants/connection-info'
 
 export default {
   methods: {

@@ -117,7 +117,7 @@
 <script>
   import moment from 'moment'
   import { mapGetters } from 'vuex'
-  import * as ps from '../constants/process'
+  import * as ps from '@/constants/process'
 
   export default {
     props: {

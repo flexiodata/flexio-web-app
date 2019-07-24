@@ -26,7 +26,7 @@
 </template>
 
 <script>
-  import { ROUTE_APP_ACCOUNT, ROUTE_APP_PIPES } from '../constants/route'
+  import { ROUTE_APP_ACCOUNT, ROUTE_APP_PIPES } from '@/constants/route'
   import { mapGetters } from 'vuex'
 
   export default {

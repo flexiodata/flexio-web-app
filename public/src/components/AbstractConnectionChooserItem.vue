@@ -40,8 +40,8 @@
 </template>
 
 <script>
-  import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
-  import { CONNECTION_TYPE_FLEX } from '../constants/connection-type'
+  import { CONNECTION_STATUS_AVAILABLE } from '@/constants/connection-status'
+  import { CONNECTION_TYPE_FLEX } from '@/constants/connection-type'
   import ServiceIcon from '@/components/ServiceIcon'
   import MixinConnection from '@/components/mixins/connection'
 

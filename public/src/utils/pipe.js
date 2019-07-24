@@ -1,4 +1,4 @@
-import * as sched from '../constants/schedule'
+import * as sched from '@/constants/schedule'
 import doctrine from 'doctrine'
 import moment from 'moment'
 

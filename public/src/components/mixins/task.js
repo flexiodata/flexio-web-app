@@ -1,8 +1,8 @@
 // common helpers for task items (requires that the calling object has
 // an `item` computed property or provides their own `task` computed property)
 
-import * as ops from '../../constants/task-op'
-import * as tasks from '../../constants/task-info'
+import * as ops from '@/constants/task-op'
+import * as tasks from '@/constants/task-info'
 
 export default {
   computed: {

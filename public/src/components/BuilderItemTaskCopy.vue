@@ -127,7 +127,7 @@
   import marked from 'marked'
   import { afterNth } from '@/utils'
   import { mapGetters } from 'vuex'
-  import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
+  import { CONNECTION_STATUS_AVAILABLE } from '@/constants/connection-status'
   import BuilderComponentConnectionChooser from '@/components/BuilderComponentConnectionChooser'
   import BuilderComponentFileChooser from '@/components/BuilderComponentFileChooser'
   import MixinConnection from '@/components/mixins/connection'

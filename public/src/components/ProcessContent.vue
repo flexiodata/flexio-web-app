@@ -57,7 +57,7 @@
     PROCESS_STATUS_CANCELLED,
     PROCESS_STATUS_FAILED,
     PROCESS_STATUS_COMPLETED
-  } from '../constants/process'
+  } from '@/constants/process'
 
   import Spinner from 'vue-simple-spinner'
   import CodeEditor from '@/components/CodeEditor'

@@ -5,7 +5,7 @@
 </template>
 
 <script>
-  import * as connections from '../constants/connection-info'
+  import * as connections from '@/constants/connection-info'
 
   export default {
     props: {

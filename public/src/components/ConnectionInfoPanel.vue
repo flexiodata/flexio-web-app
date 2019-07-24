@@ -171,7 +171,7 @@
 </template>
 
 <script>
-  import { CONNECTION_TYPE_HTTP } from '../constants/connection-type'
+  import { CONNECTION_TYPE_HTTP } from '@/constants/connection-type'
   import ServiceIcon from '@/components/ServiceIcon'
   import KeypairList from '@/components/KeypairList'
 

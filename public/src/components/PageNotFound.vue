@@ -28,7 +28,7 @@
 </template>
 
 <script>
-  import { ROUTE_SIGNIN_PAGE } from '../constants/route'
+  import { ROUTE_SIGNIN_PAGE } from '@/constants/route'
 
   export default {
     metaInfo() {

@@ -32,7 +32,7 @@
 
 <script>
   import marked from 'marked'
-  import * as tasks from '../constants/task-info'
+  import * as tasks from '@/constants/task-info'
 
   export default {
     props: {

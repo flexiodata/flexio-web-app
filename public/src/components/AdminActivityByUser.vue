@@ -106,7 +106,7 @@
   import moment from 'moment'
   import stickybits from 'stickybits'
   import { mapState, mapGetters } from 'vuex'
-  import * as ps from '../constants/process'
+  import * as ps from '@/constants/process'
   import Spinner from 'vue-simple-spinner'
   import ProcessListByUser from '@/components/ProcessListByUser'
   import ProcessDetailsPanel from '@/components/ProcessDetailsPanel'

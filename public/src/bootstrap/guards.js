@@ -1,6 +1,6 @@
 import router from '@/router' // VueRouter
 import store from '@/store' // Vuex store
-import { ROUTE_INITSESSION_PAGE, ROUTE_SIGNIN_PAGE } from '../constants/route'
+import { ROUTE_INITSESSION_PAGE, ROUTE_SIGNIN_PAGE } from '@/constants/route'
 
 const tryFetchTeams = (team_name) => {
   if (!store.state.teams.is_fetched && !store.state.teams.is_fetching) {

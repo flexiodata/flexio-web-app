@@ -28,8 +28,8 @@
 
 <script>
   import { mapState } from 'vuex'
-  import * as ops from '../constants/task-op'
-  import * as task_info from '../constants/task-info'
+  import * as ops from '@/constants/task-op'
+  import * as task_info from '@/constants/task-info'
   import builder_defs from '../data/builder'
   import BuilderList from '@/components/BuilderList'
   import PipeBuilderEmptyItem from '@/components/PipeBuilderEmptyItem'

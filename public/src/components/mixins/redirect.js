@@ -1,4 +1,4 @@
-import { ROUTE_APP_PIPES } from '../../constants/route'
+import { ROUTE_APP_PIPES } from '@/constants/route'
 
 // allows any component to set the active project; if the project hasn't yet
 // been fetched from the server, this mixin will do that as well and then
