@@ -92,23 +92,21 @@ class User
             $cleaned_post_params = self::cleanProperties($post_params); // don't store sensitive info
             $request->setRequestParams($cleaned_post_params);
 
-            // determine the status and verify code based on whether or not we're requiring verification
-            $eid_status = ($require_verification === true ? \Model::STATUS_PENDING : \Model::STATUS_AVAILABLE);
-            $verify_code = ($require_verification === true ? \Flexio\Base\Util::generateHandle() : '');
-
-            // set the new user info
+            // create the user; determine the status and verify code based on
+            // whether or not we're requiring verification
             $new_user_info = $validated_post_params;
-            $new_user_info['eid_status'] = $eid_status;
-            $new_user_info['verify_code'] = $verify_code;
-
-            // create the user
+            $new_user_info['eid_status'] = ($require_verification === true ? \Model::STATUS_PENDING : \Model::STATUS_AVAILABLE);
+            $new_user_info['verify_code'] = ($require_verification === true ? \Flexio\Base\Util::generateHandle() : '');
             $user = \Flexio\Object\User::create($new_user_info);
-            $user_eid = $user->getEid();
 
             // create a default api key for the user
             $token_properties = array();
             $token_properties['owned_by'] = $user->getEid();
             \Flexio\Object\Token::create($token_properties);
+
+            // if appropriate, create examples
+            if ($create_examples === true)
+                \Flexio\Object\Store::createExampleObjects($user->getEid());
 
             // if a token is set, try to add a card; however, don't fail if it can't be added
             // since the overall user creation has already succeeded
@@ -127,13 +125,9 @@ class User
             // if appropriate, send an email
             if ($send_email === true)
             {
-                $email_params = array('email' => $email, 'verify_code' => $verify_code);
+                $email_params = array('email' => $email, 'verify_code' => $user->getVerifyCode());
                 \Flexio\Api\Message::sendWelcomeEmail($email_params);
             }
-
-            // if appropriate, create examples
-            if ($create_examples === true)
-                \Flexio\Object\Store::createExampleObjects($user_eid);
 
             // return the user info
             $result = $user->get();
@@ -141,11 +135,11 @@ class User
             // TODO: for testing purposes only:
             if (IS_DEBUG())
             {
-                $verification_link = \Flexio\System\System::getUserVerificationLink($email, $verify_code);
+                $verification_link = \Flexio\System\System::getUserVerificationLink($email, $user->getVerifyCode());
                 $result['verification_link'] = $verification_link;
             }
 
-            $request->setRequestingUser($user_eid);
+            $request->setRequestingUser($user->getEid());
             $request->setResponseParams($result);
             $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
             $request->track();
