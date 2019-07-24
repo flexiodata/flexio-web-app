@@ -5,9 +5,9 @@
     </div>
     <h1 class="fw6 tc mb4">Forgot Password</h1>
     <template v-if="is_sent">
-      <div class="mv3 lh-copy">
-        <p>An email has been sent to <span class="b">{{email}}</span> with further instructions.</p>
-        <p>You may need to check your spam folder or unblock no-reply@flex.io.</p>
+      <p>An email has been sent to <span class="b">{{email}}</span> with further instructions.</p>
+      <p>You may need to check your spam folder or unblock no-reply@flex.io.</p>
+      <div class="pv2">
         <button
           :class="button_cls"
           @click="$emit('sign-in-click')"
@@ -50,7 +50,10 @@
         </div>
       </div>
     </template>
-    <div class="mt3 pt2 f5 fw6 tc">
+    <div
+      class="mt3 pt2 f5 fw6 tc"
+      v-show="!is_sent"
+    >
       New to Flex.io?
       <button type="button" class="link dib blue underline-hover db fw6" @click="$emit('sign-up-click')">Sign up</button>
     </div>
