@@ -160,16 +160,13 @@
           var attrs = _.pick(this.edit_info, ['username', 'password'])
           this.$store.dispatch('users/delete', { eid, attrs }).then(response => {
             this.signOut()
-          }).catch(error => {
-            // TODO: add error handling?
           })
         })
       },
       signOut() {
-        // NOTE: we need to route back to the sign in page before we actually dispatch
-        //       the `users/signOut` call, otherwise a 404 page will show momentarily
-        this.$router.push({ name: ROUTE_SIGNIN_PAGE })
-        this.$store.dispatch('users/signOut')
+        this.$store.dispatch('users/signOut').then(response => {
+          this.$router.push({ name: ROUTE_SIGNIN_PAGE })
+        })
       }
     }
   }

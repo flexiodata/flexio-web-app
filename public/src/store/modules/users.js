@@ -110,10 +110,14 @@ const actions = {
     commit('SIGNING_OUT', true)
 
     return api.v2_logout().then(response => {
-      commit('SIGNED_OUT')
-      commit('SIGNING_OUT', false)
-      commit('RESET_STATE')
-      dispatch('track', { event_name: 'Signed Out' })
+      // we need to give just a bit of breathing room for the UI to change
+      // the route to the sign in page before we update the state with these commits
+      setTimeout(() => {
+        commit('SIGNED_OUT')
+        commit('SIGNING_OUT', false)
+        commit('RESET_STATE')
+        dispatch('track', { event_name: 'Signed Out' })
+      }, 1)
       return response
     }).catch(error => {
       commit('SIGNING_OUT', false)
