@@ -55,6 +55,7 @@ export default {
   v2_createMember:         function(team_name, attrs)              { return AxiosResource(team_name)[V2_POS] (`/members`, attrs)                               },
   v2_updateMember:         function(team_name, object_name, attrs) { return AxiosResource(team_name)[V2_POS] (`/members/${object_name}`, attrs)                },
   v2_deleteMember:         function(team_name, object_name)        { return AxiosResource(team_name)[V2_DEL] (`/members/${object_name}`)                       },
+  v2_reinviteMember:       function(team_name, object_name)        { return AxiosResource(team_name)[V2_POS] (`/members/${object_name}/invitations`)           },
 
   // teams
   v2_fetchTeams:           function(team_name)                     { return AxiosResource(team_name)[V2_GET] (`/teams`)                                        },

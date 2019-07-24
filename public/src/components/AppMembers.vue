@@ -40,13 +40,22 @@
                 </div>
               </td>
               <td>
+                <el-button
+                  type="text"
+                  @click="resendInvite(member)"
+                  v-if="isMemberPending(member)"
+                >
+                  Resend invite
+                </el-button>
+              </td>
+              <td>
                 <ConfirmPopover
                   placement="bottom-end"
                   title="Confirm remove?"
                   message="Are you sure you want to remove this member?"
                   confirm-button-text="Remove"
                   @confirm-click="removeMember(member)"
-                  v-show="!isOwner(member)"
+                  v-if="!isMemberOwner(member)"
                 >
                   <el-button
                     slot="reference"
@@ -128,6 +137,7 @@
 </template>
 
 <script>
+  import { OBJECT_STATUS_PENDING } from '@/constants/object-status'
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
   import ConfirmPopover from '@/components/ConfirmPopover'
@@ -184,21 +194,25 @@
         }
       },
       sendInvites() {
-        var timeout = 10
+        var timeout = 20
 
         // quick hack to allow multiple users to be added until the API supports it
         _.forEach(this.add_dialog_model.users, user => {
-          setTimeout(() => {
-            var team_name = this.active_team_name
-            var attrs = { member: user }
-
-            this.$store.dispatch('members/create', { team_name, attrs })
-          }, timeout)
-
+          setTimeout(() => { this.sendInvite(user) }, timeout)
           timeout += 40
         })
 
         this.show_add_dialog = false
+      },
+      sendInvite(member) {
+        var team_name = this.active_team_name
+        var attrs = { member }
+        this.$store.dispatch('members/create', { team_name, attrs })
+      },
+      resendInvite(member) {
+        var team_name = this.active_team_name
+        var eid = _.get(member, 'eid')
+        this.$store.dispatch('members/resendInvite', { team_name, eid })
       },
       getGravatarUrl(member) {
         return 'https://secure.gravatar.com/avatar/' + member.email_hash + '?d=mm&s=40'
@@ -206,8 +220,11 @@
       hasFullName(member) {
         return _.get(member, 'first_name', '').length > 0 && _.get(member, 'last_name', '').length > 0
       },
-      isOwner(member) {
-        return _.get(member, 'username') == this.active_team_name
+      isMemberOwner(member) {
+        return _.get(member, 'eid') == _.get(member, 'member_of.eid')
+      },
+      isMemberPending(member) {
+        return _.get(member, 'member_status') == OBJECT_STATUS_PENDING
       },
       removeMember(member) {
         var team_name = this.active_team_name
@@ -235,3 +252,9 @@
     }
   }
 </script>
+
+<style lang="stylus" scoped>
+  td
+    padding-left: 0.5rem
+    padding-right: 0.5rem
+</style>

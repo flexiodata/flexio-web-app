@@ -112,6 +112,15 @@ const actions = {
       throw error
     })
   },
+
+  'resendInvite' ({ commit }, { team_name, eid }) {
+    return api.v2_reinviteMember(team_name, eid).then(response => {
+      commit('UPDATED_ITEM', { eid, item: response.data })
+      return response
+    }).catch(error => {
+      throw error
+    })
+  },
 }
 
 const getters = {
