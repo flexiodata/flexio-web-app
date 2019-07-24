@@ -109,7 +109,7 @@
   export default {
     metaInfo() {
       return {
-        title: _.get(this.section_label_lookup, [this.getSection()], 'My Account')
+        title: _.get(this.action_label_lookup, [this.getSection()], 'My Account')
       }
     },
     components: {
@@ -123,14 +123,14 @@
       ProcessActivity
     },
     watch: {
-      route_section: {
-        handler: 'onRouteSectionChange',
+      route_action: {
+        handler: 'onRouteActionChange',
         immediate: true
       }
     },
     data() {
       return {
-        section_label_lookup: {
+        action_label_lookup: {
           profile: 'Your Profile',
           activity: 'Your Activity',
           settings: 'Account Settings',
@@ -148,11 +148,11 @@
       has_user() {
         return this.active_user_eid.length > 0
       },
-      route_section() {
-        return _.get(this.$route, 'params.section', 'profile')
+      route_action() {
+        return _.get(this.$route, 'params.action', 'profile')
       },
       style() {
-        switch (this.route_section) {
+        switch (this.route_action) {
           default:        return  "max-width: 56rem"
           case 'activity': return  "max-width: 80rem"
         }
@@ -167,19 +167,19 @@
     },
     methods: {
       getSection() {
-        return _.get(this.$route, 'params.section', 'profile')
+        return _.get(this.$route, 'params.action', 'profile')
       },
-      setRoute(section) {
+      setRoute(action) {
         // update the route
-        var current_section = _.get(this.$route, 'params.section', '')
+        var current_action = _.get(this.$route, 'params.action', '')
         var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
-        new_route.params = _.assign({}, new_route.params, { section })
-        this.$router[current_section.length == 0 ? 'replace' : 'push'](new_route)
+        new_route.params = _.assign({}, new_route.params, { action })
+        this.$router[current_action.length == 0 ? 'replace' : 'push'](new_route)
       },
       onTabClick(tab) {
         this.setRoute(tab.name)
       },
-      onRouteSectionChange(val) {
+      onRouteActionChange(val) {
         this.active_tab_name = val
       }
     }

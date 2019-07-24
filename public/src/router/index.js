@@ -35,7 +35,7 @@ const routes = [
   { path: '/forgotpassword',                        name: rn.ROUTE_FORGOTPASSWORD_PAGE, component: ForgotPasswordPage        },
   { path: '/resetpassword',                         name: rn.ROUTE_RESETPASSWORD_PAGE,  component: ResetPasswordPage         },
   { path: '/initsession',                           name: rn.ROUTE_INITSESSION_PAGE,    component: InitSessionPage           },
-  { path: '/account/:section?',                     name: rn.ROUTE_APP_ACCOUNT,         component: AppAccount,          meta },
+  { path: '/account/:action?',                      name: rn.ROUTE_APP_ACCOUNT,         component: AppAccount,          meta },
   { path: '/:team_name?/members',                   name: rn.ROUTE_APP_MEMBERS,         component: AppMembers,          meta },
   { path: '/:team_name?/connections/:object_name?', name: rn.ROUTE_APP_CONNECTIONS,     component: AppConnections,      meta },
   { path: '/:team_name?/pipes/:object_name?',       name: rn.ROUTE_APP_PIPES,           component: AppPipes,            meta },
