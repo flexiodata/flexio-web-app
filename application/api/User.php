@@ -18,6 +18,12 @@ namespace Flexio\Api;
 
 class User
 {
+    public const REQUIRE_VERIFICATION = true;
+    public const CREATE_DEFAULT_TOKEN = true;
+    public const CREATE_DEFAULT_EXAMPLES = true;
+    public const SEND_WELCOME_EMAIL = true;
+    public const SEND_INVITE_EMAIL = true;
+
     public static function create(\Flexio\Api\Request $request) : void
     {
         $post_params = $request->getPostParams();
@@ -45,10 +51,7 @@ class User
                 'usage_tier'           => array('type' => 'string',     'required' => false, 'default' => ''),
                 'referrer'             => array('type' => 'string',     'required' => false, 'default' => ''),
                 'token'                => array('type' => 'string',     'required' => false), // stripe payment token if it's included; TODO: more specific name?
-                'config'               => array('type' => 'object',     'required' => false, 'default' => []),
-                'send_email'           => array('type' => 'boolean',    'required' => false, 'default' => false), // don't send an email by default
-                'create_examples'      => array('type' => 'boolean',    'required' => false, 'default' => true),
-                'require_verification' => array('type' => 'boolean',    'required' => false, 'default' => false)
+                'config'               => array('type' => 'object',     'required' => false, 'default' => [])
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
@@ -58,20 +61,6 @@ class User
         $username = $validated_post_params['username'];
         $email = $validated_post_params['email'];
         $password = $validated_post_params['password'];
-
-        // configuration fields we don't want to pass on
-        $send_email = $validated_post_params['send_email'];
-        $create_examples = $validated_post_params['create_examples'];
-        $require_verification = $validated_post_params['require_verification'];
-        unset($validated_post_params['send_email']);
-        unset($validated_post_params['create_examples']);
-        unset($validated_post_params['require_verification']);
-
-
-        // TODO: new, experimental verification settings:
-        $send_email = true;
-        $require_verification = true;
-
 
         // try to find the user
         $user = false;
@@ -92,20 +81,28 @@ class User
             $cleaned_post_params = self::cleanProperties($post_params); // don't store sensitive info
             $request->setRequestParams($cleaned_post_params);
 
+            // note: following logic is paralleled when creating a new user
+            // in the user api implementation, except for the initial user
+            // parameters which are populated partially here by the api request
+
             // create the user; determine the status and verify code based on
             // whether or not we're requiring verification
             $new_user_info = $validated_post_params;
-            $new_user_info['eid_status'] = ($require_verification === true ? \Model::STATUS_PENDING : \Model::STATUS_AVAILABLE);
-            $new_user_info['verify_code'] = ($require_verification === true ? \Flexio\Base\Util::generateHandle() : '');
+            $new_user_info['email'] = $email;
+            $new_user_info['eid_status'] = (\Flexio\Api\User::REQUIRE_VERIFICATION === true ? \Model::STATUS_PENDING : \Model::STATUS_AVAILABLE);
+            $new_user_info['verify_code'] = (\Flexio\Api\User::REQUIRE_VERIFICATION === true ? \Flexio\Base\Util::generateHandle() : '');
             $user = \Flexio\Object\User::create($new_user_info);
 
-            // create a default api key for the user
-            $token_properties = array();
-            $token_properties['owned_by'] = $user->getEid();
-            \Flexio\Object\Token::create($token_properties);
+            // if appropriate, create an a default api token
+            if (\Flexio\Api\User::CREATE_DEFAULT_TOKEN === true)
+            {
+                $token_properties = array();
+                $token_properties['owned_by'] = $user->getEid();
+                \Flexio\Object\Token::create($token_properties);
+            }
 
-            // if appropriate, create examples
-            if ($create_examples === true)
+            // if appropriate, create default examples
+            if (\Flexio\Api\User::CREATE_DEFAULT_EXAMPLES === true)
                 \Flexio\Object\Store::createExampleObjects($user->getEid());
 
             // if a token is set, try to add a card; however, don't fail if it can't be added
@@ -123,7 +120,7 @@ class User
             }
 
             // if appropriate, send an email
-            if ($send_email === true)
+            if (\Flexio\Api\User::SEND_WELCOME_EMAIL === true)
             {
                 $email_params = array('email' => $email, 'verify_code' => $user->getVerifyCode());
                 \Flexio\Api\Message::sendWelcomeEmail($email_params);
@@ -203,7 +200,7 @@ class User
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, _('Operation failed'));
 
         // if appropriate, send an email
-        if ($send_email === true)
+        if (\Flexio\Api\User::SEND_WELCOME_EMAIL === true)
         {
             $email_params = array('email' => $email, 'verify_code' => $new_verify_code);
             \Flexio\Api\Message::sendWelcomeEmail($email_params);

@@ -65,36 +65,71 @@ class TeamMember
             if (\Flexio\Base\Email::isValid($member_param) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
-            // TODO: following user addition is simply to get things going; need
-            // invite emails, etc
+            // member param is the email
+            $email = $member_param;
 
-            // set the new user info
-            $new_user_info = $validated_post_params;
-            $new_user_info['eid_status'] = \Model::STATUS_PENDING;
-            $new_user_info['username'] = \Flexio\Base\Util::generateHandle();
-            $new_user_info['email'] = $member_param;
+            // note: following logic is paralleled when creating a new user
+            // in the user api implementation, except for the initial user
+            // parameters which are minimal here
 
             // create the user
+            $new_user_info = array();
+            $new_user_info['email'] = $email;
+            $new_user_info['eid_status'] = (\Flexio\Api\User::REQUIRE_VERIFICATION === true ? \Model::STATUS_PENDING : \Model::STATUS_AVAILABLE);
+            $new_user_info['verify_code'] = (\Flexio\Api\User::REQUIRE_VERIFICATION === true ? \Flexio\Base\Util::generateHandle() : '');
             $user = \Flexio\Object\User::create($new_user_info);
+
+            // if appropriate, create an a default api token
+            if (\Flexio\Api\User::CREATE_DEFAULT_TOKEN === true)
+            {
+                $token_properties = array();
+                $token_properties['owned_by'] = $user->getEid();
+                \Flexio\Object\Token::create($token_properties);
+            }
+
+            // if appropriate, create default examples
+            if (\Flexio\Api\User::CREATE_DEFAULT_EXAMPLES === true)
+                \Flexio\Object\Store::createExampleObjects($user->getEid());
+
             $member_user_eid = $user->getEid();
         }
 
-        // if for whatever reason, we still don't have a valid member, throw an exception
-        if ($member_user_eid === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+        // get the requesting user info and member info, which we'll need for
+        // sending an email; do this ea
+        $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
+        if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        $member_user = \Flexio\Object\User::load($member_user_eid);
 
         // if the team member has already been added for whatever reason,
         // throw an error
         if (self::isTeamMember($member_user_eid, $owner_user_eid))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
-        // create the object
+        // add the team member
         $member_properties = array();
         $member_properties['member_eid'] = $member_user_eid;
         $member_properties['rights'] = $rights;
         $member_properties['owned_by'] = $owner_user_eid;
         $member_properties['created_by'] = $requesting_user_eid;
         \Flexio\System\System::getModel()->teammember->create($member_properties);
+
+        // if appropriate, send an invite email
+        if (\Flexio\Api\User::SEND_INVITE_EMAIL === true)
+        {
+            $owner_user_info = $owner_user->get();
+            $requesting_user_info = $requesting_user->get();
+            $member_user_info = $member_user->get();
+
+            $email_params = array(
+                'email'       => $member_user_info['email'],
+                'from_name'   => $requesting_user_info['first_name'],
+                'from_email'  => $requesting_user_info['email'],
+                'object_name' => $owner_user_info['username'],
+                'verify_code' => $member_user->getVerifyCode()
+            );
+            \Flexio\Api\Message::sendTeamInvitationEmail($email_params);
+        }
 
         // get the result of creating
         $result = self::getMemberInfo($member_user_eid, $owner_user_eid);
@@ -295,7 +330,8 @@ class TeamMember
             'email'       => $member_user_info['email'] ?? '',
             'from_name'   => $requesting_user_info['first_name'],
             'from_email'   => $requesting_user_info['email'],
-            'object_name' => $owner_user_info['username'] ?? ''
+            'object_name' => $owner_user_info['username'] ?? '',
+            'verify_code' => $member_user->getVerifyCode()
         );
         \Flexio\Api\Message::sendTeamInvitationEmail($email_params);
 
