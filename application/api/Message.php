@@ -189,6 +189,11 @@ class Message
             $msg = str_replace('&#36;{'.$k.'}', $v, $msg); // MJML compiler HTML-encodes the '$' character
         }
 
+        // always replace ${year}
+        $date = date("Y");
+        $msg = str_replace('${year}', $date, $msg);
+        $msg = str_replace('&#36;{year}', $date, $msg); // MJML compiler HTML-encodes the '$' character
+
         return $msg;
     }
 
@@ -204,6 +209,11 @@ class Message
         {
             $msg = str_replace('${'.$k.'}', $v, $msg);
         }
+
+        // always replace ${year}
+        $date = date("Y");
+        $msg = str_replace('${year}', $date, $msg);
+        $msg = str_replace('&#36;{year}', $date, $msg); // MJML compiler HTML-encodes the '$' character
 
         return $msg;
     }
