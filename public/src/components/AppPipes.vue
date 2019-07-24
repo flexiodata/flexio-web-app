@@ -73,6 +73,19 @@
       <!-- pipe not found -->
       <PageNotFound class="flex-fill bg-nearer-white" v-else />
     </div>
+    <EmptyItem class="flex flex-column items-center justify-center h-100" v-else>
+      <div class="tc f3" slot="text">
+        <p>No pipes to show</p>
+        <el-button
+          size="large"
+          type="primary"
+          class="ttu fw6"
+          @click="show_pipe_dialog = true"
+        >
+          New Pipe
+        </el-button>
+      </div>
+    </EmptyItem>
 
     <!-- pipe edit dialog -->
     <el-dialog
@@ -101,6 +114,7 @@
   import Spinner from 'vue-simple-spinner'
   import PipeDocument from '@/components/PipeDocument'
   import PipeEditPanel from '@/components/PipeEditPanel'
+  import EmptyItem from '@/components/EmptyItem'
   import PageNotFound from '@/components/PageNotFound'
 
   const DEPLOY_MODE_RUN = 'R'
@@ -136,6 +150,7 @@
       Spinner,
       PipeDocument,
       PipeEditPanel,
+      EmptyItem,
       PageNotFound
     },
     watch: {
