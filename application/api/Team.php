@@ -47,7 +47,7 @@ class Team
         // get the teams (items where the owner is a member of a team)
         $result = array();
 
-        $filter = array('member_eid' => $owner_user_eid);
+        $filter = array('member_eid' => $owner_user_eid, 'member_status' => \Model::TEAM_MEMBER_STATUS_ACTIVE);
         $filter = array_merge($validated_query_params, $filter); // give precedence to fixed owner/status
         $teams = \Flexio\System\System::getModel()->team->list($filter);
 

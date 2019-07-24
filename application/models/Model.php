@@ -23,47 +23,22 @@ class Filter
     {
         $allowed_item_keys = array_flip($allowed_items);
 
-        // build the filter
+        // initial condition
         $filter_expr = 'true';
-        if (isset($filter_items['eid']) && array_key_exists('eid', $allowed_item_keys))
-            $filter_expr .= (' and (eid = ' . $db->quote($filter_items['eid']) . ')');
 
-        if (isset($filter_items['eid_status']) && array_key_exists('eid_status', $allowed_item_keys))
-            $filter_expr .= (' and (eid_status = ' . $db->quote($filter_items['eid_status']) . ')');
+        // add on allowed items from the list of filter items
+        foreach ($filter_items as $key => $value)
+        {
+            // handle date range separately
+            if ($key === 'created_min' || $key === 'created_max')
+                continue;
 
-        if (isset($filter_items['owned_by']) && array_key_exists('owned_by', $allowed_item_keys))
-            $filter_expr .= (' and (owned_by = ' . $db->quote($filter_items['owned_by']) . ')');
+            // all other keys, build up a equality comparison using the column name
+            if (isset($value) && array_key_exists($key, $allowed_item_keys))
+                $filter_expr .= (" and ($key = " . $db->quote($value) . ")");
+        }
 
-        if (isset($filter_items['parent_eid']) && array_key_exists('parent_eid', $allowed_item_keys))
-            $filter_expr .= (' and (parent_eid = ' . $db->quote($filter_items['parent_eid']) . ')');
-
-        if (isset($filter_items['name']) && array_key_exists('name', $allowed_item_keys))
-            $filter_expr .= (' and (name = ' . $db->quote($filter_items['name']) . ')');
-
-        if (isset($filter_items['username']) && array_key_exists('username', $allowed_item_keys))
-            $filter_expr .= (' and (username = ' . $db->quote($filter_items['username']) . ')');
-
-        if (isset($filter_items['email']) && array_key_exists('email', $allowed_item_keys))
-            $filter_expr .= (' and (email = ' . $db->quote($filter_items['email']) . ')');
-
-        if (isset($filter_items['name']) && array_key_exists('name', $allowed_item_keys))
-            $filter_expr .= (' and (name = ' . $db->quote($filter_items['name']) . ')');
-
-        if (isset($filter_items['stream_type']) && array_key_exists('stream_type', $allowed_item_keys))
-            $filter_expr .= (' and (stream_type = ' . $db->quote($filter_items['stream_type']) . ')');
-
-        if (isset($filter_items['object_eid']) && array_key_exists('object_eid', $allowed_item_keys))
-            $filter_expr .= (' and (object_eid = ' . $db->quote($filter_items['object_eid']) . ')');
-
-        if (isset($filter_items['access_code']) && array_key_exists('access_code', $allowed_item_keys))
-            $filter_expr .= (' and (access_code = ' . $db->quote($filter_items['access_code']) . ')');
-
-        if (isset($filter_items['connection_eid']) && array_key_exists('connection_eid', $allowed_item_keys))
-            $filter_expr .= (' and (connection_eid = ' . $db->quote($filter_items['connection_eid']) . ')');
-
-        if (isset($filter_items['member_eid']) && array_key_exists('member_eid', $allowed_item_keys))
-            $filter_expr .= (' and (member_eid = ' . $db->quote($filter_items['member_eid']) . ')');
-
+        // handle the date range
         if (isset($filter_items['created_min']) && array_key_exists('created_min', $allowed_item_keys))
         {
             $date = $filter_items['created_min'];

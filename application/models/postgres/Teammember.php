@@ -31,6 +31,9 @@ class Teammember extends ModelBase
 
         $process_arr = $validator->getParams();
 
+        if (self::isValidMemberStatus($process_arr['member_status']) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
         $db = $this->getDatabase();
         try
         {
@@ -169,6 +172,9 @@ class Teammember extends ModelBase
         $process_arr = $validator->getParams();
         $process_arr['updated'] = \Flexio\System\System::getTimestamp();
 
+        if (isset($params['member_status']) && self::isValidMemberStatus($params['member_status']) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
         $db = $this->getDatabase();
         try
         {
@@ -192,7 +198,7 @@ class Teammember extends ModelBase
     public function list(array $filter) : array
     {
         $db = $this->getDatabase();
-        $allowed_items = array('owned_by', 'member_eid', 'created_min', 'created_max');
+        $allowed_items = array('owned_by', 'member_eid', 'member_status', 'created_min', 'created_max');
         $filter_expr = \Filter::build($db, $filter, $allowed_items);
         $limit_expr = \Limit::build($db, $filter);
 
@@ -272,5 +278,19 @@ class Teammember extends ModelBase
         {
             return null;
         }
+    }
+
+    private static function isValidMemberStatus(string $status) : bool
+    {
+        switch ($status)
+        {
+            case \Model::TEAM_MEMBER_STATUS_UNDEFINED:
+            case \Model::TEAM_MEMBER_STATUS_PENDING:
+            case \Model::TEAM_MEMBER_STATUS_INACTIVE:
+            case \Model::TEAM_MEMBER_STATUS_ACTIVE:
+                return true;
+        }
+
+        return false;
     }
 }
