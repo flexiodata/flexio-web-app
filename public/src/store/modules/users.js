@@ -115,8 +115,10 @@ const actions = {
       setTimeout(() => {
         commit('SIGNED_OUT')
         commit('SIGNING_OUT', false)
-        commit('RESET_STATE')
         dispatch('track', { event_name: 'Signed Out' })
+
+        // reset the store state globally (including all modules)
+        dispatch('resetState', {}, { root: true })
       }, 1)
       return response
     }).catch(error => {

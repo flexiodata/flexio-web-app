@@ -75,9 +75,13 @@ const getters = {
 
   getActiveTeamLabel (state, getters)  {
     var team = getters.getActiveTeam
-    var first_name = _.get(team, 'first_name', '')
-    var last_name = _.get(team, 'last_name', '')
-    return `${first_name} ${last_name}` + "'s team"
+    if (team) {
+      var first_name = _.get(team, 'first_name', '')
+      var last_name = _.get(team, 'last_name', '')
+      return `${first_name} ${last_name}` + "'s team"
+    } else {
+      return ''
+    }
   },
 }
 
