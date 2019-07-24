@@ -8,7 +8,7 @@
         <div class="tc" style="margin-top: -68px">
           <img src="../assets/icon/icon-flexio-128.png" alt="Flex.io" class="br-100 ba bw1 b--white" style="width: 68px; box-shadow: 0 2px 4px rgba(0,0,0,0.2)">
         </div>
-        <h1 class="tc mb4">Thanks for signing up!</h1>
+        <h1 class="fw6 tc mb4">Thanks for signing up!</h1>
         <p>To finish signing up, you just need to confirm that we got your email address right.</p>
         <p>We've sent a verification email to the address you provided. Clicking the confirmation link in that email lets us know the email address is both valid and yours.</p>
         <div class="pv2">

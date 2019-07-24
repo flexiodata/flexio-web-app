@@ -3,7 +3,7 @@
     <div class="tc" style="margin-top: -68px">
       <img src="../assets/icon/icon-flexio-128.png" alt="Flex.io" class="br-100 ba bw1 b--white" style="width: 68px; box-shadow: 0 2px 4px rgba(0,0,0,0.2)">
     </div>
-    <h1 class="tc mb4">Forgot Password</h1>
+    <h1 class="fw6 tc mb4">Forgot Password</h1>
     <template v-if="is_sent">
       <div class="mv3 lh-copy">
         <p>An email has been sent to <span class="b">{{email}}</span> with further instructions.</p>
