@@ -10,6 +10,8 @@ import {OBJECT_STATUS_AVAILABLE } from '@/constants/object-status'
 
 const getDefaultMeta = () => {
   return {
+    is_invite_resending: false,
+    is_invite_resent: false,
     is_fetching: false,
     is_fetched: false,
   }
@@ -58,6 +60,14 @@ const mutations = {
 
   'DELETED_ITEM' (state, eid) {
     removeItem(state, eid)
+  },
+
+  'RESENDING_INVITE' (state, { eid, is_invite_resending }) {
+    updateMeta(state, eid, { is_invite_resending })
+  },
+
+  'RESENT_INVITE' (state, { eid, is_invite_resent }) {
+    updateMeta(state, eid, { is_invite_resent })
   },
 }
 
@@ -114,10 +124,15 @@ const actions = {
   },
 
   'resendInvite' ({ commit }, { team_name, eid }) {
+    commit('RESENDING_INVITE', { eid, is_invite_resending: true })
+
     return api.v2_reinviteMember(team_name, eid).then(response => {
-      commit('UPDATED_ITEM', { eid, item: response.data })
+      commit('RESENDING_INVITE', { eid, is_invite_resending: false })
+      commit('RESENT_INVITE', { eid, is_invite_resent: true })
+      setTimeout(() => { commit('RESENT_INVITE', { eid, is_invite_resent: false }) }, 4000)
       return response
     }).catch(error => {
+      commit('RESENDING_INVITE', { eid, is_invite_resending: false })
       throw error
     })
   },

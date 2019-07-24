@@ -39,14 +39,28 @@
                   </div>
                 </div>
               </td>
-              <td>
-                <el-button
-                  type="text"
-                  @click="resendInvite(member)"
-                  v-if="isMemberPending(member)"
-                >
-                  Resend invite
-                </el-button>
+              <td class="tr nowrap">
+                <div class="mh3">
+                  <div
+                    v-if="isInviteResending(member)"
+                  >
+                    Resending invite...
+                  </div>
+                  <div
+                    class="flex flex-row items-center"
+                    v-else-if="isInviteResent(member)"
+                  >
+                    <i class="el-icon-success dark-green mr1"></i>
+                    <span class="dark-green">Invite sent!</span>
+                  </div>
+                  <el-button
+                    type="text"
+                    @click="resendInvite(member)"
+                    v-else-if="isMemberPending(member)"
+                  >
+                    Resend invite
+                  </el-button>
+                </div>
               </td>
               <td>
                 <ConfirmPopover
@@ -225,6 +239,12 @@
       },
       isMemberPending(member) {
         return _.get(member, 'member_status') == OBJECT_STATUS_PENDING
+      },
+      isInviteResending(member) {
+        return _.get(member, 'vuex_meta.is_invite_resending')
+      },
+      isInviteResent(member) {
+        return _.get(member, 'vuex_meta.is_invite_resent')
       },
       removeMember(member) {
         var team_name = this.active_team_name
