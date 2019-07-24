@@ -75,9 +75,18 @@
       <!-- connection not found -->
       <PageNotFound class="flex-fill bg-nearer-white" v-else />
     </div>
-    <EmptyItem class="flex flex-column justify-center h-100" v-else>
-      <i slot="icon" class="material-icons">repeat</i>
-      <span slot="text">No connections to show</span>
+    <EmptyItem class="flex flex-column items-center justify-center h-100" v-else>
+      <div class="tc f3" slot="text">
+        <p>No connections to show</p>
+        <el-button
+          size="large"
+          type="primary"
+          class="ttu fw6"
+          @click="onNewConnection"
+        >
+          New Connection
+        </el-button>
+      </div>
     </EmptyItem>
 
     <!-- connection dialog -->
