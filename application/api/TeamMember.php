@@ -29,7 +29,9 @@ class TeamMember
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
                 'member' => array('type' => 'string', 'required' => true),
-                'member_status' => array('type' => 'string', 'required' => false),
+                'member_status' => array('type' => 'string', 'required' => false,
+                                         'default' => \Model::TEAM_MEMBER_STATUS_PENDING,
+                                         'enum' => [\Model::TEAM_MEMBER_STATUS_PENDING, \Model::TEAM_MEMBER_STATUS_ACTIVE]),
                 'rights' => array('type' => 'object', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
@@ -187,7 +189,8 @@ class TeamMember
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
-                'member_status' => array('type' => 'string', 'required' => false),
+                'member_status' => array('type' => 'string', 'required' => false,
+                                         'enum' => [\Model::TEAM_MEMBER_STATUS_PENDING, \Model::TEAM_MEMBER_STATUS_ACTIVE]),
                 'rights'        => array('type' => 'object', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
