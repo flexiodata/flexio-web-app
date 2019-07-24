@@ -1,7 +1,3 @@
-import _ from 'lodash'
-import Flexio from 'flexio-sdk-js'
-import utilSdkJs from '@/utils/sdk-js'
-
 const getDefaultState = () => {
   return {
     eid: '',
