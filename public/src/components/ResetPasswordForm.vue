@@ -3,7 +3,7 @@
     <div class="tc" style="margin-top: -68px">
       <img src="../assets/icon/icon-flexio-128.png" alt="Flex.io" class="br-100 ba bw1 b--white" style="width: 68px; box-shadow: 0 2px 4px rgba(0,0,0,0.2)">
     </div>
-    <h1 class="tc mb4 pb2">Reset Password</h1>
+    <h1 class="tc mb4">Reset Password</h1>
     <template v-if="is_sent">
       <p>Your password has been successfully reset. To continue using Flex.io, you will need to sign in again.</p>
       <router-link to="/signin" class="link ph4 pv2a b lh-title white bg-blue b--blue darken-10 ttu tc db">Sign in</router-link>
