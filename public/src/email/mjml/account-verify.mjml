@@ -3,12 +3,13 @@
     <mj-title>Welcome to Flex.io</mj-title>
     <mj-font name="Open Sans" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600"></mj-font>
     <mj-attributes>
-      <mj-all font-family="Open Sans, Helvetica Neue, Helvetica, Arial, sans-serif" font-size="17px" ></mj-all>
-      <mj-column width="100%"></mj-column>
-      <mj-text font-weight="400" color="#333" line-height="150%" padding="13px 50px 12px"></mj-text>
-      <mj-button align="center" text-transform="uppercase" font-weight="600" background-color="#2196f3" color="#fff" border-radius="4px" padding="25px" inner-padding="15px 30px"></mj-button>
-      <mj-body background-color="#f5f7fa"></mj-body>
-      <mj-section padding="0px"></mj-section>
+      <mj-all font-family="Open Sans, Helvetica Neue, Helvetica, Arial, sans-serif" font-size="17px" />
+      <mj-body background-color="#f5f7fa" />
+      <mj-section padding="0" />
+      <mj-column width="100%" />
+      <mj-text color="#333" font-weight="400" line-height="150%" padding="13px 50px 12px" />
+      <mj-image align="center" border="none" padding="0" />
+      <mj-button align="center" background-color="#2196f3" border-radius="4px" color="#fff" font-weight="600" inner-padding="15px 30px" padding="25px" text-transform="uppercase" />
     </mj-attributes>
     <mj-style>
       .debug * {
@@ -33,7 +34,7 @@
         <mj-spacer height="100px" />
       </mj-column>
       <mj-column css-class="css-white-box">
-        <mj-image src="https://static.flex.io/assets/logo-square-400x400.png" css-class="css-logo" alt="" width="80px" align="center" border="none" padding="0px"></mj-image>
+        <mj-image src="https://static.flex.io/assets/logo-square-400x400.png" alt="" width="80px" css-class="css-logo" />
         <mj-spacer height="12px" />
         <mj-text align="center" font-size="34px">Welcome to Flex.io</mj-text>
         <mj-text>Thank you for creating your Flex.io account! Please click on the following link to activate your account:</mj-text>
