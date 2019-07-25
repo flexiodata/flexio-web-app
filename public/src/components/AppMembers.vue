@@ -236,8 +236,6 @@
         this.show_add_dialog = false
       },
       formValidateEmailArray(rule, value, callback) {
-        console.log(rule, value)
-
         var has_errors = false
         _.each(value, v => {
           has_errors = has_errors || !isValidEmail(v)
