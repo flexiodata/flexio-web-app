@@ -84,6 +84,8 @@
         class="el-form--cozy el-form__label-tiny"
         label-position="top"
         :model="add_dialog_model"
+        :rules="add_dialog_rules"
+        v-if="show_add_dialog"
       >
         <p class="f5">Enter the email addresses of the people you would like to invite to your team. New team members will get an email with a link to accept the invitation.</p>
         <el-form-item
@@ -95,6 +97,7 @@
             ref="email-invite-select"
             class="w-100"
             placeholder="Enter email addresses"
+            spellcheck="false"
             multiple
             filterable
             allow-create
@@ -126,6 +129,7 @@
           class="ttu fw6"
           type="primary"
           @click="sendInvites"
+          :disabled="add_dialog_has_errors == true"
         >
           Send Invites
         </el-button>
@@ -136,6 +140,7 @@
 
 <script>
   import { mapState, mapGetters } from 'vuex'
+  import { isValidEmail } from '@/utils'
   import Spinner from 'vue-simple-spinner'
   import MemberItem from '@/components/MemberItem'
   import PageNotFound from '@/components/PageNotFound'
@@ -161,9 +166,15 @@
     data() {
       return {
         show_add_dialog: false,
+        add_dialog_has_errors: false,
         add_dialog_model: {
           users: [],
           options: []
+        },
+        add_dialog_rules: {
+          users: [
+            { validator: this.formValidateEmailArray }
+          ],
         }
       }
     },
@@ -224,7 +235,27 @@
 
         this.show_add_dialog = false
       },
+      formValidateEmailArray(rule, value, callback) {
+        console.log(rule, value)
+
+        var has_errors = false
+        _.each(value, v => {
+          has_errors = has_errors || !isValidEmail(v)
+        })
+
+        if (value.length == 0) {
+          this.add_dialog_has_errors = true
+          callback(new Error('Please input at least one email address'))
+        } else if (has_errors) {
+          this.add_dialog_has_errors = true
+          callback(new Error('One or more of the email addresses entered is invalid'))
+        } else {
+          this.add_dialog_has_errors = false
+          callback()
+        }
+      },
       sendInvite(member) {
+        var team_name = this.active_team_name
         var team_name = this.active_team_name
         var attrs = { member }
         this.$store.dispatch('members/create', { team_name, attrs })
@@ -256,6 +287,7 @@
         // in the input to be added to the users array
         if (!visible) {
           this.addUserTag()
+          this.$refs.form.validateField('users')
         }
       },
       addUserTag(evt) {

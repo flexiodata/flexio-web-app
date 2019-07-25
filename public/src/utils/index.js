@@ -1,6 +1,6 @@
 
-export const isNumber = (value) => {
-  return !isNaN(parseFloat(value)) && isFinite(value)
+export const isNumber = val => {
+  return !isNaN(parseFloat(val)) && isFinite(val)
 }
 
 export const afterNth = (str, char, cnt) => {
@@ -21,7 +21,7 @@ export const pluralize = (cnt, many_str, one_str, zero_str) => {
   return ''
 }
 
-export const slugify = (str) => {
+export const slugify = str => {
   str = str.replace(/\W/g, ' ')
   str = str.trim()
   str = str.replace(/\s+/g, '-')
@@ -29,17 +29,21 @@ export const slugify = (str) => {
   return str
 }
 
-export const sanitizeMasked = (obj) => {
+export const isValidEmail = str => {
+  return /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(str)
+}
+
+export const sanitizeMasked = obj => {
   return _.omitBy(obj, (val, key) => { return val === '*****' })
 }
 
-export const btoaUnicode = (str) => {
+export const btoaUnicode = str => {
   return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
     return String.fromCharCode(parseInt(p1, 16))
   }))
 }
 
-export const atobUnicode = (str) => {
+export const atobUnicode = str => {
   return decodeURIComponent(Array.prototype.map.call(atob(str), function(c) {
     return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
   }).join(''))
