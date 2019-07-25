@@ -144,6 +144,26 @@ class Test
 
         // TEST: object deletion
 
+        $actual = '';
+        try
+        {
+            $object = \Flexio\Object\User::create();
+            $eid1 = $object->getEid();
+            $eid2 = $object->delete()->getEid();
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
+        }
+        catch (\Exception $e)
+        {
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('C.1', '\Flexio\Object\User::delete(); throw an error when attempting to delete a user with normal delete() method',  $actual, $expected, $results);
+
+/*
+        // note: keep following tests in case user deletion via status flag of STATUS_DELETED
+        // is reactivated; right now, users can't be deleted by setting the status flag
+        // and the only way to delete them is via purging
+
         // BEGIN TEST
         $object = \Flexio\Object\User::create();
         $object = $object->delete();
@@ -173,7 +193,7 @@ class Test
         $actual =  ($status1 !== \Model::STATUS_DELETED && $status2 === \Model::STATUS_DELETED);
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('C.4', 'User::delete(); make sure the status is set to deleted',  $actual, $expected, $results);
-
+*/
 
 
         // TEST: object property setting
@@ -311,8 +331,8 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\User::create();
         $status1 = $object->setStatus(\Model::STATUS_PENDING)->getStatus();
-        $status2 = $object->setStatus(\Model::STATUS_DELETED)->getStatus();
-        $actual =  ($status1 === \Model::STATUS_PENDING && $status2 === \Model::STATUS_DELETED);
+        $status2 = $object->setStatus(\Model::STATUS_AVAILABLE)->getStatus();
+        $actual =  ($status1 === \Model::STATUS_PENDING && $status2 === \Model::STATUS_AVAILABLE);
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('F.5', 'User::setStatus(); make sure the status is set',  $actual, $expected, $results);
 
