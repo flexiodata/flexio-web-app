@@ -4,10 +4,8 @@
     <mj-include path="./head.mjml" />
   </mj-head>
   <mj-body>
+ 		<mj-include path="./spacer.mjml" />
     <mj-section vertical-align="middle">
-      <mj-column>
-        <mj-spacer height="100px" />
-      </mj-column>
       <mj-column css-class="css-white-box">
         <mj-include path="./logo.mjml" />
         <mj-spacer height="12px" />
@@ -19,5 +17,6 @@
       </mj-column>
     </mj-section>
     <mj-include path="./copyright.mjml" />
+ 		<mj-include path="./spacer.mjml" />
   </mj-body>
 </mjml>
