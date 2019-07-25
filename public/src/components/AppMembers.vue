@@ -47,7 +47,7 @@
                     Sending invite...
                   </div>
                   <div
-                    class="flex flex-row items-center"
+                    class="flex flex-row items-center justify-end"
                     v-else-if="isInviteResent(member)"
                   >
                     <i class="el-icon-success dark-green mr1"></i>
