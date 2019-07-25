@@ -138,7 +138,7 @@ class Message
         $email = \Flexio\Services\NoticeEmail::create(array(
             'from' => "$from_name via " . \Flexio\Services\NoticeEmail::EMAIL_ADDRESS_NO_REPLY,
             'to' => $to,
-            'subject' => "${from_name} invited you into the \"${object_name}\" team",
+            'subject' => "${from_name} invited you to the team \"${object_name}\" on Flex.io",
             'msg_text' => $msg_text,
             'msg_html' => $msg_html
         ));
