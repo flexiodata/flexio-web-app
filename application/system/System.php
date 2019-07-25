@@ -287,12 +287,7 @@ class System
 
     public static function getTeamInviteLink(string $team_name) : string
     {
-        return self::getBaseUrl() . "/app/$team_name";
-    }
-
-    public static function getPipeShareLink(string $pipe_name) : string
-    {
-        return self::getBaseUrl() . "/app/pipe/$pipe_name";
+        return self::getBaseUrl() . "/app/$team_name/join";
     }
 
     public static function getBaseDirectory() : string
