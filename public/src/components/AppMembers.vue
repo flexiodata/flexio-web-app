@@ -7,9 +7,12 @@
     <template v-else>
       <div class="h3"></div>
       <div class="w-100 center mw-doc pa4 bg-white br2 css-white-box" style="max-width: 36rem">
-        <h3 class="flex-fill mt0 fw6 f3">Join Team "{{active_team_name}}"</h3>
-        <p>You've been invited to become a member of the team <strong>"{{active_team_name}}"</strong> on Flex.io. Would you like to join the team?</p>
-        <div class="h1"></div>
+        <div class="tc">
+          <i class="material-icons moon-gray" style="font-size: 4rem">people</i>
+          <h3 class="flex-fill mt2 fw6 f3">Join Team "{{active_team_name}}"</h3>
+        </div>
+        <p>You've been invited to become a member of the team <strong>"{{active_team_name}}"</strong> on Flex.io. Would you like to join this team?</p>
+        <div class="h2"></div>
         <div class="flex flex-row items-center justify-end">
           <el-button
             type="text"
