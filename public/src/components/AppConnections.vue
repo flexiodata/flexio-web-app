@@ -1,13 +1,13 @@
 <template>
   <!-- fetching -->
   <div v-if="is_fetching">
-    <div class="flex flex-column justify-center h-100">
+    <div class="flex flex-column justify-center bg-nearer-white h-100">
       <Spinner size="large" message="Loading connections..." />
     </div>
   </div>
 
   <!-- fetched -->
-  <div class="flex flex-column" v-else-if="is_fetched">
+  <div class="flex flex-column bg-nearer-white" v-else-if="is_fetched">
     <div class="flex-fill flex flex-row" v-if="connections.length > 0">
       <template v-if="has_connection">
         <!-- sidebar -->
@@ -51,24 +51,27 @@
         </div>
 
         <!-- content area -->
-        <div class="flex-fill flex flex-column pa3">
-          <ConnectionStaticPanel
-            class="flex-none"
-            :connection="connection"
-            @edit-click="onEditConnection"
-          />
-          <div class="flex-fill mt3 pt3 bt b--black-05"
-            v-if="is_keyring_connection"
-          >
-            <div class="mb2 lh-copy ttu fw6 f6">Keypair Values</div>
-            <JsonDetailsPanel
-              :json="connection.connection_info"
+        <div class="flex-fill pa4 pt0 overflow-y-scroll">
+          <div class="h2"></div>
+          <div class="relative z-7 bg-nearer-white sticky">
+            <ConnectionStaticPanel
+              class="w-100 center mw-doc"
+              :connection="connection"
+              @edit-click="onEditConnection"
             />
           </div>
-          <FileChooser class="flex-fill mt3"
-            :connection="connection"
-            v-if="is_storage_connection"
-          />
+          <div class="w-100 center mw-doc pa4 bg-white br2 css-white-box" style="min-height: 20rem">
+            <template v-if="is_keyring_connection">
+              <div class="mb2 lh-copy ttu fw6 f6">Keypair Values</div>
+              <JsonDetailsPanel
+                :json="connection.connection_info"
+              />
+            </template>
+            <FileChooser
+              :connection="connection"
+              v-if="is_storage_connection"
+            />
+          </div>
         </div>
       </template>
 
@@ -351,3 +354,17 @@
     }
   }
 </script>
+
+
+<style lang="stylus" scoped>
+  .sticky
+    margin: 0 -2rem
+    padding: 1rem
+    border-bottom: 1px solid transparent
+    transition: all 0.15s ease
+
+  .sticky.js-is-sticky
+  .sticky.js-is-stuck
+    border-bottom: 1px solid rgba(0,0,0,0.1)
+    box-shadow: 0 4px 16px -6px rgba(0,0,0,0.2)
+</style>

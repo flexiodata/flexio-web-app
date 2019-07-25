@@ -1,11 +1,14 @@
 <template>
+  <!-- joining -->
   <div class="flex-fill flex flex-column bg-nearer-white" v-if="is_action_join">
+    <!-- logged in user is not the same as the invited user -->
     <PageNotFound
       class="flex-fill"
       v-if="!is_joining_member_logged_in"
     />
-    <template v-else>
-      <div class="h3"></div>
+
+    <!-- logged in user is the same as the invited user -->
+    <div class="pa5">
       <div class="w-100 center mw-doc pa4 bg-white br2 css-white-box" style="max-width: 36rem">
         <div class="tc">
           <i class="material-icons moon-gray" style="font-size: 4rem">people</i>
@@ -29,7 +32,7 @@
           </el-button>
         </div>
       </div>
-    </template>
+    </div>
   </div>
 
   <!-- fetching -->
@@ -41,29 +44,30 @@
 
   <!-- fetched -->
   <div class="flex flex-column bg-nearer-white" v-else-if="is_fetched">
-    <div class="h3"></div>
-    <div class="w-100 center mw-doc pa4 bg-white br2 css-white-box" style="min-height: 20rem">
-      <div class="flex flex-row items-start">
-        <h3 class="flex-fill mt0 fw6 f3">Team Members</h3>
-        <el-button
-          class="ttu fw6"
-          type="primary"
-          @click="show_add_dialog = true"
-        >
-          Add Members
-        </el-button>
+    <div class="pa5">
+      <div class="w-100 center mw-doc pa4 bg-white br2 css-white-box" style="min-height: 20rem">
+        <div class="flex flex-row items-start">
+          <h3 class="flex-fill mt0 fw6 f3">Team Members</h3>
+          <el-button
+            class="ttu fw6"
+            type="primary"
+            @click="show_add_dialog = true"
+          >
+            Add Members
+          </el-button>
+        </div>
+        <table class="el-table w-100 mv3">
+          <tbody>
+            <MemberItem
+              :key="member.eid"
+              :item="member"
+              @resend-invite="resendInvite"
+              @remove-member="removeMember"
+              v-for="member in members"
+            />
+          </tbody>
+        </table>
       </div>
-      <table class="el-table w-100 mv3">
-        <tbody>
-          <MemberItem
-            :key="member.eid"
-            :item="member"
-            @resend-invite="resendInvite"
-            @remove-member="removeMember"
-            v-for="member in members"
-          />
-        </tbody>
-      </table>
     </div>
 
     <el-dialog

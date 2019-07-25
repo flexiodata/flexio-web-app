@@ -21,9 +21,10 @@
             flexGrow: show_sidebar ? undefined : 1
           }"
         >
+          <div class="h2"></div>
           <div class="relative z-7 bg-nearer-white sticky">
             <PipeDocumentHeader
-              class="center mw-doc"
+              class="w-100 center mw-doc"
               :pipe="orig_pipe"
               :is-mode-run.sync="is_deployed"
               :show-save-cancel="show_save_cancel"
@@ -35,7 +36,7 @@
             />
           </div>
 
-          <div class="mv2 center mw-doc" style="padding-bottom: 12rem">
+          <div class="center mw-doc" style="padding-bottom: 112rem">
             <el-collapse
               class="el-collapse--plain"
               v-model="active_collapse_items"
