@@ -1,6 +1,6 @@
 <mjml>
   <mj-head>
-    <mj-title>${name} wants to share "${object_name}" with you</mj-title>
+    <mj-title>${name} invited you to the team "${object_name}" on Flex.io</mj-title>
     <mj-font name="Open Sans" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600"></mj-font>
     <mj-attributes>
       <mj-all font-family="Open Sans, Helvetica Neue, Helvetica, Arial, sans-serif" font-size="17px" />
