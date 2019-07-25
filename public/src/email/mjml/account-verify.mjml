@@ -1,41 +1,50 @@
 <mjml>
   <mj-head>
     <mj-title>Welcome to Flex.io</mj-title>
-    <mj-font name="Open Sans" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700"></mj-font>
+    <mj-font name="Open Sans" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600"></mj-font>
     <mj-attributes>
-      <mj-all font-family="Open Sans, Helvetica Neue, Helvetica, Arial, sans-serif"></mj-all>
-      <mj-text font-weight="400" font-size="17px" color="#333" line-height="150%" padding="25px 50px"></mj-text>
-      <mj-button align="center" text-transform="uppercase" font-weight="700" background-color="#2196f3" color="#fff" border-radius="4px" font-size="16px" inner-padding="16px 32px"></mj-button>
+      <mj-all font-family="Open Sans, Helvetica Neue, Helvetica, Arial, sans-serif" font-size="17px" ></mj-all>
+      <mj-column width="100%"></mj-column>
+      <mj-text font-weight="400" color="#333" line-height="150%" padding="13px 50px 12px"></mj-text>
+      <mj-button align="center" text-transform="uppercase" font-weight="600" background-color="#2196f3" color="#fff" border-radius="4px" padding="25px" inner-padding="15px 30px"></mj-button>
+      <mj-body background-color="#f5f7fa"></mj-body>
       <mj-section padding="0px"></mj-section>
     </mj-attributes>
+    <mj-style>
+      .debug * {
+        outline: 1px solid gold;
+      }
+      .css-white-box {
+        box-shadow: 0 1px 1px rgba(0,0,0,0.1), 0 4px 16px -8px rgba(0,0,0,0.2);
+        background-color: #fff;
+        border-radius: 4px;
+        padding-bottom: 50px;
+      }
+      .css-logo img {
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        border-radius: 100%;
+        margin-top: -40px;
+      }
+    </mj-style>
   </mj-head>
-  <mj-body background-color="#f5f7fa">
-    <mj-section padding="40px 20px 20px 20px">
-      <mj-column width="100%">
-        <mj-image src="https://s3.amazonaws.com/flexio-app-assets/logo-flexio-email.png" alt="" width="160px" align="center" border="none" padding="0px"></mj-image>
+  <mj-body>
+    <mj-section vertical-align="middle">
+      <mj-column>
+        <mj-spacer height="100px" />
       </mj-column>
-    </mj-section>
-    <mj-section vertical-align="middle" background-color="#fff">
-      <mj-column width="100%">
-        <mj-text align="center" padding="50px 50px 0" font-size="34px">Welcome to Flex.io</mj-text>
+      <mj-column css-class="css-white-box">
+        <mj-image src="https://static.flex.io/assets/logo-square-400x400.png" css-class="css-logo" alt="" width="80px" align="center" border="none" padding="0px"></mj-image>
+        <mj-spacer height="12px" />
+        <mj-text align="center" font-size="34px">Welcome to Flex.io</mj-text>
         <mj-text>Thank you for creating your Flex.io account! Please click on the following link to activate your account:</mj-text>
         <mj-button href="${activation_link}">Activate My Account</mj-button>
-        <mj-text padding-bottom="50px">Enjoy!
-          <br><br> - The Flex.io Team</mj-text>
+        <mj-text>Enjoy!</mj-text>
+        <mj-text>- The Flex.io Team</mj-text>
       </mj-column>
     </mj-section>
-    <mj-wrapper padding="0 1px">
-      <mj-section border-top="1px solid #d6d6d6"></mj-section>
-    </mj-wrapper>
-    <mj-wrapper padding="0 4px">
-      <mj-section border-top="1px solid #e6e6e6"></mj-section>
-    </mj-wrapper>
-    <mj-wrapper padding="0 6px">
-      <mj-section border-top="1px solid #eaeaea"></mj-section>
-    </mj-wrapper>
-    <mj-section padding="0 0 20px 0">
+    <mj-section>
       <mj-column>
-        <mj-text align="center" color="#999" font-size="11px" font-weight="400" line-height="12px">&copy;${year} All Rights Reserved. Flex.io&trade; is a trademark of Gold Prairie LLC.</mj-text>
+        <mj-text align="center" color="#999" font-size="11px">&copy;${year} All Rights Reserved. Flex.io&trade; is a trademark of Gold Prairie LLC.</mj-text>
       </mj-column>
     </mj-section>
   </mj-body>
