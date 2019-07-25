@@ -118,7 +118,7 @@ class Message
             $to = $test_email_address;
 
         // get text template from the application res directory
-        $msg_text = self::getTextEmail('project-share', [
+        $msg_text = self::getTextEmail('team-invite', [
             'name' => $from_name,
             'from_email' => $from_email,
             'message' => (strlen($message) == 0) ? '' : "\n$message\n",
@@ -127,7 +127,7 @@ class Message
         ]);
 
         // get html template from the application res directory
-        $msg_html = self::getHtmlEmail('project-share', [
+        $msg_html = self::getHtmlEmail('team-invite', [
             'name' => $from_name,
             'from_email' => $from_email,
             'message' => (strlen($message) == 0) ? '' : "$message<br>",
