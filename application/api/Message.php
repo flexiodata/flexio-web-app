@@ -109,7 +109,7 @@ class Message
         $from_email = $validated_params['from_email'];
         $object_name = $validated_params['object_name'];
         $message = $validated_params['message'] ?? '';
-        $share_link = \Flexio\System\System::getTeamInviteLink($object_name);
+        $share_link = \Flexio\System\System::getTeamInviteLink($to, $object_name);
 
         // if a test email address is specified, override the test email
         // note: test email override only available in debug mode
