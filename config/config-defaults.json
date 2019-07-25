@@ -12,6 +12,10 @@
 
     "storage_root": "",
 
+    "experimental_cache_type": "elasticsearch",
+    "experimental_cache_host": "localhost",
+    "experimental_cache_port": "9200",
+
     "private_key": "2Uwr79paYAfUvu54SPuwReyUCeCRedeyTH4GufrU4ruK7zAnaphujA8W6TRa7uVE",
 
     "debug": true,
