@@ -23,65 +23,13 @@
         </div>
         <table class="el-table w-100 mv3">
           <tbody>
-            <tr
+            <MemberItem
               :key="member.eid"
+              :item="member"
+              @resend-invite="resendInvite"
+              @remove-member="removeMember"
               v-for="member in members"
-            >
-              <td class="w-100">
-                <div class="flex flex-row items-center">
-                  <img :src="getGravatarUrl(member)" class="br-100 mr3"/>
-                  <div v-if="hasFullName(member)">
-                    <div class="fw6 body-color">{{member.first_name}} {{member.last_name}}</div>
-                    <div class="mt1 black-50">{{member.email}}</div>
-                  </div>
-                  <div v-else>
-                    <div class="fw6 body-color">{{member.email}}</div>
-                  </div>
-                </div>
-              </td>
-              <td class="tr nowrap">
-                <div class="mh3">
-                  <div
-                    v-if="isInviteResending(member)"
-                  >
-                    Sending invite...
-                  </div>
-                  <div
-                    class="flex flex-row items-center justify-end"
-                    v-else-if="isInviteResent(member)"
-                  >
-                    <i class="el-icon-success dark-green mr1"></i>
-                    <span class="dark-green">Invite sent!</span>
-                  </div>
-                  <el-button
-                    type="text"
-                    @click="resendInvite(member)"
-                    v-else-if="isMemberPending(member)"
-                  >
-                    Resend invite
-                  </el-button>
-                </div>
-              </td>
-              <td>
-                <ConfirmPopover
-                  placement="bottom-end"
-                  title="Confirm remove?"
-                  message="Are you sure you want to remove this member?"
-                  confirm-button-text="Remove"
-                  @confirm-click="removeMember(member)"
-                  v-if="!isMemberOwner(member)"
-                >
-                  <el-button
-                    slot="reference"
-                    class="ttu fw6"
-                    type="danger"
-                    size="small"
-                  >
-                    Remove
-                  </el-button>
-                </ConfirmPopover>
-              </td>
-            </tr>
+            />
           </tbody>
         </table>
       </div>
@@ -151,10 +99,9 @@
 </template>
 
 <script>
-  import { OBJECT_STATUS_PENDING } from '@/constants/object-status'
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
-  import ConfirmPopover from '@/components/ConfirmPopover'
+  import MemberItem from '@/components/MemberItem'
 
   export default {
     metaInfo() {
@@ -168,7 +115,7 @@
     },
     components: {
       Spinner,
-      ConfirmPopover
+      MemberItem
     },
     data() {
       return {
@@ -228,24 +175,6 @@
         var eid = _.get(member, 'eid')
         this.$store.dispatch('members/resendInvite', { team_name, eid })
       },
-      getGravatarUrl(member) {
-        return 'https://secure.gravatar.com/avatar/' + member.email_hash + '?d=mm&s=40'
-      },
-      hasFullName(member) {
-        return _.get(member, 'first_name', '').length > 0 && _.get(member, 'last_name', '').length > 0
-      },
-      isMemberOwner(member) {
-        return _.get(member, 'eid') == _.get(member, 'member_of.eid')
-      },
-      isMemberPending(member) {
-        return _.get(member, 'member_status') == OBJECT_STATUS_PENDING
-      },
-      isInviteResending(member) {
-        return _.get(member, 'vuex_meta.is_invite_resending')
-      },
-      isInviteResent(member) {
-        return _.get(member, 'vuex_meta.is_invite_resent')
-      },
       removeMember(member) {
         var team_name = this.active_team_name
         var eid = member.eid
@@ -272,9 +201,3 @@
     }
   }
 </script>
-
-<style lang="stylus" scoped>
-  td
-    padding-left: 0.5rem
-    padding-right: 0.5rem
-</style>
