@@ -9,7 +9,7 @@
       <div class="w-100 center mw-doc pa4 bg-white br2 css-white-box" style="max-width: 36rem">
         <div class="tc">
           <i class="material-icons moon-gray" style="font-size: 4rem">people</i>
-          <h3 class="flex-fill mt2 fw6 f3">Join Team "{{active_team_name}}"</h3>
+          <h3 class="flex-fill mt2 fw6 f3">{{join_title}}</h3>
         </div>
         <p>You've been invited to become a member of the team <strong>"{{active_team_name}}"</strong> on Flex.io. Would you like to join this team?</p>
         <div class="h2"></div>
@@ -50,7 +50,7 @@
           type="primary"
           @click="show_add_dialog = true"
         >
-          Add Member
+          Add Members
         </el-button>
       </div>
       <table class="el-table w-100 mv3">
@@ -96,9 +96,9 @@
             allow-create
             default-first-option
             popper-class="dn"
-            @keydown.native.188="addUserTag"
-            @keydown.native.tab="addUserTag"
             @keydown.native.space="addUserTag"
+            @keydown.native.tab="addUserTag"
+            @keydown.native.188="addUserTag"
             v-model="add_dialog_model.users"
           >
             <el-option
@@ -140,8 +140,11 @@
       return {
         title: 'Members',
         titleTemplate: (chunk) => {
-          // if undefined or blank then we don't need the pipe
-          return chunk ? `${chunk} | ${this.getActiveTeamLabel()}` : 'Flex.io';
+          if (this.is_action_join) {
+            return `${this.join_title} | Flex.io`
+          }
+
+          return chunk ? `${chunk} | ${this.getActiveTeamLabel()}` : 'Flex.io'
         }
       }
     },
@@ -178,6 +181,9 @@
       },
       is_action_join() {
         return _.get(this.$route, 'params.action') == 'join'
+      },
+      join_title() {
+        return `Join Team "${this.active_team_name}"`
       }
     },
     created() {

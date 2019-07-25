@@ -130,8 +130,7 @@
       return {
         title: _.get(this.connection, 'name', 'Connections'),
         titleTemplate: (chunk) => {
-          // if undefined or blank then we don't need the pipe
-          return chunk ? `${chunk} | ${this.getActiveTeamLabel()}` : 'Flex.io';
+          return chunk ? `${chunk} | ${this.getActiveTeamLabel()}` : 'Flex.io'
         }
       }
     },

@@ -45,8 +45,7 @@
     metaInfo: {
       // all titles will be injected into this template
       titleTemplate: (chunk) => {
-        // if undefined or blank then we don't need the pipe
-        return chunk ? `${chunk} | Flex.io` : 'Flex.io';
+        return chunk ? `${chunk} | Flex.io` : 'Flex.io'
       },
       meta: [
         {
