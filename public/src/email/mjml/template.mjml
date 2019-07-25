@@ -7,7 +7,7 @@
       <mj-body background-color="#f5f7fa" />
       <mj-section padding="0" />
       <mj-column width="100%" />
-      <mj-text color="#333" font-weight="400" line-height="150%" padding="13px 50px 12px" />
+      <mj-text color="#333" font-weight="400" line-height="150%" padding="12px 50px" />
       <mj-image align="center" border="none" padding="0" />
       <mj-button align="center" background-color="#2196f3" border-radius="4px" color="#fff" font-weight="600" inner-padding="15px 30px" padding="25px" text-transform="uppercase" />
     </mj-attributes>
@@ -16,15 +16,14 @@
         outline: 1px solid gold;
       }
       .css-white-box {
-        box-shadow: 0 1px 1px rgba(0,0,0,0.1), 0 4px 16px -8px rgba(0,0,0,0.2);
         background-color: #fff;
         border-radius: 4px;
-        padding-bottom: 50px;
+        padding: 40px 0;
+        box-shadow: 0 1px 1px rgba(0,0,0,0.1), 0 4px 16px -8px rgba(0,0,0,0.2);
       }
       .css-logo img {
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         border-radius: 100%;
-        margin-top: -40px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
       }
     </mj-style>
   </mj-head>
