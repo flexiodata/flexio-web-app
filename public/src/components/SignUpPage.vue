@@ -11,15 +11,31 @@
         <h1 class="fw6 tc mb4">Thanks for signing up!</h1>
         <p>To finish signing up, you just need to confirm that we got your email address right.</p>
         <p>We've sent a verification email to the address you provided. Clicking the confirmation link in that email lets us know the email address is both valid and yours.</p>
+        <p v-show="!just_signed_up">If you no longer have this email, you may enter your email address again and we'll send it to you.</p>
         <div class="pv2">
-          <button
-            type="button"
-            class="border-box no-select ttu fw6 w-100 ph4 pv2a lh-title white br2 darken-10"
-            :class="is_sent ? 'bg-dark-green o-40 no-pointer-events' : 'bg-blue'"
-            @click="resendVerification"
-          >
-            {{is_sent ? 'Verification email sent!' : 'Resend verification email'}}
-          </button>
+          <div class="mb3">
+            <input
+              ref="input-email"
+              type="email"
+              placeholder="Email address"
+              autocomplete="off"
+              spellcheck="false"
+              class="input-reset ba b--black-10 br2 focus-b--blue lh-title ph3 pv2a w-100"
+              :disabled="just_signed_up ? true : false"
+              @keyup.enter="resendVerification"
+              v-model="user.email"
+            >
+          </div>
+          <div class="mt3">
+            <button
+              type="button"
+              class="border-box no-select ttu fw6 w-100 ph4 pv2a lh-title white br2 darken-10"
+              :class="is_sent ? 'bg-dark-green o-40 no-pointer-events' : 'bg-blue'"
+              @click="resendVerification"
+            >
+              {{is_sent ? 'Verification email sent!' : 'Resend verification email'}}
+            </button>
+          </div>
         </div>
       </div>
       <SignUpForm
@@ -51,7 +67,10 @@
     data() {
       return {
         is_sent: false,
-        user: {}
+        just_signed_up: false,
+        user: {
+          email: ''
+        }
       }
     },
     computed: {
@@ -66,12 +85,6 @@
       }
     },
     mounted() {
-      // don't allow signup verification page to be reloaded
-      if (this.is_verify && _.get(this.user, 'email', '').length == 0) {
-        var new_route = _.assign({}, this.$route, { params: { action: undefined } })
-        this.$router.replace(new_route)
-      }
-
       this.$store.track('Visited Sign Up Page')
     },
     methods: {
@@ -79,6 +92,7 @@
         this.$router.push(this.signin_route)
       },
       onSignedUp(user) {
+        this.just_signed_up = true
         this.user = user
         var new_route = _.assign({}, this.$route, { params: { action: 'verify' } })
         this.$router.replace(new_route)
