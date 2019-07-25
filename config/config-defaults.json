@@ -15,6 +15,9 @@
     "experimental_cache_type": "elasticsearch",
     "experimental_cache_host": "localhost",
     "experimental_cache_port": "9200",
+    "experimental_cache_username": "",
+    "experimental_cache_password": "",
+    "experimental_cache_name": "",
 
     "private_key": "2Uwr79paYAfUvu54SPuwReyUCeCRedeyTH4GufrU4ruK7zAnaphujA8W6TRa7uVE",
 
