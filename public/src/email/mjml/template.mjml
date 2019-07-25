@@ -37,6 +37,9 @@
         <mj-image src="https://static.flex.io/assets/logo-square-400x400.png" alt="" width="80px" css-class="css-logo" />
         <mj-spacer height="12px" />
         <mj-text>Content goes here...</mj-text>
+        <mj-button href="${href_link}">Button text goes here...</mj-button>
+        <mj-text>Enjoy!</mj-text>
+        <mj-text>- The Flex.io Team</mj-text>
       </mj-column>
     </mj-section>
     <mj-section>
