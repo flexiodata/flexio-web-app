@@ -6,22 +6,25 @@
     />
     <template v-else>
       <div class="h3"></div>
-      <div class="center mw-doc pa4 bg-white br2 css-white-box">
+      <div class="w-100 center mw-doc pa4 bg-white br2 css-white-box" style="max-width: 36rem">
         <h3 class="flex-fill mt0 fw6 f3">Join Team "{{active_team_name}}"</h3>
-        <p>Accept the invite to join the team.</p>
-        <el-button
-          class="ttu fw6"
-          @click="leaveTeam"
-        >
-          No thanks
-        </el-button>
-        <el-button
-          class="ttu fw6"
-          type="primary"
-          @click="joinTeam"
-        >
-          Yes, I want to join
-        </el-button>
+        <p>You've been invited to become a member of the team <strong>"{{active_team_name}}"</strong> on Flex.io. Would you like to join the team?</p>
+        <div class="h1"></div>
+        <div class="flex flex-row items-center justify-end">
+          <el-button
+            type="text"
+            @click="leaveTeam"
+          >
+            No thanks, please remove me
+          </el-button>
+          <el-button
+            class="ttu fw6"
+            type="primary"
+            @click="joinTeam"
+          >
+            Yes, I want to join
+          </el-button>
+        </div>
       </div>
     </template>
   </div>
@@ -36,7 +39,7 @@
   <!-- fetched -->
   <div class="flex flex-column bg-nearer-white" v-else-if="is_fetched">
     <div class="h3"></div>
-    <div class="center mw-doc pa4 bg-white br2 css-white-box" style="min-height: 20rem">
+    <div class="w-100 center mw-doc pa4 bg-white br2 css-white-box" style="min-height: 20rem">
       <div class="flex flex-row items-start">
         <h3 class="flex-fill mt0 fw6 f3">Team Members</h3>
         <el-button
