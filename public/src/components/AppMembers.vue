@@ -1,6 +1,33 @@
 <template>
+  <div class="flex-fill flex flex-column bg-nearer-white" v-if="is_action_join">
+    <PageNotFound
+      class="flex-fill"
+      v-if="!is_joining_member_logged_in"
+    />
+    <template v-else>
+      <div class="h3"></div>
+      <div class="center mw-doc pa4 bg-white br2 css-white-box">
+        <h3 class="flex-fill mt0 fw6 f3">Join Team "{{active_team_name}}"</h3>
+        <p>Accept the invite to join the team.</p>
+        <el-button
+          class="ttu fw6"
+          @click="leaveTeam"
+        >
+          No thanks
+        </el-button>
+        <el-button
+          class="ttu fw6"
+          type="primary"
+          @click="joinTeam"
+        >
+          Yes, I want to join
+        </el-button>
+      </div>
+    </template>
+  </div>
+
   <!-- fetching -->
-  <div v-if="is_fetching">
+  <div v-else-if="is_fetching">
     <div class="flex flex-column justify-center h-100 bg-nearer-white">
       <Spinner size="large" message="Loading members..." />
     </div>
@@ -8,31 +35,29 @@
 
   <!-- fetched -->
   <div class="flex flex-column bg-nearer-white" v-else-if="is_fetched">
-    <div>
-      <div class="h3"></div>
-      <div class="center mw-doc pa4 bg-white br2 css-white-box" style="min-height: 20rem">
-        <div class="flex flex-row items-start">
-          <h3 class="flex-fill mt0 fw6 f3">Team Members</h3>
-          <el-button
-            class="ttu fw6"
-            type="primary"
-            @click="show_add_dialog = true"
-          >
-            Add Member
-          </el-button>
-        </div>
-        <table class="el-table w-100 mv3">
-          <tbody>
-            <MemberItem
-              :key="member.eid"
-              :item="member"
-              @resend-invite="resendInvite"
-              @remove-member="removeMember"
-              v-for="member in members"
-            />
-          </tbody>
-        </table>
+    <div class="h3"></div>
+    <div class="center mw-doc pa4 bg-white br2 css-white-box" style="min-height: 20rem">
+      <div class="flex flex-row items-start">
+        <h3 class="flex-fill mt0 fw6 f3">Team Members</h3>
+        <el-button
+          class="ttu fw6"
+          type="primary"
+          @click="show_add_dialog = true"
+        >
+          Add Member
+        </el-button>
       </div>
+      <table class="el-table w-100 mv3">
+        <tbody>
+          <MemberItem
+            :key="member.eid"
+            :item="member"
+            @resend-invite="resendInvite"
+            @remove-member="removeMember"
+            v-for="member in members"
+          />
+        </tbody>
+      </table>
     </div>
 
     <el-dialog
@@ -102,6 +127,7 @@
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
   import MemberItem from '@/components/MemberItem'
+  import PageNotFound from '@/components/PageNotFound'
 
   export default {
     metaInfo() {
@@ -115,7 +141,8 @@
     },
     components: {
       Spinner,
-      MemberItem
+      MemberItem,
+      PageNotFound
     },
     data() {
       return {
@@ -131,16 +158,31 @@
       ...mapState({
         is_fetching: state => state.members.is_fetching,
         is_fetched: state => state.members.is_fetched,
-        active_team_name: state => state.teams.active_team_name
+        active_team_name: state => state.teams.active_team_name,
+        active_user_eid: state => state.users.active_user_eid,
       }),
       members() {
         return this.getAllMembers()
+      },
+      joining_member_email() {
+        return _.get(this.$route, 'query.email', '')
+      },
+      is_joining_member_logged_in() {
+        return this.joining_member_email == this.getActiveUserEmail()
+      },
+      is_action_join() {
+        return _.get(this.$route, 'params.action') == 'join'
       }
     },
     created() {
-      this.tryFetchMembers()
+      if (!this.is_action_join) {
+        this.tryFetchMembers()
+      }
     },
     methods: {
+      ...mapGetters('users', {
+        'getActiveUserEmail': 'getActiveUserEmail'
+      }),
       ...mapGetters('members', {
         'getAllMembers': 'getAllMembers'
       }),
@@ -180,6 +222,17 @@
         var eid = member.eid
 
         this.$store.dispatch('members/delete', { team_name, eid })
+      },
+      leaveTeam() {
+        var team_name = this.active_team_name
+        var eid = this.active_user_eid
+        this.$store.dispatch('members/delete', { team_name, eid })
+      },
+      joinTeam() {
+        var team_name = this.active_team_name
+        var eid = this.active_user_eid
+        var attrs = { member_status: 'A' }
+        this.$store.dispatch('members/update', { team_name, eid, attrs })
       },
       addUserTag() {
         var $select = this.$refs['email-select']

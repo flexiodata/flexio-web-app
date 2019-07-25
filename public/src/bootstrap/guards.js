@@ -46,7 +46,7 @@ router.beforeEach((to, from, next) => {
 
     store.commit('teams/CHANGE_ACTIVE_TEAM', team_name)
 
-    tryFetchTeams(team_name)
+    tryFetchTeams(active_username)
     tryFetchMembers(team_name)
     tryFetchConnections(team_name)
     next()

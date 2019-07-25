@@ -188,6 +188,10 @@ const getters = {
     return _.find(getters.getAllUsers, { eid: state.active_user_eid })
   },
 
+  getActiveUserEmail (state, getters) {
+    return _.get(getters.getActiveUser, 'email', state.active_user_eid)
+  },
+
   getActiveUsername (state, getters) {
     return _.get(getters.getActiveUser, 'username', state.active_user_eid)
   },

@@ -78,9 +78,14 @@
         return _.get(this.$route, 'meta.requiresAuth', false)
       },
       is_allowed() {
+        // allow users to see the team members join screen
+        if (this.$route.path.indexOf('/members/join') >= 0) {
+          return true
+        }
+
+        // if the active user is part of the members list, they're allowed
         var members = this.getAllMembers()
         if (members.length > 0) {
-          // if the active user is part of the members list, they're allowed
           var user = _.find(members, { eid: this.active_user_eid })
           return !!_.get(user, 'eid', false)
         }

@@ -56,7 +56,7 @@
     },
     computed: {
       is_verify() {
-        return _.get(this.$route, 'params.action', '') === 'verify'
+        return _.get(this.$route, 'params.action') == 'verify'
       },
       signin_route() {
         return {
