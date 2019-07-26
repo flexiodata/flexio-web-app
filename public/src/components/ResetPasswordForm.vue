@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="tc" style="margin-top: -68px">
-      <img src="../assets/icon/icon-flexio-128.png" alt="Flex.io" class="br-100 ba bw1 b--white" style="width: 68px; box-shadow: 0 2px 4px rgba(0,0,0,0.2)">
+    <div class="tc" style="margin-top: -77px">
+      <img src="../assets/icon/icon-flexio-80.png" alt="Flex.io" class="br-100 ba bw1 b--white" style="width: 84px; box-shadow: 0 0 3px rgba(0,0,0,0.4)">
     </div>
     <h1 class="fw6 tc mb4">Reset Password</h1>
     <template v-if="is_sent">
