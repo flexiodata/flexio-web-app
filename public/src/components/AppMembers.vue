@@ -8,7 +8,10 @@
     />
 
     <!-- logged in user is the same as the invited user -->
-    <div class="pa5">
+    <div
+      class="pa5"
+      v-else
+    >
       <div class="w-100 center mw-doc pa4 bg-white br2 css-white-box" style="max-width: 36rem">
         <div class="tc">
           <i class="material-icons moon-gray" style="font-size: 4rem">people</i>
