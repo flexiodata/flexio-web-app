@@ -186,7 +186,7 @@ class Api
 
             // TODO: remove this; this is a hack to allow the Google Sheets
             //       add-on to work with the test site's API calls
-            $parts = $server_request->getUrlParts()
+            $parts = $server_request->getUrlParts();
             if (substr($request_http_host, 0, 4) == 'test.' &&
                 substr($request_http_host, -8) == '.flex.io' &&
                 sizeof($parts) >= 1 && $parts[0] == 'api')
