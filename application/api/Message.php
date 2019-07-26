@@ -28,10 +28,10 @@ class Message
             return false;
 
         $validated_params = $validator->getParams();
-        $to = $validated_params['email'];
+        $to_email = $validated_params['email'];
         $verify_code = $validated_params['verify_code'];
 
-        $activation_link = \Flexio\System\System::getUserVerificationLink($to, $verify_code);
+        $activation_link = \Flexio\System\System::getUserVerificationLink($to_email, $verify_code);
 
         // get templates from the application res directory
         $msg_text = self::getTextEmail('account-verify', [ 'activation_link' => $activation_link ]);
@@ -41,12 +41,12 @@ class Message
         // note: test email override only available in debug mode
         $test_email_address = self::getTestEmailAddress();
         if ($test_email_address !== false)
-            $to = $test_email_address;
+            $to_email = $test_email_address;
 
         // send an email that the user's account was created
         $email = \Flexio\Services\NoticeEmail::create(array(
             'from' => \Flexio\Services\NoticeEmail::EMAIL_ADDRESS_NO_REPLY,
-            'to' => $to,
+            'to' => $to_email,
             'subject' => 'Welcome to Flex.io',
             'msg_text' => $msg_text,
             'msg_html' => $msg_html
@@ -64,11 +64,11 @@ class Message
             return false;
 
         $validated_params = $validator->getParams();
-        $to = $validated_params['email'];
+        $to_email = $validated_params['email'];
         $verify_code = $validated_params['verify_code'];
 
         // prepare info structure for create account
-        $reset_link = \Flexio\System\System::getPasswordResetLink($to, $verify_code);
+        $reset_link = \Flexio\System\System::getPasswordResetLink($to_email, $verify_code);
 
         // get templates from the application res directory
         $msg_text = self::getTextEmail('forgot-password', [ 'reset_link' => $reset_link ]);
@@ -78,12 +78,12 @@ class Message
         // note: test email override only available in debug mode
         $test_email_address = self::getTestEmailAddress();
         if ($test_email_address !== false)
-            $to = $test_email_address;
+            $to_email = $test_email_address;
 
         // send an email that the user's account was created
         $email = \Flexio\Services\NoticeEmail::create(array(
             'from' => \Flexio\Services\NoticeEmail::EMAIL_ADDRESS_NO_REPLY,
-            'to' => $to,
+            'to' => $to_email,
             'subject' => 'Flex.io password reset',
             'msg_text' => $msg_text,
             'msg_html' => $msg_html
@@ -104,18 +104,18 @@ class Message
             return false;
 
         $validated_params = $validator->getParams();
-        $to = $validated_params['email'];
+        $to_email = $validated_params['email'];
         $from_name = $validated_params['from_name'];
         $from_email = $validated_params['from_email'];
         $object_name = $validated_params['object_name'];
         $message = $validated_params['message'] ?? '';
-        $share_link = \Flexio\System\System::getTeamInviteLink($to, $object_name);
+        $share_link = \Flexio\System\System::getTeamInviteLink($to_email, $object_name);
 
         // if a test email address is specified, override the test email
         // note: test email override only available in debug mode
         $test_email_address = self::getTestEmailAddress();
         if ($test_email_address !== false)
-            $to = $test_email_address;
+            $to_email = $test_email_address;
 
         // get text template from the application res directory
         $msg_text = self::getTextEmail('team-invite', [
@@ -137,7 +137,7 @@ class Message
 
         $email = \Flexio\Services\NoticeEmail::create(array(
             'from' => "$from_name via " . \Flexio\Services\NoticeEmail::EMAIL_ADDRESS_NO_REPLY,
-            'to' => $to,
+            'to' => $to_email,
             'subject' => "${from_name} invited you to the team \"${object_name}\" on Flex.io",
             'msg_text' => $msg_text,
             'msg_html' => $msg_html
