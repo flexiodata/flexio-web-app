@@ -173,7 +173,6 @@ class Api
             header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, PATCH, HEAD');
             header('Access-Control-Max-Age: 1000');
             header('Access-Control-Allow-Headers: authorization, origin, x-csrftoken, content-type, accept'); // note that '*' is not valid for Access-Control-Allow-Headers
-
         }
         else
         {
