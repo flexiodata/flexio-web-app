@@ -173,10 +173,23 @@ class Api
             header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, PATCH, HEAD');
             header('Access-Control-Max-Age: 1000');
             header('Access-Control-Allow-Headers: authorization, origin, x-csrftoken, content-type, accept'); // note that '*' is not valid for Access-Control-Allow-Headers
+
         }
         else
         {
             if (substr($request_http_host, 0, 4) == 'api.' && substr($request_http_host, -8) == '.flex.io')
+            {
+                header('Access-Control-Allow-Origin: *');
+                header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, PATCH, HEAD');
+                header('Access-Control-Allow-Headers: authorization, content-type');
+            }
+
+            // TODO: remove this; this is a hack to allow the Google Sheets
+            //       add-on to work with the test site's API calls
+            $parts = $server_request->getUrlParts()
+            if (substr($request_http_host, 0, 4) == 'test.' &&
+                substr($request_http_host, -8) == '.flex.io' &&
+                sizeof($parts) >= 1 && $parts[0] == 'api')
             {
                 header('Access-Control-Allow-Origin: *');
                 header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, PATCH, HEAD');
