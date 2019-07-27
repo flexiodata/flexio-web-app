@@ -161,8 +161,9 @@ class User
             $new_user_info = $validated_post_params;
 
             // invited users already exist, but need to have the rest of their
-            // info set; don't allow last minute changes to the username or email
-            unset($new_user_info['username']);
+            // info set; as an sanity check, don't allow the email address to be,
+            // changed, however this is how the current user was selected, so
+            // it should always be the same
             unset($new_user_info['email']);
 
             // link was clicked in notification email and verify code checks out;
@@ -190,9 +191,19 @@ class User
         // previously; in either case, we need to create a new verification code and let
         // the user verify
 
+        // start with the info provided
+        $new_user_info = $validated_post_params;
         $new_verify_code = \Flexio\Base\Util::generateHandle();
 
-        $new_user_info = array();
+        // invited users already exist, but need to have the rest of their
+        // info set; as an sanity check, don't allow the email address to be,
+        // changed, however this is how the current user was selected, so
+        // it should always be the same
+        unset($new_user_info['email']);
+
+        // require the user to be verified; user status should already be pending,
+        // but set it to pending as a sanity check
+        $new_user_info['eid_status'] = \Model::STATUS_PENDING;
         $new_user_info['verify_code'] = $new_verify_code;
 
         $result = $user->set($new_user_info);
