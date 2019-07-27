@@ -28,7 +28,7 @@
           :class="is_sent ? 'bg-dark-green o-40 no-pointer-events' : 'bg-blue'"
           @click="resendVerification"
         >
-          {{is_sent ? 'Verification email sent!' : 'Resend verification email'}}
+          {{button_label}}
         </button>
       </div>
     </div>
@@ -53,14 +53,29 @@
     },
     data() {
       return {
+        is_sending: false,
         is_sent: false
+      }
+    },
+    computed: {
+      button_label() {
+        if (this.is_sent) {
+          return 'Verification email sent!'
+        } else if (this.is_sending) {
+          return 'Sending email...'
+        } else {
+          return 'Resend verification email'
+        }
       }
     },
     methods: {
       resendVerification() {
+        this.is_sending = true
         axios.post('/api/v2/requestverification', { email: this.user.email }).then(response => {
           this.is_sent = true
           setTimeout(() => { this.is_sent = false }, 6000)
+        }).finally(() => {
+          this.is_sending = false
         })
       }
     }
