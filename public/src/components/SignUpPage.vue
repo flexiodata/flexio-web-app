@@ -5,8 +5,8 @@
         class="br2 bg-white pa3 pa4-ns css-white-box"
         v-if="is_verify"
       >
-        <div class="tc" style="margin-top: -77px">
-          <img src="../assets/icon/icon-flexio-80.png" alt="Flex.io" class="br-100 ba bw1 b--white" style="width: 84px; box-shadow: 0 0 3px rgba(0,0,0,0.4)">
+        <div class="tc" style="margin-top: -76px">
+          <img src="../assets/logo-square-80x80.png" alt="Flex.io" class="br-100 ba bw1 b--white" style="width: 84px; box-shadow: 0 0 3px rgba(0,0,0,0.4)">
         </div>
         <h1 class="fw6 tc mb4">Thanks for signing up!</h1>
         <p>To finish signing up, you just need to confirm that we got your email address right.</p>

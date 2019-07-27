@@ -22,7 +22,7 @@
             </div>
           </el-tab-pane>
 
-          <el-tab-pane name="activity">
+          <el-tab-pane name="activity" v-if="false">
             <div slot="label"><div style="min-width: 5rem">Activity</div></div>
             <ProcessActivity class="ml3 mr4 pr4" style="min-height: 20rem">
               <div slot="title">
@@ -53,7 +53,7 @@
             </div>
           </el-tab-pane>
 
-          <el-tab-pane name="api">
+          <el-tab-pane name="api" v-if="false">
             <div slot="label"><div style="min-width: 5rem">API keys</div></div>
             <div class="ml3 mr4" v-if="has_user">
               <h3 class="mt0 fw6 f3">API Keys</h3>

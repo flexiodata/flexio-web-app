@@ -1,7 +1,7 @@
 <template>
   <form @submit.prevent>
-    <div class="tc" style="margin-top: -77px">
-      <img src="../assets/icon/icon-flexio-80.png" alt="Flex.io" class="br-100 ba bw1 b--white" style="width: 84px; box-shadow: 0 0 3px rgba(0,0,0,0.4)">
+    <div class="tc" style="margin-top: -76px">
+      <img src="../assets/logo-square-80x80.png" alt="Flex.io" class="br-100 ba bw1 b--white" style="width: 84px; box-shadow: 0 0 3px rgba(0,0,0,0.4)">
     </div>
     <h1 class="fw6 tc mb4">Sign up for Flex.io</h1>
     <template>
