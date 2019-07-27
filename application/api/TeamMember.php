@@ -346,6 +346,12 @@ class TeamMember
         \Flexio\Api\Response::sendContent($result);
     }
 
+    public static function processjoin(\Flexio\Api\Request $request) : void
+    {
+        // TODO: special call for joining a team that doesn't have same
+        // restrictions as set()?
+    }
+
     private static function getMemberEidFromParam(string $param) // TODO: add return type
     {
         if (\Flexio\System\System::getModel()->user->exists($param))
