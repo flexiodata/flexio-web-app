@@ -193,7 +193,6 @@ class User
 
         // start with the info provided
         $new_user_info = $validated_post_params;
-        $new_verify_code = \Flexio\Base\Util::generateHandle();
 
         // invited users already exist, but need to have the rest of their
         // info set; as an sanity check, don't allow the email address to be,
@@ -204,7 +203,7 @@ class User
         // require the user to be verified; user status should already be pending,
         // but set it to pending as a sanity check
         $new_user_info['eid_status'] = \Model::STATUS_PENDING;
-        $new_user_info['verify_code'] = $new_verify_code;
+        $new_user_info['verify_code'] = \Flexio\Base\Util::generateHandle();
 
         $result = $user->set($new_user_info);
         if ($result === false)
@@ -213,7 +212,7 @@ class User
         // if appropriate, send an email
         if (\Flexio\Api\User::SEND_WELCOME_EMAIL === true)
         {
-            $email_params = array('email' => $email, 'verify_code' => $new_verify_code);
+            $email_params = array('email' => $email, 'verify_code' => $user->getVerifyCode());
             \Flexio\Api\Message::sendWelcomeEmail($email_params);
         }
 
