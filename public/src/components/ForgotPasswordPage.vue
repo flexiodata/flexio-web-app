@@ -1,6 +1,6 @@
 <template>
   <main class="pa3 ph3-m pa5-ns bg-nearer-white overflow-auto">
-    <div class="measure center mt3">
+    <div class="measure center mt4">
       <ForgotPasswordForm
         class="br2 bg-white pa3 pa4-ns css-white-box"
         @sign-up-click="onSignUpClick"
