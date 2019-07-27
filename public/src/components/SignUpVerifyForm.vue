@@ -7,7 +7,7 @@
     <p>To finish signing up, you just need to confirm that we got your email address right.</p>
     <p>We've sent a verification email to the address you provided. Clicking the confirmation link in that email lets us know the email address is both valid and yours.</p>
     <p v-show="!justSignedUp">If you no longer have this email, you may enter your email address again and we'll send it to you.</p>
-    <div class="pv2">
+    <div class="pt2">
       <div class="mb3">
         <input
           ref="input-email"
@@ -30,6 +30,10 @@
         >
           {{button_label}}
         </button>
+      </div>
+      <div class="mt3 pt2 f5 fw6 tc">
+        Already have an account?
+        <button type="button" class="link dib blue underline-hover db fw6" @click="$emit('sign-in-click')">Sign in</button>
       </div>
     </div>
   </form>

@@ -5,6 +5,7 @@
         class="br2 bg-white pa3 pa4-ns css-white-box"
         :just-signed-up="just_signed_up"
         :user="user"
+        @sign-in-click="onSignInClick"
         v-if="is_verify"
       />
       <SignUpForm

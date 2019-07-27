@@ -4,98 +4,96 @@
       <img src="../assets/logo-square-80x80.png" alt="Flex.io" class="br-100 ba bw1 b--white" style="width: 84px; box-shadow: 0 0 3px rgba(0,0,0,0.4)">
     </div>
     <h1 class="fw6 tc mb4">Sign up for Flex.io</h1>
-    <template>
-      <div class="mb3" v-if="error_msg">
-        <div class="el-alert el-alert--error is-light">
-          {{error_msg}}
-        </div>
+    <div class="mb3" v-if="error_msg">
+      <div class="el-alert el-alert--error is-light">
+        {{error_msg}}
       </div>
-      <div v-if="email_provided" class="mv3">
+    </div>
+    <div v-if="email_provided" class="mv3">
+      <input
+        type="email"
+        placeholder="Email"
+        autocomplete=off
+        spellcheck="false"
+        class="bg-black-10"
+        disabled
+        :class="input_cls"
+        v-model="email"
+      >
+    </div>
+    <div class="mv3 flex flex-row">
+      <div class="flex-fill mr3">
         <input
-          type="email"
-          placeholder="Email"
+          ref="input-firstname"
+          type="text"
+          placeholder="First name"
           autocomplete=off
           spellcheck="false"
-          class="bg-black-10"
-          disabled
           :class="input_cls"
-          v-model="email"
+          v-model="first_name"
         >
       </div>
-      <div class="mv3 flex flex-row">
-        <div class="flex-fill mr3">
-          <input
-            ref="input-firstname"
-            type="text"
-            placeholder="First name"
-            autocomplete=off
-            spellcheck="false"
-            :class="input_cls"
-            v-model="first_name"
-          >
-        </div>
-        <div class="flex-fill">
-          <input
-            type="text"
-            placeholder="Last name"
-            autocomplete=off
-            spellcheck="false"
-            :class="input_cls"
-            v-model="last_name"
-          >
-        </div>
-      </div>
-      <div class="mv3">
+      <div class="flex-fill">
         <input
           type="text"
-          placeholder="Pick a username"
+          placeholder="Last name"
           autocomplete=off
           spellcheck="false"
           :class="input_cls"
-          v-model="username"
+          v-model="last_name"
         >
-        <span class="f8 dark-red" v-show="has_username_error">{{username_error}}</span>
       </div>
-      <div v-if="!email_provided" class="mv3">
-        <input
-          type="email"
-          placeholder="Email"
-          autocomplete=off
-          spellcheck="false"
-          :class="input_cls"
-          v-model="email"
-        >
-        <span class="f8 dark-red" v-show="has_email_error">{{email_error}}</span>
+    </div>
+    <div class="mv3">
+      <input
+        type="text"
+        placeholder="Pick a username"
+        autocomplete=off
+        spellcheck="false"
+        :class="input_cls"
+        v-model="username"
+      >
+      <span class="f8 dark-red" v-show="has_username_error">{{username_error}}</span>
+    </div>
+    <div v-if="!email_provided" class="mv3">
+      <input
+        type="email"
+        placeholder="Email"
+        autocomplete=off
+        spellcheck="false"
+        :class="input_cls"
+        v-model="email"
+      >
+      <span class="f8 dark-red" v-show="has_email_error">{{email_error}}</span>
+    </div>
+    <div class="mv3">
+      <input
+        type="password"
+        placeholder="Password"
+        autocomplete=off
+        spellcheck="false"
+        :class="input_cls"
+        @keyup.enter="trySignUp"
+        v-model="password"
+      >
+      <span class="f8 dark-red" v-show="has_password_error">{{password_error}}</span>
+    </div>
+    <div class="mv3">
+      <button
+        type="button"
+        :class="button_cls"
+        :disabled="is_submitting || has_errors"
+        @click="trySignUp"
+      >
+        <span v-if="is_submitting">{{label_submitting}}</span>
+        <span v-else>Sign up</span>
+      </button>
+      <div class="mt1 f8 fw6 black-60">
+        By signing up, you agree to Flex.io's
+        <a class="link underline-hover blue" href="/terms" target="_blank" rel="noopener noreferrer">Terms</a> and
+        <a class="link underline-hover blue" href="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.
       </div>
-      <div class="mv3">
-        <input
-          type="password"
-          placeholder="Password"
-          autocomplete=off
-          spellcheck="false"
-          :class="input_cls"
-          @keyup.enter="trySignUp"
-          v-model="password"
-        >
-        <span class="f8 dark-red" v-show="has_password_error">{{password_error}}</span>
-      </div>
-      <div class="mv3">
-        <button
-          type="button"
-          :class="button_cls"
-          :disabled="is_submitting || has_errors"
-          @click="trySignUp"
-        >
-          <span v-if="is_submitting">{{label_submitting}}</span>
-          <span v-else>Sign up</span>
-        </button>
-        <div class="mt1 f8 fw6 black-60">
-          By signing up, you agree to Flex.io's
-          <a class="link underline-hover blue" href="/terms" target="_blank" rel="noopener noreferrer">Terms</a> and
-          <a class="link underline-hover blue" href="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.
-        </div>
-      </div>
-    </template>
+    </div>
     <div class="mt3 pt2 f5 fw6 tc">
       Already have an account?
       <button type="button" class="link dib blue underline-hover db fw6" @click="$emit('sign-in-click')">Sign in</button>
