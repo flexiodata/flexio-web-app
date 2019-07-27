@@ -675,7 +675,6 @@ class User
 
         $validated_post_params = $validator->getParams();
         $email = $validated_post_params['email'];
-        $verify_code = \Flexio\Base\Util::generateHandle();
 
         $user = false;
         try
@@ -692,10 +691,10 @@ class User
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, _('This user is unavailable'));
         }
 
-        if ($user->set(array('verify_code' => $verify_code)) === false)
+        if ($user->set(array('verify_code' => \Flexio\Base\Util::generateHandle())) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, _('Could not send password reset email at this time'));
 
-        $email_params = array('email' => $email, 'verify_code' => $verify_code);
+        $email_params = array('email' => $email, 'verify_code' => $user->getVerifyCode());
         \Flexio\Api\Message::sendResetPasswordEmail($email_params);
 
         $result = array();
