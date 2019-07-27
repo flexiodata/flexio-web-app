@@ -31,7 +31,7 @@
 <script>
   import { mapState } from 'vuex'
   import * as mt from '@/constants/mimetype'
-  import { API_V2_ROOT } from '../api/resources'
+  import { API_ROOT } from '../api/resources'
   import Grid from 'vue-grid2'
   import Spinner from 'vue-simple-spinner'
   import StreamText from '@/components/StreamText'
@@ -68,7 +68,7 @@
         return _.get(this.$store, 'state.streams.items.'+this.streamEid)
       },
       stream_content_url() {
-        var base_url = API_V2_ROOT + '/' + this.active_team_name + '/streams/' + this.streamEid
+        var base_url = API_ROOT + '/' + this.active_team_name + '/streams/' + this.streamEid
 
         if (this.is_flexio_html) {
           return base_url + '/content?content_type=text/html'

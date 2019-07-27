@@ -50,7 +50,7 @@
 
 <script>
   import { mapState, mapGetters } from 'vuex'
-  import { API_V2_ROOT } from '../api/resources'
+  import { API_ROOT } from '../api/resources'
   import {
     PROCESS_STATUS_PENDING,
     PROCESS_STATUS_RUNNING,
@@ -135,7 +135,7 @@
         return _.get(this.process_log, 'output.stdout.eid', '')
       },
       download_url() {
-        return API_V2_ROOT + '/' + this.active_team_name + '/streams/' + this.stream_eid + '/content?download=true'
+        return API_ROOT + '/' + this.active_team_name + '/streams/' + this.stream_eid + '/content?download=true'
       }
     },
     methods: {

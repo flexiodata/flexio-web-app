@@ -1,7 +1,7 @@
 import axios from 'axios'
 import store from '@/store'
 
-export const API_V2_ROOT = '/api/v2'
+export const API_ROOT = '/api/v2'
 
 export const AxiosResource = (team_name) => {
   var base_cfg = {
@@ -18,9 +18,9 @@ export const AxiosResource = (team_name) => {
     var api_user_root = team_name || store.state.teams.active_team_name
 
     if (team_name === null) {
-      return API_V2_ROOT
+      return API_ROOT
     } else {
-      return API_V2_ROOT + '/' + api_user_root
+      return API_ROOT + '/' + api_user_root
     }
   }
 
