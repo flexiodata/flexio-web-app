@@ -125,10 +125,10 @@ class TeamMember
 
             $email_params = array(
                 'email'       => $member_user_info['email'],
+                'verify_code' => $member_user->getVerifyCode(),
                 'from_name'   => $requesting_user_info['first_name'],
                 'from_email'  => $requesting_user_info['email'],
-                'object_name' => $owner_user_info['username'],
-                'verify_code' => $member_user->getVerifyCode()
+                'object_name' => $owner_user_info['username']
             );
             \Flexio\Api\Message::sendTeamInvitationEmail($email_params);
         }
@@ -331,10 +331,10 @@ class TeamMember
         // send the email
         $email_params = array(
             'email'       => $member_user_info['email'] ?? '',
+            'verify_code' => $member_user->getVerifyCode(),
             'from_name'   => $requesting_user_info['first_name'],
-            'from_email'   => $requesting_user_info['email'],
-            'object_name' => $owner_user_info['username'] ?? '',
-            'verify_code' => $member_user->getVerifyCode()
+            'from_email'  => $requesting_user_info['email'],
+            'object_name' => $owner_user_info['username'] ?? ''
         );
         \Flexio\Api\Message::sendTeamInvitationEmail($email_params);
 

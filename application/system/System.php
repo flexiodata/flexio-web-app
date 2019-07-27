@@ -285,9 +285,9 @@ class System
         return self::getBaseUrl() . '/app/resetpassword?email='.urlencode($email_to).'&verify_code='.$verify_code;
     }
 
-    public static function getTeamInviteLink(string $email_to, string $team_name) : string
+    public static function getTeamInviteLink(string $email_to, string $verify_code, string $team_name) : string
     {
-        return self::getBaseUrl() . "/app/$team_name/members/join?email=".urlencode($email_to);
+        return self::getBaseUrl() . '/app/'.$team_name.'/members/join?email='.urlencode($email_to).'&verify_code='.$verify_code;
     }
 
     public static function getBaseDirectory() : string

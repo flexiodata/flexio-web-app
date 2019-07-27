@@ -96,6 +96,7 @@ class Message
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'email'       => array('type' => 'email',  'required' => true),
+                'verify_code' => array('type' => 'string', 'required' => true),
                 'from_name'   => array('type' => 'string', 'required' => true),
                 'from_email'  => array('type' => 'email',  'required' => true),
                 'object_name' => array('type' => 'string', 'required' => true),
@@ -105,11 +106,12 @@ class Message
 
         $validated_params = $validator->getParams();
         $to_email = $validated_params['email'];
+        $verify_code = $validated_params['verify_code'];
         $from_name = $validated_params['from_name'];
         $from_email = $validated_params['from_email'];
         $object_name = $validated_params['object_name'];
         $message = $validated_params['message'] ?? '';
-        $share_link = \Flexio\System\System::getTeamInviteLink($to_email, $object_name);
+        $share_link = \Flexio\System\System::getTeamInviteLink($to_email, $verify_code, $object_name);
 
         // if a test email address is specified, override the test email
         // note: test email override only available in debug mode
