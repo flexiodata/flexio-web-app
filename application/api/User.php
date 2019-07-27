@@ -1133,8 +1133,21 @@ class User
             return false;
         }
 
-        // check if email already exists
-        if (\Flexio\Object\User::getEidFromEmail($value) !== false)
+        // check if email is already taken by a user
+
+        // if the email is already correlated with a user, see if the user
+        // is pending or active; if the user is active, the email is taken
+        // and therefore invalid; if the user is pending, the email isn't
+        // considered taken because the user hasn't validated the email yet;
+        // for example, this situation may happen when a user is invited into
+        // a team with an email and a pending user placeholder created, but
+        // the user hasn't yet signed up and then goes to enter their email
+        // address
+
+        $filter = array('email' => $value, 'eid_status' => \Model::STATUS_AVAILABLE);
+        $users = \Flexio\System\System::getModel()->user->list($filter);
+
+        if (count($users) > 0)
         {
             $message = _('This email address is already taken.');
             return false;
