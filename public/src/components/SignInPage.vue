@@ -13,7 +13,8 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
+  import { OBJECT_STATUS_PENDING } from '@/constants/object-status'
+  import { mapState, mapGetters } from 'vuex'
   import { ROUTE_SIGNUP_PAGE, ROUTE_FORGOTPASSWORD_PAGE } from '@/constants/route'
   import SignInForm from '@/components/SignInForm'
   import MixinRedirect from '@/components/mixins/redirect'
@@ -57,6 +58,9 @@
       }
     },
     methods: {
+      ...mapGetters('users', {
+        'getActiveUser': 'getActiveUser'
+      }),
       onSignUpClick() {
         this.$router.push(this.signup_route)
       },
@@ -64,7 +68,13 @@
         this.$router.push(this.forgotpassword_route)
       },
       onSignedIn() {
-        this.$_Redirect_redirect()
+        this.$store.dispatch('users/fetch', { eid: 'me' }).then(response => {
+          if (this.getActiveUser().eid_status == OBJECT_STATUS_PENDING) {
+            this.$router.push({ path: '/signup/verify' })
+          } else {
+            this.$_Redirect_redirect()
+          }
+        })
       }
     }
   }
