@@ -348,8 +348,46 @@ class TeamMember
 
     public static function processjoin(\Flexio\Api\Request $request) : void
     {
-        // TODO: special call for joining a team that doesn't have same
-        // restrictions as set()?
+        // special call for joining a team that doesn't require permissions
+        // because it's a simple acceptance and allows a user to join a team
+        // without having to be logged in as a particular user
+        $owner_user_eid = $request->getOwnerFromUrl();
+        $post_params = $request->getPostParams();
+
+        $request->track(\Flexio\Api\Action::TYPE_TEAMMEMBER_UPDATE);
+        $request->setRequestParams($post_params);
+
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($post_params, array(
+                'member' => array('type' => 'email', 'required' => true)
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        $validated_post_params = $validator->getParams();
+        $email = $validated_post_params['member'];
+
+        // make sure the owner exists
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+        // get the eid for the user joining; if the user is silent, fail silently so as
+        // not reveal information about the team to the public caller
+        $member_user_eid = \Flexio\Object\User::getEidFromEmail($email);
+        if ($member_user_eid !== false)
+        {
+            // update the team member
+            $updated_member_info = array();
+            $updated_member_info['member_status'] = \Model::TEAM_MEMBER_STATUS_ACTIVE;
+            \Flexio\System\System::getModel()->teammember->set($member_user_eid, $owner_user_eid, $updated_member_info);
+        }
+
+        // public call, so don't return any info about the member joining
+        $result = array();
+        $request->setResponseParams($result);
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        $request->track();
+        \Flexio\Api\Response::sendContent($result);
     }
 
     private static function getMemberEidFromParam(string $param) // TODO: add return type
