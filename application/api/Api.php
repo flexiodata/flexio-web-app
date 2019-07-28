@@ -73,6 +73,7 @@ class Api
         // team members
         'POS /:teamid/members'                        => '\Flexio\Api\TeamMember::create',
         'GET /:teamid/members'                        => '\Flexio\Api\TeamMember::list',
+        'POS /:teamid/members/join'                   => '\Flexio\Api\TeamMember::processjoin',  // public endpoint
         'POS /:teamid/members/:teamid'                => '\Flexio\Api\TeamMember::set',
         'GET /:teamid/members/:teamid'                => '\Flexio\Api\TeamMember::get',
         'DEL /:teamid/members/:teamid'                => '\Flexio\Api\TeamMember::delete',

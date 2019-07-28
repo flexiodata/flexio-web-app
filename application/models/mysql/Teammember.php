@@ -181,7 +181,7 @@ class Teammember extends ModelBase
             // see if the action exists; return false otherwise; this check is to
             // achieve the same behavior as other model set functions
             $qmember_eid = $db->quote($member_eid);
-            $qowned_by= $db->quote($qowned_by);
+            $qowned_by= $db->quote($owned_by);
             $row = $db->fetchRow("select member_eid from tbl_teammember where member_eid = $qmember_eid and owned_by = $qowned_by");
             if (!$row)
                 return false;

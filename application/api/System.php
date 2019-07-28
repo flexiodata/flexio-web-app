@@ -211,11 +211,11 @@ class System
 
             // make sure the user is available (e.g., not deleted and properly verified,
             // if verification is being used)
-            if ($current_user->getStatus() !== \Model::STATUS_AVAILABLE)
-            {
-                $error_message = _('Account not verified.  Please verify your account.');
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-            }
+            // if ($current_user->getStatus() !== \Model::STATUS_AVAILABLE)
+            // {
+            //     $error_message = _('Account not verified.  Please verify your account.');
+            //     throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+            // }
 
             // verify the user with their credentials
             if ($current_user->checkPassword($password) === false)

@@ -161,8 +161,9 @@ class User
             $new_user_info = $validated_post_params;
 
             // invited users already exist, but need to have the rest of their
-            // info set; don't allow last minute changes to the username or email
-            unset($new_user_info['username']);
+            // info set; as an sanity check, don't allow the email address to be,
+            // changed, however this is how the current user was selected, so
+            // it should always be the same
             unset($new_user_info['email']);
 
             // link was clicked in notification email and verify code checks out;
@@ -190,10 +191,19 @@ class User
         // previously; in either case, we need to create a new verification code and let
         // the user verify
 
-        $new_verify_code = \Flexio\Base\Util::generateHandle();
+        // start with the info provided
+        $new_user_info = $validated_post_params;
 
-        $new_user_info = array();
-        $new_user_info['verify_code'] = $new_verify_code;
+        // invited users already exist, but need to have the rest of their
+        // info set; as an sanity check, don't allow the email address to be,
+        // changed, however this is how the current user was selected, so
+        // it should always be the same
+        unset($new_user_info['email']);
+
+        // require the user to be verified; user status should already be pending,
+        // but set it to pending as a sanity check
+        $new_user_info['eid_status'] = \Model::STATUS_PENDING;
+        $new_user_info['verify_code'] = \Flexio\Base\Util::generateHandle();
 
         $result = $user->set($new_user_info);
         if ($result === false)
@@ -202,7 +212,7 @@ class User
         // if appropriate, send an email
         if (\Flexio\Api\User::SEND_WELCOME_EMAIL === true)
         {
-            $email_params = array('email' => $email, 'verify_code' => $new_verify_code);
+            $email_params = array('email' => $email, 'verify_code' => $user->getVerifyCode());
             \Flexio\Api\Message::sendWelcomeEmail($email_params);
         }
 
@@ -665,7 +675,6 @@ class User
 
         $validated_post_params = $validator->getParams();
         $email = $validated_post_params['email'];
-        $verify_code = \Flexio\Base\Util::generateHandle();
 
         $user = false;
         try
@@ -682,10 +691,10 @@ class User
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, _('This user is unavailable'));
         }
 
-        if ($user->set(array('verify_code' => $verify_code)) === false)
+        if ($user->set(array('verify_code' => \Flexio\Base\Util::generateHandle())) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, _('Could not send password reset email at this time'));
 
-        $email_params = array('email' => $email, 'verify_code' => $verify_code);
+        $email_params = array('email' => $email, 'verify_code' => $user->getVerifyCode());
         \Flexio\Api\Message::sendResetPasswordEmail($email_params);
 
         $result = array();
@@ -1133,8 +1142,21 @@ class User
             return false;
         }
 
-        // check if email already exists
-        if (\Flexio\Object\User::getEidFromEmail($value) !== false)
+        // check if email is already taken by a user
+
+        // if the email is already correlated with a user, see if the user
+        // is pending or active; if the user is active, the email is taken
+        // and therefore invalid; if the user is pending, the email isn't
+        // considered taken because the user hasn't validated the email yet;
+        // for example, this situation may happen when a user is invited into
+        // a team with an email and a pending user placeholder created, but
+        // the user hasn't yet signed up and then goes to enter their email
+        // address
+
+        $filter = array('email' => $value, 'eid_status' => \Model::STATUS_AVAILABLE);
+        $users = \Flexio\System\System::getModel()->user->list($filter);
+
+        if (count($users) > 0)
         {
             $message = _('This email address is already taken.');
             return false;
