@@ -37,6 +37,10 @@ const mutations = {
     _.assign(state, getDefaultState())
   },
 
+  'FETCHING_USER' (state, is_fetching) {
+    state.is_fetching = is_fetching
+  },
+
   'FETCHED_USER' (state, item) {
     var meta = _.assign(getDefaultMeta(), { is_fetched: true })
     addItem(state, item, meta)
@@ -108,6 +112,8 @@ const mutations = {
 
 const actions = {
   'fetch' ({ commit, dispatch }, { eid }) {
+    commit('FETCHING_USER', true)
+
     if (eid == 'me') {
       commit('INITIALIZING_USER', true)
     }
@@ -115,14 +121,18 @@ const actions = {
     // fetching a single item
     return api.fetchUser(eid).then(response => {
       var user = response.data
+      commit('FETCHING_USER', false)
+      commit('FETCHED_USER', user)
+
       if (eid == 'me') {
         commit('INITIALIZING_USER', false)
         commit('INITIALIZED_USER', user)
         dispatch('identify', user)
       }
-      commit('FETCHED_USER', user)
+
       return response
     }).catch(error => {
+      commit('FETCHING_USER', false)
       commit('INITIALIZING_USER', false)
       throw error
     })
