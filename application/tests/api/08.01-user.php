@@ -61,62 +61,93 @@ class Test
         // TEST: make sure we can't create a duplicate user on either username or email
 
         // BEGIN TEST
-        $username_original = \Flexio\Base\Identifier::generate();
-        $email_original = \Flexio\Tests\Util::createEmailAddress();
-        $password = \Flexio\Base\Password::generate();
+        $username1 = \Flexio\Base\Identifier::generate();
+        $email1 = \Flexio\Tests\Util::createEmailAddress();
+        $password1 = \Flexio\Base\Password::generate();
+        $username2 = $username1;
+        $email2 = \Flexio\Tests\Util::createEmailAddress();
+        $password2 = \Flexio\Base\Password::generate();
 
-        for ($i = 1; $i <= 3; ++$i)
+        $params = array(
+            'method' => 'POST',
+            'url' => "$apibase/signup",
+            // 'token' => '', // no token included
+            'content_type' => 'application/json',
+            'params' => '{
+                "username": "'.$username1.'",
+                "email": "'.$email1.'",
+                "password": "'.$password1.'",
+                "send_email": "true",
+                "create_examples": "true"
+            }'
+        );
+        $result = \Flexio\Tests\Util::callApi($params);
+        $params = array(
+            'method' => 'POST',
+            'url' => "$apibase/signup",
+            // 'token' => '', // no token included
+            'content_type' => 'application/json',
+            'params' => '{
+                "username": "'.$username2.'",
+                "email": "'.$email2.'",
+                "password": "'.$password2.'",
+                "send_email": "true",
+                "create_examples": "true"
+            }'
+        );
+        $result = \Flexio\Tests\Util::callApi($params);
+        $actual = $result['response'];
+        $expected = '
         {
-            $username = $username_original;
-            $email = $email_original;
-
-            // on first loop, create the user; on second loop, check
-            // for duplicate username (i.e., change the email); on third
-            // loop, check for duplicate email (i.e., change the username)
-            if ($i === 2)
-            {
-                $email = \Flexio\Tests\Util::createEmailAddress();
+            "error" : {
+                "code": "create-failed"
             }
-            if ($i === 3)
-                $username = \Flexio\Base\Identifier::generate();
+        }';
+        \Flexio\Tests\Check::assertInArray('B.1', 'POST /signup; fail if username is already taken',  $actual, $expected, $results);
 
-            $params = array(
-                'method' => 'POST',
-                'url' => "$apibase/signup",
-                // 'token' => '', // no token included
-                'content_type' => 'application/json',
-                'params' => '{
-                    "username": "'.$username.'",
-                    "email": "'.$email.'",
-                    "password": "'.$password.'",
-                    "send_email": "true",
-                    "create_examples": "true"
-                }'
-            );
-            $result = \Flexio\Tests\Util::callApi($params);
-            $actual = $result['response'];
+        // BEGIN TEST
+        $username1 = \Flexio\Base\Identifier::generate();
+        $email1 = \Flexio\Tests\Util::createEmailAddress();
+        $password1 = \Flexio\Base\Password::generate();
+        $username2 = \Flexio\Base\Identifier::generate();
+        $email2 = $email1;
+        $password2 = \Flexio\Base\Password::generate();
 
-            if ($i === 1)
-            {
-                $expected = '
-                {
-                    "eid_type": "'.\Model::TYPE_USER.'",
-                    "username": "'.$username.'",
-                    "email": "'.$email.'"
-                }';
-                \Flexio\Tests\Check::assertInArray('B.1', 'POST /signup; create a new user',  $actual, $expected, $results);
+        $params = array(
+            'method' => 'POST',
+            'url' => "$apibase/signup",
+            // 'token' => '', // no token included
+            'content_type' => 'application/json',
+            'params' => '{
+                "username": "'.$username1.'",
+                "email": "'.$email1.'",
+                "password": "'.$password1.'",
+                "send_email": "true",
+                "create_examples": "true"
+            }'
+        );
+        $result = \Flexio\Tests\Util::callApi($params);
+        $params = array(
+            'method' => 'POST',
+            'url' => "$apibase/signup",
+            // 'token' => '', // no token included
+            'content_type' => 'application/json',
+            'params' => '{
+                "username": "'.$username2.'",
+                "email": "'.$email2.'",
+                "password": "'.$password2.'",
+                "send_email": "true",
+                "create_examples": "true"
+            }'
+        );
+        $result = \Flexio\Tests\Util::callApi($params);
+        $actual = $result['response'];
+        $expected = '
+        {
+            "error" : {
+                "code": "create-failed"
             }
-
-            if ($i === 2 || $i === 3)
-            {
-                $expected = '
-                {
-                    "error" : {
-                        "code": "create-failed"
-                    }
-                }';
-                \Flexio\Tests\Check::assertInArray("B.$i", 'POST /signup; fail if username or email are already taken',  $actual, $expected, $results);
-            }
-        }
+        }';
+        \Flexio\Tests\Check::assertInArray('B.2', 'POST /signup; fail if email is already taken',  $actual, $expected, $results);
     }
 }
