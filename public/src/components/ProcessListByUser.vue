@@ -93,7 +93,7 @@
 </template>
 
 <script>
-  import axios from 'axios'
+  import api from '@/api'
   import moment from 'moment'
 
   export default {
@@ -109,12 +109,11 @@
       var last_week = moment().subtract(6, 'days')
       var created_min = last_week.format('YMMDD')
       var created_max = today.format('YMMDD')
-      var url = '/api/v2/admin/info/processes/summary/user?created_min=' + created_min + '&created_max=' + created_max
 
       this.created_min = created_min
       this.created_max = created_max
 
-      axios.get(url).then(response => {
+      api.fetchAdminUserProcesses.get({ created_min, created_max }).then(response => {
         this.res = response.data
       }).catch(error => {
 

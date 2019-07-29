@@ -102,8 +102,7 @@
       }),
       is_superuser() {
         // limit to @flex.io users for now
-        var user_email = this.getActiveUserEmail()
-        return _.includes(user_email, '@flex.io')
+        return _.includes(this.getActiveUserEmail(), '@flex.io')
       },
       process() {
         return _.get(this.$store, 'state.processes.items.' + this.processEid)

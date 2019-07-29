@@ -38,10 +38,10 @@
         <button
           type="button"
           :class="button_cls"
-          :disabled="is_submitting"
+          :disabled="is_signing_in"
           @click="trySignIn"
         >
-          <span v-if="is_submitting">Signing in...</span>
+          <span v-if="is_signing_in">Signing in...</span>
           <span v-else>Sign in</span>
         </button>
       </div>
@@ -54,14 +54,13 @@
 </template>
 
 <script>
-  import api from '@/api'
+  import { mapState } from 'vuex'
 
   export default {
     data() {
       return {
         username: '',
         password: '',
-        is_submitting: false,
         error_msg: '',
         input_cls: 'input-reset ba b--black-10 br2 focus-b--blue lh-title ph3 pv2a w-100',
         button_cls: 'border-box no-select ttu fw6 w-100 ph4 pv2a lh-title white bg-blue br2 darken-10'
@@ -70,61 +69,22 @@
     mounted() {
       this.$refs['input-username'].focus()
     },
+    computed: {
+      ...mapState({
+        is_signing_in: state => state.users.is_signing_in
+      })
+    },
     methods: {
-      getAttrs() {
-        // assemble non-empty values for submitting to the backend
-        var attrs = _.assign({}, this.$data)
-        attrs = _.pick(attrs, ['username', 'password'])
-        return _.omitBy(attrs, _.isEmpty)
-      },
       trySignIn() {
-        var attrs = this.getAttrs()
+        var username = this.username
+        var password = this.password
 
-        this.is_submitting = true
-
-        api.signIn(attrs).then(response => {
-          var user_info =  _.get(response, 'data', {})
-          this.$emit('signed-in', user_info)
-          this.trackSignIn(user_info)
+        this.$store.dispatch('users/signIn', { username, password }).then(response => {
+          this.$emit('signed-in', response.data)
         }).catch(error => {
-          this.is_submitting = false
           this.password = ''
           this.error_msg = _.get(error, 'response.data.error.message', '')
         })
-      },
-      getUserInfo(attrs, include_label) {
-        var user_info = _.pick(attrs, ['first_name', 'last_name', 'email'])
-
-        // add Segment-friendly keys
-        _.assign(user_info, {
-          firstName: _.get(attrs, 'first_name'),
-          lastName: _.get(attrs, 'last_name'),
-          username: _.get(attrs, 'username'),
-          createdAt: _.get(attrs, 'created')
-        })
-
-        // add current pathname as 'label' (for Google Analytics)
-        if (include_label === true) {
-          _.assign(user_info, { label: window.location.pathname })
-        }
-
-        // remove null values
-        user_info = _.omitBy(user_info, _.isNil)
-
-        return user_info
-      },
-      trackSignIn(attrs) {
-        var eid = _.get(attrs, 'eid', '')
-
-        if (window.analytics && eid.length > 0) {
-          // identify user
-          window.analytics.identify(eid, this.getUserInfo(attrs))
-
-          // track sign in
-          setTimeout(() => {
-            window.analytics.track('Signed In', this.getUserInfo(attrs, true))
-          }, 100)
-        }
       }
     }
   }

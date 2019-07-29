@@ -17,7 +17,9 @@ const getDefaultMeta = () => {
 const getDefaultState = () => {
   return {
     active_user_eid: '',
-    is_signing_in: false,
+    is_initializing: false, // `GET /me/account`
+    is_signing_up: false,   // `POS /signup`
+    is_signing_in: false,   // `POS /login`
     is_signing_out: false,
     is_fetching: false,
     is_fetched: false,
@@ -45,8 +47,29 @@ const mutations = {
     removeItem(state, eid)
   },
 
+  'INITIALIZING_ITEM' (state, is_initializing) {
+    state.is_initializing = is_initializing
+  },
+
+  'INITIALIZED_ITEM' (state, item) {
+    var meta = _.assign(getDefaultMeta(), { is_fetched: true })
+    addItem(state, item, meta)
+
+    // store the active user eid
+    state.active_user_eid = item.eid
+  },
+
+  'SIGNING_UP' (state, is_signing_up) {
+    state.is_signing_up = is_signing_up
+  },
+
+  'SIGNED_UP' (state, item) {
+    var meta = _.assign(getDefaultMeta())
+    addItem(state, item, meta)
+  },
+
   'SIGNING_IN' (state, is_signing_in) {
-    this.is_signing_in = is_signing_in
+    state.is_signing_in = is_signing_in
   },
 
   'SIGNED_IN' (state, item) {
@@ -69,7 +92,7 @@ const mutations = {
 const actions = {
   'fetch' ({ commit, dispatch }, { eid }) {
     if (eid == 'me') {
-      commit('SIGNING_IN', true)
+      commit('INITIALIZING_ITEM', true)
     }
 
     // fetching a single item
@@ -77,13 +100,13 @@ const actions = {
       var user = response.data
       commit('FETCHED_ITEM', user)
       if (eid == 'me') {
-        commit('SIGNED_IN', user)
-        commit('SIGNING_IN', false)
+        commit('INITIALIZED_ITEM', user)
+        commit('INITIALIZING_ITEM', false)
         dispatch('identify', user)
       }
       return response
     }).catch(error => {
-      commit('SIGNING_IN', false)
+      commit('INITIALIZING_ITEM', false)
       throw error
     })
   },
@@ -113,8 +136,8 @@ const actions = {
       // we need to give just a bit of breathing room for the UI to change
       // the route to the sign in page before we update the state with these commits
       setTimeout(() => {
-        commit('SIGNED_OUT')
         commit('SIGNING_OUT', false)
+        commit('SIGNED_OUT')
         dispatch('track', { event_name: 'Signed Out' })
 
         // reset the store state globally (including all modules)
@@ -123,6 +146,42 @@ const actions = {
       return response
     }).catch(error => {
       commit('SIGNING_OUT', false)
+      throw error
+    })
+  },
+
+  'signIn' ({ commit, dispatch }, attrs) {
+    commit('SIGNING_IN', true)
+
+    return api.signIn(attrs).then(response => {
+      var user = response.data
+      commit('SIGNING_IN', false)
+      commit('SIGNED_IN', user)
+      dispatch('identify', user)
+      setTimeout(() => {
+        dispatch('track', _.assign({}, user, { event_name: 'Signed In' }))
+      }, 100)
+      return response
+    }).catch(error => {
+      commit('SIGNING_IN', false)
+      throw error
+    })
+  },
+
+  'signUp' ({ commit, dispatch }, attrs) {
+    commit('SIGNING_UP', true)
+
+    return api.signUp(attrs).then(response => {
+      var user = response.data
+      commit('SIGNING_UP', false)
+      commit('SIGNED_UP', user)
+      dispatch('identify', user)
+      setTimeout(() => {
+        dispatch('track', _.assign({}, user, { event_name: 'Signed Up' }))
+      }, 100)
+      return response
+    }).catch(error => {
+      commit('SIGNING_UP', false)
       throw error
     })
   },

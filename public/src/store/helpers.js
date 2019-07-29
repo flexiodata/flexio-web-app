@@ -32,8 +32,11 @@ export const updateItem = (state, eid, attrs) => {
   // update new object attributes
   _.assign(new_obj, attrs)
 
+  // key the object so we can update the correct key value in the object
+  var to_update = getKeyedObject(new_obj)
+
   // store the new object
-  state['items'][eid] = _.assign({}, new_obj)
+  state['items'] = _.assign({}, state['items'], to_update)
 }
 
 export const removeItem = (state, objs) => {
