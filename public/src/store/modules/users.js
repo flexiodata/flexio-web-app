@@ -22,6 +22,7 @@ const getDefaultState = () => {
     is_signing_out: false,
     is_initializing: false, // when fetching 'me'
     is_changing_password: false,
+    is_updating: false,
     is_deleting: false,
     is_fetching: false,
     is_fetched: false,
@@ -39,6 +40,10 @@ const mutations = {
   'FETCHED_USER' (state, item) {
     var meta = _.assign(getDefaultMeta(), { is_fetched: true })
     addItem(state, item, meta)
+  },
+
+  'UPDATING_USER' (state, is_updating) {
+    state.is_updating = is_updating
   },
 
   'UPDATED_USER' (state, { eid, item }) {
@@ -124,10 +129,13 @@ const actions = {
   },
 
   'update' ({ commit }, { eid, attrs }) {
+    commit('UPDATING_USER', true)
     return api.updateUser(eid, attrs).then(response => {
+      commit('UPDATING_USER', false)
       commit('UPDATED_USER', { eid, item: response.data })
       return response
     }).catch(error => {
+      commit('UPDATING_USER', false)
       throw error
     })
   },
