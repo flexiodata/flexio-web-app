@@ -63,7 +63,7 @@ class Test
             'token' => $token2,
             'content_type' => 'application/json',
             'params' => '{
-                "name": "name2",
+                "name": "name2"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
