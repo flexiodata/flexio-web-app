@@ -63,7 +63,7 @@ class Pipe
         $owner_user = \Flexio\Object\User::load($owner_user_eid);
         if ($owner_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PIPE_CREATE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // create the object
@@ -103,12 +103,11 @@ class Pipe
         $validated_post_params = $validator->getParams();
         $original_pipe_eid = $validated_post_params['copy_eid'];
 
-        // check the rights on the owner; ability to create an object is governed
-        // currently by user write privileges
+        // check the rights on the owner
         $owner_user = \Flexio\Object\User::load($owner_user_eid);
         if ($owner_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PIPE_CREATE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // load the pipe
@@ -117,7 +116,7 @@ class Pipe
         // check the rights on the pipe being read from
         if ($original_pipe->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($original_pipe->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
+        if ($original_pipe->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PIPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // create a new pipe; copy the logic, but not the status, scheduling, etc
@@ -157,7 +156,7 @@ class Pipe
         // check the rights on the object
         if ($pipe->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($pipe->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_DELETE) === false)
+        if ($pipe->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PIPE_DELETE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $pipe->delete();
@@ -204,7 +203,7 @@ class Pipe
             // check the rights on the object
             if ($pipe->getStatus() === \Model::STATUS_DELETED)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-            if ($pipe->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_DELETE) === false)
+            if ($pipe->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PIPE_DELETE) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
             $pipes_to_delete[] = $pipe;
@@ -264,7 +263,7 @@ class Pipe
         // check the rights on the object
         if ($pipe->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($pipe->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
+        if ($pipe->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PIPE_UPDATE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // set the properties
@@ -293,7 +292,7 @@ class Pipe
         // check the rights on the object
         if ($pipe->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($pipe->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
+        if ($pipe->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PIPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the properties
@@ -335,7 +334,7 @@ class Pipe
 
         foreach ($pipes as $p)
         {
-            if ($p->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
+            if ($p->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PIPE_READ) === false)
                 continue;
 
             $properties = $p->get();
@@ -353,7 +352,7 @@ class Pipe
         $pipe_eid = $request->getObjectFromUrl();
 
 /*
-        $request->track(\Flexio\Api\Action::TYPE_PIPE_RUN);
+        $request->track(\Flexio\Api\Action::TYPE_PROCESS_CREATE);
         $request->setRequestParams($post_params);
 */
 
@@ -366,7 +365,7 @@ class Pipe
         // check the rights on the pipe object
         if ($pipe->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($pipe->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_EXECUTE) === false)
+        if ($pipe->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PROCESS_CREATE) === false)
              throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // if the process is created with a request from an api token, it's

@@ -481,7 +481,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         // check the rights on the connection
         if ($connection->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($connection->allows($owner_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
+        if ($connection->allows($owner_user_eid, \Flexio\Api\Action::TYPE_CONNECTION_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $connection_info = $connection->get();

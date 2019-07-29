@@ -830,7 +830,7 @@ class ScriptHost
 
         foreach ($connections as $c)
         {
-            if ($c->allows($owner_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
+            if ($c->allows($owner_user_eid, \Flexio\Api\Action::TYPE_CONNECTION_READ) === false)
                 continue;
 
             $properties = $c->get();
@@ -1286,12 +1286,12 @@ class ScriptHost
     public function func_kvGet(string $key)
     {
         global $g_config;
-        
+
         $session_redis_host = $g_config->session_redis_host ?? '';
         $session_redis_port = $g_config->session_redis_port ?? '';
         if (strlen($session_redis_host) == 0)
             return false;
-        
+
         $owner_user_eid = $this->getProcess()->getOwner();
         $store_key = "kv.$owner_user_eid.$key";
 
@@ -1308,7 +1308,7 @@ class ScriptHost
         $session_redis_port = $g_config->session_redis_port ?? '';
         if (strlen($session_redis_host) == 0)
             return false;
-        
+
         $owner_user_eid = $this->getProcess()->getOwner();
         $store_key = "kv.$owner_user_eid.$key";
 
@@ -1325,7 +1325,7 @@ class ScriptHost
         $session_redis_port = $g_config->session_redis_port ?? '';
         if (strlen($session_redis_host) == 0)
             return false;
-        
+
         $owner_user_eid = $this->getProcess()->getOwner();
         $store_key = "kv.$owner_user_eid.$key";
 
@@ -1345,7 +1345,7 @@ class ScriptHost
         $session_redis_port = $g_config->session_redis_port ?? '';
         if (strlen($session_redis_host) == 0)
             return false;
-        
+
         $owner_user_eid = $this->getProcess()->getOwner();
         $store_key = "kv.$owner_user_eid.$key";
 

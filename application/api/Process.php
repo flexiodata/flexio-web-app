@@ -51,7 +51,13 @@ class Process
         // rights on the pipe; if the process is anonymous, it's goverend by
         // the ability to write to the user, simliar to pipes and connections
 
-        // check rights
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PROCESS_CREATE) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        // check additional rights
         $pipe = false;
         if ($pipe_eid !== false)
         {
@@ -60,24 +66,11 @@ class Process
             // owner is the owner that the process is being created for
             $pipe = \Flexio\Object\Pipe::load($pipe_eid);
 
-            // we're getting the logic from the pipe, and we're associating the process with
-            // the pipe, so we should have both read/write access to the pipe;
+            // we're getting the logic from the pipe, so we should have read access to
+            // the pipe; TODO: verify if this is correct logic
             if ($pipe->getStatus() === \Model::STATUS_DELETED)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-            if ($pipe->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_EXECUTE) === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-        }
-        else
-        {
-            // TODO: should we add some type of execute write to users and use
-            // that instead?
-
-            // check the rights on the owner; ability to create an object is governed
-            // currently by user write privileges
-            $owner_user = \Flexio\Object\User::load($owner_user_eid);
-            if ($owner_user->getStatus() === \Model::STATUS_DELETED)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-            if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
+            if ($pipe->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PIPE_READ) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
         }
 
@@ -159,7 +152,7 @@ class Process
         // check the rights on the object
         if ($process->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($process->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_DELETE) === false)
+        if ($process->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PROCESS_DELETE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $process->delete();
@@ -193,7 +186,7 @@ class Process
         // check the rights on the object
         if ($process->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($process->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
+        if ($process->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PROCESS_UPDATE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // TODO: we shouldn't allow the task to be set if the process is anything
@@ -232,7 +225,7 @@ class Process
         // check the rights on the object
         if ($process->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($process->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
+        if ($process->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PROCESS_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // if no wait period is specified, return the information immediately
@@ -418,7 +411,7 @@ class Process
         $result = array();
         foreach ($processes as $p)
         {
-            if ($p->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
+            if ($p->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PROCESS_READ) === false)
                 continue;
 
             $process_info = $p->get();
@@ -461,7 +454,7 @@ class Process
         // check the rights on the object
         if ($process->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($process->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
+        if ($process->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PROCESS_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $result = $process->getLog();
@@ -481,11 +474,14 @@ class Process
         $process = \Flexio\Object\Process::load($process_eid);
         if ($owner_user_eid !== $process->getOwner())
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-
-        // check the rights on the object
         if ($process->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($process->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_EXECUTE) === false)
+
+        // check the rights
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PROCESS_CREATE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // only allow a process to be run once
@@ -570,12 +566,11 @@ class Process
         // public pipes that don't require a token
         $triggered_by = strlen($request->getToken()) > 0 ? \Model::PROCESS_TRIGGERED_API : \Model::PROCESS_TRIGGERED_INTERFACE;
 
-        // check the rights on the owner; ability to create an object is governed
-        // currently by user write privileges
+        // check the rights on the owner
         $owner_user = \Flexio\Object\User::load($owner_user_eid);
         if ($owner_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PROCESS_CREATE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // set the owner based on the owner being posted to
@@ -654,7 +649,7 @@ class Process
         // check the rights on the object
         if ($process->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($process->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_EXECUTE) === false)
+        if ($process->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PROCESS_UPDATE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $process->cancel();

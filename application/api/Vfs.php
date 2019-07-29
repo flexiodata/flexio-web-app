@@ -33,14 +33,13 @@ class Vfs
         $validated_query_params = $validator->getParams();
         $path = $validated_query_params['q'] ?? '';
 
-        // load the object; TODO: right now, govern VFS read rights using read
-        // permissions on the user; perhaps use user privileges on store/streams?
+        // load the object
         $owner_user = \Flexio\Object\User::load($owner_user_eid);
 
         // check the rights on the object
         if ($owner_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_STREAM_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $vfs = new \Flexio\Services\Vfs($owner_user_eid);
@@ -59,14 +58,13 @@ class Vfs
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
 
-        // load the object; TODO: right now, govern VFS read rights using read
-        // permissions on the user; perhaps use user privileges on store/streams?
+        // load the object
         $owner_user = \Flexio\Object\User::load($owner_user_eid);
 
         // check the rights on the object
         if ($owner_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_STREAM_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $path = $request_url;
@@ -126,7 +124,7 @@ class Vfs
         // check the rights on the object
         if ($owner_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_STREAM_CREATE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $path = $request_url;
@@ -181,14 +179,13 @@ class Vfs
         //$query_params = $request->getQueryParams();
         //$post_params = $request->getPostParams();
 
-        // load the object; TODO: right now, govern VFS write rights using write
-        // permissions on the user; perhaps use user privileges on store/streams?
+        // load the object
         $owner_user = \Flexio\Object\User::load($owner_user_eid);
 
         // check the rights on the object
         if ($owner_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_STREAM_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the file to excecute from the vfs path

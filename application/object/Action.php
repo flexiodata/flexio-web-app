@@ -18,12 +18,6 @@ namespace Flexio\Object;
 
 class Action extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 {
-    public const TYPE_UNDEFINED        = '';                 // undefined
-    public const TYPE_READ             = 'object.read';      // ability to read the properties of an object
-    public const TYPE_WRITE            = 'object.write';     // ability to write the properties of an object
-    public const TYPE_DELETE           = 'object.delete';    // ability to delete an object
-    public const TYPE_EXECUTE          = 'object.execute';   // ability to run a process object
-
     public function __construct()
     {
     }
