@@ -103,6 +103,7 @@
 
 <script>
   import axios from 'axios'
+  import api from '@/api'
 
   export default {
     props: {
@@ -124,7 +125,6 @@
         is_sent: false,
         error_msg: '',
         ss_errors: {},
-        verify_code: '',
         input_cls: 'input-reset ba b--black-10 br2 focus-b--blue lh-title ph3 pv2a w-100',
         button_cls: 'border-box no-select ttu fw6 w-100 ph4 pv2a lh-title white bg-blue br2 darken-10'
       }
@@ -163,7 +163,7 @@
     methods: {
       getAttrs() {
         // assemble non-empty values for submitting to the backend
-        return _.pick(this.$data, ['first_name', 'last_name', 'username', 'email', 'password', 'verify_code'])
+        return _.pick(this.$data, ['first_name', 'last_name', 'username', 'email', 'password'])
       },
       getSignInAttrs() {
         // massage attributes to match login call's expected params
@@ -195,14 +195,13 @@
         }]
 
         // if a validation key is provided; only run validation on that key
-        if (!_.isNil(validate_key))
-        {
+        if (!_.isNil(validate_key)) {
           validate_attrs = _.filter(validate_attrs, (attr) => {
             return attr.key == validate_key || _.has(this.ss_errors, attr.key)
           })
         }
 
-        axios.post('/api/v2/validate', validate_attrs).then(response => {
+        api.validate(null, validate_attrs).then(response => {
           this.ss_errors = _.keyBy(response.data, 'key')
 
           if (_.isFunction(callback))
