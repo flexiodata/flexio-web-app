@@ -54,7 +54,6 @@
 </template>
 
 <script>
-  import _ from 'lodash'
   import axios from 'axios'
 
   export default {

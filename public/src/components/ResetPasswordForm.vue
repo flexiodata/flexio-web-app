@@ -71,7 +71,6 @@
 </template>
 
 <script>
-  import _ from 'lodash'
   import api from '@/api'
   import MixinValidation from '@/components/mixins/validation'
 
