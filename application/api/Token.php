@@ -30,7 +30,7 @@ class Token
         $owner_user = \Flexio\Object\User::load($owner_user_eid);
         if ($owner_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_USER_AUTHKEY_CREATE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // create the token object
@@ -63,7 +63,7 @@ class Token
         // check the rights on the object
         if ($token->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($token->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_DELETE) === false)
+        if ($token->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_USER_AUTHKEY_DELETE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $token->delete();
@@ -90,7 +90,7 @@ class Token
         // check the rights on the object
         if ($token->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($token->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
+        if ($token->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_USER_AUTHKEY_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $result = $token->get();
@@ -130,7 +130,7 @@ class Token
 
         foreach ($tokens as $t)
         {
-            if ($t->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
+            if ($t->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_USER_AUTHKEY_READ) === false)
                 continue;
 
             $result[] = $t->get();

@@ -244,7 +244,7 @@ class User
 
         // make sure the requesting user has delete rights for the owner
         $owner_user = \Flexio\Object\User::load($owner_user_eid);
-        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_DELETE) === false)
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_USER_DELETE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // as an additional check, confirm that the username and password for the intended
@@ -327,7 +327,7 @@ class User
         // set info for unverified users
         if ($owner_user->getStatus() !== \Model::STATUS_PENDING)
         {
-            if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
+            if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_USER_UPDATE) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
         }
 
@@ -350,7 +350,7 @@ class User
         // check the rights on the object
         if ($owner_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_USER_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $result = $owner_user->get();
@@ -369,7 +369,7 @@ class User
         // check the rights on the object
         if ($owner_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_USER_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the stripe customer id; if a key doesn't yet exist, there are no sources
@@ -443,7 +443,7 @@ class User
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         // check the rights
-        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_USER_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $source_info = self::addCustomerPaymentSource($owner_user, $stripe_token);
@@ -472,7 +472,7 @@ class User
         // check the rights on the object
         if ($owner_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_USER_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $path = $request_url;
@@ -538,7 +538,7 @@ class User
         // check the rights on the object
         if ($owner_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_USER_CREDENTIAL_UPDATE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         if ($owner_user->checkPassword($old_password) === false)
@@ -772,7 +772,7 @@ class User
         $owner_user = \Flexio\Object\User::load($owner_user_eid);
         if ($owner_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_USER_UPDATE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $new_params = array('config' => array());
@@ -799,7 +799,7 @@ class User
         // check the rights on the object
         if ($owner_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_USER_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $content = '';
@@ -835,7 +835,7 @@ class User
         // check the rights on the object
         if ($owner_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_USER_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $content = '';
@@ -1179,13 +1179,18 @@ class User
             // an exception will be thrown
             $owner_user = \Flexio\Object\User::load($owner_user_eid);
 
-            // make sure the requesting user has rights to the user (the object may
-            // not exist, which means we need to check against write privileges on
-            // the user); throw an exception, which will cause the function to return
-            // false, which won't reveal any info about names created by a particular
-            // user
-            if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            // check the rights
+            if ($eid_type === \Model::TYPE_PIPE)
+            {
+                if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PIPE_READ) === false)
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            }
+
+            if ($eid_type === \Model::TYPE_CONNECTION)
+            {
+                if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_CONNECTION_READ) === false)
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            }
 
             if (($eid_type == \Model::TYPE_PIPE || $eid_type == \Model::TYPE_UNDEFINED) &&
                 \Flexio\Object\Pipe::getEidFromName($owner_user->getEid(), $value) !== false)

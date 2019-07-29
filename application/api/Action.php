@@ -18,6 +18,8 @@ namespace Flexio\Api;
 
 class Action
 {
+    // TODO: add tests for these constants
+
     public const TYPE_UNDEFINED              = '';
     public const TYPE_TEST                   = 'action.test';
 
@@ -27,28 +29,47 @@ class Action
     public const TYPE_USER_CREATE            = 'action.user.create';
     public const TYPE_USER_UPDATE            = 'action.user.update';
     public const TYPE_USER_DELETE            = 'action.user.delete';
+    public const TYPE_USER_READ              = 'action.user.read';
     public const TYPE_USER_CREDENTIAL_UPDATE = 'action.user.credential.update';
     public const TYPE_USER_CREDENTIAL_RESET  = 'action.user.credential.reset';
 
-    public const TYPE_TEAMMEMBER_ADD            = 'action.teammember.add';
+    public const TYPE_TEAM_CREATE            = 'action.team.create';
+    public const TYPE_TEAM_UPDATE            = 'action.team.update';
+    public const TYPE_TEAM_DELETE            = 'action.team.delete';
+    public const TYPE_TEAM_READ              = 'action.team.read';
+
+    public const TYPE_TEAMMEMBER_CREATE         = 'action.teammember.create';
     public const TYPE_TEAMMEMBER_UPDATE         = 'action.teammember.update';
-    public const TYPE_TEAMMEMBER_REMOVE         = 'action.teammember.remove';
+    public const TYPE_TEAMMEMBER_DELETE         = 'action.teammember.delete';
+    public const TYPE_TEAMMEMBER_READ           = 'action.teammember.read';
     public const TYPE_TEAMMEMBER_SENDINVITATION = 'action.teammember.sendinvitation';
     public const TYPE_TEAMMEMBER_JOINTEAM       = 'action.teammember.jointeam';
 
     public const TYPE_USER_AUTHKEY_CREATE    = 'action.user.authkey.create';
     public const TYPE_USER_AUTHKEY_DELETE    = 'action.user.authkey.delete';
+    public const TYPE_USER_AUTHKEY_READ      = 'action.user.authkey.read';
 
     public const TYPE_PIPE_CREATE            = 'action.pipe.create';
     public const TYPE_PIPE_UPDATE            = 'action.pipe.update';
     public const TYPE_PIPE_DELETE            = 'action.pipe.delete';
-    public const TYPE_PIPE_RUN               = 'action.pipe.run';
+    public const TYPE_PIPE_READ              = 'action.pipe.read';
 
     public const TYPE_CONNECTION_CREATE      = 'action.connection.create';
     public const TYPE_CONNECTION_UPDATE      = 'action.connection.update';
     public const TYPE_CONNECTION_DELETE      = 'action.connection.delete';
+    public const TYPE_CONNECTION_READ        = 'action.connection.read';
     public const TYPE_CONNECTION_CONNECT     = 'action.connection.connect';
     public const TYPE_CONNECTION_DISCONNECT  = 'action.connection.disconnect';
+
+    public const TYPE_PROCESS_CREATE         = 'action.process.create';
+    public const TYPE_PROCESS_UPDATE         = 'action.process.update';
+    public const TYPE_PROCESS_DELETE         = 'action.process.delete';
+    public const TYPE_PROCESS_READ           = 'action.process.read';
+
+    public const TYPE_STREAM_CREATE          = 'action.stream.create';
+    public const TYPE_STREAM_UPDATE          = 'action.stream.update';
+    public const TYPE_STREAM_DELETE          = 'action.stream.delete';
+    public const TYPE_STREAM_READ            = 'action.stream.read';
 
 
     // TODO: add actions for following API endpoints:

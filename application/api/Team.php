@@ -36,12 +36,11 @@ class Team
 
         $validated_query_params = $validator->getParams();
 
-        // check the rights on the owner; ability to get a list of teams is governed
-        // currently by user read privileges
+        // check the rights on the owner
         $owner_user = \Flexio\Object\User::load($owner_user_eid);
         if ($owner_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_TEAM_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the teams (items where the owner is a member of a team)

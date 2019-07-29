@@ -42,12 +42,11 @@ class Connection
 
         $validated_post_params = $validator->getParams();
 
-        // check the rights on the owner; ability to create an object is governed
-        // currently by user write privileges
+        // check the rights on the owner
         $owner_user = \Flexio\Object\User::load($owner_user_eid);
         if ($owner_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_CONNECTION_CREATE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // create the object
@@ -82,7 +81,7 @@ class Connection
         // check the rights on the object
         if ($connection->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($connection->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_DELETE) === false)
+        if ($connection->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_CONNECTION_DELETE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // delete the object
@@ -131,7 +130,7 @@ class Connection
         // check the rights on the object
         if ($connection->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($connection->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
+        if ($connection->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_CONNECTION_UPDATE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // set the properties
@@ -161,7 +160,7 @@ class Connection
         // check the rights on the object
         if ($connection->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($connection->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
+        if ($connection->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_CONNECTION_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // return the result
@@ -203,7 +202,7 @@ class Connection
 
         foreach ($connections as $c)
         {
-            if ($c->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
+            if ($c->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_CONNECTION_READ) === false)
                 continue;
 
             $properties = $c->get();
@@ -231,9 +230,7 @@ class Connection
         // check the rights on the object
         if ($connection->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($connection->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-        if ($connection->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
+        if ($connection->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_CONNECTION_CONNECT) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // try to connect
@@ -275,7 +272,7 @@ class Connection
         // check the rights on the object
         if ($connection->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($connection->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
+        if ($connection->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_CONNECTION_DISCONNECT) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // disconnect
