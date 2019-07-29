@@ -82,11 +82,10 @@
       <button
         type="button"
         :class="button_cls"
-        :disabled="is_submitting || has_errors"
+        :disabled="is_signing_up || is_signing_in || is_submitting || has_errors"
         @click="trySignUp"
       >
-        <span v-if="is_submitting">{{label_submitting}}</span>
-        <span v-else>Sign up</span>
+        {{button_label}}
       </button>
       <div class="mt1 f8 fw6 black-60">
         By signing up, you agree to Flex.io's
@@ -102,6 +101,7 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
   import api from '@/api'
 
   export default {
@@ -118,10 +118,8 @@
         username: '',
         email: '',
         password: '',
-        label_submitting: 'Creating account...',
         email_provided: false,
         is_submitting: false,
-        is_sent: false,
         error_msg: '',
         ss_errors: {},
         input_cls: 'input-reset ba b--black-10 br2 focus-b--blue lh-title ph3 pv2a w-100',
@@ -134,6 +132,17 @@
       password: function(val, old_val) { this.checkSignup('password') }
     },
     computed: {
+      ...mapState({
+        is_signing_up: state => state.users.is_signing_up,
+        is_signing_in: state => state.users.is_signing_in
+      }),
+      button_label() {
+        if (this.is_submitting) {
+          return this.is_signing_in ? 'Signing in...' : 'Creating account...'
+        } else {
+          return 'Sign up'
+        }
+      },
       email_error() {
         return _.get(this.ss_errors, 'email.message', '')
       },
@@ -163,18 +172,6 @@
       getAttrs() {
         // assemble non-empty values for submitting to the backend
         return _.pick(this.$data, ['first_name', 'last_name', 'username', 'email', 'password'])
-      },
-      getSignInAttrs() {
-        // massage attributes to match login call's expected params
-        var attrs = this.getAttrs()
-        attrs = _.pick(attrs, ['email', 'password'])
-
-        return _.mapKeys(attrs, (val, key) => {
-          if (key == 'email')
-            return 'username'
-
-          return key
-        })
       },
       checkSignup: _.debounce(function(validate_key, callback) {
         var attrs = this.getAttrs()
@@ -208,8 +205,6 @@
         })
       }, 500),
       trySignUp() {
-        var attrs = this.getAttrs()
-
         this.is_submitting = true
 
         // check server-side errors
@@ -219,6 +214,7 @@
             return
           }
 
+          var attrs = this.getAttrs()
           this.$store.dispatch('users/signUp', attrs).then(response => {
             this.$emit('signed-up', response.data)
             if (this.signinOnSignup === true) {
@@ -232,11 +228,10 @@
         })
       },
       trySignIn() {
+        this.is_submitting = true
+
         var username = this.username
         var password = this.password
-
-        this.label_submitting = 'Signing in...'
-        this.is_submitting = true
 
         this.$store.dispatch('users/signIn', { username, password }).then(response => {
           this.$emit('signed-in', response.data)
