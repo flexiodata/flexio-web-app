@@ -7,7 +7,7 @@
 </template>
 
 <script>
-  import axios from 'axios'
+  import api from '@/api'
   import Spinner from 'vue-simple-spinner'
   import MixinRedirect from '@/components/mixins/redirect'
 
@@ -16,18 +16,13 @@
     components: {
       Spinner
     },
-    data() {
-      return {
-        query: this.$route.query
-      }
-    },
     mounted() {
-      var token = _.get(this.query, 'token', '')
-      var redirect = _.get(this.query, 'redirect', '/')
+      var token = _.get(this.$route.query, 'token', '')
+      var redirect = _.get(this.$route.query, 'redirect', '/')
 
       if (token.length > 0) {
         // initialize session
-        axios.get('/api/v2/login', { params: { token } }).then(response => {
+        api.signIn({ params: { token } }).then(response => {
           this.fetchUserAndRedirect(redirect)
         }).catch(error => {
           this.fetchUserAndRedirect(redirect)
