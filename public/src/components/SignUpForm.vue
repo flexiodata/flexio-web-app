@@ -219,13 +219,11 @@
             return
           }
 
-          api.signUp(attrs).then(response => {
-            var user_info =  _.get(response, 'data', {})
-            this.$emit('signed-up', user_info)
+          this.$store.dispatch('users/signUp', attrs).then(response => {
+            this.$emit('signed-up', response.data)
             if (this.signinOnSignup === true) {
               this.trySignIn()
             }
-            this.trackSignUp(user_info)
           }).catch(error => {
             this.is_submitting = false
             this.password = ''
@@ -234,53 +232,19 @@
         })
       },
       trySignIn() {
-        var attrs = this.getSignInAttrs()
+        var username = this.username
+        var password = this.password
 
         this.label_submitting = 'Signing in...'
         this.is_submitting = true
 
-        api.signIn(attrs).then(response => {
-          var user_info =  _.get(response, 'data', {})
-          this.$emit('signed-in', user_info)
+        this.$store.dispatch('users/signIn', { username, password }).then(response => {
+          this.$emit('signed-in', response.data)
         }).catch(error => {
           this.is_submitting = false
           this.password = ''
           this.error_msg = _.get(error, 'response.data.error.message', '')
         })
-      },
-      getUserInfo(attrs, include_label) {
-        var user_info = _.pick(attrs, ['first_name', 'last_name', 'email'])
-
-        // add Segment-friendly keys
-        _.assign(user_info, {
-          firstName: _.get(attrs, 'first_name'),
-          lastName: _.get(attrs, 'last_name'),
-          username: _.get(attrs, 'username'),
-          createdAt: _.get(attrs, 'created')
-        })
-
-        // add current pathname as 'label' (for Google Analytics)
-        if (include_label === true) {
-          _.assign(user_info, { label: window.location.pathname })
-        }
-
-        // remove null values
-        user_info = _.omitBy(user_info, _.isNil)
-
-        return user_info
-      },
-      trackSignUp(attrs) {
-        var eid = _.get(attrs, 'eid', '')
-
-        if (window.analytics && eid.length > 0) {
-          // identify user
-          window.analytics.identify(eid, this.getUserInfo(attrs))
-
-          // track sign in
-          setTimeout(() => {
-            window.analytics.track('Signed Up', this.getUserInfo(attrs, true))
-          }, 100)
-        }
       }
     }
   }
