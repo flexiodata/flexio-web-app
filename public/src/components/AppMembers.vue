@@ -17,14 +17,19 @@
           <i class="material-icons moon-gray" style="font-size: 4rem">people</i>
           <h3 class="flex-fill mt2 fw6 f3">{{join_title}}</h3>
         </div>
+        <div class="mb3" v-if="join_error_msg">
+          <div class="el-alert el-alert--error is-light">
+            {{join_error_msg}}
+          </div>
+        </div>
         <p>You've been invited to become a member of the team <strong>"{{active_team_name}}"</strong> on Flex.io. Would you like to join this team?</p>
         <div class="h2"></div>
         <div class="flex flex-row items-center justify-end">
           <el-button
             type="text"
-            @click="leaveTeam"
+            @click="rejectJoinTeam"
           >
-            No thanks, please remove me
+            No thanks
           </el-button>
           <el-button
             class="ttu fw6"
@@ -142,6 +147,7 @@
 </template>
 
 <script>
+  import { ROUTE_APP_PIPES } from '@/constants/route'
   import { mapState, mapGetters } from 'vuex'
   import { isValidEmail } from '@/utils'
   import Spinner from 'vue-simple-spinner'
@@ -168,6 +174,7 @@
     },
     data() {
       return {
+        join_error_msg: '',
         show_add_dialog: false,
         add_dialog_has_errors: false,
         add_dialog_model: {
@@ -257,7 +264,6 @@
       },
       sendInvite(member) {
         var team_name = this.active_team_name
-        var team_name = this.active_team_name
         var attrs = { member }
         this.$store.dispatch('members/create', { team_name, attrs })
       },
@@ -272,16 +278,22 @@
 
         this.$store.dispatch('members/delete', { team_name, eid })
       },
-      leaveTeam() {
-        var team_name = this.active_team_name
-        var eid = this.active_user_eid
-        this.$store.dispatch('members/delete', { team_name, eid })
+      rejectJoinTeam() {
+        this.$router.push({ name: ROUTE_APP_PIPES })
       },
       joinTeam() {
+        this.join_error_msg = ''
+
         var team_name = this.active_team_name
-        var eid = this.active_user_eid
-        var attrs = { member_status: 'A' }
-        this.$store.dispatch('members/update', { team_name, eid, attrs })
+        var member = _.get(this.$route.query, 'email')
+        var verify_code = _.get(this.$route.query, 'verify_code')
+        var attrs = { member, verify_code }
+        this.$store.dispatch('members/join', { team_name, attrs }).then(response => {
+          this.$router.replace({ name: ROUTE_APP_PIPES, params: { team_name } })
+        }).catch(error => {
+          //this.join_error_msg = _.get(error, 'response.data.error.message', '')
+          this.join_error_msg = 'There was a problem joining the team'
+        })
       },
       onEmailInviteSelectVisibleChange(visible) {
         // this is somewhat of a hack, but it allows the final text that was

@@ -256,7 +256,7 @@
               this.selectPipe(pipe)
             }
           })
-        }).catch(() => {
+        }).catch(error => {
           // do nothing
         })
       },

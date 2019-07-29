@@ -62,6 +62,8 @@ const mutations = {
     removeItem(state, eid)
   },
 
+  'JOINED_TEAM' (state) {},
+
   'RESENDING_INVITE' (state, { eid, is_invite_resending }) {
     updateMeta(state, eid, { is_invite_resending })
   },
@@ -117,6 +119,15 @@ const actions = {
   'delete' ({ commit }, { team_name, eid }) {
     return api.deleteMember(team_name, eid).then(response => {
       commit('DELETED_MEMBER', eid)
+      return response
+    }).catch(error => {
+      throw error
+    })
+  },
+
+  'join' ({ commit }, { team_name, attrs }) {
+    return api.joinTeam(team_name, attrs).then(response => {
+      commit('JOINED_TEAM')
       return response
     }).catch(error => {
       throw error

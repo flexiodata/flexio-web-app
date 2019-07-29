@@ -203,7 +203,7 @@
           type: 'warning'
         }).then(() => {
           this.saveChanges()
-        }).catch(() => {
+        }).catch(error => {
           // do nothing
         })
       }
