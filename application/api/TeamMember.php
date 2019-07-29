@@ -380,7 +380,10 @@ class TeamMember
         $member_info_updated = \Flexio\System\System::getModel()->teammember->set($member_user_eid, $owner_user_eid, $updated_member_info);
 
         // throw an error if the member isn't part of the team (result of updating in false,
-        // which indicates no update)
+        // which indicates no update); note: this may happen if a user was invited into
+        // a team, received a "join team" email and then clicked on the link in that email
+        // after somebody else removed them from the email; this error is necessary for
+        // displaying some type of error in the interface
         if ($member_info_updated === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
