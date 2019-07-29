@@ -69,8 +69,11 @@
       },
       onSignedIn() {
         this.$store.dispatch('users/fetch', { eid: 'me' }).then(response => {
-          if (this.getActiveUser().eid_status == OBJECT_STATUS_PENDING) {
-            this.$router.push({ path: '/signup/verify' })
+          if (_.get(this.getActiveUser(), 'eid_status') == OBJECT_STATUS_PENDING) {
+            this.$router.push({
+              path: '/signup/verify',
+              query: this.$route.query
+            })
           } else {
             this.$_Redirect_redirect()
           }
