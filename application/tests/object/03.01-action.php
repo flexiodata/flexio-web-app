@@ -44,15 +44,5 @@ class Test
         $actual = \Flexio\Object\Action::TYPE_EXECUTE;
         $expected = 'object.execute';
         \Flexio\Tests\Check::assertString('A.5', 'Action type',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Flexio\Object\Action::TYPE_READ_RIGHTS;
-        $expected = 'rights.read';
-        \Flexio\Tests\Check::assertString('A.6', 'Action type',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Flexio\Object\Action::TYPE_WRITE_RIGHTS;
-        $expected = 'rights.write';
-        \Flexio\Tests\Check::assertString('A.7', 'Action type',  $actual, $expected, $results);
     }
 }
