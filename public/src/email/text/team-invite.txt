@@ -1,4 +1,4 @@
-Hello,
+Hi there,
 
 ${name} (${from_email}) invited you to the team "${object_name}" on Flex.io.
 
