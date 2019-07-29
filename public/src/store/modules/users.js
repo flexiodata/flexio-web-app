@@ -47,7 +47,7 @@ const mutations = {
   },
 
   'INITIALIZING_ITEM' (state, is_initializing) {
-    this.is_initializing = is_initializing
+    state.is_initializing = is_initializing
   },
 
   'INITIALIZED_ITEM' (state, item) {
@@ -59,7 +59,7 @@ const mutations = {
   },
 
   'SIGNING_IN' (state, is_signing_in) {
-    this.is_signing_in = is_signing_in
+    state.is_signing_in = is_signing_in
   },
 
   'SIGNED_IN' (state, item) {
@@ -119,6 +119,21 @@ const actions = {
     })
   },
 
+  'signIn' ({ commit, dispatch }, attrs) {
+    commit('SIGNING_IN', true)
+
+    return api.signIn(attrs).then(response => {
+      var user = response.data
+      commit('SIGNING_IN', false)
+      commit('SIGNED_IN', user)
+      dispatch('identify', user)
+      return response
+    }).catch(error => {
+      commit('SIGNING_IN', false)
+      throw error
+    })
+  },
+
   'signOut' ({ commit, dispatch }) {
     commit('SIGNING_OUT', true)
 
@@ -126,8 +141,8 @@ const actions = {
       // we need to give just a bit of breathing room for the UI to change
       // the route to the sign in page before we update the state with these commits
       setTimeout(() => {
-        commit('SIGNED_OUT')
         commit('SIGNING_OUT', false)
+        commit('SIGNED_OUT')
         dispatch('track', { event_name: 'Signed Out' })
 
         // reset the store state globally (including all modules)
