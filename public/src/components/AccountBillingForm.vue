@@ -140,7 +140,7 @@
         return this.card_icons[card_name] || ''
       },
       fetchCards() {
-        api.v2_fetchCards().then(response => {
+        api.fetchCards().then(response => {
           this.cards = response.data
           this.card_error = ''
         }).catch(error => {
@@ -161,14 +161,14 @@
         createToken().then(data => {
           var token_id = data.token.id
 
-          api.v2_createCard('me', { token: token_id }).then(card_data => {
+          api.createCard('me', { token: token_id }).then(card_data => {
             this.fetchCards()
             this.resetCard()
           })
         })
       },
       removeCard(card) {
-        api.v2_deleteCard('me', card.card_id).then(card_data => {
+        api.deleteCard('me', card.card_id).then(card_data => {
           this.fetchCards()
         })
       }

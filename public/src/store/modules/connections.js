@@ -87,7 +87,7 @@ const mutations = {
 
 const actions = {
   'create' ({ commit, dispatch }, { team_name, attrs }) {
-    return api.v2_createConnection(team_name, attrs).then(response => {
+    return api.createConnection(team_name, attrs).then(response => {
       commit('CREATED_ITEM', response.data)
       return response
     }).catch(error => {
@@ -98,7 +98,7 @@ const actions = {
   'fetch' ({ commit }, { team_name, eid, name }) {
     if (eid || name) {
       // fetching a single item
-      return api.v2_fetchConnection(team_name, eid || name).then(response => {
+      return api.fetchConnection(team_name, eid || name).then(response => {
         commit('FETCHED_ITEM', response.data)
         return response
       }).catch(error => {
@@ -108,7 +108,7 @@ const actions = {
       // fetching a collection of items
       commit('FETCHING_ITEMS', true)
 
-      return api.v2_fetchConnections(team_name).then(response => {
+      return api.fetchConnections(team_name).then(response => {
         commit('FETCHED_ITEMS', response.data)
         commit('FETCHING_ITEMS', false)
         return response
@@ -125,7 +125,7 @@ const actions = {
       attrs.connection_info = sanitizeMasked(attrs.connection_info)
     }
 
-    return api.v2_updateConnection(team_name, eid, attrs).then(response => {
+    return api.updateConnection(team_name, eid, attrs).then(response => {
       commit('UPDATED_ITEM', { eid, item: response.data })
       return response
     }).catch(error => {
@@ -134,7 +134,7 @@ const actions = {
   },
 
   'delete' ({ commit }, { team_name, eid }) {
-    return api.v2_deleteConnection(team_name, eid).then(response => {
+    return api.deleteConnection(team_name, eid).then(response => {
       commit('DELETED_ITEM', eid)
       return response
     }).catch(error => {
@@ -150,7 +150,7 @@ const actions = {
 
     commit('TESTING_ITEM', { eid, is_testing: true })
 
-    return api.v2_testConnection(team_name, eid, attrs).then(response => {
+    return api.testConnection(team_name, eid, attrs).then(response => {
       commit('TESTED_ITEM', { eid, item: response.data })
       commit('TESTING_ITEM', { eid, is_testing: false })
       return response
@@ -163,7 +163,7 @@ const actions = {
   'disconnect' ({ commit }, { team_name, eid, attrs }) {
     commit('DISCONNECTING_ITEM', { eid, is_disconnecting: true })
 
-    return api.v2_disconnectConnection(team_name, eid, attrs).then(response => {
+    return api.disconnectConnection(team_name, eid, attrs).then(response => {
       commit('DISCONNECTED_ITEM', { eid, item: response.data })
       commit('DISCONNECTING_ITEM', { eid, is_disconnecting: false })
       return response

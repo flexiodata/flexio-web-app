@@ -132,7 +132,7 @@
 
           this.is_submitting = true
 
-          api.v2_resetPassword(attrs).then(response => {
+          api.resetPassword(attrs).then(response => {
             this.is_submitting = false
             this.is_sent = true
             this.error_msg = ''

@@ -53,7 +53,7 @@ const mutations = {
 
 const actions = {
   'create' ({ commit, dispatch }, { team_name }) {
-    return api.v2_createToken(team_name).then(response => {
+    return api.createToken(team_name).then(response => {
       commit('CREATED_ITEM', response.data)
       return response
     }).catch(error => {
@@ -65,7 +65,7 @@ const actions = {
     // fetching a collection of items
     commit('FETCHING_ITEMS', true)
 
-    return api.v2_fetchTokens(team_name).then(response => {
+    return api.fetchTokens(team_name).then(response => {
       commit('FETCHED_ITEMS', response.data)
       commit('FETCHING_ITEMS', false)
       return response
@@ -76,7 +76,7 @@ const actions = {
   },
 
   'delete' ({ commit }, { team_name, eid }) {
-    return api.v2_deleteToken(team_name, eid).then(response => {
+    return api.deleteToken(team_name, eid).then(response => {
       commit('DELETED_ITEM', eid)
       return response
     }).catch(error => {

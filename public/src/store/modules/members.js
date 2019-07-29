@@ -73,7 +73,7 @@ const mutations = {
 
 const actions = {
   'create' ({ commit, dispatch }, { team_name, attrs }) {
-    return api.v2_createMember(team_name, attrs).then(response => {
+    return api.createMember(team_name, attrs).then(response => {
       commit('CREATED_ITEM', response.data)
       return response
     }).catch(error => {
@@ -84,7 +84,7 @@ const actions = {
   'fetch' ({ commit }, { team_name, eid }) {
     if (eid) {
       // fetching a single item
-      return api.v2_fetchMember(team_name, eid).then(response => {
+      return api.fetchMember(team_name, eid).then(response => {
         commit('FETCHED_ITEM', response.data)
         return response
       }).catch(error => {
@@ -94,7 +94,7 @@ const actions = {
       // fetching a collection of items
       commit('FETCHING_ITEMS', true)
 
-      return api.v2_fetchMembers(team_name).then(response => {
+      return api.fetchMembers(team_name).then(response => {
         commit('FETCHED_ITEMS', response.data)
         commit('FETCHING_ITEMS', false)
         return response
@@ -106,7 +106,7 @@ const actions = {
   },
 
   'update' ({ commit }, { team_name, eid, attrs }) {
-    return api.v2_updateMember(team_name, eid, attrs).then(response => {
+    return api.updateMember(team_name, eid, attrs).then(response => {
       commit('UPDATED_ITEM', { eid, item: response.data })
       return response
     }).catch(error => {
@@ -115,7 +115,7 @@ const actions = {
   },
 
   'delete' ({ commit }, { team_name, eid }) {
-    return api.v2_deleteMember(team_name, eid).then(response => {
+    return api.deleteMember(team_name, eid).then(response => {
       commit('DELETED_ITEM', eid)
       return response
     }).catch(error => {
@@ -126,7 +126,7 @@ const actions = {
   'resendInvite' ({ commit }, { team_name, eid }) {
     commit('RESENDING_INVITE', { eid, is_invite_resending: true })
 
-    return api.v2_reinviteMember(team_name, eid).then(response => {
+    return api.reinviteMember(team_name, eid).then(response => {
       commit('RESENDING_INVITE', { eid, is_invite_resending: false })
       commit('RESENT_INVITE', { eid, is_invite_resent: true })
       setTimeout(() => { commit('RESENT_INVITE', { eid, is_invite_resent: false }) }, 4000)

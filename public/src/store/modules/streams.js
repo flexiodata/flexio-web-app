@@ -39,7 +39,7 @@ const actions = {
   'fetch' ({ commit }, { team_name, eid }) {
     if (eid) {
       // fetching a single item
-      return api.v2_fetchStream(team_name, eid).then(response => {
+      return api.fetchStream(team_name, eid).then(response => {
         commit('FETCHED_ITEM', response.data)
         return response
       }).catch(error => {

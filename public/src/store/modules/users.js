@@ -73,7 +73,7 @@ const actions = {
     }
 
     // fetching a single item
-    return api.v2_fetchUser(eid).then(response => {
+    return api.fetchUser(eid).then(response => {
       var user = response.data
       commit('FETCHED_ITEM', user)
       if (eid == 'me') {
@@ -89,7 +89,7 @@ const actions = {
   },
 
   'update' ({ commit }, { eid, attrs }) {
-    return api.v2_updateUser(eid, attrs).then(response => {
+    return api.updateUser(eid, attrs).then(response => {
       commit('UPDATED_ITEM', { eid, item: response.data })
       return response
     }).catch(error => {
@@ -98,7 +98,7 @@ const actions = {
   },
 
   'delete' ({ commit }, { eid, attrs }) {
-    return api.v2_deleteUser(eid, attrs).then(response => {
+    return api.deleteUser(eid, attrs).then(response => {
       commit('DELETED_ITEM', eid)
       return response
     }).catch(error => {
@@ -109,7 +109,7 @@ const actions = {
   'signOut' ({ commit, dispatch }) {
     commit('SIGNING_OUT', true)
 
-    return api.v2_logout().then(response => {
+    return api.logout().then(response => {
       // we need to give just a bit of breathing room for the UI to change
       // the route to the sign in page before we update the state with these commits
       setTimeout(() => {
@@ -128,7 +128,7 @@ const actions = {
   },
 
   'changePassword' ({ commit, dispatch }, { eid, attrs }) {
-    return api.v2_changePassword(eid, attrs).then(response => {
+    return api.changePassword(eid, attrs).then(response => {
       dispatch('track', { event_name: 'Changed Password' })
       return response
     }).catch(error => {

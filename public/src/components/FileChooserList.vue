@@ -230,7 +230,7 @@
 
         var path = _.defaultTo(this.path, '/')
 
-        api.v2_vfsListFiles(this.teamName, path).then(response => {
+        api.vfsListFiles(this.teamName, path).then(response => {
           var items = _
             .chain(_.defaultTo(response.data, []))
             .map((f) => { return _.assign({}, { is_selected: false }, f) })

@@ -85,7 +85,7 @@ const mutations = {
 
 const actions = {
   'create' ({ commit, dispatch }, { team_name, attrs }) {
-    return api.v2_createPipe(team_name, attrs).then(response => {
+    return api.createPipe(team_name, attrs).then(response => {
       commit('CREATED_ITEM', response.data)
       return response
     }).catch(error => {
@@ -96,7 +96,7 @@ const actions = {
   'fetch' ({ commit }, { team_name, eid, name }) {
     if (eid || name) {
       // fetching a single item
-      return api.v2_fetchPipe(team_name, eid || name).then(response => {
+      return api.fetchPipe(team_name, eid || name).then(response => {
         commit('FETCHED_ITEM', response.data)
         return response
       }).catch(error => {
@@ -106,7 +106,7 @@ const actions = {
       // fetching a collection of items
       commit('FETCHING_ITEMS', true)
 
-      return api.v2_fetchPipes(team_name).then(response => {
+      return api.fetchPipes(team_name).then(response => {
         commit('FETCHED_ITEMS', response.data)
         commit('FETCHING_ITEMS', false)
         return response
@@ -118,7 +118,7 @@ const actions = {
   },
 
   'update' ({ commit }, { team_name, eid, attrs }) {
-    return api.v2_updatePipe(team_name, eid, attrs).then(response => {
+    return api.updatePipe(team_name, eid, attrs).then(response => {
       commit('UPDATED_ITEM', { eid, item: response.data })
       return response
     }).catch(error => {
@@ -127,7 +127,7 @@ const actions = {
   },
 
   'delete' ({ commit }, { team_name, eid }) {
-    return api.v2_deletePipe(team_name, eid).then(response => {
+    return api.deletePipe(team_name, eid).then(response => {
       commit('DELETED_ITEM', eid)
       return response
     }).catch(error => {

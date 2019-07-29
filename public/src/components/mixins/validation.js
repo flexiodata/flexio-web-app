@@ -5,7 +5,7 @@ import api from '../../api'
 export default {
   methods: {
     $_Validation_validateAll: _.debounce(function(team_name, validate_attrs, callback) {
-      api.v2_validate(team_name, validate_attrs).then(response => {
+      api.validate(team_name, validate_attrs).then(response => {
         var errors = _.keyBy(response.data, 'key')
 
         if (_.isFunction(callback)) {

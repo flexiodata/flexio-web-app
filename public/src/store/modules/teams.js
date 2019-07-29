@@ -52,7 +52,7 @@ const actions = {
     // fetching a collection of items
     commit('FETCHING_ITEMS', true)
 
-    return api.v2_fetchTeams(team_name).then(response => {
+    return api.fetchTeams(team_name).then(response => {
       commit('FETCHED_ITEMS', response.data)
       commit('FETCHING_ITEMS', false)
       return response

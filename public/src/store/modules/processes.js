@@ -76,7 +76,7 @@ const mutations = {
 
 const actions = {
   'create' ({ commit, dispatch }, { team_name, attrs }) {
-    return api.v2_createProcess(team_name, attrs).then(response => {
+    return api.createProcess(team_name, attrs).then(response => {
       var process = response.data
       var eid = process.eid
 
@@ -97,7 +97,7 @@ const actions = {
   'fetch' ({ commit, dispatch }, { team_name, eid, poll, attrs }) {
     if (eid) {
       // fetching a single item
-      return api.v2_fetchProcess(team_name, eid).then(response => {
+      return api.fetchProcess(team_name, eid).then(response => {
         var process = response.data
 
         commit('FETCHED_ITEM', process)
@@ -124,7 +124,7 @@ const actions = {
       // fetching a collection of items
       commit('FETCHING_ITEMS', true)
 
-      return api[team_name == 'admin' ? 'v2_fetchAdminProcesses' : 'v2_fetchProcesses'](team_name, attrs).then(response => {
+      return api[team_name == 'admin' ? 'fetchAdminProcesses' : 'fetchProcesses'](team_name, attrs).then(response => {
         commit('FETCHED_ITEMS', response.data)
         commit('FETCHING_ITEMS', false)
         return response
@@ -136,7 +136,7 @@ const actions = {
   },
 
   'fetchLog' ({ commit, dispatch }, { team_name, eid }) {
-    return api.v2_fetchProcessLog(team_name, eid).then(response => {
+    return api.fetchProcessLog(team_name, eid).then(response => {
       var item = { log: response.data }
       commit('FETCHED_ITEM_LOG', { eid, item })
       return response
@@ -148,7 +148,7 @@ const actions = {
   'run' ({ commit, dispatch }, { team_name, eid, cfg }) {
     dispatch('fetch', { team_name, eid, poll: true })
 
-    return api.v2_runProcess(team_name, eid, cfg).then(response => {
+    return api.runProcess(team_name, eid, cfg).then(response => {
       var process = { eid, process_status: PROCESS_STATUS_RUNNING }
       commit('STARTED_ITEM', { eid, item: process })
       return response
@@ -162,7 +162,7 @@ const actions = {
   'cancel' ({ commit, dispatch }, { team_name, eid }) {
     commit('CANCELING_ITEM', { eid, is_canceling: true })
 
-    return api.v2_cancelProcess(team_name, eid).then(response => {
+    return api.cancelProcess(team_name, eid).then(response => {
       commit('CANCELED_ITEM', { eid, item: response.data })
       commit('CANCELING_ITEM', { eid, is_canceling: false })
       return response
