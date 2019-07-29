@@ -38,10 +38,10 @@
         <button
           type="button"
           :class="button_cls"
-          :disabled="is_signing_in"
+          :disabled="is_signing_in || is_submitting"
           @click="trySignIn"
         >
-          <span v-if="is_signing_in">Signing in...</span>
+          <span v-if="is_signing_in || is_submitting">Signing in...</span>
           <span v-else>Sign in</span>
         </button>
       </div>
@@ -62,6 +62,7 @@
         username: '',
         password: '',
         error_msg: '',
+        is_submitting: false,
         input_cls: 'input-reset ba b--black-10 br2 focus-b--blue lh-title ph3 pv2a w-100',
         button_cls: 'border-box no-select ttu fw6 w-100 ph4 pv2a lh-title white bg-blue br2 darken-10'
       }
@@ -76,12 +77,15 @@
     },
     methods: {
       trySignIn() {
+        this.is_submitting = true
+
         var username = this.username
         var password = this.password
 
         this.$store.dispatch('users/signIn', { username, password }).then(response => {
           this.$emit('signed-in', response.data)
         }).catch(error => {
+          this.is_submitting = false
           this.password = ''
           this.error_msg = _.get(error, 'response.data.error.message', '')
         })
