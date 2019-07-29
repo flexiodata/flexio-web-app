@@ -76,7 +76,7 @@
       </template>
 
       <!-- connection not found -->
-      <PageNotFound class="flex-fill bg-nearer-white" v-else />
+      <PageNotFound class="flex-fill" v-else />
     </div>
     <EmptyItem class="flex flex-column items-center justify-center h-100" v-else>
       <div class="tc f3" slot="text">

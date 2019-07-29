@@ -102,7 +102,7 @@
       }),
       is_superuser() {
         // limit to @flex.io users for now
-        var user_email = _.get(this.getActiveUser(), 'email', '')
+        var user_email = this.getActiveUserEmail()
         return _.includes(user_email, '@flex.io')
       },
       process() {
@@ -140,7 +140,7 @@
     },
     methods: {
       ...mapGetters('users', {
-        'getActiveUser': 'getActiveUser'
+        'getActiveUserEmail': 'getActiveUserEmail'
       }),
       fetchProcessLog() {
         var team_name = this.active_team_name

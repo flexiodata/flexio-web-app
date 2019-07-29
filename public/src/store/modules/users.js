@@ -184,8 +184,8 @@ const getters = {
     return items.reverse()
   },
 
-  getActiveUser (state, getters) {
-    return _.find(getters.getAllUsers, { eid: state.active_user_eid })
+  getActiveUser (state) {
+    return _.find(state.items, { eid: state.active_user_eid })
   },
 
   getActiveUserEmail (state, getters) {
