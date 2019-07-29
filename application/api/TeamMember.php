@@ -374,10 +374,15 @@ class TeamMember
         if ($member_user_eid === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
-        // update the team member
+        // attempt to update the team member
         $updated_member_info = array();
         $updated_member_info['member_status'] = \Model::TEAM_MEMBER_STATUS_ACTIVE;
-        \Flexio\System\System::getModel()->teammember->set($member_user_eid, $owner_user_eid, $updated_member_info);
+        $member_info_updated = \Flexio\System\System::getModel()->teammember->set($member_user_eid, $owner_user_eid, $updated_member_info);
+
+        // throw an error if the member isn't part of the team (result of updating in false,
+        // which indicates no update)
+        if ($member_info_updated === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         // public call, so don't return any info about the member joining
         $result = array();
