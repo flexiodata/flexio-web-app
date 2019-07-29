@@ -9,7 +9,7 @@
       <mj-column css-class="css-white-box">
         <mj-include path="./logo.mjml" />
         <mj-spacer height="12px" />
-        <mj-text>Hello,</mj-text>
+        <mj-text>Hi there,</mj-text>
         <mj-text>${name} (${from_email}) invited you to the team <strong>&quot;${object_name}&quot;</strong> on Flex.io.</mj-text>
         <mj-button href="${share_link}">Go to team</mj-button>
         <mj-text>Enjoy!</mj-text>
