@@ -25,7 +25,11 @@
         <button
           type="button"
           class="border-box no-select ttu fw6 w-100 ph4 pv2a lh-title white br2 darken-10"
-          :class="is_sending || is_sent ? 'bg-dark-green o-40 no-pointer-events' : 'bg-blue'"
+          :class="{
+            'bg-blue': !is_sent,
+            'bg-dark-green': is_sent,
+            'o-40 no-pointer-events': is_sending || is_sent
+          }"
           @click="resendVerification"
         >
           {{button_label}}
