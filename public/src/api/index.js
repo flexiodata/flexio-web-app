@@ -14,6 +14,7 @@ export default {
   signUp:               (attrs)                         => AxiosResource(null)[POS] (`/signup`, attrs),
   verifyAccount:        (attrs)                         => AxiosResource(null)[POS] (`/verification`, attrs),
   requestVerification:  (attrs)                         => AxiosResource(null)[POS] (`/requestverification`, attrs),
+  forgotPassword:       (attrs)                         => AxiosResource(null)[POS] (`/forgotpassword`, attrs),
   resetPassword:        (attrs)                         => AxiosResource(null)[POS] (`/resetpassword`, attrs),
 
   // AUTHENTICATED API CALLS:

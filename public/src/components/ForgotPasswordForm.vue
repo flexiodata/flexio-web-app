@@ -61,7 +61,7 @@
 </template>
 
 <script>
-  import axios from 'axios'
+  import api from '@/api'
 
   export default {
     data() {
@@ -89,7 +89,7 @@
 
         this.is_submitting = true
 
-        axios.post('/api/v2/forgotpassword', attrs).then(response => {
+        api.forgotPassword(attrs).then(response => {
           this.is_sent = true
           this.$emit('requested-password')
         }).catch(error => {
