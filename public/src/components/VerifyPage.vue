@@ -25,6 +25,7 @@
 </template>
 
 <script>
+  import { ROUTE_SIGNIN_PAGE } from '@/constants/route'
   import api from '@/api'
   import Spinner from 'vue-simple-spinner'
 
@@ -39,11 +40,18 @@
       }
     },
     mounted() {
-      api.verifyAccount(this.$route.query).then(response => {
-        this.is_verified = true
-        setTimeout(() => {
-          this.$router.replace({ path: '/signin' })
-        }, 3000)
+      this.$store.dispatch('users/signOut').then(response => {
+        api.verifyAccount(this.$route.query).then(response => {
+          this.is_verified = true
+          setTimeout(() => {
+            this.$router.replace({
+              name: ROUTE_SIGNIN_PAGE,
+              query: this.$route.query
+            })
+          }, 3000)
+        }).catch(error => {
+          this.error_msg = _.get(error, 'response.data.error.message', '')
+        })
       }).catch(error => {
         this.error_msg = _.get(error, 'response.data.error.message', '')
       })
