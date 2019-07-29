@@ -101,21 +101,21 @@ class Test
 
         // TEST: connect to service with invalid credentials
 
-        // BEGIN TEST
-        $params = array(
-            'method' => 'POST',
-            'url' => "$apibase/$userid1/connections/$objeid1/connect",
-            // 'token' => '', // no token included
-        );
-        $result = \Flexio\Tests\Util::callApi($params);
-        $actual = $result['response'];
-        $expected = '
-        {
-            "error": {
-                "code": "insufficient-rights"
-            }
-        }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:teamid/connections/:objeid/connect; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
+        // // BEGIN TEST
+        // $params = array(
+        //     'method' => 'POST',
+        //     'url' => "$apibase/$userid1/connections/$objeid1/connect",
+        //     // 'token' => '', // no token included
+        // );
+        // $result = \Flexio\Tests\Util::callApi($params);
+        // $actual = $result['response'];
+        // $expected = '
+        // {
+        //     "error": {
+        //         "code": "insufficient-rights"
+        //     }
+        // }';
+        // \Flexio\Tests\Check::assertInArray('A.1', 'POST /:teamid/connections/:objeid/connect; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -133,89 +133,89 @@ class Test
         }';
         \Flexio\Tests\Check::assertInArray('A.2', 'POST /:teamid/connections/:objeid/connect; fail if object isn\'t owned by specified owner',  $actual, $expected, $results);
 
-        // BEGIN TEST
-        $params = array(
-            'method' => 'POST',
-            'url' => "$apibase/$userid1/connections/$objeid1/connect",
-            'token' => $token2 // token for another user
-        );
-        $result = \Flexio\Tests\Util::callApi($params);
-        $actual = $result['response'];
-        $expected = '
-        {
-            "error": {
-                "code": "insufficient-rights"
-            }
-        }';
-        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:teamid/connections/:objeid/connect; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
+        // // BEGIN TEST
+        // $params = array(
+        //     'method' => 'POST',
+        //     'url' => "$apibase/$userid1/connections/$objeid1/connect",
+        //     'token' => $token2 // token for another user
+        // );
+        // $result = \Flexio\Tests\Util::callApi($params);
+        // $actual = $result['response'];
+        // $expected = '
+        // {
+        //     "error": {
+        //         "code": "insufficient-rights"
+        //     }
+        // }';
+        // \Flexio\Tests\Check::assertInArray('A.3', 'POST /:teamid/connections/:objeid/connect; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
 
 
 
-        // TEST: test connecting to service
+        // // TEST: test connecting to service
 
-        // BEGIN TEST
-        $idx = 0;
-        foreach ($test_connection_eids as $objeid1 => $type)
-        {
-            $idx++;
-            $params = array(
-                'method' => 'POST',
-                'url' => "$apibase/$userid1/connections/$objeid1/connect",
-                'token' => $token1
-            );
-            $result = \Flexio\Tests\Util::callApi($params);
-            $response = json_decode($result['response'],true);
-            $actual = $response['connection_status'] ?? '';
-            $expected = \Model::CONNECTION_STATUS_AVAILABLE;
-            \Flexio\Tests\Check::assertString("B.$idx", "POST /:teamid/connections/:objeid/connect; copy of $type: check connecting to service",  $actual, $expected, $results);
-        }
-
-
-        // TEST: test disconnecting to service
-
-        // BEGIN TEST
-        $idx = 0;
-        foreach ($test_connection_eids as $objeid1 => $type)
-        {
-            $idx++;
-            $params = array(
-                'method' => 'POST',
-                'url' => "$apibase/$userid1/connections/$objeid1/disconnect",
-                'token' => $token1
-            );
-            $result = \Flexio\Tests\Util::callApi($params);
-            $response = json_decode($result['response'],true);
-            $actual = $response['connection_status'] ?? '';
-            $expected = \Model::CONNECTION_STATUS_UNAVAILABLE;
-            \Flexio\Tests\Check::assertString("C.$idx", "POST /:teamid/connections/:objeid/connect; copy of $type: check disconnecting to service",  $actual, $expected, $results);
-        }
+        // // BEGIN TEST
+        // $idx = 0;
+        // foreach ($test_connection_eids as $objeid1 => $type)
+        // {
+        //     $idx++;
+        //     $params = array(
+        //         'method' => 'POST',
+        //         'url' => "$apibase/$userid1/connections/$objeid1/connect",
+        //         'token' => $token1
+        //     );
+        //     $result = \Flexio\Tests\Util::callApi($params);
+        //     $response = json_decode($result['response'],true);
+        //     $actual = $response['connection_status'] ?? '';
+        //     $expected = \Model::CONNECTION_STATUS_AVAILABLE;
+        //     \Flexio\Tests\Check::assertString("B.$idx", "POST /:teamid/connections/:objeid/connect; copy of $type: check connecting to service",  $actual, $expected, $results);
+        // }
 
 
-        // TEST: test connecting to service with bad credentials
+        // // TEST: test disconnecting to service
 
-        // BEGIN TEST
-        $idx = 0;
-        foreach ($test_connection_eids as $objeid1 => $type)
-        {
-            // TODO: we need a better way of resetting credentials
-            $connection_model = \Flexio\Tests\Util::getModel()->connection;
-            $connection_model->set($objeid1, array('connection_info' => '{}'));
+        // // BEGIN TEST
+        // $idx = 0;
+        // foreach ($test_connection_eids as $objeid1 => $type)
+        // {
+        //     $idx++;
+        //     $params = array(
+        //         'method' => 'POST',
+        //         'url' => "$apibase/$userid1/connections/$objeid1/disconnect",
+        //         'token' => $token1
+        //     );
+        //     $result = \Flexio\Tests\Util::callApi($params);
+        //     $response = json_decode($result['response'],true);
+        //     $actual = $response['connection_status'] ?? '';
+        //     $expected = \Model::CONNECTION_STATUS_UNAVAILABLE;
+        //     \Flexio\Tests\Check::assertString("C.$idx", "POST /:teamid/connections/:objeid/connect; copy of $type: check disconnecting to service",  $actual, $expected, $results);
+        // }
 
-            $idx++;
-            $params = array(
-                'method' => 'POST',
-                'url' => "$apibase/$userid1/connections/$objeid1/connect",
-                'token' => $token1
-            );
-            $result = \Flexio\Tests\Util::callApi($params);
-            $actual = json_decode($result['response'],true);
-            $expected = '
-            {
-                "error" : {
-                    "code": "connection-failed"
-                }
-            }';
-            \Flexio\Tests\Check::assertInArray("D.$idx", "POST /:teamid/connections/:objeid/connect; copy of $type: test connecting within invalid info",  $actual, $expected, $results);
+
+        // // TEST: test connecting to service with bad credentials
+
+        // // BEGIN TEST
+        // $idx = 0;
+        // foreach ($test_connection_eids as $objeid1 => $type)
+        // {
+        //     // TODO: we need a better way of resetting credentials
+        //     $connection_model = \Flexio\Tests\Util::getModel()->connection;
+        //     $connection_model->set($objeid1, array('connection_info' => '{}'));
+
+        //     $idx++;
+        //     $params = array(
+        //         'method' => 'POST',
+        //         'url' => "$apibase/$userid1/connections/$objeid1/connect",
+        //         'token' => $token1
+        //     );
+        //     $result = \Flexio\Tests\Util::callApi($params);
+        //     $actual = json_decode($result['response'],true);
+        //     $expected = '
+        //     {
+        //         "error" : {
+        //             "code": "connection-failed"
+        //         }
+        //     }';
+        //     \Flexio\Tests\Check::assertInArray("D.$idx", "POST /:teamid/connections/:objeid/connect; copy of $type: test connecting within invalid info",  $actual, $expected, $results);
         }
     }
 }
