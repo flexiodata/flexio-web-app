@@ -25,7 +25,7 @@
 </template>
 
 <script>
-  import axios from 'axios'
+  import api from '@/api'
   import Spinner from 'vue-simple-spinner'
 
   export default {
@@ -39,9 +39,11 @@
       }
     },
     mounted() {
-      axios.post('/api/v2/verification', this.$route.query).then(response => {
+      api.verifyAccount(this.$route.query).then(response => {
         this.is_verified = true
-        setTimeout(() => { this.$router.replace('/signin') }, 3000)
+        setTimeout(() => {
+          this.$router.replace({ path: '/signin' })
+        }, 3000)
       }).catch(error => {
         this.error_msg = _.get(error, 'response.data.error.message', '')
       })
