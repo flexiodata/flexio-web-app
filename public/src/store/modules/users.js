@@ -17,7 +17,8 @@ const getDefaultMeta = () => {
 const getDefaultState = () => {
   return {
     active_user_eid: '',
-    is_signing_in: false,
+    is_initializing: false, // `GET /me/account`
+    is_signing_in: false,   // `POS /signin`
     is_signing_out: false,
     is_fetching: false,
     is_fetched: false,
@@ -45,6 +46,19 @@ const mutations = {
     removeItem(state, eid)
   },
 
+  'INITIALIZING_ITEM' (state, is_initializing) {
+    this.is_initializing = is_initializing
+  },
+
+  'INITIALIZED_ITEM' (state, item) {
+    debugger
+    var meta = _.assign(getDefaultMeta(), { is_fetched: true })
+    addItem(state, item, meta)
+
+    // store the active user eid
+    state.active_user_eid = item.eid
+  },
+
   'SIGNING_IN' (state, is_signing_in) {
     this.is_signing_in = is_signing_in
   },
@@ -69,7 +83,7 @@ const mutations = {
 const actions = {
   'fetch' ({ commit, dispatch }, { eid }) {
     if (eid == 'me') {
-      commit('SIGNING_IN', true)
+      commit('INITIALIZING_ITEM', true)
     }
 
     // fetching a single item
@@ -77,13 +91,13 @@ const actions = {
       var user = response.data
       commit('FETCHED_ITEM', user)
       if (eid == 'me') {
-        commit('SIGNED_IN', user)
-        commit('SIGNING_IN', false)
+        commit('INITIALIZED_ITEM', user)
+        commit('INITIALIZING_ITEM', false)
         dispatch('identify', user)
       }
       return response
     }).catch(error => {
-      commit('SIGNING_IN', false)
+      commit('INITIALIZING_ITEM', false)
       throw error
     })
   },
