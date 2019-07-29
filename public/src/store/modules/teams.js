@@ -30,14 +30,14 @@ const mutations = {
     _.assign(state, getDefaultState())
   },
 
-  'FETCHING_ITEMS' (state, is_fetching) {
+  'FETCHING_TEAMS' (state, is_fetching) {
     state.is_fetching = is_fetching
     if (is_fetching === true) {
       state.is_fetched = false
     }
   },
 
-  'FETCHED_ITEMS' (state, items) {
+  'FETCHED_TEAMS' (state, items) {
     addItem(state, items, getDefaultMeta())
     state.is_fetched = true
   },
@@ -50,14 +50,14 @@ const mutations = {
 const actions = {
   'fetch' ({ commit }, { team_name, eid }) {
     // fetching a collection of items
-    commit('FETCHING_ITEMS', true)
+    commit('FETCHING_TEAMS', true)
 
     return api.fetchTeams(team_name).then(response => {
-      commit('FETCHED_ITEMS', response.data)
-      commit('FETCHING_ITEMS', false)
+      commit('FETCHED_TEAMS', response.data)
+      commit('FETCHING_TEAMS', false)
       return response
     }).catch(error => {
-      commit('FETCHING_ITEMS', false)
+      commit('FETCHING_TEAMS', false)
       throw error
     })
   },

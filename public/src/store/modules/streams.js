@@ -29,7 +29,7 @@ const mutations = {
     _.assign(state, getDefaultState())
   },
 
-  'FETCHED_ITEM' (state, item) {
+  'FETCHED_STREAM' (state, item) {
     var meta = _.assign(getDefaultMeta(), { is_fetched: true })
     addItem(state, item, meta)
   },
@@ -40,7 +40,7 @@ const actions = {
     if (eid) {
       // fetching a single item
       return api.fetchStream(team_name, eid).then(response => {
-        commit('FETCHED_ITEM', response.data)
+        commit('FETCHED_STREAM', response.data)
         return response
       }).catch(error => {
         throw error

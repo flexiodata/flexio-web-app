@@ -32,33 +32,33 @@ const mutations = {
     _.assign(state, getDefaultState())
   },
 
-  'CREATED_ITEM' (state, item) {
+  'CREATED_MEMBER' (state, item) {
     var meta = _.assign(getDefaultMeta(), { is_fetched: true })
     addItem(state, item, meta)
   },
 
-  'FETCHING_ITEMS' (state, is_fetching) {
+  'FETCHING_MEMBERS' (state, is_fetching) {
     state.is_fetching = is_fetching
     if (is_fetching === true) {
       state.is_fetched = false
     }
   },
 
-  'FETCHED_ITEMS' (state, items) {
+  'FETCHED_MEMBERS' (state, items) {
     addItem(state, items, getDefaultMeta())
     state.is_fetched = true
   },
 
-  'FETCHED_ITEM' (state, item) {
+  'FETCHED_MEMBER' (state, item) {
     var meta = _.assign(getDefaultMeta(), { is_fetched: true })
     addItem(state, item, meta)
   },
 
-  'UPDATED_ITEM' (state, { eid, item }) {
+  'UPDATED_MEMBER' (state, { eid, item }) {
     updateItem(state, eid, item)
   },
 
-  'DELETED_ITEM' (state, eid) {
+  'DELETED_MEMBER' (state, eid) {
     removeItem(state, eid)
   },
 
@@ -74,7 +74,7 @@ const mutations = {
 const actions = {
   'create' ({ commit, dispatch }, { team_name, attrs }) {
     return api.createMember(team_name, attrs).then(response => {
-      commit('CREATED_ITEM', response.data)
+      commit('CREATED_MEMBER', response.data)
       return response
     }).catch(error => {
       throw error
@@ -85,21 +85,21 @@ const actions = {
     if (eid) {
       // fetching a single item
       return api.fetchMember(team_name, eid).then(response => {
-        commit('FETCHED_ITEM', response.data)
+        commit('FETCHED_MEMBER', response.data)
         return response
       }).catch(error => {
         throw error
       })
     } else {
       // fetching a collection of items
-      commit('FETCHING_ITEMS', true)
+      commit('FETCHING_MEMBERS', true)
 
       return api.fetchMembers(team_name).then(response => {
-        commit('FETCHED_ITEMS', response.data)
-        commit('FETCHING_ITEMS', false)
+        commit('FETCHED_MEMBERS', response.data)
+        commit('FETCHING_MEMBERS', false)
         return response
       }).catch(error => {
-        commit('FETCHING_ITEMS', false)
+        commit('FETCHING_MEMBERS', false)
         throw error
       })
     }
@@ -107,7 +107,7 @@ const actions = {
 
   'update' ({ commit }, { team_name, eid, attrs }) {
     return api.updateMember(team_name, eid, attrs).then(response => {
-      commit('UPDATED_ITEM', { eid, item: response.data })
+      commit('UPDATED_MEMBER', { eid, item: response.data })
       return response
     }).catch(error => {
       throw error
@@ -116,7 +116,7 @@ const actions = {
 
   'delete' ({ commit }, { team_name, eid }) {
     return api.deleteMember(team_name, eid).then(response => {
-      commit('DELETED_ITEM', eid)
+      commit('DELETED_MEMBER', eid)
       return response
     }).catch(error => {
       throw error

@@ -32,26 +32,26 @@ const mutations = {
     _.assign(state, getDefaultState())
   },
 
-  'CREATED_ITEM' (state, item) {
+  'CREATED_PIPE' (state, item) {
     var meta = _.assign(getDefaultMeta(), { is_fetched: true })
     addItem(state, item, meta)
   },
 
-  'FETCHING_ITEMS' (state, is_fetching) {
+  'FETCHING_PIPES' (state, is_fetching) {
     state.is_fetching = is_fetching
     if (is_fetching === true) {
       state.is_fetched = false
     }
   },
 
-  'FETCHED_ITEMS' (state, items) {
+  'FETCHED_PIPES' (state, items) {
     addItem(state, items, getDefaultMeta())
     state.is_fetched = true
   },
 
   // this is problematic since we key on `eid`, but can now do fetching calls using `name`
   /*
-  'FETCHING_ITEM' (state, { eid, name, is_fetching }) {
+  'FETCHING_PIPE' (state, { eid, name, is_fetching }) {
     var meta = _.assign(getDefaultMeta(), { is_fetching: true })
 
     // if we're trying to fetch an item that's not
@@ -65,7 +65,7 @@ const mutations = {
   },
   */
 
-  'FETCHED_ITEM' (state, item) {
+  'FETCHED_PIPE' (state, item) {
     var meta = _.assign(getDefaultMeta(), { is_fetched: true })
     addItem(state, item, meta)
 
@@ -74,11 +74,11 @@ const mutations = {
     removeMeta(state, item, ['error'])
   },
 
-  'UPDATED_ITEM' (state, { eid, item }) {
+  'UPDATED_PIPE' (state, { eid, item }) {
     updateItem(state, eid, item)
   },
 
-  'DELETED_ITEM' (state, eid) {
+  'DELETED_PIPE' (state, eid) {
     removeItem(state, eid)
   },
 }
@@ -86,7 +86,7 @@ const mutations = {
 const actions = {
   'create' ({ commit, dispatch }, { team_name, attrs }) {
     return api.createPipe(team_name, attrs).then(response => {
-      commit('CREATED_ITEM', response.data)
+      commit('CREATED_PIPE', response.data)
       return response
     }).catch(error => {
       throw error
@@ -97,21 +97,21 @@ const actions = {
     if (eid || name) {
       // fetching a single item
       return api.fetchPipe(team_name, eid || name).then(response => {
-        commit('FETCHED_ITEM', response.data)
+        commit('FETCHED_PIPE', response.data)
         return response
       }).catch(error => {
         throw error
       })
     } else {
       // fetching a collection of items
-      commit('FETCHING_ITEMS', true)
+      commit('FETCHING_PIPES', true)
 
       return api.fetchPipes(team_name).then(response => {
-        commit('FETCHED_ITEMS', response.data)
-        commit('FETCHING_ITEMS', false)
+        commit('FETCHED_PIPES', response.data)
+        commit('FETCHING_PIPES', false)
         return response
       }).catch(error => {
-        commit('FETCHING_ITEMS', false)
+        commit('FETCHING_PIPES', false)
         throw error
       })
     }
@@ -119,7 +119,7 @@ const actions = {
 
   'update' ({ commit }, { team_name, eid, attrs }) {
     return api.updatePipe(team_name, eid, attrs).then(response => {
-      commit('UPDATED_ITEM', { eid, item: response.data })
+      commit('UPDATED_PIPE', { eid, item: response.data })
       return response
     }).catch(error => {
       throw error
@@ -128,7 +128,7 @@ const actions = {
 
   'delete' ({ commit }, { team_name, eid }) {
     return api.deletePipe(team_name, eid).then(response => {
-      commit('DELETED_ITEM', eid)
+      commit('DELETED_PIPE', eid)
       return response
     }).catch(error => {
       throw error

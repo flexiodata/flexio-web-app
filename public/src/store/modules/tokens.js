@@ -29,24 +29,24 @@ const mutations = {
     _.assign(state, getDefaultState())
   },
 
-  'CREATED_ITEM' (state, item) {
+  'CREATED_TOKEN' (state, item) {
     var meta = _.assign(getDefaultMeta(), { is_fetched: true })
     addItem(state, item, meta)
   },
 
-  'FETCHING_ITEMS' (state, is_fetching) {
+  'FETCHING_TOKENS' (state, is_fetching) {
     state.is_fetching = is_fetching
     if (is_fetching === true) {
       state.is_fetched = false
     }
   },
 
-  'FETCHED_ITEMS' (state, items) {
+  'FETCHED_TOKENS' (state, items) {
     addItem(state, items, getDefaultMeta())
     state.is_fetched = true
   },
 
-  'DELETED_ITEM' (state, eid) {
+  'DELETED_TOKEN' (state, eid) {
     removeItem(state, eid)
   },
 }
@@ -54,7 +54,7 @@ const mutations = {
 const actions = {
   'create' ({ commit, dispatch }, { team_name }) {
     return api.createToken(team_name).then(response => {
-      commit('CREATED_ITEM', response.data)
+      commit('CREATED_TOKEN', response.data)
       return response
     }).catch(error => {
       throw error
@@ -63,21 +63,21 @@ const actions = {
 
   'fetch' ({ commit }, { team_name }) {
     // fetching a collection of items
-    commit('FETCHING_ITEMS', true)
+    commit('FETCHING_TOKENS', true)
 
     return api.fetchTokens(team_name).then(response => {
-      commit('FETCHED_ITEMS', response.data)
-      commit('FETCHING_ITEMS', false)
+      commit('FETCHED_TOKENS', response.data)
+      commit('FETCHING_TOKENS', false)
       return response
     }).catch(error => {
-      commit('FETCHING_ITEMS', false)
+      commit('FETCHING_TOKENS', false)
       throw error
     })
   },
 
   'delete' ({ commit }, { team_name, eid }) {
     return api.deleteToken(team_name, eid).then(response => {
-      commit('DELETED_ITEM', eid)
+      commit('DELETED_TOKEN', eid)
       return response
     }).catch(error => {
       throw error

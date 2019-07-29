@@ -34,24 +34,24 @@ const mutations = {
     _.assign(state, getDefaultState())
   },
 
-  'CREATED_ITEM' (state, item) {
+  'CREATED_CONNECTION' (state, item) {
     var meta = _.assign(getDefaultMeta(), { is_fetched: true })
     addItem(state, item, meta)
   },
 
-  'FETCHING_ITEMS' (state, is_fetching) {
+  'FETCHING_CONNECTIONS' (state, is_fetching) {
     state.is_fetching = is_fetching
     if (is_fetching === true) {
       state.is_fetched = false
     }
   },
 
-  'FETCHED_ITEMS' (state, items) {
+  'FETCHED_CONNECTIONS' (state, items) {
     addItem(state, items, getDefaultMeta())
     state.is_fetched = true
   },
 
-  'FETCHED_ITEM' (state, item) {
+  'FETCHED_CONNECTION' (state, item) {
     var meta = _.assign(getDefaultMeta(), { is_fetched: true })
     addItem(state, item, meta)
 
@@ -60,27 +60,27 @@ const mutations = {
     removeMeta(state, item, ['error'])
   },
 
-  'UPDATED_ITEM' (state, { eid, item }) {
+  'UPDATED_CONNECTION' (state, { eid, item }) {
     updateItem(state, eid, item)
   },
 
-  'DELETED_ITEM' (state, eid) {
+  'DELETED_CONNECTION' (state, eid) {
     removeItem(state, eid)
   },
 
-  'TESTING_ITEM' (state, { eid, is_testing }) {
+  'TESTING_CONNECTION' (state, { eid, is_testing }) {
     updateMeta(state, eid, { is_testing })
   },
 
-  'TESTED_ITEM' (state, { eid, item }) {
+  'TESTED_CONNECTION' (state, { eid, item }) {
     updateItem(state, eid, item)
   },
 
-  'DISCONNECTING_ITEM' (state, { eid, is_disconnecting }) {
+  'DISCONNECTING_CONNECTION' (state, { eid, is_disconnecting }) {
     updateMeta(state, eid, { is_disconnecting })
   },
 
-  'DISCONNECTED_ITEM' (state, { eid, item }) {
+  'DISCONNECTED_CONNECTION' (state, { eid, item }) {
     updateItem(state, eid, item)
   }
 }
@@ -88,7 +88,7 @@ const mutations = {
 const actions = {
   'create' ({ commit, dispatch }, { team_name, attrs }) {
     return api.createConnection(team_name, attrs).then(response => {
-      commit('CREATED_ITEM', response.data)
+      commit('CREATED_CONNECTION', response.data)
       return response
     }).catch(error => {
       throw error
@@ -99,21 +99,21 @@ const actions = {
     if (eid || name) {
       // fetching a single item
       return api.fetchConnection(team_name, eid || name).then(response => {
-        commit('FETCHED_ITEM', response.data)
+        commit('FETCHED_CONNECTION', response.data)
         return response
       }).catch(error => {
         throw error
       })
     } else {
       // fetching a collection of items
-      commit('FETCHING_ITEMS', true)
+      commit('FETCHING_CONNECTIONS', true)
 
       return api.fetchConnections(team_name).then(response => {
-        commit('FETCHED_ITEMS', response.data)
-        commit('FETCHING_ITEMS', false)
+        commit('FETCHED_CONNECTIONS', response.data)
+        commit('FETCHING_CONNECTIONS', false)
         return response
       }).catch(error => {
-        commit('FETCHING_ITEMS', false)
+        commit('FETCHING_CONNECTIONS', false)
         throw error
       })
     }
@@ -126,7 +126,7 @@ const actions = {
     }
 
     return api.updateConnection(team_name, eid, attrs).then(response => {
-      commit('UPDATED_ITEM', { eid, item: response.data })
+      commit('UPDATED_CONNECTION', { eid, item: response.data })
       return response
     }).catch(error => {
       throw error
@@ -135,7 +135,7 @@ const actions = {
 
   'delete' ({ commit }, { team_name, eid }) {
     return api.deleteConnection(team_name, eid).then(response => {
-      commit('DELETED_ITEM', eid)
+      commit('DELETED_CONNECTION', eid)
       return response
     }).catch(error => {
       throw error
@@ -148,27 +148,27 @@ const actions = {
       attrs.connection_info = sanitizeMasked(attrs.connection_info)
     }
 
-    commit('TESTING_ITEM', { eid, is_testing: true })
+    commit('TESTING_CONNECTION', { eid, is_testing: true })
 
     return api.testConnection(team_name, eid, attrs).then(response => {
-      commit('TESTED_ITEM', { eid, item: response.data })
-      commit('TESTING_ITEM', { eid, is_testing: false })
+      commit('TESTED_CONNECTION', { eid, item: response.data })
+      commit('TESTING_CONNECTION', { eid, is_testing: false })
       return response
     }).catch(error => {
-      commit('TESTING_ITEM', { eid, is_testing: false })
+      commit('TESTING_CONNECTION', { eid, is_testing: false })
       throw error
     })
   },
 
   'disconnect' ({ commit }, { team_name, eid, attrs }) {
-    commit('DISCONNECTING_ITEM', { eid, is_disconnecting: true })
+    commit('DISCONNECTING_CONNECTION', { eid, is_disconnecting: true })
 
     return api.disconnectConnection(team_name, eid, attrs).then(response => {
-      commit('DISCONNECTED_ITEM', { eid, item: response.data })
-      commit('DISCONNECTING_ITEM', { eid, is_disconnecting: false })
+      commit('DISCONNECTED_CONNECTION', { eid, item: response.data })
+      commit('DISCONNECTING_CONNECTION', { eid, is_disconnecting: false })
       return response
     }).catch(error => {
-      commit('DISCONNECTING_ITEM', { eid, is_disconnecting: false })
+      commit('DISCONNECTING_CONNECTION', { eid, is_disconnecting: false })
       throw error
     })
   },

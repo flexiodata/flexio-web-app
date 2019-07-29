@@ -36,40 +36,40 @@ const mutations = {
     _.assign(state, getDefaultState())
   },
 
-  'CREATED_ITEM' (state, item) {
+  'CREATED_PROCESS' (state, item) {
     addItem(state, item, getDefaultMeta())
   },
 
-  'FETCHING_ITEMS' (state, is_fetching) {
+  'FETCHING_PROCESSS' (state, is_fetching) {
     state.is_fetching = is_fetching
     if (is_fetching === true) {
       state.is_fetched = false
     }
   },
 
-  'FETCHED_ITEMS' (state, items) {
+  'FETCHED_PROCESSS' (state, items) {
     addItem(state, items, getDefaultMeta())
     state.is_fetched = true
   },
 
-  'FETCHED_ITEM' (state, item) {
+  'FETCHED_PROCESS' (state, item) {
     var meta = _.assign(getDefaultMeta(), { is_fetched: true })
     addItem(state, item, meta)
   },
 
-  'FETCHED_ITEM_LOG' (state, { eid, item }) {
+  'FETCHED_PROCESS_LOG' (state, { eid, item }) {
     updateItem(state, eid, item)
   },
 
-  'STARTED_ITEM' ({ commit }, { eid, item }) {
+  'STARTED_PROCESS' ({ commit }, { eid, item }) {
     updateItem(state, eid, item)
   },
 
-  'CANCELING_ITEM' ({ commit }, { eid, is_canceling }) {
+  'CANCELING_PROCESS' ({ commit }, { eid, is_canceling }) {
     updateMeta(state, eid, { is_canceling })
   },
 
-  'CANCELED_ITEM' (state, { eid, item }) {
+  'CANCELED_PROCESS' (state, { eid, item }) {
     updateItem(state, eid, item)
   },
 }
@@ -80,7 +80,7 @@ const actions = {
       var process = response.data
       var eid = process.eid
 
-      commit('CREATED_ITEM', process)
+      commit('CREATED_PROCESS', process)
 
       // the 'run' parameter was specified which means
       // we've started the process; poll for the process
@@ -100,7 +100,7 @@ const actions = {
       return api.fetchProcess(team_name, eid).then(response => {
         var process = response.data
 
-        commit('FETCHED_ITEM', process)
+        commit('FETCHED_PROCESS', process)
 
         if (poll === true) {
           // poll the process while it is still running
@@ -122,14 +122,14 @@ const actions = {
       })
     } else {
       // fetching a collection of items
-      commit('FETCHING_ITEMS', true)
+      commit('FETCHING_PROCESSS', true)
 
       return api[team_name == 'admin' ? 'fetchAdminProcesses' : 'fetchProcesses'](team_name, attrs).then(response => {
-        commit('FETCHED_ITEMS', response.data)
-        commit('FETCHING_ITEMS', false)
+        commit('FETCHED_PROCESSS', response.data)
+        commit('FETCHING_PROCESSS', false)
         return response
       }).catch(error => {
-        commit('FETCHING_ITEMS', false)
+        commit('FETCHING_PROCESSS', false)
         throw error
       })
     }
@@ -138,7 +138,7 @@ const actions = {
   'fetchLog' ({ commit, dispatch }, { team_name, eid }) {
     return api.fetchProcessLog(team_name, eid).then(response => {
       var item = { log: response.data }
-      commit('FETCHED_ITEM_LOG', { eid, item })
+      commit('FETCHED_PROCESS_LOG', { eid, item })
       return response
     }).catch(error => {
       throw error
@@ -150,7 +150,7 @@ const actions = {
 
     return api.runProcess(team_name, eid, cfg).then(response => {
       var process = { eid, process_status: PROCESS_STATUS_RUNNING }
-      commit('STARTED_ITEM', { eid, item: process })
+      commit('STARTED_PROCESS', { eid, item: process })
       return response
     }).catch(error => {
       dispatch('fetch', { team_name, eid })
@@ -160,14 +160,14 @@ const actions = {
 
   /*
   'cancel' ({ commit, dispatch }, { team_name, eid }) {
-    commit('CANCELING_ITEM', { eid, is_canceling: true })
+    commit('CANCELING_PROCESS', { eid, is_canceling: true })
 
     return api.cancelProcess(team_name, eid).then(response => {
-      commit('CANCELED_ITEM', { eid, item: response.data })
-      commit('CANCELING_ITEM', { eid, is_canceling: false })
+      commit('CANCELED_PROCESS', { eid, item: response.data })
+      commit('CANCELING_PROCESS', { eid, is_canceling: false })
       return response
     }).catch(error => {
-      commit('CANCELING_ITEM', { eid, is_canceling: false })
+      commit('CANCELING_PROCESS', { eid, is_canceling: false })
       throw error
     })
   },
