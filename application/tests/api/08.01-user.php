@@ -81,7 +81,9 @@ class Test
                 "create_examples": "true"
             }'
         );
-        $result = \Flexio\Tests\Util::callApi($params);
+        $result = \Flexio\Tests\Util::callApi($params); // create a user
+        $user_eid = \Flexio\Object\User::getEidFromUsername($username1);
+        \Flexio\Object\User::load($user_eid)->setStatus(\Model::STATUS_AVAILABLE); // quick hack for verifying the user
         $params = array(
             'method' => 'POST',
             'url' => "$apibase/signup",
@@ -95,7 +97,7 @@ class Test
                 "create_examples": "true"
             }'
         );
-        $result = \Flexio\Tests\Util::callApi($params);
+        $result = \Flexio\Tests\Util::callApi($params); // create another user with the same username
         $actual = $result['response'];
         $expected = '
         {
@@ -126,7 +128,9 @@ class Test
                 "create_examples": "true"
             }'
         );
-        $result = \Flexio\Tests\Util::callApi($params);
+        $result = \Flexio\Tests\Util::callApi($params); // create a user
+        $user_eid = \Flexio\Object\User::getEidFromUsername($username1);
+        \Flexio\Object\User::load($user_eid)->setStatus(\Model::STATUS_AVAILABLE); // quick hack for verifying the user
         $params = array(
             'method' => 'POST',
             'url' => "$apibase/signup",
@@ -140,7 +144,7 @@ class Test
                 "create_examples": "true"
             }'
         );
-        $result = \Flexio\Tests\Util::callApi($params);
+        $result = \Flexio\Tests\Util::callApi($params); // create another user with the same username
         $actual = $result['response'];
         $expected = '
         {
@@ -148,6 +152,6 @@ class Test
                 "code": "create-failed"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('B.2', 'POST /signup; fail if email is already taken',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.2', 'POST /signup; fail if email for a verified user is already taken',  $actual, $expected, $results);
     }
 }
