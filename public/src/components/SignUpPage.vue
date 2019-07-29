@@ -21,13 +21,16 @@
 
 <script>
   import { ROUTE_SIGNIN_PAGE } from '@/constants/route'
+  import { OBJECT_STATUS_AVAILABLE } from '@/constants/object-status'
   import SignUpForm from '@/components/SignUpForm'
   import SignUpVerifyForm from '@/components/SignUpVerifyForm'
+  import MixinRedirect from '@/components/mixins/redirect'
 
   export default {
     metaInfo: {
       title: 'Sign Up for Flex.io Serverless Functions Today'
     },
+    mixins: [MixinRedirect],
     components: {
       SignUpForm,
       SignUpVerifyForm
@@ -61,8 +64,15 @@
       onSignedUp(user) {
         this.just_signed_up = true
         this.user = user
-        var new_route = _.assign({}, this.$route, { params: { action: 'verify' } })
-        this.$router.replace(new_route)
+
+        if (_.get(user, 'eid_status') == OBJECT_STATUS_AVAILABLE) {
+          // user is verified; move 'em along...
+          this.$_Redirect_redirect()
+        } else {
+          // user is not verified; take them to the account verification page
+          var new_route = _.assign({}, this.$route, { params: { action: 'verify' } })
+          this.$router.replace(new_route)
+        }
       }
     }
   }

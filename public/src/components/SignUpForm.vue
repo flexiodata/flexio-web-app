@@ -118,6 +118,7 @@
         username: '',
         email: '',
         password: '',
+        verify_code: '',
         email_provided: false,
         is_submitting: false,
         error_msg: '',
@@ -166,12 +167,17 @@
       }
     },
     mounted() {
-      this.$refs['input-firstname'].focus()
+      this.email = _.get(this.$route, 'query.email', '')
+      this.verify_code = _.get(this.$route, 'query.verify_code', '')
+      if (this.email.length > 0) {
+        this.email_provided = true
+      }
+      this.$nextTick(() => { this.$refs['input-firstname'].focus() })
     },
     methods: {
       getAttrs() {
         // assemble non-empty values for submitting to the backend
-        return _.pick(this.$data, ['first_name', 'last_name', 'username', 'email', 'password'])
+        return _.pick(this.$data, ['first_name', 'last_name', 'username', 'email', 'password', 'verify_code'])
       },
       checkSignup: _.debounce(function(validate_key, callback) {
         var attrs = this.getAttrs()

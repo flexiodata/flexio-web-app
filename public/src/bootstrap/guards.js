@@ -35,7 +35,7 @@ router.beforeEach((to, from, next) => {
   const redirectToSignIn = () => {
     next({
       name: ROUTE_SIGNIN_PAGE,
-      query: { redirect: to.fullPath }
+      query: _.assign({}, to.query, { redirect: to.fullPath })
     })
   }
 
