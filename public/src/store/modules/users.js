@@ -22,6 +22,7 @@ const getDefaultState = () => {
     is_signing_out: false,
     is_initializing: false, // when fetching 'me'
     is_changing_password: false,
+    is_deleting: false,
     is_fetching: false,
     is_fetched: false,
     items: {},
@@ -42,6 +43,10 @@ const mutations = {
 
   'UPDATED_USER' (state, { eid, item }) {
     updateItem(state, eid, item)
+  },
+
+  'DELETING_USER' (state, is_deleting) {
+    state.is_deleting = is_deleting
   },
 
   'DELETED_USER' (state, eid) {
@@ -128,10 +133,13 @@ const actions = {
   },
 
   'delete' ({ commit }, { eid, attrs }) {
+    commit('DELETING_USER', true)
     return api.deleteUser(eid, attrs).then(response => {
+      commit('DELETING_USER', false)
       commit('DELETED_USER', eid)
       return response
     }).catch(error => {
+      commit('DELETING_USER', false)
       throw error
     })
   },
