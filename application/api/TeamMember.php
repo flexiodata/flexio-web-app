@@ -369,16 +369,15 @@ class TeamMember
         if ($owner_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
-        // get the eid for the user joining; if the user is silent, fail silently so as
-        // not reveal information about the team to the public caller
+        // get the eid for the user joining; if the user doesn't exist, throw an error
         $member_user_eid = \Flexio\Object\User::getEidFromEmail($email);
-        if ($member_user_eid !== false)
-        {
-            // update the team member
-            $updated_member_info = array();
-            $updated_member_info['member_status'] = \Model::TEAM_MEMBER_STATUS_ACTIVE;
-            \Flexio\System\System::getModel()->teammember->set($member_user_eid, $owner_user_eid, $updated_member_info);
-        }
+        if ($member_user_eid === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+        // update the team member
+        $updated_member_info = array();
+        $updated_member_info['member_status'] = \Model::TEAM_MEMBER_STATUS_ACTIVE;
+        \Flexio\System\System::getModel()->teammember->set($member_user_eid, $owner_user_eid, $updated_member_info);
 
         // public call, so don't return any info about the member joining
         $result = array();
