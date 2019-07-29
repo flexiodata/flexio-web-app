@@ -40,7 +40,7 @@ class Message
         // if a test email address is specified, override the test email
         // note: test email override only available in debug mode
         $test_email_address = self::getTestEmailAddress();
-        if ($test_email_address !== false)
+        if (strlen($test_email_address) > 0)
             $to_email = $test_email_address;
 
         // send an email that the user's account was created
@@ -77,7 +77,7 @@ class Message
         // if a test email address is specified, override the test email
         // note: test email override only available in debug mode
         $test_email_address = self::getTestEmailAddress();
-        if ($test_email_address !== false)
+        if (strlen($test_email_address) > 0)
             $to_email = $test_email_address;
 
         // send an email that the user's account was created
@@ -116,7 +116,7 @@ class Message
         // if a test email address is specified, override the test email
         // note: test email override only available in debug mode
         $test_email_address = self::getTestEmailAddress();
-        if ($test_email_address !== false)
+        if (strlen($test_email_address) > 0)
             $to_email = $test_email_address;
 
         // get text template from the application res directory
@@ -190,12 +190,12 @@ class Message
         return $msg;
     }
 
-    private static function getTestEmailAddress()
+    private static function getTestEmailAddress() : string
     {
         if (!IS_DEBUG())
-            return false;
+            return '';
 
-        $test_email_address = $GLOBALS['g_config']->test_email_address ?? false;
+        $test_email_address = $GLOBALS['g_config']->test_email_address ?? '';
         return $test_email_address;
     }
 }

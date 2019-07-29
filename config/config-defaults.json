@@ -33,6 +33,7 @@
     "/profiling": false,
     "/query_log": "<put path here>",
     "/debug_error_log": "<put path here>",
+    "/test_email_address": "<put fixed test email address to use for signup, passwordreset, etc here>",
 
     "analytics": false,
 
@@ -60,7 +61,5 @@
     "box_client_secret": "",
 
     "github_client_id": "",
-    "github_client_secret": "",
-
-    "test_email_address": false
+    "github_client_secret": ""
 }
