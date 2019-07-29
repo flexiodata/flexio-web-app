@@ -220,7 +220,7 @@
             return
           }
 
-          axios.post('/api/v2/signup', attrs).then(response => {
+          api.signup(attrs).then(response => {
             var user_info =  _.get(response, 'data', {})
             this.$emit('signed-up', user_info)
             if (this.signinOnSignup === true) {
