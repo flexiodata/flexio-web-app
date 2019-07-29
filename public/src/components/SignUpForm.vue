@@ -102,7 +102,6 @@
 </template>
 
 <script>
-  import axios from 'axios'
   import api from '@/api'
 
   export default {
@@ -220,7 +219,7 @@
             return
           }
 
-          api.signup(attrs).then(response => {
+          api.signUp(attrs).then(response => {
             var user_info =  _.get(response, 'data', {})
             this.$emit('signed-up', user_info)
             if (this.signinOnSignup === true) {
@@ -240,7 +239,7 @@
         this.label_submitting = 'Signing in...'
         this.is_submitting = true
 
-        axios.post('/api/v2/login', attrs).then(response => {
+        api.signIn(attrs).then(response => {
           var user_info =  _.get(response, 'data', {})
           this.$emit('signed-in', user_info)
         }).catch(error => {

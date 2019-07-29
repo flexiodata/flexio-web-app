@@ -54,7 +54,7 @@
 </template>
 
 <script>
-  import axios from 'axios'
+  import api from '@/api'
 
   export default {
     data() {
@@ -63,7 +63,6 @@
         password: '',
         is_submitting: false,
         error_msg: '',
-        verify_code: '',
         input_cls: 'input-reset ba b--black-10 br2 focus-b--blue lh-title ph3 pv2a w-100',
         button_cls: 'border-box no-select ttu fw6 w-100 ph4 pv2a lh-title white bg-blue br2 darken-10'
       }
@@ -75,7 +74,7 @@
       getAttrs() {
         // assemble non-empty values for submitting to the backend
         var attrs = _.assign({}, this.$data)
-        attrs = _.pick(attrs, ['username', 'password', 'verify_code'])
+        attrs = _.pick(attrs, ['username', 'password'])
         return _.omitBy(attrs, _.isEmpty)
       },
       trySignIn() {
@@ -83,7 +82,7 @@
 
         this.is_submitting = true
 
-        axios.post('/api/v2/login', attrs).then(response => {
+        api.signIn(attrs).then(response => {
           var user_info =  _.get(response, 'data', {})
           this.$emit('signed-in', user_info)
           this.trackSignIn(user_info)

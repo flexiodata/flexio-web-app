@@ -10,7 +10,8 @@ export default {
 
   // auth
   logout:               ()                              => AxiosResource(null)[POS] (`/logout`),
-  signup:               (attrs)                         => AxiosResource(null)[POS] (`/signup`, attrs),
+  signIn:               (attrs)                         => AxiosResource(null)[POS] (`/login`, attrs),
+  signUp:               (attrs)                         => AxiosResource(null)[POS] (`/signup`, attrs),
   verifyAccount:        (attrs)                         => AxiosResource(null)[POS] (`/verification`, attrs),
   requestVerification:  (attrs)                         => AxiosResource(null)[POS] (`/requestverification`, attrs),
   resetPassword:        (attrs)                         => AxiosResource(null)[POS] (`/resetpassword`, attrs),
