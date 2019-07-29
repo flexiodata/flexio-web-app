@@ -109,7 +109,7 @@ const actions = {
   'signOut' ({ commit, dispatch }) {
     commit('SIGNING_OUT', true)
 
-    return api.logout().then(response => {
+    return api.signOut().then(response => {
       // we need to give just a bit of breathing room for the UI to change
       // the route to the sign in page before we update the state with these commits
       setTimeout(() => {

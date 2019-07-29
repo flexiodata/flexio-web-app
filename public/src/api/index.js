@@ -9,7 +9,7 @@ export default {
   // PUBLIC API CALLS:
 
   // auth
-  logout:               ()                              => AxiosResource(null)[POS] (`/logout`),
+  signOut:              ()                              => AxiosResource(null)[POS] (`/logout`),
   signIn:               (attrs)                         => AxiosResource(null)[POS] (`/login`, attrs),
   signUp:               (attrs)                         => AxiosResource(null)[POS] (`/signup`, attrs),
   verifyAccount:        (attrs)                         => AxiosResource(null)[POS] (`/verification`, attrs),
