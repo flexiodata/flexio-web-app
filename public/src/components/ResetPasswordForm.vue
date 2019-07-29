@@ -9,7 +9,7 @@
       <div class="pv2">
         <router-link
           to="/signin"
-          class="link ph4 pv2a b lh-title white bg-blue b--blue darken-10 ttu tc db"
+          class='link db tc border-box no-select ttu fw6 w-100 ph4 pv2a lh-title white bg-blue br2 darken-10'
         >
           Sign in
         </router-link>
