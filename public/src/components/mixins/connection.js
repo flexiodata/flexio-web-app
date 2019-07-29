@@ -4,7 +4,7 @@ import * as connections from '@/constants/connection-info'
 export default {
   methods: {
     $_Connection_getConnectionByIdentifier(id) {
-      var connections = _.filter(this.$store.state.objects, { eid_type: OBJECT_TYPE_CONNECTION })
+      var connections = _.filter(this.$store.state.connections.items, { eid_type: OBJECT_TYPE_CONNECTION })
       return _.find(connections, (c) => {
         var cname = _.get(c, 'name', '')
         return cname.length > 0 ? cname == id : c.eid == id

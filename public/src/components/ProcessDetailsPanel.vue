@@ -100,12 +100,12 @@
       user() {
         var user_eid = _.get(this.process, 'owned_by.eid', '')
         if (user_eid.length > 0) {
-          return _.get(this.$store, 'state.objects.' + user_eid)
+          return _.get(this.$store, 'state.users.items.' + user_eid)
         }
         return null
       },
       user_trimmed() {
-        return _.omit(this.user, ['eid_type', 'eid_status', 'email_hash', 'config', 'owned_by'])
+        return _.omit(this.user, ['eid_type', 'eid_status', 'email_hash', 'config', 'owned_by', 'vuex_meta'])
       },
       pipe_name() {
         var eid = _.get(this.process, 'parent.eid', '')
