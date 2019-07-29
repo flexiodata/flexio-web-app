@@ -17,10 +17,11 @@ const getDefaultMeta = () => {
 const getDefaultState = () => {
   return {
     active_user_eid: '',
-    is_initializing: false, // `GET /me/account`
-    is_signing_up: false,   // `POS /signup`
-    is_signing_in: false,   // `POS /login`
+    is_signing_up: false,
+    is_signing_in: false,
     is_signing_out: false,
+    is_initializing: false, // when fetching 'me'
+    is_changing_password: false,
     is_fetching: false,
     is_fetched: false,
     items: {},
@@ -34,24 +35,24 @@ const mutations = {
     _.assign(state, getDefaultState())
   },
 
-  'FETCHED_ITEM' (state, item) {
+  'FETCHED_USER' (state, item) {
     var meta = _.assign(getDefaultMeta(), { is_fetched: true })
     addItem(state, item, meta)
   },
 
-  'UPDATED_ITEM' (state, { eid, item }) {
+  'UPDATED_USER' (state, { eid, item }) {
     updateItem(state, eid, item)
   },
 
-  'DELETED_ITEM' (state, eid) {
+  'DELETED_USER' (state, eid) {
     removeItem(state, eid)
   },
 
-  'INITIALIZING_ITEM' (state, is_initializing) {
+  'INITIALIZING_USER' (state, is_initializing) {
     state.is_initializing = is_initializing
   },
 
-  'INITIALIZED_ITEM' (state, item) {
+  'INITIALIZED_USER' (state, item) {
     var meta = _.assign(getDefaultMeta(), { is_fetched: true })
     addItem(state, item, meta)
 
@@ -87,33 +88,39 @@ const mutations = {
   'SIGNED_OUT' (state) {
     state.active_user_eid = ''
   },
+
+  'CHANGING_PASSWORD' (state, is_changing_password) {
+    state.is_changing_password = is_changing_password
+  },
+
+  'CHANGED_PASSWORD' (state) {},
 }
 
 const actions = {
   'fetch' ({ commit, dispatch }, { eid }) {
     if (eid == 'me') {
-      commit('INITIALIZING_ITEM', true)
+      commit('INITIALIZING_USER', true)
     }
 
     // fetching a single item
     return api.fetchUser(eid).then(response => {
       var user = response.data
-      commit('FETCHED_ITEM', user)
       if (eid == 'me') {
-        commit('INITIALIZED_ITEM', user)
-        commit('INITIALIZING_ITEM', false)
+        commit('INITIALIZING_USER', false)
+        commit('INITIALIZED_USER', user)
         dispatch('identify', user)
       }
+      commit('FETCHED_USER', user)
       return response
     }).catch(error => {
-      commit('INITIALIZING_ITEM', false)
+      commit('INITIALIZING_USER', false)
       throw error
     })
   },
 
   'update' ({ commit }, { eid, attrs }) {
     return api.updateUser(eid, attrs).then(response => {
-      commit('UPDATED_ITEM', { eid, item: response.data })
+      commit('UPDATED_USER', { eid, item: response.data })
       return response
     }).catch(error => {
       throw error
@@ -122,7 +129,7 @@ const actions = {
 
   'delete' ({ commit }, { eid, attrs }) {
     return api.deleteUser(eid, attrs).then(response => {
-      commit('DELETED_ITEM', eid)
+      commit('DELETED_USER', eid)
       return response
     }).catch(error => {
       throw error
@@ -187,10 +194,14 @@ const actions = {
   },
 
   'changePassword' ({ commit, dispatch }, { eid, attrs }) {
+    commit('CHANGING_PASSWORD', true)
     return api.changePassword(eid, attrs).then(response => {
+      commit('CHANGING_PASSWORD', false)
+      commit('CHANGED_PASSWORD')
       dispatch('track', { event_name: 'Changed Password' })
       return response
     }).catch(error => {
+      commit('CHANGING_PASSWORD', false)
       throw error
     })
   },
