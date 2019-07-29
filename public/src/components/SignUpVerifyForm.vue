@@ -40,7 +40,7 @@
 </template>
 
 <script>
-  import axios from 'axios'
+  import api from '@/api'
 
   export default {
     props: {
@@ -75,7 +75,7 @@
     methods: {
       resendVerification() {
         this.is_sending = true
-        axios.post('/api/v2/requestverification', { email: this.user.email }).then(response => {
+        api.requestVerification({ email: this.user.email }).then(response => {
           this.is_sent = true
           setTimeout(() => { this.is_sent = false }, 6000)
         }).finally(() => {
