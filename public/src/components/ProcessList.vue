@@ -116,6 +116,7 @@
 
 <script>
   import moment from 'moment'
+  import { ROUTE_APP_PIPES } from '@/constants/route'
   import { mapGetters } from 'vuex'
   import * as ps from '@/constants/process'
 
@@ -231,10 +232,17 @@
         return _.get(row, 'parent.name', '').length > 0
       },
       getPipeRoute(row) {
-        var team_name = _.get(row, 'owned_by.eid', '')
+        var team_name = _.get(row, 'owned_by.username') || _.get(row, 'owned_by.eid', '')
         var name = _.get(row, 'parent.name', '')
         var object_name = name.length > 0 ? name : _.get(row, 'parent.eid', '')
-        return `/${team_name}/pipes/${object_name}`
+
+        return {
+          name: ROUTE_APP_PIPES,
+          params: {
+            team_name,
+            object_name
+          }
+        }
       },
       getIndex(idx) {
         return idx + this.start + 1
