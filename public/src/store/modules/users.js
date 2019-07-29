@@ -51,7 +51,6 @@ const mutations = {
   },
 
   'INITIALIZED_ITEM' (state, item) {
-    debugger
     var meta = _.assign(getDefaultMeta(), { is_fetched: true })
     addItem(state, item, meta)
 

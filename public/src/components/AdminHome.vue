@@ -58,15 +58,13 @@
     },
     computed: {
       is_superuser() {
-        debugger
         // limit to @flex.io users for now
-        var user_email = this.getActiveUserEmail()
-        return _.includes(user_email, '@flex.io')
+        return _.includes(this.getActiveUserEmail(), '@flex.io')
       }
     },
     methods: {
       ...mapGetters('users', {
-        'getActiveUserEmail': 'getActiveUserEmail()'
+        'getActiveUserEmail': 'getActiveUserEmail'
       })
     }
   }
