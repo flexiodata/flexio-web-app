@@ -20,7 +20,6 @@
 </template>
 
 <script>
-  import axios from 'axios'
   import { ROUTE_SIGNIN_PAGE } from '@/constants/route'
   import SignUpForm from '@/components/SignUpForm'
   import SignUpVerifyForm from '@/components/SignUpVerifyForm'
