@@ -23,8 +23,6 @@ class Action extends \Flexio\Object\Base implements \Flexio\IFace\IObject
     public const TYPE_WRITE            = 'object.write';     // ability to write the properties of an object
     public const TYPE_DELETE           = 'object.delete';    // ability to delete an object
     public const TYPE_EXECUTE          = 'object.execute';   // ability to run a process object
-    public const TYPE_READ_RIGHTS      = 'rights.read';      // ability to see rights
-    public const TYPE_WRITE_RIGHTS     = 'rights.write';     // ability to change rights
 
     public function __construct()
     {
