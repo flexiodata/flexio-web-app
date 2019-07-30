@@ -319,6 +319,21 @@ class User extends ModelBase
         return true;
     }
 
+    public function getStatus(string $eid) : string
+    {
+        if (!\Flexio\Base\Eid::isValid($eid))
+            return \Model::STATUS_UNDEFINED;
+
+        // allow direct access to checking user status; this can save time in
+        // cases where it isn't desirable to load all the user properties,
+        // such as in rights checking in higher-level abstractions
+        $result = $this->getDatabase()->fetchOne("select eid_status from tbl_user where eid = ?", $eid);
+        if ($result === false)
+            return \Model::STATUS_UNDEFINED;;
+
+        return $result;
+    }
+
     public function getVerifyCodeFromEid(string $eid) // TODO: add return type
     {
         if (!\Flexio\Base\Eid::isValid($eid))
