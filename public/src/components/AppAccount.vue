@@ -53,7 +53,7 @@
             </div>
           </el-tab-pane>
 
-          <el-tab-pane name="api" v-if="false">
+          <el-tab-pane name="api">
             <div slot="label"><div style="min-width: 5rem">API keys</div></div>
             <div class="ml3 mr4" v-if="has_user">
               <h3 class="mt0 fw6 f3">API Keys</h3>

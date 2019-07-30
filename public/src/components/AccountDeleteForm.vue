@@ -164,7 +164,7 @@
         })
       },
       signOut() {
-        this.$store.dispatch('users/signOut').then(response => {
+        this.$store.dispatch('users/signOut', {}).then(response => {
           this.$router.push({ name: ROUTE_SIGNIN_PAGE })
         })
       }
