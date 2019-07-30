@@ -33,6 +33,10 @@ class Action
     public const TYPE_USER_CREDENTIAL_UPDATE = 'action.user.credential.update';
     public const TYPE_USER_CREDENTIAL_RESET  = 'action.user.credential.reset';
 
+    public const TYPE_USER_AUTHKEY_CREATE    = 'action.user.authkey.create';
+    public const TYPE_USER_AUTHKEY_DELETE    = 'action.user.authkey.delete';
+    public const TYPE_USER_AUTHKEY_READ      = 'action.user.authkey.read';
+
     public const TYPE_TEAM_CREATE            = 'action.team.create';
     public const TYPE_TEAM_UPDATE            = 'action.team.update';
     public const TYPE_TEAM_DELETE            = 'action.team.delete';
@@ -44,10 +48,6 @@ class Action
     public const TYPE_TEAMMEMBER_READ           = 'action.teammember.read';
     public const TYPE_TEAMMEMBER_SENDINVITATION = 'action.teammember.sendinvitation';
     public const TYPE_TEAMMEMBER_JOINTEAM       = 'action.teammember.jointeam';
-
-    public const TYPE_USER_AUTHKEY_CREATE    = 'action.user.authkey.create';
-    public const TYPE_USER_AUTHKEY_DELETE    = 'action.user.authkey.delete';
-    public const TYPE_USER_AUTHKEY_READ      = 'action.user.authkey.read';
 
     public const TYPE_PIPE_CREATE            = 'action.pipe.create';
     public const TYPE_PIPE_UPDATE            = 'action.pipe.update';
