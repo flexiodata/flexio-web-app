@@ -14,6 +14,9 @@
         v-else-if="error_msg.length > 0"
       >
         <p>{{error_msg}}</p>
+        <p class="mt3 mb0">
+          <router-link to="/signup/verify" class="el-button el-button--primary no-underline ttu fw6" style="min-width: 11rem">Get another verification code</router-link>
+        </p>
       </div>
       <Spinner
         size="large"
@@ -40,7 +43,7 @@
       }
     },
     mounted() {
-      this.$store.dispatch('users/signOut').then(response => {
+      this.$store.dispatch('users/signOut', { silent: true }).then(response => {
         api.verifyAccount(this.$route.query).then(response => {
           this.is_verified = true
           setTimeout(() => {

@@ -20,6 +20,7 @@ const getDefaultState = () => {
     is_signing_up: false,
     is_signing_in: false,
     is_signing_out: false,
+    is_silent_signout: false,
     is_initializing: false, // when fetching 'me'
     is_changing_password: false,
     is_updating: false,
@@ -95,8 +96,9 @@ const mutations = {
     state.active_user_eid = item.eid
   },
 
-  'SIGNING_OUT' (state, is_signing_out) {
+  'SIGNING_OUT' (state, { is_signing_out, is_silent_signout }) {
     state.is_signing_out = is_signing_out
+    state.is_silent_signout = is_signing_out ? !!is_silent_signout || false : false
   },
 
   'SIGNED_OUT' (state) {
@@ -162,14 +164,14 @@ const actions = {
     })
   },
 
-  'signOut' ({ commit, dispatch }) {
-    commit('SIGNING_OUT', true)
+  'signOut' ({ commit, dispatch }, { silent }) {
+    commit('SIGNING_OUT', { is_signing_out: true, is_silent_signout: silent })
 
     return api.signOut().then(response => {
       // we need to give just a bit of breathing room for the UI to change
       // the route to the sign in page before we update the state with these commits
       setTimeout(() => {
-        commit('SIGNING_OUT', false)
+        commit('SIGNING_OUT', { is_signing_out: false })
         commit('SIGNED_OUT')
         dispatch('track', { event_name: 'Signed Out' })
 
@@ -178,7 +180,7 @@ const actions = {
       }, 1)
       return response
     }).catch(error => {
-      commit('SIGNING_OUT', false)
+      commit('SIGNING_OUT', { is_signing_out: false })
       throw error
     })
   },

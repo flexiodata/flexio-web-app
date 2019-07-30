@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="flex flex-column fixed absolute--fill overflow-hidden">
-    <template v-if="is_signing_out">
+    <template v-if="is_signing_out && !is_silent_signout">
       <!-- match navbar height -->
       <div class="bg-nearer-white" style="height: 60px"></div>
       <div class="flex-fill flex flex-column justify-center bg-nearer-white">
@@ -66,6 +66,7 @@
         is_initializing: state => state.members.is_fetching,
         is_initialized: state => state.members.is_fetched,
         is_signing_out: state => state.users.is_signing_out,
+        is_silent_signout: state => state.users.is_silent_signout,
       }),
       route_name() {
         return _.get(this.$route, 'name')
