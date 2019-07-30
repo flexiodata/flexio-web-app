@@ -784,6 +784,12 @@ class Util
         return false;
     }
 
+    public static function generateRandomName(string $prefix) : string
+    {
+        $name = $prefix . \Flexio\Base\Util::generateRandomString(4);
+        return $name;
+    }
+
     public static function generateRandomString(int $length) : string
     {
         $result = '';
