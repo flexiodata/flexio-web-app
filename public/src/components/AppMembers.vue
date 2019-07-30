@@ -51,7 +51,7 @@
   </div>
 
   <!-- fetched -->
-  <div class="flex flex-column bg-nearer-white" v-else-if="is_fetched">
+  <div class="flex flex-column bg-nearer-white overflow-y-auto" v-else-if="is_fetched">
     <div class="pa5">
       <div class="w-100 center mw-doc pa4 bg-white br2 css-white-box" style="min-height: 20rem">
         <div class="flex flex-row items-start">

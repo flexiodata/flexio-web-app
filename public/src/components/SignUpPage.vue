@@ -10,9 +10,8 @@
       />
       <SignUpForm
         class="br2 bg-white pa3 pa4-ns css-white-box"
-        :signin-on-signup="false"
         @sign-in-click="onSignInClick"
-        @signed-up="onSignedUp"
+        @signed-in="onSignedUpAndSignedIn"
         v-else
       />
     </div>
@@ -61,7 +60,7 @@
       onSignInClick() {
         this.$router.push(this.signin_route)
       },
-      onSignedUp(user) {
+      onSignedUpAndSignedIn(user) {
         this.just_signed_up = true
         this.user = user
 
