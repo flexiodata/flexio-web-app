@@ -55,27 +55,53 @@ class Base
             return true;
 
         // CHECK: see if the user is a member of the owner team, and if they have
-        // actively joined the team
+        // actively joined the team; if so, grant them "contributor" rights, which
+        // allows them to perform CRUD operation on objects in the team, access the
+        // team member list, but not perform other operations on the team or on
+        // the owner user
         try
         {
             $member_info = $this->getModel()->teammember->get($user_eid, $this->getOwner());
             if ($member_info['member_status'] === \Model::TEAM_MEMBER_STATUS_ACTIVE)
             {
-                // for now, grant all rights to a team member
-                return true;
+                switch ($action)
+                {
+                    // TODO: action types are specified in the api layer; location
+                    // of base rights implementation should be relocated since this
+                    // is accessing a layer above the object layer
+                    case \Flexio\Api\Action::TYPE_TEAMMEMBER_READ:
+                    case \Flexio\Api\Action::TYPE_PIPE_CREATE:
+                    case \Flexio\Api\Action::TYPE_PIPE_UPDATE:
+                    case \Flexio\Api\Action::TYPE_PIPE_DELETE:
+                    case \Flexio\Api\Action::TYPE_PIPE_READ:
+                    case \Flexio\Api\Action::TYPE_CONNECTION_CREATE:
+                    case \Flexio\Api\Action::TYPE_CONNECTION_UPDATE:
+                    case \Flexio\Api\Action::TYPE_CONNECTION_DELETE:
+                    case \Flexio\Api\Action::TYPE_CONNECTION_READ:
+                    case \Flexio\Api\Action::TYPE_CONNECTION_CONNECT:
+                    case \Flexio\Api\Action::TYPE_CONNECTION_DISCONNECT:
+                    case \Flexio\Api\Action::TYPE_PROCESS_CREATE:
+                    case \Flexio\Api\Action::TYPE_PROCESS_UPDATE:
+                    case \Flexio\Api\Action::TYPE_PROCESS_DELETE:
+                    case \Flexio\Api\Action::TYPE_PROCESS_READ:
+                    case \Flexio\Api\Action::TYPE_STREAM_CREATE:
+                    case \Flexio\Api\Action::TYPE_STREAM_UPDATE:
+                    case \Flexio\Api\Action::TYPE_STREAM_DELETE:
+                    case \Flexio\Api\Action::TYPE_STREAM_READ:
+                        return true;
+                }
 
                 // TODO: in the future, limit rights by checking if the action
                 // is in the list of rights
-
-                $rights = @json_decode($member_info['member_status'],true);
-                if (is_array($rights))
-                {
-                    foreach ($rights as $r)
-                    {
-                        if ($action === $r)
-                            return true;
-                    }
-                }
+                // $rights = @json_decode($member_info['member_status'],true);
+                // if (is_array($rights))
+                // {
+                //     foreach ($rights as $r)
+                //     {
+                //         if ($action === $r)
+                //             return true;
+                //     }
+                // }
             }
         }
         catch (\Exception $e)
