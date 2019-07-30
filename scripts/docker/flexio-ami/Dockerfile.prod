@@ -78,6 +78,6 @@ RUN echo fs-4ebd9b07.efs.us-east-1.amazonaws.com:/ /srv/www/flexio/store nfs4 nf
 RUN service apache2 start
 
 # mark status as done
-RUN curl -X POST https://fjaxox0kwc.execute-api.us-east-1.amazonaws.com/default/flexio-update-buildinfo?environment=prod&contents=DONE
+RUN curl -X GET "https://fjaxox0kwc.execute-api.us-east-1.amazonaws.com/default/flexio-update-buildinfo?environment=prod&contents=DONE"
 
 
