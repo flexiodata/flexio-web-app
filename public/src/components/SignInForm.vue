@@ -68,7 +68,10 @@
       }
     },
     mounted() {
-      this.$refs['input-username'].focus()
+      this.username = _.get(this.$route, 'query.email', '')
+      this.$nextTick(() => {
+        this.username.length > 0 ? this.$refs['input-password'].focus() : this.$refs['input-username'].focus()
+      })
     },
     computed: {
       ...mapState({
