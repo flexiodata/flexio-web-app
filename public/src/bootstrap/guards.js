@@ -1,6 +1,10 @@
 import router from '@/router' // VueRouter
 import store from '@/store' // Vuex store
-import { ROUTE_INITSESSION_PAGE, ROUTE_SIGNIN_PAGE } from '@/constants/route'
+import {
+  ROUTE_INITSESSION_PAGE,
+  ROUTE_SIGNIN_PAGE,
+  ROUTE_SIGNUP_PAGE
+} from '@/constants/route'
 
 const tryFetchTeams = (team_name) => {
   if (!store.state.teams.is_fetched && !store.state.teams.is_fetching) {
@@ -33,8 +37,11 @@ router.afterEach((to, from) => {
 
 router.beforeEach((to, from, next) => {
   const redirectToSignIn = () => {
+    // redirect to the sign up page if URL contains a verify code (most likely
+    // meaning they are a new user entering the app from an email link)
+    var verify_code = _.get(to, 'query.verify_code', '')
     next({
-      name: ROUTE_SIGNIN_PAGE,
+      name: verify_code.length > 0 ? ROUTE_SIGNUP_PAGE : ROUTE_SIGNIN_PAGE,
       query: _.assign({}, to.query, { redirect: to.fullPath })
     })
   }
