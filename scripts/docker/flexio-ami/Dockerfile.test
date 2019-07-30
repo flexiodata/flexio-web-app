@@ -78,5 +78,6 @@ RUN echo fs-2f426b66.efs.us-east-1.amazonaws.com:/ /srv/www/flexio/store nfs4 nf
 RUN service apache2 start
 
 # mark status as done
-RUN curl -X POST https://api.keyvalue.xyz/f415778c/flexiotest/DONE
+RUN curl -X POST https://fjaxox0kwc.execute-api.us-east-1.amazonaws.com/default/flexio-update-buildinfo?environment=test&contents=DONE
+
 
