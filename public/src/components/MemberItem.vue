@@ -3,7 +3,7 @@
     <td class="w-100">
       <div class="flex flex-row items-center">
         <img :src="gravatar_url" class="br-100 mr3"/>
-        <div v-if="has_full_name">
+        <div class="truncate" v-if="has_full_name">
           <div class="fw6 body-color">{{full_name}}</div>
           <div class="mt1 black-50">{{item.email}}</div>
         </div>
@@ -12,15 +12,22 @@
         </div>
       </div>
     </td>
-    <td class="tr nowrap">
-      <div class="mh3">
+    <td class="tl nowrap" style="min-width: 10rem">
+      <div class="fw6">
+        {{is_member_owner ? 'Owner' : is_member_pending ? 'Invited' : 'Contributor'}}</div>
+      </div>
+
+      <div
+        class="mt1"
+        v-if="is_member_pending"
+      >
         <div
           v-if="is_invite_resending"
         >
-          Sending invite...
+          Sending...
         </div>
         <div
-          class="flex flex-row items-center justify-end"
+          class="flex flex-row items-center"
           v-else-if="is_invite_resent"
         >
           <i class="el-icon-success dark-green mr1"></i>
@@ -28,8 +35,9 @@
         </div>
         <el-button
           type="text"
+          style="border: 0; padding: 0"
           @click="onResendInvite"
-          v-else-if="is_member_pending"
+          v-else
         >
           Resend invite
         </el-button>
@@ -107,6 +115,12 @@
 
 <style lang="stylus" scoped>
   td
+    padding-left: 1rem
+    padding-right: 1rem
+  td:first-child
+    padding-left: 0.5rem
+    padding-right: 0.5rem
+  td:last-child
     padding-left: 0.5rem
     padding-right: 0.5rem
 </style>

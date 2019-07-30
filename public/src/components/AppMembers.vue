@@ -53,7 +53,7 @@
   <!-- fetched -->
   <div class="flex flex-column bg-nearer-white overflow-y-auto" v-else-if="is_fetched">
     <div class="pa5">
-      <div class="w-100 center mw-doc pa4 bg-white br2 css-white-box" style="min-height: 20rem">
+      <div class="w-100 center mw-doc pa4 bg-white br2 css-white-box overflow-hidden" style="min-height: 20rem">
         <div class="flex flex-row items-start">
           <h3 class="flex-fill mt0 fw6 f3">Team Members</h3>
           <el-button
