@@ -45,10 +45,20 @@ class Base
 
     public function allows(string $user_eid, string $action) : bool
     {
-        // CHECK: the requesting user must be active
+        // CHECK: the requesting user must be active; if they're not,
+        // don't allow them to do anything, unless they're the owner
+        // requesting their own account info
         $user_status = $this->getModel()->user->getStatus($user_eid);
         if ($user_status !== \Model::STATUS_AVAILABLE)
+        {
+            // allow the owner to read their own info, even if they're pending; this case
+            // is so that we can query for the user status in the interface for a pending user
+            if ($user_eid === $this->getOwner() && $action === \Flexio\Api\Action::TYPE_USER_READ)
+                return true;
+
+            // for everything else, don't allow a pending status
             return false;
+        }
 
         // CHECK: if the user is the owner, allow them to do anything
         if ($user_eid === $this->getOwner())
