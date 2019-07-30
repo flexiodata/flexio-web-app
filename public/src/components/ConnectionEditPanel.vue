@@ -261,7 +261,7 @@
       }
     },
     data() {
-      var ctype = this.connection.connection_type
+      var ctype = _.get(this.connection, 'connection_type')
 
       return {
         orig_connection: _.assign({}, defaultAttrs(ctype), this.connection),
