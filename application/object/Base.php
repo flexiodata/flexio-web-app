@@ -45,19 +45,17 @@ class Base
 
     public function allows(string $user_eid, string $action) : bool
     {
-        // if the user is the owner, allow them to do anything;
-        // TODO: if the user interface ever allows rights to be limited
-        // for the owner, this needs to be removed; right now, the UI allows
-        // the owner to do everything, so this is an optimization
+        // CHECK: the requesting user must be active
+        $user_status = $this->getModel()->user->getStatus($user_eid);
+        if ($user_status !== \Model::STATUS_AVAILABLE)
+            return false;
+
+        // CHECK: if the user is the owner, allow them to do anything
         if ($user_eid === $this->getOwner())
             return true;
 
-        // if the user is a system administrator, allow access
-        if ($this->getModel()->user->isAdministrator($user_eid) === true)
-            return true;
-
-        // see if the input user is a member of the owner team and if
-        // they have actively joined the team
+        // CHECK: see if the user is a member of the owner team, and if they have
+        // actively joined the team
         try
         {
             $member_info = $this->getModel()->teammember->get($user_eid, $this->getOwner());
@@ -84,6 +82,10 @@ class Base
         {
             // fall through
         }
+
+        // CHECK: if the user is a system administrator, allow access
+        if ($this->getModel()->user->isAdministrator($user_eid) === true)
+            return true;
 
         // action not allowed
         return false;
