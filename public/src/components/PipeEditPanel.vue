@@ -28,7 +28,19 @@
       </el-form-item>
 
       <div>
-        <label class="el-form-item__label">Description</label>
+        <label class="el-form-item__label">
+          <span class="flex flex-row items-center">
+            <span>Description</span>
+            <el-button
+              type="text"
+              class="el-form-item__label"
+              style="border: 0; padding: 0; margin-left: 8px"
+              @click="autofillDescription"
+            >
+              Autofill with example descripion
+            </el-button>
+          </span>
+        </label>
         <CodeEditor
           class="pa1 bg-white ba b--black-10 br2"
           style="font-size: 13px"
@@ -147,13 +159,13 @@
         form_errors: {},
         description_placeholder: `Example:
 
-/**
- * Add two numbers
- * @customfunction
- * @param {number} first First number
- * @param {number} second Second number
- * @returns {number} The sum of the two numbers.
- */`
+Add two numbers
+
+@customfunction
+@param {number} first First number
+@param {number} second Second number
+@returns {number} The sum of the two numbers.
+`
       }
     },
     computed: {
@@ -216,6 +228,12 @@
           this.$refs.form.resetFields()
         }
         this.form_errors = {}
+      },
+      autofillDescription() {
+        var desc = this.description_placeholder
+        desc = desc.substring(desc.indexOf('\n'))
+        desc = desc.trim()
+        this.edit_pipe.description = desc
       },
       validate(callback) {
         this.$refs.form.validate(callback)
