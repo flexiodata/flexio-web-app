@@ -359,7 +359,7 @@
 <style lang="stylus" scoped>
   .sticky
     margin: 0 -2rem
-    padding: 1rem
+    padding: 1rem 2rem /* match container horizontal padding */
     border-bottom: 1px solid transparent
     transition: all 0.15s ease
 
