@@ -47,7 +47,7 @@ class CallProxy(object):
                 return self.convert_base64_to_binary(resobj['result'], moniker)
             except zmq.ZMQError:
                 pass
-            
+
             if self.monitor:
                 try:
                     evt = recv_monitor_message(self.monitor, zmq.NOBLOCK)
@@ -159,7 +159,6 @@ env_vars_obj = EnvVars()
 class Connection(object):
     def __init__(self, info):
         self.eid = info['eid']
-        self.alias = info['alias']
         self.name = info['name']
         self.description = info['description']
 
@@ -183,12 +182,12 @@ class ContextConnections(object):
         for connection in connections:
             connobj = Connection(connection)
             self.fx_connection_map[connobj.eid] = connobj
-            self.fx_connection_map[connobj.alias] = connobj
+            self.fx_connection_map[connobj.name] = connobj
             self.fx_connection_list.append(connobj)
         connections = proxy.invoke('getLocalConnections', [])
         for connection in connections:
             connobj = Connection(connection)
-            self.fx_connection_map[connobj.alias] = connobj
+            self.fx_connection_map[connobj.name] = connobj
         self.fx_inited = True
 
     def __getitem__(self, key):
@@ -524,8 +523,8 @@ class ContextFs(object):
         info = proxy.invoke('fsCreate', [path, connection])
         stream = Stream(info)
         stream._need_commit = True
-        return 
-        
+        return
+
     def create_tempfile(self):
         info = proxy.invoke('fsCreateTempFile', [])
         stream = Stream(info)
@@ -545,7 +544,7 @@ class ContextFs(object):
         return stream.readall()
 
     def write(self, path, data='', connection=''):
- 
+
         info = proxy.invoke('fsOpen', ['w', path, connection])
         handle = info['handle']
 
@@ -561,15 +560,15 @@ class ContextFs(object):
 
 
     def list(self, path, connection=''):
- 
+
         return proxy.invoke('fsList', [path, connection])
 
     def exists(self, path, connection=''):
- 
+
         return proxy.invoke('fsExists', [path, connection])
 
     def remove(self, path, connection=''):
- 
+
         return proxy.invoke('fsRemove', [path, connection])
 
 
@@ -626,7 +625,7 @@ class Context(object):
             stdout_stream_info  = proxy.invoke('getStreamInfo', [1])
             self._output = Stream(stdout_stream_info)
         return self._output
-    
+
     @property
     def query(self):
         if self._query is None:
@@ -661,7 +660,7 @@ class Context(object):
         self.output.write(json.dumps(obj))
         proxy.close()
         sys.exit()
-    
+
     def status(self, code):
         fileinfos = proxy.invoke('status', [code])
 

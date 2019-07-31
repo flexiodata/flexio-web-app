@@ -43,7 +43,7 @@ class CallProxy {
         var pThis = this
 
         this.close()
-        
+
         this.requester = zmq.socket('req')
         this.requester.connect(this.server)
 
@@ -62,7 +62,7 @@ class CallProxy {
     }
 
     onMessage(reply) {
-        
+
         var result = undefined, call_id = ''
 
         try
@@ -157,9 +157,9 @@ class CallProxy {
         } else {
             return obj
         }
-          
+
     }
-    
+
     convertBase64ToBinary(obj, moniker)
     {
         var res, k, len
@@ -232,7 +232,7 @@ class Input {
             this._casting = true
         }
     }
-    
+
     get env() {
         return inputEnv
     }
@@ -258,7 +258,7 @@ class Input {
         }
         return this._structure
     }
-    
+
     get isTable() {
         return this._isTable
     }
@@ -308,14 +308,14 @@ class Input {
         }
         return row
     }
-    
+
     forEach(callback) {
         var row
         while ((row = this.readLine()) !== null) {
             callback(row)
         }
     }
-    
+
     readAll() {
         if (this._isTable) {
             var rows = [], row
@@ -353,7 +353,7 @@ class Input {
                 } else {
                     key = col['name']
                 }
-                if (col['type'] == 'numeric') 
+                if (col['type'] == 'numeric')
                     this._casts[key] = function(val) { return parseFloat(val) }
                 else if (col['type'] == 'integer')
                     this._casts[key] = function(val) { return parseInt(val) }
@@ -403,7 +403,7 @@ class Output {
             this._handle = -1
         }
     }
-    
+
     get name() {
         return this._name
     }
@@ -473,7 +473,7 @@ class Output {
         this.typeCasts(row)
         proxy.invokeSync('insertRow', [this._handle, row])
     }
-    
+
     insertRows(rows) {
         for (var i = 0, cnt = rows.length; i < cnt; ++i) {
             this.typeCasts(rows[i])
@@ -590,7 +590,7 @@ class Context {
                 return Object.keys(target)
             }
         });
-        
+
     }
 
     get query() {
@@ -614,11 +614,10 @@ class Context {
             for (i = 0; i < conns.length; ++i) {
                 c = new ContextConnection()
                 c.eid = conns[i].eid
-                c.alias = conns[i].alias
                 c.name = conns[i].name
                 c.description = conns[i].description
                 this._connections[c.eid] = c
-                this._connections[c.alias] = c
+                this._connections[c.name] = c
             }
         }
         return this._connections
@@ -682,7 +681,7 @@ function run(handler) {
         proxy = new CallProxy()
         context = new Context()
         context.proxy = proxy
-        
+
         checkModuleInit(function() {
             handler(context)
         })

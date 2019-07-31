@@ -19,7 +19,7 @@ class Connection extends ModelBase
 {
     public function create(array $params) : string
     {
-        $default_name = 'connection-' . \Flexio\Base\Util::generateRandomString(4);
+        $default_name = \Flexio\Base\Util::generateRandomName('connection-');
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
