@@ -27,7 +27,21 @@
         />
       </el-form-item>
 
-      <div>
+      <el-form-item
+        key="description"
+        prop="description"
+        label="Description"
+      >
+        <el-input
+          type="textarea"
+          placeholder="Enter description"
+          :rows="6"
+          v-model="edit_pipe.description"
+        />
+      </el-form-item>
+
+      <!-- we're revisit using JSDoc nomenclature in the future -->
+      <div v-if="false">
         <label class="el-form-item__label">
           <span class="flex flex-row items-center">
             <span>Description</span>
