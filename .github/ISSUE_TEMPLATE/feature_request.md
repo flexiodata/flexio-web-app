@@ -1,8 +1,8 @@
 ---
 name: Feature request
 about: Suggest an idea for this project
-title: 'Where you''d like it (e.g. Account Profile Form): What you''d like (e.g. It''d
-  be nice to be able to upload a new profile image)'
+title: 'FEATURE: Where you''d like it (e.g. Account Profile Form): What you''d like
+  (e.g. It''d be nice to be able to upload a new profile image)'
 labels: ''
 assignees: ''
 
