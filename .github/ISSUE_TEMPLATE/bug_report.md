@@ -1,7 +1,8 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-title: 'Where it happens (e.g. Pipe Edit Modal): Short description of what is wrong'
+title: 'Where it happens (e.g. Account Profile Form): What happens (e.g. Pressing
+  "Update Profile" button does nothing)'
 labels: ''
 assignees: ''
 
