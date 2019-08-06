@@ -113,7 +113,7 @@
           })
           prompt = _.get(def, 'prompt', null)
 
-          // TODO: use an execute task under the hood, but allow for a custom UI for the lookup task
+          // TODO: use an execute step under the hood, but allow for a custom UI for the lookup step
           if (task.op == 'lookup' || (task.op == 'execute' && task.real_op == 'lookup')) {
             prompt = {
               element: 'task-lookup',
@@ -130,8 +130,8 @@
         // make sure we don't overwrite any objects
         prompt = _.cloneDeep(prompt)
 
-        // if we couldn't find a matching task builder definition
-        // show a basic JSON task editor
+        // if we couldn't find a matching step builder definition
+        // show a basic JSON step editor
         if (_.isNil(prompt)) {
           var task = _.omit(task, ['eid'])
           prompt = {
@@ -149,7 +149,7 @@
 
           prompt = _.assign({}, prompt, { form_values: task })
         } else if (prompt.element == 'form') {
-          // for form builder items, assign the form item value by finding it in the task object
+          // for form builder items, assign the form item value by finding it in the step object
           prompt.form_items = _.map(prompt.form_items, fi => {
             if (!fi.variable || !_.has(task, fi.variable)) {
               return fi
@@ -171,7 +171,7 @@
           prompt = _.assign({}, prompt, { form_values })
         }
 
-        // associate prompt with task
+        // associate prompt with step
         var icon = this.getIconFromTask(task)
         prompt = _.assign({}, prompt, { task_idx, icon })
         prompt = _.cloneDeep(prompt)
@@ -189,12 +189,12 @@
         var tasks = []
         var prompts = []
 
-        // map existing tasks in model to prompts
+        // map existing steps in model to prompts
         _.each(task.items, (t, task_idx) => {
-          // create prompt from task
+          // create prompt from step
           prompts.push(this.promptFromTask(t, task_idx))
 
-          // store task internally
+          // store step internally
           tasks.push(_.cloneDeep(t))
         })
 
@@ -216,17 +216,17 @@
         this.prompts = [].concat(prompts)
 
         this.$emit('input', { op: 'sequence', items })
-        this.$store.track('Added ' + _.startCase(item.op) + ' Task')
+        this.$store.track('Added ' + _.startCase(item.op) + ' Step')
       },
       insertStep(idx, task) {
         var items = _.get(this.value, 'items', [])
         items = _.cloneDeep(items)
         if (task) {
           items.splice(idx, 0, task)
-          this.$store.track('Added ' + _.startCase(task.op) + ' Task')
+          this.$store.track('Added ' + _.startCase(task.op) + ' Step')
         } else {
           items.splice(idx, 0, { op: '' })
-          this.$store.track('Clicked Insert Task Button')
+          this.$store.track('Clicked Insert Step Button')
         }
         this.is_editing = false
         this.is_inserting = true
@@ -267,7 +267,7 @@
       },
       itemCancel() {
         if (this.is_inserting) {
-          this.$store.track('Added Task (Canceled)')
+          this.$store.track('Added Step (Canceled)')
         }
 
         this.is_editing = false
@@ -277,7 +277,7 @@
       },
       itemSave() {
         if (this.is_inserting) {
-          this.$store.track('Added Task (Saved)')
+          this.$store.track('Added Step (Saved)')
         }
 
         this.is_editing = false

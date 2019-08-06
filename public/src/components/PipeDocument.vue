@@ -41,14 +41,14 @@
               class="el-collapse--plain"
               v-model="active_collapse_items"
             >
-              <!-- tasks panel -->
+              <!-- steps panel -->
               <el-collapse-item
                 class="mb4 pv1 ph3 bg-white br2 css-white-box"
                 name="tasks"
               >
                 <template slot="title">
                   <div class="flex flex-row items-center">
-                    <span class="f4">Tasks</span>
+                    <span class="f4">Steps</span>
                   </div>
                 </template>
                 <div class="pt3 ph3">

@@ -41,9 +41,9 @@
     placement: left
 - target: '[data-tour-step="pipe-onboarding-5"]'
   content: |
-    **Add New Function Task**
+    **Add New Function Step**
 
-    Now we've added a new task to your function. The output from the execute task above is passed to the input of this email task.
+    Now we've added a new step to your function. The output from the execute step above is passed to the input of this email step.
 
     Click on the "Test" button once more to test your function. Check your inbox to see the result.
   popperOptions:

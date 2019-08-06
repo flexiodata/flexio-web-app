@@ -24,7 +24,7 @@ steps:
       * Select three fields
       * Copy to cloud storage (e.g., Dropbox)
 
-      The first step in the function is to access a CSV file from the sample Amazon S3 directory included with your Flex.io account. As you see in the console, we'll use the `read` task to access the CSV.
+      The first step in the function is to access a CSV file from the sample Amazon S3 directory included with your Flex.io account. As you see in the console, we'll use the `read` step to access the CSV.
 
       Click the **Run** button on the right to see the raw CSV data.
 
@@ -37,7 +37,7 @@ steps:
     blurb: |
       ### Step 2. Add a conversion step
 
-      Now we'll add a simple `convert` task that reformats the data from CSV to a table as follows:
+      Now we'll add a simple `convert` step that reformats the data from CSV to a table as follows:
 
       ```
       Flexio.pipe()
@@ -45,7 +45,7 @@ steps:
         .convert('csv', 'table')
       ```
 
-      Add this task and click the **Run** button again; you'll now see the output converted to a tabular format.
+      Add this step and click the **Run** button again; you'll now see the output converted to a tabular format.
 
   - #----------------------------------------#
 
@@ -65,7 +65,7 @@ steps:
         .select('firstname', 'lastname', 'city')
       ```
 
-      Add this task and click the **Run** button again; now we see only the columns that we selected.
+      Add this step and click the **Run** button again; now we see only the columns that we selected.
 
   - #----------------------------------------#
 
@@ -89,7 +89,7 @@ steps:
     blurb: |
       ### Step 5. Transfer the file to your cloud storage
 
-      Now we'll copy the file from the S3 account to your cloud storage account.  You just need to add a `write` task to your code as follows:
+      Now we'll copy the file from the S3 account to your cloud storage account.  You just need to add a `write` step to your code as follows:
 
       ```
       Flexio.pipe()
@@ -101,4 +101,4 @@ steps:
 
       **NOTE:** You'll notice that the name `{{connection_name}}` from the connection created in the previous step is referenced in the `write` command. Currently the files are placed in timestamped subfolders; if you want to place the files in a different location, simply update the path like this: `.write('/{{connection_name}}/foo/contact-list-1.csv')`.
 
-      Add this task, click the **Run** button again and then check your cloud storage account to see the copied file.
+      Add this step, click the **Run** button again and then check your cloud storage account to see the copied file.

@@ -36,7 +36,7 @@ steps:
     blurb: |
       ### Step 2. Add a conversion step
 
-      Now we'll add a simple `convert` task that reformats the data from JSON to a table as follows:
+      Now we'll add a simple `convert` step that reformats the data from JSON to a table as follows:
 
       ```
       Flexio.pipe()
@@ -44,7 +44,7 @@ steps:
         .convert('json', 'table')
       ```
 
-      Add this task and click the **Run** button again; you'll now see the output converted to a tabular format.
+      Add this step and click the **Run** button again; you'll now see the output converted to a tabular format.
 
   - #----------------------------------------#
 
@@ -57,7 +57,7 @@ steps:
 
       Now that we have our data in tabular format, let's store it somewhere. For this example, we'll add it to our local Storage in your Flex.io account. Storage provides a quick access point for data collection or enrichment.
 
-      The root path of your local storage is `/home`.  So, to collect this data in local storage, we'll simply add a `write` task.
+      The root path of your local storage is `/home`.  So, to collect this data in local storage, we'll simply add a `write` step.
 
       ```
       Flexio.pipe()
@@ -68,4 +68,4 @@ steps:
 
       **NOTE:** Currently the files are placed in timestamped subfolders; if you want to place the files in a different location, simply update the path like this: `.write('/{{connection_name}}/foo/sample-api.csv')`.
 
-      Add this task and click the **Run** button again. The data from the API will now appear as a CSV file in your local Storage.
+      Add this step and click the **Run** button again. The data from the API will now appear as a CSV file in your local Storage.

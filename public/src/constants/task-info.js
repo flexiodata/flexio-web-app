@@ -1,6 +1,6 @@
 import * as ops from './task-op'
 
-/* task info */
+/* step info */
 
 const CONNECT = {
   op: ops.TASK_OP_CONNECT,
@@ -76,7 +76,7 @@ const WRITE = {
 
 /* exports */
 
-// go out of alphabetical order here so the order is correct in the task chooser builder item
+// go out of alphabetical order here so the order is correct in the step chooser builder item
 export const TASK_INFO_EXECUTE       = EXECUTE
 export const TASK_INFO_LOOKUP        = LOOKUP
 export const TASK_INFO_REQUEST       = REQUEST

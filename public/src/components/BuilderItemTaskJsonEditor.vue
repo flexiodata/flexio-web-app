@@ -86,7 +86,7 @@
         return this.description.length > 0
       },
       title() {
-        return _.get(this.item, 'title', 'Task JSON')
+        return _.get(this.item, 'title', 'Step JSON')
       },
       description() {
         return marked(_.get(this.item, 'description', ''))
@@ -156,9 +156,9 @@
 
         try {
           if (!_.isObject(task)) {
-            throw({ message: 'Task result must be an object' })
+            throw({ message: 'Step result must be an object' })
           } else if (_.isNil(task.op)) {
-            throw({ message: 'Tasks must have an `op` node' })
+            throw({ message: 'Steps must have an `op` node' })
           }
 
           this.$emit('item-change', task, this.index)
