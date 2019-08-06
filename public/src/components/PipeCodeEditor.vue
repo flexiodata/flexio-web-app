@@ -18,7 +18,7 @@
   import yaml from 'js-yaml'
   import CodeEditor from '@/components/CodeEditor'
 
-  // TODO: remove 'omitDeep' once we get rid of task eids
+  // TODO: remove 'omitDeep' once we get rid of step eids
   const omitDeep = (collection, excludeKeys) => {
     function omitFn(val) {
       if (val && typeof val === 'object') {
@@ -101,7 +101,7 @@
         this.is_inited = false
 
         try {
-          // TODO: remove 'omitDeep' once we get rid of task eids
+          // TODO: remove 'omitDeep' once we get rid of step eids
           var pipe = _.cloneDeep(this.value)
           var task = omitDeep(pipe, ['eid'])
 
@@ -177,7 +177,7 @@
         }
 
         if (this.taskOnly) {
-          // we're only dealing with the task JSON
+          // we're only dealing with the step JSON
           task = _.cloneDeep(obj)
 
           if (_.isNil(task)) {

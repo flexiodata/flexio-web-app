@@ -23,7 +23,7 @@ steps:
       * Filter for files where size < 50KB
       * Copy to cloud storage (e.g., Dropbox)
 
-      The first step in the function is to access the sample Amazon S3 directory included with your Flex.io account. As you see in the console, we'll use the `list` task to read through each of the files in the directory.
+      The first step in the function is to access the sample Amazon S3 directory included with your Flex.io account. As you see in the console, we'll use the `list` step to read through each of the files in the directory.
 
       Click the **Run** button at the right to see the files.
 
@@ -36,7 +36,7 @@ steps:
     blurb: |
       ### Step 2. Add a filter
 
-      Now that we see our files, let's say we only want to move files that are less than 50KB in size. To do this, add a `filter` task like this:
+      Now that we see our files, let's say we only want to move files that are less than 50KB in size. To do this, add a `filter` step like this:
 
       ```
       Flexio.pipe()
@@ -68,7 +68,7 @@ steps:
     blurb: |
       ### Step 4. Copy the filtered files to your cloud storage
 
-      Now we'll copy the files from the S3 account to your cloud storage account. For this, we'll use three tasks in conjunction: `foreach`, `read` and `write`:
+      Now we'll copy the files from the S3 account to your cloud storage account. For this, we'll use three steps in conjunction: `foreach`, `read` and `write`:
 
       ```
       Flexio.pipe()
@@ -84,4 +84,4 @@ steps:
 
       **NOTE:** You'll notice that the name `{{connection_name}}` from the connection created in the previous step is referenced in the `write` command. Currently the files are placed in timestamped subfolders; if you want to place the files in a different location, simply update the path like this: `.write('/{{connection_name}}/foo/${item.name}')`.
 
-      Add these tasks, click the **Run** button again and then check your cloud storage account to see the copied files.
+      Add these steps, click the **Run** button again and then check your cloud storage account to see the copied files.

@@ -314,7 +314,7 @@
         this.edit_values = edit_values
 
         if (is_new) {
-          // when creating a new convert task, make sure we fire an 'item-change'
+          // when creating a new convert step, make sure we fire an 'item-change'
           // event so that the pipedocument module knows about the default config
           // if the user attempts to save the function without editing the step at all
           //

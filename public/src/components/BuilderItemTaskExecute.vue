@@ -202,7 +202,7 @@ exports.flex_handler = function(flex) {
         if (has_no_code) {
           form_values.code = this.getCodeByLang(form_values.lang)
 
-          // when creating a new execute task, make sure we fire an 'item-change'
+          // when creating a new execute step, make sure we fire an 'item-change'
           // event so that the pipedocument module knows about the default code
           // if the user attempts to save the function without editing the code at all
           //

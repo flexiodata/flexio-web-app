@@ -26,7 +26,7 @@
         {
           vmid: 'description',
           name: 'description',
-          content: 'Sign in to Flex.io and stitch together serverless functions with out-of-the-box helper tasks that take the pain out of OAuth, notifications, scheduling, local storage, library dependencies and other "glue" code.'
+          content: 'Sign in to Flex.io and stitch together serverless functions with out-of-the-box helper steps that take the pain out of OAuth, notifications, scheduling, local storage, library dependencies and other "glue" code.'
         }
       ]
     },

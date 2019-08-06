@@ -48,7 +48,7 @@
       },
       title: {
         type: String,
-        default: 'Insert new task'
+        default: 'Insert new step'
       },
       description: {
         type: String,
