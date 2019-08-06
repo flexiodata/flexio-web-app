@@ -276,7 +276,7 @@ const TWILIO = {
 
 /* exports */
 
-// go out of alphabetical order here so the order is correct in the pipe add modal
+// go out of alphabetical order here so the order is correct in the function add modal
 export const CONNECTION_INFO_FLEX                 = FLEX
 export const CONNECTION_INFO_AMAZON_S3            = AMAZON_S3
 export const CONNECTION_INFO_BOX                  = BOX

@@ -74,33 +74,33 @@
           },
           {
             target: '#a19',
-            content: '<div class="mb3"><div class="mb2 b">Step 2 of 6:</div>Pipes can execute functions and related tasks. New tasks can be added by clicking on the plus button.</div>'
+            content: '<div class="mb3"><div class="mb2 b">Step 2 of 6:</div>Functions contain steps. New steps can be added by clicking on the plus button.</div>'
           },
           {
             target: '#a3',
-            content: '<div class="mb3"><div class="mb2 b">Step 3 of 6:</div>Click on the "Test" button to run this pipe.</div>'
+            content: '<div class="mb3"><div class="mb2 b">Step 3 of 6:</div>Click on the "Test" button to run this function.</div>'
           },
           {
             target: '#a4',
-            content: '<div class="mb3"><div class="mb2 b">Step 4 of 6:</div>And here\'s the pipe output.</div>',
+            content: '<div class="mb3"><div class="mb2 b">Step 4 of 6:</div>And here\'s the function output.</div>',
             params: {
               placement: 'left'
             }
           },
           {
             target: '#a20',
-            content: '<div class="mb3"><div class="mb2 b">Step 5 of 6:</div>Now we\'ve added a new task to your pipe. The output from the execute task is passed to the input of this email task.<br><br>Now test your pipe again and check your inbox.</div>',
+            content: '<div class="mb3"><div class="mb2 b">Step 5 of 6:</div>Now we\'ve added a new step to your function. The output from the execute step is passed to the input of this email step.<br><br>Now test your function again and check your inbox.</div>',
             params: {
               placement: 'left'
             }
           },
           {
             target: '#a6',
-            content: '<div class="mb3"><div class="mb2 b">Step 6 of 6:</div>Finally, click the "Schedule" button and set the pipe to run every five minutes.</div>'
+            content: '<div class="mb3"><div class="mb2 b">Step 6 of 6:</div>Finally, click the "Schedule" button and set the function to run every five minutes.</div>'
           },
           {
             target: '#a7',
-            content: '<div class="mb3"><div class="mb2 b">Thanks for checking out Flex.io!</div>Click the pipe list to see other examples or create your own pipes.</div>'
+            content: '<div class="mb3"><div class="mb2 b">Thanks for checking out Flex.io!</div>Click the function list to see other examples or create your own function.</div>'
           }
         ]
       }

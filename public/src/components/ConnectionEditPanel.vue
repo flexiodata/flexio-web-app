@@ -76,7 +76,7 @@
           >
             <template slot="label">
               <span>Name</span>
-              <span class="lh-1 hint--top hint--large" aria-label="A unique identifier that can be used to reference this connection in a pipe">
+              <span class="lh-1 hint--top hint--large" aria-label="A unique identifier that can be used to reference this connection in a function">
                 <i class="el-icon-info blue"></i>
               </span>
             </template>

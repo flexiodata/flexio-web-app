@@ -187,11 +187,11 @@
 
           try {
             if (_.isNil(task.op)) {
-              throw({ message: 'Pipes must have an `op` node' })
+              throw({ message: 'Functions must have an `op` node' })
             } else if (task.op != 'sequence') {
               throw({ message: 'The `op` node must be "sequence"' })
             } else if (_.isNil(task.items)) {
-              throw({ message: 'Pipes must have an `items` node' })
+              throw({ message: 'Functions must have an `items` node' })
             } else if (!_.isArray(task.items)) {
               throw({ message: 'The `items` node must be an array' })
             }
@@ -204,7 +204,7 @@
             this.error_msg = e.message
           }
         } else {
-          // we're dealing with the full pipe JSON
+          // we're dealing with the full function JSON
           pipe = _.cloneDeep(obj)
 
           // TODO: add try/catch error checking here

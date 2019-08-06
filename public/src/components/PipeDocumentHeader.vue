@@ -7,7 +7,7 @@
           <LabelSwitch
             class="dib ml3 hint--bottom"
             active-color="#13ce66"
-            :aria-label="is_deployed ? 'Turn pipe off' : 'Turn pipe on'"
+            :aria-label="is_deployed ? 'Turn function off' : 'Turn function on'"
             :width="58"
             v-model="is_deployed"
           />

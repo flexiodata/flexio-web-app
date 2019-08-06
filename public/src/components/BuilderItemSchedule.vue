@@ -68,7 +68,7 @@
         return this.description.length > 0
       },
       title() {
-        return _.get(this.item, 'title', 'Schedule your pipe')
+        return _.get(this.item, 'title', 'Schedule your function')
       },
       description() {
         return marked(_.get(this.item, 'description', ''))

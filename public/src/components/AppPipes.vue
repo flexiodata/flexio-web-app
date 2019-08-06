@@ -2,7 +2,7 @@
   <!-- fetching -->
   <div v-if="is_fetching">
     <div class="flex flex-column justify-center bg-nearer-white h-100">
-      <Spinner size="large" message="Loading pipes..." />
+      <Spinner size="large" message="Loading functions..." />
     </div>
   </div>
 
@@ -16,7 +16,7 @@
           <div class="flex-none ph3 pv2 relative bg-white bb b--black-05">
             <div class="flex flex-row">
               <div class="flex-fill flex flex-row items-center">
-                <h2 class="mv0 f3 mr3">Pipes</h2>
+                <h2 class="mv0 f3 mr3">Functions</h2>
               </div>
               <div class="flex-none flex flex-row items-center ml3">
                 <el-button
@@ -75,14 +75,14 @@
     </div>
     <EmptyItem class="flex flex-column items-center justify-center h-100" v-else>
       <div class="tc f3" slot="text">
-        <p>No pipes to show</p>
+        <p>No functions to show</p>
         <el-button
           size="large"
           type="primary"
           class="ttu fw6"
           @click="show_pipe_dialog = true"
         >
-          New Pipe
+          New Function
         </el-button>
       </div>
     </EmptyItem>
@@ -120,7 +120,7 @@
   const DEPLOY_MODE_RUN = 'R'
 
   const defaultAttrs = () => {
-    // when creating a new pipe, start out with a basic Python 'Hello World' script
+    // when creating a new function, start out with a basic Python 'Hello World' script
     return {
       deploy_mode: 'R',
       deploy_api: 'A',
@@ -139,7 +139,7 @@
   export default {
     metaInfo() {
       return {
-        title: _.get(this.pipe, 'name', 'Pipes'),
+        title: _.get(this.pipe, 'name', 'Functions'),
         titleTemplate: (chunk) => {
           return chunk ? `${chunk} | ${this.getActiveTeamLabel()}` : 'Flex.io'
         }
@@ -195,7 +195,7 @@
       this.tryFetchPipes()
     },
     mounted() {
-      this.$store.track('Visited Pipes Page')
+      this.$store.track('Visited Functions Page')
     },
     methods: {
       ...mapGetters('teams', {
@@ -221,25 +221,25 @@
           var pipe = response.data
 
           this.$message({
-            message: 'The pipe was created successfully.',
+            message: 'The function was created successfully.',
             type: 'success'
           })
 
           var analytics_payload = _.pick(pipe, ['eid', 'name', 'short_description', 'description', 'created'])
-          this.$store.track('Created Pipe', analytics_payload)
+          this.$store.track('Created Function', analytics_payload)
           this.selectPipe(pipe)
           this.show_pipe_dialog = false
         })
       },
       tryDeletePipe(attrs) {
         var eid = _.get(attrs, 'eid', '')
-        var pname = _.get(attrs, 'name', 'Pipe')
+        var pname = _.get(attrs, 'name', 'Function')
         var team_name = this.active_team_name
 
-        this.$confirm('Are you sure you want to delete the pipe named "' + pname + '"?', 'Really delete pipe?', {
+        this.$confirm('Are you sure you want to delete the function named "' + pname + '"?', 'Really delete function?', {
           confirmButtonClass: 'ttu fw6',
           cancelButtonClass: 'ttu fw6',
-          confirmButtonText: 'Delete pipe',
+          confirmButtonText: 'Delete function',
           cancelButtonText: 'Cancel',
           type: 'warning'
         }).then(() => {

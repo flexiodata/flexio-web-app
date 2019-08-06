@@ -2,7 +2,7 @@
   title: |
     <div class="tc mv1 f3">Hi {{first_name}}, welcome to Flex.io!</div>
   content: |
-    Here's a two-minute tour to help you get started building serverless pipes with Flex.io.
+    Here's a two-minute tour to help you get started building serverless functions with Flex.io.
   popperOptions:
     placement: none
   style:
@@ -13,9 +13,9 @@
     padding: 1.5rem
 - target: '[data-tour-step="pipe-onboarding-1"]'
   content: |
-    **Pipe Tasks**
+    **Function Steps**
 
-    Pipes can execute functions and related tasks. New tasks can be added by clicking on the plus button.
+    Functions contain steps. New steps can be added by clicking on the plus button.
 
     This Python function grabs the most recent posts from Hacker News.  Let's give it a try.
   popperOptions:
@@ -31,39 +31,39 @@
   content: |
     **Run Button**
 
-    Click on the "Test" button to run this pipe.
+    Click on the "Test" button to run this function.
 - target: '[data-tour-step="pipe-onboarding-4"]'
   content: |
-    **Pipe Results**
+    **Function Results**
 
-    And here's the pipe output.
+    And here's the function output.
   popperOptions:
     placement: left
 - target: '[data-tour-step="pipe-onboarding-5"]'
   content: |
-    **Add New Pipe Task**
+    **Add New Function Task**
 
-    Now we've added a new task to your pipe. The output from the execute task above is passed to the input of this email task.
+    Now we've added a new task to your function. The output from the execute task above is passed to the input of this email task.
 
-    Click on the "Test" button once more to test your pipe. Check your inbox to see the result.
+    Click on the "Test" button once more to test your function. Check your inbox to see the result.
   popperOptions:
     placement: top-start
 - target: '[data-tour-step="pipe-onboarding-6"]'
   content: |
     **Deployment Options**
 
-    Choose your deployment options. This pipe is scheduled to run every five minutes.
+    Choose your deployment options. This function is scheduled to run every five minutes.
   popperOptions:
     placement: left
 - target: '[data-tour-step="pipe-onboarding-7"]'
   content: |
-    **Pipe Activation**
+    **Function Activation**
 
-    Finally, activate your pipe by turning it on and then watch your inbox. Come back and turn it off whenever you'd like.
+    Finally, activate your function by turning it on and then watch your inbox. Come back and turn it off whenever you'd like.
 - target: '[data-tour-step="pipe-onboarding-8"]'
   content: |
     Thanks for checking out Flex.io!
 
-    Click the pipe list to see other examples or create your own pipes.
+    Click the function list to see other examples or create your own functions.
   popperOptions:
     placement: top-start

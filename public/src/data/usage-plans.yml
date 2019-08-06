@@ -6,7 +6,6 @@
   'Local Storage': '1 GB'
   'Execution Timeout': '1 min'
   'Unlimited Prototyping': true
-  'Visual Pipe Builder': true
   'Run From API': true
   'Trigger From Email': true
   'Scheduling': true
@@ -20,7 +19,6 @@
   'Local Storage': '10 GB'
   'Execution Timeout': '5 min'
   'Unlimited Prototyping': true
-  'Visual Pipe Builder': true
   'Run From API': true
   'Trigger From Email': true
   'Scheduling': true
@@ -34,7 +32,6 @@
   'Local Storage': '100 GB'
   'Execution Timeout': '15 min'
   'Unlimited Prototyping': true
-  'Visual Pipe Builder': true
   'Run From API': true
   'Trigger From Email': true
   'Scheduling': true

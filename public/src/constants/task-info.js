@@ -13,7 +13,7 @@ const CONNECT = {
 const CONVERT = {
   op: ops.TASK_OP_CONVERT,
   name: 'Convert',
-  description: 'Convert the output of the previous step in your pipe to a different format (e.g., JSON to CSV)',
+  description: 'Convert the output of the previous step in your function to a different format (e.g., JSON to CSV)',
   icon: 'settings',
   bg_color: 'bg-task-blue'
 }
@@ -61,7 +61,7 @@ const READ = {
 const REQUEST = {
   op: ops.TASK_OP_REQUEST,
   name: 'Request',
-  description: 'Make an HTTP request; output will be sent to the next step of your pipe.',
+  description: 'Make an HTTP request; output will be sent to the next step of your function.',
   icon: 'http',
   bg_color: 'bg-task-blue'
 }
@@ -139,7 +139,7 @@ const DUPLICATE = {
 const ECHO = {
   op: ops.TASK_OP_ECHO,
   name: 'Echo',
-  description: 'Echo a message or variable to the next step in your pipe.',
+  description: 'Echo a message or variable to the next step in your function.',
   icon: 'settings_remote',
   bg_color: 'bg-task-blue'
 }
