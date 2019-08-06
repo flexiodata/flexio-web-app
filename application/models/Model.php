@@ -158,8 +158,8 @@ class Model
     public const TEAM_MEMBER_STATUS_INACTIVE = 'I';
     public const TEAM_MEMBER_STATUS_ACTIVE = 'A';
 
-    public const ROLE_UNDEFINED     = '';
-    public const ROLE_ADMINISTRATOR = 'A';
+    public const SYSTEM_ROLE_UNDEFINED     = '';
+    public const SYSTEM_ROLE_ADMINISTRATOR = 'A';
 
     private $objs = array();
     private $database = null;

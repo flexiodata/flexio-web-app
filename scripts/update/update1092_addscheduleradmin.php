@@ -49,8 +49,8 @@ if (is_null($db))
 try
 {
     // STEP 1: grant roles
-    // const ROLE_UNDEFINED     = '';
-    // const ROLE_ADMINISTRATOR = 'A';
+    // const SYSTEM_ROLE_UNDEFINED     = '';
+    // const SYSTEM_ROLE_ADMINISTRATOR = 'A';
     $db->exec("update tbl_user set role = 'A' where email IN ('scheduler@flex.io');");
 }
 catch(\Exception $e)

@@ -52,8 +52,8 @@ try
     $db->exec("alter table tbl_user add column role varchar(1) NOT NULL default '';");
 
     // STEP 2: grant roles
-    // const ROLE_UNDEFINED     = '';
-    // const ROLE_ADMINISTRATOR = 'A';
+    // const SYSTEM_ROLE_UNDEFINED     = '';
+    // const SYSTEM_ROLE_ADMINISTRATOR = 'A';
     $db->exec("update tbl_user set role = 'A' where email IN ('aaron@flex.io', 'ben@flex.io', 'dave@flex.io', 'nate@flex.io', 'ken@flex.io');");
 }
 catch(\Exception $e)

@@ -506,7 +506,7 @@ class User extends ModelBase
         if ($role === false)
             return false;
 
-        if ($role === \Model::ROLE_ADMINISTRATOR)
+        if ($role === \Model::SYSTEM_ROLE_ADMINISTRATOR)
             return true;
 
         return false;
