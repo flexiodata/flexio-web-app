@@ -215,7 +215,7 @@ class Test
                 "eid_type": null,
                 "eid_status": null,
                 "name": null,
-                "short_description" : null,
+                "title" : null,
                 "description": null,
                 "deploy_mode": null,
                 "created": null,

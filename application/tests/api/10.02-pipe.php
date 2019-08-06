@@ -39,7 +39,7 @@ class Test
             'content_type' => 'application/json',
             'params' => '{
                 "name": "name1",
-                "short_description": "Test Pipe"
+                "title": "Test Pipe"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -53,7 +53,7 @@ class Test
             'content_type' => 'application/json',
             'params' => '{
                 "name": "name2",
-                "short_description": "Test Pipe"
+                "title": "Test Pipe"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -67,7 +67,7 @@ class Test
             'content_type' => 'application/json',
             'params' => '{
                 "name": "name3",
-                "short_description": "Test Pipe"
+                "title": "Test Pipe"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -84,7 +84,7 @@ class Test
             // 'token' => '', // no token included
             'content_type' => 'application/json',
             'params' => '{
-                "short_description": "Updated Test Pipe"
+                "title": "Updated Test Pipe"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -104,7 +104,7 @@ class Test
             'token' => $token1,
             'content_type' => 'application/json',
             'params' => '{
-                "short_description": "Updated Test Pipe"
+                "title": "Updated Test Pipe"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -230,7 +230,7 @@ class Test
             'content_type' => 'application/json',
             'params' => '{
                 "name": "name1-updated",
-                "short_description": "Test Pipe Updated",
+                "title": "Test Pipe Updated",
                 "description": "Test Pipe Description Updated",
                 "ui": {
                     "a": "b"
@@ -264,7 +264,7 @@ class Test
             "eid_type": "PIP",
             "eid_status": "A",
             "name": "name1-updated",
-            "short_description": "Test Pipe Updated",
+            "title": "Test Pipe Updated",
             "description": "Test Pipe Description Updated",
             "ui": {
                 "a": "b"
@@ -430,7 +430,7 @@ class Test
             'content_type' => 'application/json',
             'params' => '{
                 "name": "name1-updated",
-                "short_description": "Test Pipe Updated",
+                "title": "Test Pipe Updated",
                 "description": "Test Pipe Description Updated",
                 "task": {
                     "op": "echo"
@@ -452,7 +452,7 @@ class Test
             "eid_type": "PIP",
             "eid_status": "A",
             "name": "name1-updated",
-            "short_description": "Test Pipe Updated",
+            "title": "Test Pipe Updated",
             "description": "Test Pipe Description Updated",
             "task": {
                 "op": "echo"

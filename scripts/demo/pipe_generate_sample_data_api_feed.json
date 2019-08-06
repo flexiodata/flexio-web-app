@@ -1,7 +1,7 @@
 {
     "eid_type": "PIP",
     "name": "example-generate-sample-data-api-feed",
-    "short_description": "Example: Generate Sample Data API Feed",
+    "title": "Example: Generate Sample Data API Feed",
     "description": "Generate sample data that can be returned via an API call",
     "task": {
       "op": "sequence",

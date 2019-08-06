@@ -39,7 +39,7 @@ class Test
             'content_type' => 'application/json',
             'params' => '{
                 "name": "name1",
-                "short_description": "Test Connection"
+                "title": "Test Connection"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -53,7 +53,7 @@ class Test
             'content_type' => 'application/json',
             'params' => '{
                 "name": "name2",
-                "short_description": "Test Connection"
+                "title": "Test Connection"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -67,7 +67,7 @@ class Test
             'content_type' => 'application/json',
             'params' => '{
                 "name": "name3",
-                "short_description": "Test Connection"
+                "title": "Test Connection"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -84,7 +84,7 @@ class Test
             // 'token' => '', // no token included
             'content_type' => 'application/json',
             'params' => '{
-                "short_description": "Updated Test Connection"
+                "title": "Updated Test Connection"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -104,7 +104,7 @@ class Test
             'token' => $token1,
             'content_type' => 'application/json',
             'params' => '{
-                "short_description": "Updated Test Connection"
+                "title": "Updated Test Connection"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -230,7 +230,7 @@ class Test
             'content_type' => 'application/json',
             'params' => '{
                 "name": "name1-updated",
-                "short_description": "Test Connection Updated",
+                "title": "Test Connection Updated",
                 "description": "Test Connection Description Updated",
                 "connection_type": "'.\Flexio\Services\Factory::TYPE_HTTP.'",
                 "connection_status": "'.\Model::CONNECTION_STATUS_AVAILABLE.'",
@@ -251,7 +251,7 @@ class Test
             "eid_type": "CTN",
             "eid_status": "A",
             "name": "name1-updated",
-            "short_description": "Test Connection Updated",
+            "title": "Test Connection Updated",
             "description": "Test Connection Description Updated",
             "connection_type": "http",
             "connection_status": "A",

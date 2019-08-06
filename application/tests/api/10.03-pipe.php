@@ -39,7 +39,7 @@ class Test
             'content_type' => 'application/json',
             'params' => '{
                 "name": "name1",
-                "short_description": "Test Pipe"
+                "title": "Test Pipe"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -53,7 +53,7 @@ class Test
             'content_type' => 'application/json',
             'params' => '{
                 "name": "name2",
-                "short_description": "Test Pipe"
+                "title": "Test Pipe"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -67,7 +67,7 @@ class Test
             'content_type' => 'application/json',
             'params' => '{
                 "name": "name3",
-                "short_description": "Test Pipe"
+                "title": "Test Pipe"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -196,7 +196,7 @@ class Test
             'content_type' => 'application/json',
             'params' => '{
                 "name": "'.$unique_name.'",
-                "short_description": "Test Pipe"
+                "title": "Test Pipe"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -223,7 +223,7 @@ class Test
             'content_type' => 'application/json',
             'params' => '{
                 "name": "'.$unique_name.'",
-                "short_description": "Test Pipe"
+                "title": "Test Pipe"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);

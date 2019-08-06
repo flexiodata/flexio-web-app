@@ -164,7 +164,7 @@ class Test
 
         // BEGIN TEST
         $info = array(
-            'short_description' => 'Test connection'
+            'title' => 'Test connection'
         );
         $eid = $model->create($info);
         $info = array(
@@ -173,7 +173,7 @@ class Test
         $result = $model->set($eid, $info);
         $actual = $model->get($eid);
         $expected = array(
-            'short_description' => 'Test connection',
+            'title' => 'Test connection',
             'description' => 'This is a test'
         );
         \Flexio\Tests\Check::assertInArray('D.1', '\Flexio\Model\Connection::set(); for object update, make sure non-specified properties aren\'t changed',  $actual, $expected, $results);

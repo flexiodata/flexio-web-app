@@ -1,7 +1,7 @@
 {
     "eid_type": "PIP",
     "name": "example-analyze-data-with-nodejs-and-python",
-    "short_description": "Example: Analyze Data with Nodejs and Python",
+    "title": "Example: Analyze Data with Nodejs and Python",
     "description": "Analyze Job Postings on GitHub Jobs with Nodejs Lodash and Python Pandas",
     "task": {
       "op": "sequence",
