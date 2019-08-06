@@ -221,7 +221,7 @@
         var orig_name = _.get(this.connection, 'name')
         var team_name = this.active_team_name
 
-        attrs = _.pick(attrs, ['name', 'short_description', 'description', 'connection_info'])
+        attrs = _.pick(attrs, ['name', 'title', 'description', 'connection_info'])
         _.assign(attrs, { eid_status: OBJECT_STATUS_AVAILABLE })
 
         // TODO: backend should probably handle this for us
@@ -245,7 +245,7 @@
           }
 
           if (is_pending) {
-            var analytics_payload = _.pick(attrs, ['eid', 'name', 'short_description', 'description', 'connection_type'])
+            var analytics_payload = _.pick(attrs, ['eid', 'name', 'title', 'description', 'connection_type'])
             this.$store.track('Created Connection', analytics_payload)
           }
 

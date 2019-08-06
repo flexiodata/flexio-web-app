@@ -57,7 +57,7 @@
     },
     computed: {
       cname() {
-        return _.get(this.connection, 'short_description', '')
+        return _.get(this.connection, 'title', '')
       },
       ctype() {
         return _.get(this.connection, 'connection_type', '')

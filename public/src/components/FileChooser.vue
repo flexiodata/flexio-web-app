@@ -61,7 +61,7 @@
   const LOCAL_STORAGE_ITEM = {
     connection_type: CONNECTION_TYPE_FLEX,
     eid: 'flex',
-    short_description: 'Flex.io'
+    title: 'Flex.io'
   }
   */
 

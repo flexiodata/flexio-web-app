@@ -117,7 +117,7 @@
 
     return {
       name: `pipe-${suffix}`,
-      short_description: '',
+      title: '',
       description: ''
     }
   }

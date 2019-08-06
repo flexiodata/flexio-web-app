@@ -6,7 +6,7 @@
         <i class="el-icon-error dark-red bg-white ba bw1 b--white br-100" v-else></i>
       </div>
       <service-icon :type="ctype" class="dib v-mid br2 square-5" />
-      <div class="f6 fw6 mt2 cursor-default">{{item.short_description}}</div>
+      <div class="f6 fw6 mt2 cursor-default">{{item.title}}</div>
     </div>
     <div class="flex flex-row items-center" v-else>
       <i class="material-icons md-18 b mr3" v-if="showSelectionCheckmark && is_selected">check</i>
@@ -20,7 +20,7 @@
       </div>
       <div class="flex-fill flex flex-column">
         <div class="f5 fw6 cursor-default">{{item.name}}</div>
-        <div class="light-silver f8 lh-copy" style="margin-top: 3px" v-if="short_desc.length > 0">{{short_desc}}</div>
+        <div class="light-silver f8 lh-copy" style="margin-top: 3px" v-if="ctitle.length > 0">{{ctitle}}</div>
       </div>
       <el-button
         plain
@@ -85,8 +85,8 @@
       cstatus() {
         return _.get(this.item, 'connection_status', '')
       },
-      short_desc() {
-        return _.get(this.item, 'short_description', '')
+      ctitle() {
+        return _.get(this.item, 'title', '')
       },
       is_selected() {
         var cid = this.connectionIdentifier
