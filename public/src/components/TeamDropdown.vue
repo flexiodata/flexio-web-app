@@ -23,7 +23,7 @@
           class="el-dropdown-menu__item flex flex-row items-center"
           :key="team.eid"
           @click="changeTeam(team)"
-          v-for="team in teams"
+          v-for="team in getAllTeams()"
         >
           <i class="material-icons md-18 b mr3" v-if="isActiveTeam(team)">check</i>
           <i class="material-icons md-18 b mr3" style="color: transparent" v-else>check</i>
@@ -58,9 +58,6 @@
         is_fetched: state => state.teams.is_fetched,
         active_team_name: state => state.teams.active_team_name
       }),
-      teams() {
-        return this.getAllTeams()
-      },
       active_username() {
         return _.get(this.getActiveUser(), 'username', '')
       },

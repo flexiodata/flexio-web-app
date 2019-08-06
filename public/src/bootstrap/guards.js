@@ -21,6 +21,10 @@ const tryFetchConnections = (team_name) => {
   }
 }
 
+const isLocalhost = () => {
+  return location.hostname === 'localhost' || location.hostname === '127.0.0.1'
+}
+
 const hasActiveUser = () => {
  return store.state.users.active_user_eid.length > 0
 }
@@ -40,7 +44,9 @@ const canProceed = () => {
 }
 
 const debugRoute = (msg, to) => {
-  console.log(msg, to)
+  if (isLocalhost()) {
+    console.log(msg, to)
+  }
 }
 
 // global route guards

@@ -203,7 +203,7 @@ Add two numbers
         return _.get(jsdoc_obj, 'description', '')
       },
       spreadsheet_command_syntax() {
-        return getSpreadsheetSyntaxStr(this.edit_pipe, true)
+        return getSpreadsheetSyntaxStr(this.active_team_name, this.edit_pipe, true)
       },
       submit_label() {
         return this.mode == 'edit' ? 'Save changes' : 'Create function'
