@@ -48,13 +48,9 @@ if (is_null($db))
 
 try
 {
-    // STEP 1: add the title columns
-    $db->exec("alter table tbl_pipe add column title text default ''");
-    $db->exec("alter table tbl_connection add column title text default ''");
-
-    // STEP 2: populate the title columns from the existing short_description
-    $db->exec("update tbl_pipe set title = short_description");
-    $db->exec("update tbl_connection set title = short_description");
+    // STEP 1: rename the short_description column to title
+    $db->exec("alter table tbl_pipe rename column short_description to title;");
+    $db->exec("alter table tbl_connection rename column short_description to title;");
 }
 catch(\Exception $e)
 {

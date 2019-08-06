@@ -26,7 +26,6 @@ class Connection extends ModelBase
                 'eid_status'        => array('type' => 'string', 'required' => false, 'default' => \Model::STATUS_AVAILABLE),
                 'name'              => array('type' => 'identifier', 'required' => false, 'default' => $default_name),
                 'title'             => array('type' => 'string', 'required' => false),
-                'short_description' => array('type' => 'string', 'required' => false),
                 'description'       => array('type' => 'string', 'required' => false, 'default' => ''),
                 'connection_type'   => array('type' => 'string', 'required' => false, 'default' => ''),
                 'connection_status' => array('type' => 'string', 'required' => false, 'default' => \Model::CONNECTION_STATUS_UNAVAILABLE),
@@ -44,15 +43,6 @@ class Connection extends ModelBase
 
         if (self::isValidConnectionStatus($process_arr['connection_status']) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-
-
-        // TODO: short_description migration; map title to short description for now
-        if (isset($process_arr['title']))
-        {
-            $process_arr['short_description'] = $process_arr['title'];
-            unset($process_arr['title']);
-        }
-
 
         // encrypt the connection info
         $process_arr['connection_info'] = \Flexio\Base\Util::encrypt($process_arr['connection_info'], $GLOBALS['g_store']->connection_enckey);
@@ -147,7 +137,6 @@ class Connection extends ModelBase
                 'eid_status'        => array('type' => 'string', 'required' => false),
                 'name'              => array('type' => 'string', 'required' => false),
                 'title'             => array('type' => 'string', 'required' => false),
-                'short_description' => array('type' => 'string', 'required' => false),
                 'description'       => array('type' => 'string', 'required' => false),
                 'connection_type'   => array('type' => 'string', 'required' => false),
                 'connection_status' => array('type' => 'string', 'required' => false),
@@ -166,15 +155,6 @@ class Connection extends ModelBase
 
         if (isset($params['connection_status']) && self::isValidConnectionStatus($params['connection_status']) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-
-
-        // TODO: short_description migration; map title to short description for now
-        if (isset($process_arr['title']))
-        {
-            $process_arr['short_description'] = $process_arr['title'];
-            unset($process_arr['title']);
-        }
-
 
         // encrypt the connection info
         if (isset($process_arr['connection_info']))
@@ -254,8 +234,7 @@ class Connection extends ModelBase
                               'eid_type'          => \Model::TYPE_CONNECTION,
                               'eid_status'        => $row['eid_status'],
                               'name'              => $row['name'],
-                              'title'             => $row['short_description'],
-                              'short_description' => $row['short_description'],
+                              'title'             => $row['title'],
                               'description'       => $row['description'],
                               'connection_type'   => $row['connection_type'],
                               'connection_status' => $row['connection_status'],

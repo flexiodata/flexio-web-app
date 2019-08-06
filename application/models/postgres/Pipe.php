@@ -26,7 +26,6 @@ class Pipe extends ModelBase
                 'eid_status'      => array('type' => 'string', 'required' => false, 'default' => \Model::STATUS_AVAILABLE),
                 'name'            => array('type' => 'identifier', 'required' => false, 'default' => $default_name),
                 'title'           => array('type' => 'string', 'required' => false),
-                'short_description' => array('type' => 'string', 'required' => false),
                 'description'     => array('type' => 'string', 'required' => false, 'default' => ''),
                 'ui'              => array('type' => 'string', 'required' => false, 'default' => '{}'),
                 'task'            => array('type' => 'string', 'required' => false, 'default' => '{}'),
@@ -42,15 +41,6 @@ class Pipe extends ModelBase
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $process_arr = $validator->getParams();
-
-
-        // TODO: short_description migration; map title to short description for now
-        if (isset($process_arr['title']))
-        {
-            $process_arr['short_description'] = $process_arr['title'];
-            unset($process_arr['title']);
-        }
-
 
         if (\Model::isValidStatus($process_arr['eid_status']) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
@@ -160,7 +150,6 @@ class Pipe extends ModelBase
                 'eid_status'      => array('type' => 'string', 'required' => false),
                 'name'            => array('type' => 'string', 'required' => false),
                 'title'           => array('type' => 'string', 'required' => false),
-                'short_description' => array('type' => 'string', 'required' => false),
                 'description'     => array('type' => 'string', 'required' => false),
                 'ui'              => array('type' => 'string', 'required' => false),
                 'task'            => array('type' => 'string', 'required' => false),
@@ -177,15 +166,6 @@ class Pipe extends ModelBase
 
         $process_arr = $validator->getParams();
         $process_arr['updated'] = \Flexio\System\System::getTimestamp();
-
-
-        // TODO: short_description migration; map title to short description for now
-        if (isset($process_arr['title']))
-        {
-            $process_arr['short_description'] = $process_arr['title'];
-            unset($process_arr['title']);
-        }
-
 
         if (isset($process_arr['eid_status']) && \Model::isValidStatus($process_arr['eid_status']) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
@@ -291,8 +271,7 @@ class Pipe extends ModelBase
                               'eid_type'        => \Model::TYPE_PIPE,
                               'eid_status'      => $row['eid_status'],
                               'name'            => $row['name'],
-                              'title'           => $row['short_description'],
-                              'short_description' => $row['short_description'],
+                              'title'           => $row['title'],
                               'description'     => $row['description'],
                               'ui'              => $row['ui'],
                               'task'            => $row['task'],

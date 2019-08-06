@@ -441,7 +441,6 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             'eid_status' => $pipe_info['eid_status'] ?? "",
             'name' => $pipe_info['name'] ?? "",
             'title' => $pipe_info['title'] ?? "",
-            'short_description' => $pipe_info['description'] ?? "",
             'description' => $pipe_info['description'] ?? "",
             'deploy_mode' => $pipe_info['deploy_mode'] ?? "",
             'created' => $pipe_info['created'] ?? "",
