@@ -90,7 +90,7 @@
           <div class="flex flex-column h-100" v-if="show_yaml">
             <div class="flex flex-row items-center bg-nearer-white bb b--black-05 pa2">
               <i class="material-icons mr1">code</i>
-              <div class="f6 fw6 flex-fill">Pipe Definition</div>
+              <div class="f6 fw6 flex-fill">Function Definition</div>
               <el-radio-group
                 class="mh2"
                 size="micro"
@@ -99,7 +99,7 @@
                 <el-radio-button label="json"><span class="fw6">JSON</span></el-radio-button>
                 <el-radio-button label="yaml"><span class="fw6">YAML</span></el-radio-button>
               </el-radio-group>
-              <div class="pointer f5 black-30 hover-black-60 hint--bottom-left" aria-label="Hide Pipe Definition" @click="showYaml(false)">
+              <div class="pointer f5 black-30 hover-black-60 hint--bottom-left" aria-label="Hide Function Definition" @click="showYaml(false)">
                 <i class="el-icon-close fw6"></i>
               </div>
             </div>
@@ -120,7 +120,7 @@
           </div>
           <div class="flex flex-column h-100" v-if="show_testing">
             <div class="flex-none flex flex-row items-center bg-nearer-white bb b--black-05 pa2">
-              <div class="f6 fw6 flex-fill">Test Pipe</div>
+              <div class="f6 fw6 flex-fill">Test Function</div>
               <div class="pointer f5 black-30 hover-black-60 hint--bottom-left" aria-label="Hide Testing" @click="showTesting(false)">
                 <i class="el-icon-close fw6"></i>
               </div>
@@ -132,7 +132,7 @@
                 <h4 class="mv0 pa3">Input</h4>
 
                 <div class="ph3">
-                  <p class="mt0 ttu fw6 f7 moon-gray">Test this pipe with the following POST parameters</p>
+                  <p class="mt0 ttu fw6 f7 moon-gray">Test this function with the following POST parameters</p>
                   <ProcessInput
                     ref="process-input"
                     v-model="process_input"
@@ -160,7 +160,7 @@
                 <div class="ph3">
                   <ProcessContent :process-eid="active_process_eid">
                     <div class="ba b--black-10 pa3 tc f6 lh-copy" slot="empty">
-                      <em>Click the <code class="ph1 ba b--black-10 bg-nearer-white br2">Run Test</code> button to see the result of your pipe logic here.</em>
+                      <em>Click the <code class="ph1 ba b--black-10 bg-nearer-white br2">Run Test</code> button to see the result of your function logic here.</em>
                     </div>
                   </ProcessContent>
                 </div>
@@ -171,7 +171,7 @@
       </multipane>
     </div>
 
-    <!-- pipe edit dialog -->
+    <!-- function edit dialog -->
     <el-dialog
       custom-class="el-dialog--no-header el-dialog--no-footer"
       width="46rem"
@@ -189,7 +189,7 @@
       />
     </el-dialog>
 
-    <!-- pipe schedule dialog -->
+    <!-- function schedule dialog -->
     <el-dialog
       custom-class="el-dialog--no-header el-dialog--no-footer"
       width="46rem"
@@ -207,7 +207,7 @@
     </el-dialog>
   </div>
 
-  <!-- pipe not found -->
+  <!-- function not found -->
   <PageNotFound class="bg-nearer-white" v-else-if="pipe_not_found" />
 </template>
 
@@ -240,11 +240,6 @@
   const DEPLOY_MODE_RUN       = 'R'
 
   export default {
-    metaInfo() {
-      return {
-        title: _.get(this.orig_pipe, 'name', 'pipes')
-      }
-    },
     components: {
       Multipane,
       MultipaneResizer,
@@ -416,21 +411,21 @@
           }
 
           if (value === false) {
-            this.$confirm('This pipe is turned on and is possibly being used in a production environment. Are you sure you want to continue?', 'Really turn pipe off?', {
+            this.$confirm('This function is turned on and is possibly being used in a production environment. Are you sure you want to continue?', 'Really turn function off?', {
               confirmButtonClass: 'ttu fw6',
               cancelButtonClass: 'ttu fw6',
-              confirmButtonText: 'Turn pipe off',
+              confirmButtonText: 'Turn function off',
               cancelButtonText: 'Cancel',
               type: 'warning'
             }).then(() => {
               doSet()
-              this.$store.track("Turned Pipe Off")
+              this.$store.track("Turned Function Off")
             }).catch(() => {
-              this.$store.track("Turned Pipe Off (Canceled)")
+              this.$store.track("Turned Function Off (Canceled)")
             })
           } else {
             doSet()
-            this.$store.track("Turned Pipe On")
+            this.$store.track("Turned Function On")
           }
         }
       }
@@ -474,7 +469,7 @@
           var pipe = response.data
 
           this.$message({
-            message: 'The pipe was updated successfully.',
+            message: 'The function was updated successfully.',
             type: 'success'
           })
 
@@ -491,7 +486,7 @@
           this.revert()
         }).catch(error => {
           this.$message({
-            message: 'There was a problem updating the pipe.',
+            message: 'There was a problem updating the function.',
             type: 'error'
           })
         }).finally(() => {
@@ -500,11 +495,11 @@
       },
       openPropertiesDialog() {
         this.show_pipe_edit_dialog = true
-        this.$store.track('Opened Properties Dialog')
+        this.$store.track('Opened Function Properties Dialog')
       },
       openScheduleDialog() {
         this.show_pipe_schedule_dialog = true
-        this.$store.track('Opened Schedule Dialog')
+        this.$store.track('Opened Function Schedule Dialog')
       },
       saveProperties(attrs) {
         attrs = _.pick(attrs, ['name', 'short_description', 'description'])
@@ -547,10 +542,10 @@
           this.$store.dispatch('processes/run', { team_name, eid, cfg })
         })
 
-        // make sure we know we've tested the pipe at least once
+        // make sure we know we've tested the function at least once
         this.has_tested_once = true
 
-        this.$store.track('Tested Pipe')
+        this.$store.track('Tested Function')
       },
       revert() {
         this.$nextTick(() => {
@@ -572,9 +567,9 @@
       showYaml(show) {
         this.show_yaml = !!show
         if (!!show) {
-          this.$store.track('Opened Pipe Definition')
+          this.$store.track('Opened Function Definition')
         } else {
-          this.$store.track('Closed Pipe Definition')
+          this.$store.track('Closed Function Definition')
         }
       },
       showTesting(show) {

@@ -60,7 +60,7 @@
       },
       'help-message': {
         type: String,
-        default: 'I have a question about how to use the pipe builder.'
+        default: 'I have a question about how to use the function builder.'
       }
     },
     computed: {

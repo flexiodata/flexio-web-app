@@ -17,14 +17,14 @@ steps:
     blurb: |
       ### Step 1.  Access a CSV file from a directory
 
-      Here's the pipe we're going to build:
+      Here's the function we're going to build:
 
       * Access a file from an AWS S3 directory
       * Convert text to a table
       * Select three fields
       * Copy to cloud storage (e.g., Dropbox)
 
-      The first step in the pipe is to access a CSV file from the sample Amazon S3 directory included with your Flex.io account. As you see in the console, we'll use the `read` task to access the CSV.
+      The first step in the function is to access a CSV file from the sample Amazon S3 directory included with your Flex.io account. As you see in the console, we'll use the `read` task to access the CSV.
 
       Click the **Run** button on the right to see the raw CSV data.
 

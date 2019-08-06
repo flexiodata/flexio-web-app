@@ -211,7 +211,7 @@
           case ps.PROCESS_TRIGGERED_SCHEDULER : return 'Scheduler'
           case ps.PROCESS_TRIGGERED_INTERFACE :
             if (process_mode == ps.PROCESS_MODE_BUILD) {
-              return 'Pipe Test'
+              return 'Function Test'
             } else if (process_mode == ps.PROCESS_MODE_RUN) {
               return 'Web Interface'
             }

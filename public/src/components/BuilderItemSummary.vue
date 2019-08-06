@@ -79,7 +79,7 @@
         return marked(_.get(this.item, 'description', ''))
       },
       action_btn_label() {
-        return _.get(this.item, 'action_button.label', 'View pipe')
+        return _.get(this.item, 'action_button.label', 'View function')
       },
       action_btn_href() {
         return _.get(this.item, 'action_button.href', '')

@@ -29,7 +29,7 @@ ui:
 
           * Connect to Dropbox and select source files
           * Connect to Google Drive and select the destination folder
-          * Schedule the data feed or choose other options to run the pipe
+          * Schedule the data feed or choose other options to run the function
       connections:
         - dropbox
         - googledrive

@@ -37,7 +37,7 @@
       <el-form-item
         key="name"
         prop="name"
-        label="How would you like to refer to this connection in this pipe?"
+        label="How would you like to refer to this connection in this function?"
       >
         <div class="w5">
           <el-input

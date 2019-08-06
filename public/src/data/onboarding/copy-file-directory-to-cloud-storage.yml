@@ -17,13 +17,13 @@ steps:
     blurb: |
       ### Step 1. Access a file directory
 
-      Here's the pipe we're going to build:
+      Here's the function we're going to build:
 
       * Access an AWS S3 directory
       * Filter for files where size < 50KB
       * Copy to cloud storage (e.g., Dropbox)
 
-      The first step in the pipe is to access the sample Amazon S3 directory included with your Flex.io account. As you see in the console, we'll use the `list` task to read through each of the files in the directory.
+      The first step in the function is to access the sample Amazon S3 directory included with your Flex.io account. As you see in the console, we'll use the `list` task to read through each of the files in the directory.
 
       Click the **Run** button at the right to see the files.
 

@@ -8,7 +8,7 @@
         <template v-if="isActiveMemberAvailable()">
           <TeamDropdown class="ml3" />
           <template>
-            <router-link :to="pipe_route" class="fw6 f6 ttu link nav-link">Pipes</router-link>
+            <router-link :to="pipe_route" class="fw6 f6 ttu link nav-link">Functions</router-link>
             <router-link :to="connection_route" class="fw6 f6 ttu link nav-link">Connections</router-link>
             <router-link :to="member_route" class="fw6 f6 ttu link nav-link">Members</router-link>
           </template>

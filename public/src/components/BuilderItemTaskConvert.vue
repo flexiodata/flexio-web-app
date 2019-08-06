@@ -315,8 +315,8 @@
 
         if (is_new) {
           // when creating a new convert task, make sure we fire an 'item-change'
-          // event so that the pipe module knows about the default config if the user
-          // attempts to save the pipe without editing the step at all
+          // event so that the pipedocument module knows about the default config
+          // if the user attempts to save the function without editing the step at all
           //
           // NOTE: we cannot use $nextTick here because this call happens multiple times
           setTimeout(() => { this.onEditValuesChange() }, 1)

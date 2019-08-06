@@ -66,7 +66,7 @@
         return this.index < this.activeItemIdx
       },
       title() {
-        return _.get(this.item, 'title', 'Running Pipe')
+        return _.get(this.item, 'title', 'Running Function')
       },
       description() {
         return marked(_.get(this.item, 'description', ''))

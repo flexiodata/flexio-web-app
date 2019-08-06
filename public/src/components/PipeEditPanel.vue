@@ -194,7 +194,7 @@ Add two numbers
           return this.title
         }
 
-        return this.mode == 'edit' ? `Edit "${this.pname}" Pipe` : 'New Pipe'
+        return this.mode == 'edit' ? `Edit "${this.pname}" Function` : 'New Function'
       },
       pdesc() {
         var jsdoc_obj = getJsDocObject(this.edit_pipe)
@@ -204,7 +204,7 @@ Add two numbers
         return getSpreadsheetSyntaxStr(this.edit_pipe, true)
       },
       submit_label() {
-        return this.mode == 'edit' ? 'Save changes' : 'Create pipe'
+        return this.mode == 'edit' ? 'Save changes' : 'Create function'
       },
       has_errors() {
         return _.keys(this.form_errors).length > 0
