@@ -7,7 +7,7 @@ const getDefaultState = () => {
     edit_keys: [
       'eid',
       'name',
-      'short_description',
+      'title',
       'description',
       'schedule',
       'deploy_mode',

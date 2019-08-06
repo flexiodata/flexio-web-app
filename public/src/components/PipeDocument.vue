@@ -502,7 +502,7 @@
         this.$store.track('Opened Function Schedule Dialog')
       },
       saveProperties(attrs) {
-        attrs = _.pick(attrs, ['name', 'short_description', 'description'])
+        attrs = _.pick(attrs, ['name', 'title', 'description'])
 
         var pipe = _.cloneDeep(this.edit_pipe)
         _.assign(pipe, attrs)

@@ -186,7 +186,7 @@
 
           var attrs = {
             eid_status: OBJECT_STATUS_PENDING,
-            short_description: cname,
+            title: cname,
             connection_type: ctype
           }
 
@@ -211,7 +211,7 @@
         var is_pending = attrs.eid_status === OBJECT_STATUS_PENDING
         var team_name = this.active_team_name
 
-        attrs = _.pick(attrs, ['short_description', 'name', 'description', 'connection_info'])
+        attrs = _.pick(attrs, ['title', 'name', 'description', 'connection_info'])
         _.assign(attrs, { eid_status: OBJECT_STATUS_AVAILABLE })
 
         // update the connection and make it available

@@ -225,7 +225,7 @@
             type: 'success'
           })
 
-          var analytics_payload = _.pick(pipe, ['eid', 'name', 'short_description', 'description', 'created'])
+          var analytics_payload = _.pick(pipe, ['eid', 'name', 'title', 'description', 'created'])
           this.$store.track('Created Function', analytics_payload)
           this.selectPipe(pipe)
           this.show_pipe_dialog = false

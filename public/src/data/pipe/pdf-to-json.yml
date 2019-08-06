@@ -1,5 +1,5 @@
 name: pdf-to-json
-short_description: PDF to JSON
+title: PDF to JSON
 deploy_mode: R
 deploy_schedule: I
 deploy_email: I
