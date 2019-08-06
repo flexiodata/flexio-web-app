@@ -326,5 +326,41 @@ class Test
         $actual = \Model::TEAM_MEMBER_STATUS_ACTIVE;
         $expected = 'A';
         \Flexio\Tests\Check::assertString('K.4', 'Team member status constant',  $actual, $expected, $results);
+
+
+
+        // TEST: Model system role status constants; the database stores raw values
+        // for some of these constants, so these tests ensure that the constants
+        // are consistent between various models and the values in the databases
+
+        $actual = \Model::SYSTEM_ROLE_UNDEFINED;
+        $expected = '';
+        \Flexio\Tests\Check::assertString('L.1', 'System role status constant',  $actual, $expected, $results);
+
+        $actual = \Model::SYSTEM_ROLE_ADMINISTRATOR;
+        $expected = 'A';
+        \Flexio\Tests\Check::assertString('L.2', 'System role status constant',  $actual, $expected, $results);
+
+
+
+        // TEST: Model system role status constants; the database stores raw values
+        // for some of these constants, so these tests ensure that the constants
+        // are consistent between various models and the values in the databases
+
+        $actual = \Model::TEAM_ROLE_UNDEFINED;
+        $expected = '';
+        \Flexio\Tests\Check::assertString('M.1', 'Team member role status constant',  $actual, $expected, $results);
+
+        $actual = \Model::TEAM_ROLE_USER;
+        $expected = 'U';
+        \Flexio\Tests\Check::assertString('M.2', 'Team member role status constant',  $actual, $expected, $results);
+
+        $actual = \Model::TEAM_ROLE_CONTRIBUTOR;
+        $expected = 'C';
+        \Flexio\Tests\Check::assertString('M.3', 'Team member role status constant',  $actual, $expected, $results);
+
+        $actual = \Model::TEAM_ROLE_ADMINISTRATOR;
+        $expected = 'A';
+        \Flexio\Tests\Check::assertString('M.4', 'Team member role status constant',  $actual, $expected, $results);
     }
 }
