@@ -71,8 +71,8 @@ class Admin
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
-                'owned_by'    => array('type' => 'eid',     'required' => false),
-                'created_by'  => array('type' => 'eid',     'required' => false),
+                'owned_by'    => array('type' => 'string',  'required' => false),
+                'created_by'  => array('type' => 'string',  'required' => false),
                 'start'       => array('type' => 'integer', 'required' => false),
                 'tail'        => array('type' => 'integer', 'required' => false),
                 'limit'       => array('type' => 'integer', 'required' => false),
@@ -83,6 +83,8 @@ class Admin
 
         $validated_query_params = $validator->getParams();
 
+        // convert owned_by/created_by identifiers into eids
+        $validated_query_params = self::convertUserIdentifierQueryParams($validated_query_params);
 
         // only allow users from flex.io to get this info
         $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
@@ -122,8 +124,8 @@ class Admin
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
-                'owned_by'    => array('type' => 'eid',     'required' => false),
-                'created_by'  => array('type' => 'eid',     'required' => false),
+                'owned_by'    => array('type' => 'string',  'required' => false),
+                'created_by'  => array('type' => 'string',  'required' => false),
                 'start'       => array('type' => 'integer', 'required' => false),
                 'tail'        => array('type' => 'integer', 'required' => false),
                 'limit'       => array('type' => 'integer', 'required' => false),
@@ -133,6 +135,9 @@ class Admin
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_query_params = $validator->getParams();
+
+        // convert owned_by/created_by identifiers into eids
+        $validated_query_params = self::convertUserIdentifierQueryParams($validated_query_params);
 
         // only allow users from flex.io to get this info
         $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
@@ -162,8 +167,8 @@ class Admin
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
-                'owned_by'    => array('type' => 'eid',     'required' => false),
-                'created_by'  => array('type' => 'eid',     'required' => false),
+                'owned_by'    => array('type' => 'string',  'required' => false),
+                'created_by'  => array('type' => 'string',  'required' => false),
                 'start'       => array('type' => 'integer', 'required' => false),
                 'tail'        => array('type' => 'integer', 'required' => false),
                 'limit'       => array('type' => 'integer', 'required' => false),
@@ -173,6 +178,9 @@ class Admin
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_query_params = $validator->getParams();
+
+        // convert owned_by/created_by identifiers into eids
+        $validated_query_params = self::convertUserIdentifierQueryParams($validated_query_params);
 
         // only allow users from flex.io to get this info
         $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
@@ -202,8 +210,8 @@ class Admin
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
-                'owned_by'    => array('type' => 'eid',     'required' => false),
-                'created_by'  => array('type' => 'eid',     'required' => false),
+                'owned_by'    => array('type' => 'string',  'required' => false),
+                'created_by'  => array('type' => 'string',  'required' => false),
                 'start'       => array('type' => 'integer', 'required' => false),
                 'tail'        => array('type' => 'integer', 'required' => false),
                 'limit'       => array('type' => 'integer', 'required' => false),
@@ -213,6 +221,9 @@ class Admin
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_query_params = $validator->getParams();
+
+        // convert owned_by/created_by identifiers into eids
+        $validated_query_params = self::convertUserIdentifierQueryParams($validated_query_params);
 
         // only allow users from flex.io to get this info
         $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
@@ -242,8 +253,8 @@ class Admin
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
-                'owned_by'    => array('type' => 'eid',     'required' => false),
-                'created_by'  => array('type' => 'eid',     'required' => false),
+                'owned_by'    => array('type' => 'string',  'required' => false),
+                'created_by'  => array('type' => 'string',  'required' => false),
                 'start'       => array('type' => 'integer', 'required' => false),
                 'tail'        => array('type' => 'integer', 'required' => false),
                 'limit'       => array('type' => 'integer', 'required' => false),
@@ -253,6 +264,9 @@ class Admin
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_query_params = $validator->getParams();
+
+        // convert owned_by/created_by identifiers into eids
+        $validated_query_params = self::convertUserIdentifierQueryParams($validated_query_params);
 
         // only allow users from flex.io to get this info
         $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
@@ -301,7 +315,8 @@ class Admin
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
-                'owned_by'    => array('type' => 'eid',     'required' => false),
+                'owned_by'    => array('type' => 'string',  'required' => false),
+                'created_by'  => array('type' => 'string',  'required' => false),
                 'start'       => array('type' => 'integer', 'required' => false),
                 'tail'        => array('type' => 'integer', 'required' => false),
                 'limit'       => array('type' => 'integer', 'required' => false),
@@ -311,6 +326,9 @@ class Admin
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_query_params = $validator->getParams();
+
+        // convert owned_by/created_by identifiers into eids
+        $validated_query_params = self::convertUserIdentifierQueryParams($validated_query_params);
 
         // only allow users from flex.io to get this info
         $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
@@ -452,5 +470,36 @@ class Admin
             case 'K': return (int)$size_str * 1024;
             default:  return (int)$size_str;
         }
+    }
+
+    private static function convertUserIdentifierQueryParams(array $params) : array
+    {
+        // converts user owned_by and created_by query params that
+        // are identifiers into eids
+        $converted_params = $params;
+
+        if (isset($converted_params['owned_by']))
+        {
+            $owned_by_param = $converted_params['owned_by'];
+            if (!\Flexio\Base\Eid::isValid($owned_by_param))
+            {
+                $converted_owned_by_param = \Flexio\Object\User::getEidFromIdentifier($owned_by_param);
+                if ($converted_owned_by_param !== false)
+                    $converted_params['owned_by'] = $converted_owned_by_param;
+            }
+        }
+
+        if (isset($converted_params['created_by']))
+        {
+            $created_by_param = $converted_params['created_by'];
+            if (!\Flexio\Base\Eid::isValid($created_by_param))
+            {
+                $converted_created_by_param = \Flexio\Object\User::getEidFromIdentifier($created_by_param);
+                if ($converted_created_by_param !== false)
+                    $converted_params['created_by'] = $converted_created_by_param;
+            }
+        }
+
+        return $converted_params;
     }
 }
