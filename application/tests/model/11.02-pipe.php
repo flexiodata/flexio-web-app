@@ -90,7 +90,7 @@ class Test
             'eid_type' => \Model::TYPE_PIPE,
             'eid_status' => \Model::STATUS_AVAILABLE,
             'name' => $handle,
-            'short_description'=>'',
+            'title'=>'',
             'description'  => '',
             'task' => '{}',
             'schedule' => '',

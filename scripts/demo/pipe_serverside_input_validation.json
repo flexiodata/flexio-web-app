@@ -1,7 +1,7 @@
 {
     "eid_type": "PIP",
     "name": "example-serverside-input-validation",
-    "short_description": "Example: Server-side Input Validation",
+    "title": "Example: Server-side Input Validation",
     "description": "Validate input with a server-side logic that hides data used to validate with Python Cerberus",
     "task": {
         "op": "sequence",

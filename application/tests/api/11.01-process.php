@@ -101,7 +101,7 @@ class Test
                 "eid_type": "PIP",
                 "eid_status":"",
                 "name":"",
-                "short_description":"",
+                "title":"",
                 "description":"",
                 "deploy_mode":"",
                 "created":"",

@@ -559,6 +559,7 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "eid_type" => null,
                 "eid_status" => null,
                 "name" => null,
+                "title" => null,
                 "short_description" => null,
                 "description" => null,
                 "connection_type" => null,

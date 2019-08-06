@@ -209,7 +209,7 @@ class Test
             "eid_type" : null,
             "eid_status" : null,
             "name" : null,
-            "short_description" : null,
+            "title" : null,
             "description" : null,
             "connection_type" : null,
             "connection_status" : null,
