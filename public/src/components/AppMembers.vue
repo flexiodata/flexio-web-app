@@ -26,7 +26,7 @@
         <div class="h2"></div>
         <div class="flex flex-row items-center justify-end">
           <el-button
-            type="text"
+            class="ttu fw6"
             @click="rejectJoinTeam"
           >
             No thanks
