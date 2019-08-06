@@ -71,7 +71,7 @@
               :item="member"
               @resend-invite="resendInvite"
               @remove-member="removeMember"
-              v-for="member in members"
+              v-for="member in getAllMembers()"
             />
           </tbody>
         </table>
@@ -196,9 +196,6 @@
         active_team_name: state => state.teams.active_team_name,
         active_user_eid: state => state.users.active_user_eid,
       }),
-      members() {
-        return this.getAllMembers()
-      },
       joining_member_email() {
         return _.get(this.$route, 'query.email', '')
       },

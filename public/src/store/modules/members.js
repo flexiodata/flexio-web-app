@@ -151,8 +151,13 @@ const actions = {
 
 const getters = {
   getAllMembers (state) {
-    var items = _.sortBy(state.items, [ item => new Date(item.created) ])
-    return items
+    // make sure owner is always first in this list; the list members by the date
+    // they were invited, with more recent invites at the top of the list
+    var items = _.sortBy(state.items, [
+      item => _.get(item, 'eid') == _.get(item, 'member_of.eid'),
+      item => new Date(item.invited)
+    ])
+    return items.reverse()
   },
 
   isActiveMemberAvailable (state, getters, root_state) {
