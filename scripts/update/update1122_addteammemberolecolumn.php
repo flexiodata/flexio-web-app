@@ -58,8 +58,8 @@ try
     // public const TEAM_ROLE_CONTRIBUTOR     = 'C';
     // public const TEAM_ROLE_ADMINISTRATOR   = 'A';
     // public const TEAM_ROLE_OWNER           = 'O';
-    $db->exec("update tbl_member set role = 'O' where member_eid = owned_by");
-    $db->exec("update tbl_member set role = 'C' where role != 'O'");
+    $db->exec("update tbl_teammember set role = 'O' where member_eid = owned_by");
+    $db->exec("update tbl_teammember set role = 'C' where role != 'O'");
 }
 catch(\Exception $e)
 {
