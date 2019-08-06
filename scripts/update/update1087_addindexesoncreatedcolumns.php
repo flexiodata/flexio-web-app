@@ -48,7 +48,7 @@ if (is_null($db))
 
 try
 {
-    // STEP 1: add indexes on created_by columns
+    // STEP 1: add indexes on created columns
     $db->exec('create index idx_user_created on tbl_user (created)');
     $db->exec('create index idx_token_created on tbl_token (created)');
     $db->exec('create index idx_acl_created on tbl_acl (created)');
