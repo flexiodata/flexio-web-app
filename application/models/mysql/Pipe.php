@@ -19,7 +19,7 @@ class Pipe extends ModelBase
 {
     public function create(array $params) : string
     {
-        $default_name = \Flexio\Base\Util::generateRandomName('pipe-');
+        $default_name = \Flexio\Base\Util::generateRandomName('func-');
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
