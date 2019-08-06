@@ -22,6 +22,8 @@
       >
         <el-input
           placeholder="Enter name"
+          autocomplete="off"
+          spellcheck="false"
           :autofocus="true"
           v-model="edit_pipe.name"
         />
