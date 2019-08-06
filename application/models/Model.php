@@ -165,6 +165,7 @@ class Model
     public const TEAM_ROLE_USER            = 'U';
     public const TEAM_ROLE_CONTRIBUTOR     = 'C';
     public const TEAM_ROLE_ADMINISTRATOR   = 'A';
+    public const TEAM_ROLE_OWNER           = 'O';
 
     private $objs = array();
     private $database = null;
