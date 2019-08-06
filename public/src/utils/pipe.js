@@ -78,7 +78,7 @@ export const getJsDocObject = (pipe) => {
   return doctrine.parse(desc, { unwrap: true })
 }
 
-export const getSpreadsheetSyntaxStr = (pipe, return_html) => {
+export const getSpreadsheetSyntaxStr = (team_name, pipe, return_html) => {
   function getParamMarkup(param) {
     if (return_html === true) {
       return `<span title="${param.description}">${param.name}</span>`
@@ -92,7 +92,7 @@ export const getSpreadsheetSyntaxStr = (pipe, return_html) => {
   var tags = _.get(jsdoc_obj, 'tags', [])
   var params = _.filter(tags, { title: 'param' })
   var param_names = _.map(params, p => getParamMarkup(p))
-  var output_params = [`"${name}"`]
+  var output_params = [`"${team_name}/${name}"`]
   output_params = output_params.concat(param_names)
   return '=FLEX(' + output_params.join(', ') + ')'
 }

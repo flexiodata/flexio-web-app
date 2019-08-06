@@ -70,6 +70,7 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
   import { getJsDocObject, getSpreadsheetSyntaxStr } from '@/utils/pipe'
   import LabelSwitch from '@/components/LabelSwitch'
 
@@ -100,12 +101,15 @@
       LabelSwitch
     },
     computed: {
+      ...mapState({
+        active_team_name: state => state.teams.active_team_name
+      }),
       pdesc() {
         var jsdoc_obj = getJsDocObject(this.pipe)
         return _.get(jsdoc_obj, 'description', '')
       },
       spreadsheet_command_syntax() {
-        return getSpreadsheetSyntaxStr(this.pipe, true)
+        return getSpreadsheetSyntaxStr(this.active_team_name, this.pipe, true)
       },
       is_deployed: {
         get() {
