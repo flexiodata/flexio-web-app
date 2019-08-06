@@ -53,8 +53,8 @@ try
     $db->exec("alter table tbl_connection add column title text default ''");
 
     // STEP 2: populate the title columns from the existing short_description
-    $db->exec("update tbl_pipe set title = short_description = ''");
-    $db->exec("update tbl_connection set title = short_description = ''");
+    $db->exec("update tbl_pipe set title = short_description");
+    $db->exec("update tbl_connection set title = short_description");
 }
 catch(\Exception $e)
 {
