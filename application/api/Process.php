@@ -119,8 +119,8 @@ class Process
 
         // only allow processes to be run from an API call if the process is in run mode;
         // note: processes are by default in run mode when called from the API directly
-        if ($triggered_by === \Model::PROCESS_TRIGGERED_API && $process_params['process_mode'] !== \Flexio\Jobs\Process::MODE_RUN)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        //if ($triggered_by === \Model::PROCESS_TRIGGERED_API && $process_params['process_mode'] !== \Flexio\Jobs\Process::MODE_RUN)
+        //    throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         $process_params['triggered_by'] = $triggered_by;
         $process = \Flexio\Object\Process::create($process_params);
