@@ -125,8 +125,18 @@ const actions = {
     })
   },
 
-  'join' ({ commit }, { team_name, attrs }) {
+  'join' ({ commit, dispatch }, { team_name, attrs }) {
     return api.joinTeam(team_name, attrs).then(response => {
+      // if a user joins a team, we need to reset the state on
+      // a number of modules (pipes, connections, members, etc.)
+      //
+      // note that we need to force this initialization because
+      // this is happening from the join team page and the active team
+      // and the team we're initializing are the same, in which case
+      // the `initializeTeam` action would do nothing to avoid
+      // issuing API calls all the time
+      dispatch('initializeTeam', { team_name, force: true }, { root: true })
+
       commit('JOINED_TEAM')
       return response
     }).catch(error => {
