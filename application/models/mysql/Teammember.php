@@ -24,6 +24,7 @@ class Teammember extends ModelBase
                 'member_eid'    => array('type' => 'eid', 'required' => true),
                 'member_status' => array('type' => 'string', 'required' => false, 'default' => \Model::TEAM_MEMBER_STATUS_PENDING),
                 'rights'        => array('type' => 'string', 'required' => false, 'default' => '[]'),
+                'role'          => array('type' => 'string', 'required' => false, 'default' => \Model::TEAM_ROLE_USER), // grant some basic rights by default
                 'owned_by'      => array('type' => 'string', 'required' => false, 'default' => ''),
                 'created_by'    => array('type' => 'string', 'required' => false, 'default' => '')
             ))->hasErrors()) === true)
@@ -32,6 +33,9 @@ class Teammember extends ModelBase
         $process_arr = $validator->getParams();
 
         if (self::isValidMemberStatus($process_arr['member_status']) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        if (self::isValidMemberRole($process_arr['role']) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $db = $this->getDatabase();
@@ -165,7 +169,8 @@ class Teammember extends ModelBase
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'member_status' => array('type' => 'string', 'required' => false),
-                'rights'        => array('type' => 'string', 'required' => false)
+                'rights'        => array('type' => 'string', 'required' => false),
+                'role'          => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
@@ -173,6 +178,9 @@ class Teammember extends ModelBase
         $process_arr['updated'] = \Flexio\System\System::getTimestamp();
 
         if (isset($params['member_status']) && self::isValidMemberStatus($params['member_status']) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        if (isset($params['role']) && self::isValidMemberRole($params['role']) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $db = $this->getDatabase();
@@ -222,6 +230,7 @@ class Teammember extends ModelBase
             $output[] = array('member_eid'    => $row['member_eid'],
                               'member_status' => $row['member_status'],
                               'rights'        => $row['rights'],
+                              'role'          => $row['role'],
                               'owned_by'      => $row['owned_by'],
                               'created_by'    => $row['created_by'],
                               'created'       => \Flexio\Base\Util::formatDate($row['created']),
@@ -248,6 +257,7 @@ class Teammember extends ModelBase
             return array('member_eid'    => $row['member_eid'],
                          'member_status' => $row['member_status'],
                          'rights'        => $row['rights'],
+                         'role'          => $row['role'],
                          'owned_by'      => $row['owned_by'],
                          'created_by'    => $row['created_by'],
                          'created'       => \Flexio\Base\Util::formatDate($row['created']),
@@ -288,6 +298,20 @@ class Teammember extends ModelBase
             case \Model::TEAM_MEMBER_STATUS_PENDING:
             case \Model::TEAM_MEMBER_STATUS_INACTIVE:
             case \Model::TEAM_MEMBER_STATUS_ACTIVE:
+                return true;
+        }
+
+        return false;
+    }
+
+    private static function isValidMemberRole(string $role) : bool
+    {
+        switch ($role)
+        {
+            case \Model::TEAM_ROLE_USER:
+            case \Model::TEAM_ROLE_CONTRIBUTOR:
+            case \Model::TEAM_ROLE_ADMINISTRATOR:
+            case \Model::TEAM_ROLE_OWNER:
                 return true;
         }
 

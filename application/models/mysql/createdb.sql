@@ -113,6 +113,7 @@ CREATE TABLE tbl_teammember (
   member_eid char(12) NOT NULL default '',
   member_status char(1) NOT NULL default 'I',
   rights text default '',
+  role varchar(1) NOT NULL default '',
   owned_by char(12) NOT NULL default '',
   created_by char(12) NOT NULL default '',
   created timestamp NULL default NULL,

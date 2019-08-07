@@ -72,47 +72,8 @@ class Base
         try
         {
             $member_info = $this->getModel()->teammember->get($user_eid, $this->getOwner());
-            if ($member_info['member_status'] === \Model::TEAM_MEMBER_STATUS_ACTIVE)
-            {
-                switch ($action)
-                {
-                    // TODO: action types are specified in the api layer; location
-                    // of base rights implementation should be relocated since this
-                    // is accessing a layer above the object layer
-                    case \Flexio\Api\Action::TYPE_TEAMMEMBER_READ:
-                    case \Flexio\Api\Action::TYPE_PIPE_CREATE:
-                    case \Flexio\Api\Action::TYPE_PIPE_UPDATE:
-                    case \Flexio\Api\Action::TYPE_PIPE_DELETE:
-                    case \Flexio\Api\Action::TYPE_PIPE_READ:
-                    case \Flexio\Api\Action::TYPE_CONNECTION_CREATE:
-                    case \Flexio\Api\Action::TYPE_CONNECTION_UPDATE:
-                    case \Flexio\Api\Action::TYPE_CONNECTION_DELETE:
-                    case \Flexio\Api\Action::TYPE_CONNECTION_READ:
-                    case \Flexio\Api\Action::TYPE_CONNECTION_CONNECT:
-                    case \Flexio\Api\Action::TYPE_CONNECTION_DISCONNECT:
-                    case \Flexio\Api\Action::TYPE_PROCESS_CREATE:
-                    case \Flexio\Api\Action::TYPE_PROCESS_UPDATE:
-                    case \Flexio\Api\Action::TYPE_PROCESS_DELETE:
-                    case \Flexio\Api\Action::TYPE_PROCESS_READ:
-                    case \Flexio\Api\Action::TYPE_STREAM_CREATE:
-                    case \Flexio\Api\Action::TYPE_STREAM_UPDATE:
-                    case \Flexio\Api\Action::TYPE_STREAM_DELETE:
-                    case \Flexio\Api\Action::TYPE_STREAM_READ:
-                        return true;
-                }
-
-                // TODO: in the future, limit rights by checking if the action
-                // is in the list of rights
-                // $rights = @json_decode($member_info['member_status'],true);
-                // if (is_array($rights))
-                // {
-                //     foreach ($rights as $r)
-                //     {
-                //         if ($action === $r)
-                //             return true;
-                //     }
-                // }
-            }
+            if (self::isMemberAllowed($member_info, $action) === true)
+                return true;
         }
         catch (\Exception $e)
         {
@@ -130,5 +91,172 @@ class Base
     protected function getModel() : \Model
     {
         return \Flexio\System\System::getModel();
+    }
+
+    private static function isMemberAllowed(array $member_info, string $action) : bool
+    {
+        // members only have rights if they're active
+        if ($member_info['member_status'] !== \Model::TEAM_MEMBER_STATUS_ACTIVE)
+            return false;
+
+        $role = $member_info['role'];
+
+        // check rights for team member with a user role
+        if ($role === \Model::TEAM_ROLE_USER)
+        {
+            switch ($action)
+            {
+                // allow reading of team members, but don't allow any team management
+                case \Flexio\Api\Action::TYPE_TEAMMEMBER_READ:
+                //case \Flexio\Api\Action::TYPE_TEAMMEMBER_CREATE:
+                //case \Flexio\Api\Action::TYPE_TEAMMEMBER_UPDATE:
+                //case \Flexio\Api\Action::TYPE_TEAMMEMBER_DELETE:
+                //case \Flexio\Api\Action::TYPE_TEAMMEMBER_READ:
+                //case \Flexio\Api\Action::TYPE_TEAMMEMBER_SENDINVITATION:
+                    return true;
+
+                // allow read-only on pipes
+                //case \Flexio\Api\Action::TYPE_PIPE_CREATE:
+                //case \Flexio\Api\Action::TYPE_PIPE_UPDATE:
+                //case \Flexio\Api\Action::TYPE_PIPE_DELETE:
+                case \Flexio\Api\Action::TYPE_PIPE_READ:
+                    return true;
+
+                // allow read-only on connections
+                //case \Flexio\Api\Action::TYPE_CONNECTION_CREATE:
+                //case \Flexio\Api\Action::TYPE_CONNECTION_UPDATE:
+                //case \Flexio\Api\Action::TYPE_CONNECTION_DELETE:
+                case \Flexio\Api\Action::TYPE_CONNECTION_READ:
+                //case \Flexio\Api\Action::TYPE_CONNECTION_CONNECT:
+                //case \Flexio\Api\Action::TYPE_CONNECTION_DISCONNECT:
+                    return true;
+
+                // allow execute on processes (create/update are also needed for executing)
+                case \Flexio\Api\Action::TYPE_PROCESS_CREATE:
+                case \Flexio\Api\Action::TYPE_PROCESS_UPDATE:
+                case \Flexio\Api\Action::TYPE_PROCESS_DELETE:
+                case \Flexio\Api\Action::TYPE_PROCESS_READ:
+                    return true;
+
+                // allow read-only on streams
+                //case \Flexio\Api\Action::TYPE_STREAM_CREATE:
+                //case \Flexio\Api\Action::TYPE_STREAM_UPDATE:
+                //case \Flexio\Api\Action::TYPE_STREAM_DELETE:
+                case \Flexio\Api\Action::TYPE_STREAM_READ:
+                    return true;
+            }
+        }
+
+        // check rights for team member with a contributor role
+        if ($role === \Model::TEAM_ROLE_CONTRIBUTOR)
+        {
+            switch ($action)
+            {
+                // allow reading of team members, but don't allow any team management
+                case \Flexio\Api\Action::TYPE_TEAMMEMBER_READ:
+                //case \Flexio\Api\Action::TYPE_TEAMMEMBER_CREATE:
+                //case \Flexio\Api\Action::TYPE_TEAMMEMBER_UPDATE:
+                //case \Flexio\Api\Action::TYPE_TEAMMEMBER_DELETE:
+                //case \Flexio\Api\Action::TYPE_TEAMMEMBER_READ:
+                //case \Flexio\Api\Action::TYPE_TEAMMEMBER_SENDINVITATION:
+                    return true;
+
+                // allow read/write/delete on pipes
+                case \Flexio\Api\Action::TYPE_PIPE_CREATE:
+                case \Flexio\Api\Action::TYPE_PIPE_UPDATE:
+                case \Flexio\Api\Action::TYPE_PIPE_DELETE:
+                case \Flexio\Api\Action::TYPE_PIPE_READ:
+                    return true;
+
+                // allow read/write/delete on connections
+                case \Flexio\Api\Action::TYPE_CONNECTION_CREATE:
+                case \Flexio\Api\Action::TYPE_CONNECTION_UPDATE:
+                case \Flexio\Api\Action::TYPE_CONNECTION_DELETE:
+                case \Flexio\Api\Action::TYPE_CONNECTION_READ:
+                case \Flexio\Api\Action::TYPE_CONNECTION_CONNECT:
+                case \Flexio\Api\Action::TYPE_CONNECTION_DISCONNECT:
+                    return true;
+
+                // allow read/write/delete/execute on processes
+                case \Flexio\Api\Action::TYPE_PROCESS_CREATE:
+                case \Flexio\Api\Action::TYPE_PROCESS_UPDATE:
+                case \Flexio\Api\Action::TYPE_PROCESS_DELETE:
+                case \Flexio\Api\Action::TYPE_PROCESS_READ:
+                    return true;
+
+                // allow read/write/delete on streams
+                case \Flexio\Api\Action::TYPE_STREAM_CREATE:
+                case \Flexio\Api\Action::TYPE_STREAM_UPDATE:
+                case \Flexio\Api\Action::TYPE_STREAM_DELETE:
+                case \Flexio\Api\Action::TYPE_STREAM_READ:
+                    return true;
+            }
+        }
+
+        // check rights for team member with an administrator role
+        if ($role === \Model::TEAM_ROLE_ADMINISTRATOR)
+        {
+            switch ($action)
+            {
+                // allow management of team members
+                case \Flexio\Api\Action::TYPE_TEAMMEMBER_READ:
+                case \Flexio\Api\Action::TYPE_TEAMMEMBER_CREATE:
+                case \Flexio\Api\Action::TYPE_TEAMMEMBER_UPDATE:
+                case \Flexio\Api\Action::TYPE_TEAMMEMBER_DELETE:
+                case \Flexio\Api\Action::TYPE_TEAMMEMBER_READ:
+                case \Flexio\Api\Action::TYPE_TEAMMEMBER_SENDINVITATION:
+                    return true;
+
+                // allow read/write/delete on pipes
+                case \Flexio\Api\Action::TYPE_PIPE_CREATE:
+                case \Flexio\Api\Action::TYPE_PIPE_UPDATE:
+                case \Flexio\Api\Action::TYPE_PIPE_DELETE:
+                case \Flexio\Api\Action::TYPE_PIPE_READ:
+                    return true;
+
+                // allow read/write/delete on connections
+                case \Flexio\Api\Action::TYPE_CONNECTION_CREATE:
+                case \Flexio\Api\Action::TYPE_CONNECTION_UPDATE:
+                case \Flexio\Api\Action::TYPE_CONNECTION_DELETE:
+                case \Flexio\Api\Action::TYPE_CONNECTION_READ:
+                case \Flexio\Api\Action::TYPE_CONNECTION_CONNECT:
+                case \Flexio\Api\Action::TYPE_CONNECTION_DISCONNECT:
+                    return true;
+
+                // allow read/write/delete/execute on processes
+                case \Flexio\Api\Action::TYPE_PROCESS_CREATE:
+                case \Flexio\Api\Action::TYPE_PROCESS_UPDATE:
+                case \Flexio\Api\Action::TYPE_PROCESS_DELETE:
+                case \Flexio\Api\Action::TYPE_PROCESS_READ:
+                    return true;
+
+                // allow read/write/delete on streams
+                case \Flexio\Api\Action::TYPE_STREAM_CREATE:
+                case \Flexio\Api\Action::TYPE_STREAM_UPDATE:
+                case \Flexio\Api\Action::TYPE_STREAM_DELETE:
+                case \Flexio\Api\Action::TYPE_STREAM_READ:
+                    return true;
+            }
+        }
+
+        if ($role === \Model::TEAM_ROLE_OWNER)
+        {
+            // for now, handled separately
+        }
+
+        // TODO: in the future, limit rights by checking if the action
+        // is in the list of rights
+        // $rights = @json_decode($member_info['member_status'],true);
+        // if (is_array($rights))
+        // {
+        //     foreach ($rights as $r)
+        //     {
+        //         if ($action === $r)
+        //             return true;
+        //     }
+        // }
+
+        // anything else is not allowed
+        return false;
     }
 }

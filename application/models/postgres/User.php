@@ -88,11 +88,13 @@ class User extends ModelBase
             if ($db->insert('tbl_user', $user_arr) === false)
                 throw new \Exception();
 
-            // add the user as a member to their own team
+            // add the user as a member to their own team; the user
+            // added to their own team will have the owner role
             $teammember_arr = array();
             $teammember_arr['member_eid'] = $eid;
             $teammember_arr['member_status'] = \Model::TEAM_MEMBER_STATUS_ACTIVE;
             $teammember_arr['rights'] = '[]';
+            $teammember_arr['role'] = \Model::TEAM_ROLE_OWNER;
             $teammember_arr['owned_by'] = $eid;
             $teammember_arr['created_by'] = $eid;
             $teammember_arr['created'] = $timestamp;
