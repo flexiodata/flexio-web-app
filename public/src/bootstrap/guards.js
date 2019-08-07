@@ -3,24 +3,6 @@ import store from '@/store' // Vuex store
 import { OBJECT_STATUS_AVAILABLE } from '@/constants/object-status'
 import { ROUTE_SIGNIN_PAGE, ROUTE_SIGNUP_PAGE } from '@/constants/route'
 
-const tryFetchTeams = (team_name) => {
-  if (!store.state.teams.is_fetched && !store.state.teams.is_fetching) {
-    store.dispatch('teams/fetch', { team_name })
-  }
-}
-
-const tryFetchMembers = (team_name) => {
-  if (!store.state.members.is_fetched && !store.state.members.is_fetching) {
-    store.dispatch('members/fetch', { team_name })
-  }
-}
-
-const tryFetchConnections = (team_name) => {
-  if (!store.state.connections.is_fetched && !store.state.connections.is_fetching) {
-    store.dispatch('connections/fetch', { team_name })
-  }
-}
-
 const isLocalhost = () => {
   return location.hostname === 'localhost' || location.hostname === '127.0.0.1'
 }
@@ -71,11 +53,8 @@ router.beforeEach((to, from, next) => {
     var active_username = active_user.username
     var team_name = to.params.team_name || active_username
 
-    store.commit('teams/CHANGE_ACTIVE_TEAM', team_name)
+    store.dispatch('teams/changeActiveTeam', { team_name })
 
-    tryFetchTeams(active_username)
-    tryFetchMembers(team_name)
-    tryFetchConnections(team_name)
     next()
   }
 
