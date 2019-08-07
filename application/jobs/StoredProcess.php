@@ -209,7 +209,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
             'started' => \Flexio\Base\Util::getCurrentTimestamp()
         ]);
 
-        // STEP 3: run the job
+        // run the job
         if ($background === true)
         {
             // job will run in background across process boundry; we'll serialize the
@@ -222,18 +222,19 @@ class StoredProcess implements \Flexio\IFace\IProcess
 
             $owned_by = $this->getOwner();
             $storable_stdin = self::createStorableStream($this->engine->getStdin(), $owned_by);
-            $storable_stdout = self::createStorableStream($this->engine->getStdout(), $owned_by);
-
             $input = [
                 'params' => $this->engine->getParams(),
                 'stream' => $storable_stdin->getEid()
             ];
+            $this->procobj->set(['input' => $input]);
 
-            $output = [
-                'stream' => $storable_stdout->getEid()
-            ];
+            // TODO: no need to set the output in background mode; if we're in the build mode
+            //$storable_stdout = self::createStorableStream($this->engine->getStdout(), $owned_by);
+            //$output = [
+            //    'stream' => $storable_stdout->getEid()
+            //];
+            //$this->procobj->set(['output' => $output]);
 
-            $this->procobj->set(['input' => json_encode($input), 'output' => json_encode($output)]);
             $process_eid = $this->procobj->getEid();
 
             \Flexio\System\Program::runInBackground("\Flexio\Jobs\StoredProcess::background_entry('$process_eid')");
@@ -287,9 +288,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
         // STEP 2: get events for logging, if necessary
         $this->addEventHandler([$this, 'handleEvent']);
 
-        // STEP 3: execute the job; process the top-level array with a sequence task
-
-
         // STEP 3: if we have an associative array, we have a top-level task, so simply
         // execute it; otherwise we have an array of tasks, so package them in a sequence job
         $task = $this->procobj->getTask();
@@ -310,6 +308,16 @@ class StoredProcess implements \Flexio\IFace\IProcess
 
                 $process_params['process_status'] = \Flexio\Jobs\Process::STATUS_FAILED;
                 $process_params['process_info'] = $process_info_str;
+            }
+
+            // if we're in build mode, create a storable stream to store the output
+            if ($this->procmode === \Flexio\Jobs\Process::MODE_BUILD)
+            {
+                $owned_by = $this->getOwner();
+                $storable_stdout = self::createStorableStream($this->getStdout(), $owned_by);
+
+                $storable_stream_info = array();
+                $process_params['output'] = array('stream' => $storable_stdout->getEid());
             }
         }
         $this->procobj->set($process_params);
