@@ -63,10 +63,9 @@
     computed: {
       ...mapState({
         active_user_eid: state => state.users.active_user_eid,
-        is_initializing: state => state.members.is_fetching,
-        is_initialized: state => state.members.is_fetched,
         is_signing_out: state => state.users.is_signing_out,
         is_silent_signout: state => state.users.is_silent_signout,
+        is_initializing: state => state.is_initializing
       }),
       route_name() {
         return _.get(this.$route, 'name')

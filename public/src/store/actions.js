@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 const files = require.context('./modules', false, /\.js$/)
 const modules_names = []
 
@@ -17,6 +19,8 @@ export default {
     var old_team_name = state.teams.active_team_name
 
     if (team_name != old_team_name || force === true) {
+        commit('INITIALIZING_APP', true)
+
         // clear out these modules so we can start over
         commit('teams/RESET_STATE')
         commit('members/RESET_STATE')
@@ -27,25 +31,14 @@ export default {
         commit('pipedocument/RESET_STATE')
 
         // query these objects fresh
-        dispatch('teams/fetch', { team_name: active_user_name })
-        dispatch('members/fetch', { team_name })
-        dispatch('connections/fetch', { team_name })
+        axios.all([
+          dispatch('teams/fetch', { team_name: active_user_name }),
+          dispatch('members/fetch', { team_name }),
+          dispatch('connections/fetch', { team_name }),
+        ])
+        .finally(axios.spread(() => {
+          commit('INITIALIZING_APP', false)
+        }))
     }
-
-    // TODO: I don't think this is necessary anymore since these objects should already have been fetched
-    /*
-    } else {
-      if (!state.teams.is_fetched && !state.teams.is_fetching) {
-        dispatch('teams/fetch', { team_name: active_user_name })
-      }
-
-      if (!state.members.is_fetched && !state.members.is_fetching) {
-        dispatch('members/fetch', { team_name })
-      }
-
-      if (!state.connections.is_fetched && !state.connections.is_fetching) {
-        dispatch('connections/fetch', { team_name })
-      }
-    }*/
   }
 }
