@@ -1,6 +1,13 @@
 <template>
+  <!-- fetching -->
+  <div v-if="is_fetching">
+    <div class="flex flex-column justify-center h-100 bg-nearer-white">
+      <Spinner size="large" message="Loading members..." />
+    </div>
+  </div>
+
   <!-- joining -->
-  <div class="flex-fill flex flex-column bg-nearer-white" v-if="is_action_join">
+  <div class="flex-fill flex flex-column bg-nearer-white" v-else-if="is_action_join">
     <!-- logged in user is not the same as the invited user -->
     <PageNotFound
       class="flex-fill"
@@ -43,17 +50,18 @@
     </div>
   </div>
 
-  <!-- fetching -->
-  <div v-else-if="is_fetching">
-    <div class="flex flex-column justify-center h-100 bg-nearer-white">
-      <Spinner size="large" message="Loading members..." />
-    </div>
-  </div>
-
   <!-- fetched -->
   <div class="flex flex-column bg-nearer-white overflow-y-auto" v-else-if="is_fetched">
     <div class="pa5">
       <div class="w-100 center mw-doc pa4 bg-white br2 css-white-box overflow-hidden" style="min-height: 20rem">
+        <el-alert
+          style="margin-bottom: 2rem"
+          type="warning"
+          show-icon
+          title="You are already a member of this team."
+          :closable="false"
+          v-show="is_already_member"
+        />
         <div class="flex flex-row items-start">
           <h3 class="flex-fill mt0 fw6 f3">Team Members</h3>
           <el-button
@@ -71,7 +79,7 @@
               :item="member"
               @resend-invite="resendInvite"
               @remove-member="removeMember"
-              v-for="member in getAllMembers()"
+              v-for="member in members"
             />
           </tbody>
         </table>
@@ -172,8 +180,20 @@
       MemberItem,
       PageNotFound
     },
+    watch: {
+      is_action_join: {
+        immediate: true,
+        handler: 'checkAlreadyMember'
+      },
+      is_fetched: {
+        immediate: true,
+        handler: 'checkAlreadyMember'
+      }
+    },
     data() {
       return {
+        is_checking_already_member: false,
+        is_already_member: false,
         join_error_msg: '',
         show_add_dialog: false,
         add_dialog_has_errors: false,
@@ -207,12 +227,13 @@
       },
       join_title() {
         return `Join Team "${this.active_team_name}"`
+      },
+      members() {
+        return this.getAllMembers()
       }
     },
     created() {
-      if (!this.is_action_join) {
-        this.tryFetchMembers()
-      }
+      this.tryFetchMembers()
     },
     methods: {
       ...mapGetters('users', {
@@ -231,13 +252,35 @@
           this.$store.dispatch('members/fetch', { team_name })
         }
       },
+      checkAlreadyMember() {
+        // this method is to make sure existing members don't get shown
+        // the 'join' message, but instead are moved back to the member list
+        if (this.is_action_join && !this.is_checking_already_member) {
+          var active_member = _.find(this.members, { eid: this.active_user_eid })
+
+          // this user is already a member of this team; show the member list
+          if (active_member) {
+            this.is_already_member = true
+
+            var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
+            new_route.params = _.assign({}, _.omit(new_route.params, ['action']))
+            new_route.query = {}
+            this.$router.replace(new_route)
+
+            setTimeout(() => { this.is_already_member = false }, 4000)
+          }
+
+          this.is_checking_already_member = true
+          setTimeout(() => { this.is_checking_already_member = false }, 10)
+        }
+      },
       sendInvites() {
-        var timeout = 20
+        var timeout = 1
 
         // quick hack to allow multiple users to be added until the API supports it
         _.forEach(this.add_dialog_model.users, user => {
           setTimeout(() => { this.sendInvite(user) }, timeout)
-          timeout += 40
+          timeout += 50
         })
 
         this.show_add_dialog = false
