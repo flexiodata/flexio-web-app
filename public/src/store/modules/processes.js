@@ -40,14 +40,14 @@ const mutations = {
     addItem(state, item, getDefaultMeta())
   },
 
-  'FETCHING_PROCESSS' (state, is_fetching) {
+  'FETCHING_PROCESSES' (state, is_fetching) {
     state.is_fetching = is_fetching
     if (is_fetching === true) {
       state.is_fetched = false
     }
   },
 
-  'FETCHED_PROCESSS' (state, items) {
+  'FETCHED_PROCESSES' (state, items) {
     addItem(state, items, getDefaultMeta())
     state.is_fetched = true
   },
@@ -122,14 +122,14 @@ const actions = {
       })
     } else {
       // fetching a collection of items
-      commit('FETCHING_PROCESSS', true)
+      commit('FETCHING_PROCESSES', true)
 
       return api[team_name == 'admin' ? 'fetchAdminProcesses' : 'fetchProcesses'](team_name, attrs).then(response => {
-        commit('FETCHED_PROCESSS', response.data)
-        commit('FETCHING_PROCESSS', false)
+        commit('FETCHED_PROCESSES', response.data)
+        commit('FETCHING_PROCESSES', false)
         return response
       }).catch(error => {
-        commit('FETCHING_PROCESSS', false)
+        commit('FETCHING_PROCESSES', false)
         throw error
       })
     }
