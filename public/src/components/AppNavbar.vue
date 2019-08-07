@@ -2,10 +2,16 @@
   <nav>
     <div class="flex flex-row items-center bg-white pv1 ph2 ph3-ns" style="height: 60px">
       <div class="flex-fill flex flex-row items-center" style="letter-spacing: 0.03em">
-        <router-link to="/pipes" class="mr3 dib link v-mid min-w3 hint--bottom" aria-label="Home">
+        <router-link to="/" class="mr3 dib link v-mid min-w3 hint--bottom" aria-label="Home">
           <img src="../assets/logo-flexio-navbar.png" class="dib" alt="Flex.io">
         </router-link>
-        <template v-if="isActiveMemberAvailable()">
+        <div
+          class="ml3 f5 fw6"
+          v-if="is_my_account"
+        >
+          My Account
+        </div>
+        <template v-else-if="show_team_nav">
           <TeamDropdown class="ml3" />
           <template>
             <router-link :to="pipe_route" class="fw6 f6 ttu link nav-link">Functions</router-link>
@@ -23,8 +29,10 @@
 
 
 <script>
+  import { OBJECT_STATUS_AVAILABLE } from '@/constants/object-status'
   import { mapState, mapGetters } from 'vuex'
   import {
+    ROUTE_APP_ACCOUNT,
     ROUTE_APP_PIPES,
     ROUTE_APP_CONNECTIONS,
     ROUTE_APP_MEMBERS
@@ -53,12 +61,30 @@
       },
       is_logged_in() {
         return this.active_user_eid.length > 0
+      },
+      is_my_account() {
+        return _.get(this.$route, 'name') == ROUTE_APP_ACCOUNT
+      },
+      show_team_nav() {
+        if (this.is_my_account) {
+          return false
+        }
+
+        if (!this.isActiveUserMemberOfTeam()) {
+          return false
+        }
+
+        return true
       }
     },
     methods: {
       ...mapGetters('members', {
-        'isActiveMemberAvailable': 'isActiveMemberAvailable'
-      })
+        'getAllMembers': 'getAllMembers'
+      }),
+      isActiveUserMemberOfTeam() {
+        var member = _.find(this.getAllMembers(), { eid: this.active_user_eid })
+        return _.get(member, 'member_status') == OBJECT_STATUS_AVAILABLE
+      },
     }
   }
 </script>

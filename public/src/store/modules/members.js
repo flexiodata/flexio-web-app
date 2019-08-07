@@ -6,7 +6,6 @@ import {
   updateMeta,
   removeMeta,
 } from '@/store/helpers'
-import {OBJECT_STATUS_AVAILABLE } from '@/constants/object-status'
 
 const getDefaultMeta = () => {
   return {
@@ -168,11 +167,6 @@ const getters = {
       item => new Date(item.invited)
     ])
     return items.reverse()
-  },
-
-  isActiveMemberAvailable (state, getters, root_state) {
-    var member = _.find(getters.getAllMembers, { eid: root_state.users.active_user_eid })
-    return _.get(member, 'member_status') == OBJECT_STATUS_AVAILABLE
   },
 }
 

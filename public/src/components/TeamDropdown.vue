@@ -9,12 +9,7 @@
     >
       <div class="flex flex-row items-center">
         <span>{{active_team_label}}</span>
-        <i
-          class="material-icons black-30 arrow"
-          :class="{ 'member-arrow' : isActiveMemberAvailable() }"
-        >
-          expand_more
-        </i>
+        <i class="material-icons black-30 arrow member-arrow">expand_more</i>
       </div>
     </span>
     <el-dropdown-menu style="min-width: 12rem" slot="dropdown">
@@ -71,9 +66,6 @@
     methods: {
       ...mapGetters('users', {
         'getActiveUser': 'getActiveUser'
-      }),
-      ...mapGetters('members', {
-        'isActiveMemberAvailable': 'isActiveMemberAvailable'
       }),
       ...mapGetters('teams', {
         'getActiveTeamLabel': 'getActiveTeamLabel',
