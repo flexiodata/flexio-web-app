@@ -107,8 +107,7 @@
         var fetch_url = this.contentUrl
         var params = _.assign({}, this.queryParams)
 
-        if (fetch_all !== true)
-        {
+        if (fetch_all !== true) {
           _.assign(params, {
             start: this.total_fetched,
             limit: this.chunk_size,
