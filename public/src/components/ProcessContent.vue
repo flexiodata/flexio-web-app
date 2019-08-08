@@ -89,18 +89,6 @@
       JsonDetailsPanel,
       StreamContent
     },
-    watch: {
-      processEid: {
-        handler: 'fetchProcessLog',
-        immediate: true
-      },
-      process_status(val, old_val) {
-        // we just finished running a process; fetch the process log
-        if (old_val === PROCESS_STATUS_RUNNING || old_val === PROCESS_STATUS_PENDING) {
-          this.fetchProcessLog()
-        }
-      }
-    },
     data() {
       return {
         force_loading: false
@@ -141,7 +129,7 @@
         return _.last(log)
       },
       stream_eid() {
-        return _.get(this.process_log, 'output.stdout.eid', '')
+        return _.get(this.process, 'output.eid', '')
       },
       download_url() {
         return API_ROOT + '/' + this.active_team_name + '/streams/' + this.stream_eid + '/content?download=true'
@@ -150,13 +138,7 @@
     methods: {
       ...mapGetters('users', {
         'getActiveUserEmail': 'getActiveUserEmail'
-      }),
-      fetchProcessLog() {
-        var team_name = this.active_team_name
-        if (this.processEid.length > 0) {
-          this.$store.dispatch('processes/fetchLog', { team_name, eid: this.processEid })
-        }
-      }
+      })
     }
   }
 </script>

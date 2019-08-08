@@ -28,7 +28,7 @@
               :pipe="orig_pipe"
               :is-mode-run.sync="is_deployed"
               :show-save-cancel="show_save_cancel"
-              :show-test-panel="show_testing"
+              :show-test-panel="show_result_sidebar"
               @properties-click="openPropertiesDialog"
               @cancel-click="cancelChanges"
               @save-click="saveChanges"
@@ -69,7 +69,7 @@
             flexGrow: show_sidebar ? 1 : undefined
           }"
         >
-          <div class="flex flex-column h-100" v-if="show_testing">
+          <div class="flex flex-column h-100" v-if="show_result_sidebar">
             <div class="flex-none flex flex-row items-center bg-nearer-white bb b--black-05 pa2">
               <div class="f6 fw6 flex-fill">Result</div>
               <div class="pointer f5 black-30 hover-black-60" @click="showTesting(false)">
@@ -204,12 +204,11 @@
     data() {
       return {
         active_task_idx: -1,
+        active_process_eid: '',
         scrollbar_container_id: _.uniqueId('pane-'),
         show_pipe_schedule_dialog: false,
         show_pipe_edit_dialog: false,
-        yaml_view: 'yaml',
-        show_testing: false,
-        has_tested_once: false,
+        show_result_sidebar: false,
         has_errors: false,
         is_saving: false,
         show_save_cancel: false,
@@ -303,16 +302,8 @@
       pipe_schedule() {
         return _.get(this.edit_pipe, 'schedule', {})
       },
-      active_process_eid() {
-        if (!this.has_tested_once) {
-          return ''
-        }
-
-        var process = _.last(this.getActiveDocumentProcesses())
-        return _.get(process, 'eid', '')
-      },
       show_sidebar() {
-        return this.show_testing
+        return this.show_result_sidebar
       },
       is_deployed: {
         get() {
@@ -348,9 +339,6 @@
       }
     },
     methods: {
-      ...mapGetters('processes', {
-        'getActiveDocumentProcesses': 'getActiveDocumentProcesses'
-      }),
       loadPipe() {
         this.$store.commit('pipedocument/FETCHING_PIPE', true)
 
@@ -441,7 +429,7 @@
         })
       },
       testPipe() {
-        this.show_testing = true
+        this.show_result_sidebar = true
 
         var team_name = this.active_team_name
         var attrs = _.pick(this.edit_pipe, ['task'])
@@ -455,11 +443,9 @@
         this.$store.dispatch('processes/create', { team_name, attrs }).then(response => {
           var process = response.data
           var eid = process.eid
+          this.active_process_eid = eid
           this.$store.dispatch('processes/run', { team_name, eid, cfg })
         })
-
-        // make sure we know we've tested the function at least once
-        this.has_tested_once = true
 
         this.$store.track('Tested Function')
       },
@@ -481,7 +467,7 @@
         })
       },
       showTesting(show) {
-        this.show_testing = !!show
+        this.show_result_sidebar = !!show
         if (!!show) {
           this.$store.track('Opened Testing Panel')
         } else {
