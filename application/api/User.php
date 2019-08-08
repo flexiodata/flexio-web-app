@@ -103,7 +103,7 @@ class User
 
             // if appropriate, create default examples
             if (\Flexio\Api\User::CREATE_DEFAULT_EXAMPLES === true)
-                \Flexio\Object\Store::createExampleObjects($user->getEid());
+                \Flexio\Object\Factory::createExampleObjects($user->getEid());
 
             // if a token is set, try to add a card; however, don't fail if it can't be added
             // since the overall user creation has already succeeded

@@ -675,8 +675,8 @@ class Structure
         $result = trim($result, chr(1));
         $result = str_replace(chr(1), '_', $result);
 
-        // make sure the field name is not a keyword
-        if (self::isKeyword($result))
+        // make sure the field name is valid
+        if (!self::isValidFieldName($result))
             $result = 'f_' . $result;
 
         // if the field starts with a number, prefix it with f_
@@ -691,8 +691,17 @@ class Structure
         return trim($result);
     }
 
-    public static function isKeyword(string $str) : bool
+    public static function isValidFieldName(string $str) : bool
     {
+        if (!is_string($str))
+            return false;
+
+        if (strlen($str) === 0)
+            return false;
+
+        if (false !== strpbrk($str, "$()[]{};:*+-."))
+            return false;
+
         $res = array_search(strtoupper($str),
             ["ABORT", "ABS", "ABSOLUTE", "ACCESS", "ACTION", "ADA", "ADD", "ADMIN", "AFTER", "AGGREGATE",
             "ALIAS", "ALL", "ALLOCATE", "ALSO", "ALTER", "ALWAYS", "ANALYSE", "ANALYZE", "AND", "ANY", "ARE",
@@ -769,6 +778,6 @@ class Structure
             "VAR_SAMP", "VERBOSE", "VIEW", "VOLATILE", "WHEN", "WHENEVER", "WHERE", "WIDTH_BUCKET", "WINDOW", "WITH",
             "WITHIN", "WITHOUT", "WORK", "WRITE", "YEAR", "ZONE"]);
 
-        return ($res !== false ? true : false);
+        return ($res !== false ? false : true);
     }
 }

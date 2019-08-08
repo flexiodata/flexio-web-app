@@ -30,7 +30,7 @@ class Test
         $actual = '';
         try
         {
-            $object = \Flexio\Object\Store::load('');
+            $object = \Flexio\Object\Factory::load('');
             $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Flexio\Base\Exception $e)
@@ -45,7 +45,7 @@ class Test
         try
         {
             $eid = $model->pipe->create(array());
-            $object = \Flexio\Object\Store::load($eid);
+            $object = \Flexio\Object\Factory::load($eid);
             $actual = get_class($object);
         }
         catch (\Flexio\Base\Exception $e)
@@ -60,7 +60,7 @@ class Test
         try
         {
             $eid = $model->pipe->create(array());
-            $object = \Flexio\Object\Store::load($eid);
+            $object = \Flexio\Object\Factory::load($eid);
             $actual = $object->getType();
         }
         catch (\Flexio\Base\Exception $e)
@@ -72,7 +72,7 @@ class Test
 
         // BEGIN TEST
         $eid = $model->pipe->create(array());
-        $object = \Flexio\Object\Store::load($eid);
+        $object = \Flexio\Object\Factory::load($eid);
         $actual = $eid;
         $expected = $object->getEid();
         \Flexio\Tests\Check::assertString('A.4', 'Store::load(); make sure the eid is set when an object is loaded',  $actual, $expected, $results);
@@ -83,35 +83,35 @@ class Test
 
         // BEGIN TEST
         $eid = $model->comment->create(array());
-        $object = \Flexio\Object\Store::load($eid);
+        $object = \Flexio\Object\Factory::load($eid);
         $actual =  \Flexio\Base\Eid::isValid($eid) && $object->getEid() === $eid;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('B.1', 'Store::load(); make sure object is created',  $actual, $expected, $results);
 
         // BEGIN TEST
         $eid = $model->connection->create(array());
-        $object = \Flexio\Object\Store::load($eid);
+        $object = \Flexio\Object\Factory::load($eid);
         $actual =  \Flexio\Base\Eid::isValid($eid) && $object->getEid() === $eid;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('B.2', 'Store::load(); make sure object is created',  $actual, $expected, $results);
 
         // BEGIN TEST
         $eid = $model->pipe->create(array());
-        $object = \Flexio\Object\Store::load($eid);
+        $object = \Flexio\Object\Factory::load($eid);
         $actual =  \Flexio\Base\Eid::isValid($eid) && $object->getEid() === $eid;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('B.3', 'Store::load(); make sure object is created',  $actual, $expected, $results);
 
         // BEGIN TEST
         $eid = $model->process->create(array());
-        $object = \Flexio\Object\Store::load($eid);
+        $object = \Flexio\Object\Factory::load($eid);
         $actual =  \Flexio\Base\Eid::isValid($eid) && $object->getEid() === $eid;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('B.4', 'Store::load(); make sure object is created',  $actual, $expected, $results);
 
         // BEGIN TEST
         $eid = $model->stream->create(array());
-        $object = \Flexio\Object\Store::load($eid);
+        $object = \Flexio\Object\Factory::load($eid);
         $actual =  \Flexio\Base\Eid::isValid($eid) && $object->getEid() === $eid;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('B.5', 'Store::load(); make sure object is created',  $actual, $expected, $results);
@@ -121,7 +121,7 @@ class Test
         $email = $username . '@flex.io';
         $properties = array('username' => $username, 'email' => $email);
         $eid = $model->user->create($properties); // user creation requires username and email
-        $object = \Flexio\Object\Store::load($eid);
+        $object = \Flexio\Object\Factory::load($eid);
         $actual = \Flexio\Base\Eid::isValid($eid) && $object->getEid() === $eid;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('B.6', 'Store::load(); make sure object is created',  $actual, $expected, $results);

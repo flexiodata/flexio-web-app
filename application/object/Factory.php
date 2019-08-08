@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Object;
 
 
-class Store
+class Factory
 {
     public static function load(string $eid, string $eid_type = null)
     {

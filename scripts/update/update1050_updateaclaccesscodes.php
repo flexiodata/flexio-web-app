@@ -115,7 +115,7 @@ function convertAclEntry($db, $acl_entry)
 {
     // load the object
     $object_eid = $acl_entry['object_eid'];
-    $object = \Flexio\Object\Store::load($object_eid);
+    $object = \Flexio\Object\Factory::load($object_eid);
     if ($object === false)
         return;
 
