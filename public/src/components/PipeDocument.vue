@@ -70,26 +70,49 @@
           }"
         >
           <div class="flex flex-column h-100" v-if="show_result_sidebar">
+            <!-- input panel header -->
             <div class="flex-none flex flex-row items-center bg-nearer-white bb b--black-05 pa2">
-              <div class="f6 fw6 flex-fill">Result</div>
-              <div class="pointer f5 black-30 hover-black-60" @click="showTesting(false)">
+              <div class="f6 fw6">{{show_input_parameters ? 'Input Parameters' : 'Result'}}</div>
+              <el-button
+                type="text"
+                size="small"
+                style="padding: 2px 0 0; margin-left: 8px"
+                :class="show_input_parameters ? '' : 'hint--bottom'"
+                :aria-label="show_input_parameters ? '' : 'Test this function with POST parameters'"
+                @click="show_input_parameters = !show_input_parameters"
+              >
+                {{show_input_parameters ? 'Hide' : 'Edit input parameters'}}
+              </el-button>
+              <div class="flex-fill"></div>
+              <div
+                class="pointer f5 black-30 hover-black-60 hint--bottom-left"
+                aria-label="Close test panel"
+                @click="showTesting(false)"
+              >
                 <i class="el-icon-close fw6"></i>
               </div>
             </div>
 
-            <div class="flex-fill flex flex-column overflow-y-auto">
+            <div class="flex-fill flex flex-column">
               <!-- input panel -->
-              <div class="flex-none mb4 ph2" v-show="false">
-                <h4 class="mv0 pa3">Input</h4>
+              <div
+                class="flex-none pa3 bb b--black-05 overflow-y-auto"
+                style="max-height: 17rem"
+                v-show="show_input_parameters"
+              >
+                <ProcessInput
+                  ref="process-input"
+                  v-model="process_input"
+                  :process-data.sync="process_data"
+                />
+              </div>
 
-                <div class="ph3">
-                  <p class="mt0 ttu fw6 f7 moon-gray">Test this function with the following POST parameters</p>
-                  <ProcessInput
-                    ref="process-input"
-                    v-model="process_input"
-                    :process-data.sync="process_data"
-                  />
-                </div>
+              <!-- output panel header -->
+              <div
+                class="flex-none flex flex-row items-center bg-nearer-white bb b--black-05 pa2"
+                v-show="show_input_parameters"
+              >
+                <div class="f6 fw6">Result</div>
               </div>
 
               <!-- output panel -->
@@ -176,6 +199,7 @@
       show_pipe_schedule_dialog: false,
       show_pipe_edit_dialog: false,
       show_result_sidebar: false,
+      show_input_parameters: false,
       has_errors: false,
       is_saving: false,
       show_save_cancel: false,
