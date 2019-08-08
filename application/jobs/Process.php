@@ -56,6 +56,7 @@ class Process implements \Flexio\IFace\IProcess
         'echo'      => '\Flexio\Jobs\Echo1',
         'email'     => '\Flexio\Jobs\Email',
         'execute'   => '\Flexio\Jobs\Execute',
+        'extract'   => '\Flexio\Jobs\Extract',
         'exit'      => '\Flexio\Jobs\Exit1',
         'fail'      => '\Flexio\Jobs\Fail',
         'filter'    => '\Flexio\Jobs\Filter',
