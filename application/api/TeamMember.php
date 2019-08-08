@@ -94,7 +94,7 @@ class TeamMember
 
             // if appropriate, create default examples
             if (\Flexio\Api\User::CREATE_DEFAULT_EXAMPLES === true)
-                \Flexio\Object\Store::createExampleObjects($user->getEid());
+                \Flexio\Object\Factory::createExampleObjects($user->getEid());
 
             $member_user_eid = $user->getEid();
         }

@@ -73,7 +73,7 @@ try
 
         // load the object
         $eid = $row['eid'];
-        $object = \Flexio\Object\Store::load($eid);
+        $object = \Flexio\Object\Factory::load($eid);
         if ($object === false)
             continue;
 
