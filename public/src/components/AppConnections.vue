@@ -16,7 +16,7 @@
           <div class="flex-none ph3 pv2 relative bg-white bb b--black-05">
             <div class="flex flex-row">
               <div class="flex-fill flex flex-row items-center">
-                <h2 class="mv0 f3 mr3">Connections</h2>
+                <h2 class="mv0 f3 fw6 mr3">Connections</h2>
               </div>
               <div class="flex-none flex flex-row items-center ml3">
                 <el-button

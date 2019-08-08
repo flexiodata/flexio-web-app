@@ -1,16 +1,16 @@
 <template>
   <div class="dn db-ns" v-if="isStatic">
     <div class="flex flex-column flex-row-ns nb1">
-      <div class="mr3-ns fw6 w-30-ns f6">{{key}}</div>
-      <div class="mr2-ns fw6 w-70-ns f6">{{val}}</div>
-    <div class="o-0">
-      <span class="pointer f3">
-        &times;
-      </span>
-    </div>
+      <div class="mr2-ns w-30-ns f6 fw6">{{key}}</div>
+      <div class="mr2-ns w-70-ns f6 fw6">{{val}}</div>
+      <div class="o-0">
+        <span class="pointer f3">
+          &times;
+        </span>
+      </div>
     </div>
   </div>
-  <div class="flex flex-column items-center-ns flex-row-ns hide-child mb2" v-else>
+  <div class="flex flex-column items-center-ns flex-row-ns hide-child mb1" v-else>
     <div class="mr2-ns w-30-ns">
       <el-input
         :placeholder="keyPlaceholder"
@@ -27,7 +27,6 @@
         v-model="val"
       />
     </div>
-
     <div
       class="dn db-ns"
       :class="index >= count-1 ? 'o-0 no-pointer-events' : ''"
