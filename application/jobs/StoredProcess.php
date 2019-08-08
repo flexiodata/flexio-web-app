@@ -268,11 +268,9 @@ class StoredProcess implements \Flexio\IFace\IProcess
                 return;
 
             case \Flexio\Jobs\Process::EVENT_STARTING_TASK:
-                //$this->startLog($process_info);
                 break;
 
             case \Flexio\Jobs\Process::EVENT_FINISHED_TASK:
-                //$this->finishLog($process_info);
                 $this->updateProcessInfo($process_info);
                 break;
         }
@@ -323,53 +321,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
         $this->procobj->set($process_params);
 
         return $this;
-    }
-
-    private function startLog(array $process_info) : void
-    {
-        $task = $process_info['task'] ?? array();
-/*
-        // no need to save the stdin/stdout for the input
-        $owned_by = $this->getOwner();
-        $storable_stdin = self::createStorableStream($process_info['stdin'], $owned_by);
-        $storable_stdout = self::createStorableStream($process_info['stdout'], $owned_by);
-        $storable_stream_info = array();
-        $storable_stream_info['stdin'] = array('eid' => $storable_stdin->getEid());
-        $storable_stream_info['stdout'] = array('eid' => $storable_stdout->getEid());
-*/
-        // create a log record
-        $params = array();
-        $params['task_op'] = $task['op'] ?? '';
-        $params['task'] = json_encode($task);
-        $params['started'] = \Flexio\Base\Util::getCurrentTimestamp();
-//        $params['input'] = json_encode($storable_stream_info);
-//        $params['log_type'] = \Flexio\Jobs\Process::LOG_TYPE_SYSTEM;
-//        $params['message'] = '';
-
-        $this->current_log_eid = $this->procobj->addToLog(null, $params);
-    }
-
-    private function finishLog(array $process_info) : void
-    {
-        $task = $process_info['task'] ?? array();
-        $owned_by = $this->getOwner();
-        //$storable_stdin = self::createStorableStream($process_info['stdin'], $owned_by);
-        $storable_stdout = self::createStorableStream($process_info['stdout'], $owned_by);
-
-        $storable_stream_info = array();
-        //$storable_stream_info['stdin'] = array('eid' => $storable_stdin->getEid());
-        $storable_stream_info['stdout'] = array('eid' => $storable_stdout->getEid());
-
-        // update the log record
-        $params = array();
-        //$params['task_op'] = $task['op'] ?? '';
-        //$params['task'] = json_encode($task);
-        $params['finished'] = \Flexio\Base\Util::getCurrentTimestamp();
-        $params['output'] = json_encode($storable_stream_info);
-        $params['log_type'] = \Flexio\Jobs\Process::LOG_TYPE_SYSTEM;
-        $params['message'] = '';
-
-        $this->procobj->addToLog($this->current_log_eid, $params);
     }
 
     private function updateProcessInfo(array $process_info) : void

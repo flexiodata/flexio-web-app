@@ -353,44 +353,6 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $this->properties['process_mode'];
     }
 
-    public function addToLog($log_eid = null, array $params) : string
-    {
-        $eid = $this->getModel()->process->log($log_eid, $this->getEid(), $params);
-        return $eid;
-    }
-
-    public function getLog() : array
-    {
-        $process_model = $this->getModel()->process;
-        $log_entries = $process_model->getProcessLogEntries($this->getEid());
-
-        $result = array();
-        foreach ($log_entries as $entry)
-        {
-            // unpack the task
-            $task = @json_decode($entry['task'],true);
-            if ($task !== false)
-            {
-                $entry['task'] = $task;
-                $entry['task'] = \Flexio\Jobs\Base::fixEmptyParams($entry['task']);
-            }
-
-            // unpack the input
-            $input = @json_decode($entry['input'],true);
-            if ($input !== false)
-                $entry['input'] = $input;
-
-            // unpack the output
-            $output = @json_decode($entry['output'],true);
-            if ($output !== false)
-                $entry['output'] = $output;
-
-            $result[] = $entry;
-        }
-
-        return $result;
-    }
-
     private function isCached() : bool
     {
         // a process may be run in the background and update values

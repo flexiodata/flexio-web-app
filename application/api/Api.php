@@ -116,7 +116,6 @@ class Api
         'POS /:teamid/processes/:objid'               => '\Flexio\Api\Process::set',
         'GET /:teamid/processes/:objid'               => '\Flexio\Api\Process::get',
         'DEL /:teamid/processes/:objid'               => '\Flexio\Api\Process::delete',
-        //'GET /:teamid/processes/:objid/log'           => '\Flexio\Api\Process::log',
         'POS /:teamid/processes/:objid/run'           => '\Flexio\Api\Process::run',
         'POS /:teamid/processes/:objid/cancel'        => '\Flexio\Api\Process::cancel',
 

@@ -37,10 +37,6 @@ class Process implements \Flexio\IFace\IProcess
     public const RESPONSE_NONE = 0;
     public const RESPONSE_NORMAL = 200;
 
-    public const LOG_TYPE_UNDEFINED = '';
-    public const LOG_TYPE_SYSTEM    = 'P'; // 'P' for process
-    public const LOG_TYPE_USER      = 'U'; // 'U' for user
-
     // events are passed in a callback function along with info
     // to track info about the process
     public const EVENT_STARTING       = 'process.starting';

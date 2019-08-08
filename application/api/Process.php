@@ -440,30 +440,6 @@ class Process
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function log(\Flexio\Api\Request $request) : void
-    {
-        $requesting_user_eid = $request->getRequestingUser();
-        $owner_user_eid = $request->getOwnerFromUrl();
-        $process_eid = $request->getObjectFromUrl();
-
-        // load the object; make sure the eid is associated with the owner
-        // as an additional check
-        $process = \Flexio\Object\Process::load($process_eid);
-        if ($owner_user_eid !== $process->getOwner())
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-
-        // check the rights on the object
-        if ($process->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($process->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PROCESS_READ) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
-        $result = $process->getLog();
-
-        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api\Response::sendContent($result);
-    }
-
     public static function run(\Flexio\Api\Request $request) : void
     {
         $requesting_user_eid = $request->getRequestingUser();
