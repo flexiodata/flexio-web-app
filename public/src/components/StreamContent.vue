@@ -1,31 +1,61 @@
 <template>
-  <div class="flex flex-column justify-center bg-white ba b--black-10" :style="inner_style" v-if="is_fetching">
+  <div
+    class="flex flex-column justify-center bg-white"
+    :style="inner_style"
+    v-if="is_fetching"
+  >
     <Spinner size="large" message="Loading preview..." />
   </div>
-  <div v-else-if="is_image">
-    <img :stream-eid="streamEid" :src="stream_content_url" :style="inner_style" class="dib">
-  </div>
-  <div v-else-if="is_flexio_html" :style="inner_style" class="bg-white ba b--black-10">
-    <iframe :stream-eid="streamEid" :src="stream_content_url" class="absolute top-0 left-0 w-100 h-100" height="100%" width="100%" frameborder="0" allowfullscreen></iframe>
-  </div>
-  <div v-else-if="is_pdf" :style="inner_style" class="bg-white relative overflow-hidden">
-    <iframe :stream-eid="streamEid" :src="stream_content_url" class="absolute top-0 left-0 w-100 h-100" height="100%" width="100%" frameborder="0" allowfullscreen></iframe>
-  </div>
-  <div v-else-if="is_json || is_html || is_text" :style="inner_style" class="bg-white ba b--black-10">
-    <StreamText
-      :stream-eid="streamEid"
-      :content-url="stream_content_url"
-      :query-params="stream_query_params"
-      :is-json="is_json"
-      :is-html="is_html"
-    />
-  </div>
-  <div v-else-if="is_table" :style="inner_style" class="bg-white ba b--black-10">
-    <Grid
-      :data-url="stream_content_url"
-      :live-scroll="false"
-    />
-  </div>
+
+  <img
+    :stream-eid="streamEid"
+    :src="stream_content_url"
+    :style="inner_style"
+    v-else-if="is_image"
+  >
+
+  <iframe
+    class="absolute absolute--fill"
+    height="100%"
+    width="100%"
+    frameborder="0"
+    allowfullscreen
+    :stream-eid="streamEid"
+    :src="stream_content_url"
+    :style="inner_style"
+    v-else-if="is_flexio_html"
+  ></iframe>
+
+  <iframe
+    class="absolute absolute--fill bg-white relative overflow-hidden"
+    height="100%"
+    width="100%"
+    frameborder="0"
+    allowfullscreen
+    :stream-eid="streamEid"
+    :src="stream_content_url"
+    :style="inner_style"
+    v-else-if="is_pdf"
+  ></iframe>
+
+  <StreamText
+    :stream-eid="streamEid"
+    :content-url="stream_content_url"
+    :query-params="stream_query_params"
+    :is-json="is_json"
+    :is-html="is_html"
+    :style="inner_style"
+    v-else-if="is_json || is_html || is_text"
+  />
+
+  <Grid
+    :data-url="stream_content_url"
+    :live-scroll="false"
+    :style="inner_style"
+    v-else-if="is_table"
+  />
+
+  <div v-else></div>
 </template>
 
 <script>

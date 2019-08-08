@@ -32,7 +32,7 @@
               @properties-click="openPropertiesDialog"
               @cancel-click="cancelChanges"
               @save-click="saveChanges"
-              @run-click="showTesting(true)"
+              @run-click="testPipe"
             />
           </div>
 
@@ -69,48 +69,17 @@
             flexGrow: show_sidebar ? 1 : undefined
           }"
         >
-          <div class="flex flex-column h-100" v-if="show_yaml">
-            <div class="flex flex-row items-center bg-nearer-white bb b--black-05 pa2">
-              <i class="material-icons mr1">code</i>
-              <div class="f6 fw6 flex-fill">Function Definition</div>
-              <el-radio-group
-                class="mh2"
-                size="micro"
-                v-model="yaml_view"
-              >
-                <el-radio-button label="json"><span class="fw6">JSON</span></el-radio-button>
-                <el-radio-button label="yaml"><span class="fw6">YAML</span></el-radio-button>
-              </el-radio-group>
-              <div class="pointer f5 black-30 hover-black-60 hint--bottom-left" aria-label="Hide Function Definition" @click="showYaml(false)">
-                <i class="el-icon-close fw6"></i>
-              </div>
-            </div>
-            <PipeCodeEditor
-              class="flex-fill"
-              ref="code-editor"
-              editor-cls="bg-white h-100"
-              :type="yaml_view"
-              :class="{
-                'no-pointer-events': !show_yaml
-              }"
-              :show-json-view-toggle="false"
-              :task-only="false"
-              :has-errors.sync="has_errors"
-              @save="saveChanges"
-              v-model="edit_pipe"
-            />
-          </div>
           <div class="flex flex-column h-100" v-if="show_testing">
             <div class="flex-none flex flex-row items-center bg-nearer-white bb b--black-05 pa2">
-              <div class="f6 fw6 flex-fill">Test Function</div>
-              <div class="pointer f5 black-30 hover-black-60 hint--bottom-left" aria-label="Hide Testing" @click="showTesting(false)">
+              <div class="f6 fw6 flex-fill">Result</div>
+              <div class="pointer f5 black-30 hover-black-60" @click="showTesting(false)">
                 <i class="el-icon-close fw6"></i>
               </div>
             </div>
 
-            <div class="flex-fill overflow-y-auto">
+            <div class="flex-fill flex flex-column overflow-y-auto">
               <!-- input panel -->
-              <div class="mb4 ph2">
+              <div class="flex-none mb4 ph2" v-show="false">
                 <h4 class="mv0 pa3">Input</h4>
 
                 <div class="ph3">
@@ -121,32 +90,15 @@
                     :process-data.sync="process_data"
                   />
                 </div>
-
-                <div class="ph3 mt3">
-                  <el-button
-                    class="ttu fw6"
-                    type="primary"
-                    size="small"
-                    @click="testPipe"
-                  >
-                    Run Test
-                  </el-button>
-                </div>
               </div>
-
 
               <!-- output panel -->
-              <div class="mb4 ph2">
-                <h4 class="mv0 ph3 pb3">Output</h4>
-
-                <div class="ph3">
-                  <ProcessContent :process-eid="active_process_eid">
-                    <div class="ba b--black-10 pa3 tc f6 lh-copy" slot="empty">
-                      <em>Click the <code class="ph1 ba b--black-10 bg-nearer-white br2">Run Test</code> button to see the result of your function logic here.</em>
-                    </div>
-                  </ProcessContent>
-                </div>
-              </div>
+              <ProcessContent
+                class="flex-fill flex flex-column"
+                :process-eid="active_process_eid"
+              >
+                <div class="pa3 tc f6 lh-copy" slot="empty"></div>
+              </ProcessContent>
             </div>
           </div>
         </div>
@@ -247,14 +199,6 @@
           this.save_cancel_zindex++
           this.show_save_cancel = val
         })
-      },
-      show_yaml() {
-        this.transitioning_sidebar = true
-        setTimeout(() => { this.transitioning_sidebar = false }, 150)
-      },
-      show_testing() {
-        this.transitioning_sidebar = true
-        setTimeout(() => { this.transitioning_sidebar = false }, 150)
       }
     },
     data() {
@@ -264,9 +208,7 @@
         show_pipe_schedule_dialog: false,
         show_pipe_edit_dialog: false,
         yaml_view: 'yaml',
-        show_yaml: false,
         show_testing: false,
-        transitioning_sidebar: false,
         has_tested_once: false,
         has_errors: false,
         is_saving: false,
@@ -370,7 +312,7 @@
         return _.get(process, 'eid', '')
       },
       show_sidebar() {
-        return this.show_yaml || this.show_testing
+        return this.show_testing
       },
       is_deployed: {
         get() {
@@ -499,7 +441,6 @@
         })
       },
       testPipe() {
-        this.show_yaml = false
         this.show_testing = true
 
         var team_name = this.active_team_name
@@ -538,14 +479,6 @@
             task_list.revert()
           }
         })
-      },
-      showYaml(show) {
-        this.show_yaml = !!show
-        if (!!show) {
-          this.$store.track('Opened Function Definition')
-        } else {
-          this.$store.track('Closed Function Definition')
-        }
       },
       showTesting(show) {
         this.show_testing = !!show

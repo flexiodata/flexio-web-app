@@ -38,7 +38,6 @@
             size="small"
             :disabled="!allowRun"
             @click="$emit('run-click')"
-            v-show="!showTestPanel"
           >
             <span class="ttu fw6">Test</span>
           </el-button>

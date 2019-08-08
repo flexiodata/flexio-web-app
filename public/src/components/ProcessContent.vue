@@ -1,51 +1,57 @@
 <template>
-  <div>
-    <transition name="slide-fade" mode="out-in">
-      <!-- no content -->
-      <div v-if="!processEid || processEid.length == 0">
-        <slot name="empty">
-          <div class="tc f6">
-            <em>There is no content to show.</em>
-          </div>
-        </slot>
-      </div>
-      <!-- loading -->
-      <div
-        class="bg-white ba b--black-10 flex flex-column justify-center"
-        style="height: 300px"
-        v-else-if="is_process_pending || is_process_running || force_loading"
-      >
-        <Spinner size="large" :message="is_process_pending ? 'Starting...' : 'Running...'" />
-      </div>
-      <!-- failed -->
-      <div
-        class="bg-white ba b--black-10 pa4 overflow-y-auto"
-        style="max-height: 600px"
-        v-else-if="is_process_failed"
-      >
+  <transition name="slide-fade" mode="out-in">
+    <!-- no content -->
+    <div v-if="!processEid || processEid.length == 0">
+      <slot name="empty">
+        <div class="tc f6">
+          <em>There is no content to show.</em>
+        </div>
+      </slot>
+    </div>
+
+    <!-- loading -->
+    <div
+      class="flex flex-column justify-center"
+      v-else-if="is_process_pending || is_process_running || force_loading"
+    >
+      <Spinner size="large" :message="is_process_pending ? 'Starting...' : 'Running...'" />
+    </div>
+
+    <!-- failed -->
+    <div v-else-if="is_process_failed">
+      <div>
         <IconMessage
-          class="tc"
+          class="ma3 tc"
           title="Oops, looks like something went wrong... :-/"
         />
-        <JsonDetailsPanel :json="process_error" />
-      </div>
-      <!-- show content -->
-      <div v-else-if="stream_eid.length > 0">
-        <StreamContent
-          :height="300"
-          :stream-eid="stream_eid"
+        <JsonDetailsPanel
+          class="ma3"
+          :json="process_error"
         />
-        <div class="mt3 tc">
-          <a
-            class="el-button el-button--primary ttu fw6 no-underline"
-            :href="download_url"
-          >
-            Download
-          </a>
-        </div>
       </div>
-    </transition>
-  </div>
+    </div>
+
+    <!-- show content -->
+    <div v-else-if="stream_eid.length > 0">
+      <StreamContent
+        :height="-1"
+        :stream-eid="stream_eid"
+      />
+      <div
+        class="mt3 tc"
+        v-if="showDownloadButton"
+      >
+        <a
+          class="el-button el-button--primary ttu fw6 no-underline"
+          :href="download_url"
+        >
+          Download
+        </a>
+      </div>
+    </div>
+
+    <div v-else></div>
+  </transition>
 </template>
 
 <script>
@@ -70,6 +76,10 @@
       processEid: {
         type: String,
         required: true
+      },
+      showDownloadButton: {
+        type: Boolean,
+        default: false
       }
     },
     components: {

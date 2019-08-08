@@ -28,12 +28,6 @@
           v-if="user"
         />
       </el-tab-pane>
-      <el-tab-pane name="output" label="Output" v-if="false">
-        <ProcessContent
-          style="margin-top: -1px"
-          :processEid="processEid"
-        />
-      </el-tab-pane>
     </el-tabs>
 
     <div class="mt4 w-100 flex flex-row justify-end" v-if="showFooter">
@@ -50,7 +44,6 @@
 
 <script>
   import JsonDetailsPanel from '@/components/JsonDetailsPanel'
-  import ProcessContent from '@/components/ProcessContent'
 
   export default {
     props: {
@@ -76,8 +69,7 @@
       }
     },
     components: {
-      JsonDetailsPanel,
-      ProcessContent
+      JsonDetailsPanel
     },
     watch: {
       processEid: {
