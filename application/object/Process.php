@@ -223,6 +223,23 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             $properties['pipe_info'] = json_encode($properties['pipe_info']);
         }
 
+        // if the input or output info are set, make sure they're an object and then encode it as
+        // JSON for storage
+        if (isset($properties) && isset($properties['input']))
+        {
+            if (!is_array($properties['input']))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+            $properties['input'] = json_encode($properties['input']);
+        }
+        if (isset($properties) && isset($properties['output']))
+        {
+            if (!is_array($properties['output']))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+            $properties['output'] = json_encode($properties['output']);
+        }
+
         // if the task is set, make sure it's an object and then encode it as JSON for storage
         if (isset($properties) && isset($properties['task']))
         {
@@ -410,6 +427,7 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "parent" => null,
                 "process_mode" => null,
                 "task" => null,
+                "output" => null,
                 "triggered_by" => null,
                 "started_by" => null,
                 "started" => null,
@@ -450,6 +468,20 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             'eid' => $properties['owned_by'],
             'eid_type' => \Model::TYPE_USER
         );
+
+        // get the output if it exists
+        if (isset($properties['output']))
+            $pipe_output = @json_decode($properties['output'],true);
+            if ($pipe_output !== false)
+            {
+                if (isset($pipe_output['stream']))
+                    $mapped_properties['output'] = array(
+                        "eid" => $pipe_output['stream'],
+                        "eid_type" => \Model::TYPE_STREAM
+                    );
+                 else
+                    $mapped_properties['output'] = null;
+            }
 
         // unpack the primary process task json
         if (isset($mapped_properties['task']))
