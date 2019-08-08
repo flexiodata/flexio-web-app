@@ -2,30 +2,6 @@ import * as ops from './task-op'
 
 /* step info */
 
-const CONNECT = {
-  op: ops.TASK_OP_CONNECT,
-  name: 'Connect',
-  description: 'Create or add an external connection (OAuth, token, etc.) to call from your function.',
-  icon: 'repeat',
-  bg_color: 'bg-task-blue'
-}
-
-const CONVERT = {
-  op: ops.TASK_OP_CONVERT,
-  name: 'Convert',
-  description: 'Convert the output of the previous step in your function to a different format (e.g., JSON to CSV)',
-  icon: 'settings',
-  bg_color: 'bg-task-blue'
-}
-
-const EMAIL_SEND = {
-  op: ops.TASK_OP_EMAIL_SEND,
-  name: 'Email',
-  description: 'Email a notification, variable and/or attachments using Flex.io or your own SMTP email service.',
-  icon: 'mail_outline',
-  bg_color: 'bg-task-blue'
-}
-
 const EXECUTE = {
   op: ops.TASK_OP_EXECUTE,
   name: 'Execute',
@@ -34,43 +10,19 @@ const EXECUTE = {
   bg_color: 'bg-task-purple'
 }
 
+const EXTRACT = {
+  op: ops.TASK_OP_EXTRACT,
+  name: 'Extract',
+  description: 'Extra data from a dataset.',
+  icon: 'launch',
+  bg_color: 'bg-task-orange'
+}
+
 const LOOKUP = {
   op: ops.TASK_OP_LOOKUP,
   name: 'Lookup',
   description: 'Lookup values based on a key/value pair lookup in a dataset.',
   icon: 'find_in_page',
-  bg_color: 'bg-task-purple'
-}
-
-const OAUTH = {
-  op: ops.TASK_OP_OAUTH,
-  name: 'OAuth',
-  description: 'Set up an OAuth-type connection and output an execute step that returns your OAuth token.',
-  icon: 'security',
-  bg_color: 'bg-task-purple'
-}
-
-const READ = {
-  op: ops.TASK_OP_READ,
-  name: 'Read',
-  description: 'Read files from storage-type connections (e.g., Dropbox, MySQL, GitHub).',
-  icon: 'input',
-  bg_color: 'bg-task-blue'
-}
-
-const REQUEST = {
-  op: ops.TASK_OP_REQUEST,
-  name: 'Request',
-  description: 'Make an HTTP request; output will be sent to the next step of your function.',
-  icon: 'http',
-  bg_color: 'bg-task-blue'
-}
-
-const WRITE = {
-  op: ops.TASK_OP_WRITE,
-  name: 'Write',
-  description: 'Write files to storage-type connections (e.g., Dropbox, MySQL, GitHub).',
-  icon: 'input',
   bg_color: 'bg-task-blue'
 }
 
@@ -78,16 +30,12 @@ const WRITE = {
 
 // go out of alphabetical order here so the order is correct in the step chooser builder item
 export const TASK_INFO_EXECUTE       = EXECUTE
+export const TASK_INFO_EXTRACT       = EXTRACT
 export const TASK_INFO_LOOKUP        = LOOKUP
-export const TASK_INFO_REQUEST       = REQUEST
-export const TASK_INFO_CONVERT       = CONVERT
-export const TASK_INFO_EMAIL_SEND    = EMAIL_SEND
-export const TASK_INFO_OAUTH         = OAUTH
-export const TASK_INFO_CONNECT       = CONNECT
-export const TASK_INFO_READ          = READ
-export const TASK_INFO_WRITE         = WRITE
 
 /*
+-------------------- old cruft --------------------
+
 const CALC_FIELD = {
   name: 'Calculation',
   description: '',
@@ -101,6 +49,22 @@ const COMMENT = {
   description: '',
   op: ops.TASK_OP_COMMENT,
   icon: 'comment',
+  bg_color: 'bg-task-blue'
+}
+
+const CONNECT = {
+  op: ops.TASK_OP_CONNECT,
+  name: 'Connect',
+  description: 'Create or add an external connection (OAuth, token, etc.) to call from your function.',
+  icon: 'repeat',
+  bg_color: 'bg-task-blue'
+}
+
+const CONVERT = {
+  op: ops.TASK_OP_CONVERT,
+  name: 'Convert',
+  description: 'Convert the output of the previous step in your function to a different format (e.g., JSON to CSV)',
+  icon: 'settings',
   bg_color: 'bg-task-blue'
 }
 
@@ -141,6 +105,14 @@ const ECHO = {
   name: 'Echo',
   description: 'Echo a message or variable to the next step in your function.',
   icon: 'settings_remote',
+  bg_color: 'bg-task-blue'
+}
+
+const EMAIL_SEND = {
+  op: ops.TASK_OP_EMAIL_SEND,
+  name: 'Email',
+  description: 'Email a notification, variable and/or attachments using Flex.io or your own SMTP email service.',
+  icon: 'mail_outline',
   bg_color: 'bg-task-blue'
 }
 
@@ -200,6 +172,14 @@ const NOP = {
   bg_color: 'bg-task-orange'
 }
 
+const OAUTH = {
+  op: ops.TASK_OP_OAUTH,
+  name: 'OAuth',
+  description: 'Set up an OAuth-type connection and output an execute step that returns your OAuth token.',
+  icon: 'security',
+  bg_color: 'bg-task-purple'
+}
+
 const OUTPUT = {
   name: 'Output',
   description: '',
@@ -224,6 +204,14 @@ const R = {
   bg_color: 'bg-task-purple'
 }
 
+const READ = {
+  op: ops.TASK_OP_READ,
+  name: 'Read',
+  description: 'Read files from storage-type connections (e.g., Dropbox, MySQL, GitHub).',
+  icon: 'input',
+  bg_color: 'bg-task-blue'
+}
+
 const RENAME = {
   name: 'Rename',
   description: '',
@@ -238,6 +226,14 @@ const RENDER = {
   op: ops.TASK_OP_RENDER,
   icon: 'photo',
   bg_color: 'bg-task-orange'
+}
+
+const REQUEST = {
+  op: ops.TASK_OP_REQUEST,
+  name: 'Request',
+  description: 'Make an HTTP request; output will be sent to the next step of your function.',
+  icon: 'http',
+  bg_color: 'bg-task-blue'
 }
 
 const SEARCH = {
@@ -272,13 +268,24 @@ const TRANSFORM = {
   bg_color: 'bg-task-orange'
 }
 
+const WRITE = {
+  op: ops.TASK_OP_WRITE,
+  name: 'Write',
+  description: 'Write files to storage-type connections (e.g., Dropbox, MySQL, GitHub).',
+  icon: 'input',
+  bg_color: 'bg-task-blue'
+}
+
 export const TASK_INFO_CALC_FIELD    = CALC_FIELD
 export const TASK_INFO_COMMENT       = COMMENT
+export const TASK_INFO_CONNECT       = CONNECT
+export const TASK_INFO_CONVERT       = CONVERT
 export const TASK_INFO_COPY          = COPY
 export const TASK_INFO_CUSTOM        = CUSTOM
 export const TASK_INFO_DISTINCT      = DISTINCT
 export const TASK_INFO_DUPLICATE     = DUPLICATE
 export const TASK_INFO_ECHO          = ECHO
+export const TASK_INFO_EMAIL_SEND    = EMAIL_SEND
 export const TASK_INFO_FIND_REPLACE  = FIND_REPLACE
 export const TASK_INFO_FILTER        = FILTER
 export const TASK_INFO_GROUP         = GROUP
@@ -286,13 +293,17 @@ export const TASK_INFO_INPUT         = INPUT
 export const TASK_INFO_LIMIT         = LIMIT
 export const TASK_INFO_MERGE         = MERGE
 export const TASK_INFO_NOP           = NOP
+export const TASK_INFO_OAUTH         = OAUTH
 export const TASK_INFO_OUTPUT        = OUTPUT
 export const TASK_INFO_PROMPT        = PROMPT
 export const TASK_INFO_R             = R
+export const TASK_INFO_READ          = READ
 export const TASK_INFO_RENAME        = RENAME
 export const TASK_INFO_RENDER        = RENDER
+export const TASK_INFO_REQUEST       = REQUEST
 export const TASK_INFO_SEARCH        = SEARCH
 export const TASK_INFO_SELECT        = SELECT
 export const TASK_INFO_SORT          = SORT
 export const TASK_INFO_TRANSFORM     = TRANSFORM
+export const TASK_INFO_WRITE         = WRITE
 */
