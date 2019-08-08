@@ -2,10 +2,10 @@
   <div>
     <div class="flex flex-row">
       <div class="flex-fill flex flex-column">
-        <div class="flex flex-row items-center f4 fw6 lh-title">
-          <div>{{pipe.name}}</div>
+        <div class="flex flex-row items-center">
+          <div class="f4 fw6 lh-title">{{pipe.name}}</div>
           <LabelSwitch
-            class="dib ml3 hint--bottom"
+            class="ml3 hint--bottom"
             active-color="#13ce66"
             :aria-label="is_deployed ? 'Turn function off' : 'Turn function on'"
             :width="58"
