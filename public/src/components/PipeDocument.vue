@@ -94,12 +94,11 @@
 
               <!-- output panel -->
               <ProcessContent
-                class="flex-fill flex flex-column justify-center"
+                class="flex-fill flex flex-column"
                 :process-eid="active_process_eid"
               >
-                <div class="pa3 tc f6 lh-copy" slot="empty">
-                  <em>Click the <code class="ph1 ba b--black-10 bg-nearer-white br1">Test</code> button to see the result of your function here.</em>
-                </div>
+                <!-- don't show any empty text -->
+                <div class="pa3 tc f6 lh-copy" slot="empty"></div>
               </ProcessContent>
             </div>
           </div>
