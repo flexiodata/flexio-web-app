@@ -97,45 +97,26 @@ class Test
 
 
 
-        // TEST: Process log constants
-
-        // BEGIN TEST
-        $actual = \Flexio\Jobs\Process::LOG_TYPE_UNDEFINED;
-        $expected = '';
-        \Flexio\Tests\Check::assertString('D.1', 'Log type constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Flexio\Jobs\Process::LOG_TYPE_SYSTEM;
-        $expected = 'P';
-        \Flexio\Tests\Check::assertString('D.2', 'Log type constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Flexio\Jobs\Process::LOG_TYPE_USER;
-        $expected = 'U';
-        \Flexio\Tests\Check::assertString('D.3', 'Log type constant',  $actual, $expected, $results);
-
-
-
         // TEST: Process event constants
 
         // BEGIN TEST
         $actual = \Flexio\Jobs\Process::EVENT_STARTING;
         $expected = 'process.starting';
-        \Flexio\Tests\Check::assertString('E.1', 'Event type constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('D.1', 'Event type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Jobs\Process::EVENT_STARTING_TASK;
         $expected = 'process.starting.task';
-        \Flexio\Tests\Check::assertString('E.2', 'Event type constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('D.2', 'Event type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Jobs\Process::EVENT_FINISHED;
         $expected = 'process.finished';
-        \Flexio\Tests\Check::assertString('E.3', 'Event type constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('D.3', 'Event type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Jobs\Process::EVENT_FINISHED_TASK;
         $expected = 'process.finished.task';
-        \Flexio\Tests\Check::assertString('E.4', 'Event type constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('D.4', 'Event type constant',  $actual, $expected, $results);
     }
 }

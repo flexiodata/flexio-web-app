@@ -718,7 +718,6 @@ class Model
             'pipe' => 'select count(*) as count from tbl_pipe',
             'connection' => 'select count(*) as count from tbl_connection',
             'process' => 'select count(*) as count from tbl_process',
-            'processlog' => 'select count(*) as count from tbl_processlog',
             'stream' => 'select count(*) as count from tbl_stream',
             'comment' => 'select count(*) as count from tbl_comment',
             'action' => 'select count(*) as count from tbl_action',
