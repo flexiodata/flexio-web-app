@@ -94,10 +94,12 @@
 
               <!-- output panel -->
               <ProcessContent
-                class="flex-fill flex flex-column"
+                class="flex-fill flex flex-column justify-center"
                 :process-eid="active_process_eid"
               >
-                <div class="pa3 tc f6 lh-copy" slot="empty"></div>
+                <div class="pa3 tc f6 lh-copy" slot="empty">
+                  <em>Click the <code class="ph1 ba b--black-10 bg-nearer-white br1">Test</code> button to see the result of your function here.</em>
+                </div>
               </ProcessContent>
             </div>
           </div>
@@ -167,6 +169,24 @@
   const DEPLOY_MODE_BUILD     = 'B'
   const DEPLOY_MODE_RUN       = 'R'
 
+  const getInitialState = () => {
+    return {
+      active_task_idx: -1,
+      active_process_eid: '',
+      scrollbar_container_id: _.uniqueId('pane-'),
+      show_pipe_schedule_dialog: false,
+      show_pipe_edit_dialog: false,
+      show_result_sidebar: false,
+      has_errors: false,
+      is_saving: false,
+      show_save_cancel: false,
+      save_cancel_zindex: 2050,
+      pipe_not_found: false,
+      process_input: {},
+      process_data: {}
+    }
+  }
+
   export default {
     components: {
       Multipane,
@@ -202,21 +222,7 @@
       }
     },
     data() {
-      return {
-        active_task_idx: -1,
-        active_process_eid: '',
-        scrollbar_container_id: _.uniqueId('pane-'),
-        show_pipe_schedule_dialog: false,
-        show_pipe_edit_dialog: false,
-        show_result_sidebar: false,
-        has_errors: false,
-        is_saving: false,
-        show_save_cancel: false,
-        save_cancel_zindex: 2050,
-        pipe_not_found: false,
-        process_input: {},
-        process_data: {}
-      }
+      return getInitialState()
     },
     computed: {
       ...mapState({
@@ -341,6 +347,9 @@
     methods: {
       loadPipe() {
         this.$store.commit('pipedocument/FETCHING_PIPE', true)
+
+        // reset our local component data
+        Object.assign(this.$data, getInitialState())
 
         var team_name = this.active_team_name
         var name = this.route_object_name
