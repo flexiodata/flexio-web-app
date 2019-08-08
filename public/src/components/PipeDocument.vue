@@ -36,7 +36,7 @@
             />
           </div>
 
-          <div class="center mw-doc" style="padding-bottom: 112rem">
+          <div class="w-100 center mw-doc mt1" style="min-height: 20rem; margin-bottom: 10rem">
             <el-collapse
               class="el-collapse--plain"
               v-model="active_collapse_items"
@@ -212,16 +212,10 @@
 </template>
 
 <script>
-  import stickybits from 'stickybits'
-  import marked from 'marked'
-  import { mapState, mapGetters } from 'vuex'
-  import {
-    SCHEDULE_FREQUENCY_FIVE_MINUTES,
-    SCHEDULE_DEFAULTS
-  } from '@/constants/schedule'
   import { PROCESS_MODE_BUILD } from '@/constants/process'
-
+  import { mapState, mapGetters } from 'vuex'
   import { Multipane, MultipaneResizer } from 'vue-multipane'
+  import stickybits from 'stickybits'
   import Spinner from 'vue-simple-spinner'
   import PipeBuilderList from '@/components/PipeBuilderList'
   import PipeCodeEditor from '@/components/PipeCodeEditor'
@@ -588,17 +582,6 @@
             stickyBitStickyOffset: 0
           })
         }, 500)
-      },
-      scrollToItem(item_id, timeout) {
-        if (_.isString(item_id)) {
-          setTimeout(() => {
-            this.$scrollTo('#'+item_id, {
-              container: '#'+this.scrollbar_container_id,
-              duration: 400,
-              offset: -80
-            })
-          }, timeout ? timeout : 10)
-        }
       }
     }
   }

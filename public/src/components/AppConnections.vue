@@ -51,7 +51,10 @@
         </div>
 
         <!-- content area -->
-        <div class="flex-fill pa4 pt0 overflow-y-scroll">
+        <div
+          class="flex-fill pa4 pt0 overflow-y-scroll"
+          :id="scrollbar_container_id"
+        >
           <div class="h2"></div>
           <div class="relative z-7 bg-nearer-white sticky">
             <ConnectionStaticPanel
@@ -60,7 +63,8 @@
               @edit-click="onEditConnection"
             />
           </div>
-          <div class="w-100 center mw-doc pa4 bg-white br2 css-white-box" style="min-height: 20rem">
+
+          <div class="w-100 center mw-doc mt1 pa3 bg-white br2 css-white-box" style="min-height: 20rem; margin-bottom: 10rem">
             <template v-if="is_keyring_connection">
               <div class="mb2 lh-copy ttu fw6 f6">Keypair Values</div>
               <JsonDetailsPanel
@@ -118,6 +122,7 @@
   import { CONNECTION_TYPE_HTTP, CONNECTION_TYPE_KEYRING } from '@/constants/connection-type'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '@/constants/object-status'
   import { mapState, mapGetters } from 'vuex'
+  import stickybits from 'stickybits'
   import Spinner from 'vue-simple-spinner'
   import AbstractList from '@/components/AbstractList'
   import ConnectionEditPanel from '@/components/ConnectionEditPanel'
@@ -162,10 +167,11 @@
     data() {
       return {
         is_selecting: false,
+        show_connection_dialog: false,
         connection: {},
         last_selected: {},
         edit_mode: 'add',
-        show_connection_dialog: false
+        scrollbar_container_id: _.uniqueId('content-'),
       }
     },
     computed: {
@@ -306,6 +312,7 @@
         }
 
         this.selectConnection(conn)
+        this.initSticky()
       },
       selectConnection(item) {
         if (this.connections.length == 0) {
@@ -350,6 +357,15 @@
       },
       saveChanges(item) {
         this.tryUpdateConnection(item)
+      },
+      initSticky() {
+        setTimeout(() => {
+          stickybits('.sticky', {
+            scrollEl: '#' + this.scrollbar_container_id,
+            useStickyClasses: true,
+            stickyBitStickyOffset: 0
+          })
+        }, 500)
       }
     }
   }
