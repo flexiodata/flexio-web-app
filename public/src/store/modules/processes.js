@@ -135,16 +135,6 @@ const actions = {
     }
   },
 
-  'fetchLog' ({ commit, dispatch }, { team_name, eid }) {
-    return api.fetchProcessLog(team_name, eid).then(response => {
-      var item = { log: response.data }
-      commit('FETCHED_PROCESS_LOG', { eid, item })
-      return response
-    }).catch(error => {
-      throw error
-    })
-  },
-
   'run' ({ commit, dispatch }, { team_name, eid, cfg }) {
     dispatch('fetch', { team_name, eid, poll: true })
 
