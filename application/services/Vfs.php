@@ -81,8 +81,6 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
     {
         $results = [];
 
-        $owner_user_eid = $this->getOwner();
-
         $connection_identifier = '';
         $rpath = '';
         $service = $this->getServiceFromPath($path, $connection_identifier, $rpath);
