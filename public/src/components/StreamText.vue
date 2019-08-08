@@ -1,10 +1,11 @@
 <template>
   <div
     class="flex flex-column justify-center h-100"
-    v-if="state.is_fetching && !state.has_fetched"
+    v-if="is_fetching && !has_fetched"
   >
-    <Spinner size="large" :message="state.loading_text" />
+    <Spinner size="large" :message="loading_text" />
   </div>
+
   <CodeEditor
     class="h-100 overflow-auto"
     lang="text/html"
@@ -12,9 +13,10 @@
       lineNumbers: false,
       readOnly: true
     }"
-    v-model="state.text"
+    v-model="text"
     v-else-if="isHtml"
   />
+
   <CodeEditor
     class="h-100 overflow-auto"
     lang="json"
@@ -23,14 +25,15 @@
       lineNumbers: false,
       readOnly: true
     }"
-    v-model="state.text"
+    v-model="text"
     v-else-if="isJson"
   />
+
   <pre
     class="monospace ma0 pa2 h-100 overflow-auto"
     @scroll="onScroll"
     v-else
-  >{{state.text}}</pre>
+  >{{text}}</pre>
 </template>
 
 <script>
@@ -38,36 +41,38 @@
   import Spinner from 'vue-simple-spinner'
   import CodeEditor from '@/components/CodeEditor'
 
-  const INITIAL_DATA = {
-    is_fetching: false,
-    has_fetched: false,
-    loading_text: 'Loading text...',
-    total_fetched: 0,
-    chunk_size: 100000,
-    text_scroll_top: 0,
-    eof: false,
-    text: ''
+  const getInitialState = () => {
+    return {
+      is_fetching: false,
+      has_fetched: false,
+      loading_text: 'Loading text...',
+      total_fetched: 0,
+      chunk_size: 100000,
+      text_scroll_top: 0,
+      eof: false,
+      text: ''
+    }
   }
 
   export default {
     props: {
-      'stream-eid': {
+      streamEid: {
         type: String,
         required: true
       },
-      'content-url': {
+      contentUrl: {
         type: String,
         required: true
       },
-      'is-html': {
+      isHtml: {
         type: Boolean,
         default: false
       },
-      'is-json': {
+      isJson: {
         type: Boolean,
         default: false
       },
-      'query-params': {
+      queryParams: {
         type: Object
       }
     },
@@ -76,64 +81,59 @@
       CodeEditor
     },
     data() {
-      return {
-        state: _.assign({}, INITIAL_DATA)
-      }
+      return getInitialState()
     },
     watch: {
-      streamEid() {
-        this.initialFetch()
+      streamEid: {
+        immediate: true,
+        handler: 'initialFetch'
       }
-    },
-    mounted() {
-      this.initialFetch()
     },
     methods: {
       initialFetch() {
-        this.state = _.assign({}, INITIAL_DATA)
+        // reset our local component data
+        _.assign(this.$data, getInitialState())
 
-        if (this.isJson)
+        if (this.isJson) {
           this.fetchAll()
-           else
+        } else {
           this.fetchChunk()
+        }
       },
       fetchAll() {
         return this.fetchChunk(true)
       },
       fetchChunk(fetch_all) {
-        var state = this.state
-
         var fetch_url = this.contentUrl
         var params = _.assign({}, this.queryParams)
 
         if (fetch_all !== true)
         {
           _.assign(params, {
-            start: state.total_fetched,
-            limit: state.chunk_size,
+            start: this.total_fetched,
+            limit: this.chunk_size,
             format: 'data'
           })
         }
 
-        state.is_fetching = true
+        this.is_fetching = true
 
         axios.get(fetch_url, { params }).then(response => {
           var str = response.data
 
-          if (fetch_all === true || str.length < this.chunk_size)
-            state.eof = true
-
-          state.total_fetched += str.length
-
-          if (_.isObject(str))
-          {
-            str = JSON.stringify(str, null, 2)
+          if (fetch_all === true || str.length < this.chunk_size) {
+            this.eof = true
           }
-           else
-          {
+
+          this.total_fetched += str.length
+
+          if (_.isObject(str)) {
+            str = JSON.stringify(str, null, 2)
+          } else {
             // force string
-            if (!_.isString(str))
+            if (!_.isString(str)) {
               str = ''+str
+            }
 
             // since we're outputting raw text in a <pre> tag,
             // I don't think we want to escape the text here
@@ -142,36 +142,37 @@
             str = str.replace(/\r\n\n/g, '\r\n')
           }
 
-          state.text += str
+          this.text += str
 
-          state.is_fetching = false
-          state.has_fetched = true
+          this.is_fetching = false
+          this.has_fetched = true
         }).catch(error => {
-          state.is_fetching = false
-          state.has_fetched = true
+          this.is_fetching = false
+          this.has_fetched = true
         })
       },
       onScroll(evt) {
-        var state = this.state
-
-        if (state.is_fetching)
+        if (this.is_fetching) {
           return
+        }
 
         var scroll_top = evt.target.scrollTop
         var scroll_height = evt.target.scrollHeight
         var cli_height = evt.target.clientHeight
 
         // only handle vertical scrolling
-        if (scroll_top == state.text_scroll_top)
+        if (scroll_top == this.text_scroll_top)
           return
 
-        state.text_scroll_top = scroll_top
+        this.text_scroll_top = scroll_top
 
-        if (state.eof === true)
+        if (this.eof === true) {
           return
+        }
 
-        if (scroll_top+cli_height > scroll_height*0.75)
+        if (scroll_top+cli_height > scroll_height*0.75) {
           this.fetchChunk()
+        }
       }
     }
 

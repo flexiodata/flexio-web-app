@@ -348,7 +348,7 @@
         this.$store.commit('pipedocument/FETCHING_PIPE', true)
 
         // reset our local component data
-        Object.assign(this.$data, getInitialState())
+        _.assign(this.$data, getInitialState())
 
         var team_name = this.active_team_name
         var name = this.route_object_name
