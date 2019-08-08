@@ -268,11 +268,11 @@ class StoredProcess implements \Flexio\IFace\IProcess
                 return;
 
             case \Flexio\Jobs\Process::EVENT_STARTING_TASK:
-                $this->startLog($process_info);
+                //$this->startLog($process_info);
                 break;
 
             case \Flexio\Jobs\Process::EVENT_FINISHED_TASK:
-                $this->finishLog($process_info);
+                //$this->finishLog($process_info);
                 $this->updateProcessInfo($process_info);
                 break;
         }
