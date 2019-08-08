@@ -7,6 +7,39 @@
 @import "./element-ui-ext/style.styl"
 @import "./codemirror-ext/style.styl"
 
+// -- Vuebar styles --
+
+.vb > .vb-dragger
+  z-index: 5
+  margin: 3px
+  width: 6px
+  right: 0
+
+.vb > .vb-dragger > .vb-dragger-styler
+  backface-visibility: hidden
+  transition: background-color .15s ease-out, margin .15s ease-out, height .15s ease-out
+  background-color: rgba(0,0,0,.1)
+  border-radius: 9999px
+  height: calc(100% - 6px)
+  width: 6px
+  display: block
+
+.vb.vb-scrolling-phantom > .vb-dragger > .vb-dragger-styler
+  background-color: rgba(0,0,0,.5)
+
+.vb > .vb-dragger:hover > .vb-dragger-styler
+  background-color: rgba(0,0,0,.5)
+  margin: 0
+  height: calc(100% - 6px)
+
+.vb.vb-dragging > .vb-dragger > .vb-dragger-styler
+  background-color: rgba(0,0,0,.5)
+  margin: 0
+  height: calc(100% - 6px)
+
+.vb.vb-dragging-phantom > .vb-dragger > .vb-dragger-styler
+  background-color: rgba(0,0,0,.5)
+
 // -- VuePopper styles --
 
 .vue-popper-step

@@ -11,7 +11,7 @@
     <div class="flex-fill flex flex-row" v-if="pipes.length > 0">
       <template v-if="has_pipe">
         <!-- sidebar -->
-        <div class="flex flex-column min-w5 br b--black-05">
+        <div class="flex flex-column min-w5 bg-white br b--black-05">
           <!-- control bar -->
           <div class="flex-none ph3 pv2 relative bg-white bb b--black-05">
             <div class="flex flex-row">
@@ -32,37 +32,39 @@
           </div>
 
           <!-- list -->
-          <div class="flex-fill bg-white overflow-y-auto" style="max-width: 20rem">
-            <article
-              class="min-w5 pa3 bb b--black-05 bg-white hover-bg-nearer-white"
-              :title="pipe.name"
-              :class="isPipeSelected(pipe) ? 'relative bg-nearer-white' : ''"
-              @click="selectPipe(pipe)"
-              v-for="pipe in pipes"
-            >
-              <div class="flex flex-row items-center cursor-default">
-                <div class="flex-fill">
-                  <div class="flex flex-row items-center">
-                    <div
-                      class="br-100 mr2"
-                      style="width: 8px; height: 8px"
-                      :style="isPipeDeployed(pipe) ? 'background-color: #13ce66' : 'background-color: #dcdfe6'"
-                    ></div>
-                    <div class="flex-fill f5 fw6 cursor-default mr1 lh-title truncate">{{pipe.name}}</div>
+          <div style="max-width: 20rem" v-bar>
+            <div>
+              <article
+                class="min-w5 pa3 bb b--black-05 bg-white hover-bg-nearer-white"
+                :title="pipe.name"
+                :class="isPipeSelected(pipe) ? 'relative bg-nearer-white' : ''"
+                @click="selectPipe(pipe)"
+                v-for="pipe in pipes"
+              >
+                <div class="flex flex-row items-center cursor-default">
+                  <div class="flex-fill">
+                    <div class="flex flex-row items-center">
+                      <div
+                        class="br-100 mr2"
+                        style="width: 8px; height: 8px"
+                        :style="isPipeDeployed(pipe) ? 'background-color: #13ce66' : 'background-color: #dcdfe6'"
+                      ></div>
+                      <div class="flex-fill f5 fw6 cursor-default mr1 lh-title truncate">{{pipe.name}}</div>
+                    </div>
+                  </div>
+                  <div class="flex-none ml2" @click.stop>
+                      <el-dropdown trigger="click" @command="onCommand">
+                        <span class="el-dropdown-link dib pointer pa1 black-30 hover-black">
+                          <i class="material-icons v-mid">expand_more</i>
+                        </span>
+                        <el-dropdown-menu style="min-width: 10rem" slot="dropdown">
+                          <el-dropdown-item class="flex flex-row items-center ph2" command="delete" :item="pipe"><i class="material-icons mr3">delete</i> Delete</el-dropdown-item>
+                        </el-dropdown-menu>
+                      </el-dropdown>
                   </div>
                 </div>
-                <div class="flex-none ml2" @click.stop>
-                    <el-dropdown trigger="click" @command="onCommand">
-                      <span class="el-dropdown-link dib pointer pa1 black-30 hover-black">
-                        <i class="material-icons v-mid">expand_more</i>
-                      </span>
-                      <el-dropdown-menu style="min-width: 10rem" slot="dropdown">
-                        <el-dropdown-item class="flex flex-row items-center ph2" command="delete" :item="pipe"><i class="material-icons mr3">delete</i> Delete</el-dropdown-item>
-                      </el-dropdown-menu>
-                    </el-dropdown>
-                </div>
-              </div>
-            </article>
+              </article>
+            </div>
           </div>
         </div>
 

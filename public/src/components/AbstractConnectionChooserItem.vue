@@ -20,7 +20,7 @@
       </div>
 
       <div class="flex-fill flex flex-column">
-        <div class="f5 fw6 cursor-default mr1">{{cname}}</div>
+        <div class="f5 fw6 cursor-default mr1 lh-title truncate">{{cname}}</div>
         <div class="bt b--black-05" style="padding-top: 2px; margin-top: 2px; max-width: 12rem" v-if="showUrl && url.length > 0">
           <div class="light-silver f8 lh-copy truncate">{{url}}</div>
         </div>

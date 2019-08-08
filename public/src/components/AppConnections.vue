@@ -11,9 +11,9 @@
     <div class="flex-fill flex flex-row" v-if="connections.length > 0">
       <template v-if="has_connection">
         <!-- sidebar -->
-        <div class="flex flex-column min-w5 br b--black-05">
+        <div class="flex flex-column min-w5 bg-white br b--black-05">
           <!-- control bar -->
-          <div class="flex-none ph3 pv2 relative bg-white bb b--black-05">
+          <div class="flex-none ph3 pv2 relative bb b--black-05">
             <div class="flex flex-row">
               <div class="flex-fill flex flex-row items-center">
                 <h2 class="mv0 f3 fw6 mr3">Connections</h2>
@@ -32,22 +32,23 @@
           </div>
 
           <!-- list -->
-          <AbstractList
-            class="flex-fill bg-white overflow-y-auto"
-            ref="list"
-            layout="list"
-            item-component="AbstractConnectionChooserItem"
-            :selected-item.sync="connection"
-            :items="connections"
-            :item-options="{
-              itemCls: 'min-w5 pa3 bb b--black-05 bg-white hover-bg-nearer-white',
-              selectedCls: 'relative bg-nearer-white',
-              showDropdown: true,
-              dropdownItems: ['delete']
-            }"
-            @item-activate="selectConnection"
-            @item-delete="tryDeleteConnection"
-          />
+          <div style="max-width: 20rem" v-bar>
+            <AbstractList
+              ref="list"
+              layout="list"
+              item-component="AbstractConnectionChooserItem"
+              :selected-item.sync="connection"
+              :items="connections"
+              :item-options="{
+                itemCls: 'min-w5 pa3 bb b--black-05 bg-white hover-bg-nearer-white',
+                selectedCls: 'relative bg-nearer-white',
+                showDropdown: true,
+                dropdownItems: ['delete']
+              }"
+              @item-activate="selectConnection"
+              @item-delete="tryDeleteConnection"
+            />
+          </div>
         </div>
 
         <!-- content area -->
