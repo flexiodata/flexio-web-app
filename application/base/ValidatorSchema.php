@@ -528,7 +528,7 @@ class ValidatorSchema
             // custom formats
             case 'fx.eid':        $result = \Flexio\Base\Eid::isValid($data);                      break;
             case 'fx.identifier': $result = \Flexio\Base\Identifier::isValid($data);               break;
-            case 'fx.fieldname':  $result = \Flexio\Services\Postgres::isValidFieldName($data); break;
+            case 'fx.fieldname':  $result = \Flexio\Base\Structure::isValidFieldName($data);       break;
         }
 
         if ($result === false)
