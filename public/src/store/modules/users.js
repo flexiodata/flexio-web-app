@@ -98,7 +98,7 @@ const mutations = {
 
   'SIGNING_OUT' (state, { is_signing_out, is_silent_signout }) {
     state.is_signing_out = is_signing_out
-    state.is_silent_signout = is_signing_out ? !!is_silent_signout || false : false
+    state.is_silent_signout = is_signing_out ? !!is_silent_signout : false
   },
 
   'SIGNED_OUT' (state) {
@@ -167,17 +167,25 @@ const actions = {
   'signOut' ({ commit, dispatch }, { silent }) {
     commit('SIGNING_OUT', { is_signing_out: true, is_silent_signout: silent })
 
-    return api.signOut().then(response => {
-      // we need to give just a bit of breathing room for the UI to change
-      // the route to the sign in page before we update the state with these commits
-      setTimeout(() => {
-        commit('SIGNING_OUT', { is_signing_out: false })
-        commit('SIGNED_OUT')
-        dispatch('track', { event_name: 'Signed Out' })
+    const finishSignOut = () => {
+      commit('SIGNING_OUT', { is_signing_out: false })
+      commit('SIGNED_OUT')
+      dispatch('track', { event_name: 'Signed Out' })
 
-        // reset the store state globally (including all modules)
-        dispatch('resetState', {}, { root: true })
-      }, 1)
+      // reset the store state globally (including all modules)
+      dispatch('resetState', {}, { root: true })
+    }
+
+    return api.signOut().then(response => {
+      if (silent === true) {
+        // we can do this without the setTimeout()
+        // since silent sign outs don't change the route
+        finishSignOut()
+      } else {
+        // we need to give just a bit of breathing room for the UI to change
+        // the route to the sign in page before we update the state with these commits
+        setTimeout(() => { finishSignOut() }, 1)
+      }
       return response
     }).catch(error => {
       commit('SIGNING_OUT', { is_signing_out: false })
