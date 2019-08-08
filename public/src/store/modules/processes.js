@@ -179,12 +179,6 @@ const getters = {
     var items = _.sortBy(state.items, [ item => new Date(item.created) ])
     return items.reverse()
   },
-
-  getActiveDocumentProcesses (state, getters, root_state) {
-    var doc_id = root_state.active_document_identifier
-    var items = getters.getAllProcesses
-    return _.filter(items, p => _.get(p, 'parent.eid') === doc_id || _.get(p, 'parent.name') === doc_id)
-  },
 }
 
 export default {
