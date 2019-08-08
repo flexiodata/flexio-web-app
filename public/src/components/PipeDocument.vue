@@ -36,34 +36,16 @@
             />
           </div>
 
-          <div class="w-100 center mw-doc mt1" style="min-height: 20rem; margin-bottom: 10rem">
-            <el-collapse
-              class="el-collapse--plain"
-              v-model="active_collapse_items"
-            >
-              <!-- steps panel -->
-              <el-collapse-item
-                class="mb4 pv1 ph3 bg-white br2 css-white-box"
-                name="tasks"
-              >
-                <template slot="title">
-                  <div class="flex flex-row items-center">
-                    <span class="f4">Steps</span>
-                  </div>
-                </template>
-                <div class="pt3 ph3">
-                  <PipeBuilderList
-                    ref="task-list"
-                    :container-id="scrollbar_container_id"
-                    :has-errors.sync="has_errors"
-                    :active-item-idx.sync="active_task_idx"
-                    @cancel="cancelChanges"
-                    @save="saveChanges"
-                    v-model="edit_task_list"
-                  />
-                </div>
-              </el-collapse-item>
-            </el-collapse>
+          <div class="w-100 center mw-doc mt1 pa4 bg-white br2 css-white-box" style="min-height: 20rem; margin-bottom: 10rem">
+            <PipeBuilderList
+              ref="task-list"
+              :container-id="scrollbar_container_id"
+              :has-errors.sync="has_errors"
+              :active-item-idx.sync="active_task_idx"
+              @cancel="cancelChanges"
+              @save="saveChanges"
+              v-model="edit_task_list"
+            />
           </div>
         </div>
 
@@ -277,7 +259,6 @@
     },
     data() {
       return {
-        active_collapse_items: ['tasks'],
         active_task_idx: -1,
         scrollbar_container_id: _.uniqueId('pane-'),
         show_pipe_schedule_dialog: false,
