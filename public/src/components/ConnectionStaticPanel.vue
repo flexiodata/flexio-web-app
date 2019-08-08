@@ -141,4 +141,7 @@
     line-height: 1.5
   td:first-child::after
     content: ":"
+  tr:last-child
+    td
+      padding-bottom: 0
 </style>
