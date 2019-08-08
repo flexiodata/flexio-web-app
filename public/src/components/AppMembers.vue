@@ -7,7 +7,7 @@
   </div>
 
   <!-- joining -->
-  <div class="flex-fill flex flex-column bg-nearer-white overflow-y-auto" v-else-if="is_action_join">
+  <div class="flex-fill flex flex-column bg-nearer-white overflow-y-scroll" v-else-if="is_action_join">
     <!-- logged in user is not the same as the invited user -->
     <PageNotFound
       class="flex-fill"
@@ -51,7 +51,7 @@
   </div>
 
   <!-- fetched -->
-  <div class="flex flex-column bg-nearer-white overflow-y-auto" v-else-if="is_fetched">
+  <div class="flex flex-column bg-nearer-white overflow-y-scroll" v-else-if="is_fetched">
     <div class="pa5">
       <div class="w-100 center mw-doc pa4 bg-white br2 css-white-box overflow-hidden" style="min-height: 20rem">
         <el-alert
