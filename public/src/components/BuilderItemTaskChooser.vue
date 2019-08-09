@@ -13,17 +13,17 @@
     >
     </div>
 
-    <div class="flex flex-row flex-wrap items-center nl2" style="max-width: 46rem">
+    <div class="flex flex-row flex-wrap items-center">
       <div
-        class="br2 ma2 pv3 w4 pointer silver hover-blue ba css-list-item hint--top hint--medium-large"
+        class="css-local-item hint--top hint--medium-large"
         :key="item.op"
         :aria-label="item.description"
         @click="itemClick(item)"
         v-for="(item, index) in items"
       >
         <div class="flex flex-column justify-center items-center">
-          <i class="material-icons md-48">{{item.icon}}</i>
-          <div class="mt2 f6 fw6 ttu">{{item.name}}</div>
+          <i class="material-icons" style="font-size: 96px">{{item.icon}}</i>
+          <div class="css-local-item-title">{{item.name}}</div>
         </div>
       </div>
     </div>
@@ -82,3 +82,30 @@
     }
   }
 </script>
+
+<style lang="stylus" scoped>
+  @import '../stylesheets/variables.styl'
+
+  .css-local-item
+    border: 2px dashed rgba(0,0,0,0.075)
+    border-radius: 4px
+    color: #bbb
+    cursor: pointer
+    flex: 1 1
+    margin: 2%
+    min-width: calc( (100% / 3) - (4%) )
+    max-width: calc( (100% / 3) - (4%) )
+    padding: 32px 32px 42px
+    transition: all 0.15s ease
+
+    &:hover
+      background-color: $nearer-white
+      border: 2px solid $blue
+      color: $blue
+
+  .css-local-item-title
+    margin-top: .5rem
+    font-size: 1.25rem
+    font-weight: 600
+    text-transform: uppercase
+</style>
