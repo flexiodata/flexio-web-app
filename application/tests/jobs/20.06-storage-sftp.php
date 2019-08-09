@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        if (\Flexio\Tests\Base::TEST_EXTERNAL_STORAGE === true)
+        if (\Flexio\Tests\Base::TEST_EXTERNAL_STORAGE === false)
             return;
 
 
