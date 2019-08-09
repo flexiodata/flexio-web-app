@@ -27,9 +27,7 @@ class Test
         // TEST: \Flexio\Model\Search::exec(); search tests when results for single eid
 
         // BEGIN TEST
-        $info = array(
-        );
-        $eid = $pipe_model->create($info);
+        $eid = $pipe_model->create(["name"=>\Flexio\Base\Util::generateHandle()]);
         $path = "$eid";
         $result = $search_model->exec($path);
         $actual = $result;
