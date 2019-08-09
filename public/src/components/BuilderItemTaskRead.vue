@@ -230,25 +230,7 @@
         files = _.get(files, '[0].full_path', '')
         this.edit_values = _.assign({}, this.edit_values, { path: files })
         this.show_file_chooser_dialog = false
-      },
-      /*
-      addFiles() {
-        var files = this.$refs['file-chooser'].getSelectedFiles()
-        files = _.map(files, (f) => { return f.path })
-        var existing_files = _.get(this.edit_values, 'path', [])
-        if (!_.isArray(existing_files)) {
-          existing_files = [existing_files]
-        }
-        files = existing_files.concat(files)
-        this.edit_values = _.assign({}, this.edit_values, { path: files })
-        this.show_file_chooser_dialog = false
-      },
-      removeFile(idx) {
-        var files = _.get(this.edit_values, 'path', [])
-        files.splice(idx, 1)
-        this.edit_values = _.assign({}, this.edit_values, { path: files })
       }
-      */
     }
   }
 </script>
