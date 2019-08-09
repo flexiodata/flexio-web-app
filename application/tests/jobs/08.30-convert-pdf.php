@@ -24,7 +24,9 @@ class Test
             [
                 "op" => "convert",
                 "input" => [
-                    "format" => "pdf"
+                    "format" => "pdf",
+                    "pages" => "1"
+
                 ]
             ]
         ]);
