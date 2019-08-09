@@ -39,10 +39,6 @@ class List1 extends \Flexio\Jobs\Base
 
         // process buffer
         $params = $this->getJobParameters();
-
-        if (is_null($path))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Missing parameter 'path'");
-
         $results = self::doList($this, $params);
 
         $outstream = $process->getStdout();
@@ -55,6 +51,9 @@ class List1 extends \Flexio\Jobs\Base
     public static function doList($process, $params)
     {
         $path = $params['path'] ?? null;
+
+        if (is_null($path))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Missing parameter 'path'");
 
         $parts = \Flexio\Base\File::splitPath($path);
         $lastpart = array_pop($parts);
