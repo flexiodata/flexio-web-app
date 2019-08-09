@@ -199,7 +199,6 @@ class Stream implements \Flexio\IFace\IStream
         $this->properties['structure'] = array();
         $this->properties['file_created'] = null;
         $this->properties['file_modified'] = null;
-        $this->properties['connection_eid'] = '';
         $this->properties['created'] = null;
         $this->properties['updated'] = null;
     }
@@ -217,16 +216,6 @@ class Stream implements \Flexio\IFace\IStream
             $structure = $properties['structure'];
             $structure_object = \Flexio\Base\Structure::create($structure);
             $object->properties['structure'] = $structure_object->enum();
-        }
-
-        // add a default path, but only if a connection eid, isn't specified; TODO:
-        // this behavior is for consistency with the regular stream object; should
-        // uncouple the default path creation from the connection eid
-        if (!isset($properties['connection_eid']))
-        {
-            // default path
-            if (!isset($properties['path']))
-                $object->properties['path'] = \Flexio\Base\Util::generateHandle();
         }
 
         if (isset($properties['name']))

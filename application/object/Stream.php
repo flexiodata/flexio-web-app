@@ -484,7 +484,6 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
                 "structure" => null,
                 "file_created" => null,
                 "file_modified" => null,
-                "connection_eid" => null,
                 "expires" => null,
                 "owned_by" => null,
                 "created" => null,

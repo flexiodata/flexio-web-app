@@ -32,7 +32,6 @@ class Stream extends ModelBase
                 'structure'      => array('type' => 'string',  'required' => false, 'default' => '[]'),
                 'file_created'   => array('type' => 'date',    'required' => false, 'default' => null, 'allow_null' => true),
                 'file_modified'  => array('type' => 'date',    'required' => false, 'default' => null, 'allow_null' => true),
-                'connection_eid' => array('type' => 'string',  'required' => false, 'default' => ''), // validate with string instead of eid because of default
                 'expires'        => array('type' => 'date',    'required' => false, 'default' => null, 'allow_null' => true),
                 'owned_by'       => array('type' => 'string',  'required' => false, 'default' => ''),
                 'created_by'     => array('type' => 'string',  'required' => false, 'default' => '')
@@ -112,7 +111,6 @@ class Stream extends ModelBase
                 'structure'      => array('type' => 'string',  'required' => false),
                 'file_created'   => array('type' => 'date',    'required' => false, 'allow_null' => true),
                 'file_modified'  => array('type' => 'date',    'required' => false, 'allow_null' => true),
-                'connection_eid' => array('type' => 'eid',     'required' => false),
                 'expires'        => array('type' => 'date',    'required' => false, 'allow_null' => true),
                 'owned_by'       => array('type' => 'string',  'required' => false),
                 'created_by'     => array('type' => 'string',  'required' => false)
@@ -144,7 +142,7 @@ class Stream extends ModelBase
     public function list(array $filter) : array
     {
         $db = $this->getDatabase();
-        $allowed_items = array('eid', 'eid_status', 'owned_by', 'created_by', 'created_min', 'created_max', 'parent_eid', 'connection_eid', 'name', 'stream_type');
+        $allowed_items = array('eid', 'eid_status', 'owned_by', 'created_by', 'created_min', 'created_max', 'parent_eid', 'name', 'stream_type');
         $filter_expr = \Filter::build($db, $filter, $allowed_items);
         $limit_expr = \Limit::build($db, $filter);
 
@@ -177,7 +175,6 @@ class Stream extends ModelBase
                               'structure'            => $row['structure'],
                               'file_created'         => $row['file_created'],
                               'file_modified'        => $row['file_modified'],
-                              'connection_eid'       => $row['connection_eid'],
                               'expires'              => $row['expires'],
                               'eid_status'           => $row['eid_status'],
                               'owned_by'             => $row['owned_by'],

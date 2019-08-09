@@ -66,7 +66,6 @@ class Test
             },
             "file_created" : null,
             "file_modified" : null,
-            "connection_eid" :  null,
             "created" : null,
             "updated" : null
         }

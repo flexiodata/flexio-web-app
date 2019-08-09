@@ -109,12 +109,6 @@ class List1 extends \Flexio\Jobs\Base
                 'type' => $f['type']
             );
 
-            if (isset($f['.connection_eid']))
-                $entry['.connection_eid'] = $f['.connection_eid'];
-
-            if (isset($f['.connection_type']))
-                $entry['.connection_type'] = $f['.connection_type'];
-
             $results[] = $entry;
         }
 
