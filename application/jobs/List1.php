@@ -39,7 +39,7 @@ class List1 extends \Flexio\Jobs\Base
 
         // process buffer
         $params = $this->getJobParameters();
-        $results = self::doList($this, $params);
+        $results = self::doList($process, $params);
 
         $outstream = $process->getStdout();
         $outstream->setMimeType(\Flexio\Base\ContentType::JSON);
