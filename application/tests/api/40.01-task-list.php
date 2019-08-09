@@ -49,18 +49,20 @@ class Test
         foreach ($storage_items as $storage_location)
         {
             $idx++;
-            $folderpath = "$storage_location:/job-tests-" . \Flexio\Tests\Util::getTimestampName() . "/";
+            $folderpath = "/job-tests-" . \Flexio\Tests\Util::getTimestampName() . "/";
+            $full_folderpath = "$storage_location:$folderpath";
             $filename = \Flexio\Base\Util::generateHandle() . '.txt';
             $filepath = $folderpath . '/' . $filename;
             $task = \Flexio\Tests\Task::create([
                 ["op" => "write", "path" => $filepath],
-                ["op" => "list", "path" => $folderpath]
+                ["op" => "list", "path" => $full_folderpath]
             ]);
             $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
             $actual = json_decode($result['response'],true);
             $expected = '[{
                 "name":"'.$filename.'",
                 "path":"'.$folderpath.$filename.'",
+                "full_path":"'.$full_folderpath.$filename.'",
                 "type":"FILE"
             }]';
             \Flexio\Tests\Check::assertInArray("A.$idx", 'Process List; ('.$storage_location.') listing of folder with single file ' . $folderpath, $actual, $expected, $results);
