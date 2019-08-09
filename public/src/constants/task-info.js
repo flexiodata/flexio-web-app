@@ -13,7 +13,7 @@ const EXECUTE = {
 const EXTRACT = {
   op: ops.TASK_OP_EXTRACT,
   name: 'Extract',
-  description: 'Extra data from a dataset.',
+  description: 'Extract data from a dataset.',
   icon: 'launch',
   bg_color: 'bg-task-orange'
 }
