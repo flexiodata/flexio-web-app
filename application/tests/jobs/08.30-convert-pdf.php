@@ -24,7 +24,9 @@ class Test
             [
                 "op" => "convert",
                 "input" => [
-                    "format" => "pdf"
+                    "format" => "pdf",
+                    "pages" => "1"
+
                 ]
             ]
         ]);
@@ -62,7 +64,9 @@ class Test
         $task = self::createConvertTask();
         $stream = \Flexio\Tests\Util::createStream('/pdf/01.03-minimum.pdf');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
-        $actual = $process->getStdout()->getReader()->read(100);
+        $content = $process->getStdout()->getReader()->read();
+        $content = json_decode($content,true);
+        $actual = $content['content'][0]['text'];
         $expected = "  ";
         \Flexio\Tests\Check::assertString('C.1', 'Convert PDF; simple file',  $actual, $expected, $results);
 
@@ -70,8 +74,10 @@ class Test
         $task = self::createConvertTask();
         $stream = \Flexio\Tests\Util::createStream('/pdf/01.04-simple.pdf');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
-        $actual = $process->getStdout()->getReader()->read(100);
+        $content = $process->getStdout()->getReader()->read();
+        $content = json_decode($content,true);
+        $actual = $content['content'][0]['text'];
         $expected = "This is a test.\t  ";
-        \Flexio\Tests\Check::assertString('C.4', 'Convert PDF; simple file',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.2', 'Convert PDF; simple file',  $actual, $expected, $results);
     }
 }
