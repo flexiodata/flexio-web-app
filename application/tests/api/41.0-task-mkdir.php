@@ -81,17 +81,18 @@ class Test
         {
             $idx++;
             $foldername = 'empty_folder1';
-            $parentfolder = "$storage_location:/job-tests-" . \Flexio\Tests\Util::getTimestampName(); // folder path without trailing slash
+            $parentfolder = "/job-tests-" . \Flexio\Tests\Util::getTimestampName(); // folder path without trailing slash
             $mkdirfolder = $parentfolder . '/' . $foldername;
             $task = \Flexio\Tests\Task::create([
-                ["op" => "mkdir", "path" => $mkdirfolder],
-                ["op" => "list", "path" => $parentfolder]
+                ["op" => "mkdir", "path" => "$storage_location:$mkdirfolder"],
+                ["op" => "list", "path" => "$storage_location:$parentfolder"]
             ]);
             $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
             $actual = json_decode($result['response'],true);
             $expected = '[{
                 "name":"'.$foldername.'",
                 "path":"'.$mkdirfolder.'",
+                "full_path":"'.$storage_location.':'.$mkdirfolder.'",
                 "type":"DIR"
             }]';
             \Flexio\Tests\Check::assertInArray("A.$idx", 'Process Mkdir; ('.$storage_location.') creating an empty folder (no trailing slash after folder name); folder should be ' . $parentfolder, $actual, $expected, $results);
@@ -106,11 +107,11 @@ class Test
         {
             $idx++;
             $foldername = 'empty_folder2';
-            $parentfolder = "$storage_location:/job-tests-" . \Flexio\Tests\Util::getTimestampName(); // folder path with trailing slash
+            $parentfolder = "/job-tests-" . \Flexio\Tests\Util::getTimestampName(); // folder path with trailing slash
             $mkdirfolder = $parentfolder . '/' . $foldername . '/';
             $task = \Flexio\Tests\Task::create([
-                ["op" => "mkdir", "path" => $mkdirfolder],
-                ["op" => "list", "path" => $parentfolder]
+                ["op" => "mkdir", "path" => "$storage_location:$mkdirfolder"],
+                ["op" => "list", "path" => "$storage_location:$parentfolder"]
             ]);
             $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
             $actual = json_decode($result['response'],true);
@@ -119,6 +120,7 @@ class Test
             $expected = '[{
                 "name":"'.$foldername.'",
                 "path":"'.$expectedpath.'",
+                "full_path":"'.$storage_location.':'.$expectedpath.'",
                 "type":"DIR"
             }]';
             \Flexio\Tests\Check::assertInArray("B.$idx", 'Process Mkdir; ('.$storage_location.') creating an empty folder (trailing slash after folder name); folder should be ' . $parentfolder, $actual, $expected, $results);
