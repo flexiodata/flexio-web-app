@@ -109,29 +109,13 @@
           prop="users"
           label="Send invites to the following email addresses"
         >
-          <el-select
+          <TagSelect
             ref="email-invite-select"
             class="w-100"
             placeholder="Enter email addresses"
             spellcheck="false"
-            multiple
-            filterable
-            allow-create
-            default-first-option
-            popper-class="dn"
-            @visible-change="onEmailInviteSelectVisibleChange"
-            @keydown.native.tab="addUserTag"
-            @keydown.native.prevent.space="addUserTag"
-            @keydown.native.prevent.188="addUserTag"
             v-model="add_dialog_model.users"
-          >
-            <el-option
-              :label="option.label"
-              :value="option.val"
-              :key="option.val"
-              v-for="option in add_dialog_model.options"
-            />
-          </el-select>
+          />
         </el-form-item>
       </el-form>
       <div class="mt4 w-100 flex flex-row justify-end">
@@ -160,6 +144,7 @@
   import { isValidEmail } from '@/utils'
   import Spinner from 'vue-simple-spinner'
   import MemberItem from '@/components/MemberItem'
+  import TagSelect from '@/components/TagSelect'
   import PageNotFound from '@/components/PageNotFound'
 
   export default {
@@ -178,6 +163,7 @@
     components: {
       Spinner,
       MemberItem,
+      TagSelect,
       PageNotFound
     },
     watch: {
@@ -188,6 +174,11 @@
       is_fetched: {
         immediate: true,
         handler: 'checkAlreadyMember'
+      },
+      'add_dialog_model.users'() {
+        // for some reason the 'change' trigger doesn't work here --
+        // using a watcher here will have the same effect
+        this.$refs.form.validateField('users')
       }
     },
     data() {
@@ -334,21 +325,6 @@
           //this.join_error_msg = _.get(error, 'response.data.error.message', '')
           this.join_error_msg = 'There was a problem joining the team'
         })
-      },
-      onEmailInviteSelectVisibleChange(visible) {
-        // this is somewhat of a hack, but it allows the final text that was
-        // in the input to be added to the users array
-        if (!visible) {
-          this.addUserTag()
-          this.$refs.form.validateField('users')
-        }
-      },
-      addUserTag(evt) {
-        var val = _.get(this.$refs['email-invite-select'], '$refs.input.value', '').trim()
-        if (val.length > 0) {
-          this.add_dialog_model.users = this.add_dialog_model.users.concat([val])
-          evt && evt.preventDefault()
-        }
       },
       onAddDialogOpen() {
         this.$nextTick(() => this.$refs['email-invite-select'].focus())
