@@ -1,6 +1,8 @@
 <template>
   <div>
-    <p class="mt0 ttu fw6 f7 moon-gray">Choose a starting step</p>
+    <div class="tl pb3">
+      <h3 class="fw6 f3 mt0 mb2">Choose a starting step</h3>
+    </div>
     <BuilderItemTaskChooser
       :show-title="false"
       @task-chooser-select-task="selectTask"

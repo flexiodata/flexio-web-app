@@ -91,7 +91,6 @@
     border-radius: 4px
     color: #bbb
     cursor: pointer
-    flex: 1 1
     margin: 2%
     min-width: calc( (100% / 3) - (4%) )
     max-width: calc( (100% / 3) - (4%) )
