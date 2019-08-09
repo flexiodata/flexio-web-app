@@ -65,7 +65,7 @@
             />
           </div>
 
-          <div class="w-100 center mw-doc mt1 pa3 bg-white br2 css-white-box" style="min-height: 20rem; margin-bottom: 10rem">
+          <div class="w-100 center mw-doc mt1 pa4 bg-white br2 css-white-box" style="min-height: 20rem; margin-bottom: 10rem">
             <template v-if="is_keyring_connection">
               <div class="mb2 lh-copy ttu fw6 f6">Keypair Values</div>
               <JsonDetailsPanel
