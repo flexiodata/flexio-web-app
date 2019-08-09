@@ -22,7 +22,7 @@
         v-for="(item, index) in items"
       >
         <div class="flex flex-column justify-center items-center">
-          <i class="material-icons" style="font-size: 96px">{{item.icon}}</i>
+          <i class="material-icons md-72">{{item.icon}}</i>
           <div class="step-chooser-item-title">{{item.name}}</div>
         </div>
       </div>
@@ -104,8 +104,8 @@
       color: $blue
 
   .step-chooser-item-title
-    margin-top: .5rem
-    font-size: 1.25rem
+    margin-top: 1rem
+    font-size: 1rem
     font-weight: 600
     text-transform: uppercase
 </style>
