@@ -18,6 +18,8 @@ namespace Flexio\Tests;
 
 class Base
 {
+    public const TEST_EXTERNAL_STORAGE = false;
+
     public const ERROR_EXCEPTION = 'error-exception';
     public const ERROR_NO_EXCEPTION = 'error-no-exception';
     public const ERROR_BAD_PARSE = 'error-bad-parse';

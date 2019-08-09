@@ -20,6 +20,10 @@ class Test
 {
     public function run(&$results)
     {
+        if (\Flexio\Tests\Base::TEST_EXTERNAL_STORAGE === true)
+            return;
+
+
         // SETUP
         $process_owner = \Flexio\Tests\Util::getTestStorageOwner();
         $files = \Flexio\Tests\Util::getTestDataSamples();

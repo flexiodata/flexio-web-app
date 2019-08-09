@@ -32,16 +32,20 @@ class Test
         $password2 = \Flexio\Base\Password::generate();
         $userid2 = \Flexio\Tests\Util::createUser(null, null, $password2);
         $token2 = \Flexio\Tests\Util::createToken($userid2);
-        $storage_items = [
-            \Flexio\Tests\Base::STORAGE_FLEX,
-            \Flexio\Tests\Base::STORAGE_AMAZONS3,
-            \Flexio\Tests\Base::STORAGE_BOX,
-            \Flexio\Tests\Base::STORAGE_DROPBOX,
-            \Flexio\Tests\Base::STORAGE_GITHUB,
-            \Flexio\Tests\Base::STORAGE_GOOGLEDRIVE,
-            //\Flexio\Tests\Base::STORAGE_GOOGLECLOUDSTORAGE,
-            \Flexio\Tests\Base::STORAGE_SFTP
-        ];
+
+        $storage_items = array();
+        $storage_items[] = \Flexio\Tests\Base::STORAGE_FLEX;
+        if (\Flexio\Tests\Base::TEST_EXTERNAL_STORAGE === true)
+        {
+            $storage_items[] = \Flexio\Tests\Base::STORAGE_AMAZONS3;
+            $storage_items[] = \Flexio\Tests\Base::STORAGE_BOX;
+            $storage_items[] = \Flexio\Tests\Base::STORAGE_DROPBOX;
+            $storage_items[] = \Flexio\Tests\Base::STORAGE_GITHUB;
+            $storage_items[] = \Flexio\Tests\Base::STORAGE_GOOGLEDRIVE;
+            //$storage_items[] = \Flexio\Tests\Base::STORAGE_GOOGLECLOUDSTORAGE;
+            $storage_items[] = \Flexio\Tests\Base::STORAGE_SFTP;
+        }
+
         $test_connection_eids = array();
 
         $params = array(

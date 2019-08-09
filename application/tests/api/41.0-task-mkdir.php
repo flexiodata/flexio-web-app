@@ -58,16 +58,19 @@ class Test
         $apibase = \Flexio\Tests\Util::getTestHost() . '/v1';
         $userid = \Flexio\Tests\Util::getTestStorageOwner();
         $token = \Flexio\Tests\Util::getTestStorageOwnerToken();
-        $storage_items = [
-            \Flexio\Tests\Base::STORAGE_FLEX,
-            \Flexio\Tests\Base::STORAGE_AMAZONS3,
-            \Flexio\Tests\Base::STORAGE_BOX,
-            \Flexio\Tests\Base::STORAGE_DROPBOX,
-            //\Flexio\Tests\Base::STORAGE_GITHUB,  // git doesn't support folder creation without files in a folder
-            \Flexio\Tests\Base::STORAGE_GOOGLEDRIVE,
-            //\Flexio\Tests\Base::STORAGE_GOOGLECLOUDSTORAGE,
-            \Flexio\Tests\Base::STORAGE_SFTP
-        ];
+
+        $storage_items = array();
+        $storage_items[] = \Flexio\Tests\Base::STORAGE_FLEX;
+        if (\Flexio\Tests\Base::TEST_EXTERNAL_STORAGE === true)
+        {
+            $storage_items[] = \Flexio\Tests\Base::STORAGE_AMAZONS3;
+            $storage_items[] = \Flexio\Tests\Base::STORAGE_BOX;
+            $storage_items[] = \Flexio\Tests\Base::STORAGE_DROPBOX;
+            //$storage_items[] = \Flexio\Tests\Base::STORAGE_GITHUB;
+            $storage_items[] = \Flexio\Tests\Base::STORAGE_GOOGLEDRIVE;
+            //$storage_items[] = \Flexio\Tests\Base::STORAGE_GOOGLECLOUDSTORAGE;
+            $storage_items[] = \Flexio\Tests\Base::STORAGE_SFTP;
+        }
 
 
         // TEST: creating an empty folder (no trailing slash after folder name)
