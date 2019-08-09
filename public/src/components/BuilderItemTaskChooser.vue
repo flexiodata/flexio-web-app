@@ -15,7 +15,7 @@
 
     <div class="flex flex-row flex-wrap items-center">
       <div
-        class="css-local-item hint--top hint--medium-large"
+        class="step-chooser-item hint--top hint--medium-large"
         :key="item.op"
         :aria-label="item.description"
         @click="itemClick(item)"
@@ -23,7 +23,7 @@
       >
         <div class="flex flex-column justify-center items-center">
           <i class="material-icons" style="font-size: 96px">{{item.icon}}</i>
-          <div class="css-local-item-title">{{item.name}}</div>
+          <div class="step-chooser-item-title">{{item.name}}</div>
         </div>
       </div>
     </div>
@@ -86,7 +86,7 @@
 <style lang="stylus" scoped>
   @import '../stylesheets/variables.styl'
 
-  .css-local-item
+  .step-chooser-item
     border: 2px dashed rgba(0,0,0,0.075)
     border-radius: 4px
     color: #bbb
@@ -103,7 +103,7 @@
       border: 2px solid $blue
       color: $blue
 
-  .css-local-item-title
+  .step-chooser-item-title
     margin-top: .5rem
     font-size: 1.25rem
     font-weight: 600
