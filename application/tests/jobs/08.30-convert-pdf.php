@@ -72,6 +72,6 @@ class Test
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getReader()->read(100);
         $expected = "This is a test.\t  ";
-        \Flexio\Tests\Check::assertString('C.4', 'Convert PDF; simple file',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.2', 'Convert PDF; simple file',  $actual, $expected, $results);
     }
 }
