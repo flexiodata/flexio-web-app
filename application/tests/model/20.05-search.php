@@ -28,9 +28,7 @@ class Test
         // TEST: \Flexio\Model\Search::exec(); make sure that duplicate edges and eids are removed in search
 
         // BEGIN TEST
-        $info = array(
-        );
-        $eid = $pipe_model->create($info);
+        $eid = $pipe_model->create(["name"=>\Flexio\Base\Util::generateHandle()]);
         $path = "$eid,$eid";
         $result = $search_model->exec($path);
         $actual = $result;
@@ -40,9 +38,7 @@ class Test
         \Flexio\Tests\Check::assertArray('A.1', '\Flexio\Model\Search::exec(); make sure that duplicate edges and eids are removed in search',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $info = array(
-        );
-        $eid = $pipe_model->create($info);
+        $eid = $pipe_model->create(["name"=>\Flexio\Base\Util::generateHandle()]);
         $path = "($eid,$eid)";
         $result = $search_model->exec($path);
         $actual = $result;
@@ -52,9 +48,7 @@ class Test
         \Flexio\Tests\Check::assertArray('A.2', '\Flexio\Model\Search::exec(); make sure that duplicate edges and eids are removed in search',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $info = array(
-        );
-        $eid = $pipe_model->create($info);
+        $eid = $pipe_model->create(["name"=>\Flexio\Base\Util::generateHandle()]);
         $path = "($eid,$eid,$eid,$eid,$eid,$eid,$eid,$eid,$eid,$eid)";
         $result = $search_model->exec($path);
         $actual = $result;

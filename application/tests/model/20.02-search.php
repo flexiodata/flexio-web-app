@@ -49,9 +49,7 @@ class Test
         \Flexio\Tests\Check::assertArray('A.2', '\Flexio\Model\Search::exec(); return empty array when results can\'t be found',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $info = array(
-        );
-        $eid1 = $pipe_model->create($info);
+        $eid1 = $pipe_model->create(["name"=>\Flexio\Base\Util::generateHandle()]);
         $eid2 = \Flexio\Base\Eid::generate();
         $path = "$eid2";
         $result = $search_model->exec($path);
