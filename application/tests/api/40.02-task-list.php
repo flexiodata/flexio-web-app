@@ -49,11 +49,12 @@ class Test
         foreach ($storage_items as $storage_location)
         {
             $idx++;
-            $folderpath = "$storage_location:/job-tests-" . \Flexio\Tests\Util::getTimestampName() . "/";
+            $folderpath = "/job-tests-" . \Flexio\Tests\Util::getTimestampName() . "/";
+            $full_folderpath = "$storage_location:$folderpath";
             $filename1 = \Flexio\Base\Util::generateHandle() . '.txt';
             $filename2 = \Flexio\Base\Util::generateHandle() . '.txt';
-            $filepath1 = $folderpath . '/' . $filename1;
-            $filepath2 = $folderpath . '/' . $filename2;
+            $filepath1 = $full_folderpath . '/' . $filename1;
+            $filepath2 = $full_folderpath . '/' . $filename2;
             $task = \Flexio\Tests\Task::create([
                 ["op" => "write", "path" => $filepath1],
                 ["op" => "write", "path" => $filepath2],
@@ -64,6 +65,7 @@ class Test
             $expected = '[{
                 "name":"'.$filename1.'",
                 "path":"'.$folderpath.$filename1.'",
+                "full_path":"'.$full_folderpath.$filename1.'",
                 "type":"FILE"
             }]';
             \Flexio\Tests\Check::assertInArray("B.$idx", 'Process List; ('.$storage_location.') listing of a file within a folder with multiple files' . $folderpath, $actual, $expected, $results);

@@ -60,7 +60,7 @@ class Test
         }
 
         $tests = [
-            ["pattern" => "/*.txt",       "expected" => ["file1.txt"]],
+            ["pattern" => "/file*.txt",       "expected" => ["file1.txt"]],
             ["pattern" => "/*.csv",       "expected" => ["file2.csv","file5.csv"]],
             ["pattern" => "/*.png",       "expected" => ["file3.png"]],
             ["pattern" => "/*.jpg",       "expected" => ["file4.jpg"]],
