@@ -28,7 +28,7 @@
         <el-input
           type="password"
           placeholder="Current Password"
-          autocomplete="off"
+          auto-complete="off"
           spellcheck="false"
           :autofocus="true"
           v-model="old_password"
@@ -43,7 +43,7 @@
         <el-input
           type="password"
           placeholder="New Password"
-          autocomplete="off"
+          auto-complete="off"
           spellcheck="false"
           v-model="new_password"
         />
@@ -57,7 +57,7 @@
         <el-input
           type="password"
           placeholder="Confirm New Password"
-          autocomplete="off"
+          auto-complete="off"
           spellcheck="false"
           v-model="new_password2"
         />

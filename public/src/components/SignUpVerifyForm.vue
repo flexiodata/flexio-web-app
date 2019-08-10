@@ -13,7 +13,7 @@
           ref="input-email"
           type="email"
           placeholder="Email address"
-          autocomplete="off"
+          auto-complete="off"
           spellcheck="false"
           class="input-reset ba b--black-10 br2 focus-b--blue lh-title ph3 pv2a w-100"
           :disabled="justSignedUp ? true : false"

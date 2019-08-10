@@ -55,7 +55,7 @@
         v-show="edit_values.remote_state == 'remote'"
       >
         <el-input
-          autocomplete="off"
+          auto-complete="off"
           spellcheck="false"
           placeholder="URL"
           :autofocus="true"

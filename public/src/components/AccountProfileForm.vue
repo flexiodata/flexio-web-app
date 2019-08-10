@@ -27,7 +27,7 @@
       >
         <el-input
           placeholder="First Name"
-          autocomplete="off"
+          auto-complete="off"
           spellcheck="false"
           :autofocus="true"
           v-model="edit_info.first_name"
@@ -41,7 +41,7 @@
       >
         <el-input
           placeholder="Last Name"
-          autocomplete="off"
+          auto-complete="off"
           spellcheck="false"
           v-model="edit_info.last_name"
         />
@@ -54,7 +54,7 @@
       >
         <el-input
           placeholder="Username"
-          autocomplete="off"
+          auto-complete="off"
           spellcheck="false"
           v-model="edit_info.username"
         />
@@ -67,7 +67,7 @@
       >
         <el-input
           placeholder="Email Address"
-          autocomplete="off"
+          auto-complete="off"
           :disabled="true"
           v-model="current_email"
         />

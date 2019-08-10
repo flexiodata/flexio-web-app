@@ -27,7 +27,9 @@
           <div class="ph2 pv2 f4 fw6 tc">{{current_plan['Name']}}</div>
           <div class="ph2 pv2 tc">
             <div>{{current_plan['Executions']}} executions</div>
+            <!--
             <div class="mt1 o-40" style="font-size: 12px; line-height: 1.25">+ ${{current_plan['Extra Executions']}} per additional execution</div>
+            -->
           </div>
           <div class="ph2 pv2">
             <span class="f1">${{current_plan['Price']}}</span><span class="f6">/mo</span>
@@ -49,7 +51,7 @@
       <div class="mb3 f7 silver ttu fw6">Choose a plan</div>
       <div class="flex flex-column flex-row-l items-stretch justify-between nl2 nr2">
         <div
-          class="mh2 mb3 mb0-l ph3 tc br3 cursor-default"
+          class="flex-fill mh2 mb3 mb0-l ph3 tc br3 cursor-default"
           style="box-shadow: inset 0 -4px 12px rgba(0,0,0,0.075)"
           :class="isPlanNameSame(plan['Name'], current_plan_name) ? 'bg-blue white' : 'bg-nearer-white'"
           :key="plan['Name']"
@@ -61,7 +63,9 @@
           </div>
           <div class="mt4 mb3">
             <div>{{plan['Executions']}} executions</div>
+            <!--
             <div class="mt1 o-40" style="font-size: 12px; line-height: 1.25">+ ${{plan['Extra Executions']}} per additional execution</div>
+            -->
           </div>
           <div class="mv3 pt2 pb1">
             <div v-if="isPlanNameSame(plan['Name'], current_plan_name)">
@@ -109,9 +113,11 @@
       FreeTrialNotice
     },
     data() {
+      var my_plans = _.filter(plans, (p) => { return p['Name'] != 'Enterprise' })
+
       return {
         is_editing: false,
-        plans: plans,
+        plans: my_plans,
         current_plan_name: ''
       }
     },

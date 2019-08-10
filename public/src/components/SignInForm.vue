@@ -15,7 +15,7 @@
           ref="input-username"
           type="text"
           placeholder="Email or username"
-          autocomplete=off
+          auto-complete="off"
           spellcheck="false"
           :class="input_cls"
           v-model="username"
@@ -26,7 +26,7 @@
           ref="input-password"
           type="password"
           placeholder="Password"
-          autocomplete=off
+          auto-complete="off"
           spellcheck="false"
           :class="input_cls"
           @keyup.enter="trySignIn"

@@ -1,11 +1,11 @@
 <template>
   <div>
     <ServiceItem
-      v-for="(service, ctype) in services"
-      :key="ctype"
       :item="service"
       :layout="layout"
+      :key="ctype"
       @activate="onItemActivate"
+      v-for="(service, ctype) in services"
     />
   </div>
 </template>

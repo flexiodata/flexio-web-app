@@ -33,7 +33,7 @@ const meta = { requiresAuth: true }
 const routes = [
   { path: '/', redirect: '/pipes' }, // base path redirect
   { path: '/signin',                                name: rn.ROUTE_SIGNIN_PAGE,         component: SignInPage                },
-  { path: '/signout',                               name: rn.ROUTE_SIGNIN_PAGE,         component: SignOutPage               },
+  { path: '/signout',                               name: rn.ROUTE_SIGNOUT_PAGE,        component: SignOutPage               },
   { path: '/signup/:action?',                       name: rn.ROUTE_SIGNUP_PAGE,         component: SignUpPage                },
   { path: '/forgotpassword',                        name: rn.ROUTE_FORGOTPASSWORD_PAGE, component: ForgotPasswordPage        },
   { path: '/resetpassword',                         name: rn.ROUTE_RESETPASSWORD_PAGE,  component: ResetPasswordPage         },

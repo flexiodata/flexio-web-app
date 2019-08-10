@@ -26,7 +26,7 @@
         prop="lookup_path"
       >
         <el-input
-          autocomplete="off"
+          auto-complete="off"
           spellcheck="false"
           placeholder="Enter the lookup file or table"
           v-model="edit_values.lookup_path"
@@ -60,10 +60,10 @@
           v-tag
         >
           <el-option
-            v-for="item in []"
-            :key="item.value"
             :label="item.label"
             :value="item.value"
+            :key="item.value"
+            v-for="item in []"
           />
         </el-select>
       </el-form-item>
@@ -85,10 +85,10 @@
           v-tag
         >
           <el-option
-            v-for="item in []"
-            :key="item.value"
             :label="item.label"
             :value="item.value"
+            :key="item.value"
+            v-for="item in []"
           />
         </el-select>
       </el-form-item>

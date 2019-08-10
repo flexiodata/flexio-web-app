@@ -1,11 +1,11 @@
 <template>
   <div>
     <TimeChooserItem
-      v-for="(time, index) in times"
       :item="time"
       :index="index"
       @change="onItemChange"
       @delete="onItemDelete"
+      v-for="(time, index) in times"
     />
   </div>
 </template>

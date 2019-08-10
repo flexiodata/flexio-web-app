@@ -23,15 +23,15 @@
       </thead>
       <tbody class="lh-copy">
         <FileChooserItem
-          v-for="(item, index) in items"
           :item="item"
           :index="index"
-          :key="item.full_path"
           :columns="columns"
+          :key="item.full_path"
           @click="itemClick"
           @ctrl-click="itemCtrlClick"
           @shift-click="itemShiftClick"
           @dblclick="itemDblClick"
+          v-for="(item, index) in items"
         />
       </tbody>
     </table>
