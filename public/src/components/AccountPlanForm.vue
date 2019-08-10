@@ -52,6 +52,7 @@
           class="mh2 mb3 mb0-l ph3 tc br3 cursor-default"
           style="box-shadow: inset 0 -4px 12px rgba(0,0,0,0.075)"
           :class="isPlanNameSame(plan['Name'], current_plan_name) ? 'bg-blue white' : 'bg-nearer-white'"
+          :key="plan['Name']"
           v-for="plan in plans"
         >
           <div class="mv4 fw6">{{plan['Name']}}</div>
