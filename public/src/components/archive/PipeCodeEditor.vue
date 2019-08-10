@@ -1,179 +1,215 @@
 <template>
   <div>
-    <!-- code editor -->
-    <div class="relative bg-white ba b--black-10 lh-title">
-      <CodeEditor
-        lang="javascript"
-        v-model="edit_code"
-      />
-    </div>
-
-    <!-- syntax error message and cancel/save buttons -->
-    <transition name="slide-fade">
-      <div class="flex flex-row items-start mt2" v-if="is_changed">
-        <div class="flex-fill mr4">
-          <transition name="slide-fade">
-            <div class="f7 dark-red pre overflow-y-hidden overflow-x-auto code" v-if="syntax_msg.length > 0">{{syntax_msg}}</div>
-          </transition>
-        </div>
-        <el-button
-          size="mini"
-          class="ttu b"
-          @click="cancelEdit"
-        >
-          Cancel
-        </el-button>
-        <el-button
-          size="mini"
-          type="primary"
-          class="ttu b"
-          @click="saveChanges"
-        >
-          Save Changes
-        </el-button>
-      </div>
-    </transition>
-
-    <!-- preview -->
-    <PipeContent
-      class="mt3 relative"
-      :stream-eid="last_stream_eid"
-      v-if="last_stream_eid.length > 0 && !is_process_failed"
+    <CodeEditor
+      :class="editorCls"
+      :lang.sync="lang"
+      :lint="true"
+      :enable-json-view-toggle="!has_errors"
+      v-bind="$attrs"
+      v-model="edit_code"
     />
+    <transition name="el-zoom-in-top">
+      <div class="f8 dark-red pre overflow-y-hidden overflow-x-auto code mt1" v-if="has_errors && false">{{error_msg}}</div>
+    </transition>
   </div>
 </template>
 
 <script>
-  import { PROCESS_STATUS_FAILED } from '../constants/process'
-  import Flexio from 'flexio-sdk-js'
-  import CodeEditor from './CodeEditor.vue'
-  import PipeContent from './PipeContent.vue'
+  import yaml from 'js-yaml'
+  import CodeEditor from '@/components/CodeEditor'
+
+  // TODO: remove 'omitDeep' once we get rid of step eids
+  const omitDeep = (collection, excludeKeys) => {
+    function omitFn(val) {
+      if (val && typeof val === 'object') {
+        excludeKeys.forEach((key) => {
+          delete val[key]
+        })
+      }
+    }
+
+    return _.cloneDeepWith(collection, omitFn)
+  }
 
   export default {
+    inheritAttrs: false,
     props: {
-      'pipe-options': {
+      value: {
         type: Object,
-        default: () => { return {} }
-      },
-      'tasks': {
-        type: Array,
         required: true
       },
-      'active-process': {
-        type: Object
+      type: {
+        type: String,
+        default: 'yaml' // 'json', 'yaml'
       },
-      'is-process-running': {
-        type: Boolean
+      editorCls: {
+        type: String,
+        default: 'bg-white ba b--black-10'
+      },
+      taskOnly: {
+        type: Boolean,
+        default: true
+      },
+      hasErrors: {
+        type: Boolean,
+        required: true
       }
     },
     components: {
-      CodeEditor,
-      PipeContent
+      CodeEditor
     },
-    inject: ['pipeEid'],
     watch: {
-      edit_code() {
-        this.syntax_msg = ''
+      value: {
+        handler: 'initFromPipeTask',
+        immediate: true,
+        deep: true
+      },
+      type: {
+        handler: 'onTypeChange'
+      },
+      lang: {
+        handler: 'onLangChange'
+      },
+      edit_code: {
+        handler: 'onEditCodeChange'
+      },
+      has_errors: {
+        handler: 'onErrorChange'
       }
     },
     data() {
-      // do this until we fix the object ref issue in the Flex.io JS SDK
-      var items = _.cloneDeep(this.tasks)
-      var edit_code = Flexio.pipe({ op: 'sequence', items }).toCode()
-
       return {
-        edit_code,
-        syntax_msg: ''
+        is_inited: false,
+        is_editing: false,
+        orig_code: '',
+        edit_code: '',
+        lang: this.type,
+        error_msg: ''
       }
     },
     computed: {
-      orig_code() {
-        // do this until we fix the object ref issue in the Flex.io JS SDK
-        var items = _.cloneDeep(this.tasks)
-        return Flexio.pipe({ op: 'sequence', items }).toCode()
-      },
-      is_changed() {
-        return this.orig_code != this.edit_code
-      },
-      // find the active subprocess by finding this task eid in the subprocess array
-      last_subprocess() {
-        return _
-          .chain(this.activeProcess)
-          .get('log')
-          .last()
-          .value()
-      },
-      last_stream_eid() {
-        return _.get(this.last_subprocess, 'output.stdout.eid', '')
-      },
-      active_process_status() {
-        return _.get(this.activeProcess, 'process_status', '')
-      },
-      is_process_failed() {
-        return this.active_process_status == PROCESS_STATUS_FAILED
-      },
-      save_code() {
-        // TODO: we need to give this code editor quite a bit of love...
-        // this is a bit of a kludge that allows pipe code to be pasted with a .run()
-        var code = this.edit_code
-        var idx = code.indexOf('.run')
-        if (idx >= 0)
-          code = code.substring(0, idx)
-        return code.trim()
+      has_errors() {
+        return this.error_msg.length > 0
       }
     },
     methods: {
-      getEditCode() {
-        return this.edit_code
-      },
-      cancelEdit() {
-        // reset the edit json
-        this.edit_code = this.orig_code
-
-        this.$nextTick(() => {
-          // reset the code in the code editor
-          var code_editor = this.$refs['code']
-          if (!_.isNil(code_editor))
-            code_editor.reset()
-
-          // reset the edit json
-          this.updateCode(this.orig_code)
-        })
-      },
-      saveChanges() {
-        try {
-          // create a function to create the JS SDK code to call
-          var fn = (Flexio, callback) => { return eval(this.save_code) }
-
-          // get access to pipe object
-          var pipe = fn.call(this, Flexio)
-
-          if (!Flexio.util.isPipeObject(pipe))
-            throw({ message: 'Invalid pipe syntax. Pipes must start with `Flexio.pipe()`.' })
-
-          // get the pipe task JSON
-          var task = _.get(pipe.getJSON(), 'task', { op: 'sequence', items: [] })
-
-          var eid = this.pipeEid
-          var attrs = { task }
-
-          this.syntax_msg = ''
-
-          return this.$store.dispatch('updatePipe', { eid, attrs }).then(response => {
-            if (response.ok)
-            {
-              this.edit_code = this.orig_code
-            }
-             else
-            {
-              // TODO: add error handling
-            }
-          })
+      initFromPipeTask(force) {
+        if (this.is_editing && force != true) {
+          return
         }
-        catch(e)
-        {
-          this.syntax_msg = e.message
-          return null
+
+        this.is_inited = false
+
+        try {
+          // TODO: remove 'omitDeep' once we get rid of step eids
+          var pipe = _.cloneDeep(this.value)
+          var task = omitDeep(pipe, ['eid'])
+
+          switch (this.type) {
+            case 'json':
+            case 'yaml':
+              if (this.lang == 'yaml') {
+                // YAML view; stringify JSON into YAML
+                this.edit_code = yaml.safeDump(task)
+              } else {
+                // JSON view; stringify JSON and indent 2 spaces
+                this.edit_code = JSON.stringify(task, null, 2)
+              }
+              break
+          }
+
+          // set original code so we know if we've edited it or not
+          this.orig_code = this.edit_code
+          this.error_msg = ''
+        }
+        catch (e) {
+          this.error_msg = e.message
+        }
+
+        this.is_editing = false
+        this.$nextTick(() => { this.is_inited = true })
+      },
+      revert() {
+        this.initFromPipeTask(true)
+      },
+      onErrorChange() {
+        this.$emit('update:hasErrors', this.has_errors ? true : false)
+      },
+      onTypeChange() {
+        this.lang = this.type
+        this.initFromPipeTask(true)
+      },
+      onLangChange() {
+        this.initFromPipeTask(true)
+      },
+      onEditCodeChange() {
+        // avoid infinite loop (we emit a value change in this function which
+        // will cause the value watcher to call `initFromPipeTask`, etc.)
+        if (!this.is_inited) {
+          return
+        }
+
+        this.is_editing = true
+
+        var obj = null
+        var task = null
+        var pipe = null
+
+        switch (this.type) {
+          case 'json':
+          case 'yaml':
+            try {
+              if (this.lang == 'yaml') {
+                // YAML view
+                obj = yaml.safeLoad(this.edit_code)
+              } else {
+                // JSON view
+                obj = JSON.parse(this.edit_code)
+              }
+
+              this.error_msg = ''
+            }
+            catch (e)
+            {
+              this.error_msg = 'Parse error: ' + e.message
+            }
+            break
+        }
+
+        if (this.taskOnly) {
+          // we're only dealing with the step JSON
+          task = _.cloneDeep(obj)
+
+          if (_.isNil(task)) {
+            this.$emit('input', { op: 'sequence', items: [] })
+            return
+          }
+
+          try {
+            if (_.isNil(task.op)) {
+              throw({ message: 'Functions must have an `op` node' })
+            } else if (task.op != 'sequence') {
+              throw({ message: 'The `op` node must be "sequence"' })
+            } else if (_.isNil(task.items)) {
+              throw({ message: 'Functions must have an `items` node' })
+            } else if (!_.isArray(task.items)) {
+              throw({ message: 'The `items` node must be an array' })
+            }
+
+            this.$emit('input', { op: 'sequence', items: task.items })
+            this.error_msg = ''
+          }
+          catch (e) {
+            this.$emit('input', { op: 'sequence', items: [] })
+            this.error_msg = e.message
+          }
+        } else {
+          // we're dealing with the full function JSON
+          pipe = _.cloneDeep(obj)
+
+          // TODO: add try/catch error checking here
+
+          this.$emit('input', pipe)
         }
       }
     }
