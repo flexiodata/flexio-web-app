@@ -3,21 +3,6 @@ import Vuebar from 'vuebar'
 Vue.use(Vuebar)
 
 Vue.directive('tag', {
-  bind: function(el, binding, vnode) {
-    // only apply this directive for `el-select` components
-    if (_.get(vnode.componentOptions, 'tag') != 'el-select') {
-      return
-    }
-
-    var component = vnode.componentInstance
-
-    // required properties for multiple tag select element
-    component.multiple = true
-    component.filterable = true
-    component.allowCreate = true
-    component.defaultFirstOption = true
-    component.popperClass = 'dn'
-  },
   inserted: function(el, binding, vnode) {
     // only apply this directive for `el-select` components
     if (_.get(vnode.componentOptions, 'tag') != 'el-select') {
@@ -25,13 +10,6 @@ Vue.directive('tag', {
     }
 
     var component = vnode.componentInstance
-
-    // required properties for multiple tag select element
-    component.multiple = true
-    component.filterable = true
-    component.allowCreate = true
-    component.defaultFirstOption = true
-    component.popperClass = 'dn'
 
     component.$refs.input.addEventListener('blur', (evt) => {
       component.selectOption()
