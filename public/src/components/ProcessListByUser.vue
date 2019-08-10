@@ -113,7 +113,7 @@
       this.created_min = created_min
       this.created_max = created_max
 
-      api.fetchAdminUserProcesses.get({ created_min, created_max }).then(response => {
+      api.fetchAdminUserProcesses('admin', { created_min, created_max }).then(response => {
         this.res = response.data
       }).catch(error => {
 
