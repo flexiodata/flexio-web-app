@@ -53,16 +53,18 @@
           allow-create
           default-first-option
           popper-class="dn"
+          class="w-100"
+          spellcheck="false"
           placeholder="Enter the names of the key fields"
-          style="width: 100%"
           v-model="edit_values.lookup_keys"
+          v-tag
         >
           <el-option
             v-for="item in []"
             :key="item.value"
             :label="item.label"
-            :value="item.value">
-          </el-option>
+            :value="item.value"
+          />
         </el-select>
       </el-form-item>
       <el-form-item
@@ -76,16 +78,18 @@
           allow-create
           default-first-option
           popper-class="dn"
+          class="w-100"
+          spellcheck="false"
           placeholder="Enter the names of the columns to return"
-          style="width: 100%"
           v-model="edit_values.return_columns"
+          v-tag
         >
           <el-option
             v-for="item in []"
             :key="item.value"
             :label="item.label"
-            :value="item.value">
-          </el-option>
+            :value="item.value"
+          />
         </el-select>
       </el-form-item>
     </el-form>

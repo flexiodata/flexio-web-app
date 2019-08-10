@@ -109,13 +109,26 @@
           prop="users"
           label="Send invites to the following email addresses"
         >
-          <TagSelect
+          <el-select
             ref="email-invite-select"
+            multiple
+            filterable
+            allow-create
+            default-first-option
+            popper-class="dn"
             class="w-100"
-            placeholder="Enter email addresses"
             spellcheck="false"
+            placeholder="Enter email addresses"
             v-model="add_dialog_model.users"
-          />
+            v-tag
+          >
+            <el-option
+              v-for="item in []"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
         </el-form-item>
       </el-form>
       <div class="mt4 w-100 flex flex-row justify-end">
@@ -144,7 +157,6 @@
   import { isValidEmail } from '@/utils'
   import Spinner from 'vue-simple-spinner'
   import MemberItem from '@/components/MemberItem'
-  import TagSelect from '@/components/TagSelect'
   import PageNotFound from '@/components/PageNotFound'
 
   export default {
@@ -163,7 +175,6 @@
     components: {
       Spinner,
       MemberItem,
-      TagSelect,
       PageNotFound
     },
     watch: {
