@@ -13,7 +13,7 @@
       <input
         type="email"
         placeholder="Email"
-        autocomplete=off
+        auto-complete="off"
         spellcheck="false"
         class="bg-black-10"
         disabled
@@ -27,7 +27,7 @@
           ref="input-firstname"
           type="text"
           placeholder="First name"
-          autocomplete=off
+          auto-complete="off"
           spellcheck="false"
           :class="input_cls"
           v-model="first_name"
@@ -37,7 +37,7 @@
         <input
           type="text"
           placeholder="Last name"
-          autocomplete=off
+          auto-complete="off"
           spellcheck="false"
           :class="input_cls"
           v-model="last_name"
@@ -48,7 +48,7 @@
       <input
         type="text"
         placeholder="Pick a username"
-        autocomplete=off
+        auto-complete="off"
         spellcheck="false"
         :class="input_cls"
         v-model="username"
@@ -59,7 +59,7 @@
       <input
         type="email"
         placeholder="Email"
-        autocomplete=off
+        auto-complete="off"
         spellcheck="false"
         :class="input_cls"
         v-model="email"
@@ -70,7 +70,7 @@
       <input
         type="password"
         placeholder="Password"
-        autocomplete=off
+        auto-complete="off"
         spellcheck="false"
         :class="input_cls"
         @keyup.enter="trySignUp"

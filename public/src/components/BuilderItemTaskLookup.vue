@@ -26,7 +26,7 @@
         prop="lookup_path"
       >
         <el-input
-          autocomplete="off"
+          auto-complete="off"
           spellcheck="false"
           placeholder="Enter the lookup file or table"
           v-model="edit_values.lookup_path"

@@ -40,7 +40,7 @@
           <el-input
             type="password"
             placeholder="Password"
-            autocomplete="off"
+            auto-complete="off"
             spellcheck="false"
             :autofocus="true"
             v-model="password"
@@ -54,7 +54,7 @@
           <el-input
             type="password"
             placeholder="Retype Password"
-            autocomplete="off"
+            auto-complete="off"
             spellcheck="false"
             v-model="password2"
           />

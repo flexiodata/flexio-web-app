@@ -30,7 +30,7 @@
             ref="input-email"
             type="email"
             placeholder="Email address"
-            autocomplete="off"
+            auto-complete="off"
             spellcheck="false"
             :class="input_cls"
             @keyup.enter="sendReset"

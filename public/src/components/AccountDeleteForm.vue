@@ -19,7 +19,7 @@
         prop="username"
       >
         <el-input
-          autocomplete="off"
+          auto-complete="off"
           spellcheck="false"
           :autofocus="true"
           v-model="edit_info.username"
@@ -33,7 +33,7 @@
       >
         <el-input
           type="password"
-          autocomplete="off"
+          auto-complete="off"
           spellcheck="false"
           v-model="edit_info.password"
         />
@@ -47,7 +47,7 @@
           <span>Verify this is what you want to do by typing <strong>delete my account</strong> below</span>
         </template>
         <el-input
-          autocomplete="off"
+          auto-complete="off"
           spellcheck="false"
           v-model.trim="edit_info.confirm_text"
         />

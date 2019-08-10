@@ -13,7 +13,7 @@
         prop="url"
       >
         <el-input
-          autocomplete="off"
+          auto-complete="off"
           spellcheck="false"
           placeholder="URL"
           v-model="form_values.url"
