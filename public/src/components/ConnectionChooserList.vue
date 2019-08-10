@@ -9,13 +9,13 @@
   </div>
   <div v-else>
     <ConnectionChooserItem
-      v-for="(item, index) in items"
       :item="item"
       :index="index"
       :key="item.eid"
       @item-activate="onItemActivate"
       v-bind="$attrs"
       v-on="$listeners"
+      v-for="(item, index) in items"
     />
   </div>
 </template>

@@ -75,10 +75,10 @@
         <table class="el-table w-100 mv3">
           <tbody>
             <MemberItem
-              :key="member.eid"
-              :item="member"
               @resend-invite="resendInvite"
               @remove-member="removeMember"
+              :item="member"
+              :key="member.eid"
               v-for="member in members"
             />
           </tbody>
@@ -123,10 +123,10 @@
             v-tag
           >
             <el-option
-              v-for="item in []"
-              :key="item.value"
               :label="item.label"
               :value="item.value"
+              :key="item.value"
+              v-for="item in []"
             />
           </el-select>
         </el-form-item>
