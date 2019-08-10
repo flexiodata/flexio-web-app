@@ -6,13 +6,13 @@
       v-if="header !== false"
     />
     <KeypairItem
-      v-for="(item, index) in items"
       :item="item"
       :index="index"
       :count="items.length"
       @change="onItemChange"
       @delete="onItemDelete"
       v-bind="$attrs"
+      v-for="(item, index) in items"
     />
   </div>
 </template>
