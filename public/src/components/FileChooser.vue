@@ -16,7 +16,7 @@
       >
         <AbstractList
           ref="list"
-          class="overflow-y-auto br b--black-05"
+          class="h-100 overflow-y-auto br b--black-05"
           layout="list"
           item-component="AbstractConnectionChooserItem"
           :selected-item.sync="active_connection"
@@ -151,9 +151,10 @@
       },
       initFromConnection(connection) {
         var old_connection_path = this.connection_path
+        var first_connection = _.first(this.connections)
 
         // do a hard refresh of the file list
-        this.active_connection = _.cloneDeep(connection || LOCAL_STORAGE_ITEM)
+        this.active_connection = _.cloneDeep(connection || first_connection)
         this.connection_path = this.getConnectionBasePath()
         this.$nextTick(() => {
           if (old_connection_path != this.connection_path) {

@@ -3,7 +3,7 @@
     <PageNotFound class="flex-fill" v-if="!is_superuser" />
     <template v-else>
       <div class="flex flex-row flex-column-l flex-none items-stretch bb bb-0-l br-l b--black-05 pv0 pt4-l ph1-l overflow-auto trans-pm">
-        <router-link to="/" class="mt1 ph1 pl3-l pr5-l pv2">
+        <router-link to="/" class="mv1 ph1 pl3-l pr5-l pv2">
           <div class="dib hint--bottom" aria-label="Home">
             <img src="../assets/logo-flexio-navbar.png" alt="Flex.io">
           </div>
@@ -40,11 +40,7 @@
       route: 'tests',
       name: 'Tests',
       icon: 'gavel'
-    },{
-      route: 'prototype',
-      name: 'Prototype',
-      icon: 'featured_play_list'
-    },
+    }
   ]
 
   export default {

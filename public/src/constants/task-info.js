@@ -10,8 +10,8 @@ const EXECUTE = {
   bg_color: 'bg-task-purple'
 }
 
-const EXTRACT = {
-  op: ops.TASK_OP_EXTRACT,
+const READ = {
+  op: ops.TASK_OP_READ,
   name: 'Extract',
   description: 'Extract data from a dataset.',
   icon: 'launch',
@@ -30,7 +30,7 @@ const LOOKUP = {
 
 // go out of alphabetical order here so the order is correct in the step chooser builder item
 export const TASK_INFO_EXECUTE       = EXECUTE
-export const TASK_INFO_EXTRACT       = EXTRACT
+export const TASK_INFO_READ          = READ
 export const TASK_INFO_LOOKUP        = LOOKUP
 
 /*
@@ -114,6 +114,14 @@ const EMAIL_SEND = {
   description: 'Email a notification, variable and/or attachments using Flex.io or your own SMTP email service.',
   icon: 'mail_outline',
   bg_color: 'bg-task-blue'
+}
+
+const EXTRACT = {
+  op: ops.TASK_OP_EXTRACT,
+  name: 'Extract',
+  description: 'Extract data from a dataset.',
+  icon: 'launch',
+  bg_color: 'bg-task-orange'
 }
 
 const FIND_REPLACE = {

@@ -2,6 +2,34 @@ import Vue from 'vue'
 import Vuebar from 'vuebar'
 Vue.use(Vuebar)
 
+Vue.directive('tag', {
+  inserted: function(el, binding, vnode) {
+    // only apply this directive for `el-select` components
+    if (_.get(vnode.componentOptions, 'tag') != 'el-select') {
+      return
+    }
+
+    var component = vnode.componentInstance
+
+    component.$refs.input.addEventListener('blur', (evt) => {
+      component.selectOption()
+    })
+
+    el.addEventListener('keydown', (evt) => {
+      switch (evt.keyCode) {
+        case 188 /* comma */:
+        case 32 /* space */:
+          evt.preventDefault()
+          component.selectOption()
+          break
+        case 9 /* tab */:
+          component.selectOption()
+          break
+      }
+    })
+  }
+})
+
 /*
 import Vue from 'vue'
 

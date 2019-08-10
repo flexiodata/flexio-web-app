@@ -176,7 +176,6 @@
   import stickybits from 'stickybits'
   import Spinner from 'vue-simple-spinner'
   import PipeBuilderList from '@/components/PipeBuilderList'
-  import PipeCodeEditor from '@/components/PipeCodeEditor'
   import PipeDocumentHeader from '@/components/PipeDocumentHeader'
   import PipeEditPanel from '@/components/PipeEditPanel'
   import PipeSchedulePanel from '@/components/PipeSchedulePanel'
@@ -216,7 +215,6 @@
       MultipaneResizer,
       Spinner,
       PipeBuilderList,
-      PipeCodeEditor,
       PipeDocumentHeader,
       PipeEditPanel,
       PipeSchedulePanel,
