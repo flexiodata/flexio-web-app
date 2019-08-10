@@ -34,7 +34,11 @@
     </div>
     <div class="pv1" style="margin-left: 24px" v-if="item.details && item.details.length > 0" v-show="!show_details">
       <table class="w-100 css-test-table">
-        <tr :class="!detail.passed ? 'css-row-error' : ''" v-for="(detail, index) in item.details">
+        <tr
+          :class="!detail.passed ? 'css-row-error' : ''"
+          :key="detail.name"
+          v-for="(detail, index) in item.details"
+        >
           <td class="v-top f6 b w3">{{detail.name}}</td>
           <td class="v-top f6 min-w6 mw6">
             <div>{{detail.description}}</div>
