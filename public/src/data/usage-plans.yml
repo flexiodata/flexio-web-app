@@ -1,38 +1,75 @@
 - 'Name': Developer
   'Price': '29'
-  'Executions': '5,000'
-  'Extra Executions': '0.006'
-  'Bandwidth': '10 GB'
+  'Team Members': 1
+  'Executions': '500'
   'Local Storage': '1 GB'
-  'Execution Timeout': '1 min'
-  'Unlimited Prototyping': true
-  'Run From API': true
-  'Trigger From Email': true
-  'Scheduling': true
-  'Live Chat Support': true
+  'Spreadsheet Add-ons': 'Excel Desktop, Google Sheets'
+  'Instant Functions': 'Table Extracts & Lookups'
+  'Custom Functions': 'Python, Node.js'
+  'Background Functions': 'Python, Node.js'
+  'GitHub Integration' : true
+  'Connector Library' : true
+  'Role-Based Permissions' : false
+  'Consolidated Billing' : false
+  'Email and Chat Support': true
+  'Dedicated Flex.io Engineer': false
+  'Custom Integrations': false
+  'Custom Solutions': false
+  'White Label Add-ons': false
 
-- 'Name': Team
-  'Price': '99'
-  'Executions': '20,000'
-  'Extra Executions': '0.005'
-  'Bandwidth': '50 GB'
+- 'Name': Starter
+  'Price': '49'
+  'Team Members': '1-5'
+  'Executions': '2,000'
   'Local Storage': '10 GB'
-  'Execution Timeout': '5 min'
-  'Unlimited Prototyping': true
-  'Run From API': true
-  'Trigger From Email': true
-  'Scheduling': true
-  'Live Chat Support': true
+  'Spreadsheet Add-ons': 'Excel Desktop, Google Sheets'
+  'Instant Functions': 'Table Extracts & Lookups'
+  'Custom Functions': 'Python, Node.js'
+  'Background Functions': 'Python, Node.js'
+  'GitHub Integration' : true
+  'Connector Library' : true
+  'Role-Based Permissions' : true
+  'Consolidated Billing' : true
+  'Email and Chat Support': true
+  'Dedicated Flex.io Engineer': false
+  'Custom Integrations': false
+  'Custom Solutions': false
+  'White Label Add-ons': false
 
-- 'Name': Business
-  'Price': '199'
-  'Executions': '50,000'
-  'Extra Executions': '0.004'
-  'Bandwidth': '200 GB'
-  'Local Storage': '100 GB'
-  'Execution Timeout': '15 min'
-  'Unlimited Prototyping': true
-  'Run From API': true
-  'Trigger From Email': true
-  'Scheduling': true
-  'Live Chat Support': true
+- 'Name': Pro
+  'Price': '99'
+  'Team Members': 'Unlimited'
+  'Executions': '5,000'
+  'Local Storage': '20 GB'
+  'Spreadsheet Add-ons': 'Excel Desktop, Google Sheets'
+  'Instant Functions': 'Table Extracts & Lookups'
+  'Custom Functions': 'Python, Node.js'
+  'Background Functions': 'Python, Node.js'
+  'GitHub Integration' : true
+  'Connector Library' : true
+  'Role-Based Permissions' : true
+  'Consolidated Billing' : true
+  'Email and Chat Support': true
+  'Dedicated Flex.io Engineer': false
+  'Custom Integrations': false
+  'Custom Solutions': false
+  'White Label Add-ons': false
+
+- 'Name': Enterprise
+  'Price': 'Contact Us'
+  'Team Members': 'Unlimited'
+  'Executions': 'Unlimited'
+  'Local Storage': 'Unlimited'
+  'Spreadsheet Add-ons': 'Excel Desktop, Google Sheets'
+  'Instant Functions': 'Table Extracts & Lookups'
+  'Custom Functions': 'Python, Node.js'
+  'Background Functions': 'Python, Node.js'
+  'GitHub Integration' : true
+  'Connector Library' : true
+  'Role-Based Permissions' : true
+  'Consolidated Billing' : true
+  'Email and Chat Support': true
+  'Dedicated Flex.io Engineer': true
+  'Custom Integrations': true
+  'Custom Solutions': true
+  'White Label Add-ons': true
