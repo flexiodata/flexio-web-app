@@ -11,12 +11,15 @@
       v-if="pretty_state == 'pretty'"
     >
       <template v-if="prettyView == 'list'">
-        <template v-for="(val, key) in json">
+        <div
+          :key="key"
+          v-for="(val, key) in json"
+        >
           <h4 class="f8 fw6 ttu moon-gray bb b--black-05 mb1 mt3 pb1">{{key}}</h4>
           <pre class="mb0 tl lh-title f7 i moon-gray" v-if="val === undefined || val === null || val === ''"
           >{{val === undefined ? '(undefined)' : val === null ? '(null)' : val === '' ? '(empty string)' : val}}</pre>
           <pre class="overflow-x-auto mb0 tl lh-title f7" v-else>{{val}}</pre>
-        </template>
+        </div>
       </template>
       <template v-else-if="prettyView == 'table'">
         <table>
@@ -25,16 +28,17 @@
             <col class="w-100">
           </colgroup>
           <tbody>
-            <template v-for="(val, key) in json">
-              <tr>
-                <td class="nowrap b">{{key}}</td>
-                <td>
-                  <pre class="ma0 tl lh-title f7 i moon-gray" v-if="val === undefined || val === null || val === ''"
-                  >{{val === undefined ? '(undefined)' : val === null ? '(null)' : val === '' ? '(empty string)' : val}}</pre>
-                  <pre class="ma0 overflow-x-auto mb0 tl lh-title f7" v-else>{{val}}</pre>
-                </td>
-              </tr>
-            </template>
+            <tr
+              :key="key"
+              v-for="(val, key) in json"
+            >
+              <td class="nowrap b">{{key}}</td>
+              <td>
+                <pre class="ma0 tl lh-title f7 i moon-gray" v-if="val === undefined || val === null || val === ''"
+                >{{val === undefined ? '(undefined)' : val === null ? '(null)' : val === '' ? '(empty string)' : val}}</pre>
+                <pre class="ma0 overflow-x-auto mb0 tl lh-title f7" v-else>{{val}}</pre>
+              </td>
+            </tr>
           </tbody>
         </table>
       </template>
