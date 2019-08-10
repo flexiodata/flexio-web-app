@@ -54,8 +54,8 @@
         class-name="narrow"
         :label="day.col_label"
         :prop="day.raw"
-        :key="day.raw"
         :sortable="true"
+        :key="day.raw"
         v-for="day in days"
       >
         <template slot-scope="scope">
