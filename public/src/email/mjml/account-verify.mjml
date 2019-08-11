@@ -5,8 +5,8 @@
   </mj-head>
   <mj-body>
  		<mj-include path="./partials/spacer.mjml" />
-    <mj-section vertical-align="middle">
-      <mj-column mj-class="bg-white br1">
+    <mj-section background-color="#edeff2" padding="1px" border-radius="4px">
+      <mj-column border-radius="4px" background-color="#ffffff">
         <mj-spacer height="40px" />
         <mj-include path="./partials/logo.mjml" />
         <mj-spacer height="12px" />
