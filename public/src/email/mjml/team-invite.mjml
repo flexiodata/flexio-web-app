@@ -6,7 +6,7 @@
   <mj-body>
     <mj-include path="./partials/spacer.mjml" />
     <mj-section vertical-align="middle">
-      <mj-column mj-class="bg-white" css-class="css-white-box">
+      <mj-column mj-class="bg-white br1">
         <mj-spacer height="40px" />
         <mj-include path="./partials/logo.mjml" />
         <mj-spacer height="12px" />

@@ -8,10 +8,10 @@
   <mj-image align="center" border="none" padding="0" />
   <mj-button align="center" background-color="#2196f3" border-radius="4px" color="#fff" font-weight="600" inner-padding="15px 30px" padding="25px" text-transform="uppercase" />
   <mj-class name="bg-white" background-color="#ffffff" />
+  <mj-class name="br1" border-radius="4px" />
 </mj-attributes>
 <mj-style inline="inline">
   .css-white-box {
-    border-radius: 4px;
     box-shadow: 0 1px 1px rgba(0,0,0,0.1), 0 4px 16px -8px rgba(0,0,0,0.2);
   }
 </mj-style>

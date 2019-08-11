@@ -36,7 +36,7 @@
       </mj-column>
     </mj-section>
     <mj-section vertical-align="middle">
-      <mj-column mj-class="bg-white" css-class="css-white-box">
+      <mj-column mj-class="bg-white br1">
         <mj-spacer height="40px" />
         <mj-image src="https://static.flex.io/assets/logo-square-400x400.png" alt="" width="80px" css-class="css-logo" />
         <mj-spacer height="12px" />
