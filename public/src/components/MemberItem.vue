@@ -12,15 +12,8 @@
         </div>
       </div>
     </td>
-    <td class="tl nowrap" style="min-width: 10rem">
-      <div class="fw6">
-        {{is_member_owner ? 'Owner' : is_member_pending ? 'Invited' : 'Contributor'}}</div>
-      </div>
-
-      <div
-        class="mt1"
-        v-if="is_member_pending"
-      >
+    <td class="tl nowrap" style="min-width: 8rem">
+      <div v-if="is_member_pending">
         <div
           v-if="is_invite_resending"
         >
@@ -43,6 +36,25 @@
         </el-button>
       </div>
     </td>
+    <td class="tl nowrap" style="min-width: 8rem">
+      <div class="fw6">
+        <span v-if="is_member_owner">Owner</span>
+        <MemberItemRoleDropdown
+          width="310"
+          :item="item"
+          v-else
+        >
+          <el-button
+            slot="reference"
+            class="fw6"
+            type="text"
+            style="padding: 0; border: 0; color: #606266"
+          >
+            {{status_str}}
+          </el-button>
+        </MemberItemRoleDropdown>
+      </div>
+    </td>
     <td>
       <ConfirmPopover
         placement="bottom-end"
@@ -54,9 +66,9 @@
       >
         <el-button
           slot="reference"
-          class="ttu fw6"
+          class="ttu fw6 w-100"
           type="danger"
-          size="small"
+          size="mini"
         >
           {{is_member_active_user ? 'Leave' : 'Remove'}}
         </el-button>
@@ -68,6 +80,7 @@
 <script>
   import { mapState } from 'vuex'
   import { OBJECT_STATUS_PENDING } from '@/constants/object-status'
+  import MemberItemRoleDropdown from '@/components/MemberItemRoleDropdown'
   import ConfirmPopover from '@/components/ConfirmPopover'
 
   export default {
@@ -78,6 +91,7 @@
       }
     },
     components: {
+      MemberItemRoleDropdown,
       ConfirmPopover
     },
     computed: {
@@ -92,6 +106,15 @@
       },
       has_full_name() {
         return this.full_name.trim().length > 0
+      },
+      status_str() {
+        switch (_.get(this.item, 'role')) {
+          case 'U': return 'User'
+          case 'C': return 'Contributor'
+          case 'A': return 'Administrator'
+        }
+
+        return 'Owner'
       },
       is_member_owner() {
         return _.get(this.item, 'eid') == _.get(this.item, 'member_of.eid')
