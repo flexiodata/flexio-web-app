@@ -61,7 +61,9 @@
 
 <script>
   import { mapState } from 'vuex'
+  import { getFullName } from '@/utils'
   import { OBJECT_STATUS_PENDING } from '@/constants/object-status'
+  import member_roles from '@/data/member-roles.yml'
   import MemberItemRoleDropdown from '@/components/MemberItemRoleDropdown'
 
   export default {
@@ -83,19 +85,14 @@
         return 'https://secure.gravatar.com/avatar/' + _.get(this.item, 'email_hash') + '?d=mm&s=40'
       },
       full_name() {
-        return _.get(this.item, 'first_name', '') + ' ' + _.get(this.item, 'last_name', '')
+        return getFullName(this.item)
       },
       has_full_name() {
         return this.full_name.trim().length > 0
       },
       role_title() {
-        switch (_.get(this.item, 'role')) {
-          case 'U': return 'User'
-          case 'C': return 'Contributor'
-          case 'A': return 'Administrator'
-        }
-
-        return 'Owner'
+        var role = _.find(member_roles, r => r.type == _.get(this.item, 'role'))
+        return role ? role.name : 'Owner'
       },
       is_member_owner() {
         return _.get(this.item, 'eid') == _.get(this.item, 'member_of.eid')

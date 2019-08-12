@@ -34,8 +34,8 @@
 
 <script>
   import { mapState } from 'vuex'
-  import member_roles from '@/data/member-roles.yml'
   import { getFullName } from '@/utils'
+  import member_roles from '@/data/member-roles.yml'
 
   export default {
     inheritAttrs: false,
