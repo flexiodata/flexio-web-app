@@ -67,11 +67,20 @@ Vue.directive('require-rights', {
 
       // map friendly-looking modifiers to single-letter UNIX-style characters
       mods = _.map(mods, (val, key) => {
+
         switch (key) {
-          case 'read':    return 'r'
-          case 'write':   return 'w'
-          case 'delete':  return 'd'
-          case 'execute': return 'x'
+          case 'r':
+          case 'read':
+            return 'r'
+          case 'w':
+          case 'write':
+            return 'w'
+          case 'd':
+          case 'delete':
+            return 'd'
+          case 'x':
+          case 'execute':
+            return 'x'
         }
         return null
       })
