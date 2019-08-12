@@ -33,6 +33,12 @@ export const isValidEmail = str => {
   return /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(str)
 }
 
+export const getFullName = obj => {
+  var fn = _.get(obj, 'first_name', '')
+  var ln = _.get(obj, 'last_name', '')
+  return ln.length > 0 ? `${fn} ${ln}` : `${fn}`
+}
+
 export const sanitizeMasked = obj => {
   return _.omitBy(obj, (val, key) => { return val === '*****' })
 }

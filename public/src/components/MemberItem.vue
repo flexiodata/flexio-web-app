@@ -12,7 +12,7 @@
         </div>
       </div>
     </td>
-    <td class="tl nowrap" style="min-width: 8rem">
+    <td class="tl nowrap" style="min-width: 9rem">
       <div v-if="is_member_pending">
         <div
           v-if="is_invite_resending"
@@ -42,7 +42,8 @@
         <MemberItemRoleDropdown
           width="310"
           :item="item"
-          @change="updateRole"
+          @change-role="updateRole"
+          @remove-member="removeMember"
           v-else
         >
           <el-button
@@ -55,25 +56,6 @@
         </MemberItemRoleDropdown>
       </div>
     </td>
-    <td>
-      <ConfirmPopover
-        placement="bottom-end"
-        :title="is_member_active_user ? 'Leave team?' : 'Confirm remove?'"
-        :message="is_member_active_user ? 'Are you sure you want to leave this team?' : 'Are you sure you want to remove this member?'"
-        :confirm-button-text="is_member_active_user ? 'Leave' : 'Remove'"
-        @confirm-click="onRemoveMember"
-        v-if="!is_member_owner"
-      >
-        <el-button
-          slot="reference"
-          class="ttu fw6 w-100"
-          type="danger"
-          size="mini"
-        >
-          {{is_member_active_user ? 'Leave' : 'Remove'}}
-        </el-button>
-      </ConfirmPopover>
-    </td>
   </tr>
 </template>
 
@@ -81,7 +63,6 @@
   import { mapState } from 'vuex'
   import { OBJECT_STATUS_PENDING } from '@/constants/object-status'
   import MemberItemRoleDropdown from '@/components/MemberItemRoleDropdown'
-  import ConfirmPopover from '@/components/ConfirmPopover'
 
   export default {
     props: {
@@ -91,8 +72,7 @@
       }
     },
     components: {
-      MemberItemRoleDropdown,
-      ConfirmPopover
+      MemberItemRoleDropdown
     },
     computed: {
       ...mapState({
@@ -120,9 +100,6 @@
       is_member_owner() {
         return _.get(this.item, 'eid') == _.get(this.item, 'member_of.eid')
       },
-      is_member_active_user() {
-        return _.get(this.item, 'eid') == this.active_user_eid
-      },
       is_member_pending() {
         return _.get(this.item, 'member_status') == OBJECT_STATUS_PENDING
       },
@@ -137,7 +114,7 @@
       onResendInvite() {
         this.$emit('resend-invite', this.item)
       },
-      onRemoveMember() {
+      removeMember(member) {
         this.$emit('remove-member', this.item)
       },
       updateRole(role) {
