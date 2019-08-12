@@ -36,21 +36,21 @@
         </el-button>
       </div>
     </td>
-    <td class="tl nowrap" style="min-width: 8rem">
+    <td class="tl nowrap" style="min-width: 9rem">
       <div class="fw6">
         <span v-if="is_member_owner">Owner</span>
         <MemberItemRoleDropdown
           width="310"
           :item="item"
+          @change="updateRole"
           v-else
         >
           <el-button
             slot="reference"
-            class="fw6"
+            class="fw6 role-button"
             type="text"
-            style="padding: 0; border: 0; color: #606266"
           >
-            {{status_str}}
+            <span>{{role_title}}</span> <i class="dropdown-caret"></i>
           </el-button>
         </MemberItemRoleDropdown>
       </div>
@@ -97,6 +97,7 @@
     computed: {
       ...mapState({
         active_user_eid: state => state.users.active_user_eid,
+        active_team_name: state => state.teams.active_team_name
       }),
       gravatar_url() {
         return 'https://secure.gravatar.com/avatar/' + _.get(this.item, 'email_hash') + '?d=mm&s=40'
@@ -107,7 +108,7 @@
       has_full_name() {
         return this.full_name.trim().length > 0
       },
-      status_str() {
+      role_title() {
         switch (_.get(this.item, 'role')) {
           case 'U': return 'User'
           case 'C': return 'Contributor'
@@ -138,6 +139,12 @@
       },
       onRemoveMember() {
         this.$emit('remove-member', this.item)
+      },
+      updateRole(role) {
+        var team_name = this.active_team_name
+        var eid = _.get(this.item, 'eid')
+        var attrs = { role }
+        this.$store.dispatch('members/update', { team_name, eid, attrs })
       }
     }
   }
@@ -153,4 +160,19 @@
   td:last-child
     padding-left: 0.5rem
     padding-right: 0.5rem
+
+  .role-button
+    padding: 0
+    border: 0
+    color: #606266 // match Element UI's body color
+    &:hover
+      color: #303133
+
+  .dropdown-caret
+    display: inline-block
+    margin-left: 2px
+    width: 0
+    height: 0
+    border: 4px solid transparent
+    border-top-color: inherit
 </style>

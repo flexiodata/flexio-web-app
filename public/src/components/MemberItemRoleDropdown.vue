@@ -11,6 +11,7 @@
       <div
         class="flex flex-row member-role-item"
         :key="role.name"
+        @click="changeRole(role.type)"
         v-for="role in member_roles"
       >
         <i class="material-icons md-18 b mr2" v-if="isActiveRole(role)">check</i>
@@ -54,6 +55,10 @@
     methods: {
       isActiveRole(role) {
         return role.type == this.item.role
+      },
+      changeRole(role_type) {
+        this.$emit('change', role_type)
+        this.is_visible = false
       }
     }
   }
