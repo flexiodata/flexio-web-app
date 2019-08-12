@@ -1,21 +1,23 @@
 <mjml>
   <mj-head>
-    <mj-title>Welcome to Flex.io</mj-title>
-    <mj-include path="./head.mjml" />
+    <mj-title>${name} invited you to the team "${object_name}" on Flex.io</mj-title>
+    <mj-include path="./partials/head.mjml" />
   </mj-head>
   <mj-body>
- 		<mj-include path="./spacer.mjml" />
-    <mj-section vertical-align="middle">
-      <mj-column css-class="css-white-box">
-        <mj-include path="./logo.mjml" />
+    <mj-include path="./partials/spacer.mjml" />
+    <mj-section background-color="#edeff2" padding="1px" border-radius="4px">
+      <mj-column border-radius="4px" background-color="#ffffff">
+        <mj-spacer height="40px" />
+        <mj-include path="./partials/logo.mjml" />
         <mj-spacer height="12px" />
         <mj-text>Content goes here...</mj-text>
         <mj-button href="${href_link}">Button text goes here...</mj-button>
         <mj-text>Enjoy!</mj-text>
         <mj-text>- The Flex.io Team</mj-text>
+        <mj-spacer height="40px" />
       </mj-column>
     </mj-section>
-    <mj-include path="./copyright.mjml" />
- 		<mj-include path="./spacer.mjml" />
+    <mj-include path="./partials/copyright.mjml" />
+    <mj-include path="./partials/spacer.mjml" />
   </mj-body>
 </mjml>

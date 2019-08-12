@@ -1,0 +1,29 @@
+- name: User
+  description: >
+    Users can view functions, connections and team members.
+  type: U
+  rights:
+    pipe: 'r---'
+    connection: 'r---'
+    member: 'r---'
+    process: '---x'
+
+- name: Contributor
+  description: >
+    Contributors can add, edit and delete functions and connections; they can also view team members.
+  type: C
+  rights:
+    pipe: 'rwd-'
+    connection: 'rwd-'
+    member: 'r---'
+    process: '---x'
+
+- name: Administrator
+  description: >
+    Administrators can add, edit and delete functions, connections and team members.
+  type: A
+  rights:
+    pipe: 'rwd-'
+    connection: 'rwd-'
+    member: 'rwd-'
+    process: '---x'

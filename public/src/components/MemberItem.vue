@@ -12,15 +12,8 @@
         </div>
       </div>
     </td>
-    <td class="tl nowrap" style="min-width: 10rem">
-      <div class="fw6">
-        {{is_member_owner ? 'Owner' : is_member_pending ? 'Invited' : 'Contributor'}}</div>
-      </div>
-
-      <div
-        class="mt1"
-        v-if="is_member_pending"
-      >
+    <td class="tl nowrap" style="min-width: 8rem">
+      <div v-if="is_member_pending">
         <div
           v-if="is_invite_resending"
         >
@@ -43,22 +36,41 @@
         </el-button>
       </div>
     </td>
+    <td class="tl nowrap" style="min-width: 9rem">
+      <div class="fw6">
+        <span v-if="is_member_owner">Owner</span>
+        <MemberItemRoleDropdown
+          width="310"
+          :item="item"
+          @change="updateRole"
+          v-else
+        >
+          <el-button
+            slot="reference"
+            class="fw6 role-button"
+            type="text"
+          >
+            <span>{{role_title}}</span> <i class="dropdown-caret"></i>
+          </el-button>
+        </MemberItemRoleDropdown>
+      </div>
+    </td>
     <td>
       <ConfirmPopover
         placement="bottom-end"
-        title="Confirm remove?"
-        message="Are you sure you want to remove this member?"
-        confirm-button-text="Remove"
+        :title="is_member_active_user ? 'Leave team?' : 'Confirm remove?'"
+        :message="is_member_active_user ? 'Are you sure you want to leave this team?' : 'Are you sure you want to remove this member?'"
+        :confirm-button-text="is_member_active_user ? 'Leave' : 'Remove'"
         @confirm-click="onRemoveMember"
         v-if="!is_member_owner"
       >
         <el-button
           slot="reference"
-          class="ttu fw6"
+          class="ttu fw6 w-100"
           type="danger"
-          size="small"
+          size="mini"
         >
-          Remove
+          {{is_member_active_user ? 'Leave' : 'Remove'}}
         </el-button>
       </ConfirmPopover>
     </td>
@@ -66,7 +78,9 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
   import { OBJECT_STATUS_PENDING } from '@/constants/object-status'
+  import MemberItemRoleDropdown from '@/components/MemberItemRoleDropdown'
   import ConfirmPopover from '@/components/ConfirmPopover'
 
   export default {
@@ -77,9 +91,14 @@
       }
     },
     components: {
+      MemberItemRoleDropdown,
       ConfirmPopover
     },
     computed: {
+      ...mapState({
+        active_user_eid: state => state.users.active_user_eid,
+        active_team_name: state => state.teams.active_team_name
+      }),
       gravatar_url() {
         return 'https://secure.gravatar.com/avatar/' + _.get(this.item, 'email_hash') + '?d=mm&s=40'
       },
@@ -89,8 +108,20 @@
       has_full_name() {
         return this.full_name.trim().length > 0
       },
+      role_title() {
+        switch (_.get(this.item, 'role')) {
+          case 'U': return 'User'
+          case 'C': return 'Contributor'
+          case 'A': return 'Administrator'
+        }
+
+        return 'Owner'
+      },
       is_member_owner() {
         return _.get(this.item, 'eid') == _.get(this.item, 'member_of.eid')
+      },
+      is_member_active_user() {
+        return _.get(this.item, 'eid') == this.active_user_eid
       },
       is_member_pending() {
         return _.get(this.item, 'member_status') == OBJECT_STATUS_PENDING
@@ -108,6 +139,12 @@
       },
       onRemoveMember() {
         this.$emit('remove-member', this.item)
+      },
+      updateRole(role) {
+        var team_name = this.active_team_name
+        var eid = _.get(this.item, 'eid')
+        var attrs = { role }
+        this.$store.dispatch('members/update', { team_name, eid, attrs })
       }
     }
   }
@@ -123,4 +160,19 @@
   td:last-child
     padding-left: 0.5rem
     padding-right: 0.5rem
+
+  .role-button
+    padding: 0
+    border: 0
+    color: #606266 // match Element UI's body color
+    &:hover
+      color: #303133
+
+  .dropdown-caret
+    display: inline-block
+    margin-left: 2px
+    width: 0
+    height: 0
+    border: 4px solid transparent
+    border-top-color: inherit
 </style>
