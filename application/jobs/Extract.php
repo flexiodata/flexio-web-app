@@ -35,22 +35,38 @@ class Extract extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\IFace\IProcess $process) : void
     {
-        parent::run($process);
-
-        // stdin/stdout
-        $instream = $process->getStdin();
-        $outstream = $process->getStdout();
-        $this->processStream($instream, $outstream);
-    }
-
-    private function processStream(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream) : void
-    {
         $job_params = $this->getJobParameters();
         $path = $job_params['path'] ?? null;
 
         if (is_null($path))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Missing parameter 'path'");
 
-        $outstream->copyFrom($instream);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "read",
+                "path" => $path
+            ],
+            [
+                "op" => "convert",
+                "input" => [
+                    "format" => "delimited",
+                    "header" => true
+                ],
+                "output" => [
+                    "format" => "table"
+                ]
+            ]
+        ]);
+
+        $local_process = \Flexio\Jobs\Process::create();
+        $local_process->setOwner($process->getOwner());
+        $local_process->setStdin($process->getStdin());
+        $local_process->execute($task);
+
+        $process->setStdout($local_process->getStdout());
     }
 }
+
+
+
+
