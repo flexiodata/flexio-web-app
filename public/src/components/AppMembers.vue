@@ -118,7 +118,7 @@
             spellcheck="false"
             placeholder="Enter email addresses"
             v-model="add_dialog_model.users"
-            v-tag
+            v-tag-input
           >
             <el-option
               :label="item.label"

@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuebar from 'vuebar'
 Vue.use(Vuebar)
 
-Vue.directive('tag', {
+Vue.directive('tag-input', {
   inserted: function(el, binding, vnode) {
     // only apply this directive for `el-select` components
     if (_.get(vnode.componentOptions, 'tag') != 'el-select') {
