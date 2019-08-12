@@ -25,6 +25,7 @@
 <script>
   import { ROUTE_APP_ACCOUNT, ROUTE_SIGNIN_PAGE } from '@/constants/route'
   import { HOSTNAME } from '@/constants/common'
+  import { getFullName } from '@/utils'
   import { mapGetters } from 'vuex'
   import FreeTrialNotice from '@/components/FreeTrialNotice'
 
@@ -33,17 +34,14 @@
       FreeTrialNotice
     },
     computed: {
+      full_name() {
+        return getFullName(this.getActiveUser())
+      },
       email() {
         return _.get(this.getActiveUser(), 'email', '')
       },
       email_hash() {
         return _.get(this.getActiveUser(), 'email_hash', '')
-      },
-      full_name() {
-        var user = this.getActiveUser()
-        var first_name = _.get(user, 'first_name', '')
-        var last_name = _.get(user, 'last_name', '')
-        return `${first_name} ${last_name}`
       },
       user_profile_src() {
         return 'https://secure.gravatar.com/avatar/' + this.email_hash + '?d=mm&s=32'
