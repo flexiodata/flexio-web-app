@@ -190,6 +190,9 @@ exports.flex_handler = function(flex) {
         return 'python'
       }
     },
+    mounted() {
+      debugger
+    },
     methods: {
       initSelf() {
         var form_values = _.get(this.item, 'form_values', {})

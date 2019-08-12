@@ -21,15 +21,15 @@
       @validate="onValidateItem"
     >
       <el-form-item
-        key="lookup_path"
         label="Select the path of the lookup file or table"
-        prop="lookup_path"
+        key="path"
+        prop="path"
       >
         <el-input
           auto-complete="off"
           spellcheck="false"
           placeholder="Enter the lookup file or table"
-          v-model="edit_values.lookup_path"
+          v-model="edit_values.path"
         >
           <el-button
             slot="append"
@@ -136,113 +136,11 @@
   import { atobUnicode, btoaUnicode } from '@/utils'
   import FileChooser from '@/components/FileChooser'
 
-
-  // non-base64 Python code
-  const template_code = `
-# looks up data values from a table based on keys
-
-import pandas
-import json
-from io import StringIO
-from cerberus import Validator
-from collections import OrderedDict
-
-def flex_handler(flex):
-
-    # get the input
-    input = flex.input.read()
-    try:
-        input = json.loads(input)
-        if not isinstance(input, list): raise ValueError
-    except ValueError:
-        raise ValueError
-
-    # define the expected parameters and map the values to the parameter names
-    # based on the positions of the keys/values
-    params = OrderedDict()
-    params['range']  = {'required': True}
-    input = dict(zip(params.keys(), input))
-
-    # data values for which to look up content
-    lookup_values = input['range']
-    # lookup_values = [["000031","00410575"],["a","00306529"],["000053","b"],["000053","00306529"],["000053","00306529"]]
-
-    # table to use for lookup values
-    lookup_table_path = '{{lookup_table_path}}'
-    # lookup_table_path = 'my-connection-name:/my-file.txt'
-
-    # columns from the lookup table to use to search for values
-    lookup_keys = '{{lookup_keys}}'.split(',')
-    # lookup_keys = ["Vend_no","Item_no"]
-
-    # columns from the lookup table to return
-    lookup_columns = '{{lookup_columns}}'.split(',')
-    #lookup_columns = ["Item_desc","Case_cost","Item_cost"]
-
-    # table config to use for lookup
-    file = flex.fs.open(lookup_table_path)
-    lookup_table_content = file.read()
-    file.close()
-
-    lookup_table_config = {
-        "data": StringIO(lookup_table_content.decode()),
-        "delimiter": ",",
-        "quotechar": "\\\"",
-        "encoding": "utf8"
-    }
-
-    # get the result and return it
-    result = lookupValues(lookup_table_config, lookup_keys, lookup_columns, lookup_values)
-    flex.output.write(json.dumps(result))
-
-
-def lookupValues(lookup_table_config, lookup_keys, lookup_columns, lookup_values):
-
-    # seperator for constructing keys
-    seperator = "|"
-
-    # load the csv into a dictionary using pandas
-    df = pandas.read_csv(lookup_table_config['data'], sep=lookup_table_config['delimiter'], quotechar=lookup_table_config['quotechar'], skipinitialspace=True, encoding=lookup_table_config['encoding'], dtype = str)
-    df.columns = map(str.lower, df.columns)
-    lookup_table = df.to_dict('records')
-
-    # create a dictionary of lookup values based on the key
-    lookup_table_index = {}
-    for row in lookup_table:
-        keyvalues = []
-        for lk in lookup_keys:
-            keyvalues.append(str(row.get(lk.lower(),'')))
-        key = seperator.join(keyvalues)
-        lookup_table_index[key] = row
-
-    # return an output corresponding to the exact order of the
-    # input values, filled out with the appropriate information from the
-    # index use all fields if no fields are specified
-    result = []
-    # result.append(lookup_columns) # uncomment to include column names
-    for lv in lookup_values:
-        key = seperator.join(lv)
-        result.append(getValuesFromLookup(key, lookup_table_index, lookup_columns))
-
-    return result
-
-
-def getValuesFromLookup(key, lookup_table_index, lookup_columns):
-    default_values = ['']*len(lookup_columns)
-    default_row = dict(zip(lookup_columns, default_values))
-    lookup_values = lookup_table_index.get(key, default_row)
-    result = [lookup_values.get(c.lower(),'') for c in lookup_columns]
-    return result
-`
-
-
   const getDefaultValues = () => {
     return {
-      lookup_path: '',
+      path: '',
       lookup_keys: [],
-      return_columns: [],
-      lang: 'python',
-      code: ''
+      return_columns: []
     }
   }
 
@@ -293,9 +191,8 @@ def getValuesFromLookup(key, lookup_table_index, lookup_columns):
         orig_values: getDefaultValues(),
         edit_values: getDefaultValues(),
         form_errors: {},
-        template_code: template_code,
         rules: {
-          lookup_path: [
+          path: [
             { required: true, message: 'Please select the path of the file or table on which to do the lookup' }
           ],
           lookup_keys: [
@@ -320,6 +217,9 @@ def getValuesFromLookup(key, lookup_table_index, lookup_columns):
       is_changed() {
         return !_.isEqual(this.edit_values, this.orig_values)
       }
+    },
+    mounted() {
+      debugger
     },
     methods: {
       initSelf() {
@@ -350,7 +250,7 @@ def getValuesFromLookup(key, lookup_table_index, lookup_columns):
       addFiles() {
         var files = this.selected_files
         files = _.map(files, (f) => { return f.full_path })
-        this.edit_values.lookup_path = _.get(files, '[0]', '')
+        this.edit_values.path = _.get(files, '[0]', '')
         this.show_file_chooser_dialog = false
       },
       onChange(val) {
@@ -361,11 +261,6 @@ def getValuesFromLookup(key, lookup_table_index, lookup_columns):
       },
       onEditValuesChange() {
         var vals = _.cloneDeep(this.edit_values)
-        vals.code = this.template_code
-        vals.code = vals.code.replace('{{lookup_table_path}}', this.edit_values.lookup_path)
-        vals.code = vals.code.replace('{{lookup_keys}}', this.edit_values.lookup_keys.join(','))
-        vals.code = vals.code.replace('{{lookup_columns}}', this.edit_values.return_columns.join(','))
-        vals.code = btoaUnicode(vals.code)
         this.$emit('item-change', vals, this.index)
       }
     }
