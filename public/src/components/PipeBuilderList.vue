@@ -113,6 +113,9 @@
           })
           prompt = _.get(def, 'prompt', null)
 
+          /*
+          // This was a clever way to allow custom tasks via Python -- keep it around for reference
+          //
           // TODO: use an execute step under the hood, but allow for a custom UI for the lookup step
           if (task.op == 'lookup' || (task.op == 'execute' && task.real_op == 'lookup')) {
             prompt = {
@@ -125,6 +128,7 @@
             task.real_op = 'lookup'
             task.lang = 'python'
           }
+          */
         }
 
         // make sure we don't overwrite any objects
