@@ -68,6 +68,7 @@
             class="ttu fw6"
             type="primary"
             @click="show_add_dialog = true"
+            v-require-rights:member="'w'"
           >
             Add Members
           </el-button>
