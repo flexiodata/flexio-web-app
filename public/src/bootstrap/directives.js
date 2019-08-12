@@ -52,6 +52,7 @@ Vue.directive('require-rights', {
     } else {
       var arg = _.get(binding, 'arg', '')
       var val = _.get(binding, 'value', '')
+
       // directive argument is required
       try {
         if (arg.length == 0) {
