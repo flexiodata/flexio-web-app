@@ -16,7 +16,7 @@
         <i class="material-icons md-18 b mr2" style="color: transparent" v-else>check</i>
         <div>
           <h4 class="ma0">{{role.name}}</h4>
-          <p class="tl mt2 mb0">{{role.description}}</p>
+          <p class="tl mt1 mb0">{{role.description}}</p>
         </div>
       </div>
       <div
@@ -100,7 +100,7 @@
 
   .member-role-item
     cursor: pointer
-    padding: 12px
+    padding: 14px 12px
     &:hover
       background-color: rgba(0,0,0,0.03)
     h4
