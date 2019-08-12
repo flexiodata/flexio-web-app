@@ -46,9 +46,9 @@
     <td>
       <ConfirmPopover
         placement="bottom-end"
-        title="Confirm remove?"
-        message="Are you sure you want to remove this member?"
-        confirm-button-text="Remove"
+        :title="is_member_active_user ? 'Leave team?' : 'Confirm remove?'"
+        :message="is_member_active_user ? 'Are you sure you want to leave this team?' : 'Are you sure you want to remove this member?'"
+        :confirm-button-text="is_member_active_user ? 'Leave' : 'Remove'"
         @confirm-click="onRemoveMember"
         v-if="!is_member_owner"
       >
@@ -58,7 +58,7 @@
           type="danger"
           size="small"
         >
-          Remove
+          {{is_member_active_user ? 'Leave' : 'Remove'}}
         </el-button>
       </ConfirmPopover>
     </td>
@@ -66,6 +66,7 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
   import { OBJECT_STATUS_PENDING } from '@/constants/object-status'
   import ConfirmPopover from '@/components/ConfirmPopover'
 
@@ -80,6 +81,9 @@
       ConfirmPopover
     },
     computed: {
+      ...mapState({
+        active_user_eid: state => state.users.active_user_eid,
+      }),
       gravatar_url() {
         return 'https://secure.gravatar.com/avatar/' + _.get(this.item, 'email_hash') + '?d=mm&s=40'
       },
@@ -91,6 +95,9 @@
       },
       is_member_owner() {
         return _.get(this.item, 'eid') == _.get(this.item, 'member_of.eid')
+      },
+      is_member_active_user() {
+        return _.get(this.item, 'eid') == this.active_user_eid
       },
       is_member_pending() {
         return _.get(this.item, 'member_status') == OBJECT_STATUS_PENDING
