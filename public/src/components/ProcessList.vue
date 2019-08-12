@@ -116,9 +116,9 @@
 
 <script>
   import moment from 'moment'
+  import * as ps from '@/constants/process'
   import { ROUTE_APP_PIPES } from '@/constants/route'
   import { mapGetters } from 'vuex'
-  import * as ps from '@/constants/process'
 
   export default {
     props: {
