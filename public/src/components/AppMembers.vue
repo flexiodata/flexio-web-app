@@ -75,8 +75,6 @@
         <table class="el-table w-100 mv3">
           <tbody>
             <MemberItem
-              @resend-invite="resendInvite"
-              @remove-member="removeMember"
               :item="member"
               :key="member.eid"
               v-for="member in members"
@@ -308,17 +306,6 @@
         var team_name = this.active_team_name
         var attrs = { member }
         this.$store.dispatch('members/create', { team_name, attrs })
-      },
-      resendInvite(member) {
-        var team_name = this.active_team_name
-        var eid = _.get(member, 'eid')
-        this.$store.dispatch('members/resendInvite', { team_name, eid })
-      },
-      removeMember(member) {
-        var team_name = this.active_team_name
-        var eid = member.eid
-
-        this.$store.dispatch('members/delete', { team_name, eid })
       },
       rejectJoinTeam() {
         this.$router.push({ name: ROUTE_APP_PIPES })

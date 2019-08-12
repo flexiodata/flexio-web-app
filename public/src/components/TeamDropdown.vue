@@ -39,6 +39,7 @@
 
 <script>
   import { mapState, mapGetters } from 'vuex'
+  import { getFullName } from '@/utils'
   import api from '@/api'
 
   export default {
@@ -79,9 +80,7 @@
         }
       },
       getTeamLabel(team) {
-        var first_name = _.get(team, 'first_name', '')
-        var last_name = _.get(team, 'last_name', '')
-        return `${first_name} ${last_name}` + "'s team"
+        return team ? getFullName(team) + "'s team" : ''
       },
       isActiveTeam(team) {
         return team.username == this.active_team_name

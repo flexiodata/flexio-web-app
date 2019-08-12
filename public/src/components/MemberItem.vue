@@ -12,7 +12,7 @@
         </div>
       </div>
     </td>
-    <td class="tl nowrap" style="min-width: 8rem">
+    <td class="tl nowrap" style="min-width: 9rem">
       <div v-if="is_member_pending">
         <div
           v-if="is_invite_resending"
@@ -29,7 +29,7 @@
         <el-button
           type="text"
           style="border: 0; padding: 0"
-          @click="onResendInvite"
+          @click="resendInvite"
           v-else
         >
           Resend invite
@@ -42,7 +42,8 @@
         <MemberItemRoleDropdown
           width="310"
           :item="item"
-          @change="updateRole"
+          @change-role="updateRole"
+          @remove-member="removeMember"
           v-else
         >
           <el-button
@@ -55,33 +56,15 @@
         </MemberItemRoleDropdown>
       </div>
     </td>
-    <td>
-      <ConfirmPopover
-        placement="bottom-end"
-        :title="is_member_active_user ? 'Leave team?' : 'Confirm remove?'"
-        :message="is_member_active_user ? 'Are you sure you want to leave this team?' : 'Are you sure you want to remove this member?'"
-        :confirm-button-text="is_member_active_user ? 'Leave' : 'Remove'"
-        @confirm-click="onRemoveMember"
-        v-if="!is_member_owner"
-      >
-        <el-button
-          slot="reference"
-          class="ttu fw6 w-100"
-          type="danger"
-          size="mini"
-        >
-          {{is_member_active_user ? 'Leave' : 'Remove'}}
-        </el-button>
-      </ConfirmPopover>
-    </td>
   </tr>
 </template>
 
 <script>
   import { mapState } from 'vuex'
+  import { getFullName } from '@/utils'
   import { OBJECT_STATUS_PENDING } from '@/constants/object-status'
+  import member_roles from '@/data/member-roles.yml'
   import MemberItemRoleDropdown from '@/components/MemberItemRoleDropdown'
-  import ConfirmPopover from '@/components/ConfirmPopover'
 
   export default {
     props: {
@@ -91,8 +74,7 @@
       }
     },
     components: {
-      MemberItemRoleDropdown,
-      ConfirmPopover
+      MemberItemRoleDropdown
     },
     computed: {
       ...mapState({
@@ -103,25 +85,17 @@
         return 'https://secure.gravatar.com/avatar/' + _.get(this.item, 'email_hash') + '?d=mm&s=40'
       },
       full_name() {
-        return _.get(this.item, 'first_name', '') + ' ' + _.get(this.item, 'last_name', '')
+        return getFullName(this.item)
       },
       has_full_name() {
         return this.full_name.trim().length > 0
       },
       role_title() {
-        switch (_.get(this.item, 'role')) {
-          case 'U': return 'User'
-          case 'C': return 'Contributor'
-          case 'A': return 'Administrator'
-        }
-
-        return 'Owner'
+        var role = _.find(member_roles, r => r.type == _.get(this.item, 'role'))
+        return role ? role.name : 'Owner'
       },
       is_member_owner() {
         return _.get(this.item, 'eid') == _.get(this.item, 'member_of.eid')
-      },
-      is_member_active_user() {
-        return _.get(this.item, 'eid') == this.active_user_eid
       },
       is_member_pending() {
         return _.get(this.item, 'member_status') == OBJECT_STATUS_PENDING
@@ -134,11 +108,15 @@
       }
     },
     methods: {
-      onResendInvite() {
-        this.$emit('resend-invite', this.item)
+      resendInvite() {
+        var team_name = this.active_team_name
+        var eid = _.get(this.item, 'eid')
+        this.$store.dispatch('members/resendInvite', { team_name, eid })
       },
-      onRemoveMember() {
-        this.$emit('remove-member', this.item)
+      removeMember() {
+        var team_name = this.active_team_name
+        var eid = _.get(this.item, 'eid')
+        this.$store.dispatch('members/delete', { team_name, eid })
       },
       updateRole(role) {
         var team_name = this.active_team_name

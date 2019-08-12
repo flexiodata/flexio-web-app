@@ -93,8 +93,9 @@
 </template>
 
 <script>
-  import api from '@/api'
   import moment from 'moment'
+  import api from '@/api'
+  import { getFullName } from '@/utils'
 
   export default {
     data() {
@@ -147,7 +148,7 @@
     },
     methods: {
       getUserName(row) {
-        return _.get(row, 'user.first_name', '') + ' ' + _.get(row, 'user.last_name', '')
+        return getFullName(_.get(row, 'user'))
       },
       getUserEid(row) {
         return _.get(row, 'user.eid', '')
