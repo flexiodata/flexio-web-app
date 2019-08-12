@@ -19,13 +19,13 @@ namespace Flexio\Jobs;
 // DESCRIPTION:
 {
     "op": "extract",  // string, required
-    "path": ""       // string, required
+    "path": ""        // string, required
 }
 
 // VALIDATOR:
 $validator = \Flexio\Base\Validator::create();
 if (($validator->check($params, array(
-        'op'         => array('required' => true,  'enum' => ['extract'])
+        'op'         => array('required' => true,  'enum' => ['extract']),
         'path'       => array('required' => true,  'type' => 'string')
     ))->hasErrors()) === true)
     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
