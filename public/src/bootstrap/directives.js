@@ -51,30 +51,42 @@ Vue.directive('require-rights', {
       is_allowed = true
     } else {
       var arg = _.get(binding, 'arg', '')
-      var val = _.get(binding, 'value', '')
+      var mods = _.get(binding, 'modifiers', {})
 
       // directive argument is required
       try {
         if (arg.length == 0) {
           throw({ message: '`v-require-rights` directive argument is required' })
-        } else if (val.length == 0) {
-          throw({ message: '`v-require-rights` directive value is required' })
+        } else if (mods.length == 0) {
+          throw({ message: '`v-require-rights` directive modifier is required' })
         }
       }
       catch (e) {
         is_allowed = false
       }
 
+      // map friendly-looking modifiers to single-letter UNIX-style characters
+      mods = _.map(mods, (val, key) => {
+        switch (key) {
+          case 'read':    return 'r'
+          case 'write':   return 'w'
+          case 'delete':  return 'd'
+          case 'execute': return 'x'
+        }
+        return null
+      })
+
+      // remove empty items (modifiers that are not accepted)
+      mods = _.compact(mods)
+
       // check directive value against the role's UNIX-style permission string
       var rights_str = _.get(rights, arg, '')
-      if (rights_str.indexOf(val) >= 0) {
-        is_allowed = true
-      } else {
-        is_allowed = false
-      }
+      _.each(mods, m => {
+        if (rights_str.indexOf(m) < 0) {
+          is_allowed = false
+        }
+      })
     }
-
-    debugger
 
     if (!is_allowed) {
       el.classList.add('no-flexio-rights')
