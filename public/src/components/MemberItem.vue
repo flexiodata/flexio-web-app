@@ -29,7 +29,7 @@
         <el-button
           type="text"
           style="border: 0; padding: 0"
-          @click="onResendInvite"
+          @click="resendInvite"
           v-else
         >
           Resend invite
@@ -111,11 +111,15 @@
       }
     },
     methods: {
-      onResendInvite() {
-        this.$emit('resend-invite', this.item)
+      resendInvite() {
+        var team_name = this.active_team_name
+        var eid = _.get(this.item, 'eid')
+        this.$store.dispatch('members/resendInvite', { team_name, eid })
       },
-      removeMember(member) {
-        this.$emit('remove-member', this.item)
+      removeMember() {
+        var team_name = this.active_team_name
+        var eid = _.get(this.item, 'eid')
+        this.$store.dispatch('members/delete', { team_name, eid })
       },
       updateRole(role) {
         var team_name = this.active_team_name
