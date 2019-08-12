@@ -246,7 +246,7 @@ exports.flex_handler = function(flex) {
       onEditValuesChange() {
         var values = _.assign({}, this.edit_values)
         var is_local = values.remote_state == 'inline' ? true : false
-        values = _.pick(values, ['op', 'lang', is_local ? 'code' : 'path'])
+        values = _.pick(values, ['description', 'op', 'lang', is_local ? 'code' : 'path'])
         this.$emit('item-change', values, this.index)
       }
     }
