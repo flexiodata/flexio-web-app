@@ -218,9 +218,6 @@
         return !_.isEqual(this.edit_values, this.orig_values)
       }
     },
-    mounted() {
-      debugger
-    },
     methods: {
       initSelf() {
         var form_values = _.get(this.item, 'form_values', {})
