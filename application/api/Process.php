@@ -63,7 +63,7 @@ class Process
         {
             // load the object; make sure the eid is associated with the owner
             // as an additional check; note: the pipe may not have the same
-            // owner is the owner that the process is being created for
+            // owner as the owner that the process is being created for
             $pipe = \Flexio\Object\Pipe::load($pipe_eid);
 
             // we're getting the logic from the pipe, so we should have read access to
