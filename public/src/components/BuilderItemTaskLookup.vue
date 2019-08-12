@@ -57,7 +57,7 @@
           spellcheck="false"
           placeholder="Enter the names of the key fields"
           v-model="edit_values.lookup_keys"
-          v-tag
+          v-tag-input
         >
           <el-option
             :label="item.label"
@@ -82,7 +82,7 @@
           spellcheck="false"
           placeholder="Enter the names of the columns to return"
           v-model="edit_values.return_columns"
-          v-tag
+          v-tag-input
         >
           <el-option
             :label="item.label"

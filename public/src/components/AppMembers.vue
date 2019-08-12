@@ -68,6 +68,7 @@
             class="ttu fw6"
             type="primary"
             @click="show_add_dialog = true"
+            v-require-rights:member="'w'"
           >
             Add Members
           </el-button>
@@ -118,7 +119,7 @@
             spellcheck="false"
             placeholder="Enter email addresses"
             v-model="add_dialog_model.users"
-            v-tag
+            v-tag-input
           >
             <el-option
               :label="item.label"
