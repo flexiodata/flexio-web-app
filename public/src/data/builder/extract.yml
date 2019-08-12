@@ -1,0 +1,6 @@
+task:
+  op: extract
+
+prompt:
+  element: task-extract
+  title: Extract
