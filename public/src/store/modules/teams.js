@@ -6,6 +6,7 @@ import {
   updateMeta,
   removeMeta,
 } from '@/store/helpers'
+import { getFullName } from '@/utils'
 
 const getDefaultMeta = () => {
   return {
@@ -85,13 +86,7 @@ const getters = {
 
   getActiveTeamLabel (state, getters)  {
     var team = getters.getActiveTeam
-    if (team) {
-      var first_name = _.get(team, 'first_name', '')
-      var last_name = _.get(team, 'last_name', '')
-      return `${first_name} ${last_name}` + "'s team"
-    } else {
-      return ''
-    }
+    return team ? getFullName(team) + "'s team" : ''
   },
 }
 
