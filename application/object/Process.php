@@ -31,24 +31,6 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return json_encode($object);
     }
 
-    public static function summary(array $filter) : array
-    {
-        $result = \Flexio\System\System::getModel()->process->summary($filter);
-        return $result;
-    }
-
-    public static function summary_daily(array $filter) : array
-    {
-        $result = \Flexio\System\System::getModel()->process->summary_daily($filter);
-        return $result;
-    }
-
-    public static function summary_another(array $filter) : array
-    {
-        $result = self::accumulateStats($filter, 'user_eid');
-        return $result;
-    }
-
     public static function accumulateStats(array $filter, string $object_column) : array
     {
         // construct a date range from the filter
@@ -80,7 +62,7 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $daily_count = \Flexio\Base\Util::createDateRangeArray($date_start, $date_end);
 
         $object_totals = array();
-        $stats = \Flexio\System\System::getModel()->process->summary_daily($filter);
+        $stats = \Flexio\System\System::getModel()->process->summary($filter);
 
         foreach ($stats as $s)
         {

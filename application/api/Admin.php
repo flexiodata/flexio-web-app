@@ -339,7 +339,7 @@ class Admin
 
         $filter = array('eid_status' => \Model::STATUS_AVAILABLE);
         $filter = array_merge($validated_query_params, $filter); // give precedence to fixed status
-        $stats = \Flexio\Object\Process::summary_another($filter);
+        $stats = \Flexio\Object\Process::accumulateStats($filter, 'user_eid');
 
         // populate the user info if possible
         if (isset($stats['detail']))
