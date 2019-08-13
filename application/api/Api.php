@@ -69,7 +69,6 @@ class Api
 
         // teams
         'GET /:teamid/teams'                          => '\Flexio\Api\Team::list',
-        'GET /:teamid/teams/rights'                   => '\Flexio\Api\Team::rights',
 
         // team members
         'POS /:teamid/members'                        => '\Flexio\Api\TeamMember::create',
@@ -79,6 +78,7 @@ class Api
         'GET /:teamid/members/:teamid'                => '\Flexio\Api\TeamMember::get',
         'DEL /:teamid/members/:teamid'                => '\Flexio\Api\TeamMember::delete',
         'POS /:teamid/members/:teamid/invitations'    => '\Flexio\Api\TeamMember::sendinvitation',
+        'GET /:teamid/members/:teamid/rights'         => '\Flexio\Api\TeamMember::rights',
 
         // authorization
         'GET /:teamid/auth/keys'                      => '\Flexio\Api\Token::list',

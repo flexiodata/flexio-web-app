@@ -294,6 +294,28 @@ class TeamMember
         \Flexio\Api\Response::sendContent($result);
     }
 
+    public static function rights(\Flexio\Api\Request $request) : void
+    {
+        $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+        $member_user_eid = $request->getObjectFromUrl();
+
+        // check the rights on the owner; ability to get a member is governed
+        // currently by user read privileges
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_TEAMMEMBER_READ) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        // get the rights for the user
+        $result = $owner_user->rights($member_user_eid);
+
+        // return the rights
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        \Flexio\Api\Response::sendContent($result);
+    }
+
     public static function sendinvitation(\Flexio\Api\Request $request) : void
     {
         $post_params = $request->getPostParams();

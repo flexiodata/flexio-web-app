@@ -60,35 +60,6 @@ class Team
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function rights(\Flexio\Api\Request $request) : void
-    {
-        $query_params = $request->getQueryParams();
-        $requesting_user_eid = $request->getRequestingUser();
-        $owner_user_eid = $request->getOwnerFromUrl();
-
-        // placeholder
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($query_params, array(
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-
-        // public call since we're need to find out rights for any object and
-        // since we're only returning what's available for the requesting user;
-        // make sure the owner sin't deleted, however
-        $owner_user = \Flexio\Object\User::load($owner_user_eid);
-        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        //if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_USER_READ) === false)
-        //    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
-        // get the rights for the user
-        $result = $owner_user->rights($requesting_user_eid);
-
-        // return the rights
-        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api\Response::sendContent($result);
-    }
-
     private static function formatProperties(array $properties) : array
     {
         // sanity check: if the data record is missing, then owned_by (eid is
