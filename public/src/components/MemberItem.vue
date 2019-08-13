@@ -13,7 +13,10 @@
       </div>
     </td>
     <td class="tl nowrap" style="min-width: 9rem">
-      <div v-if="is_member_pending">
+      <div
+        v-if="is_member_pending"
+        v-require-rights:member.write
+      >
         <div
           v-if="is_invite_resending"
         >
@@ -44,6 +47,7 @@
           :item="item"
           @change-role="updateRole"
           @remove-member="removeMember"
+          v-require-rights:member.write
           v-else
         >
           <el-button
