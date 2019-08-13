@@ -24,6 +24,7 @@
                   type="primary"
                   class="ttu fw6"
                   @click="onNewConnection"
+                  v-require-rights:connection.write
                 >
                   New
                 </el-button>
