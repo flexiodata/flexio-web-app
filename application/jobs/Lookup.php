@@ -130,39 +130,6 @@ class Lookup extends \Flexio\Jobs\Base
 
         $streamwriter = $outstream->getWriter();
         $streamwriter->write(json_encode($lookup_result));
-        return;
-
-
-
-
-
-
-
-        // convert the table to json, but do so manually so we can
-        // handle large tables
-        $streamwriter = $outstream->getWriter();
-
-        // start the output
-        $streamwriter->write("[");
-
-        // write out the column names
-        $column_names = $local_stdout->getStructure()->getNames();
-        $streamwriter->write(json_encode($column_names));
-
-        // write out each row
-        $rows = \Flexio\Base\Util::getStreamContents($local_stdout);
-        foreach ($rows as $r)
-        {
-            $row_values = array_values($r);
-
-            $streamwriter->write(',');
-            $streamwriter->write(json_encode($row_values));
-        }
-
-        // end the output
-        $streamwriter->write(']');
-
-        // set the content type
         $outstream->setMimeType(\Flexio\Base\ContentType::JSON);
     }
 }
