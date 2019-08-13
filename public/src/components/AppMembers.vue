@@ -157,6 +157,7 @@
 </template>
 
 <script>
+  import { OBJECT_STATUS_AVAILABLE } from '@/constants/object-status'
   import { ROUTE_APP_PIPES } from '@/constants/route'
   import { mapState, mapGetters } from 'vuex'
   import { isValidEmail } from '@/utils'
@@ -266,7 +267,7 @@
           var active_member = _.find(this.members, { eid: this.active_user_eid })
 
           // this user is already a member of this team; show the member list
-          if (active_member) {
+          if (_.get(active_member, 'member_status') == OBJECT_STATUS_AVAILABLE) {
             this.is_already_member = true
 
             var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
