@@ -24,6 +24,7 @@
                   type="primary"
                   class="ttu fw6"
                   @click="show_pipe_dialog = true"
+                  v-require-rights:pipe.write
                 >
                   New
                 </el-button>
@@ -52,7 +53,11 @@
                       <div class="flex-fill f5 fw6 cursor-default mr1 lh-title truncate">{{pipe.name}}</div>
                     </div>
                   </div>
-                  <div class="flex-none ml2" @click.stop>
+                  <div
+                    class="flex-none ml2"
+                    @click.stop
+                    v-require-rights:pipe.write.hidden
+                  >
                       <el-dropdown trigger="click" @command="onCommand">
                         <span class="el-dropdown-link dib pointer pa1 black-30 hover-black">
                           <i class="material-icons v-mid">expand_more</i>

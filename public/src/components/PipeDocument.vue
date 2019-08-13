@@ -45,6 +45,7 @@
               @cancel="cancelChanges"
               @save="saveChanges"
               v-model="edit_task_list"
+              v-require-rights:pipe.write
             />
           </div>
         </div>
