@@ -69,6 +69,7 @@ class Api
 
         // teams
         'GET /:teamid/teams'                          => '\Flexio\Api\Team::list',
+        'GET /:teamid/teams/rights'                   => '\Flexio\Api\Team::rights',
 
         // team members
         'POS /:teamid/members'                        => '\Flexio\Api\TeamMember::create',
