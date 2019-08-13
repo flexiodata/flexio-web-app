@@ -27,22 +27,29 @@ Vue.use(Router)
 // use VueMeta for page metadata
 Vue.use(Meta)
 
-// any route containing a 'meta' node below will require authorization
-const meta = { requiresAuth: true }
+// add route metadata to require authentication, etc.
+const meta = {
+  requiresAuth: true
+}
+
+const team_meta = {
+  requiresAuth: true,
+  initializeTeam: true
+}
 
 const routes = [
   { path: '/', redirect: '/pipes' }, // base path redirect
-  { path: '/signin',                                name: rn.ROUTE_SIGNIN_PAGE,         component: SignInPage                },
-  { path: '/signout',                               name: rn.ROUTE_SIGNOUT_PAGE,        component: SignOutPage               },
-  { path: '/signup/:action?',                       name: rn.ROUTE_SIGNUP_PAGE,         component: SignUpPage                },
-  { path: '/forgotpassword',                        name: rn.ROUTE_FORGOTPASSWORD_PAGE, component: ForgotPasswordPage        },
-  { path: '/resetpassword',                         name: rn.ROUTE_RESETPASSWORD_PAGE,  component: ResetPasswordPage         },
-  { path: '/initsession',                           name: rn.ROUTE_INITSESSION_PAGE,    component: InitSessionPage           },
-  { path: '/verify',                                name: rn.ROUTE_VERIFY_PAGE,         component: VerifyPage                },
-  { path: '/account/:action?',                      name: rn.ROUTE_APP_ACCOUNT,         component: AppAccount,          meta },
-  { path: '/:team_name?/members/:action?',          name: rn.ROUTE_APP_MEMBERS,         component: AppMembers,          meta },
-  { path: '/:team_name?/connections/:object_name?', name: rn.ROUTE_APP_CONNECTIONS,     component: AppConnections,      meta },
-  { path: '/:team_name?/pipes/:object_name?',       name: rn.ROUTE_APP_PIPES,           component: AppPipes,            meta },
+  { path: '/signin',                                name: rn.ROUTE_SIGNIN_PAGE,         component: SignInPage                           },
+  { path: '/signout',                               name: rn.ROUTE_SIGNOUT_PAGE,        component: SignOutPage                          },
+  { path: '/signup/:action?',                       name: rn.ROUTE_SIGNUP_PAGE,         component: SignUpPage                           },
+  { path: '/forgotpassword',                        name: rn.ROUTE_FORGOTPASSWORD_PAGE, component: ForgotPasswordPage                   },
+  { path: '/resetpassword',                         name: rn.ROUTE_RESETPASSWORD_PAGE,  component: ResetPasswordPage                    },
+  { path: '/initsession',                           name: rn.ROUTE_INITSESSION_PAGE,    component: InitSessionPage                      },
+  { path: '/verify',                                name: rn.ROUTE_VERIFY_PAGE,         component: VerifyPage                           },
+  { path: '/account/:action?',                      name: rn.ROUTE_APP_ACCOUNT,         component: AppAccount,          meta            },
+  { path: '/:team_name?/members/:action?',          name: rn.ROUTE_APP_MEMBERS,         component: AppMembers,          meta: team_meta },
+  { path: '/:team_name?/connections/:object_name?', name: rn.ROUTE_APP_CONNECTIONS,     component: AppConnections,      meta: team_meta },
+  { path: '/:team_name?/pipes/:object_name?',       name: rn.ROUTE_APP_PIPES,           component: AppPipes,            meta: team_meta },
   admin_routes,
   { path: "*", component: PageNotFound } // 404
 ]
