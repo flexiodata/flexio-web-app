@@ -33,16 +33,18 @@ Vue.directive('tag-input', {
   }
 })
 
-const updateRights = (el, binding) => {
+const updateRightsElement = (el, binding) => {
+  var is_allowed = true
   var eid = store.state.users.active_user_eid
   var members = store.getters['members/getAllMembers']
   var active_member = _.find(members, { eid })
   var active_member_role = _.get(active_member, 'role', '')
   var role = _.find(member_roles, r => r.type == active_member_role)
   var rights = _.get(role, 'rights', {})
-  var is_allowed = true
 
-  console.log(active_member_role, active_member.email, rights, el)
+  var arg = _.get(binding, 'arg', '')
+  var mods = _.get(binding, 'modifiers', {})
+  var rights_cls = _.get(mods, 'hidden') ? 'member-rights-hidden' : 'member-rights-disabled'
 
   if (!active_member) {
     // active user is not a member of this team; bail out
@@ -51,10 +53,8 @@ const updateRights = (el, binding) => {
     // active user is the owner of this team; move along
     is_allowed = true
   } else {
-    var arg = _.get(binding, 'arg', '')
-    var mods = _.get(binding, 'modifiers', {})
 
-    // directive argument is required
+    // directive argument and modifier are both required
     try {
       if (arg.length == 0) {
         throw({ message: '`v-require-rights` directive argument is required' })
@@ -68,20 +68,17 @@ const updateRights = (el, binding) => {
 
     // map friendly-looking modifiers to single-letter UNIX-style characters
     mods = _.map(mods, (val, key) => {
-
       switch (key) {
         case 'r':
-        case 'read':
-          return 'r'
         case 'w':
-        case 'write':
-          return 'w'
         case 'd':
-        case 'delete':
-          return 'd'
         case 'x':
-        case 'execute':
-          return 'x'
+          return key
+
+        case 'read':    return 'r'
+        case 'write':   return 'w'
+        case 'delete':  return 'd'
+        case 'execute': return 'x'
       }
       return null
     })
@@ -98,21 +95,18 @@ const updateRights = (el, binding) => {
     })
   }
 
-  if (!is_allowed) {
-    el.classList.add('flexio-rights-disabled')
-  } else {
-    el.classList.remove('flexio-rights-disabled')
-  }
+  // add or remove the rights class depending on the active member's rights
+  el.classList[is_allowed ? 'remove' : 'add'](rights_cls)
 }
 
 Vue.directive('require-rights', {
   bind: function(el, binding) {
     //console.log('bind:require-rights')
-    updateRights(el, binding)
+    updateRightsElement(el, binding)
   },
   componentUpdated: function(el, binding) {
     //console.log('componentUpdated:require-rights')
-    updateRights(el, binding)
+    updateRightsElement(el, binding)
   }
 })
 

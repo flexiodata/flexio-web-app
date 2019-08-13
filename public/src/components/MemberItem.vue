@@ -41,7 +41,12 @@
     </td>
     <td class="tl nowrap" style="min-width: 9rem">
       <div class="fw6">
-        <span v-if="is_member_owner">Owner</span>
+        <span
+          v-require-rights:member.write
+          v-if="is_member_owner"
+        >
+          Owner
+        </span>
         <MemberItemRoleDropdown
           width="310"
           :item="item"
@@ -55,7 +60,8 @@
             class="fw6 role-button"
             type="text"
           >
-            <span>{{role_title}}</span> <i class="dropdown-caret"></i>
+            <span>{{role_title}}</span>
+            <i class="dropdown-caret" v-require-rights:member.write.hidden></i>
           </el-button>
         </MemberItemRoleDropdown>
       </div>
