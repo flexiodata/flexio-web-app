@@ -112,8 +112,6 @@ class Api
         // processes
         'POS /:teamid/processes'                      => '\Flexio\Api\Process::create',
         'GET /:teamid/processes'                      => '\Flexio\Api\Process::list',
-        'GET /:teamid/processes/summary'              => '\Flexio\Api\Process::summary', // grand totals
-        'GET /:teamid/processes/summary/daily'        => '\Flexio\Api\Process::summary_daily', // daily totals; TODO: combine with stats, rename
         'POS /:teamid/processes/:objid'               => '\Flexio\Api\Process::set',
         'GET /:teamid/processes/:objid'               => '\Flexio\Api\Process::get',
         'DEL /:teamid/processes/:objid'               => '\Flexio\Api\Process::delete',
