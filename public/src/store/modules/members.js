@@ -61,6 +61,10 @@ const mutations = {
     removeItem(state, eid)
   },
 
+  'FETCHED_MEMBER_RIGHTS' (state, { eid, rights }) {
+    updateItem(state, eid, { rights })
+  },
+
   'JOINED_TEAM' (state) {},
 
   'RESENDING_INVITE' (state, { eid, is_invite_resending }) {
@@ -118,6 +122,15 @@ const actions = {
   'delete' ({ commit }, { team_name, eid }) {
     return api.deleteMember(team_name, eid).then(response => {
       commit('DELETED_MEMBER', eid)
+      return response
+    }).catch(error => {
+      throw error
+    })
+  },
+
+  'fetchRights' ({ commit, dispatch }, { team_name, eid }) {
+    return api.fetchMemberRights(team_name, eid).then(response => {
+      commit('FETCHED_MEMBER_RIGHTS', { eid, rights: response.data })
       return response
     }).catch(error => {
       throw error

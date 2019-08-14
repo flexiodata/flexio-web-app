@@ -35,6 +35,11 @@ Vue.directive('tag-input', {
 })
 
 const updateRightsElement = (el, binding) => {
+  // if the value is false, we're going to ignore the rights requirement
+  if (_.get(binding, 'value') === false) {
+    return
+  }
+
   var eid = store.state.users.active_user_eid
   var members = store.getters['members/getAllMembers']
   var active_member = _.find(members, { eid })
