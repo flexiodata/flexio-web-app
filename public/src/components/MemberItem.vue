@@ -52,7 +52,7 @@
           :item="item"
           @change-role="updateRole"
           @remove-member="removeMember"
-          v-require-rights:member.write
+          v-require-rights:member.write="!is_member_active_user"
           v-else
         >
           <el-button
@@ -61,7 +61,7 @@
             type="text"
           >
             <span>{{role_title}}</span>
-            <i class="dropdown-caret" v-require-rights:member.write.hidden></i>
+            <i class="dropdown-caret" v-require-rights:member.write.hidden="!is_member_active_user"></i>
           </el-button>
         </MemberItemRoleDropdown>
       </div>
@@ -107,6 +107,9 @@
       is_member_owner() {
         return _.get(this.item, 'eid') == _.get(this.item, 'member_of.eid')
       },
+      is_member_active_user() {
+        return _.get(this.item, 'eid') == this.active_user_eid
+      },
       is_member_pending() {
         return _.get(this.item, 'member_status') == OBJECT_STATUS_PENDING
       },
@@ -115,7 +118,7 @@
       },
       is_invite_resent() {
         return _.get(this.item, 'vuex_meta.is_invite_resent')
-      }
+      },
     },
     methods: {
       resendInvite() {
