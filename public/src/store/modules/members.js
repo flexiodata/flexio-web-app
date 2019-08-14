@@ -130,9 +130,13 @@ const actions = {
 
   'fetchRights' ({ commit, dispatch, state, rootState }, { team_name, eid, username }) {
     return api.fetchMemberRights(team_name, username || eid).then(response => {
-      // make sure system admin's are added as members even if
-      // they're not "official" members of a team
-      if (_.indexOf(response.data, 'action.system.read') >= 0) {
+      var is_member = !!_.find(state.items, { eid })
+      var is_superuser = _.indexOf(response.data, 'action.system.read') >= 0
+
+      // if the user we just fetched rights for is a system admin. and they
+      // are not a member of this team, make sure to add them so that they'll
+      // have access even though they're not an "official" member
+      if (is_superuser && !is_member) {
         // try to lookup this user in the user module's `item's` list
         var user = _.get(rootState.users, 'items['+eid+']', null)
         if (user) {
