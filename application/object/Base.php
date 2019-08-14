@@ -77,6 +77,10 @@ class Base
             return array();
         }
 
+        // CHECK: see if the user is a system administrator
+        if ($this->getModel()->user->isAdministrator($user_eid) === true)
+            return self::getSystemAdministratorRights();
+
         // CHECK: see if the user is the team owner
         if ($user_eid === $this->getOwner())
             return self::getTeamOwnerRights();
@@ -112,10 +116,6 @@ class Base
         {
             // fall through
         }
-
-        // CHECK: see if the user is a system administrator
-        if ($this->getModel()->user->isAdministrator($user_eid) === true)
-            return self::getSystemAdministratorRights();
 
         // action not allowed
         return array();
