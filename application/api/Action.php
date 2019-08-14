@@ -89,11 +89,6 @@ class Action
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function summary(\Flexio\Api\Request $request) : void
-    {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-    }
-
     public static function list(\Flexio\Api\Request $request) : void
     {
         $query_params = $request->getQueryParams();

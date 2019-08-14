@@ -88,7 +88,6 @@ class Api
 
         // actions
         'GET /:teamid/actions'                        => '\Flexio\Api\Action::list',
-        'GET /:teamid/actions/summary'                => '\Flexio\Api\Action::summary',
 
         // connections
         'POS /:teamid/connections'                    => '\Flexio\Api\Connection::create',
