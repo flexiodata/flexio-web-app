@@ -86,9 +86,6 @@ class Api
         'GET /:teamid/auth/keys/:objid'               => '\Flexio\Api\Token::get',
         'DEL /:teamid/auth/keys/:objid'               => '\Flexio\Api\Token::delete',
 
-        // actions
-        'GET /:teamid/actions'                        => '\Flexio\Api\Action::list',
-
         // connections
         'POS /:teamid/connections'                    => '\Flexio\Api\Connection::create',
         'GET /:teamid/connections'                    => '\Flexio\Api\Connection::list',
@@ -124,6 +121,9 @@ class Api
         'GET /:teamid/vfs/list'                       => '\Flexio\Api\Vfs::list',
         'GET /:teamid/vfs/*'                          => '\Flexio\Api\Vfs::get',
         'PUT /:teamid/vfs/*'                          => '\Flexio\Api\Vfs::put',
+
+        // actions
+        'GET /:teamid/actions'                        => '\Flexio\Api\Action::list',
 
 
         // EXPERIMENTAL ENDPOINTS
