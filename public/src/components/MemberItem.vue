@@ -47,6 +47,12 @@
         >
           Owner
         </span>
+        <span
+          v-require-rights:member.write
+          v-else-if="is_member_superuser"
+        >
+          System Admin.
+        </span>
         <MemberItemRoleDropdown
           width="310"
           :item="item"
@@ -102,10 +108,13 @@
       },
       role_title() {
         var role = _.find(member_roles, r => r.type == _.get(this.item, 'role'))
-        return role ? role.name : 'Owner'
+        return role ? role.name : 'Unknown'
       },
       is_member_owner() {
-        return _.get(this.item, 'eid') == _.get(this.item, 'member_of.eid')
+        return _.get(this.item, 'role') == 'O'
+      },
+      is_member_superuser() {
+        return _.get(this.item, 'vuex_meta.is_superuser') === true
       },
       is_member_active_user() {
         return _.get(this.item, 'eid') == this.active_user_eid

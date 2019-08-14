@@ -58,7 +58,7 @@
         active_team_name: state => state.teams.active_team_name
       }),
       is_member_owner() {
-        return _.get(this.item, 'eid') == _.get(this.item, 'member_of.eid')
+        return _.get(this.item, 'role') == 'O'
       },
       is_member_active_user() {
         return _.get(this.item, 'eid') == this.active_user_eid
