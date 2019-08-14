@@ -88,8 +88,10 @@
       changeTeam(team) {
         if (!this.isActiveTeam(team)) {
           var team_name = team.username
-          this.$store.dispatch('teams/changeActiveTeam', { team_name })
-          //window.location = '/app/' + team_name + '/pipes'
+          this.$store.dispatch('teams/changeActiveTeam', { team_name }).then(response => {
+            var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path', 'query'])
+            this.$router.push({ path: `/${team_name}/pipes` })
+          })
         }
       },
       onVisibleChange(is_open) {
