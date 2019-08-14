@@ -38,9 +38,11 @@ export default {
           dispatch('connections/fetch', { team_name }),
         ])
         .then(axios.spread((teams_response, members_response, connections_response) => {
-          dispatch('members/fetchRights', { team_name, eid: active_user_eid }),
-          commit('INITIALIZING_APP', false)
+          dispatch('members/fetchRights', { team_name, eid: active_user_eid })
         }))
+        .finally(() => {
+          commit('INITIALIZING_APP', false)
+        })
     }
   }
 }

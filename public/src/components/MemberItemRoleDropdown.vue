@@ -55,6 +55,7 @@
     computed: {
       ...mapState({
         active_user_eid: state => state.users.active_user_eid,
+        active_team_name: state => state.teams.active_team_name
       }),
       is_member_owner() {
         return _.get(this.item, 'eid') == _.get(this.item, 'member_of.eid')
@@ -76,6 +77,9 @@
       },
       changeRole(role_type) {
         if (this.is_member_active_user && this.isLesserRole(role_type)) {
+          // hide the popover while we're confirming
+          this.is_visible = false
+
           this.$confirm('You are attempting to change your role to one with less rights. Are you sure you want to do this?', 'Accept lesser role?', {
             confirmButtonClass: 'ttu fw6 el-button--danger',
             cancelButtonClass: 'ttu fw6',
@@ -95,17 +99,32 @@
       },
       removeMember(member) {
         var full_name = getFullName(this.item)
-        var member = full_name.length > 0 ? full_name : _.get(this.item, 'email', '')
-        var msg = this.is_member_active_user ? 'Are you sure you want to leave this team?' : `Are you sure you want to remove <strong>${member}</strong> from this team?`
-        var title = this.is_member_active_user ? 'Leave team?' : `Remove ${member}?`
+        var email = _.get(this.item, 'email', '')
+        var member = full_name.length > 0 ? full_name : email
+        var email_str = full_name.length > 0 ? ` (${email})` : ''
 
-        this.$confirm(msg, title, {
+        var leave_msg = `<p>Are you sure you want to leave this team?</p><div class="h1"></div><p>Enter the team name <strong>"${this.active_team_name}"</strong> below to confirm this is what you want to do.</p>`
+        var leave_title = 'Leave team?'
+
+        var remove_msg = `Are you sure you want to remove <strong>${member}${email_str}</strong> from this team?`
+        var remove_title = `Remove ${member}?`
+
+        var msg = this.is_member_active_user ? leave_msg : remove_msg
+        var title = this.is_member_active_user ? leave_title : remove_title
+
+        // hide the popover while we're confirming
+        this.is_visible = false
+
+        this[this.is_member_active_user ? '$prompt' : '$confirm'](msg, title, {
+          type: this.is_member_active_user ? '' : 'warning',
           confirmButtonClass: 'ttu fw6 el-button--danger',
           cancelButtonClass: 'ttu fw6',
           confirmButtonText: this.is_member_active_user ? 'Leave' : 'Remove',
           cancelButtonText: 'Cancel',
-          dangerouslyUseHTMLString: !this.is_member_active_user ? true : false,
-          type: 'warning'
+          dangerouslyUseHTMLString: true,
+          inputValidator: (val) => {
+            return val == this.active_team_name ? true : 'The team name does not match'
+          },
         }).then(() => {
           this.$emit('remove-member', member)
           this.is_visible = false
