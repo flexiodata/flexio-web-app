@@ -1,7 +1,14 @@
 <template>
-  <div class="flex flex-column flex-row-l items-stretch bg-nearer-white">
-    <PageNotFound class="flex-fill" v-if="!is_superuser" />
-    <template v-else>
+  <!-- fetching -->
+  <div v-if="is_fetching">
+    <div class="flex flex-column justify-center bg-nearer-white h-100">
+      <Spinner size="large" message="Loading..." />
+    </div>
+  </div>
+
+  <!-- fetched -->
+  <div class="flex flex-column flex-row-l items-stretch bg-nearer-white" v-else-if="is_fetched">
+    <template v-if="is_superuser">
       <div class="flex flex-row flex-column-l flex-none items-stretch bb bb-0-l br-l b--black-05 pv0 pt4-l ph1-l overflow-auto trans-pm">
         <router-link to="/" class="mv1 ph1 pl3-l pr5-l pv2">
           <div class="dib hint--bottom" aria-label="Home">
@@ -20,11 +27,13 @@
       </div>
       <router-view class="flex-fill relative"></router-view>
     </template>
+    <PageNotFound class="flex-fill" v-else />
   </div>
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+  import { mapState, mapGetters } from 'vuex'
+  import Spinner from 'vue-simple-spinner'
   import PageNotFound from '@/components/PageNotFound'
 
   const nav_items = [
@@ -45,22 +54,42 @@
 
   export default {
     components: {
+      Spinner,
       PageNotFound
     },
     data() {
       return {
-        nav_items
+        nav_items,
+        is_fetching: false,
+        is_fetched: false,
       }
     },
     computed: {
+      ...mapState({
+        active_user_eid: state => state.users.active_user_eid
+      }),
       is_superuser() {
-        // limit to @flex.io users for now
-        return _.includes(this.getActiveUserEmail(), '@flex.io')
+        var member = _.find(this.getAllMembers(), { eid: this.active_user_eid })
+        return _.indexOf(_.get(member, 'rights', []), 'action.system.read') >= 0
       }
     },
+    mounted() {
+      this.is_fetching = true
+
+      var team_name = this.getActiveUsername()
+      var eid = this.active_user_eid
+      this.$store.dispatch('members/fetchRights', { team_name, eid, username: team_name }).then(response => {
+        this.is_fetched = true
+      }).finally(() => {
+        this.is_fetching = false
+      })
+    },
     methods: {
+      ...mapGetters('members', {
+        'getAllMembers': 'getAllMembers',
+      }),
       ...mapGetters('users', {
-        'getActiveUserEmail': 'getActiveUserEmail'
+        'getActiveUsername': 'getActiveUsername'
       })
     }
   }

@@ -16,8 +16,8 @@ export default {
 
   'initializeTeam' ({ commit, dispatch, state, getters }, { team_name, force }) {
     var active_user_name = getters['users/getActiveUsername']
-    var old_team_name = state.teams.active_team_name
     var active_user_eid = state.users.active_user_eid
+    var old_team_name = state.teams.active_team_name
 
     if (team_name != old_team_name || force === true) {
         commit('INITIALIZING_APP', true)
@@ -38,7 +38,7 @@ export default {
           dispatch('connections/fetch', { team_name }),
         ])
         .then(axios.spread((teams_response, members_response, connections_response) => {
-          dispatch('members/fetchRights', { team_name, eid: active_user_eid }).finally(response => {
+          dispatch('members/fetchRights', { team_name, eid: active_user_eid, username: active_user_name }).finally(response => {
             commit('INITIALIZING_APP', false)
           })
         }))

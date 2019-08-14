@@ -114,7 +114,7 @@
         return _.get(this.item, 'role') == 'O'
       },
       is_member_superuser() {
-        return _.get(this.item, 'vuex_meta.is_superuser') === true
+        return _.indexOf(_.get(this.item, 'rights', []), 'action.system.read') >= 0
       },
       is_member_active_user() {
         return _.get(this.item, 'eid') == this.active_user_eid

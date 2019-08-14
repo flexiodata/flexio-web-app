@@ -96,11 +96,12 @@
     },
     computed: {
       ...mapState({
+        active_user_eid: state => state.users.active_user_eid,
         active_team_name: state => state.teams.active_team_name
       }),
       is_superuser() {
-        // limit to @flex.io users for now
-        return _.includes(this.getActiveUserEmail(), '@flex.io')
+        var member = _.find(this.getAllMembers(), { eid: this.active_user_eid })
+        return _.indexOf(_.get(member, 'rights', []), 'action.system.read') >= 0
       },
       process() {
         return _.get(this.$store, 'state.processes.items.' + this.processEid)
@@ -136,6 +137,9 @@
       }
     },
     methods: {
+      ...mapGetters('member', {
+        'getAllMembers': 'getAllMembers'
+      }),
       ...mapGetters('users', {
         'getActiveUserEmail': 'getActiveUserEmail'
       })

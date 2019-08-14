@@ -12,8 +12,7 @@ const getDefaultMeta = () => {
     is_invite_resending: false,
     is_invite_resent: false,
     is_fetching: false,
-    is_fetched: false,
-    is_superuser: false
+    is_fetched: false
   }
 }
 
@@ -32,9 +31,9 @@ const mutations = {
     _.assign(state, getDefaultState())
   },
 
-  'CREATED_MEMBER' (state, { item, meta }) {
-    var _meta = _.assign(getDefaultMeta(), { is_fetched: true }, meta)
-    addItem(state, item, _meta)
+  'CREATED_MEMBER' (state, item) {
+    var meta = _.assign(getDefaultMeta(), { is_fetched: true })
+    addItem(state, item, meta)
   },
 
   'FETCHING_MEMBERS' (state, is_fetching) {
@@ -80,7 +79,7 @@ const mutations = {
 const actions = {
   'create' ({ commit, dispatch }, { team_name, attrs }) {
     return api.createMember(team_name, attrs).then(response => {
-      commit('CREATED_MEMBER', { item: response.data })
+      commit('CREATED_MEMBER', response.data)
       return response
     }).catch(error => {
       throw error
@@ -129,18 +128,15 @@ const actions = {
     })
   },
 
-  'fetchRights' ({ commit, dispatch, state, rootState }, { team_name, eid }) {
-    return api.fetchMemberRights(team_name, eid).then(response => {
-      // since we've already fetched the members; if the member doesn't
-      // exist here, it's most likely because they are logged in as
-      // a super-user; they are not an official member of the team,
-      // but are given rights as if they are an owner of the team
-      if (!_.has(state.items, eid)) {
+  'fetchRights' ({ commit, dispatch, state, rootState }, { team_name, eid, username }) {
+    return api.fetchMemberRights(team_name, username || eid).then(response => {
+      // make sure system admin's are added as members even if
+      // they're not "official" members of a team
+      if (_.indexOf(response.data, 'action.system.read') >= 0) {
         // try to lookup this user in the user module's `item's` list
         var user = _.get(rootState.users, 'items['+eid+']', null)
-        var meta = { is_superuser: true }
         if (user) {
-          commit('CREATED_MEMBER', { item: user, meta })
+          commit('CREATED_MEMBER', user)
           commit('FETCHED_MEMBER_RIGHTS', { eid, rights: response.data })
         }
       } else {
