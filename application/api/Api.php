@@ -34,7 +34,7 @@ class Api
 
     private static $endpoints = array(
 
-        // PUBLIC ENDPOINTS:
+        // PUBLIC ENDPOINTS
 
         // system
         'GET /about'                                  => '\Flexio\Api\System::about',
@@ -53,7 +53,7 @@ class Api
         'GET /login'                                  => '\Flexio\Api\System::logintoken', // special variant that allows login to be called via a redirect and token
 
 
-        // AUTHENTICATED ENDPOINTS:
+        // AUTHENTICATED ENDPOINTS
 
         // validation
         'POS /:teamid/validate'                       => '\Flexio\Api\User::validateObjects',
@@ -102,7 +102,6 @@ class Api
         // pipes
         'POS /:teamid/pipes'                          => '\Flexio\Api\Pipe::create',
         'GET /:teamid/pipes'                          => '\Flexio\Api\Pipe::list',
-        'DEL /:teamid/pipes'                          => '\Flexio\Api\Pipe::bulkdelete', // experimental
         'POS /:teamid/pipes/:objid'                   => '\Flexio\Api\Pipe::set',
         'GET /:teamid/pipes/:objid'                   => '\Flexio\Api\Pipe::get',
         'DEL /:teamid/pipes/:objid'                   => '\Flexio\Api\Pipe::delete',
@@ -118,10 +117,6 @@ class Api
         'POS /:teamid/processes/:objid/run'           => '\Flexio\Api\Process::run',
         'POS /:teamid/processes/:objid/cancel'        => '\Flexio\Api\Process::cancel',
 
-        // processes EXPERIMENTAL endpoint for running code (creates and runs a process from code)
-        'GET /:teamid/processes/exec'                 => '\Flexio\Api\Process::exec',
-        'POS /:teamid/processes/exec'                 => '\Flexio\Api\Process::exec',
-
         // streams
         'GET /:teamid/streams/:objid'                 => '\Flexio\Api\Stream::get',
         'GET /:teamid/streams/:objid/content'         => '\Flexio\Api\Stream::content',
@@ -131,11 +126,22 @@ class Api
         'GET /:teamid/vfs/*'                          => '\Flexio\Api\Vfs::get',
         'PUT /:teamid/vfs/*'                          => '\Flexio\Api\Vfs::put',
 
-        // vfs-styled EXPERIMENTAL endpoint for running code (creates and runs a process from code)
+
+        // EXPERIMENTAL ENDPOINTS
+
+        // experimental pipes endpoint for bulk delete of pipes
+        'DEL /:teamid/pipes'                          => '\Flexio\Api\Pipe::bulkdelete',
+
+        // experimental processes endpoint for running code (creates and runs a process from code)
+        'GET /:teamid/processes/exec'                 => '\Flexio\Api\Process::exec',
+        'POS /:teamid/processes/exec'                 => '\Flexio\Api\Process::exec',
+
+        // experimental vfs-style endpoint for running code (creates and runs a process based on a path)
         'GET /:teamid/run/*'                          => '\Flexio\Api\Vfs::exec',
         'POS /:teamid/run/*'                          => '\Flexio\Api\Vfs::exec',
         'PUT /:teamid/run/*'                          => '\Flexio\Api\Vfs::exec',
         'DEL /:teamid/run/*'                          => '\Flexio\Api\Vfs::exec',
+
 
         // INTERNAL ENDPOINTS
 
