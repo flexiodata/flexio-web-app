@@ -32,7 +32,6 @@ class TeamMember
                 'member_status' => array('type' => 'string', 'required' => false,
                                          'default' => \Model::TEAM_MEMBER_STATUS_PENDING,
                                          'enum' => [\Model::TEAM_MEMBER_STATUS_PENDING, \Model::TEAM_MEMBER_STATUS_ACTIVE]),
-                'rights' => array('type' => 'object', 'required' => false),
                 'role'   => array('type' => 'string', 'required' => false,
                                          'default' => \Model::TEAM_ROLE_USER,
                                          'enum' => [\Model::TEAM_ROLE_USER, \Model::TEAM_ROLE_CONTRIBUTOR, \Model::TEAM_ROLE_ADMINISTRATOR]) // don't allow a member to be set as the owner for now
@@ -41,10 +40,7 @@ class TeamMember
 
         $validated_post_params = $validator->getParams();
 
-        // rights are stored as a json string
-        $rights = '[]';
-        if (isset($validated_post_params) && isset($validated_post_params['rights']))
-            $rights = json_encode($validated_post_params['rights']);
+        // get the params
         $role = $validated_post_params['role'];
 
         // check the rights on the owner
@@ -114,7 +110,6 @@ class TeamMember
         // add the team member
         $member_properties = array();
         $member_properties['member_eid'] = $member_user_eid;
-        $member_properties['rights'] = $rights;
         $member_properties['role'] = $role;
         $member_properties['owned_by'] = $owner_user_eid;
         $member_properties['created_by'] = $requesting_user_eid;
@@ -194,17 +189,12 @@ class TeamMember
         if (($validator->check($post_params, array(
                 'member_status' => array('type' => 'string', 'required' => false,
                                          'enum' => [\Model::TEAM_MEMBER_STATUS_PENDING, \Model::TEAM_MEMBER_STATUS_ACTIVE]),
-                'rights'        => array('type' => 'object', 'required' => false),
                 'role'          => array('type' => 'string', 'required' => false,
                                          'enum' => [\Model::TEAM_ROLE_USER, \Model::TEAM_ROLE_CONTRIBUTOR, \Model::TEAM_ROLE_ADMINISTRATOR]) // don't allow a member to be set as the owner for now
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_post_params = $validator->getParams();
-
-        // rights are stored as a json string
-        if (isset($validated_post_params) && isset($validated_post_params['rights']))
-            $validated_post_params['rights'] = json_encode($validated_post_params['rights']);
 
         // check the rights on the owner; ability to update a member is governed
         // currently by user write privileges
@@ -475,11 +465,6 @@ class TeamMember
         {
         }
 
-        $rights = $properties['rights'] ?? '[]';
-        $rights = @json_decode($rights, true);
-        if ($rights === false)
-            $rights = array();
-
         // return the member info
         $member_properties = array();
         $member_properties['eid'] = $properties['member_eid'] ?? '';
@@ -490,7 +475,6 @@ class TeamMember
         $member_properties['last_name'] = $user_info['last_name'] ?? '';
         $member_properties['email'] = $user_info['email'] ?? '';
         $member_properties['email_hash'] = $user_info['email_hash'] ?? '';
-        $member_properties['rights'] = $rights;
         $member_properties['role'] = $properties['role'] ?? '';
         $member_properties['member_status'] = $properties['member_status'] ?? '';
         $member_properties['member_of'] = array(
