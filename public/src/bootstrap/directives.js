@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuebar from 'vuebar'
 import store from '@/store' // Vuex store
-import member_roles from '@/data/member-roles.yml'
 import { isMemberAllowed } from '@/utils/member'
 
 Vue.use(Vuebar)
@@ -62,27 +61,18 @@ const updateRightsElement = (el, binding) => {
     return
   }
 
-  // map friendly-looking modifiers to single-letter UNIX-style characters
-  var actions = _.map(mods, (val, key) => {
-    if (['r','w','d','x'].indexOf(key) > -1) { return key }
+  // remove any modifiers that aren't member rights actions
+  var actions = _.omit(mods, ['hidden'])
 
-    switch (key) {
-      case 'read':    return 'r';
-      case 'write':   return 'w';
-      case 'delete':  return 'd';
-      case 'execute': return 'x';
-    }
-
-    return null
+  // convert actions into an array and them map them to action strings
+  // that the backend uses (e.g. 'action.connection.read', etc.)
+  actions = _.keys(actions)
+  actions = _.map(actions, action => {
+    return `action.${arg}.${action}`
   })
 
-  // remove empty and duplicate actions and convert the actions to a UNIX-style character string
-  actions = _.compact(actions)
-  actions = actions.filter((a, idx) => actions.indexOf(a) === idx)
-  actions = actions.join('')
-
   // add or remove the rights class depending on the active member's rights
-  if (isMemberAllowed(active_member, arg, actions)) {
+  if (isMemberAllowed(active_member, actions)) {
     el.classList.remove(rights_cls)
   } else {
     el.classList.add(rights_cls)

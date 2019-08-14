@@ -24,7 +24,7 @@
                   type="primary"
                   class="ttu fw6"
                   @click="show_pipe_dialog = true"
-                  v-require-rights:pipe.write
+                  v-require-rights:pipe.update
                 >
                   New
                 </el-button>
@@ -56,7 +56,7 @@
                   <div
                     class="flex-none ml2"
                     @click.stop
-                    v-require-rights:pipe.write.hidden
+                    v-require-rights:pipe.update.hidden
                   >
                       <el-dropdown trigger="click" @command="onCommand">
                         <span class="el-dropdown-link dib pointer pa1 black-30 hover-black">

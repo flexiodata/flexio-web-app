@@ -11,7 +11,10 @@
         >
           My Account
         </div>
-        <template v-else-if="show_team_nav">
+        <template
+          v-require-rights.team.read.hidden
+          v-else-if="show_team_nav"
+        >
           <TeamDropdown class="ml3" />
           <template>
             <router-link :to="pipe_route" class="fw6 f6 ttu link nav-link">Functions</router-link>
@@ -70,21 +73,8 @@
           return false
         }
 
-        if (!this.isActiveUserMemberOfTeam()) {
-          return false
-        }
-
         return true
       }
-    },
-    methods: {
-      ...mapGetters('members', {
-        'getAllMembers': 'getAllMembers'
-      }),
-      isActiveUserMemberOfTeam() {
-        var member = _.find(this.getAllMembers(), { eid: this.active_user_eid })
-        return _.get(member, 'member_status') == OBJECT_STATUS_AVAILABLE
-      },
     }
   }
 </script>

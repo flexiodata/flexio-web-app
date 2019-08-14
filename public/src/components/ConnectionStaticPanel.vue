@@ -56,7 +56,7 @@
           size="small"
           type="primary"
           @click="$emit('edit-click')"
-          v-require-rights:connection.write
+          v-require-rights:connection.update
         >
           Edit
         </el-button>

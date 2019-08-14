@@ -10,7 +10,7 @@
         class="flex flex-row member-role-item"
         :key="role.name"
         @click="changeRole(role.type)"
-        v-require-rights:member.write
+        v-require-rights:teammember.update
         v-for="role in member_roles"
       >
         <i class="material-icons md-18 b mr2" v-if="isActiveRole(role)">check</i>

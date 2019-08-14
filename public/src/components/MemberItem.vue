@@ -15,7 +15,7 @@
     <td class="tl nowrap" style="min-width: 9rem">
       <div
         v-if="is_member_pending"
-        v-require-rights:member.write
+        v-require-rights:teammember.update
       >
         <div
           v-if="is_invite_resending"
@@ -42,13 +42,13 @@
     <td class="tl nowrap" style="min-width: 9rem">
       <div class="fw6">
         <span
-          v-require-rights:member.write
+          v-require-rights:teammember.update
           v-if="is_member_owner"
         >
           Owner
         </span>
         <span
-          v-require-rights:member.write
+          v-require-rights:teammember.update
           v-else-if="is_member_superuser"
         >
           System Admin.
@@ -58,7 +58,7 @@
           :item="item"
           @change-role="updateRole"
           @remove-member="removeMember"
-          v-require-rights:member.write="!is_member_active_user"
+          v-require-rights:teammember.update="!is_member_active_user"
           v-else
         >
           <el-button
@@ -67,7 +67,7 @@
             type="text"
           >
             <span>{{role_title}}</span>
-            <i class="dropdown-caret" v-require-rights:member.write.hidden="!is_member_active_user"></i>
+            <i class="dropdown-caret" v-require-rights:teammember.update.hidden="!is_member_active_user"></i>
           </el-button>
         </MemberItemRoleDropdown>
       </div>

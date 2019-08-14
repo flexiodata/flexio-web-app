@@ -10,7 +10,7 @@
             :aria-label="is_deployed ? 'Turn function off' : 'Turn function on'"
             :width="58"
             v-model="is_deployed"
-            v-require-rights:pipe.write
+            v-require-rights:pipe.update
           />
         </div>
         <div class="mt3">
@@ -29,7 +29,7 @@
             style="min-width: 5rem"
             size="small"
             @click="$emit('properties-click')"
-            v-require-rights:pipe.write
+            v-require-rights:pipe.update
           >
             Edit
           </el-button>
@@ -40,7 +40,7 @@
             size="small"
             :disabled="!allowRun"
             @click="$emit('run-click')"
-            v-require-rights:process.execute
+            v-require-rights:process.create
           >
             <span class="ttu fw6">Test</span>
           </el-button>

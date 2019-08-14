@@ -29,7 +29,7 @@
         class="flex-none ml2"
         @click.stop
         v-if="showDropdown && !is_flexio"
-        v-require-rights:connection.write.hidden
+        v-require-rights:connection.update.hidden
       >
         <el-dropdown trigger="click" @command="onCommand">
           <span class="el-dropdown-link dib pointer pa1 black-30 hover-black">
