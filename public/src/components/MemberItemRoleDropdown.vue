@@ -67,9 +67,31 @@
       isActiveRole(role) {
         return role.type == this.item.role
       },
+      isLesserRole(role_type) {
+        // map roles to integers
+        var mapper = { 'U': 0, 'C': 1, 'A': 2, 'O': 3 }
+        var item_strength = mapper[this.item.role]
+        var role_strength = mapper[role_type]
+        return item_strength >= role_strength
+      },
       changeRole(role_type) {
-        this.$emit('change-role', role_type)
-        this.is_visible = false
+        if (this.is_member_active_user && this.isLesserRole(role_type)) {
+          this.$confirm('You are attempting to change your role to one with less rights. Are you sure you want to do this?', 'Accept lesser role?', {
+            confirmButtonClass: 'ttu fw6 el-button--danger',
+            cancelButtonClass: 'ttu fw6',
+            confirmButtonText: 'Accept lesser role',
+            cancelButtonText: 'Cancel',
+            type: 'warning'
+          }).then(() => {
+            this.$emit('change-role', role_type)
+            this.is_visible = false
+          }).catch(() => {
+            this.is_visible = true
+          })
+        } else {
+          this.$emit('change-role', role_type)
+          this.is_visible = false
+        }
       },
       removeMember(member) {
         var full_name = getFullName(this.item)
