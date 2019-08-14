@@ -88,7 +88,8 @@
       changeTeam(team) {
         if (!this.isActiveTeam(team)) {
           var team_name = team.username
-          window.location = '/app/' + team_name + '/pipes'
+          this.$store.dispatch('teams/changeActiveTeam', { team_name })
+          //window.location = '/app/' + team_name + '/pipes'
         }
       },
       onVisibleChange(is_open) {
