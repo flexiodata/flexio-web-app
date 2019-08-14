@@ -417,7 +417,10 @@ class Base
             \Flexio\Api\Action::TYPE_STREAM_CREATE,
             \Flexio\Api\Action::TYPE_STREAM_UPDATE,
             \Flexio\Api\Action::TYPE_STREAM_DELETE,
-            \Flexio\Api\Action::TYPE_STREAM_READ
+            \Flexio\Api\Action::TYPE_STREAM_READ,
+
+            // allow reading system info
+            \Flexio\Api\Action::TYPE_SYSTEM_READ
         );
     }
 }

@@ -71,6 +71,8 @@ class Action
     public const TYPE_STREAM_DELETE          = 'action.stream.delete';
     public const TYPE_STREAM_READ            = 'action.stream.read';
 
+    public const TYPE_SYSTEM_READ            = 'action.system.read';
+
 
     // TODO: add actions for following API endpoints:
 
