@@ -99,7 +99,7 @@
         active_team_name: state => state.teams.active_team_name
       }),
       is_system_admin() {
-        return this.isActiveMemberSystemAdmin()
+        return this.isActiveUserSystemAdmin()
       },
       process() {
         return _.get(this.$store, 'state.processes.items.' + this.processEid)
@@ -136,7 +136,7 @@
     },
     methods: {
       ...mapGetters('member', {
-        'isActiveMemberSystemAdmin': 'isActiveMemberSystemAdmin'
+        'isActiveUserSystemAdmin': 'isActiveUserSystemAdmin'
       }),
       ...mapGetters('users', {
         'getActiveUserEmail': 'getActiveUserEmail'

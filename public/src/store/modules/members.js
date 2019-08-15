@@ -6,6 +6,7 @@ import {
   updateMeta,
   removeMeta,
 } from '@/store/helpers'
+import { OBJECT_STATUS_AVAILABLE } from '@/constants/object-status'
 
 const getDefaultMeta = () => {
   return {
@@ -210,9 +211,16 @@ const getters = {
     return items.reverse()
   },
 
-  isActiveMemberSystemAdmin (state, getters, rootState) {
-    var member = _.find(getters.getAllMembers, { eid: rootState.users.active_user_eid })
-    return _.indexOf(_.get(member, 'rights', []), 'action.system.read') >= 0
+  getActiveMember (state, getters, rootState) {
+    return _.find(getters.getAllMembers, { eid: rootState.users.active_user_eid })
+  },
+
+  isActiveUserMemberOfTeam (state, getters) {
+    return _.get(getters.getActiveMember, 'member_status') == OBJECT_STATUS_AVAILABLE
+  },
+
+  isActiveUserSystemAdmin (state, getters) {
+    return _.indexOf(_.get(getters.getActiveMember, 'rights', []), 'action.system.read') >= 0
   },
 }
 

@@ -32,7 +32,6 @@
 
 
 <script>
-  import { OBJECT_STATUS_AVAILABLE } from '@/constants/object-status'
   import { mapState, mapGetters } from 'vuex'
   import {
     ROUTE_APP_ACCOUNT,
@@ -73,8 +72,13 @@
           return false
         }
 
-        return true
+        return this.isActiveUserMemberOfTeam()
       }
+    },
+    methods: {
+      ...mapGetters('members', {
+        'isActiveUserMemberOfTeam': 'isActiveUserMemberOfTeam'
+      })
     }
   }
 </script>

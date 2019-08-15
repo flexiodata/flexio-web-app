@@ -69,7 +69,7 @@
         active_user_eid: state => state.users.active_user_eid
       }),
       is_system_admin() {
-        return this.isActiveMemberSystemAdmin()
+        return this.isActiveUserSystemAdmin()
       }
     },
     mounted() {
@@ -85,7 +85,7 @@
     },
     methods: {
       ...mapGetters('members', {
-        'isActiveMemberSystemAdmin': 'isActiveMemberSystemAdmin'
+        'isActiveUserSystemAdmin': 'isActiveUserSystemAdmin'
       }),
       ...mapGetters('users', {
         'getActiveUsername': 'getActiveUsername'
