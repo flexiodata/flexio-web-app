@@ -108,8 +108,8 @@
             element: 'task-chooser'
           }
         } else {
-          var def = _.find(builder_defs, (bi) => {
-            return _.get(bi, 'task.op') == task.op
+          var def = _.find(builder_defs, d => {
+            return _.get(d, 'task.op') == task.op
           })
           prompt = _.get(def, 'prompt', null)
 
@@ -133,17 +133,17 @@
 
         // make sure we don't overwrite any objects
         prompt = _.cloneDeep(prompt)
+        task = _.cloneDeep(task)
 
-        // if we couldn't find a matching step builder definition
-        // show a basic JSON step editor
         if (_.isNil(prompt)) {
-          var task = _.omit(task, ['eid'])
+          // SCENARIO 1: we couldn't find a matching step builder definition;
+          //             show a basic JSON step editor
           prompt = {
             element: 'task-json-editor',
             value: task
           }
         } else if (prompt.element.indexOf('task-') != -1) {
-          var task = _.omit(task, ['eid'])
+          // SCENARIO 2: we're rendering a pipe step; show the corresponding step UI
 
           // probably should be thought out better and not just target title...
           var ttitle = _.get(task, 'title', '')
@@ -153,22 +153,24 @@
 
           prompt = _.assign({}, prompt, { form_values: task })
         } else if (prompt.element == 'form') {
+          // SCENARIO 3: we're rendering a form step; show the form UI
+
           // for form builder items, assign the form item value by finding it in the step object
-          prompt.form_items = _.map(prompt.form_items, fi => {
-            if (!fi.variable || !_.has(task, fi.variable)) {
-              return fi
+          prompt.form_items = _.map(prompt.form_items, f => {
+            if (!f.variable || !_.has(task, f.variable)) {
+              return f
             }
 
-            return _.assign(fi, {
-              value: _.get(task, fi.variable, '')
+            return _.assign(f, {
+              value: _.get(task, f.variable, '')
             })
           })
 
           // now set the form values from the form items
           var form_values = {}
-          _.each(prompt.form_items, fi => {
-            if (fi.variable) {
-              _.set(form_values, fi.variable, fi.value)
+          _.each(prompt.form_items, f => {
+            if (f.variable) {
+              _.set(form_values, f.variable, f.value)
             }
           })
 
