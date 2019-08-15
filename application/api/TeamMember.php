@@ -371,7 +371,7 @@ class TeamMember
         $owner_user_eid = $request->getOwnerFromUrl();
         $post_params = $request->getPostParams();
 
-        $request->track(\Flexio\Api\Action::TYPE_TEAMMEMBER_UPDATE);
+        $request->track(\Flexio\Api\Action::TYPE_TEAMMEMBER_JOINTEAM);
         $request->setRequestParams($post_params);
 
         $validator = \Flexio\Base\Validator::create();
@@ -407,6 +407,52 @@ class TeamMember
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         // public call, so don't return any info about the member joining
+        $result = array();
+        $request->setResponseParams($result);
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        $request->track();
+        \Flexio\Api\Response::sendContent($result);
+    }
+
+    public static function processleave(\Flexio\Api\Request $request) : void
+    {
+        // special call for leaving a team that gives a user the right to leave a team
+        $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+
+        $request->track(\Flexio\Api\Action::TYPE_TEAMMEMBER_LEAVETEAM);
+        $request->setRequestParams($post_params);
+
+        // no params; placeholder
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($post_params, array(
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        // make sure the owner exists; make sure the user leaving the
+        // team is the requesting
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_TEAMMEMBER_LEAVETEAM) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        // don't allow users to remove themselves from their own team
+        if ($owner_user_eid === $requesting_user_eid)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        // make sure the user leaving the team is a member of the team
+        $result = \Flexio\System\System::getModel()->teammember->get($requesting_user_eid, $owner_user_eid);
+        if (!$result)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+        // remove the team member
+        $result = \Flexio\System\System::getModel()->teammember->delete($requesting_user_eid, $owner_user_eid);
+        if ($result === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+        // TODO: what should we return? normally we have an object; but in this
+        // case we only deleted a relationship
         $result = array();
         $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
