@@ -47,12 +47,6 @@
         >
           Owner
         </span>
-        <span
-          v-require-rights:teammember.update
-          v-else-if="is_member_superuser"
-        >
-          System Admin.
-        </span>
         <MemberItemRoleDropdown
           width="310"
           :item="item"
@@ -112,9 +106,6 @@
       },
       is_member_owner() {
         return _.get(this.item, 'role') == 'O'
-      },
-      is_member_superuser() {
-        return _.indexOf(_.get(this.item, 'rights', []), 'action.system.read') >= 0
       },
       is_member_active_user() {
         return _.get(this.item, 'eid') == this.active_user_eid

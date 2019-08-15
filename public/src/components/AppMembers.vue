@@ -237,8 +237,11 @@
         return `Join Team "${this.active_team_name}"`
       },
       members() {
-        return this.getAllMembers()
-      }
+        // only show members that have a role -- this is important because
+        // we don't want to show system admin. users in the list, but we *DO*
+        // need them to be members of the team (but without a role)
+        return _.filter(this.getAllMembers(), m => _.get(m, 'role', '').length > 0)
+      },
     },
     created() {
       this.tryFetchMembers()
