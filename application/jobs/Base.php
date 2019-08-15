@@ -319,13 +319,9 @@ class Base implements \Flexio\IFace\IJob
 
     public static function addEids(array $task) : array
     {
-        // if a task eid isn't set, then add one
-
-        // TODO: eventually, we may want to check if eid is unique and store it in the
-        // database; however, for now, task eids are only used internally for identifying
-        // tasks within a job for purposes of correlating preview info with the task, so
-        // there's no need to do any checks and eids are sufficiently unique to not worry
-        // about duplicate eids within a single task
+        // adds an eid to a task; note: eids are no longer added to
+        // tasks, but keep the function here along with the associated
+        // tests in case it's needed in the future
 
         if (isset($task['op']))
         {

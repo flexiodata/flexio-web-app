@@ -88,7 +88,6 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             if (!is_array($properties['task']))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
-            $properties['task'] = \Flexio\Jobs\Base::addEids($properties['task']);
             $properties['task'] = \Flexio\Jobs\Base::fixEmptyParams($properties['task']);
             $properties['task'] = \Flexio\Jobs\Base::flattenParams($properties['task']);
             $properties['task'] = json_encode($properties['task']);
@@ -221,7 +220,6 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             if (!is_array($properties['task']))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
-            $properties['task'] = \Flexio\Jobs\Base::addEids($properties['task']);
             $properties['task'] = \Flexio\Jobs\Base::fixEmptyParams($properties['task']);
             $properties['task'] = \Flexio\Jobs\Base::flattenParams($properties['task']);
             $properties['task'] = json_encode($properties['task']);
