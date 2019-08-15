@@ -150,12 +150,15 @@ class Base
             //\Flexio\Api\Action::TYPE_TEAM_READ,
 
             // allow reading of team members, but don't allow any team management
+            // except the ability to leave a team
             \Flexio\Api\Action::TYPE_TEAMMEMBER_READ,
             //\Flexio\Api\Action::TYPE_TEAMMEMBER_CREATE,
             //\Flexio\Api\Action::TYPE_TEAMMEMBER_UPDATE,
             //\Flexio\Api\Action::TYPE_TEAMMEMBER_DELETE,
             //\Flexio\Api\Action::TYPE_TEAMMEMBER_READ,
             //\Flexio\Api\Action::TYPE_TEAMMEMBER_SENDINVITATION,
+            \Flexio\Api\Action::TYPE_TEAMMEMBER_JOINTEAM,
+            \Flexio\Api\Action::TYPE_TEAMMEMBER_LEAVETEAM,
 
             // allow read-only on pipes
             //\Flexio\Api\Action::TYPE_PIPE_CREATE,
@@ -209,12 +212,15 @@ class Base
             //\Flexio\Api\Action::TYPE_TEAM_READ,
 
             // allow reading of team members, but don't allow any team management
+            // except the ability to join and leave a team
             \Flexio\Api\Action::TYPE_TEAMMEMBER_READ,
             //\Flexio\Api\Action::TYPE_TEAMMEMBER_CREATE,
             //\Flexio\Api\Action::TYPE_TEAMMEMBER_UPDATE,
             //\Flexio\Api\Action::TYPE_TEAMMEMBER_DELETE,
             //\Flexio\Api\Action::TYPE_TEAMMEMBER_READ,
             //\Flexio\Api\Action::TYPE_TEAMMEMBER_SENDINVITATION,
+            \Flexio\Api\Action::TYPE_TEAMMEMBER_JOINTEAM,
+            \Flexio\Api\Action::TYPE_TEAMMEMBER_LEAVETEAM,
 
             // allow read/write/delete on pipes
             \Flexio\Api\Action::TYPE_PIPE_CREATE,
@@ -274,6 +280,7 @@ class Base
             \Flexio\Api\Action::TYPE_TEAMMEMBER_READ,
             \Flexio\Api\Action::TYPE_TEAMMEMBER_SENDINVITATION,
             \Flexio\Api\Action::TYPE_TEAMMEMBER_JOINTEAM,
+            \Flexio\Api\Action::TYPE_TEAMMEMBER_LEAVETEAM,
 
             // allow read/write/delete on pipes
             \Flexio\Api\Action::TYPE_PIPE_CREATE,
@@ -333,6 +340,7 @@ class Base
             \Flexio\Api\Action::TYPE_TEAMMEMBER_READ,
             \Flexio\Api\Action::TYPE_TEAMMEMBER_SENDINVITATION,
             \Flexio\Api\Action::TYPE_TEAMMEMBER_JOINTEAM,
+            \Flexio\Api\Action::TYPE_TEAMMEMBER_LEAVETEAM,
 
             // allow read/write/delete on pipes
             \Flexio\Api\Action::TYPE_PIPE_CREATE,
@@ -392,6 +400,7 @@ class Base
             \Flexio\Api\Action::TYPE_TEAMMEMBER_READ,
             \Flexio\Api\Action::TYPE_TEAMMEMBER_SENDINVITATION,
             \Flexio\Api\Action::TYPE_TEAMMEMBER_JOINTEAM,
+            \Flexio\Api\Action::TYPE_TEAMMEMBER_LEAVETEAM,
 
             // allow read/write/delete on pipes
             \Flexio\Api\Action::TYPE_PIPE_CREATE,

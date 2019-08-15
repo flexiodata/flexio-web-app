@@ -48,6 +48,7 @@ class Action
     public const TYPE_TEAMMEMBER_READ           = 'action.teammember.read';
     public const TYPE_TEAMMEMBER_SENDINVITATION = 'action.teammember.sendinvitation';
     public const TYPE_TEAMMEMBER_JOINTEAM       = 'action.teammember.jointeam';
+    public const TYPE_TEAMMEMBER_LEAVETEAM      = 'action.teammember.leaveteam';
 
     public const TYPE_PIPE_CREATE            = 'action.pipe.create';
     public const TYPE_PIPE_UPDATE            = 'action.pipe.update';
