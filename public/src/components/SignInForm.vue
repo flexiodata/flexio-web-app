@@ -61,6 +61,7 @@
       return {
         username: '',
         password: '',
+        verify_code: '',
         error_msg: '',
         is_submitting: false,
         input_cls: 'input-reset ba b--black-10 br2 focus-b--blue lh-title ph3 pv2a w-100',
@@ -69,6 +70,7 @@
     },
     mounted() {
       this.username = _.get(this.$route, 'query.email', '')
+      this.verify_code = _.get(this.$route, 'query.verify_code', '')
       this.$nextTick(() => {
         this.username.length > 0 ? this.$refs['input-password'].focus() : this.$refs['input-username'].focus()
       })
@@ -84,8 +86,9 @@
 
         var username = this.username
         var password = this.password
+        var verify_code = this.verify_code
 
-        this.$store.dispatch('users/signIn', { username, password }).then(response => {
+        this.$store.dispatch('users/signIn', { username, password, verify_code }).then(response => {
           this.$emit('signed-in', response.data)
         }).catch(error => {
           this.is_submitting = false
