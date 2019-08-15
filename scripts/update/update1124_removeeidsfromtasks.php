@@ -62,8 +62,8 @@ catch(\Exception $e)
 
 
 // update the version number
-// $current_version = \Flexio\System\System::getUpdateVersionFromFilename(__FILE__);
-// \Flexio\System\System::getModel()->setDbVersionNumber($current_version);
+$current_version = \Flexio\System\System::getUpdateVersionFromFilename(__FILE__);
+\Flexio\System\System::getModel()->setDbVersionNumber($current_version);
 
 echo '{ "success": true, "msg": "Operation completed successfully." }';
 
