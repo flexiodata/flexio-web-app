@@ -149,4 +149,5 @@
       font-weight: 600
     p
       font-size: 12px
+      padding-right: 12px
 </style>
