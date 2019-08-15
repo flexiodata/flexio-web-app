@@ -62,8 +62,8 @@ export default {
   deleteMember:            (team_name, object_name)        => AxiosResource(team_name)[DEL] (`/members/${object_name}`),
   reinviteMember:          (team_name, object_name)        => AxiosResource(team_name)[POS] (`/members/${object_name}/invitations`),
   fetchMemberRights:       (team_name, object_name)        => AxiosResource(team_name)[GET] (`/members/${object_name}/rights`),
-  // TODO: which one of these is not like the other?
   joinTeam:                (team_name, attrs)              => AxiosResource(team_name)[POS] (`/members/join`, attrs),
+  leaveTeam:               (team_name)                     => AxiosResource(team_name)[POS] (`/members/leave`),
 
   // teams
   fetchTeams:              (team_name)                     => AxiosResource(team_name)[GET] (`/teams`),

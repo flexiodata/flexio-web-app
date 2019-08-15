@@ -67,6 +67,10 @@ const mutations = {
 
   'JOINED_TEAM' (state) {},
 
+  'LEFT_TEAM' (state, eid) {
+    removeItem(state, eid)
+  },
+
   'RESENDING_INVITE' (state, { eid, is_invite_resending }) {
     updateMeta(state, eid, { is_invite_resending })
   },
@@ -165,6 +169,15 @@ const actions = {
       dispatch('initializeApp', { team_name, force: true }, { root: true })
 
       commit('JOINED_TEAM')
+      return response
+    }).catch(error => {
+      throw error
+    })
+  },
+
+  'leave' ({ commit, dispatch, rootGetters }, { team_name, eid }) {
+    return api.leaveTeam(team_name).then(response => {
+      commit('LEFT_TEAM', eid)
       return response
     }).catch(error => {
       throw error

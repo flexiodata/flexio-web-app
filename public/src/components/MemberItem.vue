@@ -52,6 +52,7 @@
           :item="item"
           @change-role="updateRole"
           @remove-member="removeMember"
+          @leave-team="leaveTeam"
           v-require-rights:teammember.update="!is_member_active_user"
           v-else
         >
@@ -126,17 +127,22 @@
         var eid = _.get(this.item, 'eid')
         this.$store.dispatch('members/resendInvite', { team_name, eid })
       },
-      removeMember() {
-        var team_name = this.active_team_name
-        var eid = _.get(this.item, 'eid')
-        this.$store.dispatch('members/delete', { team_name, eid })
-      },
       updateRole(role) {
         var team_name = this.active_team_name
         var eid = _.get(this.item, 'eid')
         var attrs = { role }
         this.$store.dispatch('members/update', { team_name, eid, attrs })
-      }
+      },
+      removeMember() {
+        var team_name = this.active_team_name
+        var eid = _.get(this.item, 'eid')
+        this.$store.dispatch('members/delete', { team_name, eid })
+      },
+      leaveTeam() {
+        var team_name = this.active_team_name
+        var eid = _.get(this.item, 'eid')
+        this.$store.dispatch('members/leave', { team_name, eid })
+      },
     }
   }
 </script>

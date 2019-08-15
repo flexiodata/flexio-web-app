@@ -98,35 +98,53 @@
         }
       },
       removeMember(member) {
-        var full_name = getFullName(this.item)
-        var email = _.get(this.item, 'email', '')
-        var member = full_name.length > 0 ? full_name : email
-        var email_str = full_name.length > 0 ? ` (${email})` : ''
+        if (this.is_member_active_user) {
+          return this.leaveTeam(member)
+        } else {
+          var full_name = getFullName(this.item)
+          var email = _.get(this.item, 'email', '')
+          var member = full_name.length > 0 ? full_name : email
+          var email_str = full_name.length > 0 ? ` (${email})` : ''
 
-        var leave_msg = `<p>Are you sure you want to leave this team?</p><div class="h1"></div><p>Enter the team name <strong>"${this.active_team_name}"</strong> below to confirm this is what you want to do.</p>`
-        var leave_title = 'Leave team?'
+          var msg = `Are you sure you want to remove <strong>${member}${email_str}</strong> from this team?`
+          var title = `Remove ${member}?`
 
-        var remove_msg = `Are you sure you want to remove <strong>${member}${email_str}</strong> from this team?`
-        var remove_title = `Remove ${member}?`
+          // hide the popover while we're confirming
+          this.is_visible = false
 
-        var msg = this.is_member_active_user ? leave_msg : remove_msg
-        var title = this.is_member_active_user ? leave_title : remove_title
+          this.$confirm(msg, title, {
+            type: 'warning',
+            confirmButtonClass: 'ttu fw6 el-button--danger',
+            cancelButtonClass: 'ttu fw6',
+            confirmButtonText: 'Remove',
+            cancelButtonText: 'Cancel',
+            dangerouslyUseHTMLString: true
+          }).then(() => {
+            this.$emit('remove-member', member)
+            this.is_visible = false
+          }).catch(() => {
+            this.is_visible = true
+          })
+        }
+      },
+      leaveTeam(member) {
+        var msg = `<p>Are you sure you want to leave this team?</p><div class="h1"></div><p>Enter the team name <strong>"${this.active_team_name}"</strong> below to confirm this is what you want to do.</p>`
+        var title = 'Leave team?'
 
         // hide the popover while we're confirming
         this.is_visible = false
 
-        this[this.is_member_active_user ? '$prompt' : '$confirm'](msg, title, {
-          type: this.is_member_active_user ? '' : 'warning',
+        this.$prompt(msg, title, {
           confirmButtonClass: 'ttu fw6 el-button--danger',
           cancelButtonClass: 'ttu fw6',
-          confirmButtonText: this.is_member_active_user ? 'Leave' : 'Remove',
+          confirmButtonText: 'Leave',
           cancelButtonText: 'Cancel',
           dangerouslyUseHTMLString: true,
           inputValidator: (val) => {
             return val == this.active_team_name ? true : 'The team name does not match'
           },
         }).then(() => {
-          this.$emit('remove-member', member)
+          this.$emit('leave-team', member)
           this.is_visible = false
         }).catch(() => {
           this.is_visible = true
