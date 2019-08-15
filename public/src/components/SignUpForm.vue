@@ -238,8 +238,9 @@
 
         var username = this.username
         var password = this.password
+        var verify_code = this.verify_code
 
-        this.$store.dispatch('users/signIn', { username, password }).then(response => {
+        this.$store.dispatch('users/signIn', { username, password, verify_code }).then(response => {
           this.$emit('signed-in', response.data)
         }).catch(error => {
           this.is_submitting = false
