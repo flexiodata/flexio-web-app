@@ -72,12 +72,13 @@
           return false
         }
 
-        return this.isActiveUserMemberOfTeam()
+        return this.isActiveUserMemberOfTeam() || this.isActiveUserSystemAdmin()
       }
     },
     methods: {
       ...mapGetters('members', {
-        'isActiveUserMemberOfTeam': 'isActiveUserMemberOfTeam'
+        'isActiveUserMemberOfTeam': 'isActiveUserMemberOfTeam',
+        'isActiveUserSystemAdmin': 'isActiveUserSystemAdmin'
       })
     }
   }
