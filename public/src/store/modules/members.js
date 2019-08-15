@@ -160,9 +160,9 @@ const actions = {
       // note that we need to force this initialization because
       // this is happening from the join team page and the active team
       // and the team we're initializing are the same, in which case
-      // the `initializeTeam` action would do nothing to avoid
+      // the `initializeApp` action would do nothing to avoid
       // issuing API calls all the time
-      dispatch('initializeTeam', { team_name, force: true }, { root: true })
+      dispatch('initializeApp', { team_name, force: true }, { root: true })
 
       commit('JOINED_TEAM')
       return response

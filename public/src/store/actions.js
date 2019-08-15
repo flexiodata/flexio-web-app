@@ -14,7 +14,7 @@ export default {
     _.each(modules_names, module => { commit(`${module}/RESET_STATE`) })
   },
 
-  'initializeTeam' ({ commit, dispatch, state, getters }, { team_name, force }) {
+  'initializeApp' ({ commit, dispatch, state, getters }, { team_name, force }) {
     var active_user_name = getters['users/getActiveUsername']
     var active_user_eid = state.users.active_user_eid
     var old_team_name = state.teams.active_team_name

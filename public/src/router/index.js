@@ -30,7 +30,7 @@ Vue.use(Meta)
 // add route metadata to require authentication, etc.
 const meta = {
   requiresAuth: true,
-  initializeTeam: true
+  initializeApp: true
 }
 
 const routes = [
