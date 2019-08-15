@@ -21,13 +21,21 @@
         </el-button>
       </p>
       <p class="mt3 mb0">
-        <router-link to="/" class="el-button el-button--primary no-underline ttu fw6" style="min-width: 11rem">Back to home</router-link>
+        <el-button
+          type="primary"
+          class="ttu fw6"
+          style="min-width: 11rem"
+          @click="goBackHome"
+        >
+          Back to home
+        </el-button>
       </p>
     </div>
   </div>
 </template>
 
 <script>
+  import { mapGetters } from 'vuex'
   import { ROUTE_SIGNIN_PAGE } from '@/constants/route'
 
   export default {
@@ -37,11 +45,25 @@
       }
     },
     methods: {
+      ...mapGetters('users', {
+        'getActiveUsername': 'getActiveUsername'
+      }),
       signOut() {
         this.$store.dispatch('users/signOut', {}).then(response => {
           this.$router.push({ name: ROUTE_SIGNIN_PAGE })
         })
-      }
+      },
+      goBackHome() {
+        var team_name = this.getActiveUsername()
+
+        // TODO: the user is already on a 404 page; should we just use a hard refresh here?
+        //window.location = `/app/${team_name}/pipes`
+
+        this.$store.dispatch('teams/changeActiveTeam', { team_name }).then(response => {
+          var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path', 'query'])
+          this.$router.push({ path: `/${team_name}/pipes` })
+        })
+      },
     }
   }
 </script>
