@@ -421,13 +421,6 @@ class TeamMember
         $owner_user_eid = $request->getOwnerFromUrl();
 
         $request->track(\Flexio\Api\Action::TYPE_TEAMMEMBER_LEAVETEAM);
-        $request->setRequestParams($post_params);
-
-        // no params; placeholder
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($post_params, array(
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         // make sure the owner exists; make sure the user leaving the
         // team is the requesting
