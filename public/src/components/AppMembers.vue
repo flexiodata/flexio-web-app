@@ -251,7 +251,8 @@
         'getActiveUserEmail': 'getActiveUserEmail'
       }),
       ...mapGetters('members', {
-        'getAllMembers': 'getAllMembers'
+        'getAllMembers': 'getAllMembers',
+        'isActiveUserMemberOfTeam': 'isActiveUserMemberOfTeam'
       }),
       ...mapGetters('teams', {
         'getActiveTeamLabel': 'getActiveTeamLabel'
@@ -267,10 +268,9 @@
         // this method is to make sure existing members don't get shown
         // the 'join' message, but instead are moved back to the member list
         if (this.is_action_join && !this.is_checking_already_member) {
-          var active_member = _.find(this.members, { eid: this.active_user_eid })
-
           // this user is already a member of this team; show the member list
-          if (_.get(active_member, 'member_status') == OBJECT_STATUS_AVAILABLE) {
+          // with some feedback that they're already a member of the team
+          if (this.isActiveUserMemberOfTeam()) {
             this.is_already_member = true
 
             var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
