@@ -182,13 +182,15 @@ class System
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
                 'username' => array('type' => 'string', 'required' => true), // allow string here to accomodate username/email
-                'password' => array('type' => 'string', 'required' => true)  // allow string here to fall through to general error message below
+                'password' => array('type' => 'string', 'required' => true),  // allow string here to fall through to general error message below
+                'verify_code' => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_post_params = $validator->getParams();
         $username = $validated_post_params['username'];
         $password = $validated_post_params['password'];
+        $verify_code = $validated_post_params['verify_code'] ?? false;
 
         // default error message
         $error_message = _('Invalid username or password.');
@@ -209,6 +211,13 @@ class System
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
             }
 
+            // verify the user with their credentials
+            if ($current_user->checkPassword($password) === false)
+            {
+                $error_message = _('Invalid username or password.');
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAUTHORIZED);
+            }
+
             // make sure the user is available (e.g., not deleted and properly verified,
             // if verification is being used)
             // if ($current_user->getStatus() !== \Model::STATUS_AVAILABLE)
@@ -217,12 +226,9 @@ class System
             //     throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
             // }
 
-            // verify the user with their credentials
-            if ($current_user->checkPassword($password) === false)
-            {
-                $error_message = _('Invalid username or password.');
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAUTHORIZED);
-            }
+            // if a verification code is provide, attempt to verify the user
+            if ($current_user->getStatus() === \Model::STATUS_PENDING && $current_user->getVerifyCode() === $verify_code)
+                $current_user->set(array('eid_status' => \Model::STATUS_AVAILABLE, 'verify_code' => ''));
 
             // set the user session
             \Flexio\System\System::createUserSession($current_user_eid);
