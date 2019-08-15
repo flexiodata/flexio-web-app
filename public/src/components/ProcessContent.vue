@@ -96,12 +96,10 @@
     },
     computed: {
       ...mapState({
-        active_user_eid: state => state.users.active_user_eid,
         active_team_name: state => state.teams.active_team_name
       }),
-      is_superuser() {
-        var member = _.find(this.getAllMembers(), { eid: this.active_user_eid })
-        return _.indexOf(_.get(member, 'rights', []), 'action.system.read') >= 0
+      is_system_admin() {
+        return this.isActiveMemberSystemAdmin()
       },
       process() {
         return _.get(this.$store, 'state.processes.items.' + this.processEid)
@@ -114,7 +112,7 @@
       },
       process_error() {
         var error = _.get(this.process_info, 'error', {})
-        return this.is_superuser ? error : _.pick(error, ['code', 'message'])
+        return this.is_system_admin ? error : _.pick(error, ['code', 'message'])
       },
       is_process_pending() {
         return this.process_status == PROCESS_STATUS_PENDING
@@ -138,7 +136,7 @@
     },
     methods: {
       ...mapGetters('member', {
-        'getAllMembers': 'getAllMembers'
+        'isActiveMemberSystemAdmin': 'isActiveMemberSystemAdmin'
       }),
       ...mapGetters('users', {
         'getActiveUserEmail': 'getActiveUserEmail'

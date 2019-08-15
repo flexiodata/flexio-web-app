@@ -8,7 +8,7 @@
 
   <!-- fetched -->
   <div class="flex flex-column flex-row-l items-stretch bg-nearer-white" v-else-if="is_fetched">
-    <template v-if="is_superuser">
+    <template v-if="is_system_admin">
       <div class="flex flex-row flex-column-l flex-none items-stretch bb bb-0-l br-l b--black-05 pv0 pt4-l ph1-l overflow-auto trans-pm">
         <router-link to="/" class="mv1 ph1 pl3-l pr5-l pv2">
           <div class="dib hint--bottom" aria-label="Home">
@@ -68,9 +68,8 @@
       ...mapState({
         active_user_eid: state => state.users.active_user_eid
       }),
-      is_superuser() {
-        var member = _.find(this.getAllMembers(), { eid: this.active_user_eid })
-        return _.indexOf(_.get(member, 'rights', []), 'action.system.read') >= 0
+      is_system_admin() {
+        return this.isActiveMemberSystemAdmin()
       }
     },
     mounted() {
@@ -86,7 +85,7 @@
     },
     methods: {
       ...mapGetters('members', {
-        'getAllMembers': 'getAllMembers',
+        'isActiveMemberSystemAdmin': 'isActiveMemberSystemAdmin'
       }),
       ...mapGetters('users', {
         'getActiveUsername': 'getActiveUsername'

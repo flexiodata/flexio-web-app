@@ -49,7 +49,7 @@ router.beforeEach((to, from, next) => {
   const goNext = () => {
     debugRoute('go next:', to)
 
-    if (to.meta.initializeTeam) {
+    if (to.meta.initializeApp) {
       var active_user = store.getters['users/getActiveUser']
       var active_username = active_user.username
       var team_name = to.params.team_name || active_username

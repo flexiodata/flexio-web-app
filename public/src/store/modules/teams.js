@@ -66,7 +66,7 @@ const actions = {
     if (team_name != state.active_team_name) {
       // if the team name changes, we need to reset the state on
       // a number of modules (pipes, connections, members, etc.)
-      dispatch('initializeTeam', { team_name, force: false }, { root: true })
+      dispatch('initializeApp', { team_name, force: false }, { root: true })
 
       // now update the active team in this module
       commit('CHANGE_ACTIVE_TEAM', team_name)
