@@ -71,14 +71,32 @@ echo '{ "success": true, "msg": "Operation completed successfully." }';
 
 function updatePipeTable($db)
 {
-    // STEP 1: get a list of pipes
-    $query_sql = 'select eid, task from tbl_pipe';
-    $result = $db->query($query_sql);
+/*
+    $curSql = "DECLARE cursor1 CURSOR FOR SELECT * FROM big_table";
+    $con = new PDO("pgsql:host=whatever dbname=whatever", "user", "pass");
+    $con->beginTransaction(); // cursors require a transaction.
+    $stmt = $con->prepare($curSql);
+    $stmt->execute();
+
+    $innerStatement = $con->prepare("FETCH 1 FROM cursor1");
+
+    while($innerStatement->execute() && $row = $innerStatement->fetch(PDO::FETCH_ASSOC)) {
+        echo $row['field'];
+    }
+*/
+
+    // STEP 1: create a cursor to iterate over the pipes; use a cursor
+    // to avoid an out-of-memory error when the table is large
+    $cursor_sql = 'declare cursor_pipe cursor for select eid, task from tbl_pipe';
+    $db->beginTransaction();
+    $stmt = $db->prepare($cursor_sql);
+    $stmt->execute();
+    $iter_cursor = $db->prepare("fetch 1 from cursor_pipe");
 
     // STEP 2: for each pipe, get the task, remove the eid
     // and save the pipe with the new task
     $objects = array();
-    while ($result && ($row = $result->fetch()))
+    while ($iter_cursor->execute() && ($row = $iter_cursor->fetch()))
     {
         $pipe_eid = $row['eid'];
         $pipe_task = json_decode($row['task'],true);
@@ -91,19 +109,25 @@ function updatePipeTable($db)
         $updated_pipe_task = json_encode($pipe_task);
         writePipe($db, $pipe_eid, $updated_pipe_task);
     }
+
+    $db->commit();
 }
 
 function updateProcessTable($db)
 {
-    // STEP 1: get a list of processes
-    $query_sql = 'select eid, pipe_info, task from tbl_process';
-    $result = $db->query($query_sql);
+    // STEP 1: create a cursor to iterate over the processes; use a cursor
+    // to avoid an out-of-memory error when the table is large
+    $cursor_sql = 'declare cursor_process cursor for select eid, pipe_info, task from tbl_process';
+    $db->beginTransaction();
+    $stmt = $db->prepare($cursor_sql);
+    $stmt->execute();
+    $iter_cursor = $db->prepare("fetch 1 from cursor_process");
 
     // STEP 2: for each process, get the pipe info and the task,
     // remove the eid, and save the process with the new pipe info
     // and new task
     $objects = array();
-    while ($result && ($row = $result->fetch()))
+    while ($iter_cursor->execute() && ($row = $iter_cursor->fetch()))
     {
         $process_eid = $row['eid'];
 
@@ -129,6 +153,8 @@ function updateProcessTable($db)
         $updated_process_task = json_encode($process_task);
         writeProcess($db, $process_eid, $updated_process_pipe_info, $updated_process_task);
     }
+
+    $db->commit();
 }
 
 function writePipe($db, $pipe_eid, $task)
