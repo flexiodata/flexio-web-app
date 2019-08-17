@@ -378,6 +378,7 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "process_info" => null,
                 "process_status" => null,
                 "owned_by" => null,
+                "created_by" => null,
                 "created" => null,
                 "updated" => null
             ],
@@ -394,7 +395,7 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             if ($pipe_info === false)
                 $pipe_info = null;
 
-        // expand the parent and owner info
+        // expand the parent pipe info
         $mapped_properties['parent'] = array(
             'eid' => $properties['parent_eid'],
             'eid_type' => \Model::TYPE_PIPE,
@@ -405,10 +406,6 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             'deploy_mode' => $pipe_info['deploy_mode'] ?? "",
             'created' => $pipe_info['created'] ?? "",
             'updated' => $pipe_info['updated'] ?? ""
-        );
-        $mapped_properties['owned_by'] = array(
-            'eid' => $properties['owned_by'],
-            'eid_type' => \Model::TYPE_USER
         );
 
         // get the output if it exists
@@ -443,6 +440,16 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             if ($process_info !== false)
                 $mapped_properties['process_info'] = $process_info;
         }
+
+        // expand the user info
+        $mapped_properties['owned_by'] = array(
+            'eid' => $properties['owned_by'],
+            'eid_type' => \Model::TYPE_USER
+        );
+        $mapped_properties['created_by'] = array(
+            'eid' => $properties['created_by'],
+            'eid_type' => \Model::TYPE_USER
+        );
 
         return $mapped_properties;
     }

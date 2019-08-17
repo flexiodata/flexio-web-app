@@ -458,6 +458,7 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "deploy_api" => null,
                 "deploy_ui" => null,
                 "owned_by" => null,
+                "created_by" => null,
                 "created" => null,
                 "updated" => null
             ],
@@ -466,12 +467,6 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         // sanity check: if the data record is missing, then eid will be null
         if (!isset($mapped_properties['eid']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-
-        // expand the owner info
-        $mapped_properties['owned_by'] = array(
-            'eid' => $properties['owned_by'],
-            'eid_type' => \Model::TYPE_USER
-        );
 
         // unpack the ui json
         if (isset($mapped_properties['ui']))
@@ -503,6 +498,16 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $schedule = @json_decode($mapped_properties['schedule'],true);
         if ($schedule !== false)
             $mapped_properties['schedule'] = $schedule;
+
+        // expand the user info
+        $mapped_properties['owned_by'] = array(
+            'eid' => $properties['owned_by'],
+            'eid_type' => \Model::TYPE_USER
+        );
+        $mapped_properties['created_by'] = array(
+            'eid' => $properties['created_by'],
+            'eid_type' => \Model::TYPE_USER
+        );
 
         return $mapped_properties;
     }

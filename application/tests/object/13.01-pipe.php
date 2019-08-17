@@ -241,6 +241,10 @@ class Test
                 "eid" : null,
                 "eid_type" : null
             },
+            "created_by" : {
+                "eid" : null,
+                "eid_type" : null
+            },
             "created" : null,
             "updated" : null
         }

@@ -170,6 +170,7 @@ class Comment extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "comment" => null,
                 "replies" => null,
                 "owned_by" => null,
+                "created_by" => null,
                 "created" => null,
                 "updated" => null
             ],
@@ -179,12 +180,16 @@ class Comment extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         if (!isset($mapped_properties['eid']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-        // TODO: expand the replies and owner info
+        // TODO: expand the replies
         $mapped_properties['replies'] = (object)array(); // placholder
 
-        // expand the owner info
+        // expand the user info
         $mapped_properties['owned_by'] = array(
             'eid' => $properties['owned_by'],
+            'eid_type' => \Model::TYPE_USER
+        );
+        $mapped_properties['created_by'] = array(
+            'eid' => $properties['created_by'],
             'eid_type' => \Model::TYPE_USER
         );
 

@@ -461,6 +461,7 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "referrer" => null,
                 "config" => null,
                 "owned_by" => null,
+                "created_by" => null,
                 "created" => null,
                 "updated" => null
             ],
@@ -470,18 +471,22 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         if (!isset($mapped_properties['eid']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-        // expand the owner info
-        $mapped_properties['owned_by'] = array(
-            'eid' => $properties['owned_by'],
-            'eid_type' => \Model::TYPE_USER
-        );
-
         // unpack the config
         $config = $mapped_properties['config'] ?? '{}';
             $config = @json_decode($config, true);
             if (!is_array($config))
                 $config = new Object;
             $mapped_properties['config'] = $config;
+
+        // expand the user info
+        $mapped_properties['owned_by'] = array(
+            'eid' => $properties['owned_by'],
+            'eid_type' => \Model::TYPE_USER
+        );
+        $mapped_properties['created_by'] = array(
+            'eid' => $properties['created_by'],
+            'eid_type' => \Model::TYPE_USER
+        );
 
         return $mapped_properties;
     }

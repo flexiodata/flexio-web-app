@@ -329,6 +329,7 @@ class Process
             $process_info_subset['duration'] = $process_info['duration'];
             $process_info_subset['process_status'] = $process_info['process_status'];
             $process_info_subset['owned_by'] = $process_info['owned_by'];
+            $process_info_subset['created_by'] = $process_info['created_by'];
             $process_info_subset['created'] = $process_info['created'];
             $process_info_subset['updated'] = $process_info['updated'];
 

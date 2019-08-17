@@ -186,6 +186,7 @@ class Token extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "user_eid" => null, // TODO: this is legacy for API consistency; remove when UI is updated to use owned_by
                 "access_code" => null,
                 "owned_by" => null,
+                "created_by" => null,
                 "created" => null,
                 "updated" => null
             ],

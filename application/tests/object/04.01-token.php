@@ -214,6 +214,7 @@ class Test
             "user_eid" : null,
             "access_code" : null,
             "owned_by" : null,
+            "created_by" : null,
             "created" : null,
             "updated" : null
         }

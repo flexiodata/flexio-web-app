@@ -520,6 +520,7 @@ class TeamMember
             'eid' => $properties['owned_by'],
             'eid_type' => \Model::TYPE_USER
         );
+        $member_properties['invited_by'] = $properties['created_by']; // created by of relationship is the user the member was invited by
         $member_properties['invited'] = $properties['created']; // created date of relationship is the date the member was invited
         $member_properties['created'] = $user_info['created'];
         $member_properties['updated'] = $user_info['updated'];

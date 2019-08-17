@@ -486,6 +486,7 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
                 "file_modified" => null,
                 "expires" => null,
                 "owned_by" => null,
+                "created_by" => null,
                 "created" => null,
                 "updated" => null
             ],
@@ -495,16 +496,20 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
         if (!isset($mapped_properties['eid']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-        // expand the owner info
-        $mapped_properties['owned_by'] = array(
-            'eid' => $properties['owned_by'],
-            'eid_type' => \Model::TYPE_USER
-        );
-
         // unpack the structure json
         $structure = @json_decode($mapped_properties['structure'],true);
         if ($structure !== false)
             $mapped_properties['structure'] = $structure;
+
+        // expand the user info
+        $mapped_properties['owned_by'] = array(
+            'eid' => $properties['owned_by'],
+            'eid_type' => \Model::TYPE_USER
+        );
+        $mapped_properties['created_by'] = array(
+            'eid' => $properties['created_by'],
+            'eid_type' => \Model::TYPE_USER
+        );
 
         return $mapped_properties;
     }
