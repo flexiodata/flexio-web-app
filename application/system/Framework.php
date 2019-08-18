@@ -289,7 +289,7 @@ class FxControllerAction
     protected $request = null;
     protected $response = null;
     protected $render_raw = false;
-    private $contoller = '';
+    private $controller = '';
     private $action = '';
     public $forward = null;
 
