@@ -515,11 +515,6 @@ class StreamConverter
         $outstream->setSize($streamwriter->getBytesWritten());
     }
 
-    private static function getPagesFromRange(string $pages_to_convert = null, int $min_page, $max_page)
-    {
-
-    }
-
     private static function createOutputFromJsonInput(array $convert_params, \Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream, string $output_mime_type) : void
     {
         // read the json into a buffer
