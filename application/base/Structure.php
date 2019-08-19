@@ -53,9 +53,6 @@ class Structure
         if (!isset($columns))
             $columns = array();
 
-        if (!is_array($columns))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-
         $object = (new self);
         foreach ($columns as $c)
         {
@@ -122,7 +119,7 @@ class Structure
 
     public function push(array $column) : array
     {
-        // note: returns the added column, or false if the column couldn't be added
+        // note: returns the added column with info that includes any adjustments made
 
         // get the column info from the input
         $column_entry = array(
@@ -693,9 +690,6 @@ class Structure
 
     public static function isValidFieldName(string $str) : bool
     {
-        if (!is_string($str))
-            return false;
-
         if (strlen($str) === 0)
             return false;
 
