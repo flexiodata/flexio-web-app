@@ -31,7 +31,8 @@ class StreamConverter
     public const TEXT_QUALIFIER_SINGLE_QUOTE = '{single-quote}';
     public const TEXT_QUALIFIER_DOUBLE_QUOTE = '{double-quote}';
 
-    // conversion formats
+    // conversion formats; TODO: there are various overlapping types,
+    // so these should be better articulated/standardized
     public const FORMAT_DELIMITED_TEXT = 'delimited';
     public const FORMAT_FIXED_LENGTH   = 'fixed';
     public const FORMAT_JSON           = 'json';
@@ -39,6 +40,12 @@ class StreamConverter
     public const FORMAT_ATOM           = 'atom';
     public const FORMAT_PDF            = 'pdf';
     public const FORMAT_TABLE          = 'table';
+    public const FORMAT_CSV            = 'csv';
+    public const FORMAT_XLS            = 'xls';
+    public const FORMAT_XLSX           = 'xlsx';
+    public const FORMAT_SPREADSHEET    = 'spreadsheet';
+    public const FORMAT_EXCEL          = 'excel';
+    public const FORMAT_ODS            = 'ods';
 
     public static function process(array $convert_params, \Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream) : void
     {
@@ -79,16 +86,18 @@ class StreamConverter
             }
         }
 
+        // get the content type from the format
+        $input = $convert_params['input'] ?? '';
+        $input_format = is_string($input) ? $input : ($convert_params['input']['format'] ?? '');
+        $input_content_type_from_definition = self::getContentTypeFromFormat($input_format);
 
-
-
-        $input_content_type_from_definition = self::getInputMimeTypeFromDefinition($convert_params);
-        $output_content_type_from_definition = self::getOutputMimeTypeFromDefinition($convert_params);
+        $output = $convert_params['output'] ?? '';
+        $output_format = is_string($output) ? $output : ($convert_params['output']['format'] ?? '');
+        $output_content_type_from_definition = self::getContentTypeFromFormat($output_format);
 
         // default to convert to table
         if (!isset($output_content_type_from_definition))
             $output_content_type_from_definition = \Flexio\Base\ContentType::FLEXIO_TABLE;
-
 
         // get the mime type for the input; use the job format if it's
         // specified, as long as the input format isn't a flexio table
@@ -1484,12 +1493,9 @@ class StreamConverter
         return $structure;
     }
 
-    private static function getInputMimeTypeFromDefinition(array $convert_params) : ?string
+    private static function getContentTypeFromFormat(string $format) : ?string
     {
-        $input = $convert_params['input'] ?? '';
-        $format = is_string($input) ? $input : ($convert_params['input']['format'] ?? '');
-
-        if ($format == self::FORMAT_DELIMITED_TEXT || $format == 'csv')
+        if ($format == self::FORMAT_DELIMITED_TEXT || $format == self::FORMAT_CSV)
             return \Flexio\Base\ContentType::CSV;
         else if ($format == self::FORMAT_FIXED_LENGTH)
             return \Flexio\Base\ContentType::TEXT;
@@ -1503,36 +1509,11 @@ class StreamConverter
             return \Flexio\Base\ContentType::PDF;
         else if ($format == self::FORMAT_TABLE)
             return \Flexio\Base\ContentType::FLEXIO_TABLE;
-        else if ($format == 'xls')
+        else if ($format == self::FORMAT_XLS)
             return \Flexio\Base\ContentType::XLS;
-        else if ($format == 'xlsx' || $format == 'excel')
+        else if ($format == self::FORMAT_XLSX || self::FORMAT_EXCEL || $format == self::FORMAT_SPREADSHEET)
             return \Flexio\Base\ContentType::XLSX;
-        else if ($format == 'ods')
-            return \Flexio\Base\ContentType::ODS;
-        else
-            return null;
-    }
-
-    private static function getOutputMimeTypeFromDefinition(array $convert_params) : ?string
-    {
-        $output = $convert_params['output'] ?? '';
-        $format = is_string($output) ? $output : ($output['format'] ?? '');
-
-        if ($format == self::FORMAT_DELIMITED_TEXT || $format == 'csv')
-            return \Flexio\Base\ContentType::CSV;
-        else if ($format == self::FORMAT_FIXED_LENGTH)
-            return \Flexio\Base\ContentType::TEXT;
-        else if ($format == self::FORMAT_JSON)
-            return \Flexio\Base\ContentType::JSON;
-        else if ($format == self::FORMAT_PDF)
-            return \Flexio\Base\ContentType::PDF;
-        else if ($format == self::FORMAT_TABLE)
-            return \Flexio\Base\ContentType::FLEXIO_TABLE;
-        else if ($format == 'xls')
-            return \Flexio\Base\ContentType::XLS;
-        else if ($format == 'xlsx' || $format == 'excel' || $format == 'spreadsheet')
-            return \Flexio\Base\ContentType::XLSX;
-        else if ($format == 'ods')
+        else if ($format == self::FORMAT_ODS)
             return \Flexio\Base\ContentType::ODS;
         else
             return null;
