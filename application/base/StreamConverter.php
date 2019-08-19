@@ -41,6 +41,7 @@ class StreamConverter
     public const FORMAT_PDF            = 'pdf';
     public const FORMAT_TABLE          = 'table';
     public const FORMAT_CSV            = 'csv';
+    public const FORMAT_TSV            = 'tsv';
     public const FORMAT_XLS            = 'xls';
     public const FORMAT_XLSX           = 'xlsx';
     public const FORMAT_SPREADSHEET    = 'spreadsheet';
@@ -53,13 +54,13 @@ class StreamConverter
         $input_string = (isset($convert_params['input']) && is_string($convert_params['input'])) ? $convert_params['input'] : null;
         if ($input_string !== null)
         {
-            if ($input_string === 'csv' || $input_string === 'tsv')
+            if ($input_string === self::FORMAT_CSV || $input_string === self::FORMAT_TSV)
             {
                 $convert_params['input'] = [
-                    'format' => 'delimited',
-                    'delimiter' => ($input_string === 'csv' ? '{comma}' : '{tab}'),
+                    'format' => self::FORMAT_DELIMITED_TEXT,
+                    'delimiter' => ($input_string === 'csv' ? self::DELIMITER_COMMA : self::DELIMITER_TAB),
                     'header' => true,
-                    'qualifier' => '{double-quote}'
+                    'qualifier' => self::TEXT_QUALIFIER_DOUBLE_QUOTE
                 ];
             }
              else
@@ -71,13 +72,13 @@ class StreamConverter
         $output_string = (isset($convert_params['output']) && is_string($convert_params['output'])) ? $convert_params['output'] : null;
         if ($output_string !== null)
         {
-            if ($output_string === 'csv' || $output_string === 'tsv')
+            if ($output_string === self::FORMAT_CSV || $output_string === self::FORMAT_TSV)
             {
                 $convert_params['output'] = [
-                    'format' => 'delimited',
-                    'delimiter' => ($output_string === 'csv' ? '{comma}' : '{tab}'),
+                    'format' =>  self::FORMAT_DELIMITED_TEXT,
+                    'delimiter' => ($output_string === 'csv' ? self::DELIMITER_COMMA : self::DELIMITER_TAB),
                     'header' => true,
-                    'qualifier' => '{double-quote}'
+                    'qualifier' => self::TEXT_QUALIFIER_DOUBLE_QUOTE
                 ];
             }
              else
@@ -140,7 +141,7 @@ class StreamConverter
                 self::createOutputFromCsvInput($convert_params, $instream, $outstream, $output_content_type_from_definition);
                 return;
 
-            case 'spreadsheet':
+            case 'spreadsheet': // TODO: handle this case
             case \Flexio\Base\ContentType::ODS:
             case \Flexio\Base\ContentType::XLS:
             case \Flexio\Base\ContentType::XLSX:
@@ -280,7 +281,7 @@ class StreamConverter
                 case self::TEXT_QUALIFIER_SINGLE_QUOTE:  $qualifier = "'";  break;
                 case self::TEXT_QUALIFIER_DOUBLE_QUOTE:  $qualifier = "\""; break;
 
-                // compatibility
+                // compatibility; TODO: remove when no longer needed
                 case '{single_quote}':  $qualifier = "'";  break;
                 case '{double_quote}':  $qualifier = "\"";  break;
             }
@@ -1495,7 +1496,7 @@ class StreamConverter
 
     private static function getContentTypeFromFormat(string $format) : ?string
     {
-        if ($format == self::FORMAT_DELIMITED_TEXT || $format == self::FORMAT_CSV)
+        if ($format == self::FORMAT_DELIMITED_TEXT || $format == self::FORMAT_TSV || $format == self::FORMAT_CSV)
             return \Flexio\Base\ContentType::CSV;
         else if ($format == self::FORMAT_FIXED_LENGTH)
             return \Flexio\Base\ContentType::TEXT;
