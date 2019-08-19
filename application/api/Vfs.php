@@ -182,24 +182,51 @@ class Vfs
         if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_STREAM_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        $path = $request_url;
+        $path = parse_url($request_url, PHP_URL_PATH);
 
         $pos = strpos($path, '/vfs/info/');
         if ($pos === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
 
         // grab path, including preceding slash
-        $path = substr($path, $pos+9);
+        $path = substr($path, $pos+10);
 
-/*
-        $is_data = false;
-        $counter = 0;
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "read",
+                "path" => $path
+            ],
+            [
+                "op" => "convert",
+                "input" => [
+                    "format" => "delimited",
+                    "header" => true
+                ],
+                "output" => [
+                    "format" => "table"
+                ]
+            ]
+        ]);
 
-        $vfs = new \Flexio\Services\Vfs($owner_user_eid);
-        $vfs->read($path, function($data) use (&$is_data, &$counter) {
-        });
-*/
-        exit(0);
+        $local_process = \Flexio\Jobs\Process::create();
+        $local_process->setOwner($owner_user_eid);
+        $local_process->execute($task);
+        $local_stdout = $local_process->getStdout();
+        $columns = $local_stdout->getStructure()->get();
+
+        $result = array();
+        foreach ($columns as $c)
+        {
+            $row = array();
+            $row['name'] = $c['name'];
+            $row['type'] = $c['type'];
+            $row['width'] = $c['width'];
+            $row['scale'] = $c['scale'];
+            $result[] = $row;
+        }
+
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        \Flexio\Api\Response::sendContent($result);
     }
 
     public static function exec(\Flexio\Api\Request $request) : void
