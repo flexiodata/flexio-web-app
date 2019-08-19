@@ -137,7 +137,7 @@ class Trigger
             $mime_type = $stream_info['mime_type'];
             $start = 0;
             $limit = PHP_INT_MAX;
-            $content = \Flexio\Base\Util::getStreamContents($stream, $start, $limit);
+            $content = \Flexio\Base\StreamUtil::getStreamContents($stream, $start, $limit);
             $response_code = $engine->getResponseCode();
 
             if ($mime_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)

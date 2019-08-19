@@ -152,7 +152,7 @@ class Stream
             if ($headers_set === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-            $result = \Flexio\Base\Util::getStreamContents($stream, $start, $limit);
+            $result = \Flexio\Base\StreamUtil::getStreamContents($stream, $start, $limit);
             if (isset($encode))
             {
                 // user wants us to re-encode the data payload on a preview-only basis
@@ -181,7 +181,7 @@ class Stream
         {
             // return content as-is
             header('Content-Type: ' . $response_content_type);
-            $result = \Flexio\Base\Util::getStreamContents($stream, $start, $limit);
+            $result = \Flexio\Base\StreamUtil::getStreamContents($stream, $start, $limit);
             if (isset($encode))
             {
                 // user wants us to re-encode the data payload on a preview-only basis
@@ -204,7 +204,7 @@ class Stream
             if ($metadata === true)
                 $result['columns'] = $stream->getStructure()->get();
 
-            $result['rows'] = \Flexio\Base\Util::getStreamContents($stream, $start, $limit);
+            $result['rows'] = \Flexio\Base\StreamUtil::getStreamContents($stream, $start, $limit);
             $result = json_encode($result, JSON_UNESCAPED_SLASHES);
 
             \Flexio\Api\Response::sendRaw($result);

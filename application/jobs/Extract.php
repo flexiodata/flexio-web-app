@@ -80,7 +80,7 @@ class Extract extends \Flexio\Jobs\Base
         $streamwriter->write(json_encode($column_names));
 
         // write out each row
-        $rows = \Flexio\Base\Util::getStreamContents($local_stdout);
+        $rows = \Flexio\Base\StreamUtil::getStreamContents($local_stdout);
         foreach ($rows as $r)
         {
             $row_values = array_values($r);
