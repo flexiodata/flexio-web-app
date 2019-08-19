@@ -167,6 +167,41 @@ class Vfs
         \Flexio\Api\Response::sendContent($result);
     }
 
+    public static function info(\Flexio\Api\Request $request) : void
+    {
+        $request_url = urldecode($request->getUrl());
+        $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+
+        // load the object
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+
+        // check the rights on the object
+        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_STREAM_READ) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        $path = $request_url;
+
+        $pos = strpos($path, '/vfs/info/');
+        if ($pos === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
+
+        // grab path, including preceding slash
+        $path = substr($path, $pos+9);
+
+/*
+        $is_data = false;
+        $counter = 0;
+
+        $vfs = new \Flexio\Services\Vfs($owner_user_eid);
+        $vfs->read($path, function($data) use (&$is_data, &$counter) {
+        });
+*/
+        exit(0);
+    }
+
     public static function exec(\Flexio\Api\Request $request) : void
     {
         // EXPERIMENTAL API endpoint: creates and runs a process straight from a file on vfs
