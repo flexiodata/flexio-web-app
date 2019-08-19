@@ -154,9 +154,7 @@ class StreamConverter
     {
         $instream_mime_type = $instream->getMimeType();
         if ($instream_mime_type != \Flexio\Base\ContentType::FLEXIO_TABLE)
-        {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::EXECUTE_FAILED, "Input file must be a table");
-        }
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED, "Input file must be a table");
 
         $outstream->setMimeType($output_mime_type);
 
@@ -401,7 +399,7 @@ class StreamConverter
     {
         $instream_mime_type = $instream->getMimeType();
         if ($instream_mime_type != \Flexio\Base\ContentType::PDF)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::EXECUTE_FAILED, "Input must be a pdf");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED, "Input must be a pdf");
 
         // get the pages to convert; pages is a range of pages given
         // by pages and page ranges and special keywords; examples of page ranges:
@@ -416,7 +414,7 @@ class StreamConverter
 
         $pages_to_convert = $convert_params['input']['pages'] ?? '';
         if (is_string($pages_to_convert) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::EXECUTE_FAILED, "Pages parameter must be a string");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Pages parameter must be a string");
 
         if (strlen($pages_to_convert) === 0)
             $pages_to_convert = false;
@@ -538,7 +536,7 @@ class StreamConverter
 
             $structure = self::determineStructureFromJsonArray($items);
             if (!isset($structure))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
             foreach ($items as &$row)
                 $row = array_values($row);
@@ -588,7 +586,7 @@ class StreamConverter
             // set the output structure and write the rows
             $structure = self::determineStructureFromJsonArray($items);
             if (!isset($structure))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
             // input/output
             $outstream->set([
@@ -794,7 +792,7 @@ class StreamConverter
             {
                 $row = iconv($encoding, 'UTF-8', $row);
                 if ($row === false)
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Conversion from $encoding to UTF-8 failed");
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED, "Conversion from $encoding to UTF-8 failed");
             }
 
             // parse the row
