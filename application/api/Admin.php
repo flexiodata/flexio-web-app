@@ -371,7 +371,7 @@ class Admin
 
     public static function email(\Flexio\Api\Request $request) : void
     {
-        $f = fopen('php://input', 'r');
+        $f = \Flexio\System\System::openPhpInputStream();
         if ($f === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 

@@ -270,6 +270,35 @@ class System
         return $g_store->timestamp;
     }
 
+
+
+    public static function openPhpInputStream()
+    {
+        if (isset($_GET['fxpdata']))
+        {
+            $stream = fopen('php://memory','r+');
+            fwrite($stream, hex2bin($_GET['fxpdata']));
+            rewind($stream);
+            return $stream;
+        }
+         else
+        {
+            return fopen('php://input', 'rb');
+        }
+    }
+
+    public static function getPhpInputStreamContentType()
+    {
+        if (isset($_GET['fxpdata']))
+        {
+            return $_GET['fxpdatact'] ?? '';
+        }
+         else
+        {
+            return $_SERVER['CONTENT_TYPE'] ?? '';
+        }
+    }
+
     public static function getBaseUrl() : string
     {
         return 'https://' . $_SERVER['SERVER_NAME'];

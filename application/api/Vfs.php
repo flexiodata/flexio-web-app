@@ -149,7 +149,7 @@ class Vfs
             return;
         }
 
-        $php_stream_handle = fopen('php://input', 'rb');
+        $php_stream_handle = \Flexio\System\System::openPhpInputStream();
         $done = false;
         $vfs->write($path, function($len) use (&$php_stream_handle, &$done) {
             if ($done)
@@ -263,8 +263,8 @@ class Vfs
         $engine = \Flexio\Jobs\StoredProcess::create($process);
 
         // parse the request content and set the stream info
-        $php_stream_handle = fopen('php://input', 'rb');
-        $post_content_type = $_SERVER['CONTENT_TYPE'] ?? '';
+        $php_stream_handle = \Flexio\System\System::openPhpInputStream();
+        $post_content_type = \Flexio\System\System::getPhpInputStreamContentType();
         \Flexio\Base\Util::addProcessInputFromStream($php_stream_handle, $post_content_type, $engine);
 
         // run the process

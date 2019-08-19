@@ -188,7 +188,7 @@ EOD;
         $encode = toboolean($encode);
         $this->renderRaw();
 
-        $php_stream_handle = fopen('php://input', 'rb');
+        $php_stream_handle = \Flexio\System\System::openPhpInputStream();
         $content = fread($php_stream_handle, 32768);
 
         // if encode is false, return the raw data
@@ -201,7 +201,7 @@ EOD;
 
         // if encode is true, generate a test case with base64 encoded data
 
-        $content_type = $_SERVER['CONTENT_TYPE'];
+        $content_type = \Flexio\System\System::getPhpInputStreamContentType();
         $content_base64 = base64_encode($content);
 
         $result = '';

@@ -270,7 +270,7 @@ class Api
             // /pipe/:eid/run and /process/:eid/run
             if ($request_method != 'GET' && ini_get('enable_post_data_reading') == '1')
             {
-                $new_post_params = self::getPostContent($request_header_params, 'php://input');
+                $new_post_params = self::getPostContent($request_header_params);
                 if (isset($new_post_params))
                     $api_request->setPostParams($new_post_params);
             }
@@ -614,7 +614,7 @@ class Api
         return $user->getEid();
     }
 
-    private static function getPostContent(array $header_params, string $input) : ?array
+    private static function getPostContent(array $header_params) : ?array
     {
         // TODO: currently, in some configurations (e.g. the test site but not localhost),
         // two content-type headers are being returned; one of them is null, and the
@@ -634,7 +634,10 @@ class Api
             // where the content type looks like this: "application/json;charset=UTF-8"
             if (strcasecmp($k, 'content-type') == 0 && strpos($v, 'application/json') !== false)
             {
-                $content = file_get_contents($input);
+                $php_stream_handle = \Flexio\System\System::openPhpInputStream();
+                $content = stream_get_contents($php_stream_handle);
+                fclose($php_stream_handle);
+
                 if (strlen($content) > 0)
                 {
                     $urlencoding_test = substr($content, 0, 3);

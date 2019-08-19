@@ -1073,12 +1073,12 @@ class Util
         $mime_type = '';
 
         // get the information the parser needs to parse the content
-        $post_content_type = $_SERVER['CONTENT_TYPE'] ?? '';
-
+        $post_content_type = \Flexio\System\System::getPhpInputStreamContentType();
+        
         if (strpos($post_content_type, 'multipart/form-data') !== false)
         {
             // multipart form-data upload
-            $php_stream_handle = fopen('php://input', 'rb');
+            $php_stream_handle = \Flexio\System\System::openPhpInputStream();
 
             // parse the content and set the stream info
             $part_data_snippet = false;
@@ -1139,9 +1139,8 @@ class Util
         }
          else
         {
-            $declared_mime_type = $_SERVER["CONTENT_TYPE"] ?? '';
-
-            $php_stream_handle = fopen('php://input', 'rb');
+            $declared_mime_type = \Flexio\System\System::getPhpInputStreamContentType();
+            $php_stream_handle = \Flexio\System\System::openPhpInputStream();
             $part_data_snippet = false;
 
             while (true)
