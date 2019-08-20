@@ -126,6 +126,7 @@
 
   const DEPLOY_MODE_RUN = 'R'
 
+  /*
   const defaultAttrs = () => {
     // when creating a new function, start out with a basic Python 'Hello World' script
     return {
@@ -139,6 +140,20 @@
           lang: 'python',
           code: 'IyBiYXNpYyBoZWxsbyB3b3JsZCBleGFtcGxlCmRlZiBmbGV4X2hhbmRsZXIoZmxleCk6CiAgICBmbGV4LmVuZChbWyJIIiwiZSIsImwiLCJsIiwibyJdLFsiVyIsIm8iLCJyIiwibCIsImQiXV0pCg=='
         }]
+      }
+    }
+  }
+  */
+
+  const defaultAttrs = () => {
+    // when creating a new function, start out with a basic Python 'Hello World' script
+    return {
+      deploy_mode: 'R',
+      deploy_api: 'A',
+      deploy_ui: 'A',
+      task: {
+        op: 'sequence',
+        items: []
       }
     }
   }
