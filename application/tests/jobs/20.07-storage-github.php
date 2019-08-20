@@ -50,8 +50,8 @@ class Test
             $stream = \Flexio\Tests\Util::createStreamFromFile($filename);
             $process_write = \Flexio\Tests\Process::write($process_owner, $filepath, $stream);
             $process_read = \Flexio\Tests\Process::read($process_owner, $filepath);
-            $actual_contents = \Flexio\Base\Util::getStreamContents($process_read->getStdout());
-            $expected_contents = \Flexio\Base\Util::getStreamContents($stream);
+            $actual_contents = \Flexio\Base\StreamUtil::getStreamContents($process_read->getStdout());
+            $expected_contents = \Flexio\Base\StreamUtil::getStreamContents($stream);
 
             $actual = md5($actual_contents);
             $expected = md5($expected_contents);
@@ -88,7 +88,7 @@ class Test
         for ($i = 0; $i < 5; ++$i)
         {
             $process_read = \Flexio\Tests\Process::read($process_owner, $filepath);
-            $actual = \Flexio\Base\Util::getStreamContents($process_read->getStdout());
+            $actual = \Flexio\Base\StreamUtil::getStreamContents($process_read->getStdout());
             if ($actual == $new_content)
                 break;
             sleep(60);
@@ -132,7 +132,7 @@ class Test
             ["op" => "read", "path" => $filepath]
         ]);
         $process = \Flexio\Jobs\Process::create()->setOwner($process_owner)->execute($task);
-        $actual_contents = \Flexio\Base\Util::getStreamContents($process->getStdout());
+        $actual_contents = \Flexio\Base\StreamUtil::getStreamContents($process->getStdout());
         $expected_contents = <<<EOD
 c1,c2,n1,n2,n3,d1,d2,b1
 aBC,()[]{}<>,-1.02,-1.23,-1,1776-07-04,"1776-07-04 01:02:03",true

@@ -39,9 +39,9 @@ class Test
 
             $read = \Flexio\Tests\Task::create([["op" => "read", "path" => $source_filepath]]);
             $process_read = \Flexio\Jobs\Process::create()->setOwner($process_owner)->execute($read);
-            $actual_contents = \Flexio\Base\Util::getStreamContents($process_read->getStdout());
+            $actual_contents = \Flexio\Base\StreamUtil::getStreamContents($process_read->getStdout());
 
-            $expected_contents = \Flexio\Base\Util::getStreamContents($stream);
+            $expected_contents = \Flexio\Base\StreamUtil::getStreamContents($stream);
             $actual = md5($actual_contents);
             $expected = md5($expected_contents);
 
@@ -57,8 +57,8 @@ class Test
         $process_copy = \Flexio\Jobs\Process::create()->execute($copy);
         $process_list_source = \Flexio\Jobs\Process::create()->execute($list_source);
         $process_list_target = \Flexio\Jobs\Process::create()->execute($list_target);
-        $actual_contents = \Flexio\Base\Util::getStreamContents($process_list_target->getStdout());
-        $expected_contents = \Flexio\Base\Util::getStreamContents($process_list_source->getStdout());
+        $actual_contents = \Flexio\Base\StreamUtil::getStreamContents($process_list_target->getStdout());
+        $expected_contents = \Flexio\Base\StreamUtil::getStreamContents($process_list_source->getStdout());
 
 
         \Flexio\Tests\Check::assertString("A.1", "Copy; compare contents of copied folder $target_directory with source folder $source_directory", $actual, $expected, $results);

@@ -120,6 +120,7 @@ class Api
 
         // vfs
         'GET /:teamid/vfs/list'                       => '\Flexio\Api\Vfs::list',
+        'GET /:teamid/vfs/info/*'                     => '\Flexio\Api\Vfs::info',
         'GET /:teamid/vfs/*'                          => '\Flexio\Api\Vfs::get',
         'PUT /:teamid/vfs/*'                          => '\Flexio\Api\Vfs::put',
 
@@ -446,12 +447,13 @@ class Api
             return $function;
         }
 
-        // PATH POSSIBILITY 8; the path is a vfs path with a path after the vfs prefix
+        // PATH POSSIBILITY 8; the path is a vfs path with a qualifier and/or path after the vfs prefix
         $api_params = $url_params;
         $api_params['apiparam1'] = $user_eid !== '' ? ':teamid' : $api_params['apiparam1'];
         $apiendpoint = self::buildApiEndpointString($request_method, $api_params);
 
-             if (substr($apiendpoint,0,17) === 'GET /:teamid/vfs/') $apiendpoint = 'GET /:teamid/vfs/*';
+             if (substr($apiendpoint,0,22) === 'GET /:teamid/vfs/info/') $apiendpoint = 'GET /:teamid/vfs/info/*';
+        else if (substr($apiendpoint,0,17) === 'GET /:teamid/vfs/') $apiendpoint = 'GET /:teamid/vfs/*';
         else if (substr($apiendpoint,0,17) === 'PUT /:teamid/vfs/') $apiendpoint = 'PUT /:teamid/vfs/*';
 
         $function = self::$endpoints[$apiendpoint] ?? false;

@@ -372,7 +372,7 @@ class Process
         // parse the request content and set the stream info
         $php_stream_handle = \Flexio\System\System::openPhpInputStream();
         $post_content_type = \Flexio\System\System::getPhpInputStreamContentType();
-        \Flexio\Base\Util::addProcessInputFromStream($php_stream_handle, $post_content_type, $engine);
+        \Flexio\Base\StreamUtil::addProcessInputFromStream($php_stream_handle, $post_content_type, $engine);
 
         // run the process
         $engine->run(false  /*true: run in background*/);
@@ -392,7 +392,7 @@ class Process
         $mime_type = $stream_info['mime_type'];
         $start = 0;
         $limit = PHP_INT_MAX;
-        $content = \Flexio\Base\Util::getStreamContents($stream, $start, $limit);
+        $content = \Flexio\Base\StreamUtil::getStreamContents($stream, $start, $limit);
         $response_code = $engine->getResponseCode();
 
         if ($mime_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
@@ -473,7 +473,7 @@ class Process
         // parse the request content and set the stream info
         //$php_stream_handle = \Flexio\System\System::openPhpInputStream();
         //$post_content_type = \Flexio\System\System::getPhpInputStreamContentType();
-        //\Flexio\Base\Util::addProcessInputFromStream($php_stream_handle, $post_content_type, $engine);
+        //\Flexio\Base\StreamUtil::addProcessInputFromStream($php_stream_handle, $post_content_type, $engine);
 
         // run the process
         $engine->run(false  /*true: run in background*/);
@@ -493,7 +493,7 @@ class Process
         $mime_type = $stream_info['mime_type'];
         $start = 0;
         $limit = PHP_INT_MAX;
-        $content = \Flexio\Base\Util::getStreamContents($stream, $start, $limit);
+        $content = \Flexio\Base\StreamUtil::getStreamContents($stream, $start, $limit);
         $response_code = $engine->getResponseCode();
 
         if ($mime_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)

@@ -97,7 +97,7 @@ class Lookup extends \Flexio\Jobs\Base
         $lookup_index = array();
 
         $local_stdout = $local_process->getStdout();
-        $rows = \Flexio\Base\Util::getStreamContents($local_stdout);
+        $rows = \Flexio\Base\StreamUtil::getStreamContents($local_stdout);
         foreach ($rows as $r)
         {
             $lookup_row = array_change_key_case($r, CASE_LOWER);

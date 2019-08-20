@@ -28,7 +28,7 @@ class Test
         // BEGIN TEST
         $task = \Flexio\Tests\Task::create([["email" => "read", "to" => "", "subject" => "Test", "body" => "This is a test"]]);
         $process = \Flexio\Jobs\Process::create()->execute($task);
-        $actual = \Flexio\Base\Util::getStreamContents($process->getStdout());
+        $actual = \Flexio\Base\StreamUtil::getStreamContents($process->getStdout());
         $expected = '';
         \Flexio\Tests\Check::assertString('A.1', 'Email; check basic functionality',  $actual, $expected, $results);
     }

@@ -167,6 +167,68 @@ class Vfs
         \Flexio\Api\Response::sendContent($result);
     }
 
+    public static function info(\Flexio\Api\Request $request) : void
+    {
+        $request_url = urldecode($request->getUrl());
+        $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+
+        // load the object
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+
+        // check the rights on the object
+        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_STREAM_READ) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        $path = parse_url($request_url, PHP_URL_PATH);
+
+        $pos = strpos($path, '/vfs/info/');
+        if ($pos === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
+
+        // grab path, including preceding slash
+        $path = substr($path, $pos+10);
+
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "read",
+                "path" => $path
+            ],
+            [
+                "op" => "convert",
+                "input" => [
+                    "format" => "delimited",
+                    "header" => true
+                ],
+                "output" => [
+                    "format" => "table"
+                ]
+            ]
+        ]);
+
+        $local_process = \Flexio\Jobs\Process::create();
+        $local_process->setOwner($owner_user_eid);
+        $local_process->execute($task);
+        $local_stdout = $local_process->getStdout();
+        $columns = $local_stdout->getStructure()->get();
+
+        $result = array();
+        foreach ($columns as $c)
+        {
+            $row = array();
+            $row['name'] = $c['name'];
+            $row['type'] = $c['type'];
+            $row['width'] = $c['width'];
+            $row['scale'] = $c['scale'];
+            $result[] = $row;
+        }
+
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        \Flexio\Api\Response::sendContent($result);
+    }
+
     public static function exec(\Flexio\Api\Request $request) : void
     {
         // EXPERIMENTAL API endpoint: creates and runs a process straight from a file on vfs
@@ -265,7 +327,7 @@ class Vfs
         // parse the request content and set the stream info
         $php_stream_handle = \Flexio\System\System::openPhpInputStream();
         $post_content_type = \Flexio\System\System::getPhpInputStreamContentType();
-        \Flexio\Base\Util::addProcessInputFromStream($php_stream_handle, $post_content_type, $engine);
+        \Flexio\Base\StreamUtil::addProcessInputFromStream($php_stream_handle, $post_content_type, $engine);
 
         // run the process
         $engine->run(false  /*true: run in background*/);
@@ -285,7 +347,7 @@ class Vfs
         $mime_type = $stream_info['mime_type'];
         $start = 0;
         $limit = PHP_INT_MAX;
-        $content = \Flexio\Base\Util::getStreamContents($stream, $start, $limit);
+        $content = \Flexio\Base\StreamUtil::getStreamContents($stream, $start, $limit);
         $response_code = $engine->getResponseCode();
 
         if ($mime_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)

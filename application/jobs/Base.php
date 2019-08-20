@@ -56,56 +56,6 @@ class Base implements \Flexio\IFace\IJob
         $this->replaceParameterTokens($process);
     }
 
-    public static function ensureStream($stream, string $content_type = null) : \Flexio\Base\Stream
-    {
-        if ($stream instanceof \Flexio\Base\Stream)
-            return $stream;
-
-        if (is_object($stream) || is_array($stream))
-        {
-            $data = json_encode($stream, JSON_UNESCAPED_SLASHES);
-            if ($content_type === null)
-            {
-                $content_type = \Flexio\Base\ContentType::JSON;
-            }
-        }
-         else
-        {
-            if ($stream === true)
-                $data = 'true';
-            else if ($stream === false)
-                $data = 'false';
-            else
-                $data = (string)$stream;
-        }
-
-        $res = \Flexio\Base\Stream::create();
-        if ($content_type !== null)
-        {
-            $res->setMimeType($content_type);
-        }
-
-        /*
-         else
-        {
-            // no content type was passed; if it is JSON, set the content type to JSON
-            $test = trim($data);
-            $firstch = substr($test,0,1);
-            if ($firstch === '[' || $firstch === '{')
-            {
-                $test = @json_encode($data, JSON_UNESCAPED_SLASHES);
-                if ($test !== false)
-                {
-                    $ret->setMimeType($content_type);
-                }
-            }
-        }
-        */
-
-        $res->buffer = $data;     // shortcut to speed it up -- can also use getWriter()->write((string)$v)
-        return $res;
-    }
-
     public function getParameterStream($process, string $varname, array $info = null) : ?\Flexio\Base\Stream
     {
         if ($info === null)
@@ -391,5 +341,55 @@ class Base implements \Flexio\IFace\IJob
         }
 
         return $task;
+    }
+
+    private static function ensureStream($stream, string $content_type = null) : \Flexio\Base\Stream
+    {
+        if ($stream instanceof \Flexio\Base\Stream)
+            return $stream;
+
+        if (is_object($stream) || is_array($stream))
+        {
+            $data = json_encode($stream, JSON_UNESCAPED_SLASHES);
+            if ($content_type === null)
+            {
+                $content_type = \Flexio\Base\ContentType::JSON;
+            }
+        }
+         else
+        {
+            if ($stream === true)
+                $data = 'true';
+            else if ($stream === false)
+                $data = 'false';
+            else
+                $data = (string)$stream;
+        }
+
+        $res = \Flexio\Base\Stream::create();
+        if ($content_type !== null)
+        {
+            $res->setMimeType($content_type);
+        }
+
+        /*
+         else
+        {
+            // no content type was passed; if it is JSON, set the content type to JSON
+            $test = trim($data);
+            $firstch = substr($test,0,1);
+            if ($firstch === '[' || $firstch === '{')
+            {
+                $test = @json_encode($data, JSON_UNESCAPED_SLASHES);
+                if ($test !== false)
+                {
+                    $ret->setMimeType($content_type);
+                }
+            }
+        }
+        */
+
+        $res->buffer = $data;     // shortcut to speed it up -- can also use getWriter()->write((string)$v)
+        return $res;
     }
 }

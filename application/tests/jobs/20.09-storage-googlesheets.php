@@ -67,7 +67,7 @@ class Test
             $process = \Flexio\Jobs\Process::create()->setOwner($process_owner);
             $process->setStdin($stream);
             $process->execute([ "op" => "convert", "input" => [ "format" => "delimited", "header" => false, "delimiter" => "{tab}", "qualifier" => '"' ], "output" => "table" ]);
-            $expected_contents = \Flexio\Base\Util::getStreamContents($process->getStdout());
+            $expected_contents = \Flexio\Base\StreamUtil::getStreamContents($process->getStdout());
             if (is_array($expected_contents))
             {
                 foreach ($expected_contents as &$row)
@@ -77,7 +77,7 @@ class Test
 
             $process = \Flexio\Jobs\Process::create()->setOwner($process_owner);
             $process->execute([ "op" => "read", "path" => $filepath ]);
-            $actual_contents = \Flexio\Base\Util::getStreamContents($process->getStdout());
+            $actual_contents = \Flexio\Base\StreamUtil::getStreamContents($process->getStdout());
             if (is_array($actual_contents))
             {
                 foreach ($actual_contents as &$row)
@@ -107,7 +107,7 @@ class Test
             $stream->getWriter()->write($c);
             $process_write = \Flexio\Tests\Process::write($process_owner, $filepath, $stream);
             $process_read = \Flexio\Tests\Process::read($process_owner, $filepath);
-            $actual = \Flexio\Base\Util::getStreamContents($process_read->getStdout());
+            $actual = \Flexio\Base\StreamUtil::getStreamContents($process_read->getStdout());
             $expected = $c;
             \Flexio\Tests\Check::assertString("E.$idx", 'Read/Write; overwrite check; write/read to/from ' . $filepath, $actual, $expected, $results);
         }
