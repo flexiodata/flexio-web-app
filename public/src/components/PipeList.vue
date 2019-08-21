@@ -16,7 +16,7 @@
   import PipeListItem from '@/components/PipeListItem'
 
   export default {
-    inheritAttrs: 'false',
+    inheritAttrs: false,
     props: {
       items: {
         type: Array,

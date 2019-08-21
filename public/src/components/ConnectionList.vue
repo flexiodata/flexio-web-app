@@ -16,7 +16,7 @@
   import ConnectionListItem from '@/components/ConnectionListItem'
 
   export default {
-    inheritAttrs: 'false',
+    inheritAttrs: false,
     props: {
       items: {
         type: Array,
