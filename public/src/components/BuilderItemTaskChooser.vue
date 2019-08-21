@@ -13,7 +13,7 @@
     >
     </div>
 
-    <div class="flex flex-row flex-wrap items-center">
+    <div class="flex flex-row flex-wrap items-stretch">
       <div
         class="step-chooser-item hint--top hint--medium-large"
         :key="item.op"
