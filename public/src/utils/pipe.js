@@ -1,3 +1,4 @@
+/*
 import * as sched from '@/constants/schedule'
 //import doctrine from 'doctrine'
 import moment from 'moment'
@@ -72,6 +73,7 @@ export const getDeployApiUrl = (identifier) => {
 export const getDeployRuntimeUrl = (eid) => {
   return 'https://' + window.location.hostname + '/app/me/pipes/' + eid + '/run'
 }
+*/
 
 /*
 export const getJsDocObject = (pipe) => {
