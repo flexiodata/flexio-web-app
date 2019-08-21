@@ -4,11 +4,7 @@
     :style="itemStyle"
     @click="onClick"
   >
-    <div class="tc css-valign cursor-default" v-if="layout == 'grid'">
-      <ServiceIcon :type="ctype" class="dib v-mid br2 square-5" />
-      <div class="f6 fw6 mt2">{{cname}}</div>
-    </div>
-    <div class="flex flex-row items-center cursor-default" v-else>
+    <div class="flex flex-row items-center cursor-default">
       <i class="material-icons md-18 b mr3" v-if="showCheckmark && is_selected">check</i>
       <i class="material-icons md-18 b mr3" style="color: transparent" v-else-if="showCheckmark && !is_selected">check</i>
       <div class="flex flex-row items-center relative mr3">
@@ -45,10 +41,6 @@
 
   export default {
     props: {
-      layout: {
-        type: String,
-        default: 'list' // 'list' or 'grid'
-      },
       item: {
         type: Object,
         required: true
@@ -114,10 +106,8 @@
 
         if (this.itemCls.length > 0) {
           return this.itemCls + ' ' + sel_cls
-        } else if (this.layout == 'list') {
-          return 'min-w5 pa3 bb b--black-05 bg-white hover-bg-nearer-white ' + sel_cls
         } else {
-          return 'dib mw5 h4 w4 center bg-white br2 pa1 ma2 v-top darken-10 ' + sel_cls
+          return 'min-w5 pa3 bb b--black-05 bg-white hover-bg-nearer-white ' + sel_cls
         }
       }
     },
