@@ -30,6 +30,20 @@
       </el-form-item>
 
       <el-form-item
+        key="title"
+        prop="title"
+        label="Syntax"
+      >
+        <el-input
+          placeholder="Enter syntax"
+          auto-complete="off"
+          spellcheck="false"
+          :autofocus="true"
+          v-model="edit_pipe.title"
+        />
+      </el-form-item>
+
+      <el-form-item
         key="description"
         prop="description"
         label="Description"
@@ -42,39 +56,11 @@
         />
       </el-form-item>
 
-      <!-- we're revisit using JSDoc nomenclature in the future -->
-      <div v-if="false">
-        <label class="el-form-item__label">
-          <span class="flex flex-row items-center">
-            <span>Description</span>
-            <el-button
-              type="text"
-              class="el-form-item__label"
-              style="border: 0; padding: 0; margin-left: 8px"
-              @click="autofillDescription"
-            >
-              Autofill with example descripion
-            </el-button>
-          </span>
-        </label>
-        <CodeEditor
-          class="pa1 bg-white ba b--black-10 br2"
-          style="font-size: 13px"
-          :options="{
-            minRows: 12,
-            maxRows: 24,
-            lineNumbers: false,
-            placeholder: description_placeholder
-          }"
-          v-model="edit_pipe.description"
-        />
-      </div>
-
       <div class="mt3" style="width: 300px">
         <label class="el-form-item__label">Preview</label>
         <div class="pa3 bg-white ba b--black-10 br2">
-          <div class="code f7 b" v-html="spreadsheet_command_syntax"></div>
-          <p class="mb0 f6" v-if="pdesc.length > 0">{{pdesc}}</p>
+          <div class="code f7 b" v-show="edit_pipe.title.length > 0">{{edit_pipe.title}}</div>
+          <p class="mb0 f6" v-show="edit_pipe.description.length > 0">{{edit_pipe.description}}</p>
         </div>
       </div>
     </el-form>
@@ -101,7 +87,6 @@
 <script>
   import randomstring from 'randomstring'
   import { mapState } from 'vuex'
-  import { getJsDocObject, getSpreadsheetSyntaxStr } from '@/utils/pipe'
   import { OBJECT_TYPE_PIPE } from '@/constants/object-type'
   import CodeEditor from '@/components/CodeEditor'
   import MixinValidation from '@/components/mixins/validation'
@@ -173,15 +158,6 @@
           ]
         },
         form_errors: {},
-        description_placeholder: `Example:
-
-Add two numbers
-
-@customfunction
-@param {number} first First number
-@param {number} second Second number
-@returns {number} The sum of the two numbers.
-`
       }
     },
     computed: {
@@ -197,13 +173,6 @@ Add two numbers
         }
 
         return this.mode == 'edit' ? `Edit "${this.pname}" Function` : 'New Function'
-      },
-      pdesc() {
-        var jsdoc_obj = getJsDocObject(this.edit_pipe)
-        return _.get(jsdoc_obj, 'description', '')
-      },
-      spreadsheet_command_syntax() {
-        return getSpreadsheetSyntaxStr(this.active_team_name, this.edit_pipe, true)
       },
       submit_label() {
         return this.mode == 'edit' ? 'Save changes' : 'Create function'
@@ -244,12 +213,6 @@ Add two numbers
           this.$refs.form.resetFields()
         }
         this.form_errors = {}
-      },
-      autofillDescription() {
-        var desc = this.description_placeholder
-        desc = desc.substring(desc.indexOf('\n'))
-        desc = desc.trim()
-        this.edit_pipe.description = desc
       },
       validate(callback) {
         this.$refs.form.validate(callback)

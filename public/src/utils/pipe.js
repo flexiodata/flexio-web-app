@@ -1,5 +1,5 @@
 import * as sched from '@/constants/schedule'
-import doctrine from 'doctrine'
+//import doctrine from 'doctrine'
 import moment from 'moment'
 
 export const getTimeStr = (s) => {
@@ -73,6 +73,7 @@ export const getDeployRuntimeUrl = (eid) => {
   return 'https://' + window.location.hostname + '/app/me/pipes/' + eid + '/run'
 }
 
+/*
 export const getJsDocObject = (pipe) => {
   var desc = _.get(pipe, 'description', '')
   return doctrine.parse(desc, { unwrap: true })
@@ -96,3 +97,4 @@ export const getSpreadsheetSyntaxStr = (team_name, pipe, return_html) => {
   output_params = output_params.concat(param_names)
   return '=FLEX(' + output_params.join(', ') + ')'
 }
+*/

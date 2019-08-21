@@ -14,8 +14,8 @@
           />
         </div>
         <div class="mt3">
-          <div class="code f7 b" v-html="spreadsheet_command_syntax"></div>
-          <p class="mb0 f6" v-show="pdesc.length > 0">{{pdesc}}</p>
+          <div class="code f7 b" v-show="pipe.title.length > 0">{{pipe.title}}</div>
+          <p class="mb0 f6" v-show="pipe.description.length > 0">{{pipe.description}}</p>
         </div>
       </div>
       <transition name="el-fade-in" mode="out-in">
@@ -73,7 +73,6 @@
 
 <script>
   import { mapState } from 'vuex'
-  import { getJsDocObject, getSpreadsheetSyntaxStr } from '@/utils/pipe'
   import LabelSwitch from '@/components/LabelSwitch'
 
   export default {
@@ -106,13 +105,6 @@
       ...mapState({
         active_team_name: state => state.teams.active_team_name
       }),
-      pdesc() {
-        var jsdoc_obj = getJsDocObject(this.pipe)
-        return _.get(jsdoc_obj, 'description', '')
-      },
-      spreadsheet_command_syntax() {
-        return getSpreadsheetSyntaxStr(this.active_team_name, this.pipe, true)
-      },
       is_deployed: {
         get() {
           return this.isModeRun
