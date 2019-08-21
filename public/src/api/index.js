@@ -81,6 +81,7 @@ export default {
 
   // vfs
   vfsListFiles:            (team_name, path)               => AxiosResource(team_name)[GET] (`/vfs/list`, { q: path }),
+  vfsFetchInfo:            (team_name, path)               => AxiosResource(team_name)[GET] (`/vfs/info/${path}`),
 
   // validation
   validate:                (team_name, attrs)              => AxiosResource(team_name)[POS] (`/validate`, attrs),

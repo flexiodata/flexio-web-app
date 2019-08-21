@@ -42,28 +42,32 @@
           </el-button>
         </el-input>
       </el-form-item>
+      <div class="el-form-item" v-if="fetching_structure">
+        <div class="flex flex-row items-center">
+          <Spinner size="small" />
+          <span class="ml2 el-form-item__label">Loading structure...</span>
+        </div>
+      </div>
       <el-form-item
         key="lookup_keys"
         label="Select the key fields"
         prop="lookup_keys"
+        :class="fetching_structure ? 'o-40 no-pointer-events' : ''"
       >
         <el-select
           multiple
           filterable
           allow-create
-          default-first-option
-          popper-class="dn"
           class="w-100"
           spellcheck="false"
           placeholder="Enter the names of the key fields"
           v-model="edit_values.lookup_keys"
-          v-tag-input
         >
           <el-option
-            :label="item.label"
-            :value="item.value"
-            :key="item.value"
-            v-for="item in []"
+            :label="item.name"
+            :value="item.name"
+            :key="item.name"
+            v-for="item in structure"
           />
         </el-select>
       </el-form-item>
@@ -71,24 +75,22 @@
         key="return_columns"
         label="Select columns to return"
         prop="return_columns"
+        :class="fetching_structure ? 'o-40 no-pointer-events' : ''"
       >
         <el-select
           multiple
           filterable
           allow-create
-          default-first-option
-          popper-class="dn"
           class="w-100"
           spellcheck="false"
           placeholder="Enter the names of the columns to return"
           v-model="edit_values.return_columns"
-          v-tag-input
         >
           <el-option
-            :label="item.label"
-            :value="item.value"
-            :key="item.value"
-            v-for="item in []"
+            :label="item.name"
+            :value="item.name"
+            :key="item.name"
+            v-for="item in structure"
           />
         </el-select>
       </el-form-item>
@@ -133,7 +135,10 @@
 
 <script>
   import marked from 'marked'
+  import { mapState } from 'vuex'
+  import api from '@/api'
   import { atobUnicode, btoaUnicode } from '@/utils'
+  import Spinner from 'vue-simple-spinner'
   import FileChooser from '@/components/FileChooser'
 
   const getDefaultValues = () => {
@@ -164,6 +169,7 @@
       }
     },
     components: {
+      Spinner,
       FileChooser
     },
     watch: {
@@ -180,6 +186,9 @@
         immediate: true,
         deep: true
       },
+      'edit_values.path': {
+        handler: 'onPathChange'
+      },
       form_errors(val) {
         this.$emit('update:isNextAllowed', _.keys(val).length == 0)
       }
@@ -188,6 +197,8 @@
       return {
         selected_files: [],
         show_file_chooser_dialog: false,
+        structure: [],
+        fetching_structure: false,
         orig_values: getDefaultValues(),
         edit_values: getDefaultValues(),
         form_errors: {},
@@ -205,6 +216,9 @@
       }
     },
     computed: {
+      ...mapState({
+        active_team_name: state => state.teams.active_team_name
+      }),
       show_description() {
         return this.description.length > 0
       },
@@ -259,7 +273,21 @@
       onEditValuesChange() {
         var vals = _.cloneDeep(this.edit_values)
         this.$emit('item-change', vals, this.index)
-      }
+      },
+      onPathChange:_.debounce(function(path) {
+        if (path.indexOf(':/') > 0) {
+          this.fetching_structure = true
+          api.vfsFetchInfo(this.active_team_name, path).then(response => {
+            this.structure = response.data
+          })
+          .catch(error => {
+            this.structure = []
+          })
+          .finally(() => {
+            this.fetching_structure = false
+          })
+        }
+      }, 1000),
     }
   }
 </script>
