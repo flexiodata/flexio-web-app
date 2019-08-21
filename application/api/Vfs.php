@@ -169,6 +169,8 @@ class Vfs
 
     public static function info(\Flexio\Api\Request $request) : void
     {
+        // provides a sample of a file in table form
+
         $request_url = urldecode($request->getUrl());
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -212,18 +214,34 @@ class Vfs
         $local_process->setOwner($owner_user_eid);
         $local_process->execute($task);
         $local_stdout = $local_process->getStdout();
-        $columns = $local_stdout->getStructure()->get();
+        $column_info = $local_stdout->getStructure()->get();
+        $row_info = \Flexio\Base\StreamUtil::getStreamContents($local_stdout, 1, 10);
+
+        // get the columns
+        $columns = array();
+        foreach ($column_info as $c)
+        {
+            $item = array();
+            $item['name'] = $c['name'];
+            $item['type'] = $c['type'];
+            $item['width'] = $c['width'];
+            $item['scale'] = $c['scale'];
+            $columns[] = $item;
+        }
+
+        // get a sample of rows values
+        $rows = array();
+        foreach ($row_info as $r)
+        {
+            if (is_array($r))
+                $rows[] = array_values($r);
+                 else
+                $rows[] = $r;
+        }
 
         $result = array();
-        foreach ($columns as $c)
-        {
-            $row = array();
-            $row['name'] = $c['name'];
-            $row['type'] = $c['type'];
-            $row['width'] = $c['width'];
-            $row['scale'] = $c['scale'];
-            $result[] = $row;
-        }
+        $result['columns'] = $columns;
+        $result['rows'] = $rows;
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api\Response::sendContent($result);
