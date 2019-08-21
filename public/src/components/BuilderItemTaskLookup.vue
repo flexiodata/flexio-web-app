@@ -42,7 +42,7 @@
           </el-button>
         </el-input>
       </el-form-item>
-      <div class="el-form-item" v-if="fetching_structure">
+      <div class="relative" v-if="fetching_structure">
         <div class="flex flex-row items-center">
           <Spinner size="small" />
           <span class="ml2 el-form-item__label">Loading structure...</span>
@@ -61,6 +61,8 @@
           class="w-100"
           spellcheck="false"
           placeholder="Enter the names of the key fields"
+          :loading="fetching_structure"
+          @visible-change="onSelectVisibleChange"
           v-model="edit_values.lookup_keys"
         >
           <el-option
@@ -84,6 +86,8 @@
           class="w-100"
           spellcheck="false"
           placeholder="Enter the names of the columns to return"
+          :loading="fetching_structure"
+          @visible-change="onSelectVisibleChange"
           v-model="edit_values.return_columns"
         >
           <el-option
@@ -199,6 +203,7 @@
         show_file_chooser_dialog: false,
         structure: [],
         fetching_structure: false,
+        fetched_structure_path: '',
         orig_values: getDefaultValues(),
         edit_values: getDefaultValues(),
         form_errors: {},
@@ -274,10 +279,20 @@
         var vals = _.cloneDeep(this.edit_values)
         this.$emit('item-change', vals, this.index)
       },
-      onPathChange:_.debounce(function(path) {
-        if (path.indexOf(':/') > 0) {
+      onSelectVisibleChange(visible) {
+        if (visible) {
+          this.fetchStructure()
+        }
+      },
+      onPathChange: _.debounce(function(path) {
+        this.fetchStructure()
+      }, 1000),
+      fetchStructure() {
+        var path = _.get(this.edit_values, 'path', '')
+        if (path.indexOf(':/') > 0 && this.fetched_structure_path != path) {
           this.fetching_structure = true
           api.vfsFetchInfo(this.active_team_name, path).then(response => {
+            this.fetched_structure_path = path
             this.structure = response.data
           })
           .catch(error => {
@@ -287,7 +302,7 @@
             this.fetching_structure = false
           })
         }
-      }, 1000),
+      }
     }
   }
 </script>
