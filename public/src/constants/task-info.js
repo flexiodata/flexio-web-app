@@ -5,7 +5,7 @@ import * as ops from './task-op'
 const EXECUTE = {
   op: ops.TASK_OP_EXECUTE,
   name: 'Execute',
-  description: 'Execute an inline or remote Python or Node.js function.',
+  description: 'Build a spreadsheet function using a custom Python or Node.js script, either inline or remote.',
   icon: 'code',
   bg_color: 'bg-task-purple'
 }
@@ -13,7 +13,7 @@ const EXECUTE = {
 const EXTRACT = {
   op: ops.TASK_OP_EXTRACT,
   name: 'Extract',
-  description: 'Extract data from a dataset.',
+  description: 'Build a spreadsheet function that extracts a data set from a remote table, file or database.',
   icon: 'launch',
   bg_color: 'bg-task-orange'
 }
@@ -21,7 +21,7 @@ const EXTRACT = {
 const LOOKUP = {
   op: ops.TASK_OP_LOOKUP,
   name: 'Lookup',
-  description: 'Lookup values based on a key/value pair lookup in a dataset.',
+  description: 'Build a spreadsheet function that creates a lookup based on a key/value pair from a remote table, file or database.',
   icon: 'find_in_page',
   bg_color: 'bg-task-blue'
 }
