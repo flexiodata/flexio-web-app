@@ -16,8 +16,10 @@
       >
         <ConnectionList
           class="h-100 overflow-y-auto br b--black-05"
-          :selected-item.sync="active_connection"
+          item-size="small"
           :items="connections"
+          :selected-item.sync="active_connection"
+          :show-status="false"
           @item-activate="onConnectionActivate"
         />
       </div>

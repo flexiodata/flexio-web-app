@@ -7,14 +7,27 @@
     <div class="flex flex-row items-center cursor-default">
       <i class="material-icons md-18 b mr3" v-if="showCheckmark && is_selected">check</i>
       <i class="material-icons md-18 b mr3" style="color: transparent" v-else-if="showCheckmark && !is_selected">check</i>
-      <div class="flex flex-row items-center relative mr3">
-        <ServiceIcon class="br1 square-3" :type="ctype" :empty-cls="''" />
+      <div
+        class="flex flex-row items-center relative"
+        :class="itemSize == 'small' ? 'mr2' : 'mr3'"
+      >
+        <ServiceIcon
+          class="br1"
+          :class="itemSize == 'small' ? 'square-2' : 'square-3'"
+          :empty-cls="''"
+          :type="ctype"
+        />
         <div class="absolute z-1" style="top: -9px; right: -6px" v-if="showStatus && !is_flexio">
           <i class="el-icon-success dark-green bg-white ba b--white br-100 f8" v-if="is_available"></i>
           <i class="el-icon-error dark-red bg-white ba b--white br-100 f8" v-else></i>
         </div>
       </div>
-      <div class="flex-fill f5 fw6 cursor-default mr1 lh-title truncate">{{cname}}</div>
+      <div
+        class="flex-fill fw6 cursor-default mr1 lh-title truncate"
+        :class="itemSize == 'small' ? 'f6' : 'f5'"
+      >
+        {{cname}}
+      </div>
       <div
         class="flex-none ml2"
         @click.stop
@@ -52,6 +65,10 @@
       itemStyle: {
         type: String,
         default: ''
+      },
+      itemSize: {
+        type: String,
+        default: 'large'
       },
       selectedItem: {
         type: Object,
@@ -101,13 +118,21 @@
       is_available() {
         return this.cstatus == CONNECTION_STATUS_AVAILABLE
       },
+
       cls() {
         var sel_cls = this.is_selected ? this.selectedCls : ''
+        var size_cls = ''
+
+        switch (this.itemSize) {
+          default:
+          case 'large': size_cls = 'min-w5 pa3'; break;
+          case 'small': size_cls = 'min-w4 pa2'; break;
+        }
 
         if (this.itemCls.length > 0) {
           return this.itemCls + ' ' + sel_cls
         } else {
-          return 'min-w5 pa3 bb b--black-05 bg-white hover-bg-nearer-white ' + sel_cls
+          return size_cls + ' bb b--black-05 bg-white hover-bg-nearer-white ' + sel_cls
         }
       }
     },
