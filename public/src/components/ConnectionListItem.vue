@@ -69,6 +69,10 @@
         type: String,
         default: 'relative bg-nearer-white'
       },
+      showDropdown: {
+        type: Boolean,
+        default: false
+      },
       showStatus: {
         type: Boolean,
         default: true
@@ -77,10 +81,6 @@
         type: Boolean,
         default: false
       },
-      showDropdown: {
-        type: Boolean,
-        default: false
-      }
     },
     components: {
       ServiceIcon

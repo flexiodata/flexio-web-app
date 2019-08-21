@@ -34,42 +34,13 @@
 
           <!-- list -->
           <div style="max-width: 20rem" v-bar>
-            <div>
-              <article
-                class="min-w5 pa3 bb b--black-05 bg-white hover-bg-nearer-white"
-                :title="pipe.name"
-                :class="isPipeSelected(pipe) ? 'relative bg-nearer-white' : ''"
-                @click="selectPipe(pipe)"
-                v-for="pipe in pipes"
-              >
-                <div class="flex flex-row items-center cursor-default">
-                  <div class="flex-fill">
-                    <div class="flex flex-row items-center">
-                      <div
-                        class="br-100 mr2"
-                        style="width: 8px; height: 8px"
-                        :style="isPipeDeployed(pipe) ? 'background-color: #13ce66' : 'background-color: #dcdfe6'"
-                      ></div>
-                      <div class="flex-fill f5 fw6 cursor-default mr1 lh-title truncate">{{pipe.name}}</div>
-                    </div>
-                  </div>
-                  <div
-                    class="flex-none ml2"
-                    @click.stop
-                    v-require-rights:pipe.update.hidden
-                  >
-                      <el-dropdown trigger="click" @command="onCommand">
-                        <span class="el-dropdown-link dib pointer pa1 black-30 hover-black">
-                          <i class="material-icons v-mid">expand_more</i>
-                        </span>
-                        <el-dropdown-menu style="min-width: 10rem" slot="dropdown">
-                          <el-dropdown-item class="flex flex-row items-center ph2" command="delete" :item="pipe"><i class="material-icons mr3">delete</i> Delete</el-dropdown-item>
-                        </el-dropdown-menu>
-                      </el-dropdown>
-                  </div>
-                </div>
-              </article>
-            </div>
+            <PipeList
+              :items="pipes"
+              :selected-item.sync="pipe"
+              :show-dropdown="true"
+              @item-activate="selectPipe"
+              @item-delete="tryDeletePipe"
+            />
           </div>
         </div>
 
@@ -119,31 +90,11 @@
   import { OBJECT_STATUS_AVAILABLE } from '@/constants/object-status'
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
+  import PipeList from '@/components/PipeList'
   import PipeDocument from '@/components/PipeDocument'
   import PipeEditPanel from '@/components/PipeEditPanel'
   import EmptyItem from '@/components/EmptyItem'
   import PageNotFound from '@/components/PageNotFound'
-
-  const DEPLOY_MODE_RUN = 'R'
-
-  /*
-  const defaultAttrs = () => {
-    // when creating a new function, start out with a basic Python 'Hello World' script
-    return {
-      deploy_mode: 'R',
-      deploy_api: 'A',
-      deploy_ui: 'A',
-      task: {
-        op: 'sequence',
-        items: [{
-          op: 'execute',
-          lang: 'python',
-          code: 'IyBiYXNpYyBoZWxsbyB3b3JsZCBleGFtcGxlCmRlZiBmbGV4X2hhbmRsZXIoZmxleCk6CiAgICBmbGV4LmVuZChbWyJIIiwiZSIsImwiLCJsIiwibyJdLFsiVyIsIm8iLCJyIiwibCIsImQiXV0pCg=='
-        }]
-      }
-    }
-  }
-  */
 
   const defaultAttrs = () => {
     // when creating a new function, start out with a basic Python 'Hello World' script
@@ -169,6 +120,7 @@
     },
     components: {
       Spinner,
+      PipeList,
       PipeDocument,
       PipeEditPanel,
       EmptyItem,
@@ -188,9 +140,9 @@
     data() {
       return {
         is_selecting: false,
+        show_pipe_dialog: false,
         pipe: {},
         last_selected: {},
-        show_pipe_dialog: false
       }
     },
     computed: {
@@ -320,17 +272,6 @@
 
           this.is_selecting = true
           this.$nextTick(() => { this.is_selecting = false })
-        }
-      },
-      isPipeSelected(pipe) {
-        return _.get(this.pipe, 'eid') === pipe.eid
-      },
-      isPipeDeployed(pipe) {
-        return _.get(pipe, 'deploy_mode') == DEPLOY_MODE_RUN ? true : false
-      },
-      onCommand(cmd, menu_item) {
-        switch (cmd) {
-          case 'delete': return this.tryDeletePipe(menu_item.$attrs.item)
         }
       }
     }
