@@ -48,7 +48,6 @@
   import { CONNECTION_STATUS_AVAILABLE } from '@/constants/connection-status'
   import { CONNECTION_TYPE_FLEX } from '@/constants/connection-type'
   import ServiceIcon from '@/components/ServiceIcon'
-  import MixinConnection from '@/components/mixins/connection'
 
   export default {
     props: {
@@ -74,7 +73,7 @@
       },
       selectedCls: {
         type: String,
-        default: 'bg-light-gray'
+        default: 'relative bg-nearer-white'
       },
       showStatus: {
         type: Boolean,
@@ -97,7 +96,6 @@
         default: () => { return ['edit','delete'] }
       }
     },
-    mixins: [MixinConnection],
     components: {
       ServiceIcon
     },
@@ -134,12 +132,6 @@
       is_available() {
         return this.cstatus == CONNECTION_STATUS_AVAILABLE
       },
-      is_storage() {
-        return this.$_Connection_isStorage(this.ctype)
-      },
-      is_email() {
-        return this.$_Connection_isEmail(this.ctype)
-      },
       cls() {
         var sel_cls = this.is_selected ? this.selectedCls : ''
 
@@ -147,7 +139,7 @@
           return this.itemCls + ' ' + sel_cls
 
         if (_.get(this, 'layout', '') == 'list')
-          return 'min-w5 pa3 bb b--black-05 darken-05 ' + sel_cls
+          return 'min-w5 pa3 bb b--black-05 bg-white hover-bg-nearer-white ' + sel_cls
            else
           return 'dib mw5 h4 w4 center bg-white br2 pa1 ma2 v-top darken-10 ' + sel_cls
       }

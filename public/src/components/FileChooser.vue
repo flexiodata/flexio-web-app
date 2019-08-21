@@ -14,19 +14,10 @@
         class="flex-none overflow-y-auto"
         v-if="showConnectionList"
       >
-        <AbstractList
-          ref="list"
+        <ConnectionList
           class="h-100 overflow-y-auto br b--black-05"
-          layout="list"
-          item-component="AbstractConnectionChooserItem"
           :selected-item.sync="active_connection"
           :items="connections"
-          :item-options="{
-            itemCls: 'min-w5 pa3 bb b--black-05 bg-white hover-bg-nearer-white',
-            selectedCls: 'relative bg-nearer-white',
-            showIdentifier: true,
-            showUrl: false
-          }"
           @item-activate="onConnectionActivate"
         />
       </div>
@@ -54,7 +45,7 @@
   import * as connections from '@/constants/connection-info'
   import FileExplorerBar from '@/components/FileExplorerBar'
   import FileChooserList from '@/components/FileChooserList'
-  import AbstractList from '@/components/AbstractList'
+  import ConnectionList from '@/components/ConnectionList'
   import MixinConnection from '@/components/mixins/connection'
 
   /*
@@ -83,7 +74,7 @@
     components: {
       FileExplorerBar,
       FileChooserList,
-      AbstractList
+      ConnectionList
     },
     watch: {
       connection: {

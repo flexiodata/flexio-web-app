@@ -34,18 +34,10 @@
 
           <!-- list -->
           <div style="max-width: 20rem" v-bar>
-            <AbstractList
-              ref="list"
-              layout="list"
-              item-component="AbstractConnectionChooserItem"
-              :selected-item.sync="connection"
+            <ConnectionList
               :items="connections"
-              :item-options="{
-                itemCls: 'min-w5 pa3 bb b--black-05 bg-white hover-bg-nearer-white',
-                selectedCls: 'relative bg-nearer-white',
-                showDropdown: true,
-                dropdownItems: ['delete']
-              }"
+              :selected-item.sync="connection"
+              :show-dropdown="true"
               @item-activate="selectConnection"
               @item-delete="tryDeleteConnection"
             />
@@ -126,7 +118,7 @@
   import { mapState, mapGetters } from 'vuex'
   import stickybits from 'stickybits'
   import Spinner from 'vue-simple-spinner'
-  import AbstractList from '@/components/AbstractList'
+  import ConnectionList from '@/components/ConnectionList'
   import ConnectionEditPanel from '@/components/ConnectionEditPanel'
   import ConnectionStaticPanel from '@/components/ConnectionStaticPanel'
   import FileChooser from '@/components/FileChooser'
@@ -147,7 +139,7 @@
     mixins: [MixinConnection],
     components: {
       Spinner,
-      AbstractList,
+      ConnectionList,
       ConnectionEditPanel,
       ConnectionStaticPanel,
       FileChooser,
