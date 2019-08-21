@@ -201,11 +201,11 @@
       this.$store.track('Visited Connections Page')
     },
     methods: {
-      ...mapGetters('connections', {
-        'getAvailableConnections': 'getAvailableConnections'
-      }),
       ...mapGetters('teams', {
         'getActiveTeamLabel': 'getActiveTeamLabel'
+      }),
+      ...mapGetters('connections', {
+        'getAvailableConnections': 'getAvailableConnections'
       }),
       tryFetchConnections() {
         var team_name = this.active_team_name
@@ -348,9 +348,6 @@
       cancelChanges(item) {
         this.show_connection_dialog = false
         this.connection = _.cloneDeep(this.last_selected)
-      },
-      saveChanges(item) {
-        this.tryUpdateConnection(item)
       },
       initSticky() {
         setTimeout(() => {
