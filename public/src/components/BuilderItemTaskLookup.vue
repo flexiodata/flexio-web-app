@@ -103,7 +103,7 @@
     <!-- file chooser dialog -->
     <el-dialog
       custom-class="el-dialog--compressed-body"
-      title="Choose files"
+      title="Choose file"
       width="60vw"
       top="4vh"
       :append-to-body="true"
@@ -130,7 +130,7 @@
           type="primary"
           @click="addFiles"
         >
-          Choose a file
+          Done
         </el-button>
       </span>
     </el-dialog>
@@ -141,7 +141,6 @@
   import marked from 'marked'
   import { mapState } from 'vuex'
   import api from '@/api'
-  import { atobUnicode, btoaUnicode } from '@/utils'
   import Spinner from 'vue-simple-spinner'
   import FileChooser from '@/components/FileChooser'
 

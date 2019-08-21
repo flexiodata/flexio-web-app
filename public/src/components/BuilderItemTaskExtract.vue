@@ -12,57 +12,54 @@
       v-show="show_description"
     >
     </div>
-    <h4 class="fw6">1. Choose connection</h4>
-    <BuilderComponentConnectionChooser
-      class="mb3"
-      :filter-by="filter_by"
-      :connection-identifier.sync="connection_identifier"
-      :show-result="has_available_connection"
-      :inline-chooser="true"
+    <el-form
+      ref="form"
+      class="flex-fill el-form--compact el-form__label-tiny"
+      label-position="top"
+      :model="edit_values"
+      :rules="rules"
+      @validate="onValidateItem"
     >
-      <el-button
-        slot="buttons"
-        plain
-        size="tiny"
-        class="ttu fw6"
-        @click="clearConnection"
+      <el-form-item
+        label="Select the path of the extract file or table"
+        key="path"
+        prop="path"
       >
-        Use Different Connection
-      </el-button>
-    </BuilderComponentConnectionChooser>
-    <template v-if="has_available_connection">
-      <h4 class="fw6">2. Choose file</h4>
-      <el-input
-        v-model="read_path"
-        spellcheck="false"
-      >
-        <el-button
-          slot="append"
-          class="ttu fw6"
-          type="primary"
-          size="small"
-          @click="show_file_chooser_dialog = true"
+        <el-input
+          auto-complete="off"
+          spellcheck="false"
+          placeholder="Enter the extract file or table"
+          v-model="edit_values.path"
         >
-          Browse
-        </el-button>
-      </el-input>
-    </template>
+          <el-button
+            slot="append"
+            class="ttu fw6"
+            type="primary"
+            size="small"
+            @click="show_file_chooser_dialog = true"
+          >
+            Browse
+          </el-button>
+        </el-input>
+      </el-form-item>
+    </el-form>
 
     <!-- file chooser dialog -->
     <el-dialog
       custom-class="el-dialog--compressed-body"
       title="Choose file"
-      width="51rem"
+      width="60vw"
       top="4vh"
-      :modal-append-to-body="false"
+      :append-to-body="true"
       :visible.sync="show_file_chooser_dialog"
     >
-      <BuilderComponentFileChooser
+      <FileChooser
         ref="file-chooser"
-        :connection-identifier="connection_identifier"
+        style="max-height: 60vh"
+        :selected-items.sync="selected_files"
         :allow-multiple="false"
         :allow-folders="false"
-        :show-result="false"
+        :show-connection-list="true"
         v-if="show_file_chooser_dialog"
       />
       <span slot="footer" class="dialog-footer">
@@ -75,9 +72,9 @@
         <el-button
           class="ttu fw6"
           type="primary"
-          @click="addFile"
+          @click="addFiles"
         >
-          Choose file
+          Done
         </el-button>
       </span>
     </el-dialog>
@@ -86,17 +83,13 @@
 
 <script>
   import marked from 'marked'
-  import { afterFirst } from '@/utils'
-  import { mapGetters } from 'vuex'
-  import { CONNECTION_STATUS_AVAILABLE } from '@/constants/connection-status'
-  import BuilderComponentConnectionChooser from '@/components/BuilderComponentConnectionChooser'
-  import BuilderComponentFileChooser from '@/components/BuilderComponentFileChooser'
-  import MixinConnection from '@/components/mixins/connection'
+  import { mapState } from 'vuex'
+  import Spinner from 'vue-simple-spinner'
+  import FileChooser from '@/components/FileChooser'
 
   const getDefaultValues = () => {
     return {
-      op: 'read',
-      path: ''
+      path: '',
     }
   }
 
@@ -119,10 +112,9 @@
         required: true
       }
     },
-    mixins: [MixinConnection],
     components: {
-      BuilderComponentConnectionChooser,
-      BuilderComponentFileChooser
+      Spinner,
+      FileChooser
     },
     watch: {
       item: {
@@ -130,106 +122,93 @@
         immediate: true,
         deep: true
       },
-      has_available_connection() {
-        this.$emit('update:isNextAllowed', this.has_available_connection)
-      },
-      connection_identifier() {
-        this.read_path = ''
-        this.$emit('active-item-change', this.index)
+      is_changed: {
+        handler: 'onChange'
       },
       edit_values: {
         handler: 'onEditValuesChange',
         immediate: true,
         deep: true
+      },
+      'edit_values.path': {
+        handler: 'onPathChange'
+      },
+      form_errors(val) {
+        this.$emit('update:isNextAllowed', _.keys(val).length == 0)
       }
     },
     data() {
       return {
-        connection_identifier: '',
+        selected_files: [],
+        show_file_chooser_dialog: false,
         orig_values: getDefaultValues(),
         edit_values: getDefaultValues(),
-        show_file_chooser_dialog: false
+        form_errors: {},
+        rules: {
+          path: [
+            { required: true, message: 'Please select the path of the file or table on which to do the extract' }
+          ]
+        }
       }
     },
     computed: {
+      ...mapState({
+        active_team_name: state => state.teams.active_team_name
+      }),
       show_description() {
         return this.description.length > 0
       },
       title() {
-        return _.get(this.item, 'title', 'Read')
+        return _.get(this.item, 'title', 'Lookup')
       },
       description() {
         return marked(_.get(this.item, 'description', ''))
       },
-      filter_by() {
-        return (item) => {
-          return this.$_Connection_isStorage(item)
-        }
-      },
-      read_path: {
-        get() {
-          var path = afterFirst(this.edit_values.path, ':')
-          if (path.indexOf('/') != 0) {
-            path = '/' + path
-          }
-          return path
-        },
-        set(value) {
-          if (this.connection_identifier.length == 0) {
-            return this.edit_values.path = ''
-          }
-
-          var path = value
-          if (path.indexOf('/') != 0) {
-            path = '/' + path
-          }
-
-          this.edit_values.path = this.connection_identifier + ':' + path
-        }
-      },
-      store_connection() {
-        return this.$_Connection_getConnectionByIdentifier(this.connection_identifier)
-      },
-      has_available_connection() {
-        return _.get(this.store_connection, 'connection_status', '') == CONNECTION_STATUS_AVAILABLE
+      is_changed() {
+        return !_.isEqual(this.edit_values, this.orig_values)
       }
     },
     methods: {
       initSelf() {
         var form_values = _.get(this.item, 'form_values', {})
-
-        // set connection identifier
-        var path = _.get(form_values, 'path', '')
-        if (path.length == 0) {
-          this.connection_identifier = ''
-        } else {
-          var cid = path.substring(0, path.indexOf(':'))
-          this.connection_identifier = cid
-        }
-
-        var values = _.assign({}, getDefaultValues(), form_values)
-        this.orig_values = _.cloneDeep(values)
-        this.edit_values = _.cloneDeep(values)
-
-        this.$emit('update:isNextAllowed', this.has_available_connection)
+        this.orig_values = _.assign({}, getDefaultValues(), form_values)
+        this.edit_values = _.assign({}, getDefaultValues(), form_values)
+        this.$nextTick(() => { this.validateForm(true) })
       },
-      clearConnection() {
-        this.connection_identifier = ''
-        this.edit_values = _.assign({}, this.edit_values, { path: [] })
+      validateForm(clear) {
+        if (this.$refs.form) {
+          this.$refs.form.validate((valid) => {
+            this.$emit('update:isNextAllowed', valid)
+            if (clear === true) {
+              this.$refs.form.clearValidate()
+            }
+          })
+        }
+      },
+      onValidateItem(key, valid) {
+        var errors = _.assign({}, this.form_errors)
+        if (valid) {
+          errors = _.omit(errors, [key])
+        } else {
+          errors[key] = true
+        }
+        this.form_errors = _.assign({}, errors)
+      },
+      addFiles() {
+        var files = this.selected_files
+        files = _.map(files, (f) => { return f.full_path })
+        this.edit_values.path = _.get(files, '[0]', '')
+        this.show_file_chooser_dialog = false
+      },
+      onChange(val) {
+        if (val) {
+          this.$nextTick(() => { this.validateForm(true) })
+          this.$emit('active-item-change', this.index)
+        }
       },
       onEditValuesChange() {
-        if (_.isEqual(this.edit_values, this.orig_values)) {
-          return
-        }
-
-        this.$emit('active-item-change', this.index)
-        this.$emit('item-change', this.edit_values, this.index)
-      },
-      addFile() {
-        var files = this.$refs['file-chooser'].getSelectedFiles()
-        files = _.get(files, '[0].full_path', '')
-        this.edit_values = _.assign({}, this.edit_values, { path: files })
-        this.show_file_chooser_dialog = false
+        var vals = _.cloneDeep(this.edit_values)
+        this.$emit('item-change', vals, this.index)
       }
     }
   }
