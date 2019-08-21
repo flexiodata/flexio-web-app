@@ -128,6 +128,30 @@ class Api
         'GET /:teamid/actions'                        => '\Flexio\Api\Action::list',
 
 
+        // EXPERIMENTAL ENDPOINTS FOR MOUNTED FUNCTIONS
+
+        // connections; works almost the same, except for connect/disconnect; here for reference
+        // 'POS /:teamid/connections'                    => '\Flexio\Api\Connection::create',
+        // 'GET /:teamid/connections'                    => '\Flexio\Api\Connection::list',
+        // 'PUT /:teamid/connections/:objid'             => '\Flexio\Api\Connection::set',
+        // 'GET /:teamid/connections/:objid'             => '\Flexio\Api\Connection::get',
+        // 'DEL /:teamid/connections/:objid'             => '\Flexio\Api\Connection::delete',
+        // 'POS /:teamid/connections/:objid/auth'        => '\Flexio\Api\Connection::connect',
+        // 'DEL /:teamid/connections/:objid/auth'        => '\Flexio\Api\Connection::disconnect',
+
+        // resources; combines pipes/vfs
+        // 'POS /:teamid/resources/*'                    => '\Flexio\Api\Resource::create',
+        // 'GET /:teamid/resources/*'                    => '\Flexio\Api\Resource::read',
+        // 'PUT /:teamid/resources/*'                    => '\Flexio\Api\Resource::update',
+        // 'DEL /:teamid/resources/*'                    => '\Flexio\Api\Resource::delete',
+
+        // content; replaces streams
+        // 'POS /:teamid/content/*'                      => '\Flexio\Api\Content::create',
+        // 'GET /:teamid/content/*'                      => '\Flexio\Api\Content::read',
+        // 'PUT /:teamid/content/*'                      => '\Flexio\Api\Content::update',
+        // 'DEL /:teamid/content/*'                      => '\Flexio\Api\Content::delete',
+
+
         // EXPERIMENTAL ENDPOINTS
 
         // experimental pipes endpoint for bulk delete of pipes
