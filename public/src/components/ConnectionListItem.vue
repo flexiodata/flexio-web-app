@@ -12,19 +12,13 @@
       <i class="material-icons md-18 b mr3" v-if="showCheckmark && is_selected">check</i>
       <i class="material-icons md-18 b mr3" style="color: transparent" v-else-if="showCheckmark && !is_selected">check</i>
       <div class="flex flex-row items-center relative mr3">
-        <ServiceIcon class="br1 square-3" :type="ctype" :url="url" :empty-cls="''" />
+        <ServiceIcon class="br1 square-3" :type="ctype" :empty-cls="''" />
         <div class="absolute z-1" style="top: -9px; right: -6px" v-if="showStatus && !is_flexio">
           <i class="el-icon-success dark-green bg-white ba b--white br-100 f8" v-if="is_available"></i>
           <i class="el-icon-error dark-red bg-white ba b--white br-100 f8" v-else></i>
         </div>
       </div>
-
-      <div class="flex-fill flex flex-column">
-        <div class="f5 fw6 cursor-default mr1 lh-title truncate">{{cname}}</div>
-        <div class="bt b--black-05" style="padding-top: 2px; margin-top: 2px; max-width: 12rem" v-if="showUrl && url.length > 0">
-          <div class="light-silver f8 lh-copy truncate">{{url}}</div>
-        </div>
-      </div>
+      <div class="flex-fill f5 fw6 cursor-default mr1 lh-title truncate">{{cname}}</div>
       <div
         class="flex-none ml2"
         @click.stop
@@ -79,10 +73,6 @@
         type: Boolean,
         default: true
       },
-      showUrl: {
-        type: Boolean,
-        default: true
-      },
       showCheckmark: {
         type: Boolean,
         default: false
@@ -90,20 +80,10 @@
       showDropdown: {
         type: Boolean,
         default: false
-      },
-      dropdownItems: {
-        type: Array,
-        default: () => { return ['edit','delete'] }
       }
     },
     components: {
       ServiceIcon
-    },
-    data() {
-      return {
-        is_hover: false,
-        is_dropdown_open: false
-      }
     },
     computed: {
       eid() {
@@ -117,9 +97,6 @@
       },
       cstatus() {
         return _.get(this.item, 'connection_status', '')
-      },
-      url() {
-        return _.get(this.item, 'connection_info.url', '')
       },
       is_flexio() {
         return this.ctype == CONNECTION_TYPE_FLEX
@@ -135,19 +112,18 @@
       cls() {
         var sel_cls = this.is_selected ? this.selectedCls : ''
 
-        if (this.itemCls.length > 0)
+        if (this.itemCls.length > 0) {
           return this.itemCls + ' ' + sel_cls
-
-        if (_.get(this, 'layout', '') == 'list')
+        } else if (this.layout == 'list') {
           return 'min-w5 pa3 bb b--black-05 bg-white hover-bg-nearer-white ' + sel_cls
-           else
+        } else {
           return 'dib mw5 h4 w4 center bg-white br2 pa1 ma2 v-top darken-10 ' + sel_cls
+        }
       }
     },
     methods: {
       onCommand(cmd) {
-        switch (cmd)
-        {
+        switch (cmd) {
           case 'edit':      return this.$emit('edit', this.item)
           case 'delete':    return this.$emit('delete', this.item)
         }
