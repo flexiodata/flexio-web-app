@@ -29,9 +29,9 @@ const LOOKUP = {
 /* exports */
 
 // go out of alphabetical order here so the order is correct in the step chooser builder item
-export const TASK_INFO_EXECUTE       = EXECUTE
 export const TASK_INFO_EXTRACT       = EXTRACT
 export const TASK_INFO_LOOKUP        = LOOKUP
+export const TASK_INFO_EXECUTE       = EXECUTE
 
 /*
 -------------------- old cruft --------------------

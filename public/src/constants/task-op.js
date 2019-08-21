@@ -1,6 +1,6 @@
-export const TASK_OP_EXECUTE       = 'execute'
 export const TASK_OP_EXTRACT       = 'extract'
 export const TASK_OP_LOOKUP        = 'lookup'
+export const TASK_OP_EXECUTE       = 'execute'
 
 /*
 export const TASK_OP_CALC          = 'calc'
