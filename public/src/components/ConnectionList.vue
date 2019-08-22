@@ -9,11 +9,40 @@
       @delete="onItemDelete"
       v-bind="$attrs"
     />
+    <div class="pa2">
+      <el-button
+        size="small"
+        type="primary"
+        class="ttu fw6 w-100 connection-new-button"
+        @click="onNewConnection"
+        v-require-rights:connection.update
+      >
+        New Connection
+      </el-button>
+    </div>
+
+    <!-- connection dialog -->
+    <el-dialog
+      custom-class="el-dialog--no-header el-dialog--no-footer"
+      width="46rem"
+      top="4vh"
+      :modal-append-to-body="false"
+      :close-on-click-modal="false"
+      :visible.sync="show_connection_dialog"
+    >
+      <ConnectionEditPanel
+        @close="show_connection_dialog = false"
+        @cancel="show_connection_dialog = false"
+        @submit="show_connection_dialog = false"
+        v-if="show_connection_dialog"
+      />
+    </el-dialog>
   </div>
 </template>
 
 <script>
   import ConnectionListItem from '@/components/ConnectionListItem'
+  import ConnectionEditPanel from '@/components/ConnectionEditPanel'
 
   export default {
     inheritAttrs: false,
@@ -29,12 +58,25 @@
       disabled: {
         type: Boolean,
         default: false
+      },
+      showAddButton: {
+        type: Boolean,
+        default: false
       }
     },
     components: {
-      ConnectionListItem
+      ConnectionListItem,
+      ConnectionEditPanel
+    },
+    data() {
+      return {
+        show_connection_dialog: false
+      }
     },
     methods: {
+      onNewConnection() {
+        this.show_connection_dialog = true
+      },
       onItemActivate(item) {
         this.$emit('item-activate', item)
       },
@@ -44,3 +86,17 @@
     }
   }
 </script>
+
+<style lang="stylus" scoped>
+  @import '../stylesheets/variables.styl'
+
+  .connection-new-button
+    background-color: $nearer-white
+    border: 1px dashed rgba(0,0,0,0.075)
+    color: #bbb
+
+    &:hover
+      background-color: $blue
+      border: 1px solid $blue
+      color: #fff
+</style>
