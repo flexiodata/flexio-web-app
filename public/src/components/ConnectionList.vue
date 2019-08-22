@@ -76,7 +76,7 @@
     },
     methods: {
       onUpdateConnection(connection) {
-        this.$emit('update:selectedItem', connection)
+        this.$emit('item-activate', connection)
         this.show_connection_dialog = false
       },
       onItemActivate(item) {
