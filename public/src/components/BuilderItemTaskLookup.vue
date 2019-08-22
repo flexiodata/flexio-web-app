@@ -42,7 +42,7 @@
           </el-button>
         </el-input>
       </el-form-item>
-      <div class="relative" v-if="fetching_structure">
+      <div class="relative el-form-item" v-if="fetching_structure">
         <div class="flex flex-row items-center">
           <Spinner size="small" />
           <span class="ml2 el-form-item__label">Loading structure...</span>
@@ -52,7 +52,7 @@
         key="lookup_keys"
         label="Select the key fields"
         prop="lookup_keys"
-        :class="fetching_structure ? 'o-40 no-pointer-events' : ''"
+        :class="fetching_structure || !has_structure ? 'o-40 no-pointer-events' : ''"
       >
         <el-select
           multiple
@@ -61,15 +61,13 @@
           class="w-100"
           spellcheck="false"
           placeholder="Enter the names of the key fields"
-          :loading="fetching_structure"
-          @visible-change="onSelectVisibleChange"
           v-model="edit_values.lookup_keys"
         >
           <el-option
             :label="item.name"
             :value="item.name"
             :key="item.name"
-            v-for="item in structure"
+            v-for="item in structure_cols"
           />
         </el-select>
       </el-form-item>
@@ -77,7 +75,7 @@
         key="return_columns"
         label="Select columns to return"
         prop="return_columns"
-        :class="fetching_structure ? 'o-40 no-pointer-events' : ''"
+        :class="fetching_structure || !has_structure ? 'o-40 no-pointer-events' : ''"
       >
         <el-select
           multiple
@@ -86,15 +84,13 @@
           class="w-100"
           spellcheck="false"
           placeholder="Enter the names of the columns to return"
-          :loading="fetching_structure"
-          @visible-change="onSelectVisibleChange"
           v-model="edit_values.return_columns"
         >
           <el-option
             :label="item.name"
             :value="item.name"
             :key="item.name"
-            v-for="item in structure"
+            v-for="item in structure_cols"
           />
         </el-select>
       </el-form-item>
@@ -234,6 +230,12 @@
       },
       is_changed() {
         return !_.isEqual(this.edit_values, this.orig_values)
+      },
+      structure_cols() {
+        return _.get(this.structure, 'columns', [])
+      },
+      has_structure() {
+        return this.fetched_structure_path.length > 0 && this.structure_cols.length > 0
       }
     },
     methods: {
@@ -241,6 +243,7 @@
         var form_values = _.get(this.item, 'form_values', {})
         this.orig_values = _.assign({}, getDefaultValues(), form_values)
         this.edit_values = _.assign({}, getDefaultValues(), form_values)
+        this.fetchStructure()
         this.$nextTick(() => { this.validateForm(true) })
       },
       validateForm(clear) {
@@ -267,6 +270,7 @@
         files = _.map(files, (f) => { return f.full_path })
         this.edit_values.path = _.get(files, '[0]', '')
         this.show_file_chooser_dialog = false
+        this.fetchStructure()
       },
       onChange(val) {
         if (val) {
@@ -278,15 +282,14 @@
         var vals = _.cloneDeep(this.edit_values)
         this.$emit('item-change', vals, this.index)
       },
-      onSelectVisibleChange(visible) {
-        if (visible) {
-          this.fetchStructure()
-        }
-      },
       onPathChange: _.debounce(function(path) {
         this.fetchStructure()
       }, 1000),
       fetchStructure() {
+        if (this.fetching_structure === true) {
+          return
+        }
+
         var path = _.get(this.edit_values, 'path', '')
         if (path.indexOf(':/') > 0 && this.fetched_structure_path != path) {
           this.fetching_structure = true
