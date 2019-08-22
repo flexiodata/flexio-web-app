@@ -29,6 +29,7 @@ export default {
         commit('pipes/RESET_STATE')
         commit('processes/RESET_STATE')
         commit('streams/RESET_STATE')
+        commit('appconnections/RESET_STATE')
         commit('apppipes/RESET_STATE')
 
         // query these objects fresh
