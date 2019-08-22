@@ -39,6 +39,7 @@
 </template>
 
 <script>
+  import { CONNECTION_TYPE_GITHUB } from '@/constants/connection-type'
   import ServiceIcon from '@/components/ServiceIcon'
 
   export default {
@@ -67,10 +68,22 @@
         if (path.length > 0 && path.indexOf('/') != 0) {
           path = '/' + path
         }
-        return path
+        return path.length > 0 ? ` (${path})` : ''
+      },
+      github_path() {
+        var owner = _.get(this.connection, 'connection_info.owner', '')
+        var repo = _.get(this.connection, 'connection_info.repository', '')
+        return owner.length > 0 && repo.length > 0 ? ` (${owner}/${repo})` : ''
+      },
+      base_folder_suffix() {
+        if (this.ctype == CONNECTION_TYPE_GITHUB) {
+          return this.github_path
+        } else {
+         return this.base_path
+        }
       },
       base_folder_label() {
-        return this.cname + this.base_path
+        return this.cname + this.base_folder_suffix
       },
       items() {
         var path = this.path
