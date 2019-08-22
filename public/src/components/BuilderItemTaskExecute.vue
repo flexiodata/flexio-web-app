@@ -203,7 +203,7 @@ exports.flex_handler = function(flex) {
           form_values.code = this.getCodeByLang(form_values.lang)
 
           // when creating a new execute step, make sure we fire an 'item-change'
-          // event so that the pipedocument module knows about the default code
+          // event so that the 'apppipes' module knows about the default code
           // if the user attempts to save the function without editing the code at all
           //
           // NOTE: we cannot use $nextTick here because this call happens multiple times
