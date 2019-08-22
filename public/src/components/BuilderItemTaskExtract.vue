@@ -130,9 +130,6 @@
         immediate: true,
         deep: true
       },
-      'edit_values.path': {
-        handler: 'onPathChange'
-      },
       form_errors(val) {
         this.$emit('update:isNextAllowed', _.keys(val).length == 0)
       }
