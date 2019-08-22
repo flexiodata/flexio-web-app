@@ -250,9 +250,9 @@
       ...mapState({
         orig_pipe: state => state.apppipes.orig_pipe,
         edit_keys: state => state.apppipes.edit_keys,
-        is_fetching: state => state.apppipes.fetching,
-        is_fetched: state => state.apppipes.fetched,
-        is_changed: state => state.apppipes.changed,
+        is_fetching: state => state.apppipes.is_fetching,
+        is_fetched: state => state.apppipes.is_fetched,
+        is_changed: state => state.apppipes.is_changed,
         active_team_name: state => state.teams.active_team_name
       }),
       route_object_name() {

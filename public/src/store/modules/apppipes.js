@@ -18,28 +18,28 @@ const getDefaultState = () => {
       'task',
       'ui'
     ],
-    fetching: false,
-    fetched: false,
-    changed: false
+    is_fetching: false,
+    is_fetched: false,
+    is_changed: false
   }
 }
 
 const state = getDefaultState()
 
 const mutations = {
-  RESET_STATE (state) {
-    Object.assign(state, getDefaultState())
+  'RESET_STATE' (state) {
+    _.assign(state, getDefaultState())
   },
 
-  FETCHING_PIPE (state, fetching) {
-    state.fetching = fetching
+  'FETCHING_PIPE' (state, is_fetching) {
+    state.is_fetching = is_fetching
 
-    if (fetching === true) {
-      state.fetched = false
+    if (is_fetching === true) {
+      state.is_fetched = false
     }
   },
 
-  INIT_PIPE (state, pipe) {
+  'INIT_PIPE' (state, pipe) {
     state.eid = _.get(pipe, 'eid', '')
 
     var pipe = _.pick(pipe, state.edit_keys)
@@ -47,30 +47,26 @@ const mutations = {
     state.edit_pipe = pipe
 
     state.syntax_error = ''
-    state.fetched = true
-    state.changed = false
+    state.is_fetched = true
+    state.is_changed = false
   },
 
-  UPDATE_EDIT_PIPE (state, pipe) {
+  'UPDATE_EDIT_PIPE' (state, pipe) {
     var pipe = _.pick(pipe, state.edit_keys)
     state.edit_pipe = _.assign({}, state.edit_pipe, pipe)
-    state.changed = true
+    state.is_changed = true
   }
 }
 
 const actions = {}
 
-const getters = {
-  isChanged (state, getters, root_state) {
-    return state.changed
-  }
-}
+const getters = {}
 
 export default {
   namespaced: true,
   state,
   mutations,
   actions,
-  getters
+  getters,
 }
 

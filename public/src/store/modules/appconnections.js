@@ -1,6 +1,5 @@
 const getDefaultState = () => {
-  return {
-  }
+  return {}
 }
 
 const state = getDefaultState()
@@ -11,11 +10,9 @@ const mutations = {
   },
 }
 
-const actions = {
-}
+const actions = {}
 
-const getters = {
-}
+const getters = {}
 
 export default {
   namespaced: true,
