@@ -51,16 +51,26 @@
         class="w-100"
         key="path"
         prop="path"
-        label="Remote script URL"
+        label="Remote script path or URL"
         v-show="edit_values.remote_state == 'remote'"
       >
         <el-input
           auto-complete="off"
           spellcheck="false"
-          placeholder="URL"
+          placeholder="Path or URL"
           :autofocus="true"
           v-model="edit_values.path"
-        />
+        >
+          <el-button
+            slot="append"
+            class="ttu fw6"
+            type="primary"
+            size="small"
+            @click="show_file_chooser_dialog = true"
+          >
+            Browse
+          </el-button>
+        </el-input>
       </el-form-item>
       <el-form-item
         class="w-100"
@@ -79,6 +89,41 @@
         />
       </el-form-item>
     </el-form>
+
+    <!-- file chooser dialog -->
+    <el-dialog
+      custom-class="el-dialog--compressed-body"
+      title="Choose file"
+      width="60vw"
+      top="4vh"
+      :append-to-body="true"
+      :visible.sync="show_file_chooser_dialog"
+    >
+      <FileChooser
+        ref="file-chooser"
+        style="max-height: 60vh"
+        :selected-items.sync="selected_files"
+        :allow-multiple="false"
+        :allow-folders="false"
+        :show-connection-list="true"
+        v-if="show_file_chooser_dialog"
+      />
+      <span slot="footer" class="dialog-footer">
+        <el-button
+          class="ttu fw6"
+          @click="show_file_chooser_dialog = false"
+        >
+          Cancel
+        </el-button>
+        <el-button
+          class="ttu fw6"
+          type="primary"
+          @click="addFiles"
+        >
+          Done
+        </el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -86,6 +131,7 @@
   import marked from 'marked'
   import { btoaUnicode } from '@/utils'
   import CodeEditor from '@/components/CodeEditor'
+  import FileChooser from '@/components/FileChooser'
 
   const default_python = btoaUnicode(`# basic hello world example
 def flex_handler(flex):
@@ -133,7 +179,8 @@ exports.flex_handler = function(flex) {
       }
     },
     components: {
-      CodeEditor
+      CodeEditor,
+      FileChooser
     },
     watch: {
       item: {
@@ -164,7 +211,9 @@ exports.flex_handler = function(flex) {
           { label: 'Python',  val: 'python' },
           { label: 'Node.js', val: 'nodejs' }
           //{ label: 'Javascript', val: 'javascript' }
-        ]
+        ],
+        selected_files: [],
+        show_file_chooser_dialog: false,
       }
     },
     computed: {
@@ -234,6 +283,12 @@ exports.flex_handler = function(flex) {
         }
 
         return ''
+      },
+      addFiles() {
+        var files = this.selected_files
+        files = _.map(files, (f) => { return f.full_path })
+        this.edit_values.path = _.get(files, '[0]', '')
+        this.show_file_chooser_dialog = false
       },
       onChange(val) {
         if (val) {
