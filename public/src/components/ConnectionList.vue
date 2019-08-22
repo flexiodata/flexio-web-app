@@ -9,7 +9,7 @@
       @delete="onItemDelete"
       v-bind="$attrs"
     />
-    <div class="pa2">
+    <div class="pa2" v-if="showAddButton">
       <el-button
         size="small"
         type="primary"
