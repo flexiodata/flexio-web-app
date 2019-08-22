@@ -24,7 +24,7 @@
                   type="primary"
                   class="ttu fw6"
                   @click="show_pipe_dialog = true"
-                  v-require-rights:pipe.update
+                  v-require-rights:pipe.create
                 >
                   New
                 </el-button>

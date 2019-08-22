@@ -18,7 +18,7 @@
       <div
         class="flex-none ml2"
         @click.stop
-        v-require-rights:pipe.update.hidden
+        v-require-rights:pipe.delete.hidden
       >
           <el-dropdown trigger="click" @command="onCommand">
             <span class="el-dropdown-link dib pointer pa1 black-30 hover-black">

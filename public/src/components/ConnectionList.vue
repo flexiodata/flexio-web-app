@@ -15,7 +15,7 @@
         type="primary"
         class="ttu fw6 w-100 connection-new-button"
         @click="show_connection_dialog = true"
-        v-require-rights:connection.update
+        v-require-rights:connection.create
       >
         New Connection
       </el-button>

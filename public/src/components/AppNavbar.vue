@@ -12,7 +12,6 @@
           My Account
         </div>
         <template
-          v-require-rights.team.read.hidden
           v-else-if="show_team_nav"
         >
           <TeamDropdown class="ml3" />
