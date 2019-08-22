@@ -105,7 +105,7 @@
         :connection="edit_mode == 'edit' ? connection : undefined"
         @close="cancelChanges"
         @cancel="cancelChanges"
-        @submit="tryUpdateConnection"
+        @update-connection="onUpdateConnection"
         v-if="show_connection_dialog"
       />
     </el-dialog>
@@ -214,60 +214,20 @@
           this.$store.dispatch('connections/fetch', { team_name })
         }
       },
-      tryUpdateConnection(attrs) {
-        var eid = attrs.eid
-        var ctype = _.get(attrs, 'connection_type', '')
-        var is_pending = _.get(attrs, 'eid_status') == OBJECT_STATUS_PENDING
-        var orig_name = _.get(this.connection, 'name')
-        var team_name = this.active_team_name
+      onUpdateConnection(connection) {
+        var object_name = connection.name
+        var current_object_name = _.get(this.$route, 'params.object_name')
 
-        attrs = _.pick(attrs, ['name', 'title', 'description', 'connection_info'])
-        _.assign(attrs, { eid_status: OBJECT_STATUS_AVAILABLE })
-
-        // TODO: backend should probably handle this for us
-        // keyring connections don't need to connect, so they are always available
-        if (ctype == CONNECTION_TYPE_KEYRING) {
-          _.assign(attrs, { connection_status: OBJECT_STATUS_AVAILABLE })
+        if (object_name != current_object_name) {
+          var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
+          new_route.params = _.assign({}, new_route.params, { object_name })
+          this.$router.replace(new_route)
+        } else {
+          // force re-render the content components
+          this.selectConnection(connection)
         }
 
-        // update the connection and make it available
-        this.$store.dispatch('connections/update', { team_name, eid, attrs }).then(response => {
-          var connection = response.data
-
-          this.$message({
-            message: is_pending ? 'The connection was created successfully.' : 'The connection was updated successfully.',
-            type: 'success'
-          })
-
-          if (ctype != CONNECTION_TYPE_KEYRING) {
-            // try to connect to the connection
-            this.$store.dispatch('connections/test', { team_name, eid, attrs })
-          }
-
-          if (is_pending) {
-            var analytics_payload = _.pick(attrs, ['eid', 'name', 'title', 'description', 'connection_type'])
-            this.$store.track('Created Connection', analytics_payload)
-          }
-
-          // change the object name in the route
-          if (connection.name != orig_name) {
-            var object_name = connection.name
-
-            var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
-            new_route.params = _.assign({}, new_route.params, { object_name })
-            this.$router.replace(new_route)
-          }
-
-          this.selectConnection(connection)
-          this.show_connection_dialog = false
-        }).catch(error => {
-          this.$message({
-            message: is_pending ? 'There was a problem creating the connection.' : 'There was a problem updating the connection.',
-            type: 'error'
-          })
-
-          this.$store.track('Created Connection (Error)')
-        })
+        this.show_connection_dialog = false
       },
       tryDeleteConnection(attrs) {
         var eid = _.get(attrs, 'eid', '')

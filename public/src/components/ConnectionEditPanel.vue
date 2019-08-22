@@ -156,6 +156,7 @@
   import { mapState } from 'vuex'
   import { OBJECT_TYPE_CONNECTION } from '@/constants/object-type'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '@/constants/object-status'
+  import { CONNECTION_TYPE_KEYRING } from '@/constants/connection-type'
   import { CONNECTION_STATUS_AVAILABLE } from '@/constants/connection-status'
   import * as ctypes from '@/constants/connection-type'
   import * as connections from '@/constants/connection-info'
@@ -367,34 +368,35 @@
         return _.find(connections, { connection_type: this.ctype })
       },
       submit() {
-        this.$refs.form.validate((valid) => {
-          if (!valid)
+        this.$refs.form.validate(valid => {
+          if (!valid) {
             return
+          }
 
           var auth_panel = this.$refs['connection-authentication-panel']
           var info_panel = this.$refs['connection-info-panel']
 
           if (auth_panel) {
-            auth_panel.validate((valid2) => {
+            auth_panel.validate(valid2 => {
               if (!valid2) {
                 return
               }
 
               // there are no errors in the form; do the submit
-              this.$emit('submit', this.edit_connection)
+              this.tryUpdateConnection()
             })
           } else if (info_panel) {
-            info_panel.validate((valid3) => {
+            info_panel.validate(valid3 => {
               if (!valid3) {
                 return
               }
 
               // there are no errors in the form; do the submit
-              this.$emit('submit', this.edit_connection)
+              this.tryUpdateConnection()
             })
           } else {
             // there are no errors in the form; do the submit
-            this.$emit('submit', this.edit_connection)
+            this.tryUpdateConnection()
           }
         })
       },
@@ -419,6 +421,50 @@
           var connection = _.cloneDeep(response.data)
           connection.name = `${service_slug}-` + getNameSuffix(4),
           this.updateConnection(connection)
+        })
+      },
+      tryUpdateConnection(attrs) {
+        var attrs = this.edit_connection
+        var eid = attrs.eid
+        var ctype = _.get(attrs, 'connection_type', '')
+        var is_pending = _.get(attrs, 'eid_status') == OBJECT_STATUS_PENDING
+        var orig_name = _.get(this.orig_connection, 'name')
+        var team_name = this.active_team_name
+
+        attrs = _.pick(attrs, ['name', 'title', 'description', 'connection_info'])
+        _.assign(attrs, { eid_status: OBJECT_STATUS_AVAILABLE })
+
+        // TODO: backend should probably handle this for us
+        // keyring connections don't need to connect, so they are always available
+        if (ctype == CONNECTION_TYPE_KEYRING) {
+          _.assign(attrs, { connection_status: OBJECT_STATUS_AVAILABLE })
+        }
+
+        // update the connection and make it available
+        this.$store.dispatch('connections/update', { team_name, eid, attrs }).then(response => {
+          this.$message({
+            message: is_pending ? 'The connection was created successfully.' : 'The connection was updated successfully.',
+            type: 'success'
+          })
+
+          if (ctype != CONNECTION_TYPE_KEYRING) {
+            // try to connect to the connection
+            this.$store.dispatch('connections/test', { team_name, eid, attrs })
+          }
+
+          if (is_pending) {
+            var analytics_payload = _.pick(attrs, ['eid', 'name', 'title', 'description', 'connection_type'])
+            this.$store.track('Created Connection', analytics_payload)
+          }
+
+          this.$emit('update-connection', response.data)
+        }).catch(error => {
+          this.$message({
+            message: is_pending ? 'There was a problem creating the connection.' : 'There was a problem updating the connection.',
+            type: 'error'
+          })
+
+          this.$store.track('Created Connection (Error)')
         })
       },
       formValidateName(rule, value, callback) {
