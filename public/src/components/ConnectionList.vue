@@ -27,6 +27,7 @@
       width="46rem"
       top="4vh"
       :modal-append-to-body="false"
+      :append-to-body="true"
       :close-on-click-modal="false"
       :visible.sync="show_connection_dialog"
     >
