@@ -14,7 +14,7 @@
         size="small"
         type="primary"
         class="ttu fw6 w-100 connection-new-button"
-        @click="onNewConnection"
+        @click="show_connection_dialog = true"
         v-require-rights:connection.update
       >
         New Connection
@@ -33,7 +33,7 @@
       <ConnectionEditPanel
         @close="show_connection_dialog = false"
         @cancel="show_connection_dialog = false"
-        @submit="show_connection_dialog = false"
+        @update-connection="onUpdateConnection"
         v-if="show_connection_dialog"
       />
     </el-dialog>
@@ -74,8 +74,9 @@
       }
     },
     methods: {
-      onNewConnection() {
-        this.show_connection_dialog = true
+      onUpdateConnection(connection) {
+        this.$emit('update:selectedItem', connection)
+        this.show_connection_dialog = false
       },
       onItemActivate(item) {
         this.$emit('item-activate', item)

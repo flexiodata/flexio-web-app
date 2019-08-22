@@ -20,6 +20,7 @@
           :items="connections"
           :selected-item.sync="active_connection"
           :show-status="false"
+          :show-add-button="true"
           @item-activate="onConnectionActivate"
         />
       </div>
