@@ -7,7 +7,7 @@
           <div class="flex-fill flex flex-column" style="margin-left: 12px">
             <div class="f4 fw6 lh-title">{{connection.name}}</div>
             <div class="f6 fw4 mt1 lh-copy silver" v-if="cdesc.length > 0">{{cdesc}}</div>
-            <div class="f6 fw4 mt1" v-else><em class="moon-gray">(No description)</em></div>
+            <div class="f6 fw4 mt1 lh-copy moon-gray" v-else><em>(No description)</em></div>
           </div>
         </div>
         <div class="flex-fill flex flex-column">
@@ -42,7 +42,7 @@
               </tr>
               <tr v-if="has_basepath">
                 <td>Base Path</td>
-                <td class="f6" v-if="base_path.length == 0"><em class="moon-gray">(root folder)</em></td>
+                <td class="f6 moon-gray" v-if="base_path.length == 0"><em>(root folder)</em></td>
                 <td class="f6 fw6" v-else>{{base_path}}</td>
               </tr>
             </tbody>
