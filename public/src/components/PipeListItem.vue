@@ -25,7 +25,7 @@
               <i class="material-icons v-mid">expand_more</i>
             </span>
             <el-dropdown-menu style="min-width: 10rem" slot="dropdown">
-              <el-dropdown-item class="flex flex-row items-center ph2" command="delete" :item="pipe"><i class="material-icons mr3">delete</i> Delete</el-dropdown-item>
+              <el-dropdown-item class="flex flex-row items-center ph2" command="delete"><i class="material-icons mr3">delete</i> Delete</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
       </div>
