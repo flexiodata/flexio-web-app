@@ -438,11 +438,8 @@
         this.$store.track('Opened Function Schedule Dialog')
       },
       saveProperties(attrs) {
-        attrs = _.pick(attrs, ['name', 'title', 'description'])
-
-        var pipe = _.cloneDeep(this.edit_pipe)
-        _.assign(pipe, attrs)
-        this.$store.commit('apppipes/UPDATE_EDIT_PIPE', pipe)
+        attrs = _.pick(attrs, ['name', 'title', 'syntax', 'description'])
+        this.$store.commit('apppipes/UPDATE_EDIT_PIPE', attrs)
 
         this.saveChanges().finally(() => {
           this.show_pipe_edit_dialog = false
