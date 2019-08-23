@@ -30,15 +30,15 @@
       </el-form-item>
 
       <el-form-item
-        key="title"
-        prop="title"
+        key="syntax"
+        prop="syntax"
         label="Syntax"
       >
         <el-input
           placeholder="Enter parameters"
           auto-complete="off"
           spellcheck="false"
-          v-model="edit_pipe.title"
+          v-model="edit_pipe.syntax"
         >
           <template slot="prepend">{{syntax_prefix}}</template>
           <template slot="append">)</template>
@@ -108,6 +108,7 @@
     return {
       name: `pipe-${suffix}`,
       title: '',
+      syntax: '',
       description: ''
     }
   }
