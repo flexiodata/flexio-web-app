@@ -337,6 +337,11 @@ class Pipe
                 continue;
 
             $properties = $p->get();
+
+            // TODO: remove 'task' from pipe list to prepare for getting pipe
+            // content from a separate call; leave in pipe item get() function
+            unset($properties['task']);
+
             $result[] = self::cleanProperties($properties);
         }
 
