@@ -73,15 +73,6 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         if (!isset($properties))
             $properties = array();
 
-        // if the ui is set, make sure it's an object and then encode it as JSON for storage
-        if (isset($properties) && isset($properties['ui']))
-        {
-            if (!is_array($properties['ui']))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-
-            $properties['ui'] = json_encode($properties['ui']);
-        }
-
         // if the task is set, make sure it's an object and then encode it as JSON for storage
         if (isset($properties) && isset($properties['task']))
         {
@@ -205,15 +196,6 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
     {
         // TODO: add properties check
 
-        // if the ui is set, make sure it's an object and then encode it as JSON for storage
-        if (isset($properties) && isset($properties['ui']))
-        {
-            if (!is_array($properties['ui']))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-
-            $properties['ui'] = json_encode($properties['ui']);
-        }
-
         // if the task is set, make sure it's an object and then encode it as JSON for storage
         if (isset($properties) && isset($properties['task']))
         {
@@ -333,21 +315,6 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return \Model::TYPE_PIPE;
     }
 
-    public function setUi(array $ui) : \Flexio\Object\Pipe
-    {
-        // shorthand for setting task info
-        $properties = array();
-        $properties['ui'] = $ui;
-        return $this->set($properties);
-    }
-
-    public function getUi() : array
-    {
-        // shorthand for getting task info
-        $local_properties = $this->get();
-        return $local_properties['ui'];
-    }
-
     public function setTask(array $task) : \Flexio\Object\Pipe
     {
         // shorthand for setting task info
@@ -450,7 +417,6 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "title" => null,
                 "description" => null,
                 "syntax" => null,
-                "ui" => null,
                 "task" => null,
                 "schedule" => null,
                 "deploy_mode" => null,
@@ -468,20 +434,6 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         // sanity check: if the data record is missing, then eid will be null
         if (!isset($mapped_properties['eid']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-
-        // unpack the ui json
-        if (isset($mapped_properties['ui']))
-        {
-            $ui = @json_decode($mapped_properties['ui'],true);
-            if ($ui === false)
-            {
-                $mapped_properties['ui'] = array();
-            }
-            else
-            {
-                $mapped_properties['ui'] = $ui;
-            }
-        }
 
         // unpack the task json
         $task = @json_decode($mapped_properties['task'],true);

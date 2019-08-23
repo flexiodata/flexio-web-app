@@ -231,8 +231,6 @@ class Test
             "task" : {
             },
             "schedule" : null,
-            "ui" : {
-            },
             "deploy_mode": "B",
             "deploy_schedule": "I",
             "deploy_email": "I",
