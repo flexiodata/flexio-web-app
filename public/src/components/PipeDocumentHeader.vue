@@ -14,7 +14,7 @@
           />
         </div>
         <div class="mt3">
-          <div class="code f7 b" v-show="pipe.title.length > 0">{{pipe.title}}</div>
+          <div class="code f7 b">{{syntax_str}}</div>
           <p class="mb0 f6" v-show="pipe.description.length > 0">{{pipe.description}}</p>
         </div>
       </div>
@@ -73,6 +73,7 @@
 
 <script>
   import { mapState } from 'vuex'
+  import { getSyntaxStr } from '@/utils/pipe'
   import LabelSwitch from '@/components/LabelSwitch'
 
   export default {
@@ -105,6 +106,9 @@
       ...mapState({
         active_team_name: state => state.teams.active_team_name
       }),
+      syntax_str() {
+        return getSyntaxStr(this.active_team_name, this.pipe)
+      },
       is_deployed: {
         get() {
           return this.isModeRun
@@ -112,7 +116,7 @@
         set(value) {
           this.$emit('update:isModeRun', value)
         }
-      }
+      },
     }
   }
 </script>

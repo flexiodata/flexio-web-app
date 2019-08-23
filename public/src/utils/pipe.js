@@ -1,3 +1,7 @@
+export const getSyntaxStr = (team_name, pipe) => {
+  return `=FLEX("${team_name}/${pipe.name}"${pipe.title})`
+}
+
 /*
 import * as sched from '@/constants/schedule'
 //import doctrine from 'doctrine'

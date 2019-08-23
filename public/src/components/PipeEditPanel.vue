@@ -35,12 +35,14 @@
         label="Syntax"
       >
         <el-input
-          placeholder="Enter syntax"
+          placeholder="Enter parameters"
           auto-complete="off"
           spellcheck="false"
-          :autofocus="true"
           v-model="edit_pipe.title"
-        />
+        >
+          <template slot="prepend">{{syntax_prefix}}</template>
+          <template slot="append">)</template>
+        </el-input>
       </el-form-item>
 
       <el-form-item
@@ -59,7 +61,7 @@
       <div class="mt3" style="width: 300px">
         <label class="el-form-item__label">Preview</label>
         <div class="pa3 bg-white ba b--black-10 br2">
-          <div class="code f7 b" v-show="edit_pipe.title.length > 0">{{edit_pipe.title}}</div>
+          <div class="code f7 b">{{syntax_str}}</div>
           <p class="mb0 f6" v-show="edit_pipe.description.length > 0">{{edit_pipe.description}}</p>
         </div>
       </div>
@@ -88,6 +90,7 @@
   import randomstring from 'randomstring'
   import { mapState } from 'vuex'
   import { OBJECT_TYPE_PIPE } from '@/constants/object-type'
+  import { getSyntaxStr } from '@/utils/pipe'
   import CodeEditor from '@/components/CodeEditor'
   import MixinValidation from '@/components/mixins/validation'
 
@@ -166,6 +169,12 @@
       }),
       pname() {
         return _.get(this.orig_pipe, 'name', '')
+      },
+      syntax_prefix() {
+        return `=FLEX("${this.active_team_name}/${this.edit_pipe.name}"`
+      },
+      syntax_str() {
+        return getSyntaxStr(this.active_team_name, this.edit_pipe)
       },
       our_title() {
         if (this.title.length > 0) {
