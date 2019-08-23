@@ -35,7 +35,7 @@
         label="Syntax"
       >
         <el-input
-          placeholder="Enter parameters"
+          placeholder=", param1, [param2]"
           auto-complete="off"
           spellcheck="false"
           v-model="edit_pipe.syntax"
