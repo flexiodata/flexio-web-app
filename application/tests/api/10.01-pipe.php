@@ -83,7 +83,9 @@ class Test
             'content_type' => 'application/json',
             'params' => '{
                 "name": "name1",
+                "title": "Test Pipe Title",
                 "description": "Test Pipe Description",
+                "syntax": "param1, param2",
                 "ui": {
                     "a": "b"
                 },
@@ -115,7 +117,9 @@ class Test
             "eid_type": "PIP",
             "eid_status": "A",
             "name": "name1",
+            "title": "Test Pipe Title",
             "description": "Test Pipe Description",
+            "syntax": "param1, param2",
             "ui": {
                 "a": "b"
             },

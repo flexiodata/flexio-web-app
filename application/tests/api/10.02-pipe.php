@@ -232,6 +232,7 @@ class Test
                 "name": "name1-updated",
                 "title": "Test Pipe Updated",
                 "description": "Test Pipe Description Updated",
+                "syntax": "param1, param2",
                 "ui": {
                     "a": "b"
                 },
@@ -266,6 +267,7 @@ class Test
             "name": "name1-updated",
             "title": "Test Pipe Updated",
             "description": "Test Pipe Description Updated",
+            "syntax": "param1, param2",
             "ui": {
                 "a": "b"
             },

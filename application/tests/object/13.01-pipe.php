@@ -227,6 +227,7 @@ class Test
             "name" : null,
             "title" : null,
             "description" : null,
+            "syntax": null,
             "task" : {
             },
             "schedule" : null,
