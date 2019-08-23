@@ -233,9 +233,6 @@ class Test
                 "title": "Test Pipe Updated",
                 "description": "Test Pipe Description Updated",
                 "syntax": "param1, param2",
-                "ui": {
-                    "a": "b"
-                },
                 "task": {
                     "op": "echo"
                 },
@@ -268,9 +265,6 @@ class Test
             "title": "Test Pipe Updated",
             "description": "Test Pipe Description Updated",
             "syntax": "param1, param2",
-            "ui": {
-                "a": "b"
-            },
             "task": {
                 "op": "echo"
             },

@@ -86,9 +86,6 @@ class Test
                 "title": "Test Pipe Title",
                 "description": "Test Pipe Description",
                 "syntax": "param1, param2",
-                "ui": {
-                    "a": "b"
-                },
                 "task": {
                     "op": "echo"
                 },
@@ -120,9 +117,6 @@ class Test
             "title": "Test Pipe Title",
             "description": "Test Pipe Description",
             "syntax": "param1, param2",
-            "ui": {
-                "a": "b"
-            },
             "task": {
                 "op": "echo"
             },
