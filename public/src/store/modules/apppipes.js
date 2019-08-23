@@ -8,6 +8,7 @@ const getDefaultState = () => {
       'eid',
       'name',
       'title',
+      'syntax',
       'description',
       'schedule',
       'deploy_mode',
@@ -15,8 +16,7 @@ const getDefaultState = () => {
       'deploy_email',
       'deploy_api',
       'deploy_ui',
-      'task',
-      'ui'
+      'task'
     ],
     is_fetching: false,
     is_fetched: false,

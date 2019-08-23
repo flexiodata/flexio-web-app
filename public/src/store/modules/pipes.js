@@ -11,8 +11,6 @@ const getDefaultMeta = () => {
   return {
     is_fetching: false,
     is_fetched: false,
-    is_processes_fetching: false,
-    is_processes_fetched: false,
     /*error: {},*/
   }
 }
