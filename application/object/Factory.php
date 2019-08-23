@@ -138,6 +138,25 @@ class Factory
         $demo_dir = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'demo' . DIRECTORY_SEPARATOR;
 
         $objects = array(
+
+            // sample connection with data used for creating some sample functions
+            array('eid_type' => \Model::TYPE_CONNECTION, 'path' => $demo_dir . 'connection_amazons3.json'),
+
+            // sample extract function
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_func_sales.json')
+        );
+
+        return $objects;
+    }
+
+    private static function getExampleObjectsOld() : array
+    {
+        // TODO: following examples are the legacy serverless example objects; here for reference,
+        // but can be deleted when new examples are
+
+        $demo_dir = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'demo' . DIRECTORY_SEPARATOR;
+
+        $objects = array(
             array('eid_type' => \Model::TYPE_CONNECTION, 'path' => $demo_dir . 'connection_amazons3.json'),
 
             /*
