@@ -173,6 +173,7 @@ CREATE TABLE tbl_pipe (
   title text default '',
   description text default '',
   task text default '',
+  syntax text default '',
   schedule text default '',
   ui text default '',
   deploy_mode char(1) NOT NULL default 'B',

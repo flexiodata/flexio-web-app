@@ -156,6 +156,7 @@ CREATE TABLE tbl_pipe (
   name text default '',
   title text default '',
   description text default '',
+  syntax text default '',
   task json,
   schedule text default '',
   ui json,
