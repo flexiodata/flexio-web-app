@@ -1,14 +1,13 @@
 {
     "eid_type": "PIP",
     "name": "func-sales",
-    "description": "Return an extract of the sales funnel.",
+    "description": "Returns the sales funnel data from a CSV",
     "task": {
       "op": "sequence",
       "items": [
             {
                 "op": "extract",
-                "path": "flexio-public-s3:/sales-funnel.csv",
-                "description": "Extract data from a dataset."
+                "path": "flexio-public-s3:/sales-funnel.csv"
             }
         ]
     }

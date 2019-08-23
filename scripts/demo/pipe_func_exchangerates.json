@@ -1,0 +1,16 @@
+{
+    "eid_type": "PIP",
+    "name": "func-exchangerates",
+    "description": "Returns a list of current exchanges rates for USD",
+    "task": {
+      "op": "sequence",
+      "items": [
+            {
+                "op": "execute",
+                "lang": "python",
+                "code": "CiMgZXhjaGFuZ2UgcmF0ZXMgZm9yIGN1cnJlbnQgYW5kIGhpc3RvcmljYWwgZm9yZWlnbiBleGNoYW5nZSByYXRlcwojIGh0dHBzOi8vZXhjaGFuZ2VyYXRlc2FwaS5pbwoKaW1wb3J0IHJlcXVlc3RzCgojIG1haW4gZnVuY3Rpb24gZW50cnkgcG9pbnQKZGVmIGZsZXhpb19oYW5kbGVyKGZsZXgpOgoKICAgIHJlc3BvbnNlID0gcmVxdWVzdHMuZ2V0KCdodHRwczovL2FwaS5leGNoYW5nZXJhdGVzYXBpLmlvL2xhdGVzdD9iYXNlPVVTRCcpCiAgICByYXRlcyA9IHJlc3BvbnNlLmpzb24oKVsncmF0ZXMnXQogICAgCiAgICByZXN1bHQgPSBsaXN0KCkKICAgIHJlc3VsdC5hcHBlbmQoWydjdXJyZW5jeScsJ2Ftb3VudCddKQogICAgICAgICAgICAgICAgIAogICAgZm9yIGN1cnJlbmN5LCBhbW91bnQgaW4gcmF0ZXMuaXRlbXMoKToKICAgICAgICByZXN1bHQuYXBwZW5kKFtjdXJyZW5jeSwgYW1vdW50XSkgICAgICAgICAgCgogICAgZmxleC5vdXRwdXQud3JpdGUocmVzdWx0KQo="
+            }
+        ]
+    }
+}
+
