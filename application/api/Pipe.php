@@ -46,7 +46,6 @@ class Pipe
                 'title'           => array('type' => 'string', 'required' => false),
                 'description'     => array('type' => 'string', 'required' => false),
                 'syntax'          => array('type' => 'string', 'required' => false),
-                'ui'              => array('type' => 'object', 'required' => false),
                 'task'            => array('type' => 'object', 'required' => false),
                 'schedule'        => array('type' => 'object', 'required' => false),
                 'deploy_mode'     => array('type' => 'string', 'required' => false),
@@ -126,7 +125,6 @@ class Pipe
         $new_pipe_properties = array();
         $new_pipe_properties['name'] = $original_pipe_properties['name'] . ' copy';
         $new_pipe_properties['description'] = $original_pipe_properties['description'];
-        $new_pipe_properties['ui'] = $original_pipe_properties['ui'];
         $new_pipe_properties['task'] = $original_pipe_properties['task'];
         $new_pipe_properties['owned_by'] = $owner_user_eid;
         $new_pipe_properties['created_by'] = $requesting_user_eid;
@@ -243,7 +241,6 @@ class Pipe
                 'title'           => array('type' => 'string', 'required' => false),
                 'description'     => array('type' => 'string', 'required' => false),
                 'syntax'          => array('type' => 'string', 'required' => false),
-                'ui'              => array('type' => 'object', 'required' => false),
                 'task'            => array('type' => 'object', 'required' => false),
                 'schedule'        => array('type' => 'object', 'required' => false),
                 'deploy_mode'     => array('type' => 'string', 'required' => false),
@@ -340,6 +337,11 @@ class Pipe
                 continue;
 
             $properties = $p->get();
+
+            // TODO: remove 'task' from pipe list to prepare for getting pipe
+            // content from a separate call; leave in pipe item get() function
+            unset($properties['task']);
+
             $result[] = self::cleanProperties($properties);
         }
 
@@ -480,14 +482,6 @@ class Pipe
         if (isset($properties['task']) && is_array($properties['task']))
         {
             self::doTaskCasting($properties['task']);
-        }
-
-        if (isset($properties['ui']) && count($properties['ui']) === 0)
-            $properties['ui'] = (object)$properties['ui'];
-
-        if (isset($properties['ui']) && is_array($properties['ui']))
-        {
-            self::doTaskCasting($properties['ui']);
         }
 
         return $properties;
