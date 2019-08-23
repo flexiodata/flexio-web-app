@@ -1507,7 +1507,7 @@ class StreamConverter
             return \Flexio\Base\ContentType::FLEXIO_TABLE;
         else if ($format == self::FORMAT_XLS)
             return \Flexio\Base\ContentType::XLS;
-        else if ($format == self::FORMAT_XLSX || self::FORMAT_EXCEL || $format == self::FORMAT_SPREADSHEET)
+        else if ($format == self::FORMAT_XLSX || $format == self::FORMAT_EXCEL || $format == self::FORMAT_SPREADSHEET)
             return \Flexio\Base\ContentType::XLSX;
         else if ($format == self::FORMAT_ODS)
             return \Flexio\Base\ContentType::ODS;
