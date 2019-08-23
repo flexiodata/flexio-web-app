@@ -31,15 +31,13 @@
           placeholder="Enter the lookup file or table"
           v-model="edit_values.path"
         >
-          <el-button
+          <BrowseButton
             slot="append"
             class="ttu fw6"
-            type="primary"
-            size="small"
-            @click="show_file_chooser_dialog = true"
+            @path-selected="onPathSelected"
           >
             Browse
-          </el-button>
+          </BrowseButton>
         </el-input>
       </el-form-item>
       <div class="relative el-form-item" v-if="fetching_structure">
@@ -95,41 +93,6 @@
         </el-select>
       </el-form-item>
     </el-form>
-
-    <!-- file chooser dialog -->
-    <el-dialog
-      custom-class="el-dialog--compressed-body"
-      title="Choose file"
-      width="60vw"
-      top="4vh"
-      :append-to-body="true"
-      :visible.sync="show_file_chooser_dialog"
-    >
-      <FileChooser
-        ref="file-chooser"
-        style="max-height: 60vh"
-        :selected-items.sync="selected_files"
-        :allow-multiple="false"
-        :allow-folders="false"
-        :show-connection-list="true"
-        v-if="show_file_chooser_dialog"
-      />
-      <span slot="footer" class="dialog-footer">
-        <el-button
-          class="ttu fw6"
-          @click="show_file_chooser_dialog = false"
-        >
-          Cancel
-        </el-button>
-        <el-button
-          class="ttu fw6"
-          type="primary"
-          @click="addFiles"
-        >
-          Done
-        </el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
@@ -138,7 +101,7 @@
   import { mapState } from 'vuex'
   import api from '@/api'
   import Spinner from 'vue-simple-spinner'
-  import FileChooser from '@/components/FileChooser'
+  import BrowseButton from '@/components/BrowseButton'
 
   const getDefaultValues = () => {
     return {
@@ -169,7 +132,7 @@
     },
     components: {
       Spinner,
-      FileChooser
+      BrowseButton
     },
     watch: {
       item: {
@@ -194,8 +157,6 @@
     },
     data() {
       return {
-        selected_files: [],
-        show_file_chooser_dialog: false,
         structure: [],
         fetching_structure: false,
         fetched_structure_path: '',
@@ -265,11 +226,8 @@
         }
         this.form_errors = _.assign({}, errors)
       },
-      addFiles() {
-        var files = this.selected_files
-        files = _.map(files, (f) => { return f.full_path })
-        this.edit_values.path = _.get(files, '[0]', '')
-        this.show_file_chooser_dialog = false
+      onPathSelected(path) {
+        this.edit_values.path = path
         this.fetchStructure()
       },
       onChange(val) {
