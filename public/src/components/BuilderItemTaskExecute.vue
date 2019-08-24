@@ -67,7 +67,7 @@
             :fileChooserOptions="{
               filetypeFilter: ['py','js']
             }"
-            @path-selected="onPathSelected"
+            @paths-selected="onPathsSelected"
           >
             Browse
           </BrowseButton>
@@ -248,7 +248,7 @@ exports.flex_handler = function(flex) {
 
         return ''
       },
-      onPathSelected(path) {
+      onPathsSelected(path) {
         this.edit_values.path = path
       },
       onChange(val) {

@@ -37,7 +37,7 @@
             :fileChooserOptions="{
               filetypeFilter: ['csv','icsv','xls','xlsx']
             }"
-            @path-selected="onPathSelected"
+            @paths-selected="onPathsSelected"
           >
             Browse
           </BrowseButton>
@@ -242,7 +242,7 @@
         }
         this.form_errors = _.assign({}, errors)
       },
-      onPathSelected(path) {
+      onPathsSelected(path) {
         this.edit_values.path = path
         this.fetchStructure()
       },

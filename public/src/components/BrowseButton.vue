@@ -15,10 +15,7 @@
         ref="file-chooser"
         style="max-height: 60vh"
         :selected-items.sync="files"
-        :allow-multiple="false"
-        :allow-folders="false"
-        :show-connection-list="true"
-        v-bind="fileChooserOptions"
+        v-bind="file_chooser_opts"
         v-if="show_dialog"
       />
       <span slot="footer" class="dialog-footer">
@@ -59,11 +56,28 @@
     components: {
       FileChooser
     },
+    computed: {
+      file_chooser_opts() {
+        var default_opts = {
+          allowMultiple: false,
+          allowFolders: false,
+          showConnectionList: true
+        }
+
+        return _.assign({}, default_opts, this.fileChooserOptions)
+      }
+    },
     methods: {
       addFiles() {
         var files = this.files
-        files = _.map(files, (f) => { return f.full_path })
-        this.$emit('path-selected', _.get(files, '[0]', ''))
+        var just_paths = _.map(files, (f) => { return f.full_path })
+
+        if (this.file_chooser_opts.allowMultiple === false) {
+          just_paths = _.get(just_paths, '[0]', '')
+          files = _.get(files, '[0]', '')
+        }
+
+        this.$emit('paths-selected', just_paths, files)
         this.show_dialog = false
         this.files = []
       }
