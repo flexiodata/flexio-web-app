@@ -68,7 +68,7 @@
       </el-form-item>
       <el-form-item
         key="return_columns"
-        label="Select columns to return"
+        label="Select the columns to return"
         prop="return_columns"
         :class="fetching_structure || !has_structure ? 'o-40 no-pointer-events' : ''"
       >
