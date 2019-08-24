@@ -136,6 +136,10 @@
           return 'This folder has no subfolders'
         }
 
+        if (this.filetypeFilter.length > 0) {
+          return 'This folder contains no files that match the following file types: .' + this.filetypeFilter.join(', .')
+        }
+
         return 'This folder is empty'
       }
     },

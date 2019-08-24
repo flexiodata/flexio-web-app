@@ -18,6 +18,7 @@
         :allow-multiple="false"
         :allow-folders="false"
         :show-connection-list="true"
+        v-bind="fileChooserOptions"
         v-if="show_dialog"
       />
       <span slot="footer" class="dialog-footer">
@@ -43,6 +44,12 @@
   import FileChooser from '@/components/FileChooser'
 
   export default {
+    props: {
+      fileChooserOptions: {
+        type: Object,
+        default: () => {}
+      }
+    },
     data() {
       return {
         files: [],
