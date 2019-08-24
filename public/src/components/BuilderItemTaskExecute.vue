@@ -57,7 +57,7 @@
         <el-input
           auto-complete="off"
           spellcheck="false"
-          placeholder="Path or URL"
+          placeholder="Enter path or URL"
           :autofocus="true"
           v-model="edit_values.path"
         >
