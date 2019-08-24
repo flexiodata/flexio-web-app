@@ -233,10 +233,9 @@ class Vfs
         $rows = array();
         foreach ($row_info as $r)
         {
-            if (is_array($r))
-                $rows[] = array_values($r);
-                 else
-                $rows[] = $r;
+            // return rows as an array of objects since this is what
+            // the preview grid in the UI expects
+            $rows[] = $r;
         }
 
         $result = array();

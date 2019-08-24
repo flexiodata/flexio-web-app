@@ -40,12 +40,6 @@
           </BrowseButton>
         </el-input>
       </el-form-item>
-      <div class="relative el-form-item" v-if="fetching_structure">
-        <div class="flex flex-row items-center">
-          <Spinner size="small" />
-          <span class="ml2 el-form-item__label">Loading structure...</span>
-        </div>
-      </div>
       <el-form-item
         key="lookup_keys"
         label="Select the key fields"
@@ -55,7 +49,7 @@
         <el-select
           multiple
           filterable
-          allow-create
+          default-first-option
           class="w-100"
           spellcheck="false"
           placeholder="Enter the names of the key fields"
@@ -78,7 +72,7 @@
         <el-select
           multiple
           filterable
-          allow-create
+          default-first-option
           class="w-100"
           spellcheck="false"
           placeholder="Enter the names of the columns to return"
@@ -92,6 +86,20 @@
           />
         </el-select>
       </el-form-item>
+      <div class="relative el-form-item" v-if="fetching_structure">
+        <div class="flex flex-row items-center">
+          <Spinner size="small" />
+          <span class="ml2 el-form-item__label">Loading preview...</span>
+        </div>
+      </div>
+      <div class="relative el-form-item" v-else-if="has_structure">
+        <label class="el-form-item__label">Preview</label>
+        <SimpleTable
+          class="overflow-x-scroll"
+          :columns="structure_cols"
+          :rows="structure_rows"
+        />
+      </div>
     </el-form>
   </div>
 </template>
@@ -102,6 +110,7 @@
   import api from '@/api'
   import Spinner from 'vue-simple-spinner'
   import BrowseButton from '@/components/BrowseButton'
+  import SimpleTable from '@/components/SimpleTable'
 
   const getDefaultValues = () => {
     return {
@@ -132,7 +141,8 @@
     },
     components: {
       Spinner,
-      BrowseButton
+      BrowseButton,
+      SimpleTable
     },
     watch: {
       item: {
@@ -194,6 +204,9 @@
       },
       structure_cols() {
         return _.get(this.structure, 'columns', [])
+      },
+      structure_rows() {
+        return _.get(this.structure, 'rows', [])
       },
       has_structure() {
         return this.fetched_structure_path.length > 0 && this.structure_cols.length > 0
