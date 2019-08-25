@@ -125,8 +125,8 @@
 
         switch (this.itemSize) {
           default:
-          case 'large': size_cls = 'min-w5 pa3'; break;
-          case 'small': size_cls = 'min-w4 pa2'; break;
+          case 'large': size_cls = 'item-lg pa3'; break;
+          case 'small': size_cls = 'item-sm pa2'; break;
         }
 
         if (this.itemCls.length > 0) {
@@ -149,3 +149,11 @@
     }
   }
 </script>
+
+<style lang="stylus" scoped>
+  .item-lg
+    min-width: 16rem
+
+  .item-sm
+    min-width: 12rem
+</style>

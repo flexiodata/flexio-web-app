@@ -82,7 +82,7 @@
         if (this.itemCls.length > 0) {
           return this.itemCls + ' ' + sel_cls
         } else {
-          return 'min-w5 pa3 bb b--black-05 bg-white hover-bg-nearer-white ' + sel_cls
+          return 'item-lg pa3 bb b--black-05 bg-white hover-bg-nearer-white ' + sel_cls
         }
       }
     },
@@ -99,3 +99,8 @@
     }
   }
 </script>
+
+<style lang="stylus" scoped>
+  .item-lg
+    min-width: 16rem
+</style>
