@@ -43,6 +43,26 @@
           </BrowseButton>
         </el-input>
       </el-form-item>
+      <div
+        class="relative el-form-item"
+        v-if="fetching_structure"
+      >
+        <div class="flex flex-row items-center">
+          <Spinner size="small" />
+          <span class="ml2 el-form-item__label">Loading structure...</span>
+        </div>
+      </div>
+      <div
+        class="relative el-form-item"
+        style="margin-top: -12px"
+        v-else-if="has_structure"
+      >
+        <SimpleTable
+          class="overflow-x-auto"
+          :columns="structure_cols"
+          :rows="structure_rows"
+        />
+      </div>
     </el-form>
   </div>
 </template>
@@ -50,8 +70,10 @@
 <script>
   import marked from 'marked'
   import { mapState } from 'vuex'
+  import api from '@/api'
   import Spinner from 'vue-simple-spinner'
   import BrowseButton from '@/components/BrowseButton'
+  import SimpleTable from '@/components/SimpleTable'
 
   const getDefaultValues = () => {
     return {
@@ -80,7 +102,8 @@
     },
     components: {
       Spinner,
-      BrowseButton
+      BrowseButton,
+      SimpleTable
     },
     watch: {
       item: {
@@ -96,12 +119,18 @@
         immediate: true,
         deep: true
       },
+      'edit_values.path': {
+        handler: 'onPathChange'
+      },
       form_errors(val) {
         this.$emit('update:isNextAllowed', _.keys(val).length == 0)
       }
     },
     data() {
       return {
+        structure: [],
+        fetching_structure: false,
+        fetched_structure_path: '',
         orig_values: getDefaultValues(),
         edit_values: getDefaultValues(),
         form_errors: {},
@@ -127,6 +156,15 @@
       },
       is_changed() {
         return !_.isEqual(this.edit_values, this.orig_values)
+      },
+      structure_cols() {
+        return _.get(this.structure, 'columns', [])
+      },
+      structure_rows() {
+        return _.get(this.structure, 'rows', [])
+      },
+      has_structure() {
+        return this.fetched_structure_path.length > 0 && this.structure_cols.length > 0
       }
     },
     methods: {
@@ -134,6 +172,7 @@
         var form_values = _.get(this.item, 'form_values', {})
         this.orig_values = _.assign({}, getDefaultValues(), form_values)
         this.edit_values = _.assign({}, getDefaultValues(), form_values)
+        this.fetchStructure()
         this.$nextTick(() => { this.validateForm(true) })
       },
       validateForm(clear) {
@@ -157,6 +196,7 @@
       },
       onPathsSelected(path) {
         this.edit_values.path = path
+        this.fetchStructure()
       },
       onChange(val) {
         if (val) {
@@ -167,6 +207,29 @@
       onEditValuesChange() {
         var vals = _.cloneDeep(this.edit_values)
         this.$emit('item-change', vals, this.index)
+      },
+      onPathChange: _.debounce(function(path) {
+        this.fetchStructure()
+      }, 1000),
+      fetchStructure() {
+        if (this.fetching_structure === true) {
+          return
+        }
+
+        var path = _.get(this.edit_values, 'path', '')
+        if (path.indexOf(':/') > 0 && this.fetched_structure_path != path) {
+          this.fetching_structure = true
+          api.vfsFetchInfo(this.active_team_name, path).then(response => {
+            this.fetched_structure_path = path
+            this.structure = response.data
+          })
+          .catch(error => {
+            this.structure = []
+          })
+          .finally(() => {
+            this.fetching_structure = false
+          })
+        }
       }
     }
   }
