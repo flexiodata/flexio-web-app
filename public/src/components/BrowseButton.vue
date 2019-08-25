@@ -25,6 +25,7 @@
             class="ttu fw6"
             @click="show_new_connection_dialog = true"
             v-require-rights:connection.create
+            v-if="showNewConnectionButton"
           >
             New Connection
           </el-button>
@@ -75,6 +76,10 @@
       fileChooserOptions: {
         type: Object,
         default: () => {}
+      },
+      showNewConnectionButton: {
+        type: Boolean,
+        default: true
       }
     },
     data() {
