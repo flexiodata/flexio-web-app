@@ -21,7 +21,7 @@
       @validate="onValidateItem"
     >
       <el-form-item
-        label="Select the path of the lookup file or table"
+        label="1. Select the path of the lookup file or table"
         key="path"
         prop="path"
       >
@@ -43,9 +43,29 @@
           </BrowseButton>
         </el-input>
       </el-form-item>
+      <div
+        class="relative el-form-item"
+        v-if="fetching_structure"
+      >
+        <div class="flex flex-row items-center">
+          <Spinner size="small" />
+          <span class="ml2 el-form-item__label">Loading structure...</span>
+        </div>
+      </div>
+      <div
+        class="relative el-form-item"
+        style="margin-top: -12px"
+        v-else-if="has_structure"
+      >
+        <SimpleTable
+          class="overflow-x-auto"
+          :columns="structure_cols"
+          :rows="structure_rows"
+        />
+      </div>
       <el-form-item
         key="lookup_keys"
-        label="Select the key fields"
+        label="2. Select the key fields"
         prop="lookup_keys"
         :class="fetching_structure || !has_structure ? 'o-40 no-pointer-events' : ''"
       >
@@ -68,7 +88,7 @@
       </el-form-item>
       <el-form-item
         key="return_columns"
-        label="Select the columns to return"
+        label="3. Select the columns to return"
         prop="return_columns"
         :class="fetching_structure || !has_structure ? 'o-40 no-pointer-events' : ''"
       >
@@ -89,20 +109,6 @@
           />
         </el-select>
       </el-form-item>
-      <div class="relative el-form-item" v-if="fetching_structure">
-        <div class="flex flex-row items-center">
-          <Spinner size="small" />
-          <span class="ml2 el-form-item__label">Loading preview...</span>
-        </div>
-      </div>
-      <div class="relative el-form-item" v-else-if="has_structure">
-        <label class="el-form-item__label">Preview</label>
-        <SimpleTable
-          class="overflow-x-scroll"
-          :columns="structure_cols"
-          :rows="structure_rows"
-        />
-      </div>
     </el-form>
   </div>
 </template>

@@ -1,5 +1,5 @@
 <template>
-  <div style="border: 1px solid #dcdfe6">
+  <div style="background-color: #fff; border: 1px solid #dcdfe6">
     <table>
       <thead v-show="columns.length > 0">
         <tr>
@@ -49,7 +49,7 @@
     left: -1px
     top: -1px
     right: -1px
-    bottom: -1px
+    margin-bottom: -2px
 
   th,
   td
