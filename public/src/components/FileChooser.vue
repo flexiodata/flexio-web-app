@@ -16,6 +16,7 @@
       >
         <ConnectionList
           class="h-100 overflow-y-auto br b--black-05"
+          style="min-height: 15rem"
           item-size="small"
           :items="connections"
           :selected-item.sync="active_connection"
@@ -27,7 +28,7 @@
       <div class="flex-fill overflow-y-auto" :class="{ 'ml2': showConnectionList }">
         <FileChooserList
           ref="file-chooser"
-          :teamName="team_name"
+          :team-name="team_name"
           :path="connection_path"
           @open-folder="openFolder"
           @selection-change="updateItems"
