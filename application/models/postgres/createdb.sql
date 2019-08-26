@@ -153,6 +153,7 @@ CREATE TABLE tbl_pipe (
   id serial,
   eid varchar(12) NOT NULL default '',
   eid_status varchar(1) NOT NULL default '',
+  parent_eid varchar(12) NOT NULL default '',
   name text default '',
   title text default '',
   description text default '',
@@ -173,6 +174,7 @@ CREATE TABLE tbl_pipe (
   UNIQUE (eid)
 );
 
+CREATE INDEX idx_pipe_parent_eid ON tbl_pipe (parent_eid);
 CREATE INDEX idx_pipe_name ON tbl_pipe (name);
 CREATE INDEX idx_pipe_deploy_mode ON tbl_pipe (deploy_mode);
 CREATE INDEX idx_pipe_deploy_schedule ON tbl_pipe (deploy_schedule);
