@@ -74,7 +74,7 @@ export default {
   fetchProcess:            (team_name, object_name)        => AxiosResource(team_name)[GET] (`/processes/${object_name}`),
   createProcess:           (team_name, attrs)              => AxiosResource(team_name)[POS] (`/processes`, attrs),
   cancelProcess:           (team_name, object_name)        => AxiosResource(team_name)[POS] (`/processes/${object_name}/cancel`),
-  runProcess:              (team_name, object_name, cfg)   => AxiosResource(team_name)[POS] (`/processes/${object_name}/run`, cfg),
+  runProcess:              (team_name, object_name, cfg)   => AxiosResource(team_name)[POS] (`/processes/${object_name}/run`, {}, cfg),
 
   // streams
   fetchStream:             (team_name, object_name)        => AxiosResource(team_name)[GET] (`/streams/${object_name}`),
