@@ -4,6 +4,9 @@
     "description": "Returns a list of current exchanges rates for USD",
     "deploy_mode": "R",
     "deploy_api": "A",
+    "deploy_schedule": "I",
+    "deploy_email": "I",
+    "deploy_ui": "I",
     "task": {
       "op": "sequence",
       "items": [
