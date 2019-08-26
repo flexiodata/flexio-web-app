@@ -2,6 +2,7 @@
     "eid_type": "PIP",
     "name": "func-exchangerates",
     "description": "Returns a list of current exchanges rates for USD",
+    "deploy_mode": "R",
     "task": {
       "op": "sequence",
       "items": [

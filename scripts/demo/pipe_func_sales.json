@@ -2,6 +2,7 @@
     "eid_type": "PIP",
     "name": "func-sales",
     "description": "Returns the sales funnel data from a CSV",
+    "deploy_mode": "R",
     "task": {
       "op": "sequence",
       "items": [
