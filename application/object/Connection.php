@@ -239,10 +239,13 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         //    return array();
 
         // STEP 1: get the pipes associated with this connection
+
+
+        // STEP 2: get the files in the connection
         $service = $this->getService();
         $items = $service->list();
 
-        $pipes = array();
+        $connection_files_to_sync = array();
         foreach ($items as $i)
         {
             // TODO: add constant for "FILE"
@@ -252,15 +255,13 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             // filter out items that aren't python scripts
             // TODO: adjust filter criteria
             // TODO: add a mime type for python?
-            $filename = $i['name'];
-            $extension = \Flexio\Base\File::getFileExtension($filename);
-            if (strtolower($extension) !== 'py')
+            $name = $i['path'];
+            $ext = strtolower(\Flexio\Base\File::getFileExtension($name));
+            if ($ext !== 'py')
                 continue;
 
-            $pipes[] = $i;
+            $connection_files_to_sync[] = $i;
         }
-
-        // STEP 2: get the files in the connection
 
         // STEP 3: perform a diff on the two lists and determine which items need
         // to be deleted, added, or updated
@@ -271,7 +272,7 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
         // STEP 6: update pipes whose content in the connection has changed
 
-        return $pipes;
+        return $connection_files_to_sync;
     }
 
     public function authenticate(array $params) // TODO: add function return type
