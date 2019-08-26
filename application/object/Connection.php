@@ -226,6 +226,31 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $this;
     }
 
+    public function sync() : \Flexio\Object\Connection
+    {
+        // syncs pipes in a mounted a connection with the source files in the connection
+
+        // if the connection mode isn't a function/mount, we're done
+        $connection_mode = $this->properties['connection_mode'];
+        if ($connection_mode !== \Model::CONNECTION_MODE_FUNCTION)
+            return $this;
+
+        // STEP 1: get the pipes associated with this connection
+
+        // STEP 2: get the files in the connection
+
+        // STEP 3: perform a diff on the two lists and determine which items need
+        // to be deleted, added, or updated
+
+        // STEP 4: delete the pipes that are no longer in the connection
+
+        // STEP 5: create pipes for new items in the connection
+
+        // STEP 6: update pipes whose content in the connection has changed
+
+        return $this;
+    }
+
     public function authenticate(array $params) // TODO: add function return type
     {
         // TODO: is there anyway to save some of these in the object so we can make

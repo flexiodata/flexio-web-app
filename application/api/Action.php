@@ -61,6 +61,7 @@ class Action
     public const TYPE_CONNECTION_READ        = 'action.connection.read';
     public const TYPE_CONNECTION_CONNECT     = 'action.connection.connect';
     public const TYPE_CONNECTION_DISCONNECT  = 'action.connection.disconnect';
+    public const TYPE_CONNECTION_SYNC        = 'action.connection.sync';
 
     public const TYPE_PROCESS_CREATE         = 'action.process.create';
     public const TYPE_PROCESS_UPDATE         = 'action.process.update';
