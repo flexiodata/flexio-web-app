@@ -182,10 +182,14 @@
         }
       },
       updateFromData(data) {
-        this.ui.form_data = _.cloneDeep(data)
-        this.ui.x_www_form_urlencoded = _.cloneDeep(data)
-        this.ui.json = _.cloneDeep(data)
-        this.ui.raw = JSON.stringify(data, null, 2)
+        var ui = {
+          form_data: _.cloneDeep(data),
+          x_www_form_urlencoded: _.cloneDeep(data),
+          json: _.cloneDeep(data),
+          raw: JSON.stringify(data, null, 2)
+        }
+
+        this.ui = _.assign({}, _.cloneDeep(ui))
         this.revert()
         this.emitChange()
       },
