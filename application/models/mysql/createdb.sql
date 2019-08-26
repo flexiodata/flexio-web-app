@@ -214,6 +214,7 @@ CREATE TABLE tbl_connection (
   title text default '',
   description text default '',
   connection_type char(40) NOT NULL default '',
+  connection_mode char(1) NOT NULL default 'R',
   connection_status char(1) NOT NULL default 'U',
   connection_info text default '',
   expires timestamp NULL default NULL,

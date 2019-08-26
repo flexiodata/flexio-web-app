@@ -134,6 +134,10 @@ class Model
     public const REGISTRY_VALUE_DATETIME  = 'T'; // (YYYY-MM-DD HH:MM:SS)
     public const REGISTRY_VALUE_BINARY    = 'X';
 
+    public const CONNECTION_MODE_UNDEFINED   = '';
+    public const CONNECTION_MODE_RESOURCE      = 'R';
+    public const CONNECTION_MODE_FUNCTION      = 'F';
+
     public const CONNECTION_STATUS_UNDEFINED   = '';
     public const CONNECTION_STATUS_AVAILABLE   = 'A';
     public const CONNECTION_STATUS_UNAVAILABLE = 'U';

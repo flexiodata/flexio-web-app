@@ -198,6 +198,7 @@ CREATE TABLE tbl_connection (
   title text default '',
   description text default '',
   connection_type varchar(40) NOT NULL default '',
+  connection_mode varchar(1) NOT NULL default 'R',
   connection_status varchar(1) NOT NULL default 'U',
   connection_info text default '',
   expires timestamp NULL default NULL,
