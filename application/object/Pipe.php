@@ -413,6 +413,7 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "eid" => null,
                 "eid_type" => null,
                 "eid_status" => null,
+                "parent" => null,
                 "name" => null,
                 "title" => null,
                 "description" => null,
@@ -434,6 +435,12 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         // sanity check: if the data record is missing, then eid will be null
         if (!isset($mapped_properties['eid']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        // expand the parent connection info
+        $mapped_properties['parent'] = array(
+            'eid' => $properties['parent_eid'] ?? "",
+            'eid_type' => \Model::TYPE_CONNECTION
+        );
 
         // unpack the task json
         $task = @json_decode($mapped_properties['task'],true);

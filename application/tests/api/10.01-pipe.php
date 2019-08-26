@@ -113,6 +113,10 @@ class Test
         {
             "eid_type": "PIP",
             "eid_status": "A",
+            "parent": {
+                "eid": "",
+                "eid_type": "CTN"
+            },
             "name": "name1",
             "title": "Test Pipe Title",
             "description": "Test Pipe Description",
@@ -175,6 +179,10 @@ class Test
         {
             "eid_type": "PIP",
             "eid_status": "A",
+            "parent": {
+                "eid": "",
+                "eid_type": "CTN"
+            },
             "name": "name2",
             "description": "Test Pipe Description",
             "schedule": {
@@ -226,6 +234,10 @@ class Test
         {
             "eid_type": "PIP",
             "eid_status": "A",
+            "parent": {
+                "eid": "",
+                "eid_type": "CTN"
+            },
             "name": "name3",
             "description": "Test Pipe Description",
             "schedule": {
@@ -277,6 +289,10 @@ class Test
         {
             "eid_type": "PIP",
             "eid_status": "A",
+            "parent": {
+                "eid": "",
+                "eid_type": "CTN"
+            },
             "name": "name4",
             "description": "Test Pipe Description",
             "schedule": {
@@ -328,6 +344,10 @@ class Test
         {
             "eid_type": "PIP",
             "eid_status": "A",
+            "parent": {
+                "eid": "",
+                "eid_type": "CTN"
+            },
             "name": "name5",
             "description": "Test Pipe Description",
             "schedule": {

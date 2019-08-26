@@ -261,6 +261,10 @@ class Test
             "eid": "'.$objeid1.'",
             "eid_type": "PIP",
             "eid_status": "A",
+            "parent": {
+                "eid": "",
+                "eid_type": "CTN"
+            },
             "name": "name1-updated",
             "title": "Test Pipe Updated",
             "description": "Test Pipe Description Updated",

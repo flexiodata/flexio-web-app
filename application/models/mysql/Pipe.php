@@ -24,6 +24,7 @@ class Pipe extends ModelBase
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid_status'      => array('type' => 'string', 'required' => false, 'default' => \Model::STATUS_AVAILABLE),
+                'parent_eid'      => array('type' => 'string', 'required' => false, 'default' => ''),
                 'name'            => array('type' => 'identifier', 'required' => false, 'default' => $default_name),
                 'title'           => array('type' => 'string', 'required' => false),
                 'description'     => array('type' => 'string', 'required' => false, 'default' => ''),
@@ -149,6 +150,7 @@ class Pipe extends ModelBase
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid_status'      => array('type' => 'string', 'required' => false),
+                'parent_eid'      => array('type' => 'string', 'required' => false),
                 'name'            => array('type' => 'string', 'required' => false),
                 'title'           => array('type' => 'string', 'required' => false),
                 'description'     => array('type' => 'string', 'required' => false),
@@ -248,7 +250,7 @@ class Pipe extends ModelBase
     public function list(array $filter) : array
     {
         $db = $this->getDatabase();
-        $allowed_items = array('eid', 'eid_status', 'owned_by', 'created_by', 'created_min', 'created_max', 'name');
+        $allowed_items = array('eid', 'eid_status', 'owned_by', 'created_by', 'created_min', 'created_max', 'parent_eid', 'name');
         $filter_expr = \Filter::build($db, $filter, $allowed_items);
         $limit_expr = \Limit::build($db, $filter);
 
@@ -272,6 +274,7 @@ class Pipe extends ModelBase
             $output[] = array('eid'             => $row['eid'],
                               'eid_type'        => \Model::TYPE_PIPE,
                               'eid_status'      => $row['eid_status'],
+                              'parent_eid'      => $row['parent_eid'],
                               'name'            => $row['name'],
                               'title'           => $row['title'],
                               'description'     => $row['description'],
