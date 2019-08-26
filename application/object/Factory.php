@@ -92,10 +92,25 @@ class Factory
         $call_params['name'] = $definition['name'] ?? 'sample-pipe';
         $call_params['description'] = $definition['description'] ?? '';
         $call_params['task'] = array();
+
         if (isset($definition['task']))
             $call_params['task'] = $definition['task'];
+
         if (isset($definition['deploy_mode']))
             $call_params['deploy_mode'] = $definition['deploy_mode'];
+
+        if (isset($definition['deploy_api']))
+            $call_params['deploy_api'] = $definition['deploy_api'];
+
+        if (isset($definition['deploy_schedule']))
+            $call_params['deploy_schedule'] = $definition['deploy_schedule'];
+
+        if (isset($definition['deploy_email']))
+            $call_params['deploy_email'] = $definition['deploy_email'];
+
+        if (isset($definition['deploy_ui']))
+            $call_params['deploy_ui'] = $definition['deploy_ui'];
+
         $call_params['owned_by'] = $user_eid;
         $call_params['created_by'] = $user_eid;
         $pipe = \Flexio\Object\Pipe::create($call_params);

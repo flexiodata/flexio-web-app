@@ -3,6 +3,7 @@
     "name": "func-exchangerates",
     "description": "Returns a list of current exchanges rates for USD",
     "deploy_mode": "R",
+    "deploy_api": "A",
     "task": {
       "op": "sequence",
       "items": [

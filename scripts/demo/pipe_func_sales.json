@@ -3,6 +3,7 @@
     "name": "func-sales",
     "description": "Returns the sales funnel data from a CSV",
     "deploy_mode": "R",
+    "deploy_api": "A",
     "task": {
       "op": "sequence",
       "items": [
