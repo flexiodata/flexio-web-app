@@ -95,6 +95,7 @@ class Api
         'DEL /:teamid/connections/:objid'             => '\Flexio\Api\Connection::delete',
         'POS /:teamid/connections/:objid/connect'     => '\Flexio\Api\Connection::connect',
         'POS /:teamid/connections/:objid/disconnect'  => '\Flexio\Api\Connection::disconnect',
+        'POS /:teamid/connections/:objid/sync'        => '\Flexio\Api\Connection::sync',
 
         // pipes
         'POS /:teamid/pipes'                          => '\Flexio\Api\Pipe::create',

@@ -289,6 +289,40 @@ class Connection
         \Flexio\Api\Response::sendContent($result);
     }
 
+    public static function sync(\Flexio\Api\Request $request) : void
+    {
+        // syncs pipes in a mounted a connection with the source files in the connection
+
+        $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+        $connection_eid = $request->getObjectFromUrl();
+
+        $request->track(\Flexio\Api\Action::TYPE_CONNECTION_SYNC);
+
+        // load the object; make sure the eid is associated with the owner
+        // as an additional check
+        $connection = \Flexio\Object\Connection::load($connection_eid);
+        if ($owner_user_eid !== $connection->getOwner())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+        // check the rights on the object
+        if ($connection->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        if ($connection->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_CONNECTION_SYNC) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        // sync
+        $connection->sync();
+
+        // return the result
+        $properties = $connection->get();
+        $result = self::cleanProperties($properties);
+        $request->setResponseParams($result);
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        $request->track();
+        \Flexio\Api\Response::sendContent($result);
+    }
+
     private static function cleanProperties(array $properties) : array
     {
         if (!isset($properties['connection_info']))
