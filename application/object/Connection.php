@@ -226,16 +226,39 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $this;
     }
 
-    public function sync() : \Flexio\Object\Connection
+    public function sync() : array
     {
         // syncs pipes in a mounted a connection with the source files in the connection
 
         // if the connection mode isn't a function/mount, we're done
         $connection_mode = $this->properties['connection_mode'];
-        if ($connection_mode !== \Model::CONNECTION_MODE_FUNCTION)
-            return $this;
+
+        // TODO: uncomment; commented out for testing until mounts are exposed
+        // in the UI
+        //if ($connection_mode !== \Model::CONNECTION_MODE_FUNCTION)
+        //    return array();
 
         // STEP 1: get the pipes associated with this connection
+        $service = $this->getService();
+        $items = $service->list();
+
+        $pipes = array();
+        foreach ($items as $i)
+        {
+            // TODO: add constant for "FILE"
+            if ($i['type'] !== "FILE")
+                continue;
+
+            // filter out items that aren't python scripts
+            // TODO: adjust filter criteria
+            // TODO: add a mime type for python?
+            $filename = $i['name'];
+            $extension = \Flexio\Base\File::getFileExtension($filename);
+            if (strtolower($extension) !== 'py')
+                continue;
+
+            $pipes[] = $i;
+        }
 
         // STEP 2: get the files in the connection
 
@@ -248,7 +271,7 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
         // STEP 6: update pipes whose content in the connection has changed
 
-        return $this;
+        return $pipes;
     }
 
     public function authenticate(array $params) // TODO: add function return type

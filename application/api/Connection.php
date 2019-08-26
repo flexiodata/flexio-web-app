@@ -297,7 +297,8 @@ class Connection
         $owner_user_eid = $request->getOwnerFromUrl();
         $connection_eid = $request->getObjectFromUrl();
 
-        $request->track(\Flexio\Api\Action::TYPE_CONNECTION_SYNC);
+        // TODO: re-enable tracking
+        //$request->track(\Flexio\Api\Action::TYPE_CONNECTION_SYNC);
 
         // load the object; make sure the eid is associated with the owner
         // as an additional check
@@ -308,18 +309,20 @@ class Connection
         // check the rights on the object
         if ($connection->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($connection->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_CONNECTION_SYNC) === false)
+        //if ($connection->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_CONNECTION_SYNC) === false)
+        //    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+        // TODO: for now, use pipe update right; add a right for connection sync?
+        if ($connection->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PIPE_UPDATE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // sync
-        $connection->sync();
+        $result = $connection->sync();
 
         // return the result
-        $properties = $connection->get();
-        $result = self::cleanProperties($properties);
-        $request->setResponseParams($result);
+        // TODO: re-enable tracking once we know what we want to store
+        //$request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        $request->track();
+        //$request->track();
         \Flexio\Api\Response::sendContent($result);
     }
 
