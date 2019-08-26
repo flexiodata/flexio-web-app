@@ -5,6 +5,7 @@
     "description": "",
     "connection_status": "A",
     "connection_type": "amazons3",
+    "connection_mode": "R",
     "connection_info": {
         "region": "us-east-1",
         "bucket": "flexio-public-s3",

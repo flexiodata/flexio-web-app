@@ -85,6 +85,7 @@ class Test
                 "name": "name1",
                 "description": "Test Connection Description",
                 "connection_type": "'.\Flexio\Services\Factory::TYPE_HTTP.'",
+                "connection_mode": "'.\Model::CONNECTION_MODE_RESOURCE.'",
                 "connection_status": "'.\Model::CONNECTION_STATUS_AVAILABLE.'",
                 "connection_info": {
                     "host": "https://api.domain.com",
@@ -104,6 +105,7 @@ class Test
             "name": "name1",
             "description": "Test Connection Description",
             "connection_type": "http",
+            "connection_mode": "R",
             "connection_status": "A",
             "connection_info": {
                 "host": "https://api.domain.com",

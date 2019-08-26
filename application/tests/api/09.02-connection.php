@@ -233,6 +233,7 @@ class Test
                 "title": "Test Connection Updated",
                 "description": "Test Connection Description Updated",
                 "connection_type": "'.\Flexio\Services\Factory::TYPE_HTTP.'",
+                "connection_mode": "'.\Model::CONNECTION_MODE_FUNCTION.'",
                 "connection_status": "'.\Model::CONNECTION_STATUS_AVAILABLE.'",
                 "connection_info": {
                     "host": "https://api.domain.com",
@@ -254,6 +255,7 @@ class Test
             "title": "Test Connection Updated",
             "description": "Test Connection Description Updated",
             "connection_type": "http",
+            "connection_mode": "F",
             "connection_status": "A",
             "connection_info": {
                 "host": "https://api.domain.com",

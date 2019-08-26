@@ -35,6 +35,7 @@ class Connection
                 'title'             => array('type' => 'string', 'required' => false),
                 'description'       => array('type' => 'string', 'required' => false),
                 'connection_type'   => array('type' => 'string', 'required' => false),
+                'connection_mode'   => array('type' => 'string', 'required' => false),
                 'connection_status' => array('type' => 'string', 'required' => false),
                 'connection_info'   => array('type' => 'object', 'required' => false)
             ))->hasErrors()) === true)
@@ -114,6 +115,7 @@ class Connection
                 'title'             => array('type' => 'string', 'required' => false),
                 'description'       => array('type' => 'string', 'required' => false),
                 'connection_type'   => array('type' => 'string', 'required' => false),
+                'connection_mode'   => array('type' => 'string', 'required' => false),
                 'connection_status' => array('type' => 'string', 'required' => false),
                 'connection_info'   => array('type' => 'object', 'required' => false)
             ))->hasErrors()) === true)

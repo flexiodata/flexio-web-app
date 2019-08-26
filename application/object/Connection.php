@@ -562,6 +562,7 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "title" => null,
                 "description" => null,
                 "connection_type" => null,
+                "connection_mode" => null,
                 "connection_status" => null,
                 "connection_info" => null,
                 "expires" => null,

@@ -68,6 +68,8 @@ class Factory
             $call_params['connection_status'] = $definition['connection_status'];
         if (isset($definition['connection_type']))
             $call_params['connection_type'] = $definition['connection_type'];
+        if (isset($definition['connection_mode']))
+            $call_params['connection_mode'] = $definition['connection_mode'];
         if (isset($definition['connection_info']))
             $call_params['connection_info'] = $definition['connection_info'];
         if (isset($definition['expires']))

@@ -212,6 +212,7 @@ class Test
             "title" : null,
             "description" : null,
             "connection_type" : null,
+            "connection_mode" : null,
             "connection_status" : null,
             "connection_info" : {
             },

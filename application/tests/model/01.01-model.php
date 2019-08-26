@@ -242,6 +242,21 @@ class Test
         $expected = 'E';
         \Flexio\Tests\Check::assertString('F.4', 'Connection status constant',  $actual, $expected, $results);
 
+        // BEGIN TEST
+        $actual = \Model::CONNECTION_MODE_UNDEFINED;
+        $expected = '';
+        \Flexio\Tests\Check::assertString('F.5', 'Connection mode constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Model::CONNECTION_MODE_FUNCTION;
+        $expected = 'F';
+        \Flexio\Tests\Check::assertString('F.6', 'Connection mode constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Model::CONNECTION_MODE_RESOURCE;
+        $expected = 'R';
+        \Flexio\Tests\Check::assertString('F.7', 'Connection mode constant',  $actual, $expected, $results);
+
 
 
         // TEST: Model pipe constants; the database stores raw values for
