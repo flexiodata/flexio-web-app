@@ -5,11 +5,9 @@
     @click="onClick"
   >
     <div class="flex flex-row items-center">
-      <div class="flex-fill">
-        <div class="flex flex-row items-center">
-          <div class="item-on-indicator" :class="is_deployed ? 'on' : 'off'"></div>
-          <div class="flex-fill truncate item-title">{{pname}}</div>
-        </div>
+      <div class="flex-fill flex flex-row items-center">
+        <div class="item-on-indicator" :class="is_deployed ? 'on' : 'off'"></div>
+        <div class="flex-fill truncate item-title">{{pname}}</div>
       </div>
       <div
         class="flex-none item-dropdown"
