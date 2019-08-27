@@ -23,9 +23,9 @@ class Test
         // SETUP
         $storage_items = array();
 
-        if (\Flexio\Tests\Base::TEST_STORAGE_FLEX== true)
+        if (\Flexio\Tests\Base::TEST_STORAGE_FLEX === true)
             $storage_items[] = \Flexio\Tests\Base::STORAGE_FLEX;
-        if (\Flexio\Tests\Base::TEST_STORAGE_AMAZONS3=== true)
+        if (\Flexio\Tests\Base::TEST_STORAGE_AMAZONS3 === true)
             $storage_items[] = \Flexio\Tests\Base::STORAGE_AMAZONS3;
         if (\Flexio\Tests\Base::TEST_STORAGE_BOX === true)
             $storage_items[] = \Flexio\Tests\Base::STORAGE_BOX;
@@ -35,9 +35,9 @@ class Test
             $storage_items[] = \Flexio\Tests\Base::STORAGE_GITHUB;
         if (\Flexio\Tests\Base::TEST_STORAGE_GOOGLEDRIVE === true)
             $storage_items[] = \Flexio\Tests\Base::STORAGE_GOOGLEDRIVE;
-        if (\Flexio\Tests\Base::TEST_STORAGE_GOOGLECLOUDSTORAGE=== true)
+        if (\Flexio\Tests\Base::TEST_STORAGE_GOOGLECLOUDSTORAGE === true)
             $storage_items[] = \Flexio\Tests\Base::STORAGE_GOOGLECLOUDSTORAGE;
-        if (\Flexio\Tests\Base::TEST_STORAGE_SFTP=== true)
+        if (\Flexio\Tests\Base::TEST_STORAGE_SFTP === true)
             $storage_items[] = \Flexio\Tests\Base::STORAGE_SFTP;
 
 
