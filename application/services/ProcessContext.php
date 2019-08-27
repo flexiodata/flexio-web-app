@@ -65,6 +65,7 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
                     'path' => $k,
                     'size' => null,
                     'modified' => null,
+                    'hash' => '', // TODO: available?
                     'type' => 'FILE'
                 );
             }
@@ -83,6 +84,7 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
                     'path' => $k,
                     'size' => null,
                     'modified' => null,
+                    'hash' => '', // TODO: available?
                     'type' => 'FILE'
                 );
             }
@@ -101,6 +103,7 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
                     'path' => $k,
                     'size' => null,
                     'modified' => null,
+                    'hash' => '', // TODO: available?
                     'type' => 'FILE'
                 );
             }
@@ -115,6 +118,7 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
                     'path' => $k,
                     'size' => null,
                     'modified' => null,
+                    'hash' => '', // TODO: available?
                     'type' => 'FILE'
                 );
             }
@@ -129,6 +133,7 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
                     'path' => "$k",
                     'size' => $v->getSize(),
                     'modified' => null,
+                    'hash' => '', // TODO: available?
                     'type' => 'FILE'
                 );
             }
@@ -146,6 +151,7 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
             'path' => $path,
             'size' => $stream->getSize(),
             'modified' => null,
+            'hash' => '', // TODO: available?
             'type' => 'FILE'
         ];
     }

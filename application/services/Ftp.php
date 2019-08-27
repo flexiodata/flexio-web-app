@@ -101,6 +101,7 @@ class Ftp implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                 'path' => $full_path,
                 'size' => $info['size'] ?? '',
                 'modified' => '',
+                'hash' => '', // TODO: available?
                 'type' => 'FILE'
             );
 

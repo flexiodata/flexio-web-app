@@ -110,6 +110,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
                 'full_path' => $full_path,
                 'size' => $entry['size'],
                 'modified' => $entry['modified'],
+                'hash' => $entry['hash'] ?? '', // TODO: remove ?? when all services have hash implemented
                 'type' => $entry['type']
             );
 

@@ -106,6 +106,7 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                                      'path' => $fullpath,
                                      'size' => $entry['size'] ?? null,
                                      'modified' => $entry['client_modified'] ?? '',
+                                     'hash' => $entry['content_hash'] ?? '',
                                      'type' => ($entry['.tag'] == 'folder' ? 'DIR' : 'FILE'));
                 }
             }
@@ -172,6 +173,7 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                      'name' => $entry['name'],
                      'size' => $entry['size'] ?? null,
                      'modified' => $entry['client_modified'] ?? '',
+                     'hash' => $entry['content_hash'] ?? '',
                      'type' => ($entry['.tag'] == 'folder' ? 'DIR' : 'FILE'));
     }
 

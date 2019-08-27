@@ -73,6 +73,7 @@ class MailJet implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                 'path' => $d['path'],
                 'size' => null,
                 'modified' => null,
+                'hash' => '', // TODO: available?
                 'type' => 'FILE'
             );
         }

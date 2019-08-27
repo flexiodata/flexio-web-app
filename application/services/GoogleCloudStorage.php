@@ -139,6 +139,7 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
                 'path' => $full_path,
                 'size' => (int)$row['size'],
                 'modified' => $row['updated'],
+                'hash' => '', // TODO: available?
                 'type' => (substr($file, -1) == '/' ? 'DIR' : 'FILE')
             );
 
@@ -193,6 +194,7 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
                 'path' => $full_path,
                 'size' => (int)$row['size'],
                 'modified' => $row['updated'],
+                'hash' => '', // TODO: available?
                 'type' => (substr($file, -1) == '/' ? 'DIR' : 'FILE')
             );
 
@@ -262,6 +264,7 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
                 'name' => $plain_filename,
                 'size' => $info['size'] ?? null,
                 'modified' => $info['updated'] ?? '',
+                'hash' => '', // TODO: available?
                 'type' => (substr($info['name'], -1) == '/' ? 'DIR' : 'FILE')
             ];
         }
@@ -297,6 +300,7 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
                     'name' => $plain_filename,
                     'size' => null,
                     'modified' => null,
+                    'hash' => '', // TODO: available?
                     'type' => 'DIR'
                 ];
             }

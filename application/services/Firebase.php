@@ -60,6 +60,7 @@ class Firebase implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                 'path' => $row['table_name'],
                 'size' => null,
                 'modified' => null,
+                'hash' => '', // TODO: available?
                 'type' => 'FILE'
             );
         }

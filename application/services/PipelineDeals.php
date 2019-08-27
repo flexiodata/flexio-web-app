@@ -70,6 +70,7 @@ class PipelineDeals implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
                 'path' => $d['path'],
                 'size' => null,
                 'modified' => null,
+                'hash' => '', // TODO: available?
                 'type' => 'FILE'
             );
         }

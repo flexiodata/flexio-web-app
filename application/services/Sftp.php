@@ -128,6 +128,7 @@ class Sftp implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                 'path' => $full_path,
                 'size' => $info['size'] ?? null,
                 'modified' => '',
+                'hash' => '', // TODO: available?
                 'type' => ($info['type'] === NET_SFTP_TYPE_DIRECTORY) ? 'DIR' : 'FILE'
             );
 
@@ -158,6 +159,7 @@ class Sftp implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             'path' => $path,
             'size' => $info['size'] ?? null,
             'modified' => date('c', ($info['mtime'] ?? time())),
+            'hash' => '', // TODO: available?
             'type' => (($info['type'] ?? 0) == 2) ? 'DIR' : 'FILE'
         ];
     }

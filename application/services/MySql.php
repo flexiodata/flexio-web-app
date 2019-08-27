@@ -103,6 +103,7 @@ class MySql implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                 'path' => $row['table_name'],
                 'size' => null,
                 'modified' => null,
+                'hash' => '', // TODO: available?
                 'type' => 'TABLE'
             );
         }
@@ -123,6 +124,7 @@ class MySql implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             'path' => $path,
             'size' => null,
             'modified' => null,
+            'hash' => '', // TODO: available?
             'type' => 'TABLE',
             'structure' => $structure
         ];

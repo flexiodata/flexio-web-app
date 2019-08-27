@@ -85,6 +85,7 @@ class Postgres implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                 'path' => $r['tablename'],
                 'size' => null,
                 'modified' => null,
+                'hash' => '', // TODO: available?
                 'type' => 'FILE'
             );
         }

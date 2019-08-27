@@ -143,6 +143,7 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                          'name' => $name,
                          'size' => null,
                          'modified' => '',
+                         'hash' => '', // TODO: available?
                          'type' => 'DIR');
 
             return $res;
@@ -157,6 +158,7 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                          'name' => $entry['name'],
                          'size' => $entry['size'] ?? null,
                          'modified' => '',
+                         'hash' => $entry['sha'] ?? '',
                          'type' => 'FILE');
 
             return $res;
@@ -563,6 +565,7 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                                         'path' => $entry['path'],
                                         'size' => $entry['size'] ?? '',
                                         'modified' => '',  // TODO: available?
+                                        'hash' => $entry['sha'] ?? '',
                                         'type' => ($entry['type'] == 'dir' ? 'DIR' : 'FILE'));
             }
 

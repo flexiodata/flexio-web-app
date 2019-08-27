@@ -70,6 +70,7 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
                     'path' => '/' . $spreadsheet->title,
                     'size' => null, // size unknown
                     'modified' => $spreadsheet->updated,
+                    'hash' => '', // TODO: available?
                     'type' => 'DIR'  // (count($worksheets) > 1 ? 'DIR':'FILE')
                 );
 
@@ -101,6 +102,7 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
                     'path' => '/' . $spreadsheet->title . '/' . $worksheet->title,
                     'size' => null,
                     'modified' => null,
+                    'hash' => '', // TODO: available?
                     'type' => 'FILE'
                 );
 
@@ -148,6 +150,7 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
                    'name' => $name,
                    'size' => null,
                    'modified' => null,
+                   'hash' => '', // TODO: available?
                    'type' => 'FILE');
 
         // figure out structure

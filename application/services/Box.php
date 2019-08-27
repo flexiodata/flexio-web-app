@@ -81,6 +81,7 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                              'path' => $fullpath,
                              'size' => $entry['size'] ?? '',
                              'modified' => $entry['modified_at'] ?? '',
+                             'hash' => '', // TODO: available?
                              'type' => ($entry['type'] == 'folder' ? 'DIR' : 'FILE'));
         }
 
@@ -135,6 +136,7 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             'name' => $info['name'],
             'size' => $info['size'] ?? null,
             'modified' => $info['modified_at'] ?? '',
+            'hash' => '', // TODO: available?
             'type' => $type
         ];
     }

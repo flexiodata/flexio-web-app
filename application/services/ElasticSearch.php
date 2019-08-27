@@ -211,6 +211,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
                                    'path' => '/' . $index_name,
                                    'size' => null,
                                    'modified' => null,
+                                   'hash' => '', // TODO: available?
                                    'type' => 'FILE');
             }
         }

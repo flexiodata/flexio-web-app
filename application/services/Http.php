@@ -45,6 +45,7 @@ class Http implements \Flexio\IFace\IFileSystem
         $ret = [ 'name' => $path,
                  'size' => null,
                  'modified' => null,
+                 'hash' => '', // TODO: available?
                  'type' => 'FILE' ];
 
         return $ret;

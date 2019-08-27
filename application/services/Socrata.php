@@ -153,6 +153,7 @@ class Socrata implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                     'path' => "/$description",
                     'size' => null,
                     'modified' => null,
+                    'hash' => '', // TODO: available?
                     'id' => $id,
                     'url' => $n['url'],
                     'type' => 'FILE'
