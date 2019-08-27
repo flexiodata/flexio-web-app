@@ -20,11 +20,11 @@ class Test
 {
     public function run(&$results)
     {
-        if (\Flexio\Tests\Base::TEST_EXTERNAL_STORAGE === false)
+        if (\Flexio\Tests\Base::TEST_STORAGE_GOOGLECLOUDSTORAGE === false)
             return;
 
 
-/*
+
         // SETUP
         $process_owner = \Flexio\Tests\Util::getTestStorageOwner();
         $files = \Flexio\Tests\Util::getTestDataSamples();
@@ -123,6 +123,5 @@ EOD;
         $actual = $actual_contents;
         $expected = $expected_contents;
         \Flexio\Tests\Check::assertString("F.1", 'Read/Write; check write/read with implicit type conversion; file output here: ' . $filepath, $actual, $expected, $results);
-*/
     }
 }
