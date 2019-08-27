@@ -23,13 +23,85 @@ class Test
         if (\Flexio\Tests\Base::TEST_STORAGE_GOOGLECLOUDSTORAGE === false)
             return;
 
+        // SETUP
+        $foldername = \Flexio\Tests\Util::getTimestampName();
+        $folderpath = "/service-tests/$foldername/";
+        $filename = \Flexio\Base\Util::generateHandle() . '.txt';
+        $filepath = $folderpath . $filename;
+
+        $service = new \Flexio\Services\GoogleCloudStorage;
+        $service->createDirectory($folderpath);
+        $service->createFile($filepath);
+
 
         // TEST: service creation
 
         // BEGIN TEST
-        $service = new \Flexio\Services\GoogleCloudStorage;
         $actual = get_class($service);
         $expected = 'Flexio\Services\GoogleCloudStorage';
-        \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\GoogleCloudStorage; basic file syntax check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\GoogleCloudStorage::create(); basic file syntax check',  $actual, $expected, $results);
+
+
+        // TEST: basic service functions
+
+        // BEGIN TEST
+        try
+        {
+            $service->getFileInfo(\Flexio\Base\Util::generateHandle()); // name outside storage namespace
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
+            $expected = 'Exception: ' . \Flexio\Base\Error::UNAVAILABLE;
+            \Flexio\Tests\Check::assertString("B.1", '\Flexio\Services\GoogleCloudStorage::getFileInfo(); file path check on folder that doesn\'t exist should throw an exception' . $storage_location,  $actual, $expected, $results);
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+            $error = json_decode($e->getMessage(),true);
+            $actual = $error['code'];
+            $expected = \Flexio\Base\Error::UNAVAILABLE;
+            \Flexio\Tests\Check::assertString("B.1", '\Flexio\Services\GoogleCloudStorage::getFileInfo(); check exception code' . $storage_location,  $actual, $expected, $results);
+        }
+
+        // BEGIN TEST
+        try
+        {
+            $service->getFileInfo($folderpath . \Flexio\Base\Util::generateHandle() . '.txt'); // name within storage namespace
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
+            $expected = 'Exception: ' . \Flexio\Base\Error::UNAVAILABLE;
+            \Flexio\Tests\Check::assertString("B.2", '\Flexio\Services\GoogleCloudStorage::getFileInfo(); file path check on folder that doesn\'t exist should throw an exception' . $storage_location,  $actual, $expected, $results);
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+            $error = json_decode($e->getMessage(),true);
+            $actual = $error['code'];
+            $expected = \Flexio\Base\Error::UNAVAILABLE;
+            \Flexio\Tests\Check::assertString("B.2", '\Flexio\Services\GoogleCloudStorage::getFileInfo(); check exception code' . $storage_location,  $actual, $expected, $results);
+        }
+
+        // BEGIN TEST
+        try
+        {
+            $actual = $service->getFileInfo($folderpath);
+            $expected = array('name' => $foldername, 'type' => 'DIR');
+            \Flexio\Tests\Check::assertInArray("B.3", '\Flexio\Services\GoogleCloudStorage::getFileInfo(); basic file info check on: ' . $storage_location,  $actual, $expected, $results);
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
+            $expected = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
+            \Flexio\Tests\Check::assertString("B.3", '\Flexio\Services\GoogleCloudStorage::getFileInfo(); basic file info check on: ' . $storage_location,  $actual, $expected, $results);
+        }
+
+        // BEGIN TEST
+        try
+        {
+            $actual = $service->getFileInfo($filepath);
+            $expected = array('name' => $filename, 'type' => 'FILE');
+            \Flexio\Tests\Check::assertInArray("B.4", '\Flexio\Services\GoogleCloudStorage::getFileInfo(); basic file info check on: ' . $storage_location,  $actual, $expected, $results);
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
+            $expected = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
+            \Flexio\Tests\Check::assertString("B.4", '\Flexio\Services\GoogleCloudStorage::getFileInfo(); basic file info check on: ' . $storage_location,  $actual, $expected, $results);
+        }
     }
 }

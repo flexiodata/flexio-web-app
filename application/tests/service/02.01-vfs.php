@@ -41,15 +41,17 @@ class Test
             $storage_items[] = \Flexio\Tests\Base::STORAGE_SFTP;
 
 
+        // SETUP
+        $test_user_eid = \Flexio\Tests\Util::getTestStorageOwner();
+        $service = new \Flexio\Services\Vfs($test_user_eid);
+
+
         // TEST: service creation
 
         // BEGIN TEST
-        $test_user_eid = \Flexio\Tests\Util::getTestStorageOwner();
-        $service = new \Flexio\Services\Vfs($test_user_eid);
         $actual = get_class($service);
         $expected = 'Flexio\Services\Vfs';
         \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\Vfs; basic file syntax check',  $actual, $expected, $results);
-
 
 
         // TEST: basic service functions
@@ -63,15 +65,14 @@ class Test
             $filename = \Flexio\Base\Util::generateHandle() . '.txt';
             $filepath = $folderpath . $filename;
 
-            $vfs = new \Flexio\Services\Vfs($test_user_eid);
-            $vfs->createDirectory($folderpath);
-            $vfs->createFile($filepath);
+            $service->createDirectory($folderpath);
+            $service->createFile($filepath);
 
             // check file info on a path that doesn't exist
             $idx++;
             try
             {
-                $vfs->getFileInfo(\Flexio\Base\Util::generateHandle()); // name outside storage namespace
+                $service->getFileInfo(\Flexio\Base\Util::generateHandle()); // name outside storage namespace
                 $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
                 $expected = 'Exception: ' . \Flexio\Base\Error::UNAVAILABLE;
                 \Flexio\Tests\Check::assertString("B.$idx", '\Flexio\Services\Vfs::getFileInfo(); file path check on folder that doesn\'t exist should throw an exception' . $storage_location,  $actual, $expected, $results);
@@ -88,7 +89,7 @@ class Test
             $idx++;
             try
             {
-                $vfs->getFileInfo($folderpath . \Flexio\Base\Util::generateHandle() . '.txt'); // name within storage namespace
+                $service->getFileInfo($folderpath . \Flexio\Base\Util::generateHandle() . '.txt'); // name within storage namespace
                 $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
                 $expected = 'Exception: ' . \Flexio\Base\Error::UNAVAILABLE;
                 \Flexio\Tests\Check::assertString("B.$idx", '\Flexio\Services\Vfs::getFileInfo(); file path check on folder that doesn\'t exist should throw an exception' . $storage_location,  $actual, $expected, $results);
@@ -105,7 +106,7 @@ class Test
             $idx++;
             try
             {
-                $actual = $vfs->getFileInfo($folderpath);
+                $actual = $service->getFileInfo($folderpath);
                 $expected = array('name' => $foldername, 'type' => 'DIR');
                 \Flexio\Tests\Check::assertInArray("B.$idx", '\Flexio\Services\Vfs::getFileInfo(); basic file info check on: ' . $storage_location,  $actual, $expected, $results);
             }
@@ -120,7 +121,7 @@ class Test
             $idx++;
             try
             {
-                $actual = $vfs->getFileInfo($filepath);
+                $actual = $service->getFileInfo($filepath);
                 $expected = array('name' => $filename, 'type' => 'FILE');
                 \Flexio\Tests\Check::assertInArray("B.$idx", '\Flexio\Services\Vfs::getFileInfo(); basic file info check on: ' . $storage_location,  $actual, $expected, $results);
             }
