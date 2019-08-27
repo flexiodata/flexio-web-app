@@ -29,17 +29,23 @@ class Test
         $token = \Flexio\Tests\Util::getTestStorageOwnerToken();
 
         $storage_items = array();
-        $storage_items[] = \Flexio\Tests\Base::STORAGE_FLEX;
-        if (\Flexio\Tests\Base::TEST_EXTERNAL_STORAGE === true)
-        {
+
+        if (\Flexio\Tests\Base::TEST_STORAGE_FLEX== true)
+            $storage_items[] = \Flexio\Tests\Base::STORAGE_FLEX;
+        if (\Flexio\Tests\Base::TEST_STORAGE_AMAZONS3=== true)
             $storage_items[] = \Flexio\Tests\Base::STORAGE_AMAZONS3;
+        if (\Flexio\Tests\Base::TEST_STORAGE_BOX === true)
             $storage_items[] = \Flexio\Tests\Base::STORAGE_BOX;
+        if (\Flexio\Tests\Base::TEST_STORAGE_DROPBOX === true)
             $storage_items[] = \Flexio\Tests\Base::STORAGE_DROPBOX;
+        if (\Flexio\Tests\Base::TEST_STORAGE_GITHUB === true)
             $storage_items[] = \Flexio\Tests\Base::STORAGE_GITHUB;
+        if (\Flexio\Tests\Base::TEST_STORAGE_GOOGLEDRIVE === true)
             $storage_items[] = \Flexio\Tests\Base::STORAGE_GOOGLEDRIVE;
-            //$storage_items[] = \Flexio\Tests\Base::STORAGE_GOOGLECLOUDSTORAGE;
+        if (\Flexio\Tests\Base::TEST_STORAGE_GOOGLECLOUDSTORAGE=== true)
+            $storage_items[] = \Flexio\Tests\Base::STORAGE_GOOGLECLOUDSTORAGE;
+        if (\Flexio\Tests\Base::TEST_STORAGE_SFTP=== true)
             $storage_items[] = \Flexio\Tests\Base::STORAGE_SFTP;
-        }
 
 
         // TODO: try to delete a file that doesn't exist

@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        if (\Flexio\Tests\Base::TEST_EXTERNAL_STORAGE === false)
+        if (\Flexio\Tests\Base::TEST_STORAGE_GITHUB === false)
             return;
 
 
