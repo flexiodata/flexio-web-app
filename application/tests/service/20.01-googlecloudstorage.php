@@ -20,6 +20,10 @@ class Test
 {
     public function run(&$results)
     {
+        if (\Flexio\Tests\Base::TEST_STORAGE_GOOGLECLOUDSTORAGE === false)
+            return;
+
+
         // TEST: service creation
 
         // BEGIN TEST
