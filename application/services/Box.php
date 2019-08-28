@@ -65,7 +65,7 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             return [ $arr ];
         }
 
-        $entries = $this->getFolderItems($fileinfo['id'], 'name,type,size,modified_at');
+        $entries = $this->getFolderItems($fileinfo['id'], 'name,type,size,modified_at,sha1');
 
         $files = [];
 
@@ -81,7 +81,7 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                              'path' => $fullpath,
                              'size' => $entry['size'] ?? '',
                              'modified' => $entry['modified_at'] ?? '',
-                             'hash' => '', // TODO: available?
+                             'hash' => $entry['sha1'] ?? '',
                              'type' => ($entry['type'] == 'folder' ? 'DIR' : 'FILE'));
         }
 
@@ -136,7 +136,7 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             'name' => $info['name'],
             'size' => $info['size'] ?? null,
             'modified' => $info['modified_at'] ?? '',
-            'hash' => '', // TODO: available?
+            'hash' => $info['sha1'] ?? '',
             'type' => $type
         ];
     }
