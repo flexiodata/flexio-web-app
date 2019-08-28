@@ -13,10 +13,10 @@
         <!-- sidebar -->
         <div class="flex flex-column min-w5 bg-white br b--black-05">
           <!-- control bar -->
-          <div class="flex-none ph3 pv2 relative bg-white bb b--black-05">
+          <div class="flex-none pa2 relative bg-white bb b--black-05">
             <div class="flex flex-row">
               <div class="flex-fill flex flex-row items-center">
-                <h2 class="mv0 f3 fw6 mr3">Functions</h2>
+                <h2 class="mv0 f3 fw6 mr3 lh-1">Functions</h2>
               </div>
               <div class="flex-none flex flex-row items-center ml3">
                 <el-button
