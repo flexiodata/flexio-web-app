@@ -35,6 +35,7 @@
           <!-- list -->
           <div style="max-width: 20rem" v-bar>
             <PipeList
+              item-size="mini"
               :items="pipes"
               :selected-item.sync="pipe"
               :show-dropdown="true"
