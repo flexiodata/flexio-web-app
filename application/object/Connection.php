@@ -267,12 +267,11 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             if ($item_info['type'] !== "FILE")
                 continue;
 
-            // filter out items that aren't python scripts
-            // TODO: adjust filter criteria
-            // TODO: add a mime type for python?
+            // filter out items that aren't flexio tasks, or javascript/python scripts
+            // TODO: adjust filter criteria?
             $name = $item_info['path'];
             $ext = strtolower(\Flexio\Base\File::getFileExtension($name));
-            if ($ext !== 'js')
+            if ($ext !== 'flexio' && $ext !== 'py' && $ext !== 'js')
                 continue;
 
             $connection_item_info[$item_info['name']] = $item_info;
@@ -297,6 +296,11 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             $pipe_params['parent_eid'] = $this->getEid();
             $pipe_params['name'] = $pipe_name;
             $pipe_params['description'] = "Created from '" . $value['name'] . "' in '" . $this->get()['name'] . "' connection.";
+            $pipe_params['deploy_mode'] = 'R';
+            $pipe_params['deploy_api'] = 'A';
+            $pipe_params['deploy_schedule'] = 'I';
+            $pipe_params['deploy_email'] = 'I';
+            $pipe_params['deploy_ui'] = 'I';
             $pipe_params['owned_by'] = $this->get()['owned_by']['eid'];
             $pipe_params['created_by'] = $this->get()['created_by']['eid'];
 
