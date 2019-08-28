@@ -169,6 +169,9 @@
   import MixinConnection from '@/components/mixins/connection'
   import MixinValidation from '@/components/mixins/validation'
 
+  const CONNECTION_MODE_RESOURCE = 'R';
+  const CONNECTION_MODE_FUNCTION = 'F';
+
   const getNameSuffix = (length) => {
     return randomstring.generate({
       length,
@@ -201,6 +204,7 @@
       title: '',
       description: '',
       connection_type: '',
+      connection_mode: CONNECTION_MODE_RESOURCE,
       connection_info
     }
   }
@@ -410,7 +414,13 @@
         var service_slug = slugify(item.service_name)
         var team_name = this.active_team_name
 
-        var attrs = _.assign({}, defaultAttrs(ctype), {
+        // when using the connection edit panel in 'add' mode, if the panel
+        // is created with a `connection` prop, use the attributes of
+        // this prop when creating the pending connection -- we use this
+        // for creating 'function mount' connections
+        var prop_connection_attrs = _.cloneDeep(this.connection)
+
+        var attrs = _.assign({}, defaultAttrs(ctype), prop_connection_attrs, {
           eid_status: OBJECT_STATUS_PENDING,
           name: `${service_slug}-` + getNameSuffix(16),
           title: item.service_name,

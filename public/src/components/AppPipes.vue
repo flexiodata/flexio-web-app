@@ -111,6 +111,27 @@
         v-if="show_pipe_dialog"
       />
     </el-dialog>
+
+    <!-- connection edit dialog -->
+    <el-dialog
+      custom-class="el-dialog--no-header el-dialog--no-footer"
+      width="46rem"
+      top="4vh"
+      :modal-append-to-body="false"
+      :close-on-click-modal="false"
+      :visible.sync="show_connection_dialog"
+    >
+      <ConnectionEditPanel
+        :title="connection_edit_mode ? 'New Function Mount' : 'Edit Function Mount'"
+        :mode="connection_edit_mode"
+        :show-steps="connection_edit_mode == 'edit' ? false : true"
+        :connection="connection_edit_mode == 'edit' ? connection : new_function_mount_attrs"
+        :filter-by="filterByFunctionMount"
+        @close="show_connection_dialog = false"
+        @cancel="show_connection_dialog = false"
+        v-if="show_connection_dialog"
+      />
+    </el-dialog>
   </div>
 </template>
 
@@ -122,8 +143,13 @@
   import PipeList from '@/components/PipeList'
   import PipeDocument from '@/components/PipeDocument'
   import PipeEditPanel from '@/components/PipeEditPanel'
+  import ConnectionEditPanel from '@/components/ConnectionEditPanel'
   import EmptyItem from '@/components/EmptyItem'
   import PageNotFound from '@/components/PageNotFound'
+  import MixinConnection from '@/components/mixins/connection'
+
+  const CONNECTION_MODE_RESOURCE = 'R';
+  const CONNECTION_MODE_FUNCTION = 'F';
 
   const defaultAttrs = () => {
     // when creating a new function, start out with a basic Python 'Hello World' script
@@ -147,11 +173,13 @@
         }
       }
     },
+    mixins: [MixinConnection],
     components: {
       Spinner,
       PipeList,
       PipeDocument,
       PipeEditPanel,
+      ConnectionEditPanel,
       EmptyItem,
       PageNotFound
     },
@@ -172,6 +200,11 @@
         show_pipe_dialog: false,
         pipe: {},
         last_selected: {},
+        show_connection_dialog: false,
+        connection_edit_mode: 'add',
+        new_function_mount_attrs: {
+          connection_mode: CONNECTION_MODE_FUNCTION
+        },
       }
     },
     computed: {
@@ -319,11 +352,21 @@
           this.$nextTick(() => { this.is_selecting = false })
         }
       },
+      filterByFunctionMount(connection) {
+        return this.$_Connection_isFunctionMount(connection)
+      },
+      onNewLocalFunction() {
+        this.show_pipe_dialog = true
+      },
+      onNewFunctionMount() {
+        this.connection_edit_mode = 'add'
+        this.show_connection_dialog = true
+      },
       onCommand(cmd) {
         switch (cmd)
         {
-          case 'local-function': this.show_pipe_dialog = true; return
-          case 'function-mount': alert('TODO: Add function mount'); return
+          case 'local-function': this.onNewLocalFunction(); return
+          case 'function-mount': this.onNewFunctionMount(); return
         }
       }
     }
