@@ -4,13 +4,13 @@
     :style="itemStyle"
     @click="onClick"
   >
-    <div class="flex flex-row items-center">
+    <div class="flex flex-row items-center hide-child">
       <div class="flex-fill flex flex-row items-center">
         <div class="item-on-indicator" :class="is_deployed ? 'on' : 'off'"></div>
         <div class="flex-fill truncate item-title">{{pname}}</div>
       </div>
       <el-button
-        class="item-delete-button"
+        class="child item-delete-button"
         style="background: none; border:0; padding: 0; margin: 0 6px;"
         v-if="itemSize == 'mini'"
         @click="emitDelete"
@@ -113,7 +113,7 @@
   .item
     cursor: pointer
     &:hover
-      background-color: $nearer-white
+      background-color: darken($nearer-white, 3%)
 
   /* 'mini' size only */
   .item-delete-button
@@ -135,7 +135,7 @@
   .item-title
     font-size: 16px
     font-weight: 600
-    line-height: 1.25
+    line-height: 1.5
 
   .item-dropdown-trigger
     margin-left: 8px
@@ -153,6 +153,10 @@
 
   .item-dropdown-menu-item-icon
     margin-right: 12px
+
+  .item-selected
+    position: relative
+    background-color: darken($nearer-white, 1%)
 
   // -- sizing modifiers --
 
@@ -194,8 +198,4 @@
     .item-dropdown-trigger-icon
       font-size: 18px
       line-height: 18px
-
-  .item-selected
-    position: relative
-    background-color: $nearer-white
 </style>
