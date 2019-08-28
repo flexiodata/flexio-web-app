@@ -63,7 +63,7 @@
                   item-size="mini"
                   :items="group.pipes"
                   :selected-item.sync="pipe"
-                  :show-delete="group.id == 'local'"
+                  :show-delete="true"
                   @item-activate="selectPipe"
                   @item-delete="tryDeletePipe"
                 />
