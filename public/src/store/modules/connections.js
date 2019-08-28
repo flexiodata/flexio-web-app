@@ -142,6 +142,17 @@ const actions = {
     })
   },
 
+  'sync' ({ commit }, { team_name, eid }) {
+    return api.syncConnection(team_name, eid).then(response => {
+      // since this call simply returns a list of pipes for now, just commit
+      // the `pipes/FETCHED_PIPES` mutation to populate the Vuex store
+      commit('pipes/FETCHED_PIPES', response.data)
+      return response
+    }).catch(error => {
+      throw error
+    })
+  },
+
   'test' ({ commit }, { team_name, eid, attrs }) {
     // don't POST '*****' values
     if (attrs.connection_info) {

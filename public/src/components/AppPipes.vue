@@ -129,6 +129,7 @@
         :filter-by="filterByFunctionMount"
         @close="show_connection_dialog = false"
         @cancel="show_connection_dialog = false"
+        @update-connection="syncFunctionMount"
         v-if="show_connection_dialog"
       />
     </el-dialog>
@@ -351,6 +352,19 @@
           this.is_selecting = true
           this.$nextTick(() => { this.is_selecting = false })
         }
+      },
+      syncFunctionMount(connection) {
+        var team_name = this.active_team_name
+        var eid = _.get(connection, 'eid', '')
+
+        this.$store.dispatch('connections/sync', { team_name, eid }).then(response => {
+          //var connection = _.omit(response.data, ['name', 'title', 'description', 'connection_info'])
+          this.test_state = 'success'
+          //this.$emit('change', connection)
+        }).catch(error => {
+          this.test_state = 'error'
+          setTimeout(() => { this.test_state = 'none' }, 4000)
+        })
       },
       filterByFunctionMount(connection) {
         return this.$_Connection_isFunctionMount(connection)

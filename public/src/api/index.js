@@ -48,6 +48,7 @@ export default {
   createConnection:        (team_name, attrs)              => AxiosResource(team_name)[POS] (`/connections`, attrs),
   updateConnection:        (team_name, object_name, attrs) => AxiosResource(team_name)[POS] (`/connections/${object_name}`, attrs),
   deleteConnection:        (team_name, object_name)        => AxiosResource(team_name)[DEL] (`/connections/${object_name}`),
+  syncConnection:          (team_name, object_name)        => AxiosResource(team_name)[POS] (`/connections/${object_name}/sync`),
   testConnection:          (team_name, object_name, attrs) => AxiosResource(team_name)[POS] (`/connections/${object_name}/connect`, attrs),
   disconnectConnection:    (team_name, object_name, attrs) => AxiosResource(team_name)[POS] (`/connections/${object_name}/disconnect`, attrs) ,
 
