@@ -50,11 +50,8 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     public function list(string $full_path = '', array $options = []) : array
     {
         // returns the directory tree for all repositories the user
-        // has access to, starting with the repository as the root
-
-        if (!$this->authenticated())
-            return array();
-
+        // has access to, starting with the repository as the root;
+        // also allows access to public repos
 
         try
         {
@@ -86,9 +83,6 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
     public function getFileInfo(string $full_path) : array
     {
-        if (!$this->authenticated())
-            return array();
-
         while (false !== strpos($full_path,'//'))
             $full_path = str_replace('//','/',$full_path);
 
@@ -100,13 +94,19 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
         $url = "https://api.github.com/repos/$repository/contents/$path";
 
+        // build the request headers; allow requests to public repos
+        $request_headers = [
+            'Accept: application/vnd.github.v3+json',
+            'User-Agent: Flex.io'
+        ];
+        if ($this->authenticated())
+            $request_headers[] = 'Authorization: Token '.$this->access_token;
+
         $contents = '';
         $headers = array();
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Token '.$this->access_token,
-                                              'Accept: application/vnd.github.v3+json',
-                                              'User-Agent: Flex.io']);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
         curl_setopt($ch, CURLOPT_HTTPGET, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -205,9 +205,6 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
     public function read(array $params, callable $callback)
     {
-        if (!$this->authenticated())
-            return array();
-
         $full_path = $params['path'] ?? '';
 
         while (false !== strpos($full_path,'//'))
@@ -219,17 +216,21 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         if ($result === false)
             return;
 
-
-
         $url = "https://api.github.com/repos/$repository/contents/$path";
+
+        // build the request headers; allow requests to public repos
+        $request_headers = [
+            'Accept: application/vnd.github.v3+json',
+            'User-Agent: Flex.io'
+        ];
+        if ($this->authenticated())
+            $request_headers[] = 'Authorization: Token '.$this->access_token;
 
         $contents = '';
         $headers = array();
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Token '.$this->access_token,
-                                              'Accept: application/vnd.github.v3+json',
-                                              'User-Agent: Flex.io']);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
         curl_setopt($ch, CURLOPT_HTTPGET, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -246,15 +247,11 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
         $url = $result['download_url'];
 
-
-
-
         $contents = '';
         $headers = array();
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Token '.$this->access_token,
-                                              'User-Agent: Flex.io']);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
         curl_setopt($ch, CURLOPT_HTTPGET, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -270,6 +267,7 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
     public function write(array $params, callable $callback)
     {
+        // require authentication for writing to a repo
         if (!$this->authenticated())
             return array();
 
@@ -303,16 +301,19 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
         $url = "https://api.github.com/repos/$repository/contents/$path";
 
-
+        // build the request headers; authentication required
+        $request_headers = [
+            'Accept: application/vnd.github.v3+json',
+            'User-Agent: Flex.io',
+            'Authorization: Token '.$this->access_token
+        ];
 
         // get old blob id -- this is needed for replacing an existing file
         $contents = '';
         $headers = array();
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Token '.$this->access_token,
-                                              'Accept: application/vnd.github.v3+json',
-                                              'User-Agent: Flex.io']);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
         curl_setopt($ch, CURLOPT_HTTPGET, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -362,8 +363,7 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: token '.$this->access_token,
-                                              'User-Agent: Flex.io']);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
@@ -419,11 +419,16 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         //    }
         //  ]
 
-        if (!$this->authenticated())
-            return array();
-
         // note: get the repositories for the user
         $url = "https://api.github.com/users/repos?per_page=100";
+
+        // build the request headers; allow requests to public repos
+        $request_headers = [
+            'Accept: application/vnd.github.v3+json',
+            'User-Agent: Flex.io'
+        ];
+        if ($this->authenticated())
+            $request_headers[] = 'Authorization: Token '.$this->access_token;
 
         $repository_items = array();
 
@@ -438,9 +443,7 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             $headers = array();
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Token '.$this->access_token,
-                                                  'Accept: application/vnd.github.v3+json',
-                                                  'User-Agent: Flex.io']);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
             curl_setopt($ch, CURLOPT_HTTPGET, true);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -512,11 +515,16 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         //    }
         // ]
 
-        if (!$this->authenticated())
-            return array();
-
         // note: the repository is the full name of the repository, which is :owner/:repository
         $url = "https://api.github.com/repos/$repository/contents/$folder?per_page=100";
+
+        // build the request headers; allow requests to public repos
+        $request_headers = [
+            'Accept: application/vnd.github.v3+json',
+            'User-Agent: Flex.io'
+        ];
+        if ($this->authenticated())
+            $request_headers[] = 'Authorization: Token '.$this->access_token;
 
         $folder_items = array();
 
@@ -531,9 +539,7 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             $headers = array();
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Token '.$this->access_token,
-                                                  'Accept: application/vnd.github.v3+json',
-                                                  'User-Agent: Flex.io']);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
             curl_setopt($ch, CURLOPT_HTTPGET, true);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
