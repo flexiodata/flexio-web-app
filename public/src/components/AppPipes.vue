@@ -34,14 +34,27 @@
 
           <!-- list -->
           <div style="max-width: 20rem" v-bar>
-            <PipeList
-              item-size="mini"
-              :items="pipes"
-              :selected-item.sync="pipe"
-              :show-dropdown="true"
-              @item-activate="selectPipe"
-              @item-delete="tryDeletePipe"
-            />
+            <div>
+              <div
+                :key="group.id"
+                v-for="group in grouped_pipes"
+              >
+                <div class="pa2 mt2">
+                  {{group.title}}
+                </div>
+                <PipeList
+                  class="mb2"
+                  item-style="padding-left: 22px"
+                  item-size="mini"
+                  :items="group.pipes"
+                  :selected-item.sync="pipe"
+                  :show-delete="group.id == 'local'"
+                  @item-activate="selectPipe"
+                  @item-delete="tryDeletePipe"
+                />
+              </div>
+              <div class="h2"></div>
+            </div>
           </div>
         </div>
 
@@ -156,6 +169,20 @@
       pipes() {
         return this.getAllPipes()
       },
+      connections() {
+        return this.getAllConnections()
+      },
+      grouped_pipes() {
+        var groups = _.groupBy(this.pipes, p => _.get(p, 'parent.eid', 'local'))
+        return _.map(groups, (val, key) => {
+          var connection = _.find(this.connections, { eid: key })
+          return {
+            id: key.length == 0 ? 'local' : key,
+            title: key.length == 0 ? 'Local' : _.get(connection, 'name', 'Connection'),
+            pipes: val
+          }
+        })
+      },
       route_object_name() {
         return _.get(this.$route, 'params.object_name', undefined)
       },
@@ -178,6 +205,9 @@
       }),
       ...mapGetters('pipes', {
         'getAllPipes': 'getAllPipes'
+      }),
+      ...mapGetters('connections', {
+        'getAllConnections': 'getAllConnections'
       }),
       tryFetchPipes() {
         var team_name = this.active_team_name

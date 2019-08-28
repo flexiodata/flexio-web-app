@@ -4,7 +4,7 @@
     :style="itemStyle"
     @click="onClick"
   >
-    <div class="flex flex-row items-center hide-child">
+    <div class="flex flex-row items-center hide-child item-inner">
       <div class="flex-fill flex flex-row items-center">
         <div class="item-on-indicator" :class="is_deployed ? 'on' : 'off'"></div>
         <div class="flex-fill truncate item-title">{{pname}}</div>
@@ -12,8 +12,9 @@
       <el-button
         class="child item-delete-button"
         style="background: none; border:0; padding: 0; margin: 0 6px;"
-        v-if="itemSize == 'mini'"
         @click.stop="emitDelete"
+        v-require-rights:pipe.delete.hidden
+        v-if="showDelete && itemSize == 'mini'"
       >
         &times;
       </el-button>
@@ -21,14 +22,20 @@
         class="flex-none item-dropdown"
         @click.stop
         v-require-rights:pipe.delete.hidden
-        v-else
+        v-else-if="showDropdown && itemSize != 'mini'"
       >
         <el-dropdown trigger="click" @command="onCommand">
           <span class="el-dropdown-link item-dropdown-trigger">
             <i class="material-icons item-dropdown-trigger-icon">expand_more</i>
           </span>
           <el-dropdown-menu class="item-dropdown-menu" slot="dropdown">
-            <el-dropdown-item class="flex flex-row items-center item-dropdown-menu-item" command="delete"><i class="material-icons item-dropdown-menu-item-icon">delete</i> Delete</el-dropdown-item>
+            <el-dropdown-item
+              class="flex flex-row items-center item-dropdown-menu-item"
+              command="delete"
+              v-show="showDelete"
+            >
+              <i class="material-icons item-dropdown-menu-item-icon">delete</i> Delete
+            </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -66,6 +73,10 @@
         default: 'item-selected'
       },
       showDropdown: {
+        type: Boolean,
+        default: false
+      },
+      showDelete: {
         type: Boolean,
         default: false
       }
@@ -112,6 +123,7 @@
 
   .item
     cursor: pointer
+    user-select: none
     &:hover
       background-color: darken($nearer-white, 3%)
 
@@ -185,6 +197,9 @@
   .item-mini
     min-width: 10rem
     padding: 1px 8px
+
+    .item-inner
+      min-height: 20px
 
     .item-on-indicator
       height: 4px
