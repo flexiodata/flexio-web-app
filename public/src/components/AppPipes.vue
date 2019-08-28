@@ -26,7 +26,7 @@
                     class="ttu fw6"
 
                   >
-                    New<i class="el-icon-arrow-down el-icon--right"></i>
+                    New<i class="el-icon-arrow-down el-icon--right fw6"></i>
                   </el-button>
                   <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item
