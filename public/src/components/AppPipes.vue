@@ -92,7 +92,7 @@
                 </div>
                 <PipeList
                   class="mb2"
-                  item-style="padding-left: 22px"
+                  item-style="padding-left: 22px; padding-right: 0px; margin-right: 12px"
                   item-size="mini"
                   :items="group.pipes"
                   :selected-item.sync="pipe"
