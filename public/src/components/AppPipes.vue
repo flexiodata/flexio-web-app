@@ -19,15 +19,30 @@
                 <h2 class="mv0 f3 fw6 mr3 lh-1">Functions</h2>
               </div>
               <div class="flex-none flex flex-row items-center ml3">
-                <el-button
-                  size="small"
-                  type="primary"
-                  class="ttu fw6"
-                  @click="show_pipe_dialog = true"
-                  v-require-rights:pipe.create
-                >
-                  New
-                </el-button>
+                <el-dropdown trigger="click" @command="onCommand">
+                  <el-button
+                    size="small"
+                    type="primary"
+                    class="ttu fw6"
+
+                  >
+                    New<i class="el-icon-arrow-down el-icon--right"></i>
+                  </el-button>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item
+                      command="local-function"
+                      v-require-rights:pipe.create
+                    >
+                      Local Function
+                    </el-dropdown-item>
+                    <el-dropdown-item
+                      command="function-mount"
+                      v-require-rights:connection.create
+                    >
+                      Function Mount
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
               </div>
             </div>
           </div>
@@ -287,7 +302,6 @@
           this.last_selected = {}
           return
         }
-
         this.pipe = _.cloneDeep(item)
         this.last_selected = _.cloneDeep(item)
 
@@ -303,6 +317,13 @@
 
           this.is_selecting = true
           this.$nextTick(() => { this.is_selecting = false })
+        }
+      },
+      onCommand(cmd) {
+        switch (cmd)
+        {
+          case 'local-function': this.show_pipe_dialog = true; return
+          case 'function-mount': alert('TODO: Add function mount'); return
         }
       }
     }
