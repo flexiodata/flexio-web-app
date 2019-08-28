@@ -9,10 +9,19 @@
         <div class="item-on-indicator" :class="is_deployed ? 'on' : 'off'"></div>
         <div class="flex-fill truncate item-title">{{pname}}</div>
       </div>
+      <el-button
+        class="item-delete-button"
+        style="background: none; border:0; padding: 0; margin: 0 6px;"
+        v-if="itemSize == 'mini'"
+        @click="emitDelete"
+      >
+        &times;
+      </el-button>
       <div
         class="flex-none item-dropdown"
         @click.stop
         v-require-rights:pipe.delete.hidden
+        v-else
       >
         <el-dropdown trigger="click" @command="onCommand">
           <span class="el-dropdown-link item-dropdown-trigger">
@@ -46,7 +55,7 @@
       },
       itemSize: {
         type: String,
-        default: 'large'
+        default: 'large' // 'large', 'small', 'mini'
       },
       selectedItem: {
         type: Object,
@@ -83,10 +92,12 @@
       }
     },
     methods: {
+      emitDelete() {
+        this.$emit('delete', this.item)
+      },
       onCommand(cmd) {
         switch (cmd) {
-          case 'edit':      return this.$emit('edit', this.item)
-          case 'delete':    return this.$emit('delete', this.item)
+          case 'delete': emitDelete(); return
         }
       },
       onClick: _.debounce(function() {
@@ -103,6 +114,14 @@
     cursor: pointer
     &:hover
       background-color: $nearer-white
+
+  /* 'mini' size only */
+  .item-delete-button
+    color: rgba(0,0,0,0.3)
+    font-size: 20px
+    line-height: 20px
+    &:hover
+      color: #000
 
   .item-on-indicator
     height: 8px
@@ -161,15 +180,15 @@
 
   .item-mini
     min-width: 10rem
-    padding: 2px 8px 2px 4px
+    padding: 1px 8px
 
     .item-on-indicator
       height: 4px
       width: 4px
-      margin-right: 4px
+      margin-right: 6px
 
     .item-title
-      font-size: 13px
+      font-size: 12px
       font-weight: 400
 
     .item-dropdown-trigger-icon
