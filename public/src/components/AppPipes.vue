@@ -19,7 +19,7 @@
                 <h2 class="mv0 f3 fw6 mr3 lh-1">Functions</h2>
               </div>
               <div class="flex-none flex flex-row items-center ml3">
-                <el-dropdown trigger="click" @command="onCommand">
+                <el-dropdown trigger="click" @command="onNewCommand">
                   <el-button
                     size="small"
                     type="primary"
@@ -54,8 +54,41 @@
                 :key="group.id"
                 v-for="group in grouped_pipes"
               >
-                <div class="pa2 mt2">
-                  {{group.title}}
+                <div class="pa2 mt2 flex flex-row items-center">
+                  <div class="flex-fill">{{group.title}}</div>
+                  <el-dropdown
+                    trigger="click"
+                    @command="onFunctionMountCommand"
+                    v-show="group.id != 'local'"
+                  >
+                    <span class="el-dropdown-link pointer mr1">
+                      <i class="material-icons md-18">expand_more</i>
+                    </span>
+                    <el-dropdown-menu slot="dropdown" class="f6">
+                      <el-dropdown-item
+                        class="flex flex-row items-center item-dropdown-menu-item"
+                        :connection-eid="group.id"
+                        command="edit"
+                      >
+                        <i class="material-icons md-18 mr2">edit</i> Edit
+                      </el-dropdown-item>
+                      <el-dropdown-item
+                        class="flex flex-row items-center item-dropdown-menu-item"
+                        :connection-eid="group.id"
+                        command="refresh"
+                      >
+                        <i class="material-icons md-18 mr2">refresh</i> Refresh
+                      </el-dropdown-item>
+                      <el-dropdown-item divided></el-dropdown-item>
+                      <el-dropdown-item
+                        class="flex flex-row items-center item-dropdown-menu-item"
+                        :connection-eid="group.id"
+                        command="delete"
+                      >
+                        <i class="material-icons md-18 mr2">delete</i> Delete
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
                 </div>
                 <PipeList
                   class="mb2"
@@ -125,7 +158,7 @@
         :title="connection_edit_mode ? 'New Function Mount' : 'Edit Function Mount'"
         :mode="connection_edit_mode"
         :show-steps="connection_edit_mode == 'edit' ? false : true"
-        :connection="connection_edit_mode == 'edit' ? connection : new_function_mount_attrs"
+        :connection="connection_edit_mode == 'edit' ? edit_connection : new_function_mount_attrs"
         :filter-by="filterByFunctionMount"
         @close="show_connection_dialog = false"
         @cancel="show_connection_dialog = false"
@@ -203,6 +236,7 @@
         last_selected: {},
         show_connection_dialog: false,
         connection_edit_mode: 'add',
+        edit_connection: null,
         new_function_mount_attrs: {
           connection_mode: CONNECTION_MODE_FUNCTION
         },
@@ -225,9 +259,10 @@
         var groups = _.groupBy(this.pipes, p => _.get(p, 'parent.eid', 'local'))
         return _.map(groups, (val, key) => {
           var connection = _.find(this.connections, { eid: key })
+
           return {
             id: key.length == 0 ? 'local' : key,
-            title: key.length == 0 ? 'Local' : _.get(connection, 'name', 'Connection'),
+            title: key.length == 0 ? 'Local' : _.get(connection, 'name', 'Not Found'),
             pipes: val
           }
         })
@@ -314,6 +349,21 @@
           // do nothing
         })
       },
+      tryDeleteConnection(attrs) {
+        var eid = _.get(attrs, 'eid', '')
+        var cname = _.get(attrs, 'name', 'Connection')
+        var team_name = this.active_team_name
+
+        this.$confirm('Are you sure you want to delete the function mount named "' + cname + '"?', 'Really delete function mount?', {
+          confirmButtonClass: 'ttu fw6',
+          cancelButtonClass: 'ttu fw6',
+          confirmButtonText: 'Delete function mount',
+          cancelButtonText: 'Cancel',
+          type: 'warning'
+        }).then(() => {
+          this.$store.dispatch('connections/delete', { team_name, eid })
+        })
+      },
       loadPipe(identifier) {
         var pipe
 
@@ -357,14 +407,8 @@
         var team_name = this.active_team_name
         var eid = _.get(connection, 'eid', '')
 
-        this.$store.dispatch('connections/sync', { team_name, eid }).then(response => {
-          //var connection = _.omit(response.data, ['name', 'title', 'description', 'connection_info'])
-          this.test_state = 'success'
-          //this.$emit('change', connection)
-        }).catch(error => {
-          this.test_state = 'error'
-          setTimeout(() => { this.test_state = 'none' }, 4000)
-        })
+        this.$store.dispatch('connections/sync', { team_name, eid })
+        this.show_connection_dialog = false
       },
       filterByFunctionMount(connection) {
         return this.$_Connection_isFunctionMount(connection)
@@ -376,11 +420,25 @@
         this.connection_edit_mode = 'add'
         this.show_connection_dialog = true
       },
-      onCommand(cmd) {
-        switch (cmd)
-        {
+      onEditFunctionMount(connection) {
+        this.edit_connection = connection
+        this.connection_edit_mode = 'edit'
+        this.show_connection_dialog = true
+      },
+      onNewCommand(cmd) {
+        switch (cmd) {
           case 'local-function': this.onNewLocalFunction(); return
           case 'function-mount': this.onNewFunctionMount(); return
+        }
+      },
+      onFunctionMountCommand(cmd, dropdown_component) {
+        var eid = _.get(dropdown_component.$attrs, 'connection-eid')
+        var connection = _.find(this.connections, { eid })
+
+        switch (cmd) {
+          case 'edit': this.onEditFunctionMount(connection); return
+          case 'refresh': this.syncFunctionMount(connection); return
+          case 'delete': this.tryDeleteConnection(connection); return
         }
       }
     }
