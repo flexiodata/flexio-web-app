@@ -13,7 +13,7 @@
         class="child item-delete-button"
         style="background: none; border:0; padding: 0; margin: 0 6px;"
         v-if="itemSize == 'mini'"
-        @click="emitDelete"
+        @click.stop="emitDelete"
       >
         &times;
       </el-button>
