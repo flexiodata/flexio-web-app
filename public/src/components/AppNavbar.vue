@@ -14,11 +14,11 @@
         <template
           v-else-if="show_team_nav"
         >
-          <TeamDropdown class="ml3" />
+          <TeamDropdown class="ml3 nr2" />
           <template>
-            <router-link :to="pipe_route" class="fw6 f6 ttu link nav-link">Functions</router-link>
-            <router-link :to="connection_route" class="fw6 f6 ttu link nav-link">Connections</router-link>
-            <router-link :to="member_route" class="fw6 f6 ttu link nav-link">Members</router-link>
+            <router-link :to="pipe_route" class="f5 link nav-link">Functions</router-link>
+            <router-link :to="connection_route" class="f5 link nav-link">Connections</router-link>
+            <router-link :to="member_route" class="f5 link nav-link">Members</router-link>
           </template>
         </template>
       </div>
@@ -87,7 +87,7 @@
   @import '../stylesheets/variables.styl'
 
   .nav-link
-    margin: 0 0 0 1rem
+    margin: 0 0 0 1.25rem
     padding-top: 4px
     padding-bottom: 2px
     border-bottom: 2px solid transparent
