@@ -276,7 +276,7 @@
         var groups = _.assign({}, all_mounts, mounts_with_pipes)
 
         // return the following object for each function mount
-        return _.map(groups, (val, key) => {
+        groups = _.map(groups, (val, key) => {
           var connection = _.find(this.function_mounts, { eid: key })
 
           return {
@@ -285,6 +285,13 @@
             pipes: val
           }
         })
+
+        // sort the groups (local functions first, then alphabetically)
+        return _.sortBy(groups, [
+          group => group.id != 'local',
+          group => group.title.indexOf('Not found') != -1,
+          group => group.title.toLowerCase()
+        ])
       },
       route_object_name() {
         return _.get(this.$route, 'params.object_name', undefined)
