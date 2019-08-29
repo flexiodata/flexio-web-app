@@ -276,6 +276,7 @@
         // start with an object with connection eids for keys and empty arrays for values
         var all_mounts = _.keyBy(this.function_mounts, 'eid')
         all_mounts = _.mapValues(all_mounts, m => [])
+        all_mounts[''] = [] // include 'Local'
 
         // group all pipes by their parent connection (this will also result in
         // an object with connection eids as the key values)
