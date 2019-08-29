@@ -119,6 +119,9 @@
         }
       },
       removeMember(member) {
+        // hide the popover while we're confirming
+        this.is_visible = false
+
         if (this.is_member_active_user) {
           return this.leaveTeam(member)
         } else {
@@ -129,9 +132,6 @@
 
           var msg = `Are you sure you want to remove <strong>${member}${email_str}</strong> from this team?`
           var title = `Remove ${member}?`
-
-          // hide the popover while we're confirming
-          this.is_visible = false
 
           this.$confirm(msg, title, {
             type: 'warning',
@@ -149,11 +149,11 @@
         }
       },
       leaveTeam(member) {
-        var msg = `<p>Are you sure you want to leave this team?</p><div class="h1"></div><p>Enter the team name <strong>"${this.active_team_name}"</strong> below to confirm this is what you want to do.</p>`
-        var title = 'Leave team?'
-
         // hide the popover while we're confirming
         this.is_visible = false
+
+        var msg = `<p>Are you sure you want to leave this team?</p><div class="h1"></div><p>Enter the team name <strong>"${this.active_team_name}"</strong> below to confirm this is what you want to do.</p>`
+        var title = 'Leave team?'
 
         this.$prompt(msg, title, {
           confirmButtonClass: 'ttu fw6 el-button--danger',
