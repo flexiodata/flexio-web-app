@@ -136,7 +136,7 @@ class Teammember extends ModelBase
         }
     }
 
-    public function get(string $member_eid, $owned_by) : array
+    public function get(string $member_eid, string $owned_by) : array
     {
         if (!\Flexio\Base\Eid::isValid($member_eid) && !\Flexio\Base\Eid::isValid($owned_by))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
@@ -165,7 +165,7 @@ class Teammember extends ModelBase
          }
     }
 
-    public function exists(string $member_eid, $owned_by) : bool
+    public function exists(string $member_eid, string $owned_by) : bool
     {
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
