@@ -56,7 +56,21 @@
                 v-for="group in grouped_pipes"
               >
                 <div class="pa2 flex flex-row items-center">
-                  <div class="flex-fill">{{group.title}}</div>
+                  <ServiceIcon
+                    class="br1 square-2"
+                    style="margin-right: 8px"
+                    :empty-cls="''"
+                    :type="group.ctype"
+                    v-if="group.ctype.length > 0"
+                  />
+                  <i
+                    class="material-icons"
+                    style="margin-right: 6px"
+                    v-else
+                  >
+                    home
+                  </i>
+                  <div class="flex-fill fw6">{{group.title}}</div>
                   <el-dropdown
                     trigger="click"
                     @command="onFunctionMountCommand"
@@ -187,6 +201,7 @@
   import PipeDocument from '@/components/PipeDocument'
   import PipeEditPanel from '@/components/PipeEditPanel'
   import ConnectionEditPanel from '@/components/ConnectionEditPanel'
+  import ServiceIcon from '@/components/ServiceIcon'
   import EmptyItem from '@/components/EmptyItem'
   import PageNotFound from '@/components/PageNotFound'
   import MixinConnection from '@/components/mixins/connection'
@@ -224,6 +239,7 @@
       PipeDocument,
       PipeEditPanel,
       ConnectionEditPanel,
+      ServiceIcon,
       EmptyItem,
       PageNotFound
     },
@@ -291,6 +307,7 @@
 
           return {
             id: key.length == 0 ? 'local' : key,
+            ctype: _.get(connection, 'connection_type', ''),
             title: key.length == 0 ? 'Local' : _.get(connection, 'name', `Not found (${key})`),
             pipes: _.sortBy(val, ['name'])
           }
