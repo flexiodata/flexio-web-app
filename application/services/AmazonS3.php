@@ -152,7 +152,7 @@ class AmazonS3 implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                 {
                     $key = $object['Prefix'];
                     $maxkey = max($maxkey, $key);
-                    $arr[] = array('name' => $key, 'type' => 'DIR', 'size' => 0, 'modified' => null, 'hash' => $object['ETag']);
+                    $arr[] = array('name' => $key, 'type' => 'DIR', 'size' => 0, 'modified' => null, 'hash' => ''); // TODO: hash available?
                 }
             }
 
@@ -163,7 +163,7 @@ class AmazonS3 implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                 {
                     $key = $object['Key'];
                     $maxkey = max($maxkey, $key);
-                    $arr[] = array('name' => $key, 'type' => 'FILE', 'size' => $object['Size'], 'modified' => $object['LastModified'], 'hash' => $object['ETag']);
+                    $arr[] = array('name' => $key, 'type' => 'FILE', 'size' => $object['Size'], 'modified' => $object['LastModified'], 'hash' => ''); // TODO: hash available?
                 }
             }
 
@@ -263,7 +263,7 @@ class AmazonS3 implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                 'path' => $path,
                 'size' => $result['ContentLength'] ?? null,
                 'modified' => (string)$result['LastModified'],
-                'hash' => $result['ETag'],
+                'hash' => '', // TODO: available?
                 'type' => 'FILE'
             ];
 
@@ -312,7 +312,7 @@ class AmazonS3 implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                             'path' => $path,
                             'size' => 0,
                             'modified' => (string)$object['LastModified'],
-                            'hash' => $object['ETag'],
+                            'hash' => '', // TODO: available?
                             'type' => 'DIR'
                         ];
 
@@ -343,7 +343,7 @@ class AmazonS3 implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                             'path' => $path,
                             'size' => (int)$object['Size'] ?? null,
                             'modified' => (string)$object['LastModified'],
-                            'hash' => $object['ETag'],
+                            'hash' => '', // TODO: available?
                             'type' => 'DIR'
                         ];
 
