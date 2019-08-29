@@ -4,7 +4,7 @@
     @visible-change="onVisibleChange"
   >
     <span
-      class="el-dropdown-link pointer f5 fw6"
+      class="el-dropdown-link pointer f5"
       :class="is_dropdown_open ? 'is-open' : ''"
     >
       <div class="flex flex-row items-center">
@@ -20,8 +20,8 @@
           @click="changeTeam(team)"
           v-for="team in getAllTeams()"
         >
-          <i class="material-icons md-18 b mr3" v-if="isActiveTeam(team)">check</i>
-          <i class="material-icons md-18 b mr3" style="color: transparent" v-else>check</i>
+          <i class="material-icons md-18 b mr2" v-if="isActiveTeam(team)">check</i>
+          <i class="material-icons md-18 b mr2" style="color: transparent" v-else>check</i>
           <div class="pr3">{{getTeamLabel(team)}}</div>
         </article>
         <el-dropdown-item divided v-if="false"></el-dropdown-item>
@@ -29,7 +29,7 @@
           class="el-dropdown-menu__item flex flex-row items-center"
           v-if="false"
         >
-          <i class="material-icons md-18 b mr3">add</i>
+          <i class="material-icons md-18 b mr2">add</i>
           <div class="pr3">Create new team</div>
         </article>
       </div>
