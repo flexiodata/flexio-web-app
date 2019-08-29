@@ -2,6 +2,7 @@
   <article
     :class="cls"
     :style="itemStyle"
+    :title="pname"
     @click="onClick"
   >
     <div class="flex flex-row items-center hide-child item-inner">
