@@ -25,7 +25,7 @@ class Teammember extends ModelBase
                 'member_status' => array('type' => 'string', 'required' => false, 'default' => \Model::TEAM_MEMBER_STATUS_PENDING),
                 'rights'        => array('type' => 'string', 'required' => false, 'default' => '[]'),
                 'role'          => array('type' => 'string', 'required' => false, 'default' => \Model::TEAM_ROLE_USER), // grant some basic rights by default
-                'owned_by'      => array('type' => 'string', 'required' => false, 'default' => ''),
+                'owned_by'      => array('type' => 'eid', 'required' => true),
                 'created_by'    => array('type' => 'string', 'required' => false, 'default' => '')
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
