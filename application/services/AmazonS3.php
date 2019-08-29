@@ -152,7 +152,7 @@ class AmazonS3 implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                 {
                     $key = $object['Prefix'];
                     $maxkey = max($maxkey, $key);
-                    $arr[] = array('name' => $key, 'type' => 'DIR', 'size' => 0, 'modified' => null, 'hash' => ''); // TODO: hash available?
+                    $arr[] = array('name' => $key, 'type' => 'DIR', 'size' => 0, 'modified' => null, 'hash' => $object['ETag']);
                 }
             }
 
@@ -163,7 +163,7 @@ class AmazonS3 implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                 {
                     $key = $object['Key'];
                     $maxkey = max($maxkey, $key);
-                    $arr[] = array('name' => $key, 'type' => 'FILE', 'size' => $object['Size'], 'modified' => $object['LastModified'], 'hash' => ''); // TODO: hash available?
+                    $arr[] = array('name' => $key, 'type' => 'FILE', 'size' => $object['Size'], 'modified' => $object['LastModified'], 'hash' => $object['ETag']);
                 }
             }
 
@@ -263,7 +263,7 @@ class AmazonS3 implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                 'path' => $path,
                 'size' => $result['ContentLength'] ?? null,
                 'modified' => (string)$result['LastModified'],
-                'hash' => '', // TODO: hash available?
+                'hash' => $result['ETag'],
                 'type' => 'FILE'
             ];
 
@@ -311,8 +311,8 @@ class AmazonS3 implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                             'name' => $name,
                             'path' => $path,
                             'size' => 0,
-                            'modified' => '2017-02-23T19:00:43+00:0',
-                            'hash' => '', // TODO: hash available?
+                            'modified' => (string)$object['LastModified'],
+                            'hash' => $object['ETag'],
                             'type' => 'DIR'
                         ];
 
@@ -343,7 +343,7 @@ class AmazonS3 implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                             'path' => $path,
                             'size' => (int)$object['Size'] ?? null,
                             'modified' => (string)$object['LastModified'],
-                            'hash' => '', // TODO: hash available?
+                            'hash' => $object['ETag'],
                             'type' => 'DIR'
                         ];
 
