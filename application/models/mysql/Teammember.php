@@ -99,41 +99,8 @@ class Teammember extends ModelBase
         if (!\Flexio\Base\Eid::isValid($owned_by))
             return false;
 
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-                'member_status' => array('type' => 'string', 'required' => false),
-                'rights'        => array('type' => 'string', 'required' => false),
-                'role'          => array('type' => 'string', 'required' => false)
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-
-        $process_arr = $validator->getParams();
-        $process_arr['updated'] = \Flexio\System\System::getTimestamp();
-
-        if (isset($params['member_status']) && self::isValidMemberStatus($params['member_status']) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-
-        if (isset($params['role']) && self::isValidMemberRole($params['role']) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-
-        $db = $this->getDatabase();
-        try
-        {
-            // see if the action exists; return false otherwise; this check is to
-            // achieve the same behavior as other model set functions
-            $qmember_eid = $db->quote($member_eid);
-            $qowned_by= $db->quote($owned_by);
-            $row = $db->fetchRow("select member_eid from tbl_teammember where member_eid = $qmember_eid and owned_by = $qowned_by");
-            if (!$row)
-                return false;
-
-            $db->update('tbl_teammember', $process_arr, "member_eid = $qmember_eid and owned_by = $qowned_by");
-            return true;
-        }
-        catch (\Exception $e)
-        {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
-        }
+        $filter = array('member_eid' => $member_eid, 'owned_by' => $owned_by);
+        return $this->update($filter, $params);
     }
 
     public function get(string $member_eid, string $owned_by) : array
@@ -172,7 +139,36 @@ class Teammember extends ModelBase
 
     public function update(array $filter, array $params) : bool
     {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        $db = $this->getDatabase();
+        $allowed_items = array('owned_by', 'created_by', 'member_eid', 'member_status', 'created_min', 'created_max');
+        $filter_expr = \Filter::build($db, $filter, $allowed_items);
+
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($params, array(
+                'member_status' => array('type' => 'string', 'required' => false),
+                'rights'        => array('type' => 'string', 'required' => false),
+                'role'          => array('type' => 'string', 'required' => false)
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        $process_arr = $validator->getParams();
+        $process_arr['updated'] = \Flexio\System\System::getTimestamp();
+
+        if (isset($params['member_status']) && self::isValidMemberStatus($params['member_status']) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        if (isset($params['role']) && self::isValidMemberRole($params['role']) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        try
+        {
+            $updates_made = $db->update('tbl_teammember', $process_arr, $filter_expr);
+            return $updates_made;
+        }
+        catch (\Exception $e)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+        }
     }
 
     public function list(array $filter) : array

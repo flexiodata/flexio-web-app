@@ -22,6 +22,7 @@ class Test
     {
         // FUNCTION: \Flexio\Model\Team::list()
         // FUNCTION: \Flexio\Model\Team::create()
+        // FUNCTION: \Flexio\Model\Team::set()
 
 
         // SETUP
@@ -74,5 +75,32 @@ class Test
         \Flexio\Tests\Check::assertInArray('B.1', '\Flexio\Model\Team::create(); basic team member addition',  $actual, $expected, $results);
 
 
+        // TEST: basic team member update
+
+        // BEGIN TEST
+        $info = array(
+        );
+        $eid1 = $user_model->create($info);
+        $eid2 = $user_model->create($info);
+        $teammember_model->create(['member_eid' => $eid2, 'owned_by' => $eid1, 'created_by' => $eid1]);
+        $teammember_model->set($eid2, $eid1, ['member_status' => \Model::TEAM_MEMBER_STATUS_ACTIVE, 'role' => \Model::TEAM_ROLE_CONTRIBUTOR]);
+        $actual = $teammember_model->list(['owned_by' => $eid1]);
+        $expected = [
+            [
+                "member_eid" => $eid1,
+                "member_status" => \Model::TEAM_MEMBER_STATUS_ACTIVE,
+                "role"  => \Model::TEAM_ROLE_OWNER,
+                "owned_by" => $eid1,
+                "created_by" => $eid1
+            ],
+            [
+                "member_eid" => $eid2,
+                "member_status" => \Model::TEAM_MEMBER_STATUS_ACTIVE,
+                "role"  => \Model::TEAM_ROLE_CONTRIBUTOR,
+                "owned_by" => $eid1,
+                "created_by" => $eid1
+            ]
+        ];
+        \Flexio\Tests\Check::assertInArray('C.1', '\Flexio\Model\Team::set(); basic team member update',  $actual, $expected, $results);
     }
 }
