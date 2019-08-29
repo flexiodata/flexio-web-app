@@ -106,14 +106,14 @@
                   </el-dropdown>
                 </div>
                 <div
-                  class="pv1 silver i"
-                  style="padding-left: 17px; padding-right: 0px; margin: 0 12px 0 3px; font-size: 12px"
+                  class="pt1 pb3 silver i"
+                  style="padding-left: 17px; padding-right: 0px; margin: 0 12px 0 3px; font-size: 13px"
                   v-if="group.pipes.length == 0"
                 >
                   There are no functions to show
                 </div>
                 <PipeList
-                  class="mb2"
+                  class="mb3"
                   item-style="padding-left: 17px; padding-right: 0px; margin: 0 12px 0 3px"
                   item-size="mini"
                   :items="group.pipes"
@@ -124,7 +124,6 @@
                   v-else
                 />
               </div>
-              <div class="h2"></div>
             </div>
           </div>
         </div>
