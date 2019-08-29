@@ -24,26 +24,23 @@
                 @keydown.esc.native="pipe_list_filter = ''"
                 v-model="pipe_list_filter"
               />
-              <el-dropdown trigger="click" @command="onNewCommand">
+              <el-dropdown
+                trigger="click"
+                @command="onNewCommand"
+              >
                 <el-button
                   size="small"
                   type="primary"
                   class="ttu fw6"
-
+                  v-require-rights:pipe.create
                 >
                   New<i class="el-icon-arrow-down el-icon--right fw6" style="margin-right: -2px"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item
-                    command="local-function"
-                    v-require-rights:pipe.create
-                  >
+                  <el-dropdown-item command="local-function">
                     Local Function
                   </el-dropdown-item>
-                  <el-dropdown-item
-                    command="function-mount"
-                    v-require-rights:connection.create
-                  >
+                  <el-dropdown-item command="function-mount">
                     Function Mount
                   </el-dropdown-item>
                 </el-dropdown-menu>

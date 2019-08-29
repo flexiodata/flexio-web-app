@@ -13,29 +13,33 @@
         <!-- sidebar -->
         <div class="flex flex-column min-w5 bg-white br b--black-05">
           <!-- control bar -->
-          <div class="flex-none pa2 relative bb b--black-05">
-            <div class="flex flex-row">
-              <div class="flex-fill flex flex-row items-center">
-                <h2 class="mv0 f3 fw6 mr3 lh-1">Connections</h2>
-              </div>
-              <div class="flex-none flex flex-row items-center ml3">
-                <el-button
-                  size="small"
-                  type="primary"
-                  class="ttu fw6"
-                  @click="onNewConnection"
-                  v-require-rights:connection.create
-                >
-                  New
-                </el-button>
-              </div>
+          <div class="flex-none pa2 relative bg-white">
+            <div class="flex flex-row items-center">
+              <el-input
+                class="w-100 mr2"
+                size="small"
+                placeholder="Search..."
+                clearable
+                prefix-icon="el-icon-search"
+                @keydown.esc.native="connection_list_filter = ''"
+                v-model="connection_list_filter"
+              />
+              <el-button
+                size="small"
+                type="primary"
+                class="ttu fw6"
+                @click="onNewConnection"
+                v-require-rights:connection.create
+              >
+                New
+              </el-button>
             </div>
           </div>
 
           <!-- list -->
           <div style="max-width: 20rem" v-bar>
             <ConnectionList
-              :items="connections"
+              :items="filtered_connections"
               :selected-item.sync="connection"
               :show-dropdown="true"
               @item-activate="selectConnection"
@@ -126,6 +130,7 @@
   import EmptyItem from '@/components/EmptyItem'
   import PageNotFound from '@/components/PageNotFound'
   import MixinConnection from '@/components/mixins/connection'
+  import MixinFilter from '@/components/mixins/filter'
 
   export default {
     metaInfo() {
@@ -136,7 +141,7 @@
         }
       }
     },
-    mixins: [MixinConnection],
+    mixins: [MixinConnection, MixinFilter],
     components: {
       Spinner,
       ConnectionList,
@@ -162,6 +167,7 @@
       return {
         is_selecting: false,
         show_connection_dialog: false,
+        connection_list_filter: '',
         connection: {},
         last_selected: {},
         edit_mode: 'add',
@@ -176,7 +182,13 @@
         active_team_name: state => state.teams.active_team_name
       }),
       connections() {
-        return _.sortBy(this.getAvailableConnections(), ['name'])
+        return this.getAvailableConnections()
+      },
+      sorted_connections() {
+        return _.sortBy(this.connections, ['name'])
+      },
+      filtered_connections() {
+        return this.$_Filter_filter(this.sorted_connections, this.connection_list_filter, ['name'])
       },
       route_object_name() {
         return _.get(this.$route, 'params.object_name', undefined)
@@ -241,16 +253,16 @@
           cancelButtonText: 'Cancel',
           type: 'warning'
         }).then(() => {
-          var selected_idx = _.findIndex(this.connections, { eid: this.connection.eid })
-          var deleting_idx = _.findIndex(this.connections, { eid: attrs.eid })
+          var selected_idx = _.findIndex(this.sorted_connections, { eid: this.connection.eid })
+          var deleting_idx = _.findIndex(this.sorted_connections, { eid: attrs.eid })
 
           this.$store.dispatch('connections/delete', { team_name, eid }).then(response => {
             if (deleting_idx >= 0 && deleting_idx == selected_idx) {
-              if (deleting_idx >= this.connections.length) {
+              if (deleting_idx >= this.sorted_connections.length) {
                 deleting_idx--
               }
 
-              var connection = _.get(this.connections, '['+deleting_idx+']', {})
+              var connection = _.get(this.sorted_connections, '['+deleting_idx+']', {})
               this.selectConnection(connection)
             }
           })
@@ -260,16 +272,16 @@
         var conn
 
         if (identifier) {
-          conn = _.find(this.connections, c => c.eid == identifier || c.name == identifier)
+          conn = _.find(this.sorted_connections, c => c.eid == identifier || c.name == identifier)
         } else {
-          conn = _.first(this.connections)
+          conn = _.first(this.sorted_connections)
         }
 
         this.selectConnection(conn)
         this.initSticky()
       },
       selectConnection(item) {
-        if (this.connections.length == 0) {
+        if (this.sorted_connections.length == 0) {
           return
         }
 
