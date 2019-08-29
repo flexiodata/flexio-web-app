@@ -197,7 +197,7 @@
 
   .item-mini
     min-width: 10rem
-    padding: 1px 8px
+    padding: 2px 8px
 
     .item-inner
       min-height: 20px
@@ -208,7 +208,7 @@
       margin-right: 6px
 
     .item-title
-      font-size: 12px
+      font-size: 13px
       font-weight: 400
 
     .item-dropdown-trigger-icon
