@@ -178,8 +178,8 @@
       :visible.sync="show_connection_dialog"
     >
       <ConnectionEditPanel
-        :title="connection_edit_mode ? 'New Function Mount' : 'Edit Function Mount'"
         :mode="connection_edit_mode"
+        :title="connection_edit_mode == 'edit' ? 'Edit Function Mount' : 'New Function Mount'"
         :show-steps="connection_edit_mode == 'edit' ? false : true"
         :connection="connection_edit_mode == 'edit' ? edit_connection : new_function_mount_attrs"
         :filter-by="filterByFunctionMount"
