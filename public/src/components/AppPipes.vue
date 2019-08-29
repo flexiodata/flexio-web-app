@@ -351,12 +351,16 @@
         var pname = _.get(attrs, 'name', 'Function')
         var team_name = this.active_team_name
 
-        this.$confirm('Are you sure you want to delete the function named "' + pname + '"?', 'Really delete function?', {
+        var msg = `Are you sure you want to delete the function named <strong>"${pname}"</strong>?`
+        var title = `Really delete function?`
+
+        this.$confirm(msg, title, {
+          type: 'warning',
           confirmButtonClass: 'ttu fw6',
           cancelButtonClass: 'ttu fw6',
           confirmButtonText: 'Delete function',
           cancelButtonText: 'Cancel',
-          type: 'warning'
+          dangerouslyUseHTMLString: true
         }).then(() => {
           var selected_idx = _.findIndex(this.pipes, { eid: this.pipe.eid })
           var deleting_idx = _.findIndex(this.pipes, { eid: attrs.eid })
@@ -380,12 +384,16 @@
         var cname = _.get(attrs, 'name', 'Connection')
         var team_name = this.active_team_name
 
-        this.$confirm('Are you sure you want to delete the function mount named "' + cname + '"?', 'Really delete function mount?', {
+        var msg = `Are you sure you want to delete the function mount named <strong>"${cname}"</strong>?`
+        var title = `Really delete function mount?`
+
+        this.$confirm(msg, title, {
+          type: 'warning',
           confirmButtonClass: 'ttu fw6',
           cancelButtonClass: 'ttu fw6',
           confirmButtonText: 'Delete function mount',
           cancelButtonText: 'Cancel',
-          type: 'warning'
+          dangerouslyUseHTMLString: true
         }).then(() => {
           this.$store.dispatch('connections/delete', { team_name, eid })
         })
