@@ -100,47 +100,8 @@ class Process extends ModelBase
         if (!\Flexio\Base\Eid::isValid($eid))
             return false;
 
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-                'eid_status'     => array('type' => 'string', 'required' => false),
-                'parent_eid'     => array('type' => 'string', 'required' => false),
-                'pipe_info'      => array('type' => 'string', 'required' => false),
-                'process_mode'   => array('type' => 'string', 'required' => false),
-                'task'           => array('type' => 'string', 'required' => false),
-                'input'          => array('type' => 'string', 'required' => false),
-                'output'         => array('type' => 'string', 'required' => false),
-                'triggered_by'   => array('type' => 'string', 'required' => false),
-                'started_by'     => array('type' => 'string', 'required' => false),
-                'started'        => array('type' => 'date',   'required' => false, 'allow_null' => true),
-                'finished'       => array('type' => 'date',   'required' => false, 'allow_null' => true),
-                'process_info'   => array('type' => 'string', 'required' => false),
-                'process_status' => array('type' => 'string', 'required' => false),
-                'cache_used'     => array('type' => 'string', 'required' => false),
-                'owned_by'       => array('type' => 'string', 'required' => false),
-                'created_by'     => array('type' => 'string', 'required' => false)
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-
-        $process_arr = $validator->getParams();
-        $process_arr['updated'] = \Flexio\System\System::getTimestamp();
-
-        if (isset($process_arr['eid_status']) && \Model::isValidStatus($process_arr['eid_status']) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-
-        // if the item doesn't exist, return false
-        if ($this->exists($eid) === false)
-            return false;
-
-        $db = $this->getDatabase();
-        try
-        {
-            $db->update('tbl_process', $process_arr, 'eid = ' . $db->quote($eid));
-            return true;
-        }
-        catch (\Exception $e)
-        {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
-        }
+        $filter = array('eid' => $eid);
+        return $this->update($filter, $params);
     }
 
     public function summary(array $filter) : array
@@ -192,7 +153,46 @@ class Process extends ModelBase
 
     public function update(array $filter, array $params) : bool
     {
-        return false;
+        $db = $this->getDatabase();
+        $allowed_items = array('eid', 'eid_status', 'owned_by', 'created_by', 'created_min', 'created_max', 'parent_eid');
+        $filter_expr = \Filter::build($db, $filter, $allowed_items);
+
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($params, array(
+                'eid_status'     => array('type' => 'string', 'required' => false),
+                'parent_eid'     => array('type' => 'string', 'required' => false),
+                'pipe_info'      => array('type' => 'string', 'required' => false),
+                'process_mode'   => array('type' => 'string', 'required' => false),
+                'task'           => array('type' => 'string', 'required' => false),
+                'input'          => array('type' => 'string', 'required' => false),
+                'output'         => array('type' => 'string', 'required' => false),
+                'triggered_by'   => array('type' => 'string', 'required' => false),
+                'started_by'     => array('type' => 'string', 'required' => false),
+                'started'        => array('type' => 'date',   'required' => false, 'allow_null' => true),
+                'finished'       => array('type' => 'date',   'required' => false, 'allow_null' => true),
+                'process_info'   => array('type' => 'string', 'required' => false),
+                'process_status' => array('type' => 'string', 'required' => false),
+                'cache_used'     => array('type' => 'string', 'required' => false),
+                'owned_by'       => array('type' => 'string', 'required' => false),
+                'created_by'     => array('type' => 'string', 'required' => false)
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        $process_arr = $validator->getParams();
+        $process_arr['updated'] = \Flexio\System\System::getTimestamp();
+
+        if (isset($process_arr['eid_status']) && \Model::isValidStatus($process_arr['eid_status']) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        try
+        {
+            $updates_made = $db->update('tbl_process', $process_arr, $filter_expr);
+            return $updates_made;
+        }
+        catch (\Exception $e)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+        }
     }
 
     public function list(array $filter) : array

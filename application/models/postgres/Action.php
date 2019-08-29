@@ -72,54 +72,8 @@ class Action extends ModelBase
         if (!\Flexio\Base\Eid::isValid($eid))
             return false;
 
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-                'eid_status'          => array('type' => 'string', 'required' => false),
-                'action_type'         => array('type' => 'string', 'required' => false),
-                'request_ip'          => array('type' => 'string', 'required' => false),
-                'request_user_agent'  => array('type' => 'string', 'required' => false),
-                'request_type'        => array('type' => 'string', 'required' => false),
-                'request_method'      => array('type' => 'string', 'required' => false),
-                'request_route'       => array('type' => 'string', 'required' => false),
-                'request_created_by'  => array('type' => 'string', 'required' => false),
-                'request_created'     => array('type' => 'date',   'required' => false, 'allow_null' => true),
-                'request_access_code' => array('type' => 'string', 'required' => false),
-                'request_params'      => array('type' => 'string', 'required' => false),
-                'target_eid'          => array('type' => 'string', 'required' => false),
-                'target_eid_type'     => array('type' => 'string', 'required' => false),
-                'target_owned_by'     => array('type' => 'string', 'required' => false),
-                'response_type'       => array('type' => 'string', 'required' => false),
-                'response_code'       => array('type' => 'string', 'required' => false),
-                'response_params'     => array('type' => 'string', 'required' => false),
-                'response_created'    => array('type' => 'date',   'required' => false, 'allow_null' => true),
-                'owned_by'            => array('type' => 'string', 'required' => false),
-                'created_by'          => array('type' => 'string', 'required' => false)
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-
-        $process_arr = $validator->getParams();
-        $process_arr['updated'] = \Flexio\System\System::getTimestamp();
-
-        if (isset($process_arr['eid_status']) && \Model::isValidStatus($process_arr['eid_status']) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-
-        $db = $this->getDatabase();
-        try
-        {
-            // see if the action exists; return false otherwise; this check is to
-            // achieve the same behavior as other model set functions
-            $row = $db->fetchRow("select eid as eid from tbl_action where eid = ?", $eid);
-            if (!$row)
-                return false;
-
-            // set the properties
-            $db->update('tbl_action', $process_arr, 'eid = ' . $db->quote($eid));
-            return true;
-        }
-        catch (\Exception $e)
-        {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
-        }
+        $filter = array('eid' => $eid);
+        return $this->update($filter, $params);
     }
 
     public function delete(string $eid) : bool
@@ -153,7 +107,50 @@ class Action extends ModelBase
 
     public function update(array $filter, array $params) : bool
     {
-        return false;
+        $db = $this->getDatabase();
+        $allowed_items = array('eid', 'eid_status', 'owned_by', 'created_by', 'created_min', 'created_max');
+        $filter_expr = \Filter::build($db, $filter, $allowed_items);
+
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($params, array(
+                'eid_status'          => array('type' => 'string', 'required' => false),
+                'action_type'         => array('type' => 'string', 'required' => false),
+                'request_ip'          => array('type' => 'string', 'required' => false),
+                'request_user_agent'  => array('type' => 'string', 'required' => false),
+                'request_type'        => array('type' => 'string', 'required' => false),
+                'request_method'      => array('type' => 'string', 'required' => false),
+                'request_route'       => array('type' => 'string', 'required' => false),
+                'request_created_by'  => array('type' => 'string', 'required' => false),
+                'request_created'     => array('type' => 'date',   'required' => false, 'allow_null' => true),
+                'request_access_code' => array('type' => 'string', 'required' => false),
+                'request_params'      => array('type' => 'string', 'required' => false),
+                'target_eid'          => array('type' => 'string', 'required' => false),
+                'target_eid_type'     => array('type' => 'string', 'required' => false),
+                'target_owned_by'     => array('type' => 'string', 'required' => false),
+                'response_type'       => array('type' => 'string', 'required' => false),
+                'response_code'       => array('type' => 'string', 'required' => false),
+                'response_params'     => array('type' => 'string', 'required' => false),
+                'response_created'    => array('type' => 'date',   'required' => false, 'allow_null' => true),
+                'owned_by'            => array('type' => 'string', 'required' => false),
+                'created_by'          => array('type' => 'string', 'required' => false)
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        $process_arr = $validator->getParams();
+        $process_arr['updated'] = \Flexio\System\System::getTimestamp();
+
+        if (isset($process_arr['eid_status']) && \Model::isValidStatus($process_arr['eid_status']) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        try
+        {
+            $updates_made = $db->update('tbl_action', $process_arr, $filter_expr);
+            return $updates_made;
+        }
+        catch (\Exception $e)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+        }
     }
 
     public function list(array $filter) : array

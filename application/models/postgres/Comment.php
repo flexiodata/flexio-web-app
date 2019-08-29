@@ -87,6 +87,16 @@ class Comment extends ModelBase
         if (!\Flexio\Base\Eid::isValid($eid))
             return false;
 
+        $filter = array('eid' => $eid);
+        return $this->update($filter, $params);
+    }
+
+    public function update(array $filter, array $params) : bool
+    {
+        $db = $this->getDatabase();
+        $allowed_items = array('eid', 'eid_status', 'owned_by', 'created_by', 'created_min', 'created_max');
+        $filter_expr = \Filter::build($db, $filter, $allowed_items);
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid_status' => array('type' => 'string', 'required' => false),
@@ -102,25 +112,15 @@ class Comment extends ModelBase
         if (isset($process_arr['eid_status']) && \Model::isValidStatus($process_arr['eid_status']) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
-        // if the item doesn't exist, return false
-        if ($this->exists($eid) === false)
-            return false;
-
-        $db = $this->getDatabase();
         try
         {
-            $db->update('tbl_comment', $process_arr, 'eid = ' . $db->quote($eid));
-            return true;
+            $updates_made = $db->update('tbl_comment', $process_arr, $filter_expr);
+            return $updates_made;
         }
         catch (\Exception $e)
         {
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
-    }
-
-    public function update(array $filter, array $params) : bool
-    {
-        return false;
     }
 
     public function list(array $filter) : array
