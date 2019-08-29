@@ -40,11 +40,12 @@
           <div style="max-width: 20rem" v-bar>
             <div>
               <div
-                class="pt1 pb3 ph3 silver i"
+                class="pt1 pb3 ph3 lh-title silver i"
                 style="font-size: 13px"
                 v-if="filtered_connections.length == 0"
               >
-                There are no connections to show
+                <span v-if="connection_list_filter.length > 0">There are no connections that match the search criteria</span>
+                <span v-else>There are no connections to show</span>
               </div>
               <ConnectionList
                 :items="filtered_connections"

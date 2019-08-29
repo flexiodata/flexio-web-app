@@ -106,11 +106,12 @@
                   </el-dropdown>
                 </div>
                 <div
-                  class="pt1 pb3 silver i"
+                  class="pt1 pb3 lh-title silver i"
                   style="padding-left: 17px; padding-right: 0px; margin: 0 12px 0 3px; font-size: 13px"
                   v-if="group.pipes.length == 0"
                 >
-                  There are no functions to show
+                  <span v-if="pipe_list_filter.length > 0">There are no functions that match the search criteria</span>
+                  <span v-else>There are no functions to show</span>
                 </div>
                 <PipeList
                   class="mb3"
