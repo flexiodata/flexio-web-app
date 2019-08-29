@@ -67,6 +67,13 @@ class Action extends ModelBase
         }
     }
 
+    public function delete(string $eid) : bool
+    {
+        // set the status to deleted
+        $params = array('eid_status' => \Model::STATUS_DELETED);
+        return $this->set($eid, $params);
+    }
+
     public function set(string $eid, array $params) : bool
     {
         if (!\Flexio\Base\Eid::isValid($eid))
@@ -76,33 +83,29 @@ class Action extends ModelBase
         return $this->update($filter, $params);
     }
 
-    public function delete(string $eid) : bool
+    public function get(string $eid) : array
     {
-        // set the status to deleted
-        $params = array('eid_status' => \Model::STATUS_DELETED);
-        return $this->set($eid, $params);
+        if (!\Flexio\Base\Eid::isValid($eid))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+        $filter = array('eid' => $eid);
+        $rows = $this->list($filter);
+        if (count($rows) === 0)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+        return $rows[0];
     }
 
-    public function purge(string $owner_eid) : bool
+    public function exists(string $eid) : bool
     {
-        // this function deletes rows for a given owner
-
-        if (!\Flexio\Base\Eid::isValid($owner_eid))
+        if (!\Flexio\Base\Eid::isValid($eid))
             return false;
 
-        $db = $this->getDatabase();
-        try
-        {
-            $qowner_eid = $db->quote($owner_eid);
-            $sql = "delete from tbl_action where owned_by = $qowner_eid";
-            $rows_affected = $db->exec($sql);
+        $result = $this->getDatabase()->fetchOne("select eid from tbl_action where eid = ?", $eid);
+        if ($result === false)
+            return false;
 
-            return ($rows_affected > 0 ? true : false);
-        }
-        catch (\Exception $e)
-        {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
-        }
+        return true;
     }
 
     public function update(array $filter, array $params) : bool
@@ -207,28 +210,26 @@ class Action extends ModelBase
         return $output;
     }
 
-    public function get(string $eid) : array
+    public function purge(string $owner_eid) : bool
     {
-        if (!\Flexio\Base\Eid::isValid($eid))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        // this function deletes rows for a given owner
 
-        $filter = array('eid' => $eid);
-        $rows = $this->list($filter);
-        if (count($rows) === 0)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-
-        return $rows[0];
-    }
-
-    public function exists(string $eid) : bool
-    {
-        if (!\Flexio\Base\Eid::isValid($eid))
+        if (!\Flexio\Base\Eid::isValid($owner_eid))
             return false;
 
-        $result = $this->getDatabase()->fetchOne("select eid from tbl_action where eid = ?", $eid);
-        if ($result === false)
-            return false;
+        $db = $this->getDatabase();
+        try
+        {
+            $qowner_eid = $db->quote($owner_eid);
+            $sql = "delete from tbl_action where owned_by = $qowner_eid";
+            $rows_affected = $db->exec($sql);
 
-        return true;
+            return ($rows_affected > 0 ? true : false);
+        }
+        catch (\Exception $e)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
+        }
     }
+
 }

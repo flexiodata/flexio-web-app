@@ -61,28 +61,6 @@ class Token extends ModelBase
         return $this->set($eid, $params);
     }
 
-    public function purge(string $owner_eid) : bool
-    {
-        // this function deletes rows for a given owner
-
-        if (!\Flexio\Base\Eid::isValid($owner_eid))
-            return false;
-
-        $db = $this->getDatabase();
-        try
-        {
-            $qowner_eid = $db->quote($owner_eid);
-            $sql = "delete from tbl_token where owned_by = $qowner_eid";
-            $rows_affected = $db->exec($sql);
-
-            return ($rows_affected > 0 ? true : false);
-        }
-        catch (\Exception $e)
-        {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
-        }
-    }
-
     public function set(string $eid, array $params) : bool
     {
         if (!\Flexio\Base\Eid::isValid($eid))
@@ -90,6 +68,31 @@ class Token extends ModelBase
 
         $filter = array('eid' => $eid);
         return $this->update($filter, $params);
+    }
+
+    public function get(string $eid) : array
+    {
+        if (!\Flexio\Base\Eid::isValid($eid))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+        $filter = array('eid' => $eid);
+        $rows = $this->list($filter);
+        if (count($rows) === 0)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+        return $rows[0];
+    }
+
+    public function exists(string $eid) : bool
+    {
+        if (!\Flexio\Base\Eid::isValid($eid))
+            return false;
+
+        $result = $this->getDatabase()->fetchOne("select eid from tbl_token where eid = ?", $eid);
+        if ($result === false)
+            return false;
+
+        return true;
     }
 
     public function update(array $filter, array $params) : bool
@@ -161,29 +164,26 @@ class Token extends ModelBase
         return $output;
     }
 
-    public function get(string $eid) : array
+    public function purge(string $owner_eid) : bool
     {
-        if (!\Flexio\Base\Eid::isValid($eid))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        // this function deletes rows for a given owner
 
-        $filter = array('eid' => $eid);
-        $rows = $this->list($filter);
-        if (count($rows) === 0)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-
-        return $rows[0];
-    }
-
-    public function exists(string $eid) : bool
-    {
-        if (!\Flexio\Base\Eid::isValid($eid))
+        if (!\Flexio\Base\Eid::isValid($owner_eid))
             return false;
 
-        $result = $this->getDatabase()->fetchOne("select eid from tbl_token where eid = ?", $eid);
-        if ($result === false)
-            return false;
+        $db = $this->getDatabase();
+        try
+        {
+            $qowner_eid = $db->quote($owner_eid);
+            $sql = "delete from tbl_token where owned_by = $qowner_eid";
+            $rows_affected = $db->exec($sql);
 
-        return true;
+            return ($rows_affected > 0 ? true : false);
+        }
+        catch (\Exception $e)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
+        }
     }
 
     public function getFromAccessCode(string $code) : array

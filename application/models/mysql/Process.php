@@ -73,28 +73,6 @@ class Process extends ModelBase
         return $this->set($eid, $params);
     }
 
-    public function purge(string $owner_eid) : bool
-    {
-        // this function deletes rows for a given owner
-
-        if (!\Flexio\Base\Eid::isValid($owner_eid))
-            return false;
-
-        $db = $this->getDatabase();
-        try
-        {
-            $qowner_eid = $db->quote($owner_eid);
-            $sql = "delete from tbl_process where owned_by = $qowner_eid";
-            $rows_affected = $db->exec($sql);
-
-            return ($rows_affected > 0 ? true : false);
-        }
-        catch (\Exception $e)
-        {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
-        }
-    }
-
     public function set(string $eid, array $params) : bool
     {
         if (!\Flexio\Base\Eid::isValid($eid))
@@ -104,51 +82,29 @@ class Process extends ModelBase
         return $this->update($filter, $params);
     }
 
-    public function summary(array $filter) : array
+    public function get(string $eid) : array
     {
-        // returns the number of processes per pipe per day for a particular owner,
-        // along with the average and total times for those processes
+        if (!\Flexio\Base\Eid::isValid($eid))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
-        $db = $this->getDatabase();
-        $allowed_items = array('eid', 'eid_status', 'owned_by', 'created_min', 'created_max', 'parent_eid');
-        $filter_expr = \Filter::build($db, $filter, $allowed_items);
-        $limit_expr = \Limit::build($db, $filter);
+        $filter = array('eid' => $eid);
+        $rows = $this->list($filter);
+        if (count($rows) === 0)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
-        try
-        {
-            $sql = "select owned_by as owned_by, ".
-            "              parent_eid as parent_eid, ".
-            "              created::DATE as created, ".
-            "              avg(extract(epoch from (finished - started))) as average_time, ".
-            "              sum(extract(epoch from (finished - started))) as total_time, ".
-            "              count(*) as total_count ".
-            "       from tbl_process ".
-            "       where $filter_expr ".
-            "       group by owned_by, parent_eid, created::DATE ".
-            "       order by created, parent_eid $limit_expr";
-            $rows = $db->fetchAll($sql);
-         }
-         catch (\Exception $e)
-         {
-             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-         }
+        return $rows[0];
+    }
 
-        $output = array();
-        foreach ($rows as $row)
-        {
-            $parent_eid = '';
-            if (\Flexio\Base\Eid::isValid($row['parent_eid']))
-                $parent_eid = $row['parent_eid'];
+    public function exists(string $eid) : bool
+    {
+        if (!\Flexio\Base\Eid::isValid($eid))
+            return false;
 
-            $output[] = array('user_eid'     => $row['owned_by'],
-                              'pipe_eid'     => $parent_eid,
-                              'created'      => $row['created'],
-                              'total_count'  => $row['total_count'],
-                              'total_time'   => $row['total_time'],
-                              'average_time' => $row['average_time']);
-        }
+        $result = $this->getDatabase()->fetchOne("select eid from tbl_process where eid = ?", $eid);
+        if ($result === false)
+            return false;
 
-        return $output;
+        return true;
     }
 
     public function update(array $filter, array $params) : bool
@@ -245,29 +201,26 @@ class Process extends ModelBase
         return $output;
     }
 
-    public function get(string $eid) : array
+    public function purge(string $owner_eid) : bool
     {
-        if (!\Flexio\Base\Eid::isValid($eid))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        // this function deletes rows for a given owner
 
-        $filter = array('eid' => $eid);
-        $rows = $this->list($filter);
-        if (count($rows) === 0)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-
-        return $rows[0];
-    }
-
-    public function exists(string $eid) : bool
-    {
-        if (!\Flexio\Base\Eid::isValid($eid))
+        if (!\Flexio\Base\Eid::isValid($owner_eid))
             return false;
 
-        $result = $this->getDatabase()->fetchOne("select eid from tbl_process where eid = ?", $eid);
-        if ($result === false)
-            return false;
+        $db = $this->getDatabase();
+        try
+        {
+            $qowner_eid = $db->quote($owner_eid);
+            $sql = "delete from tbl_process where owned_by = $qowner_eid";
+            $rows_affected = $db->exec($sql);
 
-        return true;
+            return ($rows_affected > 0 ? true : false);
+        }
+        catch (\Exception $e)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
+        }
     }
 
     public function setProcessStatus(string $eid, string $status) : bool
@@ -286,5 +239,52 @@ class Process extends ModelBase
             return '';
 
         return $result;
+    }
+
+    public function summary(array $filter) : array
+    {
+        // returns the number of processes per pipe per day for a particular owner,
+        // along with the average and total times for those processes
+
+        $db = $this->getDatabase();
+        $allowed_items = array('eid', 'eid_status', 'owned_by', 'created_min', 'created_max', 'parent_eid');
+        $filter_expr = \Filter::build($db, $filter, $allowed_items);
+        $limit_expr = \Limit::build($db, $filter);
+
+        try
+        {
+            $sql = "select owned_by as owned_by, ".
+            "              parent_eid as parent_eid, ".
+            "              created::DATE as created, ".
+            "              avg(extract(epoch from (finished - started))) as average_time, ".
+            "              sum(extract(epoch from (finished - started))) as total_time, ".
+            "              count(*) as total_count ".
+            "       from tbl_process ".
+            "       where $filter_expr ".
+            "       group by owned_by, parent_eid, created::DATE ".
+            "       order by created, parent_eid $limit_expr";
+            $rows = $db->fetchAll($sql);
+         }
+         catch (\Exception $e)
+         {
+             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+         }
+
+        $output = array();
+        foreach ($rows as $row)
+        {
+            $parent_eid = '';
+            if (\Flexio\Base\Eid::isValid($row['parent_eid']))
+                $parent_eid = $row['parent_eid'];
+
+            $output[] = array('user_eid'     => $row['owned_by'],
+                              'pipe_eid'     => $parent_eid,
+                              'created'      => $row['created'],
+                              'total_count'  => $row['total_count'],
+                              'total_time'   => $row['total_time'],
+                              'average_time' => $row['average_time']);
+        }
+
+        return $output;
     }
 }

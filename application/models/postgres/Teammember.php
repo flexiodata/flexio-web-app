@@ -92,6 +92,126 @@ class Teammember extends ModelBase
         }
     }
 
+    public function set(string $member_eid, string $owned_by, array $params) : bool
+    {
+        if (!\Flexio\Base\Eid::isValid($member_eid))
+            return false;
+        if (!\Flexio\Base\Eid::isValid($owned_by))
+            return false;
+
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($params, array(
+                'member_status' => array('type' => 'string', 'required' => false),
+                'rights'        => array('type' => 'string', 'required' => false),
+                'role'          => array('type' => 'string', 'required' => false)
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        $process_arr = $validator->getParams();
+        $process_arr['updated'] = \Flexio\System\System::getTimestamp();
+
+        if (isset($params['member_status']) && self::isValidMemberStatus($params['member_status']) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        if (isset($params['role']) && self::isValidMemberRole($params['role']) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        $db = $this->getDatabase();
+        try
+        {
+            // see if the action exists; return false otherwise; this check is to
+            // achieve the same behavior as other model set functions
+            $qmember_eid = $db->quote($member_eid);
+            $qowned_by= $db->quote($owned_by);
+            $row = $db->fetchRow("select member_eid from tbl_teammember where member_eid = $qmember_eid and owned_by = $qowned_by");
+            if (!$row)
+                return false;
+
+            $db->update('tbl_teammember', $process_arr, "member_eid = $qmember_eid and owned_by = $qowned_by");
+            return true;
+        }
+        catch (\Exception $e)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+        }
+    }
+
+    public function get(string $member_eid, $owned_by) : array
+    {
+        if (!\Flexio\Base\Eid::isValid($member_eid) && !\Flexio\Base\Eid::isValid($owned_by))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+        try
+        {
+            $db = $this->getDatabase();
+            $qmember_eid = $db->quote($member_eid);
+            $qowned_by= $db->quote($owned_by);
+            $row = $db->fetchRow("select * from tbl_teammember where member_eid = $qmember_eid and owned_by = $qowned_by");
+            if (!$row)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+            return array('member_eid'    => $row['member_eid'],
+                         'member_status' => $row['member_status'],
+                         'rights'        => $row['rights'],
+                         'role'          => $row['role'],
+                         'owned_by'      => $row['owned_by'],
+                         'created_by'    => $row['created_by'],
+                         'created'       => \Flexio\Base\Util::formatDate($row['created']),
+                         'updated'       => \Flexio\Base\Util::formatDate($row['updated']));
+         }
+         catch (\Exception $e)
+         {
+             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+         }
+    }
+
+    public function exists(string $member_eid, $owned_by) : bool
+    {
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+    }
+
+    public function update(array $filter, array $params) : bool
+    {
+        return false;
+    }
+
+    public function list(array $filter) : array
+    {
+        $db = $this->getDatabase();
+        $allowed_items = array('owned_by', 'created_by', 'member_eid', 'member_status', 'created_min', 'created_max');
+        $filter_expr = \Filter::build($db, $filter, $allowed_items);
+        $limit_expr = \Limit::build($db, $filter);
+
+        $rows = array();
+        try
+        {
+            $query = "select * from tbl_teammember where $filter_expr order by id $limit_expr";
+            $rows = $db->fetchAll($query);
+         }
+         catch (\Exception $e)
+         {
+             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+         }
+
+        if (!$rows)
+            return array();
+
+        $output = array();
+        foreach ($rows as $row)
+        {
+            $output[] = array('member_eid'    => $row['member_eid'],
+                              'member_status' => $row['member_status'],
+                              'rights'        => $row['rights'],
+                              'role'          => $row['role'],
+                              'owned_by'      => $row['owned_by'],
+                              'created_by'    => $row['created_by'],
+                              'created'       => \Flexio\Base\Util::formatDate($row['created']),
+                              'updated'       => \Flexio\Base\Util::formatDate($row['updated']));
+        }
+
+        return $output;
+    }
+
     public function purge(string $owned_by) : bool
     {
         // this function deletes rows for a given owner
@@ -157,121 +277,6 @@ class Teammember extends ModelBase
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
         }
 */
-    }
-
-    public function set(string $member_eid, string $owned_by, array $params) : bool
-    {
-        if (!\Flexio\Base\Eid::isValid($member_eid))
-            return false;
-        if (!\Flexio\Base\Eid::isValid($owned_by))
-            return false;
-
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-                'member_status' => array('type' => 'string', 'required' => false),
-                'rights'        => array('type' => 'string', 'required' => false),
-                'role'          => array('type' => 'string', 'required' => false)
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-
-        $process_arr = $validator->getParams();
-        $process_arr['updated'] = \Flexio\System\System::getTimestamp();
-
-        if (isset($params['member_status']) && self::isValidMemberStatus($params['member_status']) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-
-        if (isset($params['role']) && self::isValidMemberRole($params['role']) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-
-        $db = $this->getDatabase();
-        try
-        {
-            // see if the action exists; return false otherwise; this check is to
-            // achieve the same behavior as other model set functions
-            $qmember_eid = $db->quote($member_eid);
-            $qowned_by= $db->quote($owned_by);
-            $row = $db->fetchRow("select member_eid from tbl_teammember where member_eid = $qmember_eid and owned_by = $qowned_by");
-            if (!$row)
-                return false;
-
-            $db->update('tbl_teammember', $process_arr, "member_eid = $qmember_eid and owned_by = $qowned_by");
-            return true;
-        }
-        catch (\Exception $e)
-        {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
-        }
-    }
-
-    public function update(array $filter, array $params) : bool
-    {
-        return false;
-    }
-
-    public function list(array $filter) : array
-    {
-        $db = $this->getDatabase();
-        $allowed_items = array('owned_by', 'created_by', 'member_eid', 'member_status', 'created_min', 'created_max');
-        $filter_expr = \Filter::build($db, $filter, $allowed_items);
-        $limit_expr = \Limit::build($db, $filter);
-
-        $rows = array();
-        try
-        {
-            $query = "select * from tbl_teammember where $filter_expr order by id $limit_expr";
-            $rows = $db->fetchAll($query);
-         }
-         catch (\Exception $e)
-         {
-             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-         }
-
-        if (!$rows)
-            return array();
-
-        $output = array();
-        foreach ($rows as $row)
-        {
-            $output[] = array('member_eid'    => $row['member_eid'],
-                              'member_status' => $row['member_status'],
-                              'rights'        => $row['rights'],
-                              'role'          => $row['role'],
-                              'owned_by'      => $row['owned_by'],
-                              'created_by'    => $row['created_by'],
-                              'created'       => \Flexio\Base\Util::formatDate($row['created']),
-                              'updated'       => \Flexio\Base\Util::formatDate($row['updated']));
-        }
-
-        return $output;
-    }
-
-    public function get(string $member_eid, $owned_by) : array
-    {
-        if (!\Flexio\Base\Eid::isValid($member_eid) && !\Flexio\Base\Eid::isValid($owned_by))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-
-        try
-        {
-            $db = $this->getDatabase();
-            $qmember_eid = $db->quote($member_eid);
-            $qowned_by= $db->quote($owned_by);
-            $row = $db->fetchRow("select * from tbl_teammember where member_eid = $qmember_eid and owned_by = $qowned_by");
-            if (!$row)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-
-            return array('member_eid'    => $row['member_eid'],
-                         'member_status' => $row['member_status'],
-                         'rights'        => $row['rights'],
-                         'role'          => $row['role'],
-                         'owned_by'      => $row['owned_by'],
-                         'created_by'    => $row['created_by'],
-                         'created'       => \Flexio\Base\Util::formatDate($row['created']),
-                         'updated'       => \Flexio\Base\Util::formatDate($row['updated']));
-         }
-         catch (\Exception $e)
-         {
-             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-         }
     }
 
     public function getRights(string $member_eid, string $owned_by) : ?string
