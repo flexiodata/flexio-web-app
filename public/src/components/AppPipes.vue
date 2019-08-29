@@ -375,7 +375,7 @@
           // do nothing
         })
       },
-      tryDeleteConnection(attrs) {
+      tryDeleteFunctionMount(attrs) {
         var eid = _.get(attrs, 'eid', '')
         var cname = _.get(attrs, 'name', 'Connection')
         var team_name = this.active_team_name
@@ -464,7 +464,7 @@
         switch (cmd) {
           case 'edit': this.onEditFunctionMount(connection); return
           case 'refresh': this.syncFunctionMount(connection); return
-          case 'delete': this.tryDeleteConnection(connection); return
+          case 'delete': this.tryDeleteFunctionMount(connection); return
         }
       }
     }
