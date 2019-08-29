@@ -13,37 +13,41 @@
         <!-- sidebar -->
         <div class="flex flex-column min-w5 bg-white br b--black-05">
           <!-- control bar -->
-          <div class="flex-none pa2 relative bg-white bb b--black-05">
-            <div class="flex flex-row">
-              <div class="flex-fill flex flex-row items-center">
-                <h2 class="mv0 f3 fw6 mr3 lh-1">Functions</h2>
-              </div>
-              <div class="flex-none flex flex-row items-center ml3">
-                <el-dropdown trigger="click" @command="onNewCommand">
-                  <el-button
-                    size="small"
-                    type="primary"
-                    class="ttu fw6"
+          <div class="flex-none pa2 relative bg-white">
+            <div class="flex flex-row items-center">
+              <el-input
+                class="w-100 mr2"
+                size="small"
+                placeholder="Search..."
+                clearable
+                prefix-icon="el-icon-search"
+                @keydown.esc.native="pipe_list_filter = ''"
+                v-model="pipe_list_filter"
+              />
+              <el-dropdown trigger="click" @command="onNewCommand">
+                <el-button
+                  size="small"
+                  type="primary"
+                  class="ttu fw6"
 
+                >
+                  New<i class="el-icon-arrow-down el-icon--right fw6" style="margin-right: -2px"></i>
+                </el-button>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item
+                    command="local-function"
+                    v-require-rights:pipe.create
                   >
-                    New<i class="el-icon-arrow-down el-icon--right fw6"></i>
-                  </el-button>
-                  <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item
-                      command="local-function"
-                      v-require-rights:pipe.create
-                    >
-                      Local Function
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      command="function-mount"
-                      v-require-rights:connection.create
-                    >
-                      Function Mount
-                    </el-dropdown-item>
-                  </el-dropdown-menu>
-                </el-dropdown>
-              </div>
+                    Local Function
+                  </el-dropdown-item>
+                  <el-dropdown-item
+                    command="function-mount"
+                    v-require-rights:connection.create
+                  >
+                    Function Mount
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
             </div>
           </div>
 
@@ -54,7 +58,7 @@
                 :key="group.id"
                 v-for="group in grouped_pipes"
               >
-                <div class="pa2 mt2 flex flex-row items-center">
+                <div class="pa2 flex flex-row items-center">
                   <div class="flex-fill">{{group.title}}</div>
                   <el-dropdown
                     trigger="click"
@@ -189,6 +193,7 @@
   import EmptyItem from '@/components/EmptyItem'
   import PageNotFound from '@/components/PageNotFound'
   import MixinConnection from '@/components/mixins/connection'
+  import MixinFilter from '@/components/mixins/filter'
 
   const CONNECTION_MODE_RESOURCE = 'R'
   const CONNECTION_MODE_FUNCTION = 'F'
@@ -215,7 +220,7 @@
         }
       }
     },
-    mixins: [MixinConnection],
+    mixins: [MixinConnection, MixinFilter],
     components: {
       Spinner,
       PipeList,
@@ -240,6 +245,7 @@
       return {
         is_selecting: false,
         show_pipe_dialog: false,
+        pipe_list_filter: '',
         pipe: {},
         last_selected: {},
         show_connection_dialog: false,
@@ -257,11 +263,17 @@
         is_fetched: state => state.pipes.is_fetched,
         active_team_name: state => state.teams.active_team_name
       }),
-      pipes() {
-        return _.sortBy(this.getAllPipes(), ['name'])
-      },
       function_mounts() {
         return this.getAvailableFunctionMounts()
+      },
+      pipes() {
+        return this.getAllPipes()
+      },
+      sorted_pipes() {
+        return _.sortBy(this.pipes, ['name'])
+      },
+      filtered_pipes() {
+        return this.$_Filter_filter(this.sorted_pipes, this.pipe_list_filter, ['name'])
       },
       grouped_pipes() {
         // start with an object with connection eids for keys and empty arrays for values
@@ -270,7 +282,7 @@
 
         // group all pipes by their parent connection (this will also result in
         // an object with connection eids as the key values)
-        var mounts_with_pipes = _.groupBy(this.pipes, p => _.get(p, 'parent.eid', 'local'))
+        var mounts_with_pipes = _.groupBy(this.filtered_pipes, p => _.get(p, 'parent.eid', 'local'))
 
         // overwrite keys in 'all_mounts' with keys in 'mounts_with_pipes'
         var groups = _.assign({}, all_mounts, mounts_with_pipes)
@@ -362,16 +374,16 @@
           cancelButtonText: 'Cancel',
           dangerouslyUseHTMLString: true
         }).then(() => {
-          var selected_idx = _.findIndex(this.pipes, { eid: this.pipe.eid })
-          var deleting_idx = _.findIndex(this.pipes, { eid: attrs.eid })
+          var selected_idx = _.findIndex(this.sorted_pipes, { eid: this.pipe.eid })
+          var deleting_idx = _.findIndex(this.sorted_pipes, { eid: attrs.eid })
 
           this.$store.dispatch('pipes/delete', { team_name, eid }).then(response => {
             if (deleting_idx >= 0 && deleting_idx == selected_idx) {
-              if (deleting_idx >= this.pipes.length) {
+              if (deleting_idx >= this.sorted_pipes.length) {
                 deleting_idx--
               }
 
-              var pipe = _.get(this.pipes, '['+deleting_idx+']', {})
+              var pipe = _.get(this.sorted_pipes, '['+deleting_idx+']', {})
               this.selectPipe(pipe)
             }
           })
@@ -402,15 +414,15 @@
         var pipe
 
         if (identifier) {
-          pipe = _.find(this.pipes, p => p.eid == identifier || p.name == identifier)
+          pipe = _.find(this.sorted_pipes, p => p.eid == identifier || p.name == identifier)
         } else {
-          pipe = _.first(this.pipes)
+          pipe = _.first(this.sorted_pipes)
         }
 
         this.selectPipe(pipe)
       },
       selectPipe(item) {
-        if (this.pipes.length == 0) {
+        if (this.sorted_pipes.length == 0) {
           return
         }
 
