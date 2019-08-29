@@ -38,13 +38,23 @@
 
           <!-- list -->
           <div style="max-width: 20rem" v-bar>
-            <ConnectionList
-              :items="filtered_connections"
-              :selected-item.sync="connection"
-              :show-dropdown="true"
-              @item-activate="selectConnection"
-              @item-delete="tryDeleteConnection"
-            />
+            <div>
+              <div
+                class="pt1 pb3 ph3 silver i"
+                style="font-size: 13px"
+                v-if="filtered_connections.length == 0"
+              >
+                There are no connections to show
+              </div>
+              <ConnectionList
+                :items="filtered_connections"
+                :selected-item.sync="connection"
+                :show-dropdown="true"
+                @item-activate="selectConnection"
+                @item-delete="tryDeleteConnection"
+                v-else
+              />
+            </div>
           </div>
         </div>
 
