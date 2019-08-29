@@ -31,7 +31,7 @@
                   class="ttu fw6"
 
                 >
-                  New <i class="el-icon-arrow-down el-icon--right fw6 nr1"></i>
+                  New<i class="el-icon-arrow-down el-icon--right fw6" style="margin-right: -2px"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item
