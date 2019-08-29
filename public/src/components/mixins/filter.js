@@ -1,4 +1,4 @@
-// allows any component filter an array of objects,
+// allows any component to filter an array of objects,
 // optionally specifying the keys they want to filter on
 
 export default {
