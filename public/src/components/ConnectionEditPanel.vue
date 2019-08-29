@@ -309,6 +309,9 @@
       is_keyring() {
         return this.ctype == ctypes.CONNECTION_TYPE_KEYRING
       },
+      is_github() {
+        return this.ctype == ctypes.CONNECTION_TYPE_GITHUB
+      },
       is_oauth() {
         return this.$_Connection_isOauth(this.ctype)
       },
@@ -343,6 +346,16 @@
       has_errors() {
         if (this.is_http && this.has_http_errors) {
           return true
+        }
+
+        // don't ever disable the submit button for GitHub connections
+        // since we now allow the user to connect to public repos
+        if (this.is_github) {
+          debugger
+          var owner = _.get(this.connection_info, 'owner', '')
+          var repository = _.get(this.connection_info, 'repository', '')
+
+          return owner.length == 0 || repository.length == 0
         }
 
         if (this.is_oauth && !this.is_connected) {

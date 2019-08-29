@@ -2,7 +2,8 @@
   <div>
     <div v-if="is_oauth">
       <div v-if="!is_connected">
-        <div class="lh-copy f6">To use this connection, you must first connect {{service_name}} to Flex.io.</div>
+        <div class="lh-copy f6" v-if="is_github">To use private repositories, you must first connect {{service_name}} to Flex.io, otherwise you may skip authentication and just enter the owner and repository name below.</div>
+        <div class="lh-copy f6" v-else>To use this connection, you must first connect {{service_name}} to Flex.io.</div>
         <div class="mt3 tc">
           <el-button
             class="ttu fw6"
@@ -114,11 +115,10 @@
             </el-form>
           </div>
         </div>
-        <div class="br2 bg-nearer-white mt4 pa3" v-else-if="is_github">
+      </div>
+
+        <div class="br2 bg-nearer-white mt4 pa3" v-if="is_github">
           <div class="mw6 center">
-            <div class="mb3 lh-copy ttu fw6 f6">
-              Additional configuration
-            </div>
             <el-form
               ref="form"
               class="flex flex-column el-form--compact el-form__label-tiny"
@@ -165,7 +165,7 @@
             </el-form>
           </div>
         </div>
-      </div>
+
     </div>
     <div v-else>
       <div class="lh-copy f6">To use this connection, you must first connect {{service_name}} to Flex.io.</div>
