@@ -258,7 +258,7 @@
         active_team_name: state => state.teams.active_team_name
       }),
       pipes() {
-        return this.getAllPipes()
+        return _.sortBy(this.getAllPipes(), ['name'])
       },
       function_mounts() {
         return this.getAvailableFunctionMounts()
