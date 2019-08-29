@@ -252,7 +252,7 @@ class Pipe extends ModelBase
 
     public function update(array $filter, array $params) : bool
     {
-        return false;
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
     public function list(array $filter) : array
