@@ -15,6 +15,7 @@
         <div class="mt1 silver f8">{{email}}</div>
       </div>
       <el-dropdown-item class="flex flex-row items-center" command="account"><i class="material-icons mr3">account_circle</i> My Account</el-dropdown-item>
+      <el-dropdown-item class="flex flex-row items-center" command="add-ons"><i class="material-icons mr3">settings_input_antenna</i>Add-Ons</el-dropdown-item>
       <el-dropdown-item class="flex flex-row items-center" command="docs"><i class="material-icons mr3">help</i>Online Docs</el-dropdown-item>
       <el-dropdown-item divided></el-dropdown-item>
       <el-dropdown-item class="flex flex-row items-center" command="sign-out"><i class="material-icons mr3">forward</i> Sign out</el-dropdown-item>
@@ -51,6 +52,9 @@
       ...mapGetters('users', {
         'getActiveUser': 'getActiveUser'
       }),
+      openAddOns() {
+        window.open('https://' + HOSTNAME + '/add-ons', '_blank')
+      },
       openHelpDocs() {
         window.open('https://' + HOSTNAME + '/docs', '_blank')
       },
@@ -66,6 +70,7 @@
         switch (cmd)
         {
           case 'account':  return this.gotoAccount()
+          case 'add-ons':  return this.openAddOns()
           case 'docs':     return this.openHelpDocs()
           case 'sign-out': return this.signOut()
         }

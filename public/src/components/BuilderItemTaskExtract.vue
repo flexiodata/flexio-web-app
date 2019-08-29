@@ -54,9 +54,9 @@
       </div>
       <div
         class="relative el-form-item"
-        style="margin-top: -12px"
         v-else-if="has_structure"
       >
+        <label class="el-form-item__label">Preview</label>
         <SimpleTable
           class="overflow-x-auto"
           :columns="structure_cols"

@@ -54,14 +54,15 @@
       </div>
       <div
         class="relative el-form-item"
-        style="margin-top: -12px"
         v-else-if="has_structure"
       >
+        <label class="el-form-item__label">Preview</label>
         <SimpleTable
           class="overflow-x-auto"
           :columns="structure_cols"
           :rows="structure_rows"
         />
+        <div class="mt3 mb2 bb bw1 b--black-10"></div>
       </div>
       <el-form-item
         key="lookup_keys"

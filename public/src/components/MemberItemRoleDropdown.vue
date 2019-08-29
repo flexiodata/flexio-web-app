@@ -76,16 +76,38 @@
         return item_strength >= role_strength
       },
       changeRole(role_type) {
-        if (this.is_member_active_user && this.isLesserRole(role_type)) {
-          // hide the popover while we're confirming
-          this.is_visible = false
+        // hide the popover while we're confirming
+        this.is_visible = false
 
+        if (this.is_member_active_user && this.isLesserRole(role_type)) {
           this.$confirm('You are attempting to change your role to one with less rights. Are you sure you want to do this?', 'Accept lesser role?', {
+            type: 'warning',
             confirmButtonClass: 'ttu fw6 el-button--danger',
             cancelButtonClass: 'ttu fw6',
             confirmButtonText: 'Accept lesser role',
+            cancelButtonText: 'Cancel'
+          }).then(() => {
+            this.$emit('change-role', role_type)
+            this.is_visible = false
+          }).catch(() => {
+            this.is_visible = true
+          })
+        } else if (role_type == 'A' /* new role is an administrator */) {
+          var full_name = getFullName(this.item)
+          var email = _.get(this.item, 'email', '')
+          var member = full_name.length > 0 ? full_name : email
+          var email_str = full_name.length > 0 ? ` (${email})` : ''
+
+          var msg = `Are you sure you want to make <strong>${member}${email_str}</strong> an administrator?`
+          var title = `Make ${member} an administrator?`
+
+          this.$confirm(msg, title, {
+            type: 'warning',
+            confirmButtonClass: 'ttu fw6 el-button--danger',
+            cancelButtonClass: 'ttu fw6',
+            confirmButtonText: 'Make administrator',
             cancelButtonText: 'Cancel',
-            type: 'warning'
+            dangerouslyUseHTMLString: true
           }).then(() => {
             this.$emit('change-role', role_type)
             this.is_visible = false
@@ -94,7 +116,6 @@
           })
         } else {
           this.$emit('change-role', role_type)
-          this.is_visible = false
         }
       },
       removeMember(member) {
