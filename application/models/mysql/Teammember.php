@@ -25,7 +25,7 @@ class Teammember extends ModelBase
                 'member_status' => array('type' => 'string', 'required' => false, 'default' => \Model::TEAM_MEMBER_STATUS_PENDING),
                 'rights'        => array('type' => 'string', 'required' => false, 'default' => '[]'),
                 'role'          => array('type' => 'string', 'required' => false, 'default' => \Model::TEAM_ROLE_USER), // grant some basic rights by default
-                'owned_by'      => array('type' => 'string', 'required' => false, 'default' => ''),
+                'owned_by'      => array('type' => 'eid', 'required' => true),
                 'created_by'    => array('type' => 'string', 'required' => false, 'default' => '')
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
@@ -136,7 +136,7 @@ class Teammember extends ModelBase
         }
     }
 
-    public function get(string $member_eid, $owned_by) : array
+    public function get(string $member_eid, string $owned_by) : array
     {
         if (!\Flexio\Base\Eid::isValid($member_eid) && !\Flexio\Base\Eid::isValid($owned_by))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
@@ -165,7 +165,7 @@ class Teammember extends ModelBase
          }
     }
 
-    public function exists(string $member_eid, $owned_by) : bool
+    public function exists(string $member_eid, string $owned_by) : bool
     {
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
