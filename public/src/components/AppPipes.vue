@@ -92,14 +92,14 @@
                 </div>
                 <div
                   class="pv1 silver i"
-                  style="padding-left: 22px; padding-right: 0px; margin-right: 12px; font-size: 12px"
+                  style="padding-left: 17px; padding-right: 0px; margin: 0 12px 0 3px; font-size: 12px"
                   v-if="group.pipes.length == 0"
                 >
                   There are no functions to show
                 </div>
                 <PipeList
                   class="mb2"
-                  item-style="padding-left: 22px; padding-right: 0px; margin-right: 12px"
+                  item-style="padding-left: 17px; padding-right: 0px; margin: 0 12px 0 3px"
                   item-size="mini"
                   :items="group.pipes"
                   :selected-item.sync="pipe"
