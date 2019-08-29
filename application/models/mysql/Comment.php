@@ -118,6 +118,11 @@ class Comment extends ModelBase
         }
     }
 
+    public function update(array $filter, array $params) : bool
+    {
+        return false;
+    }
+
     public function list(array $filter) : array
     {
         $db = $this->getDatabase();
