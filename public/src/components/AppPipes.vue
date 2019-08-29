@@ -56,7 +56,21 @@
                 v-for="group in grouped_pipes"
               >
                 <div class="pa2 flex flex-row items-center">
-                  <div class="flex-fill">{{group.title}}</div>
+                  <ServiceIcon
+                    class="br1 square-2"
+                    style="margin-right: 8px"
+                    :empty-cls="''"
+                    :type="group.ctype"
+                    v-if="group.ctype.length > 0"
+                  />
+                  <i
+                    class="material-icons"
+                    style="margin-right: 6px"
+                    v-else
+                  >
+                    home
+                  </i>
+                  <div class="flex-fill fw6">{{group.title}}</div>
                   <el-dropdown
                     trigger="click"
                     @command="onFunctionMountCommand"
@@ -65,28 +79,28 @@
                     <span class="el-dropdown-link pointer mr2">
                       <svg class="octicon octicon-gear" viewBox="0 0 14 16" version="1.1" width="14" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M14 8.77v-1.6l-1.94-.64-.45-1.09.88-1.84-1.13-1.13-1.81.91-1.09-.45-.69-1.92h-1.6l-.63 1.94-1.11.45-1.84-.88-1.13 1.13.91 1.81-.45 1.09L0 7.23v1.59l1.94.64.45 1.09-.88 1.84 1.13 1.13 1.81-.91 1.09.45.69 1.92h1.59l.63-1.94 1.11-.45 1.84.88 1.13-1.13-.92-1.81.47-1.09L14 8.75v.02zM7 11c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"></path></svg>
                     </span>
-                    <el-dropdown-menu slot="dropdown" class="f6">
+                    <el-dropdown-menu style="min-width: 10rem" slot="dropdown">
                       <el-dropdown-item
-                        class="flex flex-row items-center item-dropdown-menu-item"
+                        class="flex flex-row items-center"
                         :connection-eid="group.id"
                         command="edit"
                       >
-                        <i class="material-icons md-18 mr2">edit</i> Edit
+                        <i class="material-icons mr2">edit</i> Edit
                       </el-dropdown-item>
                       <el-dropdown-item
-                        class="flex flex-row items-center item-dropdown-menu-item"
+                        class="flex flex-row items-center"
                         :connection-eid="group.id"
                         command="refresh"
                       >
-                        <i class="material-icons md-18 mr2">refresh</i> Refresh
+                        <i class="material-icons mr2">refresh</i> Refresh
                       </el-dropdown-item>
                       <el-dropdown-item divided></el-dropdown-item>
                       <el-dropdown-item
-                        class="flex flex-row items-center item-dropdown-menu-item"
+                        class="flex flex-row items-center"
                         :connection-eid="group.id"
                         command="delete"
                       >
-                        <i class="material-icons md-18 mr2">delete</i> Delete
+                        <i class="material-icons mr2">delete</i> Delete
                       </el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
@@ -187,6 +201,7 @@
   import PipeDocument from '@/components/PipeDocument'
   import PipeEditPanel from '@/components/PipeEditPanel'
   import ConnectionEditPanel from '@/components/ConnectionEditPanel'
+  import ServiceIcon from '@/components/ServiceIcon'
   import EmptyItem from '@/components/EmptyItem'
   import PageNotFound from '@/components/PageNotFound'
   import MixinConnection from '@/components/mixins/connection'
@@ -224,6 +239,7 @@
       PipeDocument,
       PipeEditPanel,
       ConnectionEditPanel,
+      ServiceIcon,
       EmptyItem,
       PageNotFound
     },
@@ -291,6 +307,7 @@
 
           return {
             id: key.length == 0 ? 'local' : key,
+            ctype: _.get(connection, 'connection_type', ''),
             title: key.length == 0 ? 'Local' : _.get(connection, 'name', `Not found (${key})`),
             pipes: _.sortBy(val, ['name'])
           }

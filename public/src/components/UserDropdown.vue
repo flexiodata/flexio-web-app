@@ -14,11 +14,11 @@
         <h5 class="ma0">{{full_name}}</h5>
         <div class="mt1 silver f8">{{email}}</div>
       </div>
-      <el-dropdown-item class="flex flex-row items-center" command="account"><i class="material-icons mr3">account_circle</i> My Account</el-dropdown-item>
-      <el-dropdown-item class="flex flex-row items-center" command="add-ons"><i class="material-icons mr3">settings_input_antenna</i>Add-Ons</el-dropdown-item>
-      <el-dropdown-item class="flex flex-row items-center" command="docs"><i class="material-icons mr3">help</i>Online Docs</el-dropdown-item>
+      <el-dropdown-item class="flex flex-row items-center" command="account"><i class="material-icons mr2">account_circle</i> My Account</el-dropdown-item>
+      <el-dropdown-item class="flex flex-row items-center" command="add-ons"><i class="material-icons mr2">settings_input_antenna</i>Add-Ons</el-dropdown-item>
+      <el-dropdown-item class="flex flex-row items-center" command="docs"><i class="material-icons mr2">help</i>Online Docs</el-dropdown-item>
       <el-dropdown-item divided></el-dropdown-item>
-      <el-dropdown-item class="flex flex-row items-center" command="sign-out"><i class="material-icons mr3">forward</i> Sign out</el-dropdown-item>
+      <el-dropdown-item class="flex flex-row items-center" command="sign-out"><i class="material-icons mr2">forward</i> Sign out</el-dropdown-item>
     </el-dropdown-menu>
   </el-dropdown>
 </template>
