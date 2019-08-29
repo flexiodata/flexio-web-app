@@ -176,7 +176,7 @@
         active_team_name: state => state.teams.active_team_name
       }),
       connections() {
-        return this.getAvailableConnections()
+        return _.sortBy(this.getAvailableConnections(), ['name'])
       },
       route_object_name() {
         return _.get(this.$route, 'params.object_name', undefined)
