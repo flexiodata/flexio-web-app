@@ -282,7 +282,7 @@
           return {
             id: key.length == 0 ? 'local' : key,
             title: key.length == 0 ? 'Local' : _.get(connection, 'name', `Not found (${key})`),
-            pipes: val
+            pipes: _.sortBy(val, ['name'])
           }
         })
 
