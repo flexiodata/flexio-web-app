@@ -169,8 +169,8 @@
   import MixinConnection from '@/components/mixins/connection'
   import MixinValidation from '@/components/mixins/validation'
 
-  const CONNECTION_MODE_RESOURCE = 'R';
-  const CONNECTION_MODE_FUNCTION = 'F';
+  const CONNECTION_MODE_RESOURCE = 'R'
+  const CONNECTION_MODE_FUNCTION = 'F'
 
   const getNameSuffix = (length) => {
     return randomstring.generate({

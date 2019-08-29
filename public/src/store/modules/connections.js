@@ -6,8 +6,11 @@ import {
   updateMeta,
   removeMeta,
 } from '@/store/helpers'
-import {OBJECT_STATUS_AVAILABLE } from '@/constants/object-status'
+import { OBJECT_STATUS_AVAILABLE } from '@/constants/object-status'
 import { sanitizeMasked } from '@/utils'
+
+const CONNECTION_MODE_RESOURCE = 'R'
+const CONNECTION_MODE_FUNCTION = 'F'
 
 const getDefaultMeta = () => {
   return {
@@ -192,7 +195,11 @@ const getters = {
   },
 
   getAvailableConnections (state, getters) {
-    return _.filter(getters.getAllConnections, { eid_status: OBJECT_STATUS_AVAILABLE })
+    return _.filter(getters.getAllConnections, { eid_status: OBJECT_STATUS_AVAILABLE, connection_mode: CONNECTION_MODE_RESOURCE })
+  },
+
+  getAvailableFunctionMounts (state, getters) {
+    return _.filter(getters.getAllConnections, { eid_status: OBJECT_STATUS_AVAILABLE, connection_mode: CONNECTION_MODE_FUNCTION })
   },
 }
 

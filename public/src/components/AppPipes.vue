@@ -90,6 +90,13 @@
                     </el-dropdown-menu>
                   </el-dropdown>
                 </div>
+                <div
+                  class="pv1 silver i"
+                  style="padding-left: 22px; padding-right: 0px; margin-right: 12px; font-size: 12px"
+                  v-if="group.pipes.length == 0"
+                >
+                  There are no functions to show
+                </div>
                 <PipeList
                   class="mb2"
                   item-style="padding-left: 22px; padding-right: 0px; margin-right: 12px"
@@ -99,6 +106,7 @@
                   :show-delete="true"
                   @item-activate="selectPipe"
                   @item-delete="tryDeletePipe"
+                  v-else
                 />
               </div>
               <div class="h2"></div>
@@ -182,8 +190,8 @@
   import PageNotFound from '@/components/PageNotFound'
   import MixinConnection from '@/components/mixins/connection'
 
-  const CONNECTION_MODE_RESOURCE = 'R';
-  const CONNECTION_MODE_FUNCTION = 'F';
+  const CONNECTION_MODE_RESOURCE = 'R'
+  const CONNECTION_MODE_FUNCTION = 'F'
 
   const defaultAttrs = () => {
     // when creating a new function, start out with a basic Python 'Hello World' script
@@ -252,17 +260,28 @@
       pipes() {
         return this.getAllPipes()
       },
-      connections() {
-        return this.getAllConnections()
+      function_mounts() {
+        return this.getAvailableFunctionMounts()
       },
       grouped_pipes() {
-        var groups = _.groupBy(this.pipes, p => _.get(p, 'parent.eid', 'local'))
+        // start with an object with connection eids for keys and empty arrays for values
+        var all_mounts = _.keyBy(this.function_mounts, 'eid')
+        all_mounts = _.mapValues(all_mounts, m => [])
+
+        // group all pipes by their parent connection (this will also result in
+        // an object with connection eids as the key values)
+        var mounts_with_pipes = _.groupBy(this.pipes, p => _.get(p, 'parent.eid', 'local'))
+
+        // overwrite keys in 'all_mounts' with keys in 'mounts_with_pipes'
+        var groups = _.assign({}, all_mounts, mounts_with_pipes)
+
+        // return the following object for each function mount
         return _.map(groups, (val, key) => {
-          var connection = _.find(this.connections, { eid: key })
+          var connection = _.find(this.function_mounts, { eid: key })
 
           return {
             id: key.length == 0 ? 'local' : key,
-            title: key.length == 0 ? 'Local' : _.get(connection, 'name', 'Not Found'),
+            title: key.length == 0 ? 'Local' : _.get(connection, 'name', `Not found (${key})`),
             pipes: val
           }
         })
@@ -291,7 +310,7 @@
         'getAllPipes': 'getAllPipes'
       }),
       ...mapGetters('connections', {
-        'getAllConnections': 'getAllConnections'
+        'getAvailableFunctionMounts': 'getAvailableFunctionMounts'
       }),
       tryFetchPipes() {
         var team_name = this.active_team_name
@@ -433,7 +452,7 @@
       },
       onFunctionMountCommand(cmd, dropdown_component) {
         var eid = _.get(dropdown_component.$attrs, 'connection-eid')
-        var connection = _.find(this.connections, { eid })
+        var connection = _.find(this.function_mounts, { eid })
 
         switch (cmd) {
           case 'edit': this.onEditFunctionMount(connection); return
