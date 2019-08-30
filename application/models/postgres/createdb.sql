@@ -174,8 +174,8 @@ CREATE TABLE tbl_pipe (
   UNIQUE (eid)
 );
 
+CREATE UNIQUE INDEX idx_pipe_owned_by_name ON tbl_pipe (owned_by, name) WHERE name != '';
 CREATE INDEX idx_pipe_parent_eid ON tbl_pipe (parent_eid);
-CREATE INDEX idx_pipe_name ON tbl_pipe (name);
 CREATE INDEX idx_pipe_deploy_mode ON tbl_pipe (deploy_mode);
 CREATE INDEX idx_pipe_deploy_schedule ON tbl_pipe (deploy_schedule);
 CREATE INDEX idx_pipe_deploy_email ON tbl_pipe (deploy_email);
@@ -212,7 +212,7 @@ CREATE TABLE tbl_connection (
   UNIQUE (eid)
 );
 
-CREATE INDEX idx_connection_name ON tbl_connection (name);
+CREATE UNIQUE INDEX idx_connection_owned_by_name ON tbl_connection (owned_by, name) WHERE name != '';
 CREATE INDEX idx_connection_owned_by ON tbl_connection (owned_by);
 CREATE INDEX idx_connection_created_by ON tbl_connection (created_by);
 CREATE INDEX idx_connection_created ON tbl_connection (created);
