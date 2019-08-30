@@ -52,13 +52,6 @@ class Connection extends ModelBase
         $db->beginTransaction();
         try
         {
-            // make sure a name is unique within an owner and object type
-            $qownedby = $db->quote($process_arr['owned_by']);
-            $qname = $db->quote($process_arr['name']);
-            $existing_item = $db->fetchOne("select eid from tbl_connection where owned_by = $qownedby and name = $qname");
-            if ($existing_item !== false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-
             // create the object base
             $eid = $this->getModel()->createObjectBase(\Model::TYPE_CONNECTION, $process_arr);
             $timestamp = \Flexio\System\System::getTimestamp();
