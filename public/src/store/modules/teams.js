@@ -85,9 +85,8 @@ const getters = {
   },
 
   getActiveTeamLabel (state, getters)  {
-    var team = getters.getActiveTeam
     var team_name = state.active_team_name
-    return team ? getFullName(team) + "'s team" : team_name.length > 0 ? team_name + "'s team" : ''
+    return team_name.length > 0 ? team_name + "'s team" : ''
   },
 }
 

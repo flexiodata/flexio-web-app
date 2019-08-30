@@ -22,7 +22,15 @@
         >
           <i class="material-icons md-18 b mr2" v-if="isActiveTeam(team)">check</i>
           <i class="material-icons md-18 b mr2" style="color: transparent" v-else>check</i>
-          <div class="pr3">{{getTeamLabel(team)}}</div>
+          <div class="pr3">
+            <span>{{getTeamLabel(team)}}</span>
+            <span
+              style="font-size: 12px; opacity: 0.5; padding-left: 4px"
+              v-show="getTeamFullName(team).length > 0"
+            >
+              ({{getTeamFullName(team)}})
+            </span>
+          </div>
         </article>
         <el-dropdown-item divided v-if="false"></el-dropdown-item>
         <article
@@ -59,7 +67,7 @@
       },
       active_team_label() {
         return this.getActiveTeamLabel()
-      }
+      },
     },
     created() {
       this.tryFetchTeams()
@@ -80,7 +88,11 @@
         }
       },
       getTeamLabel(team) {
-        return team ? getFullName(team) + "'s team" : ''
+        var team_name = _.get(team, 'username', '')
+        return team_name.length > 0 ? team_name + "'s team" : ''
+      },
+      getTeamFullName(team) {
+        return team ? getFullName(team) : ''
       },
       isActiveTeam(team) {
         return team.username == this.active_team_name
