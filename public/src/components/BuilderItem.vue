@@ -2,12 +2,13 @@
   <div
     class="flex flex-row"
     :id="item.id"
+    v-bind="$attrs"
   >
     <!-- numbers, icons and vertical lines -->
     <div class="flex flex-row relative">
       <!-- stylized number w/o icons -->
       <div
-        class="flex-none pv4 pr3 pr4-l"
+        class="flex-none pr3 pr4-l"
         v-if="showNumbers && !showIcons"
       >
         <div
@@ -27,7 +28,7 @@
 
       <!-- number with icons -->
       <div
-        class="flex-none pv4 pr1 pr3-l mt2 tr"
+        class="flex-none pr1 pr3-l mt2 tr"
         style="width: 24px"
         v-if="showNumbers && showIcons"
       >
@@ -36,7 +37,7 @@
 
       <!-- icon -->
       <div
-        class="flex-none pv4 pr3 pr4-l"
+        class="flex-none pr3 pr4-l"
         :class="{
           'o-40': builder__is_editing && !is_active
         }"
@@ -58,7 +59,7 @@
 
       <!-- vertical line -->
       <div
-        class="absolute w-100 h-100 mv4"
+        class="absolute w-100 h-100"
         v-if="showLine"
       >
         <!-- vertical line w/o buttons -->
@@ -78,7 +79,7 @@
         <!-- vertical line (below icon) w/buttons -->
         <div
           class="bl bw1 b--black-10 pl3 absolute pr3 pr4-l"
-          style="top: 37px; bottom: 58px; right: -1px"
+          style="top: 37px; bottom: -6px; right: -1px"
           v-if="showLine && showInsertButtons"
         ></div>
       </div>
@@ -91,7 +92,7 @@
         <!-- insert before button -->
         <div
           class="absolute cursor-default pr3 pr4-l"
-          style="top: -34px; right: 4px"
+          style="top: -66px; right: 4px"
           v-if="is_first && showInsertButtons"
         >
           <el-button
@@ -109,7 +110,7 @@
         <!-- insert after button -->
         <div
           class="absolute cursor-default pr3 pr4-l"
-          style="bottom: 28px; right: 4px"
+          style="bottom: -4px; right: 4px"
           v-if="showInsertButtons"
         >
           <el-button
@@ -128,7 +129,7 @@
 
     <!-- main content -->
     <div
-      class="flex-fill flex flex-column bg-white hide-child relative"
+      class="flex-fill flex flex-column hide-child relative"
       :class="content_cls"
     >
       <div
@@ -243,6 +244,7 @@
   const available_components = _.keys(components)
 
   export default {
+    inheritAttrs: false,
     props: {
       item: {
         type: Object,
@@ -358,8 +360,7 @@
       },
       content_cls() {
         return _.assign({}, this.content_border_cls, {
-          'pv4 br2 css-content': true,
-          'ph4': this.showContentBorder || this.is_active,
+          'br2 css-content': true,
           [this.activeItemCls]: this.is_active,
           'o-40 no-pointer-events no-select': this.builder__is_editing && !this.is_active
         })
@@ -434,7 +435,7 @@
   .css-active-blue
     margin-top: 0.5rem
     margin-bottom: 0.5rem
-    padding: 1.5rem
+    padding: 1.25rem
     border-radius: 6px
     //border: 1px solid rgba(64, 158, 255, 1)
     box-shadow: 0 0 0 1px rgba(64, 158, 255, 1), 0 0 0 4px rgba(64, 158, 255, 0.4)

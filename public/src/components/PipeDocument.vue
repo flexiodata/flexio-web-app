@@ -22,7 +22,7 @@
           }"
         >
           <div class="h2"></div>
-          <div class="relative z-7 bg-nearer-white sticky">
+          <div class="w-100 center mw-doc mt1 pa4 bg-white br2 css-white-box" style="min-height: 20rem; margin-bottom: 10rem">
             <PipeDocumentHeader
               class="w-100 center mw-doc"
               :pipe="orig_pipe"
@@ -34,9 +34,7 @@
               @save-click="saveChanges"
               @run-click="testPipe"
             />
-          </div>
-
-          <div class="w-100 center mw-doc mt1 pa4 bg-white br2 css-white-box" style="min-height: 20rem; margin-bottom: 10rem">
+            <div class="mv3 bt bw1 b--black-05"></div>
             <PipeBuilderList
               ref="task-list"
               :container-id="scrollbar_container_id"

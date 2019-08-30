@@ -5,9 +5,12 @@
       :container-id="containerId"
       :active-item-idx.sync="active_prompt_idx"
       :active-item-cls="'css-active-blue'"
-      :show-insert-buttons="active_prompt_idx == -1"
-      :show-edit-buttons="false"
       :show-numbers="false"
+      :show-icons="false"
+      :show-line="false"
+      :show-edit-buttons="false"
+      :show-delete-buttons="false"
+      :show-insert-buttons="false"
       :show-content-border="false"
       @task-chooser-select-task="selectNewTask"
       @insert-step="insertStep"
@@ -16,6 +19,7 @@
       @item-change="itemChange"
       @item-cancel="itemCancel"
       @item-save="itemSave"
+      v-bind="$attrs"
       v-on="$listeners"
       v-if="prompts.length > 0"
     />
@@ -35,6 +39,7 @@
   import PipeBuilderEmptyItem from '@/components/PipeBuilderEmptyItem'
 
   export default {
+    inheritAttrs: false,
     props: {
       value: {
         type: Object,
