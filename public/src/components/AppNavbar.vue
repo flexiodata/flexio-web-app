@@ -6,7 +6,7 @@
           <img src="../assets/logo-flexio-navbar.png" class="dib" alt="Flex.io">
         </router-link>
         <div
-          class="ml3 f5 fw6"
+          class="ml3"
           v-if="is_my_account"
         >
           My Account
