@@ -65,22 +65,20 @@
           :id="scrollbar_container_id"
         >
           <div class="h2"></div>
-          <div class="relative z-7 bg-nearer-white sticky">
+          <div class="w-100 center mw-doc mt1 pa4 bg-white br2 css-white-box" style="min-height: 20rem; margin-bottom: 10rem">
             <ConnectionStaticPanel
-              class="w-100 center mw-doc"
               :connection="connection"
               @edit-click="onEditConnection"
             />
-          </div>
-
-          <div class="w-100 center mw-doc mt1 pa4 bg-white br2 css-white-box" style="min-height: 20rem; margin-bottom: 10rem">
             <template v-if="is_keyring_connection">
+              <div class="mv3 bt bw1 b--black-05"></div>
               <div class="mb2 lh-copy ttu fw6 f6">Keypair Values</div>
               <JsonDetailsPanel
                 :json="connection.connection_info"
               />
             </template>
             <FileChooser
+              class="mt3"
               :connection="connection"
               v-if="is_storage_connection"
             />
