@@ -33,7 +33,7 @@
               @save-click="saveChanges"
               @run-click="testPipe"
             />
-            <div class="mv3 bt bw1 b--black-05"></div>
+            <div class="h2"></div>
             <PipeBuilderList
               ref="task-list"
               :container-id="scrollbar_container_id"

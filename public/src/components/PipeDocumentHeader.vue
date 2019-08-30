@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="flex flex-row">
-      <div class="flex-fill flex flex-column">
-        <div class="flex flex-row items-center">
+      <div class="flex-fill">
+        <div class="flex-fill flex flex-row items-center">
           <div class="f4 fw6 lh-title">{{pipe.name}}</div>
           <LabelSwitch
             class="ml3 hint--bottom"
@@ -12,10 +12,6 @@
             v-model="is_deployed"
             v-require-rights:pipe.update
           />
-        </div>
-        <div class="mt3">
-          <div class="code f7 b">{{syntax_str}}</div>
-          <p class="mb0 f6" v-show="pipe.description.length > 0">{{pipe.description}}</p>
         </div>
       </div>
       <transition name="el-fade-in" mode="out-in">
