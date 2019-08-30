@@ -19,6 +19,9 @@ class Pipe extends ModelBase
 {
     public function create(array $params) : string
     {
+        // note: non-empty names are unique within owner and object type; this constraint
+        // is enforced in the database schema
+
         $default_name = \Flexio\Base\Util::generateRandomName('func-');
 
         $validator = \Flexio\Base\Validator::create();
@@ -66,13 +69,6 @@ class Pipe extends ModelBase
         $db->beginTransaction();
         try
         {
-            // make sure a name is unique within an owner and object type
-            $qownedby = $db->quote($process_arr['owned_by']);
-            $qname = $db->quote($process_arr['name']);
-            $existing_item = $db->fetchOne("select eid from tbl_pipe where owned_by = $qownedby and name = $qname");
-            if ($existing_item !== false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-
             // create the object base
             $eid = $this->getModel()->createObjectBase(\Model::TYPE_PIPE, $process_arr);
             $timestamp = \Flexio\System\System::getTimestamp();
@@ -156,16 +152,12 @@ class Pipe extends ModelBase
 
     public function update(array $filter, array $params) : bool
     {
+        // note: non-empty names are unique within owner and object type; this constraint
+        // is enforced in the database schema
+
         $db = $this->getDatabase();
         $allowed_items = array('eid', 'eid_status', 'owned_by', 'created_by', 'created_min', 'created_max', 'parent_eid', 'name');
         $filter_expr = \Filter::build($db, $filter, $allowed_items);
-
-        // names need to be unique within for an owner and object type; if the name
-        // is being set, make sure an eid is specified in the filter params, which
-        // will guarantee we're not doing a bulk update on name; we'll still need
-        // an additional check to make sure the name doesn't exist later
-        if (isset($params['name']) && !isset($filter['eid']))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
@@ -197,30 +189,6 @@ class Pipe extends ModelBase
         $db->beginTransaction();
         try
         {
-            if (isset($params['name']))
-            {
-                // if an identifier is specified, make sure that it's unique within an owner and object type
-                $eid = $filter['eid'];
-                $owner_to_check = $process_arr['owned_by'] ?? false;
-                if ($owner_to_check === false) // owner isn't specified; find out what it is
-                    $owner_to_check = $db->fetchOne("select owned_by from tbl_pipe where eid = ?", $eid);
-
-                if ($owner_to_check !== false)
-                {
-                    // we found an owner; see if the name exists for the owner and object type
-                    $name = $params['name'];
-                    $qownedby = $db->quote($owner_to_check);
-                    $qname = $db->quote($name);
-                    $existing_eid = $db->fetchOne("select eid from tbl_pipe where owned_by = $qownedby and name = $qname");
-
-                    // don't allow a name to be set if it's already used for another eid
-                    // (but if the name is passed for the same eid, it's ok, because it's
-                    // just setting it to what it already is)
-                    if ($existing_eid !== false && $existing_eid !== $eid)
-                        throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-                }
-            }
-
             // make sure the deploy mode is valid
             if (isset($process_arr['deploy_mode']))
             {
