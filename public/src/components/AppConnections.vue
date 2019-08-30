@@ -257,12 +257,16 @@
         var cname = _.get(attrs, 'name', 'Connection')
         var team_name = this.active_team_name
 
-        this.$confirm('Are you sure you want to delete the connection named "' + cname + '"?', 'Really delete connection?', {
+        var msg = `Are you sure you want to delete the connection named <strong>"${cname}"</strong>?`
+        var title = `Really delete connection?`
+
+        this.$confirm(msg, title, {
+          type: 'warning',
           confirmButtonClass: 'ttu fw6',
           cancelButtonClass: 'ttu fw6',
           confirmButtonText: 'Delete connection',
           cancelButtonText: 'Cancel',
-          type: 'warning'
+          dangerouslyUseHTMLString: true
         }).then(() => {
           var selected_idx = _.findIndex(this.sorted_connections, { eid: this.connection.eid })
           var deleting_idx = _.findIndex(this.sorted_connections, { eid: attrs.eid })
