@@ -13,7 +13,7 @@
         <!-- sidebar -->
         <div class="flex flex-column min-w5 bg-white br b--black-05">
           <!-- control bar -->
-          <div class="flex-none pa2 relative bg-white">
+          <div class="flex-none pa2 relative bg-white bb b--black-05">
             <div class="flex flex-row items-center">
               <el-input
                 class="w-100 mr2"
