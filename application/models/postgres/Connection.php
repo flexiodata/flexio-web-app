@@ -49,7 +49,6 @@ class Connection extends ModelBase
         $process_arr['connection_info'] = \Flexio\Base\Util::encrypt($process_arr['connection_info'], $GLOBALS['g_store']->connection_enckey);
 
         $db = $this->getDatabase();
-        $db->beginTransaction();
         try
         {
             // create the object base
@@ -64,12 +63,10 @@ class Connection extends ModelBase
             if ($db->insert('tbl_connection', $process_arr) === false)
                 throw new \Exception();
 
-            $db->commit();
             return $eid;
         }
         catch (\Exception $e)
         {
-            $db->rollback();
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
         }
     }
@@ -84,17 +81,14 @@ class Connection extends ModelBase
 
         // set the status to deleted and clear out any existing name
         $db = $this->getDatabase();
-        $db->beginTransaction();
         try
         {
             $process_arr = array('eid_status' => \Model::STATUS_DELETED, 'name' => '');
             $db->update('tbl_connection', $process_arr, 'eid = ' . $db->quote($eid));
-            $db->commit();
             return true;
         }
         catch (\Exception $e)
         {
-            $db->rollback();
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, (IS_DEBUG() ? $e->getMessage() : null));
         }
     }
@@ -171,17 +165,14 @@ class Connection extends ModelBase
         if (isset($process_arr['connection_info']))
             $process_arr['connection_info'] = \Flexio\Base\Util::encrypt($process_arr['connection_info'], $GLOBALS['g_store']->connection_enckey);
 
-        $db->beginTransaction();
         try
         {
             // set the properties
             $updates_made = $db->update('tbl_connection', $process_arr, $filter_expr);
-            $db->commit();
             return $updates_made;
         }
         catch (\Exception $e)
         {
-            $db->rollback();
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, (IS_DEBUG() ? $e->getMessage() : null));
         }
     }

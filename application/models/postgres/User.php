@@ -218,17 +218,14 @@ class User extends ModelBase
         if (isset($process_arr['password']) && strlen($process_arr['password']) > 0)
             $process_arr['password'] = self::encodePassword($process_arr['password']);
 
-        $db->beginTransaction();
         try
         {
             // set the properties
             $updates_made = $db->update('tbl_user', $process_arr, $filter_expr);
-            $db->commit();
             return $updates_made;
         }
         catch (\Exception $e)
         {
-            $db->rollback();
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
     }
