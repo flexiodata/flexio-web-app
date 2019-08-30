@@ -162,6 +162,25 @@
                   v-model="cinfo.repository"
                 />
               </el-form-item>
+              <el-form-item
+                label="Base Path"
+                key="base_path"
+                prop="base_path"
+                :class="getClass('base_path')"
+                v-if="showInput('base_path')"
+              >
+                <template slot="label">
+                  <span>Base path</span>
+                  <span class="lh-1 hint--top" aria-label="An optional root directory akin to chroot (e.g. /home/myname)">
+                    <i class="el-icon-info blue"></i>
+                  </span>
+                </template>
+                <el-input
+                  placeholder="Base Path (optional)"
+                  spellcheck="false"
+                  v-model="cinfo.base_path"
+                />
+              </el-form-item>
             </el-form>
           </div>
         </div>
@@ -629,7 +648,7 @@
           case ctypes.CONNECTION_TYPE_GOOGLEDRIVE:
             return ['base_path']
           case ctypes.CONNECTION_TYPE_GITHUB:
-            return ['owner', 'repository']
+            return ['owner', 'repository', 'base_path']
           case ctypes.CONNECTION_TYPE_GOOGLECLOUDSTORAGE:
             return ['bucket', 'base_path']
         }
