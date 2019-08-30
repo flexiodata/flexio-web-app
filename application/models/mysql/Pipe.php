@@ -125,6 +125,48 @@ class Pipe extends ModelBase
         if (!\Flexio\Base\Eid::isValid($eid))
             return false;
 
+        $filter = array('eid' => $eid);
+        return $this->update($filter, $params);
+    }
+
+    public function get(string $eid) : array
+    {
+        if (!\Flexio\Base\Eid::isValid($eid))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+        $filter = array('eid' => $eid);
+        $rows = $this->list($filter);
+        if (count($rows) === 0)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+        return $rows[0];
+    }
+
+    public function exists(string $eid) : bool
+    {
+        if (!\Flexio\Base\Eid::isValid($eid))
+            return false;
+
+        $result = $this->getDatabase()->fetchOne("select eid from tbl_pipe where eid = ?", $eid);
+        if ($result === false)
+            return false;
+
+        return true;
+    }
+
+    public function update(array $filter, array $params) : bool
+    {
+        $db = $this->getDatabase();
+        $allowed_items = array('eid', 'eid_status', 'owned_by', 'created_by', 'created_min', 'created_max', 'parent_eid', 'name');
+        $filter_expr = \Filter::build($db, $filter, $allowed_items);
+
+        // names need to be unique within for an owner and object type; if the name
+        // is being set, make sure an eid is specified in the filter params, which
+        // will guarantee we're not doing a bulk update on name; we'll still need
+        // an additional check to make sure the name doesn't exist later
+        if (isset($params['name']) && !isset($filter['eid']))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid_status'      => array('type' => 'string', 'required' => false),
@@ -152,18 +194,13 @@ class Pipe extends ModelBase
         if (isset($process_arr['eid_status']) && \Model::isValidStatus($process_arr['eid_status']) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
-        // if the item doesn't exist, return false
-        if ($this->exists($eid) === false)
-            return false;
-
-        $db = $this->getDatabase();
         $db->beginTransaction();
         try
         {
             if (isset($params['name']))
             {
                 // if an identifier is specified, make sure that it's unique within an owner and object type
-                $qeid = $db->quote($eid);
+                $eid = $filter['eid'];
                 $owner_to_check = $process_arr['owned_by'] ?? false;
                 if ($owner_to_check === false) // owner isn't specified; find out what it is
                     $owner_to_check = $db->fetchOne("select owned_by from tbl_pipe where eid = ?", $eid);
@@ -214,45 +251,15 @@ class Pipe extends ModelBase
             }
 
             // set the properties
-            $db->update('tbl_pipe', $process_arr, 'eid = ' . $db->quote($eid));
+            $updates_made = $db->update('tbl_pipe', $process_arr, $filter_expr);
             $db->commit();
-            return true;
+            return $updates_made;
         }
         catch (\Exception $e)
         {
             $db->rollback();
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
-    }
-
-    public function get(string $eid) : array
-    {
-        if (!\Flexio\Base\Eid::isValid($eid))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-
-        $filter = array('eid' => $eid);
-        $rows = $this->list($filter);
-        if (count($rows) === 0)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-
-        return $rows[0];
-    }
-
-    public function exists(string $eid) : bool
-    {
-        if (!\Flexio\Base\Eid::isValid($eid))
-            return false;
-
-        $result = $this->getDatabase()->fetchOne("select eid from tbl_pipe where eid = ?", $eid);
-        if ($result === false)
-            return false;
-
-        return true;
-    }
-
-    public function update(array $filter, array $params) : bool
-    {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
     public function list(array $filter) : array
