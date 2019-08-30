@@ -14,9 +14,17 @@
       @close="show_error = false"
       v-if="show_error"
     />
+    <div
+      class="flex flex-row items-center lh-copy f6 pa3 br2"
+      style="border: 1px solid #dcdfe6"
+    >
+      <img :src="gravatar_src" class="br-100"/>
+      <div class="pl3">We use Gravatar, a service that associates an avatar image with your email address. <a href="https://en.gravatar.com" class="blue" target="_blank">Change your Gravatar</a>.</div>
+    </div>
     <el-form
       ref="form"
       class="mt3 el-form--cozy el-form__label-tiny"
+      style="max-width: 28rem"
       :model="edit_info"
       :rules="rules"
     >
@@ -130,7 +138,13 @@
       }),
       current_email() {
         return _.get(this.getActiveUser(), 'email', ' ')
-      }
+      },
+      email_hash() {
+        return _.get(this.getActiveUser(), 'email_hash', '')
+      },
+      gravatar_src() {
+        return 'https://secure.gravatar.com/avatar/' + this.email_hash + '?d=mm&s=64'
+      },
     },
     mounted() {
       this.initFromActiveUser()

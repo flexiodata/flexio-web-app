@@ -17,7 +17,7 @@
             <div slot="label"><div style="min-width: 5rem">Profile</div></div>
             <div class="ml3 mr4">
               <h3 class="mt0 fw6 f3">Profile</h3>
-              <AccountProfileForm style="max-width: 28rem" />
+              <AccountProfileForm />
               <div class="h3"></div>
             </div>
           </el-tab-pane>

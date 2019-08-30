@@ -1,7 +1,7 @@
 <template>
   <el-dropdown trigger="click" @command="onCommand">
     <span class="el-dropdown-link pointer dim-less">
-      <img :src="user_profile_src" class="dib v-mid ba b--black-10 db br-100"/>
+      <img :src="gravatar_src" class="dib v-mid ba b--black-10 db br-100"/>
       <i class="material-icons v-mid black-30 nl1 md-18">expand_more</i>
     </span>
     <el-dropdown-menu style="min-width: 12rem" slot="dropdown">
@@ -44,7 +44,7 @@
       email_hash() {
         return _.get(this.getActiveUser(), 'email_hash', '')
       },
-      user_profile_src() {
+      gravatar_src() {
         return 'https://secure.gravatar.com/avatar/' + this.email_hash + '?d=mm&s=32'
       }
     },
