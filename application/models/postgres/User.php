@@ -19,6 +19,9 @@ class User extends ModelBase
 {
     public function create(array $params) : string
     {
+        // note: non-empty username and non-empty email are unique; this constraint
+        // is enforced in the database schema
+
         // convert username and email to lowercase
         if (isset($params['username']))
             $params['username'] = strtolower($params['username']);
@@ -163,16 +166,12 @@ class User extends ModelBase
 
     public function update(array $filter, array $params) : bool
     {
+        // note: non-empty username and non-empty email are unique; this constraint
+        // is enforced in the database schema
+
         $db = $this->getDatabase();
         $allowed_items = array('eid', 'eid_status', 'owned_by', 'created_by', 'created_min', 'created_max', 'username', 'email');
         $filter_expr = \Filter::build($db, $filter, $allowed_items);
-
-        // email and username need to be unique for users; if either of these are
-        // being set, make sure an eid is specified in the filter params, which
-        // will guarantee we're not doing a bulk update on tehse; we'll still need
-        // an additional check to make sure the email/username doesn't exist later
-        if ((isset($params['email']) || isset($params['username'])) && !isset($filter['eid']))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         // convert username and email to lowercase
         if (isset($params['username']))
@@ -219,35 +218,14 @@ class User extends ModelBase
         if (isset($process_arr['password']) && strlen($process_arr['password']) > 0)
             $process_arr['password'] = self::encodePassword($process_arr['password']);
 
-        $db->beginTransaction();
         try
         {
-            if (isset($process_arr['username']))
-            {
-                $eid = $filter['eid'];
-                $qusername = $db->quote($process_arr['username']);
-                $existing_eid = $db->fetchOne("select eid from tbl_user where username = $qusername");
-                if ($existing_eid !== false && $existing_eid !== $eid)
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-            }
-
-            if (isset($process_arr['email']))
-            {
-                $eid = $filter['eid'];
-                $qemail = $db->quote($process_arr['email']);
-                $existing_eid = $db->fetchOne("select eid from tbl_user where email = $qemail");
-                if ($existing_eid !== false && $existing_eid !== $eid)
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-            }
-
             // set the properties
             $updates_made = $db->update('tbl_user', $process_arr, $filter_expr);
-            $db->commit();
             return $updates_made;
         }
         catch (\Exception $e)
         {
-            $db->rollback();
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
     }
