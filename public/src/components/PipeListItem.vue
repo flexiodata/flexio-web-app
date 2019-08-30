@@ -5,7 +5,7 @@
     :title="pname"
     @click="onClick"
   >
-    <div class="flex flex-row items-center hide-child item-inner">
+    <div class="flex flex-row items-center item-inner">
       <div class="flex-fill flex flex-row items-center">
         <div class="item-on-indicator" :class="is_deployed ? 'on' : 'off'"></div>
         <div class="flex-fill truncate item-title">{{pname}}</div>
@@ -100,7 +100,7 @@
         var size_cls = this.itemCls + '-' + this.itemSize
         var sel_cls = this.is_selected ? this.selectedCls : ''
 
-        return `${cls} ${size_cls} ${sel_cls}`
+        return `${cls} ${size_cls} ${sel_cls} hide-child`
       }
     },
     methods: {

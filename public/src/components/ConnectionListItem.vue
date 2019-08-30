@@ -4,7 +4,7 @@
     :style="itemStyle"
     @click="onClick"
   >
-    <div class="flex flex-row items-center cursor-default">
+    <div class="flex flex-row items-center">
       <i class="material-icons md-18 b mr3" v-if="showCheckmark && is_selected">check</i>
       <i class="material-icons md-18 b mr3" style="color: transparent" v-else-if="showCheckmark && !is_selected">check</i>
       <div
@@ -23,11 +23,20 @@
         </div>
       </div>
       <div
-        class="flex-fill fw6 cursor-default mr1 lh-title truncate"
+        class="flex-fill fw6 mr1 lh-title truncate"
         :class="itemSize == 'small' ? 'f6' : 'f5'"
       >
         {{cname}}
       </div>
+      <el-button
+        class="child item-delete-button"
+        style="background: none; border:0; padding: 0; margin: 0"
+        @click.stop="emitDelete"
+        v-require-rights:connection.delete.hidden
+        v-if="showDelete && !showDropdown"
+      >
+        <i class="material-icons">delete</i>
+      </el-button>
       <div
         class="flex-none ml2"
         @click.stop
@@ -39,7 +48,13 @@
             <i class="material-icons v-mid">expand_more</i>
           </span>
           <el-dropdown-menu style="min-width: 10rem" slot="dropdown">
-            <el-dropdown-item class="flex flex-row items-center ph2" command="delete"><i class="material-icons mr3">delete</i> Delete</el-dropdown-item>
+            <el-dropdown-item
+              class="flex flex-row items-center ph2"
+              command="delete"
+              v-show="showDelete"
+            >
+              <i class="material-icons mr3">delete</i> Delete
+            </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -60,7 +75,7 @@
       },
       itemCls: {
         type: String,
-        default: ''
+        default: 'item'
       },
       itemStyle: {
         type: String,
@@ -79,6 +94,10 @@
         default: 'relative bg-nearer-white'
       },
       showDropdown: {
+        type: Boolean,
+        default: false
+      },
+      showDelete: {
         type: Boolean,
         default: false
       },
@@ -118,29 +137,21 @@
       is_available() {
         return this.cstatus == CONNECTION_STATUS_AVAILABLE
       },
-
       cls() {
+        var cls = this.itemCls
+        var size_cls = this.itemCls + '-' + this.itemSize
         var sel_cls = this.is_selected ? this.selectedCls : ''
-        var size_cls = ''
 
-        switch (this.itemSize) {
-          default:
-          case 'large': size_cls = 'item-lg pa3'; break;
-          case 'small': size_cls = 'item-sm pa2'; break;
-        }
-
-        if (this.itemCls.length > 0) {
-          return this.itemCls + ' ' + sel_cls
-        } else {
-          return size_cls + ' bb b--black-05 bg-white hover-bg-nearer-white ' + sel_cls
-        }
+        return `${cls} ${size_cls} ${sel_cls} hide-child`
       }
     },
     methods: {
+      emitDelete() {
+        this.$emit('delete', this.item)
+      },
       onCommand(cmd) {
         switch (cmd) {
-          case 'edit':      return this.$emit('edit', this.item)
-          case 'delete':    return this.$emit('delete', this.item)
+          case 'delete': emitDelete(); return
         }
       },
       onClick: _.debounce(function() {
@@ -151,9 +162,29 @@
 </script>
 
 <style lang="stylus" scoped>
-  .item-lg
-    min-width: 16rem
+  @import '../stylesheets/variables.styl'
 
-  .item-sm
+  .item
+    cursor: pointer
+    user-select: none
+    &:hover
+      background-color: darken($nearer-white, 3%)
+
+  .item-delete-button
+    color: rgba(0,0,0,0.3)
+    font-size: 20px
+    line-height: 20px
+    &:hover
+      color: #000
+
+  // -- sizing modifiers --
+
+  .item-large
+    min-width: 16rem
+    padding: 16px
+    border-bottom: 1px solid rgba(0,0,0,0.05)
+
+  .item-small
     min-width: 12rem
+    padding: 8px
 </style>

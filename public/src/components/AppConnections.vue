@@ -50,7 +50,7 @@
               <ConnectionList
                 :items="filtered_connections"
                 :selected-item.sync="connection"
-                :show-dropdown="true"
+                :show-delete="true"
                 @item-activate="selectConnection"
                 @item-delete="tryDeleteConnection"
                 v-else
