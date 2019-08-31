@@ -19,7 +19,7 @@
       style="border: 1px solid #dcdfe6"
     >
       <img :src="gravatar_src" class="br-100"/>
-      <div class="pl3">We use Gravatar, a service that associates an avatar image with your email address. <a href="https://en.gravatar.com" class="blue" target="_blank">Change your Gravatar</a>.</div>
+      <div class="pl3">We use Gravatar, a service that associates an avatar image with your email address, to display your profile picture. <a href="https://en.gravatar.com" class="blue" target="_blank">Change your Gravatar</a>.</div>
     </div>
     <el-form
       ref="form"
