@@ -356,7 +356,7 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $connection_item_info;
     }
 
-    public function authenticate(array $params) // TODO: add function return type
+    public function authenticateInit(array $params) // TODO: add function return type
     {
         // TODO: is there anyway to save some of these in the object so we can make
         // successive calls without sending everything?
