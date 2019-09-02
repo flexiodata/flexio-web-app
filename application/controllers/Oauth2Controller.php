@@ -29,8 +29,7 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
 
         $this->renderRaw();
         $params = $this->getRequest()->getParams();
-
-        $connection_eid = $params['eid'] ?? false;
+        $connection_eid = $params['eid'] ?? '';
 
         $auth_params = array();
         $auth_params['redirect'] = self::getCallbackUrl();
