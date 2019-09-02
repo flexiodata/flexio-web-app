@@ -35,62 +35,15 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
         $auth_params = array();
         $auth_params['redirect'] = self::getCallbackUrl();
 
+        // if the service parameter is set, perform a check upfront if
+        // the service is valid; note: the service parameter isn't required
+        // since the connection has a connection_type which correspondes
+        // to the service; this check is here because the check may be
+        // useful for debugging
         if (isset($params['service']))
-            $auth_params['service'] = $params['service'];
-
-        // check for empty
-        if (($params['service'] ?? '') == 'dropbox')
         {
-            if (strlen(''.($GLOBALS['g_config']->dropbox_client_id ?? '')) == 0 ||
-                strlen(''.($GLOBALS['g_config']->dropbox_client_secret ?? '')) == 0)
-            {
+            if (self::isValidService($params['service']) === false)
                 die('This function is presently not available.');
-            }
-        }
-
-        if (($params['service'] ?? '') == 'box')
-        {
-            if (strlen(''.($GLOBALS['g_config']->box_client_id ?? '')) == 0 ||
-                strlen(''.($GLOBALS['g_config']->box_client_secret ?? '')) == 0)
-            {
-                die('This function is presently not available.');
-            }
-        }
-
-        if (($params['service'] ?? '') == 'github')
-        {
-            if (strlen(''.($GLOBALS['g_config']->github_client_id ?? '')) == 0 ||
-                strlen(''.($GLOBALS['g_config']->github_client_secret ?? '')) == 0)
-            {
-                die('This function is presently not available.');
-            }
-        }
-
-        if (($params['service'] ?? '') == 'googledrive' || ($params['service'] ?? '') == 'googlesheets')
-        {
-            if (strlen(''.($GLOBALS['g_config']->googledrive_client_id ?? '')) == 0 ||
-                strlen(''.($GLOBALS['g_config']->googledrive_client_secret ?? '')) == 0)
-            {
-                die('This function is presently not available.');
-            }
-        }
-
-        if (($params['service'] ?? '') == 'googlecloudstorage')
-        {
-            if (strlen(''.($GLOBALS['g_config']->googlecloudstorage_client_id ?? '')) == 0 ||
-                strlen(''.($GLOBALS['g_config']->googlecloudstorage_client_secret ?? '')) == 0)
-            {
-                die('This function is presently not available.');
-            }
-        }
-
-        if (($params['service'] ?? '') == 'gmail')
-        {
-            if (strlen(''.($GLOBALS['g_config']->gmail_client_id ?? '')) == 0 ||
-                strlen(''.($GLOBALS['g_config']->gmail_client_secret ?? '')) == 0)
-            {
-                die('This function is presently not available.');
-            }
         }
 
         try
@@ -165,6 +118,77 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
         $this->setViewTitle(_('Connection Authorization - Flex.io'));
         $this->renderPublic();
         $this->render();
+    }
+
+    private static function isValidService(string $service) : bool
+    {
+        if ($service == 'dropbox')
+        {
+            if (strlen(''.($GLOBALS['g_config']->dropbox_client_id ?? '')) == 0 ||
+                strlen(''.($GLOBALS['g_config']->dropbox_client_secret ?? '')) == 0)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        if (($params['service'] ?? '') == 'box')
+        {
+            if (strlen(''.($GLOBALS['g_config']->box_client_id ?? '')) == 0 ||
+                strlen(''.($GLOBALS['g_config']->box_client_secret ?? '')) == 0)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        if (($params['service'] ?? '') == 'github')
+        {
+            if (strlen(''.($GLOBALS['g_config']->github_client_id ?? '')) == 0 ||
+                strlen(''.($GLOBALS['g_config']->github_client_secret ?? '')) == 0)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        if (($params['service'] ?? '') == 'googledrive' || ($params['service'] ?? '') == 'googlesheets')
+        {
+            if (strlen(''.($GLOBALS['g_config']->googledrive_client_id ?? '')) == 0 ||
+                strlen(''.($GLOBALS['g_config']->googledrive_client_secret ?? '')) == 0)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        if (($params['service'] ?? '') == 'googlecloudstorage')
+        {
+            if (strlen(''.($GLOBALS['g_config']->googlecloudstorage_client_id ?? '')) == 0 ||
+                strlen(''.($GLOBALS['g_config']->googlecloudstorage_client_secret ?? '')) == 0)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        if (($params['service'] ?? '') == 'gmail')
+        {
+            if (strlen(''.($GLOBALS['g_config']->gmail_client_id ?? '')) == 0 ||
+                strlen(''.($GLOBALS['g_config']->gmail_client_secret ?? '')) == 0)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     private static function getCallbackUrl() : string
