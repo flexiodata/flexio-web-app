@@ -67,22 +67,14 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
     {
         $params = $this->getRequest()->getParams();
 
-        $auth_params = array();
-        $auth_params['redirect'] = self::getCallbackUrl();
-
-        if (isset($params['code']))
-            $auth_params['code'] = $params['code'];
-        if (isset($params['state']))
-            $auth_params['state'] = $params['state'];
-
         // if the state is set, get the eid and load the connection; otherwise
         // try to get the eid from the raw params
         $connection = false;
         try
         {
-            if (isset($auth_params['state']))
+            if (isset($params['state']))
             {
-                $state = json_decode(base64_decode($auth_params['state']),true);
+                $state = json_decode(base64_decode($params['state']),true);
                 $eid = $state['eid'] ?? '';
                 $connection = \Flexio\Object\Connection::load($eid);
                 if ($connection->getStatus() === \Model::STATUS_DELETED)
@@ -107,7 +99,11 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
 
         $result = false;
         if ($connection !== false)
+        {
+            $auth_params = array();
+            $auth_params['code'] = $params['code'];
             $result = $connection->authenticateCallback($auth_params);
+        }
 
         // render this page, so it can close the popup
         // and do the callback to the parent/app window
