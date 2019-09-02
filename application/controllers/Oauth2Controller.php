@@ -83,7 +83,7 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
             if (isset($auth_params['state']))
             {
                 $state = json_decode(base64_decode($auth_params['state']),true);
-                $eid = $state['eid'] ?? false;
+                $eid = $state['eid'] ?? '';
                 $connection = \Flexio\Object\Connection::load($eid);
                 if ($connection->getStatus() === \Model::STATUS_DELETED)
                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
