@@ -30,6 +30,8 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
         $this->renderRaw();
         $params = $this->getRequest()->getParams();
 
+        $connection_eid = $params['eid'] ?? false;
+
         $auth_params = array();
         $auth_params['redirect'] = self::getCallbackUrl();
 
@@ -91,33 +93,25 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
             }
         }
 
-
-        $eid = $params['eid'] ?? false;
-
-        $connection = false;
         try
         {
-            $connection = \Flexio\Object\Connection::load($eid);
+            $connection = \Flexio\Object\Connection::load($connection_eid);
             if ($connection->getStatus() === \Model::STATUS_DELETED)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+            $result = $connection->authenticate($auth_params);
+            if (is_string($result))
+            {
+                //fxdebug('redirect URL is: '. $result);
+                $this->_redirect($result);
+            }
         }
         catch (\Flexio\Base\Exception $e)
         {
             die('The specified connection is unavailable');
         }
 
-        $result = $connection->authenticate($auth_params);
-
-        // if authenticating returns a string, it's a redirect url
-        if ($result !== true && $result !== false)
-        {
-            //fxdebug('redirect URL is: '. $result);
-            $this->_redirect($result);
-        }
-         else
-        {
-            die("Authentication to this service is presently not available.");
-        }
+        die("Authentication to this service is presently not available.");
     }
 
     public function callbackAction() : void
