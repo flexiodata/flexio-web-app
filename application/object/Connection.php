@@ -356,10 +356,15 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $connection_item_info;
     }
 
-    public function authenticateInit(array $params) // TODO: add function return type
+    public function authenticateInit(array $params) : string
     {
+        // a redirect url is required
+        if (!isset($params['redirect']))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
         $connection_info = $this->get();
         $connection_type = $connection_info['connection_type'];
+        $redirect_url = $params['redirect'];
 
         // pack up the eid
         $state = array(
@@ -368,14 +373,13 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
         $auth_params = array();
         $auth_params['state'] = base64_encode(json_encode($state));
-        if (isset($params['redirect']))
-            $auth_params['redirect'] = $params['redirect'];
+        $auth_params['redirect'] = $redirect_url;
 
         $response = null;
         switch ($connection_type)
         {
             default:
-                return false;
+                break;
 
             case \Flexio\Services\Factory::TYPE_DROPBOX:
                 $response = \Flexio\Services\Dropbox::create($auth_params);
@@ -412,33 +416,16 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             $properties = array();
             $properties['connection_status'] = \Model::CONNECTION_STATUS_ERROR;
             $this->set($properties);
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED);
         }
 
-        // if the service creation response is a string, then it's
-        // an authorization uri, and we need to complete the process;
-        // return the string
-        if (is_string($response))
-            return $response;
-
-        // we're authenticated; get the token
-        $service_object = $response;
-        $tokens = $service_object->getTokens();
-
-        // DEBUG:
-        // file_put_contents('/tmp/tokens.txt', "Tokens :" . json_encode($tokens)."\n", FILE_APPEND);
-
-        $properties = array();
-        $properties['connection_status'] = \Model::CONNECTION_STATUS_AVAILABLE;
-        $properties['connection_info']['access_token'] = $tokens['access_token'];
-        $properties['connection_info']['refresh_token'] = $tokens['refresh_token'];
-        if (isset($tokens['expires']))
-        {
-            $properties['connection_info']['expires'] = $tokens['expires'];
-        }
-        $this->set($properties);
-
-        return true;
+        // TODO: right now, the service creation function for each of the services
+        // can return multiple types; however, for this phase of the authentication,
+        // the response should always be a string; should split out this phase of
+        // the authentication into a separate function call for each service; for now,
+        // because this function enforces a return type, downstream exception handling
+        // will catch the error if the wrong type is returned
+        return $response;
     }
 
     public function authenticateCallback(array $params) // TODO: add function return type
