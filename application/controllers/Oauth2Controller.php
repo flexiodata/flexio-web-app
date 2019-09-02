@@ -122,7 +122,7 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
 
     private static function isValidService(string $service) : bool
     {
-        if ($service == 'dropbox')
+        if ($service === \Flexio\Services\Factory::TYPE_DROPBOX)
         {
             if (strlen(''.($GLOBALS['g_config']->dropbox_client_id ?? '')) == 0 ||
                 strlen(''.($GLOBALS['g_config']->dropbox_client_secret ?? '')) == 0)
@@ -133,7 +133,7 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
             return true;
         }
 
-        if (($params['service'] ?? '') == 'box')
+        if ($service === \Flexio\Services\Factory::TYPE_BOX)
         {
             if (strlen(''.($GLOBALS['g_config']->box_client_id ?? '')) == 0 ||
                 strlen(''.($GLOBALS['g_config']->box_client_secret ?? '')) == 0)
@@ -144,7 +144,7 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
             return true;
         }
 
-        if (($params['service'] ?? '') == 'github')
+        if ($service === \Flexio\Services\Factory::TYPE_GITHUB)
         {
             if (strlen(''.($GLOBALS['g_config']->github_client_id ?? '')) == 0 ||
                 strlen(''.($GLOBALS['g_config']->github_client_secret ?? '')) == 0)
@@ -155,8 +155,9 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
             return true;
         }
 
-        if (($params['service'] ?? '') == 'googledrive' || ($params['service'] ?? '') == 'googlesheets')
+        if ($service === \Flexio\Services\Factory::TYPE_GOOGLEDRIVE)
         {
+            // note: google drive and google sheets use the same config items
             if (strlen(''.($GLOBALS['g_config']->googledrive_client_id ?? '')) == 0 ||
                 strlen(''.($GLOBALS['g_config']->googledrive_client_secret ?? '')) == 0)
             {
@@ -166,7 +167,19 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
             return true;
         }
 
-        if (($params['service'] ?? '') == 'googlecloudstorage')
+        if ($service === \Flexio\Services\Factory::TYPE_GOOGLESHEETS)
+        {
+            // note: google drive and google sheets use the same config items
+            if (strlen(''.($GLOBALS['g_config']->googledrive_client_id ?? '')) == 0 ||
+                strlen(''.($GLOBALS['g_config']->googledrive_client_secret ?? '')) == 0)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        if ($service === \Flexio\Services\Factory::TYPE_GOOGLECLOUDSTORAGE)
         {
             if (strlen(''.($GLOBALS['g_config']->googlecloudstorage_client_id ?? '')) == 0 ||
                 strlen(''.($GLOBALS['g_config']->googlecloudstorage_client_secret ?? '')) == 0)
@@ -177,7 +190,7 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
             return true;
         }
 
-        if (($params['service'] ?? '') == 'gmail')
+        if ($service === \Flexio\Services\Factory::TYPE_GMAIL)
         {
             if (strlen(''.($GLOBALS['g_config']->gmail_client_id ?? '')) == 0 ||
                 strlen(''.($GLOBALS['g_config']->gmail_client_secret ?? '')) == 0)
