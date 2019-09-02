@@ -358,71 +358,53 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public function authenticateInit(array $params) // TODO: add function return type
     {
-        // TODO: is there anyway to save some of these in the object so we can make
-        // successive calls without sending everything?
+        $connection_info = $this->get();
+        $connection_type = $connection_info['connection_type'];
 
-        $service = $params['service'] ?? '';
-        $code = $params['code'] ?? false;
-        $state = $params['state'] ?? false;
-
-        // if we have a state variable, then unpack it
-        if ($state !== false)
-            $state = @json_decode(base64_decode($state),true);
-
-        // set the service, based on either the supplied parameter or the
-        // state variable if it exists
-        if ($service === '')
-            $service = $state['service'] ?? '';
-
-        // if the state param isn't initialized, pack up the service and eid
-        if ($state === false)
-        {
-            $state = array(
-                'service' => $service,
-                'eid' => $this->getEid()
-            );
-            if (isset($params['redirect']))
-                $state['redirect'] = $params['redirect'];
-        }
+        // pack up the eid
+        $state = array(
+            'service' => $connection_type,
+            'eid' => $this->getEid()
+        );
+        if (isset($params['redirect']))
+            $state['redirect'] = $params['redirect'];
 
         $auth_params = array();
         $auth_params['state'] = base64_encode(json_encode($state));
         if (isset($params['redirect']))
             $auth_params['redirect'] = $params['redirect'];
-        if ($code !== false)
-            $auth_params['code'] = $code;
 
         $response = null;
-        switch ($service)
+        switch ($connection_type)
         {
             default:
                 return false;
 
-            case 'dropbox':
+            case \Flexio\Services\Factory::TYPE_DROPBOX:
                 $response = \Flexio\Services\Dropbox::create($auth_params);
                 break;
 
-            case 'box':
+            case \Flexio\Services\Factory::TYPE_BOX:
                 $response = \Flexio\Services\Box::create($auth_params);
                 break;
 
-            case 'github':
+            case \Flexio\Services\Factory::TYPE_GITHUB:
                 $response = \Flexio\Services\GitHub::create($auth_params);
                 break;
 
-            case 'gmail':
+            case \Flexio\Services\Factory::TYPE_GMAIL:
                 $response = \Flexio\Services\Gmail::create($auth_params);
                 break;
 
-            case 'googledrive':
+            case \Flexio\Services\Factory::TYPE_GOOGLEDRIVE:
                 $response = \Flexio\Services\GoogleDrive::create($auth_params);
                 break;
 
-            case 'googlesheets':
+            case \Flexio\Services\Factory::TYPE_GOOGLESHEETS:
                 $response = \Flexio\Services\GoogleSheets::create($auth_params);
                 break;
 
-            case 'googlecloudstorage':
+            case \Flexio\Services\Factory::TYPE_GOOGLECLOUDSTORAGE:
                 $response = \Flexio\Services\GoogleCloudStorage::create($auth_params);
                 break;
         }
@@ -487,31 +469,31 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             default:
                 return false;
 
-            case 'dropbox':
+            case \Flexio\Services\Factory::TYPE_DROPBOX:
                 $response = \Flexio\Services\Dropbox::create($auth_params);
                 break;
 
-            case 'box':
+            case \Flexio\Services\Factory::TYPE_BOX:
                 $response = \Flexio\Services\Box::create($auth_params);
                 break;
 
-            case 'github':
+            case \Flexio\Services\Factory::TYPE_GITHUB:
                 $response = \Flexio\Services\GitHub::create($auth_params);
                 break;
 
-            case 'gmail':
+            case \Flexio\Services\Factory::TYPE_GMAIL:
                 $response = \Flexio\Services\Gmail::create($auth_params);
                 break;
 
-            case 'googledrive':
+            case \Flexio\Services\Factory::TYPE_GOOGLEDRIVE:
                 $response = \Flexio\Services\GoogleDrive::create($auth_params);
                 break;
 
-            case 'googlesheets':
+            case \Flexio\Services\Factory::TYPE_GOOGLESHEETS:
                 $response = \Flexio\Services\GoogleSheets::create($auth_params);
                 break;
 
-            case 'googlecloudstorage':
+            case \Flexio\Services\Factory::TYPE_GOOGLECLOUDSTORAGE:
                 $response = \Flexio\Services\GoogleCloudStorage::create($auth_params);
                 break;
         }
