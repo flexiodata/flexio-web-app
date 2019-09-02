@@ -35,10 +35,6 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
 
         if (isset($params['service']))
             $auth_params['service'] = $params['service'];
-        if (isset($params['code']))
-            $auth_params['code'] = $params['code'];
-        if (isset($params['state']))
-            $auth_params['state'] = $params['state'];
 
         // check for empty
         if (($params['service'] ?? '') == 'dropbox')
