@@ -31,7 +31,7 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
         $params = $this->getRequest()->getParams();
 
         $auth_params = array();
-        $auth_params['redirect'] = (IS_SECURE() ? 'https':'http') . '://' . $_SERVER['HTTP_HOST'] . '/oauth2/callback';
+        $auth_params['redirect'] = self::getCallbackUrl();
 
         if (isset($params['service']))
             $auth_params['service'] = $params['service'];
@@ -129,7 +129,7 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
         $params = $this->getRequest()->getParams();
 
         $auth_params = array();
-        $auth_params['redirect'] = (IS_SECURE() ? 'https':'http') . '://' . $_SERVER['HTTP_HOST'] . '/oauth2/callback';
+        $auth_params['redirect'] = self::getCallbackUrl();
 
         if (isset($params['code']))
             $auth_params['code'] = $params['code'];
@@ -175,5 +175,10 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
         $this->setViewTitle(_('Connection Authorization - Flex.io'));
         $this->renderPublic();
         $this->render();
+    }
+
+    private static function getCallbackUrl() : string
+    {
+        return (IS_SECURE() ? 'https':'http') . '://' . $_SERVER['HTTP_HOST'] . '/oauth2/callback';
     }
 }
