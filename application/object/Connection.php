@@ -363,11 +363,8 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
         // pack up the eid
         $state = array(
-            'service' => $connection_type,
             'eid' => $this->getEid()
         );
-        if (isset($params['redirect']))
-            $state['redirect'] = $params['redirect'];
 
         $auth_params = array();
         $auth_params['state'] = base64_encode(json_encode($state));
