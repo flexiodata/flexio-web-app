@@ -358,7 +358,10 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public function authenticateInit(array $params) : string
     {
-        // a redirect url is required
+        // note: this function is called to initiate oauth authentication;
+        // a redirect url is required, and if the service info is set up,
+        // the function will return a url for the service that should be
+        // used for authenticating and invoking the callback function
         if (!isset($params['redirect']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
@@ -375,43 +378,43 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $auth_params['state'] = base64_encode(json_encode($state));
         $auth_params['redirect'] = $redirect_url;
 
-        $response = null;
+        $service_oauth_url = null;
         switch ($connection_type)
         {
             default:
                 break;
 
             case \Flexio\Services\Factory::TYPE_DROPBOX:
-                $response = \Flexio\Services\Dropbox::create($auth_params);
+                $service_oauth_url = \Flexio\Services\Dropbox::create($auth_params);
                 break;
 
             case \Flexio\Services\Factory::TYPE_BOX:
-                $response = \Flexio\Services\Box::create($auth_params);
+                $service_oauth_url = \Flexio\Services\Box::create($auth_params);
                 break;
 
             case \Flexio\Services\Factory::TYPE_GITHUB:
-                $response = \Flexio\Services\GitHub::create($auth_params);
+                $service_oauth_url = \Flexio\Services\GitHub::create($auth_params);
                 break;
 
             case \Flexio\Services\Factory::TYPE_GMAIL:
-                $response = \Flexio\Services\Gmail::create($auth_params);
+                $service_oauth_url = \Flexio\Services\Gmail::create($auth_params);
                 break;
 
             case \Flexio\Services\Factory::TYPE_GOOGLEDRIVE:
-                $response = \Flexio\Services\GoogleDrive::create($auth_params);
+                $service_oauth_url = \Flexio\Services\GoogleDrive::create($auth_params);
                 break;
 
             case \Flexio\Services\Factory::TYPE_GOOGLESHEETS:
-                $response = \Flexio\Services\GoogleSheets::create($auth_params);
+                $service_oauth_url = \Flexio\Services\GoogleSheets::create($auth_params);
                 break;
 
             case \Flexio\Services\Factory::TYPE_GOOGLECLOUDSTORAGE:
-                $response = \Flexio\Services\GoogleCloudStorage::create($auth_params);
+                $service_oauth_url = \Flexio\Services\GoogleCloudStorage::create($auth_params);
                 break;
         }
 
         // if the service creation response is null, something went wrong
-        if (is_null($response))
+        if (is_null($service_oauth_url))
         {
             $properties = array();
             $properties['connection_status'] = \Model::CONNECTION_STATUS_ERROR;
@@ -425,81 +428,69 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         // the authentication into a separate function call for each service; for now,
         // because this function enforces a return type, downstream exception handling
         // will catch the error if the wrong type is returned
-        return $response;
+        return $service_oauth_url;
     }
 
-    public function authenticateCallback(array $params) // TODO: add function return type
+    public function authenticateCallback(array $params) : void
     {
-        // TODO: is there anyway to save some of these in the object so we can make
-        // successive calls without sending everything?
+        // note: this function is called by the oauth callback function; a code
+        // that's used to get an oauth token should be passed; if it isn't, something
+        // went wrong
+        if (!isset($params['code']))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED);
 
         // get the connection properties
         $connection_properties = $this->get();
         $connection_type = $connection_properties['connection_type'] ?? '';
+        $code = $params['code'];
 
-        $code = $params['code'] ?? false;
-        $state = $params['state'] ?? false;
-
-        $auth_params = array();
-        $auth_params['state'] = base64_encode(json_encode($state));
-        if (isset($params['redirect']))
-            $auth_params['redirect'] = $params['redirect'];
-        if ($code !== false)
-            $auth_params['code'] = $code;
-
-        $response = null;
+        // get the service
+        $service = null;
         switch ($connection_type)
         {
             default:
-                return false;
+                break;
 
             case \Flexio\Services\Factory::TYPE_DROPBOX:
-                $response = \Flexio\Services\Dropbox::create($auth_params);
+                $service = \Flexio\Services\Dropbox::create($auth_params);
                 break;
 
             case \Flexio\Services\Factory::TYPE_BOX:
-                $response = \Flexio\Services\Box::create($auth_params);
+                $service = \Flexio\Services\Box::create($auth_params);
                 break;
 
             case \Flexio\Services\Factory::TYPE_GITHUB:
-                $response = \Flexio\Services\GitHub::create($auth_params);
+                $service = \Flexio\Services\GitHub::create($auth_params);
                 break;
 
             case \Flexio\Services\Factory::TYPE_GMAIL:
-                $response = \Flexio\Services\Gmail::create($auth_params);
+                $service = \Flexio\Services\Gmail::create($auth_params);
                 break;
 
             case \Flexio\Services\Factory::TYPE_GOOGLEDRIVE:
-                $response = \Flexio\Services\GoogleDrive::create($auth_params);
+                $service = \Flexio\Services\GoogleDrive::create($auth_params);
                 break;
 
             case \Flexio\Services\Factory::TYPE_GOOGLESHEETS:
-                $response = \Flexio\Services\GoogleSheets::create($auth_params);
+                $service = \Flexio\Services\GoogleSheets::create($auth_params);
                 break;
 
             case \Flexio\Services\Factory::TYPE_GOOGLECLOUDSTORAGE:
-                $response = \Flexio\Services\GoogleCloudStorage::create($auth_params);
+                $service = \Flexio\Services\GoogleCloudStorage::create($auth_params);
                 break;
         }
 
         // if the service creation response is null, something went wrong
-        if (is_null($response))
+        if (is_null($service))
         {
             $properties = array();
             $properties['connection_status'] = \Model::CONNECTION_STATUS_ERROR;
             $this->set($properties);
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED);
         }
 
-        // if the service creation response is a string, then it's
-        // an authorization uri, and we need to complete the process;
-        // return the string
-        if (is_string($response))
-            return $response;
-
         // we're authenticated; get the token
-        $service_object = $response;
-        $tokens = $service_object->getTokens();
+        $tokens = $service->getTokens();
 
         // DEBUG:
         // file_put_contents('/tmp/tokens.txt', "Tokens :" . json_encode($tokens)."\n", FILE_APPEND);
@@ -508,19 +499,14 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $properties['connection_status'] = \Model::CONNECTION_STATUS_AVAILABLE;
         $properties['connection_info']['access_token'] = $tokens['access_token'];
         $properties['connection_info']['refresh_token'] = $tokens['refresh_token'];
+
         if (isset($tokens['expires']))
-        {
             $properties['connection_info']['expires'] = $tokens['expires'];
-        }
 
         if ($connection_type == 'gmail')
-        {
             $properties['connection_info']['email'] = $service_object->retrieveEmailAddress();
-        }
 
         $this->set($properties);
-
-        return true;
     }
 
     public function getAccessToken()

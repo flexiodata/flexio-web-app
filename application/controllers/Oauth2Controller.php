@@ -52,12 +52,9 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
             if ($connection->getStatus() === \Model::STATUS_DELETED)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
-            $result = $connection->authenticateInit($auth_params);
-            if (is_string($result))
-            {
-                //fxdebug('redirect URL is: '. $result);
-                $this->_redirect($result);
-            }
+            $service_oauth_url = $connection->authenticateInit($auth_params);
+            //fxdebug('redirect URL is: '. $service_oauth_url);
+            $this->_redirect($service_oauth_url);
         }
         catch (\Flexio\Base\Exception $e)
         {
