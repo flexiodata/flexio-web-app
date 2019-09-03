@@ -12,7 +12,7 @@
     <!-- header -->
     <div class="flex flex-row">
       <div class="flex-fill flex flex-row items-center">
-        <div class="f3 fw6 lh-title pipe-title">{{pipe.name}}</div>
+        <div class="f3 fw6 lh-title">{{pipe.name}}</div>
         <LabelSwitch
           class="ml3 hint--bottom"
           active-color="#13ce66"
@@ -30,22 +30,91 @@
           type="primary"
           v-require-rights:pipe.update
         >
-          Edit
+          Rename
         </el-button>
       </div>
     </div>
 
-    <!-- content -->
-    <div>
-      <pre class="f7 overflow-x-scroll">{{pipe.task}}</pre>
+    <!-- description -->
+    <div class="mv5">
+      <div class="flex flex-row items-center pb2 bb b--black-10 mb4">
+        <div class="flex-fill f4 fw6 lh-title">Description</div>
+        <div class="flex-none">
+          <el-button
+            style="padding: 0"
+            type="text"
+            v-require-rights:pipe.update
+          >
+            Edit
+          </el-button>
+        </div>
+      </div>
+      <div
+        class="marked"
+        v-html="description"
+        v-show="description.length > 0"
+      ></div>
+    </div>
+
+    <!-- syntax -->
+    <div class="mv5">
+      <div class="flex flex-row items-center pb2 bb b--black-10 mb4">
+        <div class="flex-fill f4 fw6 lh-title">Syntax</div>
+        <div class="flex-none">
+          <el-button
+            style="padding: 0"
+            type="text"
+            v-require-rights:pipe.update
+          >
+            Edit
+          </el-button>
+        </div>
+      </div>
+      <div
+        class="marked"
+        v-html="syntax"
+        v-show="syntax.length > 0"
+      ></div>
+    </div>
+
+    <!-- configuration -->
+    <div class="mv5">
+      <div class="flex flex-row items-center pb2 bb b--black-10 mb4">
+        <div class="flex-fill f4 fw6 lh-title">Configuration</div>
+        <div class="flex-none">
+          <el-button
+            style="padding: 0"
+            type="text"
+            v-require-rights:pipe.update
+          >
+            Edit
+          </el-button>
+        </div>
+      </div>
+      <PipeDocumentTaskExtract
+        v-if="pipe_task_type == 'extract'"
+      />
+      <PipeDocumentTaskLookup
+        v-else-if="pipe_task_type == 'lookup'"
+      />
+      <PipeDocumentTaskExecute
+        v-else-if="pipe_task_type == 'execute'"
+      />
+      <div v-else>
+        Unknown Task
+      </pre>
     </div>
   </div>
 </template>
 
 <script>
+  import marked from 'marked'
   import { mapState } from 'vuex'
   import Spinner from 'vue-simple-spinner'
   import LabelSwitch from '@/components/LabelSwitch'
+  import PipeDocumentTaskExtract from '@/components/PipeDocumentTaskExtract'
+  import PipeDocumentTaskLookup from '@/components/PipeDocumentTaskLookup'
+  import PipeDocumentTaskExecute from '@/components/PipeDocumentTaskExecute'
 
   const DEPLOY_MODE_UNDEFINED = ''
   const DEPLOY_MODE_BUILD     = 'B'
@@ -60,7 +129,10 @@
     },
     components: {
       Spinner,
-      LabelSwitch
+      LabelSwitch,
+      PipeDocumentTaskExtract,
+      PipeDocumentTaskLookup,
+      PipeDocumentTaskExecute,
     },
     watch: {
       pipeEid: {
@@ -80,11 +152,23 @@
       pipe() {
         return _.get(this.$store.state.pipes, `items.${this.pipeEid}`, {})
       },
+      description() {
+        return marked(_.get(this.pipe, 'description', ''))
+      },
+      syntax() {
+        return marked(_.get(this.pipe, 'syntax', ''))
+      },
       is_fetched() {
         return _.get(this.pipe, 'vuex_meta.is_fetched', false)
       },
       is_fetching() {
         return _.get(this.pipe, 'vuex_meta.is_fetching', false) || this.is_local_fetching /* Vuex pipe `is_fetching` isn't yet implemented */
+      },
+      pipe_task() {
+        return _.get(this.pipe, 'task.items[0]', {})
+      },
+      pipe_task_type() {
+        return _.get(this.pipe_task, 'op', '')
       },
       is_deployed: {
         get() {
@@ -143,7 +227,7 @@
             this.$router.replace(new_route)
           }
         })
-      }
+      },
     }
   }
 </script>
