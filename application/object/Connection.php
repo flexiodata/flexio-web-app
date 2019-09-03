@@ -370,7 +370,7 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
             $pipe_params = array();
             $pipe_params['parent_eid'] = $connection_info['eid'];
-            $pipe_params['name'] = $pipe_name;
+            $pipe_params['name'] = $connection_info['name'] . '-' . $pipe_name; // TODO: pipe namespace is currently flat; prefix pipe name with connection name to avoid clashes with other pipes;
             $pipe_params['description'] = "Created from '" . $value['name'] . "' in '" . $connection_info['name'] . "' connection.";
             $pipe_params['deploy_mode'] = 'R';
             $pipe_params['deploy_api'] = 'A';
