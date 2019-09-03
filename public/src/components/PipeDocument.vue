@@ -14,15 +14,17 @@
         layout="vertical"
       >
         <div
-          class="pane pa4 pt0 overflow-y-scroll"
+          class="pane pa4 pv5 overflow-y-scroll"
           :id="scrollbar_container_id"
           :style="{
             minWidth: '800px',
             flexGrow: show_sidebar ? undefined : 1
           }"
         >
-          <div class="h2"></div>
-          <div class="w-100 center mw-doc mt1 pa4 bg-white br2 css-white-box" style="min-height: 20rem; margin-bottom: 10rem">
+          <div
+            class="w-100 center mw-doc pa4 bg-white br2 css-white-box"
+            style="min-height: 20rem"
+          >
             <PipeDocumentHeader
               :pipe="orig_pipe"
               :is-mode-run.sync="is_deployed"
