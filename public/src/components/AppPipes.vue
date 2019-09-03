@@ -130,7 +130,13 @@
         </div>
 
         <!-- content area -->
-        <PipeDocument class="flex-fill" />
+        <div class="flex-fill ph4 pv5 overflow-y-scroll">
+          <PipeDocument
+            class="w-100 center mw-doc pa4 bg-white br2 css-white-box"
+            style="min-height: 20rem"
+            :pipe="pipe"
+          />
+        </div>
       </template>
 
       <!-- pipe not found -->
