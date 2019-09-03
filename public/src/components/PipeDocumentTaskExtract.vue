@@ -75,7 +75,7 @@
         type: Object,
         required: true
       },
-      isNextAllowed: {
+      isSaveAllowed: {
         type: Boolean,
         required: true
       }
@@ -103,7 +103,7 @@
         handler: 'onPathChange'
       },
       form_errors(val) {
-        this.$emit('update:isNextAllowed', _.keys(val).length == 0)
+        this.$emit('update:isSaveAllowed', _.keys(val).length == 0)
       }
     },
     data() {
@@ -149,7 +149,7 @@
       validateForm(clear) {
         if (this.$refs.form) {
           this.$refs.form.validate((valid) => {
-            this.$emit('update:isNextAllowed', valid)
+            this.$emit('update:isSaveAllowed', valid)
             if (clear === true) {
               this.$refs.form.clearValidate()
             }

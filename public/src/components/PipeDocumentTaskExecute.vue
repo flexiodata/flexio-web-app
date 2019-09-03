@@ -4,16 +4,15 @@
       class="el-form--cozy el-form__label-tiny"
       label-position="top"
       inline
-      :model="edit_values"
+      :model="$data"
     >
       <el-form-item
         key="remote_state"
         prop="remote_state"
         label="Would you like to execute an inline script or a remote script?"
       >
-        <el-radio-group v-model="edit_values.remote_state">
+        <el-radio-group v-model="remote_state">
           <el-radio-button
-
             :label="option.val"
             :key="option.val"
             v-for="option in remote_options"
@@ -27,7 +26,7 @@
         prop="lang"
         label="Language"
       >
-        <el-select v-model="edit_values.lang">
+        <el-select v-model="lang">
           <el-option
             :label="option.label"
             :value="option.val"
@@ -41,14 +40,14 @@
         key="path"
         prop="path"
         label="Remote script path or URL"
-        v-show="edit_values.remote_state == 'remote'"
+        v-show="remote_state == 'remote'"
       >
         <el-input
           auto-complete="off"
           spellcheck="false"
           placeholder="Enter path or URL"
           :autofocus="true"
-          v-model="edit_values.path"
+          v-model="path"
         >
           <BrowseButton
             slot="append"
@@ -67,7 +66,7 @@
         key="code"
         prop="code"
         label="Code"
-        v-show="edit_values.remote_state == 'inline'"
+        v-show="remote_state == 'inline'"
       >
         <CodeEditor
           class="bg-white ba b--black-10"
@@ -75,7 +74,7 @@
           transpose="base64"
           :lang="code_editor_lang"
           :options="{ minRows: 8, maxRows: 32 }"
-          v-model="edit_values.code"
+          v-model="code"
         />
       </el-form-item>
     </el-form>
@@ -87,39 +86,50 @@
   import CodeEditor from '@/components/CodeEditor'
   import BrowseButton from '@/components/BrowseButton'
 
-  const default_python = btoaUnicode(`# basic hello world example
+  const code_python = btoaUnicode(`# basic hello world example
 def flex_handler(flex):
     flex.end([["H","e","l","l","o"],["W","o","r","l","d"]])
 `)
 
-  const default_javascript = btoaUnicode(`// basic hello world example
+  const code_javascript = btoaUnicode(`// basic hello world example
 exports.flex_handler = function(flex) {
   flex.end([["H","e","l","l","o"],["W","o","r","l","d"]])
 }
 `)
-
-  const getDefaultValues = () => {
-    return {
-      op: 'execute',
-      lang: 'python',
-      path: '',
-      code: '',
-      remote_state: 'inline'
-    }
-  }
 
   const remote_options = [
     { label: 'Inline script', val: 'inline' },
     { label: 'Remote script', val: 'remote' }
   ]
 
+  const lang_options = [
+    { label: 'Python',  val: 'python' },
+    { label: 'Node.js', val: 'nodejs' }
+  ]
+
+  const getDefaultState = () => {
+    return {
+      remote_options,
+      lang_options,
+      code_python,
+      code_javascript,
+      remote_state: 'inline',
+
+      // task values
+      op: 'execute',
+      lang: 'python',
+      path: '',
+      code: '',
+    }
+  }
+
   export default {
     props: {
-      item: {
+      task: {
         type: Object,
         required: true
       },
-      isNextAllowed: {
+      isSaveAllowed: {
         type: Boolean,
         required: true
       }
@@ -129,46 +139,23 @@ exports.flex_handler = function(flex) {
       BrowseButton
     },
     watch: {
-      item: {
+      task: {
         handler: 'initSelf',
         immediate: true,
         deep: true
       },
-      edit_values: {
-        handler: 'onEditValuesChange',
-        immediate: true,
-        deep: true
-      },
-      'edit_values.lang': {
+      lang: {
         handler: 'onLangChange'
-      },
-      is_changed: {
-        handler: 'onChange'
       }
     },
     data() {
-      return {
-        remote_options,
-        code_python: default_python,
-        code_javascript: default_javascript,
-        orig_values: _.assign({}, getDefaultValues()),
-        edit_values: _.assign({}, getDefaultValues()),
-        lang_options: [
-          { label: 'Python',  val: 'python' },
-          { label: 'Node.js', val: 'nodejs' }
-          //{ label: 'Javascript', val: 'javascript' }
-        ]
-      }
+      return getDefaultState()
     },
     computed: {
-      is_changed() {
-        return !_.isEqual(this.edit_values, this.orig_values)
-      },
       code_editor_lang() {
-        switch (this.edit_values.lang) {
-          case 'python':     return 'python'
-          case 'nodejs':     return 'javascript'
-          case 'javascript': return 'javascript'
+        switch (this.lang) {
+          case 'python': return 'python'
+          case 'nodejs': return 'javascript'
         }
 
         return 'python'
@@ -176,65 +163,38 @@ exports.flex_handler = function(flex) {
     },
     methods: {
       initSelf() {
-        var form_values = _.get(this.item, 'form_values', {})
-        form_values = _.assign({}, getDefaultValues(), form_values)
-        form_values.remote_state = form_values.path.length == 0 ? 'inline' : 'remote'
+        // reset our local component data
+        _.assign(this.$data, getDefaultState(), this.task)
 
-        var has_no_code = _.get(form_values, 'code', '').length == 0
-        var is_inline_script = form_values.remote_state == 'inline'
+        // set our internal remote state
+        this.remote_state = this.path.length == 0 ? 'inline' : 'remote'
 
-        if (has_no_code) {
-          form_values.code = this.getCodeByLang(form_values.lang)
-
-          // when creating a new execute step, make sure we fire an 'item-change'
-          // event so that the 'apppipes' module knows about the default code
-          // if the user attempts to save the function without editing the code at all
-          //
-          // NOTE: we cannot use $nextTick here because this call happens multiple times
-          if (is_inline_script) {
-            setTimeout(() => { this.onEditValuesChange() }, 1)
-          }
+        // initialize code
+        if (this.code.length == 0) {
+          this.code = this.getCodeByLang(this.lang)
         }
 
-        switch (form_values.lang) {
-          case 'python':
-            this.code_python = form_values.code
-            break
-          case 'nodejs':
-          case 'javascript':
-            this.code_javascript = form_values.code
-            break
+        // overwrite internal code based on selected language
+        switch (this.lang) {
+          case 'python': this.code_python = this.code; break
+          case 'nodejs': this.code_javascript = this.code; break
         }
 
-        this.orig_values = _.cloneDeep(form_values)
-        this.edit_values = _.cloneDeep(form_values)
-        this.$emit('update:isNextAllowed', true)
+        this.$emit('update:isSaveAllowed', true)
       },
       getCodeByLang(lang) {
         switch (lang) {
-          case 'python':     return this.code_python
-          case 'nodejs':     return this.code_javascript
-          case 'javascript': return this.code_javascript
+          case 'python': return this.code_python
+          case 'nodejs': return this.code_javascript
         }
 
         return ''
       },
       onPathsSelected(path) {
-        this.edit_values.path = path
-      },
-      onChange(val) {
-        if (val) {
-          this.$emit('active-item-change', this.index)
-        }
+        this.path = path
       },
       onLangChange(val) {
-        this.edit_values.code = this.getCodeByLang(val)
-      },
-      onEditValuesChange() {
-        var values = _.assign({}, this.edit_values)
-        var is_local = values.remote_state == 'inline' ? true : false
-        values = _.pick(values, ['description', 'op', 'lang', is_local ? 'code' : 'path'])
-        this.$emit('item-change', values, this.index)
+        this.code = this.getCodeByLang(val)
       }
     }
   }

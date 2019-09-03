@@ -106,12 +106,18 @@
         </div>
       </div>
       <PipeDocumentTaskExtract
+        :item="pipe_task"
+        :is-save-allowed="is_save_allowed"
         v-if="pipe_task_type == 'extract'"
       />
       <PipeDocumentTaskLookup
+        :item="pipe_task"
+        :is-save-allowed="is_save_allowed"
         v-else-if="pipe_task_type == 'lookup'"
       />
       <PipeDocumentTaskExecute
+        :task="pipe_task"
+        :is-save-allowed="is_save_allowed"
         v-else-if="pipe_task_type == 'execute'"
       />
       <div
@@ -159,6 +165,7 @@
     data() {
       return {
         is_local_fetching: false,
+        is_save_allowed: true
       }
     },
     computed: {
