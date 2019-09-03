@@ -97,7 +97,7 @@
       <div class="el-form-item" style="width: 270px" v-if="show_times">
         <label class="el-form-item__label" v-if="is_weekly || is_monthly">Run at the following time</label>
         <label class="el-form-item__label" v-else>Run at the following times</label>
-        <time-chooser-list
+        <TimeChooserList
           class="mb1 nl1"
           :times="edit_pipe.schedule.times"
           @item-change="updateTime"

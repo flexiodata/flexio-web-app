@@ -3,6 +3,7 @@
     <TimeChooserItem
       :item="time"
       :index="index"
+      :key="index"
       @change="onItemChange"
       @delete="onItemDelete"
       v-for="(time, index) in times"

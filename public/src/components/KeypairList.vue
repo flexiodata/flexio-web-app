@@ -8,6 +8,7 @@
     <KeypairItem
       :item="item"
       :index="index"
+      :key="index"
       :count="items.length"
       @change="onItemChange"
       @delete="onItemDelete"
