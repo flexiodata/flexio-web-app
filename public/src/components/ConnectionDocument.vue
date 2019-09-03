@@ -6,7 +6,7 @@
         <div class="flex-fill flex flex-row mr4-l mb3 mb0-l">
           <ServiceIcon class="flex-none mt1 br2 square-4" :type="ctype" :url="url" :empty-cls="''" />
           <div class="flex-fill flex flex-column" style="margin-left: 12px">
-            <div class="f4 fw6 lh-title">{{connection.name}}</div>
+            <div class="f3 fw6 lh-title">{{connection.name}}</div>
             <div class="f6 fw4 mt1 lh-copy silver" v-if="cdesc.length > 0">{{cdesc}}</div>
             <div class="f6 fw4 mt1 lh-copy moon-gray" v-else><em>(No description)</em></div>
           </div>
