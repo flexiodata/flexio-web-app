@@ -134,7 +134,7 @@
           <PipeDocument
             class="w-100 center mw-doc pa4 bg-white br2 css-white-box"
             style="min-height: 20rem"
-            :pipe="pipe"
+            :pipe-eid="pipe.eid"
           />
         </div>
       </template>
