@@ -61,28 +61,15 @@
 
         <!-- content area -->
         <div
-          class="flex-fill pa4 pt0 overflow-y-scroll"
+          class="flex-fill ph4 pv5 overflow-y-scroll"
           :id="scrollbar_container_id"
         >
-          <div class="h2"></div>
-          <div class="w-100 center mw-doc mt1 pa4 bg-white br2 css-white-box" style="min-height: 20rem; margin-bottom: 10rem">
-            <ConnectionStaticPanel
-              :connection="connection"
-              @edit-click="onEditConnection"
-            />
-            <template v-if="is_keyring_connection">
-              <div class="mv3 bt bw1 b--black-05"></div>
-              <div class="mb2 lh-copy ttu fw6 f6">Keypair Values</div>
-              <JsonDetailsPanel
-                :json="connection.connection_info"
-              />
-            </template>
-            <FileChooser
-              class="mt3"
-              :connection="connection"
-              v-if="is_storage_connection"
-            />
-          </div>
+          <ConnectionDocument
+            class="w-100 center mw-doc pa4 bg-white br2 css-white-box"
+            style="min-height: 20rem"
+            :connection="connection"
+            @edit-click="onEditConnection"
+          />
         </div>
       </template>
 
@@ -133,12 +120,9 @@
   import Spinner from 'vue-simple-spinner'
   import ConnectionList from '@/components/ConnectionList'
   import ConnectionEditPanel from '@/components/ConnectionEditPanel'
-  import ConnectionStaticPanel from '@/components/ConnectionStaticPanel'
-  import FileChooser from '@/components/FileChooser'
-  import JsonDetailsPanel from '@/components/JsonDetailsPanel'
+  import ConnectionDocument from '@/components/ConnectionDocument'
   import EmptyItem from '@/components/EmptyItem'
   import PageNotFound from '@/components/PageNotFound'
-  import MixinConnection from '@/components/mixins/connection'
   import MixinFilter from '@/components/mixins/filter'
 
   export default {
@@ -150,14 +134,12 @@
         }
       }
     },
-    mixins: [MixinConnection, MixinFilter],
+    mixins: [MixinFilter],
     components: {
       Spinner,
       ConnectionList,
       ConnectionEditPanel,
-      ConnectionStaticPanel,
-      FileChooser,
-      JsonDetailsPanel,
+      ConnectionDocument,
       EmptyItem,
       PageNotFound
     },
@@ -202,18 +184,9 @@
       route_object_name() {
         return _.get(this.$route, 'params.object_name', undefined)
       },
-      ctype() {
-        return _.get(this.connection, 'connection_type', '')
-      },
       has_connection() {
-        return this.ctype.length > 0
+        return _.get(this.connection, 'eid', '').length > 0
       },
-      is_storage_connection() {
-        return this.$_Connection_isStorage(this.connection)
-      },
-      is_keyring_connection() {
-        return this.ctype == CONNECTION_TYPE_KEYRING
-      }
     },
     created() {
       this.tryFetchConnections()

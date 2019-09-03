@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- header -->
     <div class="flex flex-row">
       <div class="flex-fill flex flex-column flex-row-l">
         <div class="flex-fill flex flex-row mr4-l mb3 mb0-l">
@@ -62,14 +63,31 @@
         </el-button>
       </div>
     </div>
+
+    <!-- content -->
+    <template v-if="is_keyring_connection">
+      <div class="mv3 bt bw1 b--black-05"></div>
+      <div class="mb2 lh-copy ttu fw6 f6">Keypair Values</div>
+      <JsonDetailsPanel
+        :json="connection.connection_info"
+      />
+    </template>
+    <FileChooser
+      class="mt3"
+      :connection="connection"
+      v-if="is_storage_connection"
+    />
   </div>
 </template>
 
 <script>
   import { CONNECTION_STATUS_AVAILABLE } from '@/constants/connection-status'
+  import { CONNECTION_TYPE_KEYRING } from '@/constants/connection-type'
   import * as ctypes from '@/constants/connection-type'
   import * as connections from '@/constants/connection-info'
   import ServiceIcon from '@/components/ServiceIcon'
+  import FileChooser from '@/components/FileChooser'
+  import JsonDetailsPanel from '@/components/JsonDetailsPanel'
   import MixinConnection from '@/components/mixins/connection'
 
   export default {
@@ -81,7 +99,9 @@
     },
     mixins: [MixinConnection],
     components: {
-      ServiceIcon
+      ServiceIcon,
+      FileChooser,
+      JsonDetailsPanel,
     },
     computed: {
       ctype() {
@@ -93,11 +113,20 @@
         var desc_arr = desc.split(' ')
         return desc_arr.length <= word_count ? desc_arr.join(' ') : desc_arr.slice(0, word_count).join(' ') + '...'
       },
+      ctype() {
+        return _.get(this.connection, 'connection_type', '')
+      },
       cstatus() {
         return _.get(this.connection, 'connection_status', '')
       },
       is_available() {
         return this.cstatus == CONNECTION_STATUS_AVAILABLE
+      },
+      is_keyring_connection() {
+        return this.ctype == CONNECTION_TYPE_KEYRING
+      },
+      is_storage_connection() {
+        return this.$_Connection_isStorage(this.connection)
       },
       url() {
         return _.get(this.connection, 'connection_info.url', '')
