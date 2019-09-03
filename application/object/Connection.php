@@ -90,6 +90,10 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public function delete() : \Flexio\Object\Connection
     {
+        // delete any associated pipes for a mounted connection
+        $this->deleteAssociatedPipes();
+
+        // delete the connection
         $this->clearCache();
         $connection_model = $this->getModel()->connection;
         $connection_model->delete($this->getEid());
@@ -228,131 +232,23 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public function sync() : array
     {
-        // syncs pipes in a mounted a connection with the source files in the connection
+        // note: syncs pipes in a mounted a connection with the source files in the connection
 
-        // if the connection mode isn't a function/mount, we're done
-        $connection_mode = $this->properties['connection_mode'];
+        $connection_info = $this->get();
+        $connection_eid = $connection_info['eid'];
+        $connection_mode = $connection_info['connection_mode'];
 
-        // TODO: uncomment; commented out for testing until mounts are exposed
-        // in the UI
-        //if ($connection_mode !== \Model::CONNECTION_MODE_FUNCTION)
-        //    return array();
+        // if the connection mode isn't a mount; there are no associated pipes
+        if ($connection_mode !== \Model::CONNECTION_MODE_FUNCTION)
+            return array();
 
-        // STEP 1: get the pipes associated with this connection
-        $owner_user_eid = $this->getOwner(); // sanity check
-        $connection_eid = $this->getEid();
-        $filter = array('owned_by' => $owner_user_eid, 'parent_eid' => $connection_eid, 'eid_status' => \Model::STATUS_AVAILABLE);
-        $pipe_model = $this->getModel()->pipe;
-        $pipe_items = $pipe_model->list($filter);
+        // delete the pipes that are no longer in the connection
+        $this->deleteAssociatedPipes();
 
-        $pipe_item_info = array();
-        foreach ($pipe_items as $item)
-        {
-            $item_info = array();
-            $item_info['eid'] = $item['eid'];
-            $item_info['name'] = $item['name'];
-            $pipe_item_info[$item_info['name']] = $item_info;
-        }
+        // create pipes for new items in the connection
+        $connection_item_info = $this->createAssociatedPipes();
 
-        // STEP 2: get the files in the connection
-        $service = $this->getService();
-        $connection_items = $service->list();
-
-        $connection_item_info= array();
-        foreach ($connection_items as $item)
-        {
-            $item_info = $item;
-
-            // TODO: add constant for "FILE"
-            if ($item_info['type'] !== "FILE")
-                continue;
-
-            // filter out items that aren't flexio tasks, or javascript/python scripts
-            // TODO: adjust filter criteria?
-            $name = $item_info['path'];
-            $ext = strtolower(\Flexio\Base\File::getFileExtension($name));
-            if ($ext !== 'flexio' && $ext !== 'py' && $ext !== 'js')
-                continue;
-
-            $connection_item_info[$item_info['name']] = $item_info;
-        }
-
-        // STEP 4: delete the pipes that are no longer in the connection
-        // TODO: for now, delete all the pipes for the connection
-        foreach ($pipe_item_info as $key => $value)
-        {
-            $pipe_model = $this->getModel()->pipe;
-            $pipe_model->delete($value['eid']);
-        }
-
-        // STEP 5: create pipes for new items in the connection
-        // TODO: for now, create all new pipes for the connection
-        foreach ($connection_item_info as $key => $value)
-        {
-            $filenamebase = \Flexio\Base\File::getFilename($value['name']);
-            $pipe_name = \Flexio\Base\Identifier::makeValid($filenamebase);
-
-            $pipe_params = array();
-            $pipe_params['parent_eid'] = $this->getEid();
-            $pipe_params['name'] = $pipe_name;
-            $pipe_params['description'] = "Created from '" . $value['name'] . "' in '" . $this->get()['name'] . "' connection.";
-            $pipe_params['deploy_mode'] = 'R';
-            $pipe_params['deploy_api'] = 'A';
-            $pipe_params['deploy_schedule'] = 'I';
-            $pipe_params['deploy_email'] = 'I';
-            $pipe_params['deploy_ui'] = 'I';
-            $pipe_params['owned_by'] = $this->get()['owned_by']['eid'];
-            $pipe_params['created_by'] = $this->get()['created_by']['eid'];
-
-            // get the file extension and set the language
-            $language = false;
-            $ext = strtolower(\Flexio\Base\File::getFileExtension($value['path']));
-            if ($ext === 'flexio')
-                $language = 'flexio'; // execute content as a JSON pipe
-            if ($ext === 'py')
-                $language = 'python';
-            if ($ext === 'js')
-                $language = 'nodejs';
-
-            if ($language === false)
-                continue;
-
-            $content = '';
-            $this->getService()->read(['path' => $value['path']], function($data) use (&$content) {
-                $content .= $data;
-            });
-
-            // set the task info
-            if ($language === 'flexio')
-            {
-                $task = array();
-                $pipe = @json_decode($content,true);
-                if (!is_null($pipe))
-                    $task = $pipe['task'] ?? array();
-                $pipe_params['task'] = $task;
-            }
-            else
-            {
-                $execute_job_params = array();
-                $execute_job_params['op'] = 'execute'; // set the execute operation so this doesn't need to be supplied
-                $execute_job_params['lang'] = $language; // TODO: set the language from the extension
-                $execute_job_params['code'] = base64_encode($content); // encode the script
-
-                $pipe_params['task'] = [
-                    "op" => "sequence",
-                    "items" => [
-                        $execute_job_params
-                    ]
-                ];
-            }
-
-            // create the new pipe
-            $item = \Flexio\Object\Pipe::create($pipe_params);
-        }
-
-        // STEP 6: update pipes whose content in the connection has changed
-        // TODO: update pipes when pipes are no longer always deleted/recreated
-
+        // return the newly added pipes
         return $connection_item_info;
     }
 
@@ -412,6 +308,125 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         }
 
         return $service;
+    }
+
+    private function deleteAssociatedPipes()
+    {
+        // note: deletes associated pipes for a mounted connection
+
+        $connection_info = $this->get();
+        $connection_eid = $connection_info['eid'];
+        $connection_mode = $connection_info['connection_mode'];
+
+        // if the connection mode isn't a mount; there are no associated pipes
+        if ($connection_mode !== \Model::CONNECTION_MODE_FUNCTION)
+            return;
+
+        $pipe_model = $this->getModel()->pipe;
+        $pipes_to_update = array('parent_eid' => $connection_eid);
+        $process_arr = array('eid_status' => \Model::STATUS_DELETED, 'name' => '');
+        $pipe_model->update($pipes_to_update, $process_arr);
+    }
+
+    private function createAssociatedPipes() : array
+    {
+        // note: creates associated pipes for a mounted connection
+
+        $connection_info = $this->get();
+        $connection_mode = $connection_info['connection_mode'];
+
+        // if the connection mode isn't a mount; there are no associated pipes
+        if ($connection_mode !== \Model::CONNECTION_MODE_FUNCTION)
+            return array();
+
+        // STEP 1: get the list of files to use to create pipes
+        $service = $this->getService();
+        $connection_items = $service->list();
+
+        $connection_item_info = array();
+        foreach ($connection_items as $item)
+        {
+            $item_info = $item;
+
+            // TODO: add constant for "FILE"
+            if ($item_info['type'] !== "FILE")
+                continue;
+
+            // filter out items that aren't flexio tasks, or javascript/python scripts
+            // TODO: adjust filter criteria?
+            $name = $item_info['path'];
+            $ext = strtolower(\Flexio\Base\File::getFileExtension($name));
+            if ($ext !== 'flexio' && $ext !== 'py' && $ext !== 'js')
+                continue;
+
+            $connection_item_info[$item_info['name']] = $item_info;
+        }
+
+        // STEP 2: create the pipes
+        foreach ($connection_item_info as $key => $value)
+        {
+            $filenamebase = \Flexio\Base\File::getFilename($value['name']);
+            $pipe_name = \Flexio\Base\Identifier::makeValid($filenamebase);
+
+            $pipe_params = array();
+            $pipe_params['parent_eid'] = $connection_info['eid'];
+            $pipe_params['name'] = $pipe_name;
+            $pipe_params['description'] = "Created from '" . $value['name'] . "' in '" . $connection_info['name'] . "' connection.";
+            $pipe_params['deploy_mode'] = 'R';
+            $pipe_params['deploy_api'] = 'A';
+            $pipe_params['deploy_schedule'] = 'I';
+            $pipe_params['deploy_email'] = 'I';
+            $pipe_params['deploy_ui'] = 'I';
+            $pipe_params['owned_by'] = $connection_info['owned_by']['eid'];
+            $pipe_params['created_by'] = $connection_info['created_by']['eid'];
+
+            // get the file extension and set the language
+            $language = false;
+            $ext = strtolower(\Flexio\Base\File::getFileExtension($value['path']));
+            if ($ext === 'flexio')
+                $language = 'flexio'; // execute content as a JSON pipe
+            if ($ext === 'py')
+                $language = 'python';
+            if ($ext === 'js')
+                $language = 'nodejs';
+
+            if ($language === false)
+                continue;
+
+            $content = '';
+            $this->getService()->read(['path' => $value['path']], function($data) use (&$content) {
+                $content .= $data;
+            });
+
+            // set the task info
+            if ($language === 'flexio')
+            {
+                $task = array();
+                $pipe = @json_decode($content,true);
+                if (!is_null($pipe))
+                    $task = $pipe['task'] ?? array();
+                $pipe_params['task'] = $task;
+            }
+            else
+            {
+                $execute_job_params = array();
+                $execute_job_params['op'] = 'execute'; // set the execute operation so this doesn't need to be supplied
+                $execute_job_params['lang'] = $language; // TODO: set the language from the extension
+                $execute_job_params['code'] = base64_encode($content); // encode the script
+
+                $pipe_params['task'] = [
+                    "op" => "sequence",
+                    "items" => [
+                        $execute_job_params
+                    ]
+                ];
+            }
+
+            // create the new pipe
+            $item = \Flexio\Object\Pipe::create($pipe_params);
+        }
+
+        return $connection_item_info;
     }
 
     private function getConnectionPropertiesToUpdate(array $properties) : array
