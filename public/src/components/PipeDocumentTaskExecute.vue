@@ -149,6 +149,10 @@ exports.flex_handler = function(flex) {
         type: Object,
         required: true
       },
+      isEditing: {
+        type: Boolean,
+        required: true
+      },
       isSaveAllowed: {
         type: Boolean,
         required: true
@@ -163,6 +167,10 @@ exports.flex_handler = function(flex) {
         handler: 'initSelf',
         immediate: true,
         deep: true
+      },
+      is_changed: {
+        handler: 'updateIsEditing',
+        immediate: true
       },
       lang: {
         handler: 'onLangChange'
@@ -210,6 +218,7 @@ exports.flex_handler = function(flex) {
           case 'nodejs': this.code_javascript = this.code; break
         }
 
+        this.$emit('update:isEditing', false)
         this.$emit('update:isSaveAllowed', true)
       },
       getCodeByLang(lang) {
@@ -219,6 +228,9 @@ exports.flex_handler = function(flex) {
         }
 
         return ''
+      },
+      updateIsEditing() {
+        this.$emit('update:isEditing', this.is_changed)
       },
       onPathsSelected(path) {
         this.path = path

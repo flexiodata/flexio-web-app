@@ -2,7 +2,7 @@
   <!-- fetching -->
   <div v-if="is_fetching">
     <div class="flex flex-row items-center">
-      <Spinner size="small" />
+      <Spinner size="22" line-size="2" />
       <span class="ml2 f6">Loading...</span>
     </div>
   </div>
@@ -36,8 +36,8 @@
     </div>
 
     <!-- description -->
-    <div class="doc-section">
-      <div class="flex flex-row items-center pb2 mb3 bb b--black-10">
+    <div class="pipe-section">
+      <div class="flex flex-row items-center pb2 mb2 bb b--black-10">
         <div class="flex-fill f4 fw6 lh-title">Description</div>
         <div class="flex-none">
           <el-button
@@ -64,8 +64,8 @@
     </div>
 
     <!-- syntax -->
-    <div class="doc-section">
-      <div class="flex flex-row items-center pb2 mb3 bb b--black-10">
+    <div class="pipe-section">
+      <div class="flex flex-row items-center pb2 mb2 bb b--black-10">
         <div class="flex-fill f4 fw6 lh-title">Syntax</div>
         <div class="flex-none">
           <el-button
@@ -92,8 +92,8 @@
     </div>
 
     <!-- configuration -->
-    <div class="doc-section">
-      <div class="flex flex-row items-center pb2 mb3 bb b--black-10">
+    <div class="pipe-section">
+      <div class="flex flex-row items-center pb2 bb b--black-10">
         <div class="flex-fill f4 fw6 lh-title">Configuration</div>
         <div class="flex-none">
           <el-button
@@ -106,18 +106,27 @@
         </div>
       </div>
       <PipeDocumentTaskExtract
+        class="pipe-editable"
+        :class="is_task_editing ? 'is-editing' : ''"
         :item="pipe_task"
-        :is-save-allowed="is_save_allowed"
+        :is-editing.sync="is_task_editing"
+        :is-save-allowed.sync="is_task_save_allowed"
         v-if="pipe_task_type == 'extract'"
       />
       <PipeDocumentTaskLookup
+        class="pipe-editable"
+        :class="is_task_editing ? 'is-editing' : ''"
         :item="pipe_task"
-        :is-save-allowed="is_save_allowed"
+        :is-editing.sync="is_task_editing"
+        :is-save-allowed.sync="is_task_save_allowed"
         v-else-if="pipe_task_type == 'lookup'"
       />
       <PipeDocumentTaskExecute
+        class="pipe-editable"
+        :class="is_task_editing ? 'is-editing' : ''"
         :task="pipe_task"
-        :is-save-allowed="is_save_allowed"
+        :is-editing.sync="is_task_editing"
+        :is-save-allowed.sync="is_task_save_allowed"
         @save-click="updateTask"
         v-else-if="pipe_task_type == 'execute'"
       />
@@ -166,7 +175,8 @@
     data() {
       return {
         is_local_fetching: false,
-        is_save_allowed: true
+        is_task_save_allowed: false,
+        is_task_editing: false,
       }
     },
     computed: {
@@ -268,9 +278,16 @@
 </script>
 
 <style lang="stylus" scoped>
-  .doc-section
+  .pipe-section
     margin-top: 32px
     margin-bottom: 32px
     &:last-child
       margin-bottom: 0
+
+  .pipe-editable
+    padding: 24px
+    transition: all 0.15s ease
+    &.is-editing
+      border-radius: 6px
+      box-shadow: 0 0 0 1px rgba(64, 158, 255, 1), 0 0 0 5px rgba(64, 158, 255, 0.4)
 </style>
