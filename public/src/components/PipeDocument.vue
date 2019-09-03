@@ -118,6 +118,7 @@
       <PipeDocumentTaskExecute
         :task="pipe_task"
         :is-save-allowed="is_save_allowed"
+        @save-click="updateTask"
         v-else-if="pipe_task_type == 'execute'"
       />
       <div
@@ -226,12 +227,9 @@
           })
         }
       },
-      deployPipe(is_deployed) {
+      savePipe(attrs) {
         var team_name = this.active_team_name
         var eid = this.pipe.eid
-
-        var deploy_mode = is_deployed === false ? DEPLOY_MODE_BUILD : DEPLOY_MODE_RUN
-        var attrs = { deploy_mode }
 
         this.$store.dispatch('pipes/update', { team_name, eid, attrs }).then(response => {
           var updated_pipe = response.data
@@ -251,6 +249,20 @@
           }
         })
       },
+      deployPipe(is_deployed) {
+        var deploy_mode = is_deployed === false ? DEPLOY_MODE_BUILD : DEPLOY_MODE_RUN
+        var attrs = { deploy_mode }
+        this.savePipe(attrs)
+      },
+      updateTask(new_task, old_task) {
+        var attrs = {
+          task: {
+            op: 'sequence',
+            items: [new_task]
+          }
+        }
+        this.savePipe(attrs)
+      }
     }
   }
 </script>
