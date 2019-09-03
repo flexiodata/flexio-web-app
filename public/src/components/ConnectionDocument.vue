@@ -92,9 +92,9 @@
 
   export default {
     props: {
-      connection: {
-        type: Object,
-        default: () => {}
+      connectionEid: {
+        type: String,
+        required: true
       }
     },
     mixins: [MixinConnection],
@@ -104,6 +104,9 @@
       JsonDetailsPanel,
     },
     computed: {
+      connection() {
+        return _.get(this.$store.state.connections, `items.${this.connectionEid}`, {})
+      },
       ctype() {
         return _.get(this.connection, 'connection_type', '')
       },
