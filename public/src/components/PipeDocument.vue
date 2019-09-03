@@ -37,7 +37,7 @@
 
     <!-- description -->
     <div class="mv5">
-      <div class="flex flex-row items-center pb2 bb b--black-10 mb4">
+      <div class="flex flex-row items-center pb2 mb3 bb b--black-10">
         <div class="flex-fill f4 fw6 lh-title">Description</div>
         <div class="flex-none">
           <el-button
@@ -52,13 +52,20 @@
       <div
         class="marked"
         v-html="description"
-        v-show="description.length > 0"
-      ></div>
+        v-if="description.length > 0"
+      >
+      </div>
+      <div
+        class="f6 fw4 mt1 lh-copy moon-gray"
+        v-else
+      >
+        <em>(No description)</em>
+      </div>
     </div>
 
     <!-- syntax -->
     <div class="mv5">
-      <div class="flex flex-row items-center pb2 bb b--black-10 mb4">
+      <div class="flex flex-row items-center pb2 mb3 bb b--black-10">
         <div class="flex-fill f4 fw6 lh-title">Syntax</div>
         <div class="flex-none">
           <el-button
@@ -73,13 +80,20 @@
       <div
         class="marked"
         v-html="syntax"
-        v-show="syntax.length > 0"
-      ></div>
+        v-if="syntax.length > 0"
+      >
+      </div>
+      <div
+        class="f6 fw4 mt1 lh-copy moon-gray"
+        v-else
+      >
+        <em>(No syntax)</em>
+      </div>
     </div>
 
     <!-- configuration -->
-    <div class="mv5">
-      <div class="flex flex-row items-center pb2 bb b--black-10 mb4">
+    <div class="mt5">
+      <div class="flex flex-row items-center pb2 mb3 bb b--black-10">
         <div class="flex-fill f4 fw6 lh-title">Configuration</div>
         <div class="flex-none">
           <el-button
@@ -100,9 +114,11 @@
       <PipeDocumentTaskExecute
         v-else-if="pipe_task_type == 'execute'"
       />
-      <div v-else>
+      <div
+        v-else
+      >
         Unknown Task
-      </pre>
+      </div>
     </div>
   </div>
 </template>
