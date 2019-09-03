@@ -52,6 +52,43 @@ class Factory
         }
     }
 
+    public static function createStreamContentCache(string $connection_eid, string $remote_path, string $handle) : \Flexio\Object\Stream
+    {
+        // STEP 1: get the connection
+        $connection = \Flexio\Object\Connection::load($connection_eid);
+
+        // STEP 2: create the stream
+        $properties = array();
+        $properties['connection_eid'] = $connection->getEid();
+        $properties['parent_eid'] = ''; // cached content has no parent
+        $properties['stream_type'] = \Flexio\Object\Stream::TYPE_FILE;
+        $properties['name'] = $handle;
+        $properties['path'] = \Flexio\Base\Util::generateHandle(); // path is the path to storage, not the path in the connection
+        $properties['owned_by'] = $connection->getOwner();
+        $storable_stream = \Flexio\Object\Stream::create($properties);
+
+        // TODO: cache metadata about the file
+
+        // STEP 3: copy the contents
+        $streamwriter = $storable_stream->getWriter();
+        $connection->getService()->read(['path' => $remote_path], function($data) use (&$streamwriter) {
+            $streamwriter->write($data);
+        });
+
+        return $storable_stream;
+    }
+
+    public static function getStreamContentCache(string $connection_eid, string $handle) : ?\Flexio\Object\Stream
+    {
+        $filter = array('connection_eid' => $connection_eid, 'name' => $handle);
+        $streams = \Flexio\Object\Stream::list($filter);
+
+        if (count($streams) !== 1)
+            return null;
+
+        return $streams[0];
+    }
+
     public static function createConnectionFromFile(string $user_eid, string $file_name) : string
     {
         // STEP 1: read the pipe file and convert it to JSON
