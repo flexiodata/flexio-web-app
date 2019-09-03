@@ -129,9 +129,10 @@
         v-else-if="pipe_task_type == 'execute'"
       />
       <div
+        class="pipe-editable f6 fw4 lh-copy moon-gray"
         v-else
       >
-        Unknown Task
+        <em>(Unknown task)</em>
       </div>
     </div>
   </div>
