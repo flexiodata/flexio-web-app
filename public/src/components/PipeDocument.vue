@@ -36,7 +36,7 @@
     </div>
 
     <!-- description -->
-    <div class="mv5">
+    <div class="doc-section">
       <div class="flex flex-row items-center pb2 mb3 bb b--black-10">
         <div class="flex-fill f4 fw6 lh-title">Description</div>
         <div class="flex-none">
@@ -64,7 +64,7 @@
     </div>
 
     <!-- syntax -->
-    <div class="mv5">
+    <div class="doc-section">
       <div class="flex flex-row items-center pb2 mb3 bb b--black-10">
         <div class="flex-fill f4 fw6 lh-title">Syntax</div>
         <div class="flex-none">
@@ -92,7 +92,7 @@
     </div>
 
     <!-- configuration -->
-    <div class="mt5">
+    <div class="doc-section">
       <div class="flex flex-row items-center pb2 mb3 bb b--black-10">
         <div class="flex-fill f4 fw6 lh-title">Configuration</div>
         <div class="flex-none">
@@ -247,3 +247,11 @@
     }
   }
 </script>
+
+<style lang="stylus" scoped>
+  .doc-section
+    margin-top: 32px
+    margin-bottom: 32px
+    &:last-child
+      margin-bottom: 0
+</style>

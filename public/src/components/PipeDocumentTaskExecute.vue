@@ -11,7 +11,7 @@
         prop="remote_state"
         label="Would you like to execute an inline script or a remote script?"
       >
-        <el-radio-group size="small" v-model="edit_values.remote_state">
+        <el-radio-group v-model="edit_values.remote_state">
           <el-radio-button
 
             :label="option.val"
@@ -27,10 +27,7 @@
         prop="lang"
         label="Language"
       >
-        <el-select
-          size="small"
-          v-model="edit_values.lang"
-        >
+        <el-select v-model="edit_values.lang">
           <el-option
             :label="option.label"
             :value="option.val"
