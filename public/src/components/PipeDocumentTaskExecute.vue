@@ -78,6 +78,26 @@
         />
       </el-form-item>
     </el-form>
+
+    <div
+      class="flex-none mt3 flex flex-row justify-end"
+      v-show="is_changed"
+    >
+      <el-button
+        class="ttu fw6"
+        @click="initSelf"
+      >
+        Cancel
+      </el-button>
+      <el-button
+        class="ttu fw6"
+        type="primary"
+        :disabled="!isSaveAllowed"
+        @click="onSaveClick"
+      >
+        Save Changes
+      </el-button>
+    </div>
   </div>
 </template>
 
@@ -129,6 +149,10 @@ exports.flex_handler = function(flex) {
         type: Object,
         required: true
       },
+      isEditing: {
+        type: Boolean,
+        required: true
+      },
       isSaveAllowed: {
         type: Boolean,
         required: true
@@ -143,6 +167,10 @@ exports.flex_handler = function(flex) {
         handler: 'initSelf',
         immediate: true,
         deep: true
+      },
+      is_changed: {
+        handler: 'updateIsEditing',
+        immediate: true
       },
       lang: {
         handler: 'onLangChange'
@@ -159,6 +187,16 @@ exports.flex_handler = function(flex) {
         }
 
         return 'python'
+      },
+      intial_remote_state() {
+        return _.get(this.task, 'path', '').length == 0 ? 'inline' : 'remote'
+      },
+      is_changed() {
+        if (this.remote_state != this.intial_remote_state) { return true }
+        if (this.code != _.get(this.task, 'code', '')) { return true }
+        if (this.path != _.get(this.task, 'path', '')) { return true }
+        if (this.lang != this.task.lang) { return true }
+        return false
       }
     },
     methods: {
@@ -167,7 +205,7 @@ exports.flex_handler = function(flex) {
         _.assign(this.$data, getDefaultState(), this.task)
 
         // set our internal remote state
-        this.remote_state = this.path.length == 0 ? 'inline' : 'remote'
+        this.remote_state = this.intial_remote_state
 
         // initialize code
         if (this.code.length == 0) {
@@ -180,6 +218,7 @@ exports.flex_handler = function(flex) {
           case 'nodejs': this.code_javascript = this.code; break
         }
 
+        this.$emit('update:isEditing', false)
         this.$emit('update:isSaveAllowed', true)
       },
       getCodeByLang(lang) {
@@ -190,11 +229,25 @@ exports.flex_handler = function(flex) {
 
         return ''
       },
+      updateIsEditing() {
+        this.$emit('update:isEditing', this.is_changed)
+      },
       onPathsSelected(path) {
         this.path = path
       },
       onLangChange(val) {
         this.code = this.getCodeByLang(val)
+      },
+      onSaveClick() {
+        var is_inline = this.remote_state == 'inline'
+        var new_task = {
+          op: this.op,
+          lang: this.lang,
+          path: is_inline ? undefined : this.path,
+          code: is_inline ? this.code : undefined
+        }
+
+        this.$emit('save-click', new_task, this.task)
       }
     }
   }

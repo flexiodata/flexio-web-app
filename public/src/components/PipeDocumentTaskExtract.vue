@@ -75,6 +75,10 @@
         type: Object,
         required: true
       },
+      isEditing: {
+        type: Boolean,
+        required: true
+      },
       isSaveAllowed: {
         type: Boolean,
         required: true
