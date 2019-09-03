@@ -80,7 +80,7 @@
     </el-form>
 
     <div
-      class="flex-none mt3 flex flex-row justify-end"
+      class="flex-none flex flex-row justify-end"
       v-show="is_changed"
     >
       <el-button

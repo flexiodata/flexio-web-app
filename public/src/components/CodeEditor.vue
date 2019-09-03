@@ -34,6 +34,7 @@
   import {} from 'codemirror/mode/javascript/javascript'
   import {} from 'codemirror/mode/yaml/yaml'
   import {} from 'codemirror/mode/python/python'
+  import {} from 'codemirror/mode/markdown/markdown'
   import {} from 'codemirror/addon/display/placeholder'
   import {} from 'codemirror/addon/lint/lint'
   import {} from 'codemirror/addon/lint/json-lint'
@@ -54,7 +55,7 @@
       },
       lang: {
         type: String,
-        default: 'javascript'
+        default: 'javascript' // 'javascript', 'python', 'yaml', 'json', 'html', 'markdown'
       },
       lint: {
         type: Boolean,

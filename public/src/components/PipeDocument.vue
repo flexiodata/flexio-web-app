@@ -2,7 +2,7 @@
   <!-- fetching -->
   <div v-if="is_fetching">
     <div class="flex flex-row items-center">
-      <Spinner size="22" line-size="2" />
+      <Spinner :size="22" :line-size="2" />
       <span class="ml2 f6">Loading...</span>
     </div>
   </div>
@@ -10,7 +10,7 @@
   <!-- fetched -->
   <div v-else-if="is_fetched">
     <!-- header -->
-    <div class="flex flex-row">
+    <div class="pipe-header flex flex-row">
       <div class="flex-fill flex flex-row items-center">
         <div class="f3 fw6 lh-title">{{pipe.name}}</div>
         <LabelSwitch
@@ -37,58 +37,56 @@
 
     <!-- description -->
     <div class="pipe-section">
-      <div class="flex flex-row items-center pb2 mb2 bb b--black-10">
+      <div class="flex flex-row items-center pb2 bb b--black-10">
         <div class="flex-fill f4 fw6 lh-title">Description</div>
         <div class="flex-none">
           <el-button
             style="padding: 0"
             type="text"
+            @click="is_description_editing = true"
+            v-show="!is_description_editing"
             v-require-rights:pipe.update
           >
             Edit
           </el-button>
         </div>
       </div>
-      <div
-        class="marked"
-        v-html="description"
-        v-if="description.length > 0"
+      <PipeDocumentMarkdownEditor
+        class="pipe-editable"
+        :class="is_description_editing ? 'is-editing' : ''"
+        :value="pipe_description"
+        :is-editing.sync="is_description_editing"
+        @save-click="updateDescription"
       >
-      </div>
-      <div
-        class="f6 fw4 mt1 lh-copy moon-gray"
-        v-else
-      >
-        <em>(No description)</em>
-      </div>
+        <span slot="empty"><em>(No description)</em></span>
+      </PipeDocumentMarkdownEditor>
     </div>
 
     <!-- syntax -->
     <div class="pipe-section">
-      <div class="flex flex-row items-center pb2 mb2 bb b--black-10">
+      <div class="flex flex-row items-center pb2 bb b--black-10">
         <div class="flex-fill f4 fw6 lh-title">Syntax</div>
         <div class="flex-none">
           <el-button
             style="padding: 0"
             type="text"
+            @click="is_syntax_editing = true"
+            v-show="!is_syntax_editing"
             v-require-rights:pipe.update
           >
             Edit
           </el-button>
         </div>
       </div>
-      <div
-        class="marked"
-        v-html="syntax"
-        v-if="syntax.length > 0"
+      <PipeDocumentMarkdownEditor
+        class="pipe-editable"
+        :class="is_syntax_editing ? 'is-editing' : ''"
+        :value="pipe_syntax"
+        :is-editing.sync="is_syntax_editing"
+        @save-click="updateSyntax"
       >
-      </div>
-      <div
-        class="f6 fw4 mt1 lh-copy moon-gray"
-        v-else
-      >
-        <em>(No syntax)</em>
-      </div>
+        <span slot="empty"><em>(No syntax)</em></span>
+      </PipeDocumentMarkdownEditor>
     </div>
 
     <!-- configuration -->
@@ -140,10 +138,10 @@
 </template>
 
 <script>
-  import marked from 'marked'
   import { mapState } from 'vuex'
   import Spinner from 'vue-simple-spinner'
   import LabelSwitch from '@/components/LabelSwitch'
+  import PipeDocumentMarkdownEditor from '@/components/PipeDocumentMarkdownEditor'
   import PipeDocumentTaskExtract from '@/components/PipeDocumentTaskExtract'
   import PipeDocumentTaskLookup from '@/components/PipeDocumentTaskLookup'
   import PipeDocumentTaskExecute from '@/components/PipeDocumentTaskExecute'
@@ -162,6 +160,7 @@
     components: {
       Spinner,
       LabelSwitch,
+      PipeDocumentMarkdownEditor,
       PipeDocumentTaskExtract,
       PipeDocumentTaskLookup,
       PipeDocumentTaskExecute,
@@ -177,6 +176,8 @@
         is_local_fetching: false,
         is_task_save_allowed: false,
         is_task_editing: false,
+        is_description_editing: false,
+        is_syntax_editing: false,
       }
     },
     computed: {
@@ -186,17 +187,17 @@
       pipe() {
         return _.get(this.$store.state.pipes, `items.${this.pipeEid}`, {})
       },
-      description() {
-        return marked(_.get(this.pipe, 'description', ''))
-      },
-      syntax() {
-        return marked(_.get(this.pipe, 'syntax', ''))
-      },
       is_fetched() {
         return _.get(this.pipe, 'vuex_meta.is_fetched', false)
       },
       is_fetching() {
         return _.get(this.pipe, 'vuex_meta.is_fetching', false) || this.is_local_fetching /* Vuex pipe `is_fetching` isn't yet implemented */
+      },
+      pipe_description() {
+        return _.get(this.pipe, 'description', '')
+      },
+      pipe_syntax() {
+        return _.get(this.pipe, 'syntax', '')
       },
       pipe_task() {
         return _.get(this.pipe, 'task.items[0]', {})
@@ -241,7 +242,7 @@
         var team_name = this.active_team_name
         var eid = this.pipe.eid
 
-        this.$store.dispatch('pipes/update', { team_name, eid, attrs }).then(response => {
+        return this.$store.dispatch('pipes/update', { team_name, eid, attrs }).then(response => {
           var updated_pipe = response.data
 
           this.$message({
@@ -264,6 +265,16 @@
         var attrs = { deploy_mode }
         this.savePipe(attrs)
       },
+      updateDescription(obj) {
+        var attrs = { description: obj.new_value }
+        this.savePipe(attrs)
+        this.is_description_editing = false
+      },
+      updateSyntax(obj) {
+        var attrs = { syntax: obj.new_value }
+        this.savePipe(attrs)
+        this.is_syntax_editing = false
+      },
       updateTask(new_task, old_task) {
         var attrs = {
           task: {
@@ -272,20 +283,23 @@
           }
         }
         this.savePipe(attrs)
-      }
+      },
     }
   }
 </script>
 
 <style lang="stylus" scoped>
-  .pipe-section
-    margin-top: 32px
+  .pipe-header
     margin-bottom: 32px
+
+  .pipe-section
+    margin-top: 8px
+    margin-bottom: 8px
     &:last-child
       margin-bottom: 0
 
   .pipe-editable
-    padding: 24px
+    padding: 16px
     transition: all 0.15s ease
     &.is-editing
       border-radius: 3px
