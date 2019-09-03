@@ -288,6 +288,6 @@
     padding: 24px
     transition: all 0.15s ease
     &.is-editing
-      border-radius: 6px
+      border-radius: 3px
       box-shadow: 0 0 0 1px rgba(64, 158, 255, 1), 0 0 0 5px rgba(64, 158, 255, 0.4)
 </style>
