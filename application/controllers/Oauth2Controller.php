@@ -67,46 +67,49 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
     {
         $params = $this->getRequest()->getParams();
 
-        // if the state is set, get the eid and load the connection; otherwise
-        // try to get the eid from the raw params
-        $connection = false;
+        // state should always be set since we pass it; if it isn't, we don't know
+        // the connection info, so we're done
+        if (!isset($params['state']))
+        {
+            // render this page, so it can close the popup and do the callback
+            // to the parent/app window
+            $this->setViewTitle(_('Connection Authorization - Flex.io'));
+            $this->renderPublic();
+            $this->render();
+            return;
+        }
+
         try
         {
-            if (isset($params['state']))
+            // get the connection eid from the state and load it
+            $state = json_decode(base64_decode($params['state']),true);
+            $eid = $state['eid'] ?? '';
+            $connection = \Flexio\Object\Connection::load($eid);
+            if ($connection->getStatus() === \Model::STATUS_DELETED)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+            if (isset($params['error']))
             {
-                $state = json_decode(base64_decode($params['state']),true);
-                $eid = $state['eid'] ?? '';
-                $connection = \Flexio\Object\Connection::load($eid);
-                if ($connection->getStatus() === \Model::STATUS_DELETED)
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+                // set the error code on the connection
+                $properties = array();
+                $properties['connection_status'] = \Model::CONNECTION_STATUS_ERROR;
+                $connection->set($properties);
+            }
+
+            if (isset($params['code']))
+            {
+                $auth_params = array();
+                $auth_params['code'] = $params['code'];
+                $connection->authenticateCallback($auth_params);
             }
         }
         catch (\Flexio\Base\Exception $e)
         {
+            // fall through
         }
 
-        if (isset($params['error']))
-        {
-            // set the error code on the connection
-            if ($connection !== false)
-            {
-                $properties = array();
-                $properties['connection_status'] = \Model::CONNECTION_STATUS_ERROR;
-                if ($connection !== false)
-                    $connection->set($properties);
-            }
-        }
-
-        $result = false;
-        if ($connection !== false)
-        {
-            $auth_params = array();
-            $auth_params['code'] = $params['code'];
-            $result = $connection->authenticateCallback($auth_params);
-        }
-
-        // render this page, so it can close the popup
-        // and do the callback to the parent/app window
+        // render this page, so it can close the popup and do the callback
+        // to the parent/app window
         $this->setViewTitle(_('Connection Authorization - Flex.io'));
         $this->renderPublic();
         $this->render();
