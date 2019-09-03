@@ -90,6 +90,10 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public function delete() : \Flexio\Object\Connection
     {
+        // delete any associated pipes for a mounted connection
+        $this->deleteAssociatedPipes();
+
+        // delete the connection
         $this->clearCache();
         $connection_model = $this->getModel()->connection;
         $connection_model->delete($this->getEid());
