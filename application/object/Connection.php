@@ -333,6 +333,7 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         // note: creates associated pipes for a mounted connection
 
         $connection_info = $this->get();
+        $connection_eid = $connection_info['eid'];
         $connection_mode = $connection_info['connection_mode'];
 
         // if the connection mode isn't a mount; there are no associated pipes
@@ -365,11 +366,11 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         // STEP 2: create the pipes
         foreach ($connection_item_info as $key => $value)
         {
-            $filenamebase = \Flexio\Base\File::getFilename($value['name']);
-            $pipe_name = \Flexio\Base\Identifier::makeValid($filenamebase);
+            //$filenamebase = \Flexio\Base\File::getFilename($value['name']); // keep extension to guarantee uniqueness
+            $pipe_name = \Flexio\Base\Identifier::makeValid($value['name']);
 
             $pipe_params = array();
-            $pipe_params['parent_eid'] = $connection_info['eid'];
+            $pipe_params['parent_eid'] = $connection_eid;
             $pipe_params['name'] = $connection_info['name'] . '-' . $pipe_name; // TODO: pipe namespace is currently flat; prefix pipe name with connection name to avoid clashes with other pipes;
             $pipe_params['description'] = "Created from '" . $value['name'] . "' in '" . $connection_info['name'] . "' connection.";
             $pipe_params['deploy_mode'] = 'R';
@@ -393,10 +394,39 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             if ($language === false)
                 continue;
 
+            // generate a handle for the content signature that will uniquely identify it;
+            // use the owner plus a hash of some identifiers that constitute unique content
+            $content_handle = '';
+            $content_handle .= $connection_info['owned_by']['eid']; // include owner in the identifier so that even if the connection owner changes (later?), the cache will only exist for this owner
+            $content_handle .= $value['hash']; // not always populated, so also add on info from the file
+            $content_handle .= md5(
+                $value['path'] .
+                strval($value['size']) .
+                $value['modified']
+            );
+
+            // get the cached content; if it doesn't exist, create the cache
+            $stream = \Flexio\Object\Factory::getStreamContentCache($connection_eid, $content_handle);
+            if (!isset($stream))
+            {
+                $remote_path = $value['path'];
+                $stream = \Flexio\Object\Factory::createStreamContentCache($connection_eid, $remote_path, $content_handle);
+            }
+
+            if (!isset($stream))
+                continue; // TODO: throw exception
+
             $content = '';
-            $this->getService()->read(['path' => $value['path']], function($data) use (&$content) {
+            $reader = $stream->getReader();
+            while (($data = $reader->read()) != false)
+            {
                 $content .= $data;
-            });
+            }
+
+            // $content = '';
+            // $this->getService()->read(['path' => $value['path']], function($data) use (&$content) {
+            //     $content .= $data;
+            // });
 
             // set the task info
             if ($language === 'flexio')

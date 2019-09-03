@@ -208,6 +208,7 @@ class Test
             "eid_status" : null,
             "stream_type" : null,
             "parent_eid" : null,
+            "connection_eid" : null,
             "name" : null,
             "path" : null,
             "size" : null,
