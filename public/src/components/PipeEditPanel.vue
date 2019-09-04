@@ -108,9 +108,9 @@
 
     return {
       name: `pipe-${suffix}`,
-      title: '',
-      syntax: '',
-      description: ''
+      //title: '',
+      //syntax: '',
+      //description: ''
     }
   }
 
