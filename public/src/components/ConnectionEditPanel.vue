@@ -241,6 +241,10 @@
       mode: {
         type: String,
         default: 'add' // 'add' or 'edit'
+      },
+      submitButtonText: {
+        type: String,
+        default: ''
       }
     },
     mixins: [MixinConnection, MixinValidation],
@@ -338,6 +342,10 @@
         return this.mode == 'edit' ? `Edit "${this.cname}" Connection` : 'New Connection'
       },
       submit_label() {
+        if (this.submitButtonText.length > 0) {
+          return this.submitButtonText
+        }
+
         return this.mode == 'edit' ? 'Save changes' : 'Create connection'
       },
       has_http_errors() {

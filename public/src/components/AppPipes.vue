@@ -203,6 +203,7 @@
         :title="connection_edit_mode == 'edit' ? 'Edit Function Mount' : 'New Function Mount'"
         :show-steps="connection_edit_mode == 'edit' ? false : true"
         :connection="connection_edit_mode == 'edit' ? edit_connection : new_function_mount_attrs"
+        :submit-button-text="connection_edit_mode == 'edit' ? '' : 'Create Function Mount'"
         :filter-by="filterByFunctionMount"
         @close="show_connection_dialog = false"
         @cancel="show_connection_dialog = false"
