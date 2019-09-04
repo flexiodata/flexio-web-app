@@ -230,7 +230,7 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $this;
     }
 
-    public function sync() : array
+    public function sync() : \Flexio\Object\Connection
     {
         // note: syncs pipes in a mounted a connection with the source files in the connection
 
@@ -246,10 +246,9 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $this->deleteAssociatedPipes();
 
         // create pipes for new items in the connection
-        $connection_item_info = $this->createAssociatedPipes();
+        $this->createAssociatedPipes();
 
-        // return the newly added pipes
-        return $connection_item_info;
+        return $this;
     }
 
     public function getAccessToken()
@@ -328,7 +327,7 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $pipe_model->update($pipes_to_update, $process_arr);
     }
 
-    private function createAssociatedPipes() : array
+    private function createAssociatedPipes() : void
     {
         // note: creates associated pipes for a mounted connection
 
@@ -338,7 +337,7 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
         // if the connection mode isn't a mount; there are no associated pipes
         if ($connection_mode !== \Model::CONNECTION_MODE_FUNCTION)
-            return array();
+            return;
 
         // STEP 1: get the list of files to use to create pipes
         $service = $this->getService();
@@ -453,8 +452,6 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             // create the new pipe
             $item = \Flexio\Object\Pipe::create($pipe_params);
         }
-
-        return $connection_item_info;
     }
 
     private static function getPipeSyntaxFromContent(string $content) : string

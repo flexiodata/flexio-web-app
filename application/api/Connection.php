@@ -316,7 +316,27 @@ class Connection
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // sync
-        $result = $connection->sync();
+        $connection = $connection->sync();
+
+        // return the pipes for the connection
+        $result = array();
+
+        $filter = array('owned_by' => $owner_user_eid, 'eid_status' => \Model::STATUS_AVAILABLE, 'parent_eid' => $connection->getEid());
+        $pipes = \Flexio\Object\Pipe::list($filter);
+
+        foreach ($pipes as $p)
+        {
+            if ($p->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PIPE_READ) === false)
+                continue;
+
+            $properties = $p->get();
+
+            // TODO: remove 'task' from pipe list to prepare for getting pipe
+            // content from a separate call; leave in pipe item get() function
+            unset($properties['task']);
+
+            $result[] = $properties;
+        }
 
         // return the result
         // TODO: re-enable tracking once we know what we want to store
