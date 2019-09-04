@@ -24,10 +24,7 @@
                 @keydown.esc.native="pipe_list_filter = ''"
                 v-model="pipe_list_filter"
               />
-              <el-dropdown
-                trigger="click"
-                @command="onNewCommand"
-              >
+              <el-dropdown trigger="click">
                 <el-button
                   size="small"
                   type="primary"
@@ -37,10 +34,17 @@
                   New<i class="el-icon-arrow-down el-icon--right fw6" style="margin-right: -2px"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item command="local-function">
-                    Local Function
+                  <el-dropdown-item @click.native="onNewFunction('extract')">
+                    Extract
                   </el-dropdown-item>
-                  <el-dropdown-item command="function-mount">
+                  <el-dropdown-item @click.native="onNewFunction('lookup')">
+                    Lookup
+                  </el-dropdown-item>
+                  <el-dropdown-item @click.native="onNewFunction('execute')">
+                    Execute
+                  </el-dropdown-item>
+                  <el-dropdown-item divided></el-dropdown-item>
+                  <el-dropdown-item @click.native="onNewFunctionMount">
                     Function Mount
                   </el-dropdown-item>
                 </el-dropdown-menu>
@@ -167,6 +171,7 @@
     >
       <PipeEditPanel
         mode="add"
+        :pipe="new_function_attrs"
         @close="show_pipe_dialog = false"
         @cancel="show_pipe_dialog = false"
         @submit="tryCreatePipe"
@@ -270,6 +275,7 @@
         show_connection_dialog: false,
         connection_edit_mode: 'add',
         edit_connection: null,
+        new_function_attrs: {},
         new_function_mount_attrs: {
           connection_mode: CONNECTION_MODE_FUNCTION
         },
@@ -480,7 +486,7 @@
       filterByFunctionMount(connection) {
         return this.$_Connection_isFunctionMount(connection)
       },
-      onNewLocalFunction() {
+      onNewFunction(op) {
         this.show_pipe_dialog = true
       },
       onNewFunctionMount() {
@@ -491,12 +497,6 @@
         this.edit_connection = connection
         this.connection_edit_mode = 'edit'
         this.show_connection_dialog = true
-      },
-      onNewCommand(cmd) {
-        switch (cmd) {
-          case 'local-function': this.onNewLocalFunction(); return
-          case 'function-mount': this.onNewFunctionMount(); return
-        }
       },
       onFunctionMountCommand(cmd, dropdown_component) {
         var eid = _.get(dropdown_component.$attrs, 'connection-eid')
