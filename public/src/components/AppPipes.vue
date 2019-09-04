@@ -77,7 +77,6 @@
                   <div class="flex-fill fw6">{{group.title}}</div>
                   <el-dropdown
                     trigger="click"
-                    @command="onFunctionMountCommand"
                     v-show="group.id != 'local'"
                   >
                     <span class="el-dropdown-link pointer mr2">
@@ -86,14 +85,14 @@
                     <el-dropdown-menu style="min-width: 10rem" slot="dropdown">
                       <el-dropdown-item
                         class="flex flex-row items-center"
-                        :connection-eid="group.id"
+                        @click.native="editFunctionMount(group.connection)"
                         command="edit"
                       >
                         <i class="material-icons mr2">edit</i> Edit
                       </el-dropdown-item>
                       <el-dropdown-item
                         class="flex flex-row items-center"
-                        :connection-eid="group.id"
+                        @click.native="syncFunctionMount(group.connection)"
                         command="refresh"
                       >
                         <i class="material-icons mr2">refresh</i> Refresh
@@ -101,10 +100,10 @@
                       <el-dropdown-item divided></el-dropdown-item>
                       <el-dropdown-item
                         class="flex flex-row items-center"
-                        :connection-eid="group.id"
+                        @click.native="tryDeleteFunctionMount(group.connection)"
                         command="delete"
                       >
-                        <i class="material-icons mr2">delete</i> Delete
+                        <i class="material-icons mr2">delete</i> Remove
                       </el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
@@ -321,7 +320,8 @@
             id: key.length == 0 ? 'local' : key,
             ctype: _.get(connection, 'connection_type', ''),
             title: key.length == 0 ? 'Local' : _.get(connection, 'name', `Not found (${key})`),
-            pipes: _.sortBy(val, ['name'])
+            pipes: _.sortBy(val, ['name']),
+            connection,
           }
         })
 
@@ -423,19 +423,31 @@
         var cname = _.get(attrs, 'name', 'Connection')
         var team_name = this.active_team_name
 
-        var msg = `Are you sure you want to delete the function mount named <strong>"${cname}"</strong>?`
-        var title = `Really delete function mount?`
+        var msg = `<p>Removing a function mount will also remove all functions associated with the function mount.</p><div class="h1"></div><p>Are you sure you want to remove the function mount named <strong>"${cname}"</strong>?</p>`
+        var title = `Really remove function mount?`
 
         this.$confirm(msg, title, {
           type: 'warning',
           confirmButtonClass: 'ttu fw6',
           cancelButtonClass: 'ttu fw6',
-          confirmButtonText: 'Delete function mount',
+          confirmButtonText: 'Remove function mount',
           cancelButtonText: 'Cancel',
           dangerouslyUseHTMLString: true
         }).then(() => {
           this.$store.dispatch('connections/delete', { team_name, eid })
         })
+      },
+      syncFunctionMount(connection) {
+        var team_name = this.active_team_name
+        var eid = _.get(connection, 'eid', '')
+
+        this.$store.dispatch('connections/sync', { team_name, eid })
+        this.show_connection_dialog = false
+      },
+      editFunctionMount(connection) {
+        this.edit_connection = connection
+        this.connection_edit_mode = 'edit'
+        this.show_connection_dialog = true
       },
       loadPipe(identifier) {
         var pipe
@@ -476,13 +488,6 @@
           this.$nextTick(() => { this.is_selecting = false })
         }
       },
-      syncFunctionMount(connection) {
-        var team_name = this.active_team_name
-        var eid = _.get(connection, 'eid', '')
-
-        this.$store.dispatch('connections/sync', { team_name, eid })
-        this.show_connection_dialog = false
-      },
       filterByFunctionMount(connection) {
         return this.$_Connection_isFunctionMount(connection)
       },
@@ -493,21 +498,6 @@
         this.connection_edit_mode = 'add'
         this.show_connection_dialog = true
       },
-      onEditFunctionMount(connection) {
-        this.edit_connection = connection
-        this.connection_edit_mode = 'edit'
-        this.show_connection_dialog = true
-      },
-      onFunctionMountCommand(cmd, dropdown_component) {
-        var eid = _.get(dropdown_component.$attrs, 'connection-eid')
-        var connection = _.find(this.function_mounts, { eid })
-
-        switch (cmd) {
-          case 'edit': this.onEditFunctionMount(connection); return
-          case 'refresh': this.syncFunctionMount(connection); return
-          case 'delete': this.tryDeleteFunctionMount(connection); return
-        }
-      }
     }
   }
 </script>
