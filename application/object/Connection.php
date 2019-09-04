@@ -423,10 +423,8 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 $content .= $data;
             }
 
-            // $content = '';
-            // $this->getService()->read(['path' => $value['path']], function($data) use (&$content) {
-            //     $content .= $data;
-            // });
+            // set the syntax info from the front of the file
+            $pipe_params['syntax'] = self::getPipeSyntaxFromContent($content);
 
             // set the task info
             if ($language === 'flexio')
@@ -457,6 +455,26 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         }
 
         return $connection_item_info;
+    }
+
+    private static function getPipeSyntaxFromContent(string $content) : string
+    {
+        $syntax_delimiter = "####################";
+        $syntax_delimiter_pos = strpos($content, $syntax_delimiter);
+
+        if ($syntax_delimiter_pos <= 0)
+            return '';
+
+        $syntax_content = substr($content, 0, $syntax_delimiter_pos);
+
+        $result = '';
+        $lines = preg_split('/\r\n|\r|\n/', $syntax_content);
+        foreach ($lines as $l)
+        {
+            $result .= preg_replace('/^# /', '', $l) . "\n";
+        }
+
+        return $result;
     }
 
     private function getConnectionPropertiesToUpdate(array $properties) : array
