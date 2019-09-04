@@ -242,10 +242,6 @@
         type: String,
         default: 'add' // 'add' or 'edit'
       },
-      submitButtonText: {
-        type: String,
-        default: ''
-      }
     },
     mixins: [MixinConnection, MixinValidation],
     components: {
@@ -334,19 +330,22 @@
       has_connection() {
         return this.ctype.length > 0
       },
+      is_function_mount() {
+        return _.get(this.edit_connection, 'connection_mode', '') == CONNECTION_MODE_FUNCTION
+      },
       our_title() {
         if (this.title.length > 0) {
           return this.title
         }
 
-        return this.mode == 'edit' ? `Edit "${this.cname}" Connection` : 'New Connection'
+        if (this.is_function_mount) {
+          return this.mode == 'edit' ? `Edit "${this.cname}" Function Mount` : 'New Function Mount'
+        } else {
+          return this.mode == 'edit' ? `Edit "${this.cname}" Connection` : 'New Connection'
+        }
       },
       submit_label() {
-        if (this.submitButtonText.length > 0) {
-          return this.submitButtonText
-        }
-
-        return this.mode == 'edit' ? 'Save changes' : 'Create connection'
+        return this.mode == 'edit' ? 'Save changes' : this.is_function_mount ? 'Create function mount' : 'Create connection'
       },
       has_http_errors() {
         return _.keys(this.connection_info_form_errors).length > 0
