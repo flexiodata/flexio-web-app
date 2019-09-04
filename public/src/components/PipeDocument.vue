@@ -35,6 +35,56 @@
       </div>
     </div>
 
+
+    <!-- configuration -->
+    <div class="pipe-section">
+      <div class="flex flex-row items-center pb2 bb b--black-10">
+        <div class="flex-fill f4 fw6 lh-title">Configuration</div>
+        <div class="flex-none">
+          <el-button
+            style="padding: 0"
+            type="text"
+            v-require-rights:pipe.update
+          >
+            Edit
+          </el-button>
+        </div>
+      </div>
+      <PipeDocumentTaskExtract
+        class="pipe-editable"
+        :class="is_task_editing ? 'is-editing' : ''"
+        :task="pipe_task"
+        :is-editing.sync="is_task_editing"
+        :is-save-allowed.sync="is_task_save_allowed"
+        @save-click="updateTask"
+        v-if="pipe_task_type == 'extract'"
+      />
+      <PipeDocumentTaskLookup
+        class="pipe-editable"
+        :class="is_task_editing ? 'is-editing' : ''"
+        :task="pipe_task"
+        :is-editing.sync="is_task_editing"
+        :is-save-allowed.sync="is_task_save_allowed"
+        @save-click="updateTask"
+        v-else-if="pipe_task_type == 'lookup'"
+      />
+      <PipeDocumentTaskExecute
+        class="pipe-editable"
+        :class="is_task_editing ? 'is-editing' : ''"
+        :task="pipe_task"
+        :is-editing.sync="is_task_editing"
+        :is-save-allowed.sync="is_task_save_allowed"
+        @save-click="updateTask"
+        v-else-if="pipe_task_type == 'execute'"
+      />
+      <div
+        class="pipe-editable f6 fw4 lh-copy moon-gray"
+        v-else
+      >
+        <em>(Unknown task)</em>
+      </div>
+    </div>
+
     <!-- description -->
     <div class="pipe-section">
       <div class="flex flex-row items-center pb2 bb b--black-10">
@@ -87,55 +137,6 @@
       >
         <span slot="empty"><em>(No syntax)</em></span>
       </PipeDocumentMarkdownEditor>
-    </div>
-
-    <!-- configuration -->
-    <div class="pipe-section">
-      <div class="flex flex-row items-center pb2 bb b--black-10">
-        <div class="flex-fill f4 fw6 lh-title">Configuration</div>
-        <div class="flex-none">
-          <el-button
-            style="padding: 0"
-            type="text"
-            v-require-rights:pipe.update
-          >
-            Edit
-          </el-button>
-        </div>
-      </div>
-      <PipeDocumentTaskExtract
-        class="pipe-editable"
-        :class="is_task_editing ? 'is-editing' : ''"
-        :task="pipe_task"
-        :is-editing.sync="is_task_editing"
-        :is-save-allowed.sync="is_task_save_allowed"
-        @save-click="updateTask"
-        v-if="pipe_task_type == 'extract'"
-      />
-      <PipeDocumentTaskLookup
-        class="pipe-editable"
-        :class="is_task_editing ? 'is-editing' : ''"
-        :task="pipe_task"
-        :is-editing.sync="is_task_editing"
-        :is-save-allowed.sync="is_task_save_allowed"
-        @save-click="updateTask"
-        v-else-if="pipe_task_type == 'lookup'"
-      />
-      <PipeDocumentTaskExecute
-        class="pipe-editable"
-        :class="is_task_editing ? 'is-editing' : ''"
-        :task="pipe_task"
-        :is-editing.sync="is_task_editing"
-        :is-save-allowed.sync="is_task_save_allowed"
-        @save-click="updateTask"
-        v-else-if="pipe_task_type == 'execute'"
-      />
-      <div
-        class="pipe-editable f6 fw4 lh-copy moon-gray"
-        v-else
-      >
-        <em>(Unknown task)</em>
-      </div>
     </div>
   </div>
 </template>
@@ -293,16 +294,14 @@
 
 <style lang="stylus" scoped>
   .pipe-header
-    margin-bottom: 32px
+    margin-bottom: 60px
 
   .pipe-section
-    margin-top: 8px
-    margin-bottom: 8px
-    &:last-child
-      margin-bottom: 0
+    margin-top: 24px
+    margin-bottom: 24px
 
   .pipe-editable
-    padding: 16px
+    padding: 24px
     transition: all 0.15s ease
     &.is-editing
       border-radius: 3px
