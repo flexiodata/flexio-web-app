@@ -28,7 +28,7 @@
           v-model="edit_pipe.name"
         />
       </el-form-item>
-
+      <!--
       <el-form-item
         key="syntax"
         prop="syntax"
@@ -65,6 +65,7 @@
           <p class="mb0 f6" v-show="edit_pipe.description.length > 0">{{edit_pipe.description}}</p>
         </div>
       </div>
+      -->
     </el-form>
 
     <div class="mt4 w-100 flex flex-row justify-end" v-if="showFooter">
