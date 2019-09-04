@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- header -->
     <div class="w-100 mb4" v-if="showHeader">
       <div class="flex flex-row items-center">
         <span class="flex-fill f4 lh-title">{{our_title}}</span>
@@ -7,6 +8,7 @@
       </div>
     </div>
 
+    <!-- body -->
     <el-form
       ref="form"
       class="el-form--cozy el-form__label-tiny"
@@ -28,46 +30,9 @@
           v-model="edit_pipe.name"
         />
       </el-form-item>
-      <!--
-      <el-form-item
-        key="syntax"
-        prop="syntax"
-        label="Syntax"
-      >
-        <el-input
-          placeholder=", param1, [param2]"
-          auto-complete="off"
-          spellcheck="false"
-          v-model="edit_pipe.syntax"
-        >
-          <template slot="prepend">{{syntax_prefix}}</template>
-          <template slot="append">)</template>
-        </el-input>
-      </el-form-item>
-
-      <el-form-item
-        key="description"
-        prop="description"
-        label="Description"
-      >
-        <el-input
-          type="textarea"
-          placeholder="Enter description"
-          :rows="6"
-          v-model="edit_pipe.description"
-        />
-      </el-form-item>
-
-      <div class="mt3" style="width: 300px">
-        <label class="el-form-item__label">Preview</label>
-        <div class="pa3 bg-white ba b--black-10 br2">
-          <div class="code f7 b">{{syntax_str}}</div>
-          <p class="mb0 f6" v-show="edit_pipe.description.length > 0">{{edit_pipe.description}}</p>
-        </div>
-      </div>
-      -->
     </el-form>
 
+    <!-- footer -->
     <div class="mt4 w-100 flex flex-row justify-end" v-if="showFooter">
       <el-button
         class="ttu fw6"
@@ -103,14 +68,22 @@
     })
   }
 
-  const defaultAttrs = () => {
+  const getDefaultState = (component) => {
     var suffix = getNameSuffix(4)
 
     return {
-      name: `pipe-${suffix}`,
-      //title: '',
-      //syntax: '',
-      //description: ''
+      rules: {
+        name: [
+          { required: true, message: 'Please input a name', trigger: 'blur' },
+          { validator: component.formValidateName }
+        ]
+      },
+      form_errors: {},
+
+      // pipe values
+      edit_pipe: {
+        name: `func-${suffix}`
+      },
     }
   }
 
@@ -130,7 +103,7 @@
       },
       pipe: {
         type: Object,
-        default: () => { return defaultAttrs() }
+        required: true
       },
       mode: {
         type: String,
@@ -143,40 +116,20 @@
     },
     watch: {
       pipe: {
-        handler: 'initPipe',
+        handler: 'initSelf',
         immediate: true,
-        deep: true
-      },
-      edit_pipe: {
-        handler: 'updatePipe',
         deep: true
       }
     },
     data() {
-      return {
-        orig_pipe: _.assign({}, defaultAttrs(), this.pipe),
-        edit_pipe: _.assign({}, defaultAttrs(), this.pipe),
-        rules: {
-          name: [
-            { required: true, message: 'Please input a name', trigger: 'blur' },
-            { validator: this.formValidateName }
-          ]
-        },
-        form_errors: {},
-      }
+      return getDefaultState(this)
     },
     computed: {
       ...mapState({
         active_team_name: state => state.teams.active_team_name
       }),
       pname() {
-        return _.get(this.orig_pipe, 'name', '')
-      },
-      syntax_prefix() {
-        return `=FLEX("${this.active_team_name}/${this.edit_pipe.name}"`
-      },
-      syntax_str() {
-        return getSyntaxStr(this.active_team_name, this.edit_pipe)
+        return _.get(this.pipe, 'name', '')
       },
       our_title() {
         if (this.title.length > 0) {
@@ -192,41 +145,29 @@
         return _.keys(this.form_errors).length > 0
       }
     },
-
     methods: {
       onClose() {
-        this.revert()
-        this.initPipe()
+        this.initSelf()
         this.$emit('close')
       },
       onCancel() {
-        this.revert()
-        this.initPipe()
+        this.initSelf()
         this.$emit('cancel')
       },
       onSubmit() {
         this.$emit('submit', this.edit_pipe)
       },
-      initPipe() {
-        var pipe = _.cloneDeep(this.pipe)
+      initSelf() {
+        // reset our local component data
+        _.assign(this.$data, getDefaultState(this))
 
-        // we have to do this to force watcher validation
-        this.$nextTick(() => {
-          this.orig_pipe = _.cloneDeep(pipe)
-          this.edit_pipe = _.cloneDeep(pipe)
-        })
-      },
-      updatePipe() {
-        this.$emit('change', this.edit_pipe)
-      },
-      revert() {
+        // reset local objects
+        this.edit_pipe = _.assign({}, this.edit_pipe, _.cloneDeep(this.pipe))
+
+        // reset the form
         if (this.$refs.form) {
           this.$refs.form.resetFields()
         }
-        this.form_errors = {}
-      },
-      validate(callback) {
-        this.$refs.form.validate(callback)
       },
       formValidateName(rule, value, callback) {
         if (value.length == 0) {
@@ -234,7 +175,7 @@
           return
         }
 
-        // we haven't changed the name; trying to validate it will tell us it already exists
+        // we haven't changed the name; trying to validate it will tell us if it already exists
         if (value == _.get(this.pipe, 'name', '')) {
           callback()
           return
