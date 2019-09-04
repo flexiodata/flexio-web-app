@@ -28,9 +28,10 @@
           style="min-width: 5rem"
           size="small"
           type="primary"
+          @click="onEditClick"
           v-require-rights:pipe.update
         >
-          Rename
+          Edit
         </el-button>
       </div>
     </div>
@@ -288,6 +289,9 @@
         }
         this.savePipe(attrs)
       },
+      onEditClick() {
+        this.$emit('edit-click', this.pipe)
+      }
     }
   }
 </script>

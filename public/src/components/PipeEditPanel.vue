@@ -155,6 +155,9 @@
         this.$emit('cancel')
       },
       submit() {
+        this.mode == 'edit' ? this.submitEditPipe() : this.submitCreatePipe()
+      },
+      submitCreatePipe() {
         var team_name = this.active_team_name
         var attrs = this.edit_pipe
 
@@ -166,6 +169,20 @@
 
           var analytics_payload = _.pick(response.data, ['eid', 'name', 'title', 'description', 'created'])
           this.$store.track('Created Function', analytics_payload)
+
+          this.$emit('update-pipe', response.data)
+        })
+      },
+      submitEditPipe() {
+        var team_name = this.active_team_name
+        var eid = _.get(this.edit_pipe, 'eid', '')
+        var attrs = _.pick(this.edit_pipe, ['name'])
+
+        this.$store.dispatch('pipes/update', { team_name, eid, attrs }).then(response => {
+          this.$message({
+            message: 'The function was updated successfully.',
+            type: 'success'
+          })
 
           this.$emit('update-pipe', response.data)
         })

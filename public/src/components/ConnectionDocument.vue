@@ -56,7 +56,7 @@
           style="min-width: 5rem"
           size="small"
           type="primary"
-          @click="$emit('edit-click')"
+          @click="onEditClick"
           v-require-rights:connection.update
         >
           Edit
@@ -162,7 +162,10 @@
     methods: {
       cinfo() {
         return _.find(connections, { connection_type: this.ctype })
-      }
+      },
+      onEditClick() {
+        this.$emit('edit-click', this.connection)
+      },
     }
   }
 </script>
