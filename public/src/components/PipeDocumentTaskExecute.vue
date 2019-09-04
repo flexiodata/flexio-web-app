@@ -78,7 +78,6 @@
         />
       </el-form-item>
     </el-form>
-
     <div
       class="flex-none flex flex-row justify-end"
       v-show="is_changed"
@@ -102,6 +101,7 @@
 </template>
 
 <script>
+  import { TASK_OP_EXTRACT } from '@/constants/task-op'
   import { btoaUnicode } from '@/utils'
   import CodeEditor from '@/components/CodeEditor'
   import BrowseButton from '@/components/BrowseButton'
@@ -241,7 +241,7 @@ exports.flex_handler = function(flex) {
       onSaveClick() {
         var is_inline = this.remote_state == 'inline'
         var new_task = {
-          op: this.op,
+          op: TASK_OP_EXECUTE,
           lang: this.lang,
           path: is_inline ? undefined : this.path,
           code: is_inline ? this.code : undefined

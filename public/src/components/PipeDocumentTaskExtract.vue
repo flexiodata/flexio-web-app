@@ -2,9 +2,9 @@
   <div>
     <el-form
       ref="form"
-      class="flex-fill el-form--compact el-form__label-tiny"
+      class="flex-fill el-form--cozy el-form__label-tiny"
       label-position="top"
-      :model="edit_values"
+      :model="$data"
       :rules="rules"
       @validate="onValidateItem"
     >
@@ -17,7 +17,7 @@
           auto-complete="off"
           spellcheck="false"
           placeholder="Enter the extract file or table"
-          v-model="edit_values.path"
+          v-model="path"
         >
           <BrowseButton
             slot="append"
@@ -52,26 +52,55 @@
         />
       </div>
     </el-form>
+    <div
+      class="flex-none flex flex-row justify-end"
+      v-show="is_changed"
+    >
+      <el-button
+        class="ttu fw6"
+        @click="initSelf"
+      >
+        Cancel
+      </el-button>
+      <el-button
+        class="ttu fw6"
+        type="primary"
+        :disabled="!isSaveAllowed"
+        @click="onSaveClick"
+      >
+        Save Changes
+      </el-button>
+    </div>
   </div>
 </template>
 
 <script>
   import marked from 'marked'
   import { mapState } from 'vuex'
+  import { TASK_OP_EXTRACT } from '@/constants/task-op'
   import api from '@/api'
   import Spinner from 'vue-simple-spinner'
   import BrowseButton from '@/components/BrowseButton'
   import SimpleTable from '@/components/SimpleTable'
 
-  const getDefaultValues = () => {
+  const getDefaultState = () => {
     return {
-      path: '',
+        path: '',
+        structure: [],
+        fetching_structure: false,
+        fetched_structure_path: '',
+        form_errors: {},
+        rules: {
+          path: [
+            { required: true, message: 'Please select the path of the file or table on which to do the extract' }
+          ]
+        }
     }
   }
 
   export default {
     props: {
-      item: {
+      task: {
         type: Object,
         required: true
       },
@@ -90,20 +119,16 @@
       SimpleTable
     },
     watch: {
-      item: {
+      task: {
         handler: 'initSelf',
         immediate: true,
         deep: true
       },
       is_changed: {
-        handler: 'onChange'
+        handler: 'updateIsEditing',
+        immediate: true
       },
-      edit_values: {
-        handler: 'onEditValuesChange',
-        immediate: true,
-        deep: true
-      },
-      'edit_values.path': {
+      path: {
         handler: 'onPathChange'
       },
       form_errors(val) {
@@ -111,26 +136,14 @@
       }
     },
     data() {
-      return {
-        structure: [],
-        fetching_structure: false,
-        fetched_structure_path: '',
-        orig_values: getDefaultValues(),
-        edit_values: getDefaultValues(),
-        form_errors: {},
-        rules: {
-          path: [
-            { required: true, message: 'Please select the path of the file or table on which to do the extract' }
-          ]
-        }
-      }
+      return getDefaultState()
     },
     computed: {
       ...mapState({
         active_team_name: state => state.teams.active_team_name
       }),
       is_changed() {
-        return !_.isEqual(this.edit_values, this.orig_values)
+        return this.path != this.task.path
       },
       structure_cols() {
         return _.get(this.structure, 'columns', [])
@@ -144,11 +157,9 @@
     },
     methods: {
       initSelf() {
-        var form_values = _.get(this.item, 'form_values', {})
-        this.orig_values = _.assign({}, getDefaultValues(), form_values)
-        this.edit_values = _.assign({}, getDefaultValues(), form_values)
+        // reset our local component data
+        _.assign(this.$data, getDefaultState(), this.task)
         this.fetchStructure()
-        this.$nextTick(() => { this.validateForm(true) })
       },
       validateForm(clear) {
         if (this.$refs.form) {
@@ -169,33 +180,18 @@
         }
         this.form_errors = _.assign({}, errors)
       },
-      onPathsSelected(path) {
-        this.edit_values.path = path
-        this.fetchStructure()
+      updateIsEditing() {
+        this.$emit('update:isEditing', this.is_changed)
       },
-      onChange(val) {
-        if (val) {
-          this.$nextTick(() => { this.validateForm(true) })
-          this.$emit('active-item-change', this.index)
-        }
-      },
-      onEditValuesChange() {
-        var vals = _.cloneDeep(this.edit_values)
-        this.$emit('item-change', vals, this.index)
-      },
-      onPathChange: _.debounce(function(path) {
-        this.fetchStructure()
-      }, 1000),
       fetchStructure() {
         if (this.fetching_structure === true) {
           return
         }
 
-        var path = _.get(this.edit_values, 'path', '')
-        if (path.indexOf(':/') > 0 && this.fetched_structure_path != path) {
+        if (this.path.indexOf(':/') > 0 && this.fetched_structure_path != this.path) {
           this.fetching_structure = true
-          api.vfsFetchInfo(this.active_team_name, path).then(response => {
-            this.fetched_structure_path = path
+          api.vfsFetchInfo(this.active_team_name, this.path).then(response => {
+            this.fetched_structure_path = this.path
             this.structure = response.data
           })
           .catch(error => {
@@ -205,7 +201,22 @@
             this.fetching_structure = false
           })
         }
-      }
+      },
+      onPathsSelected(path) {
+        this.path = path
+        this.fetchStructure()
+      },
+      onPathChange: _.debounce(function(path) {
+        this.fetchStructure()
+      }, 1000),
+      onSaveClick() {
+        var new_task = {
+          op: TASK_OP_EXTRACT,
+          path: this.path,
+        }
+
+        this.$emit('save-click', new_task, this.task)
+      },
     }
   }
 </script>
