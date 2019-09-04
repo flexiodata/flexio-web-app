@@ -44,7 +44,7 @@
         class="ttu fw6"
         type="primary"
         :disabled="has_errors"
-        @click="onSubmit"
+        @click="submit"
       >
         {{submit_label}}
       </el-button>
@@ -154,8 +154,21 @@
         this.initSelf()
         this.$emit('cancel')
       },
-      onSubmit() {
-        this.$emit('submit', this.edit_pipe)
+      submit() {
+        var team_name = this.active_team_name
+        var attrs = this.edit_pipe
+
+        this.$store.dispatch('pipes/create', { team_name, attrs }).then(response => {
+          this.$message({
+            message: 'The function was created successfully.',
+            type: 'success'
+          })
+
+          var analytics_payload = _.pick(response.data, ['eid', 'name', 'title', 'description', 'created'])
+          this.$store.track('Created Function', analytics_payload)
+
+          this.$emit('update-pipe', response.data)
+        })
       },
       initSelf() {
         // reset our local component data

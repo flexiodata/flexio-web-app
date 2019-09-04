@@ -173,7 +173,7 @@
         :pipe="new_function_attrs"
         @close="show_pipe_dialog = false"
         @cancel="show_pipe_dialog = false"
-        @submit="tryCreatePipe"
+        @update-pipe="onPipeAdded"
         v-if="show_pipe_dialog"
       />
     </el-dialog>
@@ -364,26 +364,6 @@
           this.$store.dispatch('pipes/fetch', { team_name })
         }
       },
-      tryCreatePipe(attrs) {
-        var team_name = this.active_team_name
-
-        var attrs = _.cloneDeep(attrs)
-        attrs = _.assign({}, defaultAttrs(), attrs)
-
-        this.$store.dispatch('pipes/create', { team_name, attrs }).then(response => {
-          var pipe = response.data
-
-          this.$message({
-            message: 'The function was created successfully.',
-            type: 'success'
-          })
-
-          var analytics_payload = _.pick(pipe, ['eid', 'name', 'title', 'description', 'created'])
-          this.$store.track('Created Function', analytics_payload)
-          this.selectPipe(pipe)
-          this.show_pipe_dialog = false
-        })
-      },
       tryDeletePipe(attrs) {
         var eid = _.get(attrs, 'eid', '')
         var pname = _.get(attrs, 'name', 'Function')
@@ -450,6 +430,10 @@
       },
       isFunctionMountSyncing(connection) {
         return _.get(connection, 'vuex_meta.is_syncing', false)
+      },
+      onPipeAdded(pipe) {
+        this.selectPipe(pipe)
+        this.show_pipe_dialog = false
       },
       loadPipe(identifier) {
         var pipe
