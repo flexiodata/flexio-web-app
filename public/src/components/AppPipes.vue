@@ -34,9 +34,9 @@
                   New<i class="el-icon-arrow-down el-icon--right fw6" style="margin-right: -2px"></i>
                 </el-button>
                   <el-dropdown-menu style="min-width: 10rem" slot="dropdown">
-                  <el-dropdown-item @click.native="onNewFunction('extract')">Extract</el-dropdown-item>
-                  <el-dropdown-item @click.native="onNewFunction('lookup')">Lookup</el-dropdown-item>
-                  <el-dropdown-item @click.native="onNewFunction('execute')">Execute</el-dropdown-item>
+                  <el-dropdown-item @click.native="onNewPipe('extract')">Extract</el-dropdown-item>
+                  <el-dropdown-item @click.native="onNewPipe('lookup')">Lookup</el-dropdown-item>
+                  <el-dropdown-item @click.native="onNewPipe('execute')">Execute</el-dropdown-item>
                   <el-dropdown-item divided></el-dropdown-item>
                   <el-dropdown-item @click.native="onNewFunctionMount">Function Mount</el-dropdown-item>
                 </el-dropdown-menu>
@@ -138,6 +138,7 @@
             class="w-100 center mw-doc pa4 bg-white br2 css-white-box"
             style="min-height: 20rem"
             :pipe-eid="pipe.eid"
+            @edit-click="onEditPipe"
           />
         </div>
       </template>
@@ -169,8 +170,8 @@
       :visible.sync="show_pipe_dialog"
     >
       <PipeEditPanel
-        mode="add"
-        :pipe="new_function_attrs"
+        :mode="pipe_edit_mode"
+        :pipe="pipe_edit_mode == 'edit' ? edit_pipe : new_pipe_attrs"
         @close="show_pipe_dialog = false"
         @cancel="show_pipe_dialog = false"
         @update-pipe="onPipeAdded"
@@ -190,7 +191,7 @@
       <ConnectionEditPanel
         :mode="connection_edit_mode"
         :show-steps="connection_edit_mode == 'edit' ? false : true"
-        :connection="connection_edit_mode == 'edit' ? edit_connection : new_function_mount_attrs"
+        :connection="connection_edit_mode == 'edit' ? edit_connection : new_connection_attrs"
         :filter-by="filterByFunctionMount"
         @close="show_connection_dialog = false"
         @cancel="show_connection_dialog = false"
@@ -266,15 +267,17 @@
     data() {
       return {
         is_selecting: false,
-        show_pipe_dialog: false,
         pipe_list_filter: '',
         pipe: {},
         last_selected: {},
+        show_pipe_dialog: false,
+        pipe_edit_mode: 'add',
+        edit_connection: null,
+        new_pipe_attrs: {},
         show_connection_dialog: false,
         connection_edit_mode: 'add',
         edit_connection: null,
-        new_function_attrs: {},
-        new_function_mount_attrs: {
+        new_connection_attrs: {
           connection_mode: CONNECTION_MODE_FUNCTION
         },
       }
@@ -431,10 +434,6 @@
       isFunctionMountSyncing(connection) {
         return _.get(connection, 'vuex_meta.is_syncing', false)
       },
-      onPipeAdded(pipe) {
-        this.selectPipe(pipe)
-        this.show_pipe_dialog = false
-      },
       loadPipe(identifier) {
         var pipe
 
@@ -477,7 +476,32 @@
       filterByFunctionMount(connection) {
         return this.$_Connection_isFunctionMount(connection)
       },
-      onNewFunction(op) {
+      getNewPipeAttributes(op) {
+        var task = {
+          op: 'sequence',
+          items: [{ op }]
+        }
+
+        switch (op) {
+          case 'execute': return { task }
+          case 'extract': return { task }
+          case 'lookup': return { task }
+        }
+
+        return {}
+      },
+      onPipeAdded(pipe) {
+        this.selectPipe(pipe)
+        this.show_pipe_dialog = false
+      },
+      onNewPipe(op) {
+        this.new_pipe_attrs = this.getNewPipeAttributes(op)
+        this.pipe_edit_mode = 'add'
+        this.show_pipe_dialog = true
+      },
+      onEditPipe(pipe) {
+        this.edit_pipe = pipe
+        this.pipe_edit_mode = 'edit'
         this.show_pipe_dialog = true
       },
       onNewFunctionMount() {
