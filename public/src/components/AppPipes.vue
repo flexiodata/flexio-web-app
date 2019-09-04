@@ -109,9 +109,20 @@
                   </el-dropdown>
                 </div>
                 <div
+                  class="pt1 pb3"
+                  style="padding-left: 17px; padding-right: 0px; margin: 0 12px 0 3px; font-size: 13px"
+                  v-if="isFunctionMountSyncing(group.connection)"
+                >
+                  <div class="flex flex-row items-center">
+                    <Spinner size="small" />
+                    <span class="ml2">Importing...</span>
+                  </div>
+                  <div class="pt2 lh-title silver i">NOTE: Importing from a function mount may take awhile to complete</div>
+                </div>
+                <div
                   class="pt1 pb3 lh-title silver i"
                   style="padding-left: 17px; padding-right: 0px; margin: 0 12px 0 3px; font-size: 13px"
-                  v-if="group.pipes.length == 0"
+                  v-else-if="group.pipes.length == 0"
                 >
                   <span v-if="pipe_list_filter.length > 0">There are no functions that match the search criteria</span>
                   <span v-else>There are no functions to show</span>
@@ -448,6 +459,9 @@
         this.edit_connection = connection
         this.connection_edit_mode = 'edit'
         this.show_connection_dialog = true
+      },
+      isFunctionMountSyncing(connection) {
+        return _.get(connection, 'vuex_meta.is_syncing', false)
       },
       loadPipe(identifier) {
         var pipe

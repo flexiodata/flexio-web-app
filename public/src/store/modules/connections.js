@@ -18,6 +18,7 @@ const getDefaultMeta = () => {
     is_fetched: false,
     is_testing: false,
     is_disconnecting: false,
+    is_syncing: false,
     /*error: {},*/
   }
 }
@@ -86,6 +87,10 @@ const mutations = {
   'DISCONNECTED_CONNECTION' (state, { eid, item }) {
     updateItem(state, eid, item)
   },
+
+  'SYNCING_FUNCTION_MOUNT' (state, { eid, is_syncing }) {
+    updateMeta(state, eid, { is_syncing })
+  },
 }
 
 const actions = {
@@ -147,9 +152,11 @@ const actions = {
   },
 
   'sync' ({ commit, dispatch }, { team_name, eid }) {
+    commit('SYNCING_FUNCTION_MOUNT', { eid, is_syncing: true })
     return api.syncConnection(team_name, eid).then(response => {
       dispatch('mountPurge', { eid })
       dispatch('mountPopulate', { items: response.data })
+      commit('SYNCING_FUNCTION_MOUNT', { eid, is_syncing: false })
       return response
     }).catch(error => {
       throw error
