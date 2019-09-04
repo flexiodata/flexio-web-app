@@ -85,11 +85,11 @@ const mutations = {
 
   'DISCONNECTED_CONNECTION' (state, { eid, item }) {
     updateItem(state, eid, item)
-  }
+  },
 }
 
 const actions = {
-  'create' ({ commit, dispatch }, { team_name, attrs }) {
+  'create' ({ commit }, { team_name, attrs }) {
     return api.createConnection(team_name, attrs).then(response => {
       commit('CREATED_CONNECTION', response.data)
       return response
@@ -136,19 +136,9 @@ const actions = {
     })
   },
 
-  'delete' ({ commit, dispatch, state, rootState }, { team_name, eid }) {
-    // if the connection was a function mount, remove all of the pipes
-    // associated with that function mount
-    var is_function_mount = _.get(state.items, `[${eid}].connection_mode`, '') == CONNECTION_MODE_FUNCTION
-
+  'delete' ({ commit, dispatch }, { team_name, eid }) {
     return api.deleteConnection(team_name, eid).then(response => {
-      if (is_function_mount) {
-        var pipes = _.filter(rootState.pipes.items, pipe => _.get(pipe, 'parent.eid') == eid)
-        _.each(pipes, pipe => {
-          commit('pipes/DELETED_PIPE', pipe.eid, { root: true })
-        })
-      }
-
+      dispatch('mountPurge', { eid })
       commit('DELETED_CONNECTION', eid)
       return response
     }).catch(error => {
@@ -156,11 +146,10 @@ const actions = {
     })
   },
 
-  'sync' ({ commit }, { team_name, eid }) {
+  'sync' ({ commit, dispatch }, { team_name, eid }) {
     return api.syncConnection(team_name, eid).then(response => {
-      // since this call simply returns a list of pipes for now, just commit
-      // the `pipes/FETCHED_PIPES` mutation to populate the Vuex store
-      commit('pipes/FETCHED_PIPES', response.data, { root: true })
+      dispatch('mountPurge', { eid })
+      dispatch('mountPopulate', { items: response.data })
       return response
     }).catch(error => {
       throw error
@@ -196,6 +185,25 @@ const actions = {
       commit('DISCONNECTING_CONNECTION', { eid, is_disconnecting: false })
       throw error
     })
+  },
+
+  // helper action for purging pipes associated with a function mount
+  'mountPurge' ({ commit, state, rootState }, { eid }) {
+    var cmode = _.get(state.items, `[${eid}].connection_mode`, '')
+
+    if (cmode == CONNECTION_MODE_FUNCTION) {
+      var pipes = _.filter(rootState.pipes.items, pipe => _.get(pipe, 'parent.eid') == eid)
+      _.each(pipes, pipe => {
+        commit('pipes/DELETED_PIPE', pipe.eid, { root: true })
+      })
+    }
+  },
+
+  // helper action for adding pipes associated with a function mount
+  'mountPopulate' ({ commit }, { items }) {
+    // since this call simply returns a list of pipes for now, just commit
+    // the `pipes/FETCHED_PIPES` mutation to populate the Vuex store
+    commit('pipes/FETCHED_PIPES', items, { root: true })
   },
 }
 
