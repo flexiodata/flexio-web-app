@@ -11,6 +11,7 @@
         "phpoffice/phpspreadsheet": "^1.2",
         "smalot/pdfparser": "^0.13.2",
         "tecnickcom/tcpdf": "^6.2",
-        "grpc/grpc": "^1.13"
+        "grpc/grpc": "^1.13",
+        "symfony/yaml": "^4.3"
     }
 }
