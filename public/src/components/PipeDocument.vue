@@ -115,9 +115,10 @@
       <PipeDocumentTaskLookup
         class="pipe-editable"
         :class="is_task_editing ? 'is-editing' : ''"
-        :item="pipe_task"
+        :task="pipe_task"
         :is-editing.sync="is_task_editing"
         :is-save-allowed.sync="is_task_save_allowed"
+        @save-click="updateTask"
         v-else-if="pipe_task_type == 'lookup'"
       />
       <PipeDocumentTaskExecute

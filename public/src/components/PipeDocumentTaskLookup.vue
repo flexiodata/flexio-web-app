@@ -2,9 +2,9 @@
   <div>
     <el-form
       ref="form"
-      class="flex-fill el-form--compact el-form__label-tiny"
+      class="flex-fill el-form--cozy el-form__label-tiny"
       label-position="top"
-      :model="edit_values"
+      :model="$data"
       :rules="rules"
       @validate="onValidateItem"
     >
@@ -17,7 +17,7 @@
           auto-complete="off"
           spellcheck="false"
           placeholder="Enter the lookup file or table"
-          v-model="edit_values.path"
+          v-model="path"
         >
           <BrowseButton
             slot="append"
@@ -50,7 +50,7 @@
           :columns="structure_cols"
           :rows="structure_rows"
         />
-        <div class="mt3 mb2 bb bw1 b--black-10"></div>
+        <div class="mt3 bb bw1 b--black-10"></div>
       </div>
       <el-form-item
         key="lookup_keys"
@@ -65,7 +65,7 @@
           class="w-100"
           spellcheck="false"
           placeholder="Enter the names of the key fields"
-          v-model="edit_values.lookup_keys"
+          v-model="lookup_keys"
         >
           <el-option
             :label="item.name"
@@ -88,7 +88,7 @@
           class="w-100"
           spellcheck="false"
           placeholder="Enter the names of the columns to return"
-          v-model="edit_values.return_columns"
+          v-model="return_columns"
         >
           <el-option
             :label="item.name"
@@ -99,28 +99,65 @@
         </el-select>
       </el-form-item>
     </el-form>
+    <div
+      class="flex-none flex flex-row justify-end"
+      v-show="is_changed"
+    >
+      <el-button
+        class="ttu fw6"
+        @click="initSelf"
+      >
+        Cancel
+      </el-button>
+      <el-button
+        class="ttu fw6"
+        type="primary"
+        :disabled="!isSaveAllowed"
+        @click="onSaveClick"
+      >
+        Save Changes
+      </el-button>
+    </div>
   </div>
 </template>
 
 <script>
   import marked from 'marked'
   import { mapState } from 'vuex'
+  import { TASK_OP_LOOKUP } from '@/constants/task-op'
   import api from '@/api'
   import Spinner from 'vue-simple-spinner'
   import BrowseButton from '@/components/BrowseButton'
   import SimpleTable from '@/components/SimpleTable'
 
-  const getDefaultValues = () => {
+  const getDefaultState = () => {
     return {
+      structure: [],
+      fetching_structure: false,
+      fetched_structure_path: '',
+      form_errors: {},
+      rules: {
+        path: [
+          { required: true, message: 'Please select the path of the file or table on which to do the lookup' }
+        ],
+        lookup_keys: [
+          { required: true, message: 'Please input the key field on which to do the lookup' }
+        ],
+        return_columns: [
+          { required: true, message: 'Please input the names of the columns to return' }
+        ]
+      },
+
+      // task values
       path: '',
       lookup_keys: [],
-      return_columns: []
+      return_columns: [],
     }
   }
 
   export default {
     props: {
-      item: {
+      task: {
         type: Object,
         required: true
       },
@@ -139,20 +176,16 @@
       SimpleTable
     },
     watch: {
-      item: {
+      task: {
         handler: 'initSelf',
         immediate: true,
         deep: true
       },
       is_changed: {
-        handler: 'onChange'
+        handler: 'updateIsEditing',
+        immediate: true
       },
-      edit_values: {
-        handler: 'onEditValuesChange',
-        immediate: true,
-        deep: true
-      },
-      'edit_values.path': {
+      path: {
         handler: 'onPathChange'
       },
       form_errors(val) {
@@ -160,32 +193,17 @@
       }
     },
     data() {
-      return {
-        structure: [],
-        fetching_structure: false,
-        fetched_structure_path: '',
-        orig_values: getDefaultValues(),
-        edit_values: getDefaultValues(),
-        form_errors: {},
-        rules: {
-          path: [
-            { required: true, message: 'Please select the path of the file or table on which to do the lookup' }
-          ],
-          lookup_keys: [
-            { required: true, message: 'Please input the key field on which to do the lookup' }
-          ],
-          return_columns: [
-            { required: true, message: 'Please input the names of the columns to return' }
-          ]
-        }
-      }
+      return getDefaultState()
     },
     computed: {
       ...mapState({
         active_team_name: state => state.teams.active_team_name
       }),
       is_changed() {
-        return !_.isEqual(this.edit_values, this.orig_values)
+        if (this.path != _.get(this.task, 'path', '')) { return true }
+        if (this.lookup_keys != _.get(this.task, 'lookup_keys', [])) { return true }
+        if (this.return_columns != _.get(this.task, 'return_columns', [])) { return true }
+        return false
       },
       structure_cols() {
         return _.get(this.structure, 'columns', [])
@@ -199,11 +217,9 @@
     },
     methods: {
       initSelf() {
-        var form_values = _.get(this.item, 'form_values', {})
-        this.orig_values = _.assign({}, getDefaultValues(), form_values)
-        this.edit_values = _.assign({}, getDefaultValues(), form_values)
+        // reset our local component data
+        _.assign(this.$data, getDefaultState(), this.task)
         this.fetchStructure()
-        this.$nextTick(() => { this.validateForm(true) })
       },
       validateForm(clear) {
         if (this.$refs.form) {
@@ -224,33 +240,18 @@
         }
         this.form_errors = _.assign({}, errors)
       },
-      onPathsSelected(path) {
-        this.edit_values.path = path
-        this.fetchStructure()
+      updateIsEditing() {
+        this.$emit('update:isEditing', this.is_changed)
       },
-      onChange(val) {
-        if (val) {
-          this.$nextTick(() => { this.validateForm(true) })
-          this.$emit('active-item-change', this.index)
-        }
-      },
-      onEditValuesChange() {
-        var vals = _.cloneDeep(this.edit_values)
-        this.$emit('item-change', vals, this.index)
-      },
-      onPathChange: _.debounce(function(path) {
-        this.fetchStructure()
-      }, 1000),
       fetchStructure() {
         if (this.fetching_structure === true) {
           return
         }
 
-        var path = _.get(this.edit_values, 'path', '')
-        if (path.indexOf(':/') > 0 && this.fetched_structure_path != path) {
+        if (this.path.indexOf(':/') > 0 && this.fetched_structure_path != this.path) {
           this.fetching_structure = true
-          api.vfsFetchInfo(this.active_team_name, path).then(response => {
-            this.fetched_structure_path = path
+          api.vfsFetchInfo(this.active_team_name, this.path).then(response => {
+            this.fetched_structure_path = this.path
             this.structure = response.data
           })
           .catch(error => {
@@ -260,7 +261,24 @@
             this.fetching_structure = false
           })
         }
-      }
+      },
+      onPathsSelected(path) {
+        this.path = path
+        this.fetchStructure()
+      },
+      onPathChange: _.debounce(function(path) {
+        this.fetchStructure()
+      }, 1000),
+      onSaveClick() {
+        var new_task = {
+          op: TASK_OP_LOOKUP,
+          path: this.path,
+          lookup_keys: this.lookup_keys,
+          return_columns: this.return_columns
+        }
+
+        this.$emit('save-click', new_task, this.task)
+      },
     }
   }
 </script>
