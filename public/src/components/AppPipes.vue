@@ -33,20 +33,12 @@
                 >
                   New<i class="el-icon-arrow-down el-icon--right fw6" style="margin-right: -2px"></i>
                 </el-button>
-                <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item @click.native="onNewFunction('extract')">
-                    Extract
-                  </el-dropdown-item>
-                  <el-dropdown-item @click.native="onNewFunction('lookup')">
-                    Lookup
-                  </el-dropdown-item>
-                  <el-dropdown-item @click.native="onNewFunction('execute')">
-                    Execute
-                  </el-dropdown-item>
+                  <el-dropdown-menu style="min-width: 10rem" slot="dropdown">
+                  <el-dropdown-item @click.native="onNewFunction('extract')">Extract</el-dropdown-item>
+                  <el-dropdown-item @click.native="onNewFunction('lookup')">Lookup</el-dropdown-item>
+                  <el-dropdown-item @click.native="onNewFunction('execute')">Execute</el-dropdown-item>
                   <el-dropdown-item divided></el-dropdown-item>
-                  <el-dropdown-item @click.native="onNewFunctionMount">
-                    Function Mount
-                  </el-dropdown-item>
+                  <el-dropdown-item @click.native="onNewFunctionMount">Function Mount</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </div>
@@ -86,14 +78,12 @@
                       <el-dropdown-item
                         class="flex flex-row items-center"
                         @click.native="editFunctionMount(group.connection)"
-                        command="edit"
                       >
                         <i class="material-icons mr2">edit</i> Edit
                       </el-dropdown-item>
                       <el-dropdown-item
                         class="flex flex-row items-center"
                         @click.native="syncFunctionMount(group.connection)"
-                        command="refresh"
                       >
                         <i class="material-icons mr2">refresh</i> Refresh
                       </el-dropdown-item>
@@ -101,7 +91,6 @@
                       <el-dropdown-item
                         class="flex flex-row items-center"
                         @click.native="tryDeleteFunctionMount(group.connection)"
-                        command="delete"
                       >
                         <i class="material-icons mr2">delete</i> Remove
                       </el-dropdown-item>
