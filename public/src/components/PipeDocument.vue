@@ -28,7 +28,7 @@
           style="min-width: 5rem"
           size="small"
           type="primary"
-          @click="$emit('edit-click')"
+          @click="onEditClick"
           v-require-rights:pipe.update
         >
           Edit
@@ -289,6 +289,9 @@
         }
         this.savePipe(attrs)
       },
+      onEditClick() {
+        this.$emit('edit-click', this.pipe)
+      }
     }
   }
 </script>
