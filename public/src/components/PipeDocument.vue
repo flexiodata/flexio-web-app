@@ -28,9 +28,10 @@
           style="min-width: 5rem"
           size="small"
           type="primary"
+          @click="$emit('edit-click')"
           v-require-rights:pipe.update
         >
-          Rename
+          Edit
         </el-button>
       </div>
     </div>
