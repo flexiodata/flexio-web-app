@@ -351,7 +351,6 @@
         // don't ever disable the submit button for GitHub connections
         // since we now allow the user to connect to public repos
         if (this.is_github) {
-          debugger
           var owner = _.get(this.connection_info, 'owner', '')
           var repository = _.get(this.connection_info, 'repository', '')
 
