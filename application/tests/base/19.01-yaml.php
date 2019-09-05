@@ -260,6 +260,34 @@ name: hello-world
 description: Basic hello world
 EOD;
         \Flexio\Tests\Check::assertString('B.14', '\Flexio\Base\Yaml::extract(); extract yaml from front matter in comments',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $content = <<<EOD
+# ---
+# name: currency-converter
+# description: |
+#   ### Description
+#
+#   ### Sample Usage
+#
+#   ### Syntax
+#
+# deployed: false
+# ---
+EOD;
+        $actual = \Flexio\Base\Yaml::extract($content);
+        $expected = <<<EOD
+name: currency-converter
+description: |
+  ### Description
+
+  ### Sample Usage
+
+  ### Syntax
+
+deployed: false
+EOD;
+        \Flexio\Tests\Check::assertString('B.14', '\Flexio\Base\Yaml::extract(); extract yaml from front matter in comments',  $actual, $expected, $results);
     }
 }
 

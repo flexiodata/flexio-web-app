@@ -41,7 +41,8 @@ class Yaml
         foreach ($lines as $l)
         {
             // see if we're on a front matter boundary
-            $frontmatter_boundary_count += strpos($l, $frontmatter_delimiter) !== false ? 1 : 0;
+            if (preg_match("/^(\s*([#*]|\/\/)\s)?$frontmatter_delimiter\$/", $l))
+                $frontmatter_boundary_count += 1;
 
             if ($frontmatter_boundary_count < 1)
                 continue;
@@ -50,7 +51,7 @@ class Yaml
                 break;
 
             // if we're in the front matter, save the line without the comment
-            $frontmatter[] = preg_replace('/^\s*([#*]|\/\/) /', '', $l);
+            $frontmatter[] = preg_replace('/^\s*([#*]|\/\/)\s?/', '', $l);
         }
 
         if (count($frontmatter) === 0)
