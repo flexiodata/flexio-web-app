@@ -116,7 +116,7 @@
         _.assign(this.$data, getDefaultState())
       },
       showResetMessage() {
-        alert('showing Reset Message')
+        console.log('Showing Reset Message')
       }
     }
   }
