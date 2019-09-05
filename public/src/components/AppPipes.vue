@@ -8,7 +8,7 @@
 
   <!-- fetched -->
   <div class="flex flex-column bg-nearer-white" v-else-if="is_fetched">
-    <div class="flex-fill flex flex-row" v-if="pipes.length > 0">
+    <div class="flex-fill flex flex-row relative" v-if="pipes.length > 0">
       <template v-if="has_pipe">
         <!-- sidebar -->
         <div class="flex flex-column min-w5 bg-white br b--black-05">
@@ -141,6 +141,23 @@
             @edit-click="onEditPipe"
           />
         </div>
+
+        <PipeDocumentTestPanel
+          class="min-w5 bg-white bl b--black-05"
+          style="width: 25rem"
+          :pipe-eid="pipe.eid"
+          :visible.sync="show_test_panel"
+        />
+
+        <el-button
+          size="small"
+          type="text"
+          class="absolute right-2 top-0"
+          @click="show_test_panel = true"
+          v-show="!show_test_panel && false"
+        >
+          Test Function
+        </el-button>
       </template>
 
       <!-- pipe not found -->
@@ -211,6 +228,7 @@
   import Spinner from 'vue-simple-spinner'
   import PipeList from '@/components/PipeList'
   import PipeDocument from '@/components/PipeDocument'
+  import PipeDocumentTestPanel from '@/components/PipeDocumentTestPanel'
   import PipeEditPanel from '@/components/PipeEditPanel'
   import ConnectionEditPanel from '@/components/ConnectionEditPanel'
   import ServiceIcon from '@/components/ServiceIcon'
@@ -261,6 +279,7 @@ def flex_handler(flex):
       Spinner,
       PipeList,
       PipeDocument,
+      PipeDocumentTestPanel,
       PipeEditPanel,
       ConnectionEditPanel,
       ServiceIcon,
@@ -294,6 +313,7 @@ def flex_handler(flex):
         new_connection_attrs: {
           connection_mode: CONNECTION_MODE_FUNCTION
         },
+        show_test_panel: false
       }
     },
     computed: {
