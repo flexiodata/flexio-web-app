@@ -62,7 +62,13 @@ class Yaml
         // reassemble the lines as a string
         $result = '';
         foreach ($frontmatter as $l)
-            $result .= $l . '';
+        {
+            // add return character between lines
+            if (strlen($result) > 0)
+                $result .= "\n";
+
+            $result .= $l;
+        }
 
         return $result;
     }
