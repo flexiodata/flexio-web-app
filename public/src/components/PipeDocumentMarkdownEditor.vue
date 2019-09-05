@@ -1,17 +1,5 @@
 <template>
   <div>
-    <div
-      class="marked"
-      v-html="compiled_html"
-      v-if="edit_value.length > 0"
-    >
-    </div>
-    <div
-      class="f6 fw4 mt1 lh-copy moon-gray"
-      v-else
-    >
-      <slot name="empty"><em>(No value)</em></slot>
-    </div>
     <CodeEditor
       class="bg-white ba b--black-10"
       style="line-height: 1.15; font-size: 13px"
@@ -24,6 +12,18 @@
       v-model="edit_value"
       v-if="isEditing"
     />
+    <div
+      class="marked"
+      v-html="compiled_html"
+      v-else-if="edit_value.length > 0"
+    >
+    </div>
+    <div
+      class="f6 fw4 mt1 lh-copy moon-gray"
+      v-else
+    >
+      <slot name="empty"><em>(No value)</em></slot>
+    </div>
     <div
       class="flex-none mt2 flex flex-row justify-end"
       v-show="isEditing"
