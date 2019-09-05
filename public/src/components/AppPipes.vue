@@ -491,7 +491,7 @@ def flex_handler(flex):
         return this.$_Connection_isFunctionMount(connection)
       },
       getNewPipeAttributes(op) {
-        var step = {}
+        var step = { op }
 
         switch (op) {
           case 'execute':
