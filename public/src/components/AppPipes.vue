@@ -206,6 +206,7 @@
   import { ROUTE_APP_PIPES } from '@/constants/route'
   import { OBJECT_STATUS_AVAILABLE } from '@/constants/object-status'
   import { mapState, mapGetters } from 'vuex'
+  import { btoaUnicode } from '@/utils'
   import Spinner from 'vue-simple-spinner'
   import PipeList from '@/components/PipeList'
   import PipeDocument from '@/components/PipeDocument'
@@ -220,12 +221,16 @@
   const CONNECTION_MODE_RESOURCE = 'R'
   const CONNECTION_MODE_FUNCTION = 'F'
 
+  const code_python = btoaUnicode(`# basic hello world example
+def flex_handler(flex):
+    flex.end([["H","e","l","l","o"],["W","o","r","l","d"]])
+`)
+
   const defaultAttrs = () => {
     // when creating a new function, start out with a basic Python 'Hello World' script
     return {
       deploy_mode: 'R',
       deploy_api: 'A',
-      deploy_ui: 'A',
       task: {
         op: 'sequence',
         items: []
@@ -477,18 +482,38 @@
         return this.$_Connection_isFunctionMount(connection)
       },
       getNewPipeAttributes(op) {
-        var task = {
-          op: 'sequence',
-          items: [{ op }]
-        }
+        var step = {}
 
         switch (op) {
-          case 'execute': return { task }
-          case 'extract': return { task }
-          case 'lookup': return { task }
+          case 'execute':
+            _.assign(step, {
+              op,
+              lang: 'python',
+              code: code_python
+            })
+            break
+          case 'extract':
+            _.assign(step, {
+              op,
+              path: ''
+            })
+            break
+          case 'lookup':
+            _.assign(step, {
+              op,
+              path: '',
+              lookup_keys: [],
+              return_columns: []
+            })
+            break
         }
 
-        return {}
+        var task = {
+          op: 'sequence',
+          items: [step]
+        }
+
+        return _.assign({}, defaultAttrs(), { task })
       },
       onPipeAdded(pipe) {
         this.selectPipe(pipe)

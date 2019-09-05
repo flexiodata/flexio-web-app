@@ -101,7 +101,7 @@
 </template>
 
 <script>
-  import { TASK_OP_EXTRACT } from '@/constants/task-op'
+  import { TASK_OP_EXECUTE } from '@/constants/task-op'
   import { btoaUnicode } from '@/utils'
   import CodeEditor from '@/components/CodeEditor'
   import BrowseButton from '@/components/BrowseButton'
@@ -129,10 +129,10 @@ exports.flex_handler = function(flex) {
 
   const getDefaultState = () => {
     return {
-      remote_options,
-      lang_options,
       code_python,
       code_javascript,
+      lang_options,
+      remote_options,
       remote_state: 'inline',
 
       // task values
@@ -188,11 +188,11 @@ exports.flex_handler = function(flex) {
 
         return 'python'
       },
-      intial_remote_state() {
+      initial_remote_state() {
         return _.get(this.task, 'path', '').length == 0 ? 'inline' : 'remote'
       },
       is_changed() {
-        if (this.remote_state != this.intial_remote_state) { return true }
+        if (this.remote_state != this.initial_remote_state) { return true }
         if (this.code != _.get(this.task, 'code', '')) { return true }
         if (this.path != _.get(this.task, 'path', '')) { return true }
         if (this.lang != this.task.lang) { return true }
@@ -205,17 +205,13 @@ exports.flex_handler = function(flex) {
         _.assign(this.$data, getDefaultState(), this.task)
 
         // set our internal remote state
-        this.remote_state = this.intial_remote_state
-
-        // initialize code
-        if (this.code.length == 0) {
-          this.code = this.getCodeByLang(this.lang)
-        }
+        this.remote_state = this.initial_remote_state
 
         // overwrite internal code based on selected language
+        var code = this.getCodeByLang(this.lang)
         switch (this.lang) {
-          case 'python': this.code_python = this.code; break
-          case 'nodejs': this.code_javascript = this.code; break
+          case 'python': this.code_python = code; break
+          case 'nodejs': this.code_javascript = code; break
         }
 
         this.$emit('update:isEditing', false)
