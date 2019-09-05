@@ -50,7 +50,7 @@
           :columns="structure_cols"
           :rows="structure_rows"
         />
-        <div class="mt3 bb bw1 b--black-10"></div>
+        <div class="mt3" style="border-bottom: 2px dotted #dcdfe6"></div>
       </div>
       <el-form-item
         key="lookup_keys"
