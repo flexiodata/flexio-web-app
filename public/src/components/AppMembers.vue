@@ -1,7 +1,7 @@
 <template>
   <!-- fetching -->
   <div v-if="is_fetching">
-    <div class="flex flex-column justify-center h-100 bg-nearer-white">
+    <div class="flex flex-column justify-center bg-nearer-white h-100">
       <Spinner size="large" message="Loading members..." />
     </div>
   </div>
@@ -11,17 +11,8 @@
     class="flex-fill flex flex-column bg-nearer-white overflow-y-scroll"
     v-else-if="is_action_join"
   >
-    <!-- logged in user is not the same as the invited user -->
-    <PageNotFound
-      class="flex-fill"
-      v-if="!is_joining_member_logged_in"
-    />
-
     <!-- logged in user is the same as the invited user -->
-    <div
-      class="pa5"
-      v-else
-    >
+    <div class="ph4 pv5" v-if="is_joining_member_logged_in">
       <div class="w-100 center mw-doc pa4 bg-white br2 css-white-box" style="max-width: 36rem">
         <div class="tc">
           <i class="material-icons moon-gray" style="font-size: 4rem">people</i>
@@ -51,6 +42,9 @@
         </div>
       </div>
     </div>
+
+    <!-- logged in user is not the same as the invited user -->
+    <PageNotFound class="flex-fill" v-else />
   </div>
 
   <!-- fetched -->
@@ -58,7 +52,7 @@
     class="flex flex-column bg-nearer-white overflow-y-scroll"
     v-else-if="is_fetched"
   >
-    <div class="pa5">
+    <div class="ph4 pv5">
       <div class="w-100 center mw-doc pa4 bg-white br2 css-white-box overflow-hidden" style="min-height: 20rem">
         <el-alert
           style="margin-bottom: 2rem"

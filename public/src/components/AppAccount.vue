@@ -1,30 +1,26 @@
 <template>
-  <div
-    class="bg-nearer-white ph4 overflow-y-scroll relative"
-    style="padding-bottom: 8rem"
-  >
-    <div class="center trans-mw" :style="style">
-      <div class="mt4 mt5-ns bg-white br2 relative css-white-box">
+  <div class="bg-nearer-white overflow-y-scroll">
+    <div class="ph4 pv5">
+      <div class="w-100 center mw-doc pa4 bg-white br2 css-white-box trans-mw" style="max-width: 960px">
         <!-- uncomment this to extend tab list right border all the way down -->
         <div class="absolute top-2 bottom-2 tab-list-border" v-if="false"></div>
         <el-tabs
-          class="bg-white br2 pv4 pl3"
           tab-position="left"
           @tab-click="onTabClick"
           v-model="active_tab_name"
         >
           <el-tab-pane name="profile">
             <div slot="label"><div style="min-width: 5rem">Profile</div></div>
-            <div class="ml3 mr4">
+            <div class="mh4">
               <h3 class="mt0 fw6 f3">Profile</h3>
-              <AccountProfileForm />
+              <AccountProfileForm style="max-width: 42rem" />
               <div class="h3"></div>
             </div>
           </el-tab-pane>
 
           <el-tab-pane name="activity" v-if="false">
             <div slot="label"><div style="min-width: 5rem">Activity</div></div>
-            <ProcessActivity class="ml3 mr4 pr4" style="min-height: 20rem">
+            <ProcessActivity class="mh4 pr4" style="min-height: 20rem">
               <div slot="title">
                 <h3 class="mv0 fw6 f3">Activity</h3>
               </div>
@@ -33,7 +29,7 @@
 
           <el-tab-pane name="settings">
             <div slot="label"><div style="min-width: 5rem">Account</div></div>
-            <div class="ml3 mr4">
+            <div class="mh4">
               <h3 class="mt0 fw6 f3">Change Password</h3>
               <AccountPasswordForm style="max-width: 28rem" />
               <div class="h3"></div>
@@ -55,7 +51,7 @@
 
           <el-tab-pane name="api">
             <div slot="label"><div style="min-width: 5rem">API keys</div></div>
-            <div class="ml3 mr4" v-if="has_user">
+            <div class="mh4" v-if="has_user">
               <h3 class="mt0 fw6 f3">API Keys</h3>
               <p class="lh-copy f6 mb3">This is a list of API keys associated with your account. Remove any keys that you do not recognize.</p>
               <AccountApiForm />
@@ -64,8 +60,8 @@
           </el-tab-pane>
 
           <el-tab-pane name="billing">
-            <div slot="label"><div style="min-width: 6rem">Billing</div></div>
-            <div class="ml3 mr4">
+            <div slot="label"><div style="min-width: 5rem">Billing</div></div>
+            <div class="mh4">
               <h3 class="mt0 fw6 f3">Plan</h3>
               <AccountPlanForm />
               <div class="h3"></div>
@@ -151,12 +147,6 @@
       route_action() {
         return _.get(this.$route, 'params.action', 'profile')
       },
-      style() {
-        switch (this.route_action) {
-          default:        return  "max-width: 56rem"
-          case 'activity': return  "max-width: 80rem"
-        }
-      }
     },
     mounted() {
       this.$store.track('Visited Account Page')
