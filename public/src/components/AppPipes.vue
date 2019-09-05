@@ -203,6 +203,7 @@
 </template>
 
 <script>
+  import randomstring from 'randomstring'
   import { ROUTE_APP_PIPES } from '@/constants/route'
   import { OBJECT_STATUS_AVAILABLE } from '@/constants/object-status'
   import { mapState, mapGetters } from 'vuex'
@@ -225,6 +226,14 @@
 def flex_handler(flex):
     flex.end([["H","e","l","l","o"],["W","o","r","l","d"]])
 `)
+
+  const getNameSuffix = (length) => {
+    return randomstring.generate({
+      length,
+      charset: 'alphabetic',
+      capitalization: 'lowercase'
+    })
+  }
 
   const defaultAttrs = () => {
     // when creating a new function, start out with a basic Python 'Hello World' script
@@ -486,34 +495,23 @@ def flex_handler(flex):
 
         switch (op) {
           case 'execute':
-            _.assign(step, {
-              op,
-              lang: 'python',
-              code: code_python
-            })
+            _.assign(step, { lang: 'python', code: code_python })
             break
           case 'extract':
-            _.assign(step, {
-              op,
-              path: ''
-            })
+            _.assign(step, { path: '' })
             break
           case 'lookup':
-            _.assign(step, {
-              op,
-              path: '',
-              lookup_keys: [],
-              return_columns: []
-            })
+            _.assign(step, { path: '', lookup_keys: [], return_columns: [] })
             break
         }
 
+        var name = op + '-' + getNameSuffix(4)
         var task = {
           op: 'sequence',
           items: [step]
         }
 
-        return _.assign({}, defaultAttrs(), { task })
+        return _.assign({}, defaultAttrs(), { name, task })
       },
       onPipeAdded(pipe) {
         this.selectPipe(pipe)
