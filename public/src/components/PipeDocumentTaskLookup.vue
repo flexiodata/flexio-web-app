@@ -136,6 +136,7 @@
       fetched_structure_path: '',
       form_errors: {},
       rules: {
+        /*
         path: [
           { required: true, message: 'Please select the path of the file or table on which to do the lookup' }
         ],
@@ -145,6 +146,7 @@
         return_columns: [
           { required: true, message: 'Please input the names of the columns to return' }
         ]
+        */
       },
 
       // task values

@@ -89,9 +89,11 @@
       fetched_structure_path: '',
       form_errors: {},
       rules: {
+        /*
         path: [
           { required: true, message: 'Please select the path of the file or table on which to do the extract' }
         ]
+        */
       },
 
       // task values
