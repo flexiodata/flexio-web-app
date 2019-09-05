@@ -365,21 +365,6 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         // STEP 2: create the pipes
         foreach ($connection_item_info as $key => $value)
         {
-            //$filenamebase = \Flexio\Base\File::getFilename($value['name']); // keep extension to guarantee uniqueness
-            $pipe_name = \Flexio\Base\Identifier::makeValid($value['name']);
-
-            $pipe_params = array();
-            $pipe_params['parent_eid'] = $connection_eid;
-            $pipe_params['name'] = $connection_info['name'] . '-' . $pipe_name; // TODO: pipe namespace is currently flat; prefix pipe name with connection name to avoid clashes with other pipes;
-            $pipe_params['description'] = "Created from '" . $value['name'] . "' in '" . $connection_info['name'] . "' connection.";
-            $pipe_params['deploy_mode'] = 'R';
-            $pipe_params['deploy_api'] = 'A';
-            $pipe_params['deploy_schedule'] = 'I';
-            $pipe_params['deploy_email'] = 'I';
-            $pipe_params['deploy_ui'] = 'I';
-            $pipe_params['owned_by'] = $connection_info['owned_by']['eid'];
-            $pipe_params['created_by'] = $connection_info['created_by']['eid'];
-
             // get the file extension and set the language
             $language = false;
             $ext = strtolower(\Flexio\Base\File::getFileExtension($value['path']));
@@ -422,8 +407,33 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 $content .= $data;
             }
 
-            // set the syntax info from the front of the file
-            $pipe_params['syntax'] = self::getPipeSyntaxFromContent($content);
+            // get the pipe info from the content; if we can't find any, don't import the pipe
+            $pipe_info_from_content = self::getPipeInfoFromContent($content);
+            if (!isset($pipe_info_from_content))
+                continue;
+
+            // make sure the name is set and is valid; prefix the connection name for uniqueness
+            $pipe_name = $pipe_info_from_content['name'] ?? '';
+            $pipe_name = $connection_info['name'] . '-' . $pipe_name;
+
+            if (\Flexio\Base\Identifier::isValid($pipe_name) === false)
+                continue; // TODO: throw exception
+
+            $pipe_description = $pipe_info_from_content['description'] ?? '';
+            $pipe_deployed = $pipe_info_from_content['deployed'] ?? false; // don't deploy by default
+
+            // set basic pipe info
+            $pipe_params = array();
+            $pipe_params['parent_eid'] = $connection_eid;
+            $pipe_params['name'] = $pipe_name;
+            $pipe_params['description'] = $pipe_description;
+            $pipe_params['deploy_mode'] = $pipe_deployed ? \Model::PIPE_DEPLOY_MODE_RUN : \Model::PIPE_DEPLOY_MODE_BUILD;
+            $pipe_params['deploy_api'] = \Model::PIPE_DEPLOY_STATUS_ACTIVE;
+            $pipe_params['deploy_schedule'] = \Model::PIPE_DEPLOY_STATUS_INACTIVE;
+            $pipe_params['deploy_email'] = \Model::PIPE_DEPLOY_STATUS_INACTIVE;
+            $pipe_params['deploy_ui'] = \Model::PIPE_DEPLOY_STATUS_INACTIVE;
+            $pipe_params['owned_by'] = $connection_info['owned_by']['eid'];
+            $pipe_params['created_by'] = $connection_info['created_by']['eid'];
 
             // set the task info
             if ($language === 'flexio')
@@ -454,24 +464,20 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         }
     }
 
-    private static function getPipeSyntaxFromContent(string $content) : string
+    private static function getPipeInfoFromContent(string $content) : ?array
     {
-        $syntax_delimiter = "####################";
-        $syntax_delimiter_pos = strpos($content, $syntax_delimiter);
-
-        if ($syntax_delimiter_pos <= 0)
-            return '';
-
-        $syntax_content = substr($content, 0, $syntax_delimiter_pos);
-
-        $result = '';
-        $lines = preg_split('/\r\n|\r|\n/', $syntax_content);
-        foreach ($lines as $l)
+        try
         {
-            $result .= preg_replace('/^# /', '', $l) . "\n";
+            $yaml = \Flexio\Base\Yaml::extract($content);
+            return \Flexio\Base\Yaml::parse($yaml);
+        }
+        catch (\Exception $exception)
+        {
+            // DEBUG:
+            // echo('Unable to parse the YAML string: %s', $exception->getMessage());
         }
 
-        return $result;
+        return null;
     }
 
     private function getConnectionPropertiesToUpdate(array $properties) : array

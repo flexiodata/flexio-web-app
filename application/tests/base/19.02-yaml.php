@@ -26,6 +26,27 @@ class Test
         $content = <<<EOD
 # ---
 # name: test
+#  description: invalid indent
+# ---
+EOD;
+        $actual = '';
+        try
+        {
+            $yaml = \Flexio\Base\Yaml::extract($content);
+            $info = \Flexio\Base\Yaml::parse($yaml);
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
+        }
+        catch (\Exception $exception)
+        {
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('A.1', '\Flexio\Base\Yaml::parse(); make sure bad yaml throws an exception', $actual, $expected, $results);
+
+        // BEGIN TEST
+        $content = <<<EOD
+# ---
+# name: test
 # ---
 EOD;
         $yaml = \Flexio\Base\Yaml::extract($content);
@@ -35,7 +56,7 @@ EOD;
             "name": "test"
         }
         ';
-        \Flexio\Tests\Check::assertArray('A.1', '\Flexio\Base\Yaml::parse(); extract and parse yaml from front matter in comments',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.2', '\Flexio\Base\Yaml::parse(); extract and parse yaml from front matter in comments',  $actual, $expected, $results);
 
         // BEGIN TEST
         $content = <<<EOD
@@ -59,7 +80,7 @@ EOD;
             "deployed": true
         }
         ';
-        \Flexio\Tests\Check::assertArray('A.2', '\Flexio\Base\Yaml::parse(); extract and parse yaml from front matter in comments',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.3', '\Flexio\Base\Yaml::parse(); extract and parse yaml from front matter in comments',  $actual, $expected, $results);
 
         // BEGIN TEST
         $content = <<<EOD
@@ -85,7 +106,7 @@ EOD;
             "deployed": false
         }
         ';
-        \Flexio\Tests\Check::assertArray('A.3', '\Flexio\Base\Yaml::parse(); extract and parse yaml from front matter in comments',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.4', '\Flexio\Base\Yaml::parse(); extract and parse yaml from front matter in comments',  $actual, $expected, $results);
 
         // BEGIN TEST
         $content = <<<EOD
@@ -148,6 +169,6 @@ Property | Type | Description
 `[date]` | string | (optional) The exchange rate date in YYYY-DD-MM format.
 
 EOD;
-        \Flexio\Tests\Check::assertString('A.4', '\Flexio\Base\Yaml::parse(); extract and parse yaml from front matter in comments',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.5', '\Flexio\Base\Yaml::parse(); extract and parse yaml from front matter in comments',  $actual, $expected, $results);
     }
 }
