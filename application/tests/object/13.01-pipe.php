@@ -232,6 +232,11 @@ class Test
             "title" : null,
             "description" : null,
             "syntax": null,
+            "examples": {
+            },
+            "params": {
+            },
+            "notes": null,
             "task" : {
             },
             "schedule" : null,

@@ -84,6 +84,14 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             $properties['task'] = json_encode($properties['task']);
         }
 
+        // if the examples is set, encode it as JSON for storage
+        if (isset($properties) && isset($properties['examples']))
+            $properties['examples']= json_encode($properties['examples']);
+
+        // if the examples is set, encode it as JSON for storage
+        if (isset($properties) && isset($properties['params']))
+            $properties['params']= json_encode($properties['params']);
+
         // if the deploy mode is set, make sure it's valid; otherwise default to 'build'
         if (isset($properties) && isset($properties['deploy_mode']))
         {
@@ -206,6 +214,14 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             $properties['task'] = \Flexio\Jobs\Base::flattenParams($properties['task']);
             $properties['task'] = json_encode($properties['task']);
         }
+
+        // if the examples is set, encode it as JSON for storage
+        if (isset($properties) && isset($properties['examples']))
+            $properties['examples']= json_encode($properties['examples']);
+
+        // if the examples is set, encode it as JSON for storage
+        if (isset($properties) && isset($properties['params']))
+            $properties['params']= json_encode($properties['params']);
 
         // if the deploy mode is set, make sure it's valid; otherwise default to 'build'
         if (isset($properties) && isset($properties['deploy_mode']))
@@ -418,6 +434,9 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "title" => null,
                 "description" => null,
                 "syntax" => null,
+                "examples" => null,
+                "params" => null,
+                "notes" => null,
                 "task" => null,
                 "schedule" => null,
                 "deploy_mode" => null,
@@ -453,6 +472,16 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             $mapped_properties['task'] = $task;
             $mapped_properties['task'] = \Flexio\Jobs\Base::fixEmptyParams($mapped_properties['task']);
         }
+
+        // unpack the examples json
+        $examples = @json_decode($mapped_properties['examples'],true);
+        if ($examples !== false)
+            $mapped_properties['examples'] = $examples;
+
+        // unpack the params json
+        $params = @json_decode($mapped_properties['params'],true);
+        if ($params !== false)
+            $mapped_properties['params'] = $params;
 
         // unpack the schedule json
         $schedule = @json_decode($mapped_properties['schedule'],true);

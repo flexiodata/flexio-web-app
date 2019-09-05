@@ -86,6 +86,9 @@ class Test
                 "title": "Test Pipe Title",
                 "description": "Test Pipe Description",
                 "syntax": "param1, param2",
+                "examples": ["e1", "e2", "e3"],
+                "params": ["p1", "p2", "p3"],
+                "notes": "Test Pipe Notes",
                 "task": {
                     "op": "echo"
                 },
@@ -121,6 +124,9 @@ class Test
             "title": "Test Pipe Title",
             "description": "Test Pipe Description",
             "syntax": "param1, param2",
+            "examples": ["e1", "e2", "e3"],
+            "params": ["p1", "p2", "p3"],
+            "notes": "Test Pipe Notes",
             "task": {
                 "op": "echo"
             },

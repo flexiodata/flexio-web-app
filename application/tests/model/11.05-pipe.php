@@ -186,6 +186,11 @@ class Test
         $eid = $model->create($info);
         $info = array(
             'eid_status' => \Model::STATUS_PENDING,
+            'title' => 'example title',
+            'description' => 'example description',
+            'examples' => '["a","b","c"]',
+            'params' => '["d","e","f"]',
+            'notes' => 'example notes',
             'owned_by' => $random_eid1,
             'created_by' => $random_eid2
         );
@@ -193,6 +198,11 @@ class Test
         $actual = $model->get($eid);
         $expected = array(
             'eid_status' => \Model::STATUS_PENDING,
+            'title' => 'example title',
+            'description' => 'example description',
+            'examples' => '["a","b","c"]',
+            'params' => '["d","e","f"]',
+            'notes' => 'example notes',
             'owned_by' => $random_eid1,
             'created_by' => $random_eid2
         );
