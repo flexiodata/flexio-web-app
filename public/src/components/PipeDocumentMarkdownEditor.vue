@@ -1,6 +1,7 @@
 <template>
   <div>
     <CodeEditor
+      ref="code-editor"
       class="bg-white ba b--black-10"
       style="line-height: 1.15; font-size: 13px"
       lang="markdown"
@@ -74,6 +75,9 @@
         handler: 'initSelf',
         immediate: true
       },
+      isEditing: {
+        handler: 'onEditingChange'
+      }
     },
     data() {
       return getDefaultState()
@@ -92,6 +96,16 @@
         _.assign(this.$data, getDefaultState(), { edit_value: this.value })
 
         this.$emit('update:isEditing', false)
+      },
+      onEditingChange(is_editing, was_editing) {
+        if (is_editing && !was_editing) {
+          this.$nextTick(() => {
+            var editor = this.$refs['code-editor']
+            if (editor) {
+              editor.focus()
+            }
+          })
+        }
       },
       onSaveClick() {
         var save_obj = {
