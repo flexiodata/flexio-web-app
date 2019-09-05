@@ -36,6 +36,27 @@ EOD;
         }
         ';
         \Flexio\Tests\Check::assertArray('A.1', '\Flexio\Base\Yaml::parse(); extract and parse yaml from front matter in comments',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $content = <<<EOD
+# ---
+# name: func-sales
+# description: Returns the sales funnel data from a CSV
+# deployed: true
+# ---
+
+
+
+EOD;
+        $yaml = \Flexio\Base\Yaml::extract($content);
+        $actual = \Flexio\Base\Yaml::parse($yaml);
+        $expected = '
+        {
+            "name": "func-sales",
+            "description": "Returns the sales funnel data from a CSV",
+            "deployed": true
+        }
+        ';
+        \Flexio\Tests\Check::assertArray('A.1', '\Flexio\Base\Yaml::parse(); extract and parse yaml from front matter in comments',  $actual, $expected, $results);
     }
 }
-
