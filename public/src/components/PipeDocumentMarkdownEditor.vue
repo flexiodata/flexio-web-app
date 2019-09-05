@@ -14,7 +14,7 @@
       v-if="isEditing"
     />
     <div
-      class="marked"
+      class="markdown"
       v-html="compiled_html"
       v-else-if="edit_value.length > 0"
     >

@@ -2,6 +2,7 @@
 @import "variables.styl"
 @import "core.styl"
 @import "size.styl"
+@import "markdown.styl"
 @import "./tachyons-ext/style.styl"
 @import "./material-design-ext/style.styl"
 @import "./element-ui-ext/style.styl"
@@ -149,50 +150,6 @@
 .multipane
   > div
     z-index: auto
-
-// -- markdown --
-
-.marked
-  > :first-child
-    margin-top: 0
-    padding-top: 0
-
-  h1
-    font-weight: normal
-
-  h2,
-  h3,
-  h4
-    font-weight: 600
-
-  p
-    line-height: 1.5
-
-  p + h3,
-  ul + h3
-    margin-top: 3rem
-
-  ul > li,
-  ol > li
-    line-height: 1.5
-
-  code
-    padding: 0
-    padding-top: 0.2rem
-    padding-bottom: 0.2rem
-    margin: 0
-    font-size: 85%
-    background-color: rgba(27, 31, 35, 0.05)
-    border-radius: 3px
-
-    &::before,
-    &::after
-      letter-spacing: -0.2em
-      content: "\00a0"
-
-  pre > code
-    display: block
-    padding: 6px
 
 // -- other --
 
