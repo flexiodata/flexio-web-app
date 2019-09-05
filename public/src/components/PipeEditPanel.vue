@@ -146,6 +146,18 @@
       }
     },
     methods: {
+      initSelf() {
+        // reset our local component data
+        _.assign(this.$data, getDefaultState(this))
+
+        // reset local objects
+        this.edit_pipe = _.assign({}, this.edit_pipe, _.cloneDeep(this.pipe))
+
+        // reset the form
+        if (this.$refs.form) {
+          this.$refs.form.resetFields()
+        }
+      },
       onClose() {
         this.initSelf()
         this.$emit('close')
@@ -186,18 +198,6 @@
 
           this.$emit('update-pipe', response.data)
         })
-      },
-      initSelf() {
-        // reset our local component data
-        _.assign(this.$data, getDefaultState(this))
-
-        // reset local objects
-        this.edit_pipe = _.assign({}, this.edit_pipe, _.cloneDeep(this.pipe))
-
-        // reset the form
-        if (this.$refs.form) {
-          this.$refs.form.resetFields()
-        }
       },
       formValidateName(rule, value, callback) {
         if (value.length == 0) {
