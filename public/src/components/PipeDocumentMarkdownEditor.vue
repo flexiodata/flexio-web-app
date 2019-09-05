@@ -6,8 +6,8 @@
       lang="markdown"
       :options="{
         lineNumbers: false,
-        minRows: 8,
-        maxRows: 20,
+        minRows: 24,
+        maxRows: 24,
       }"
       v-model="edit_value"
       v-if="isEditing"
@@ -25,7 +25,7 @@
       <slot name="empty"><em>(No value)</em></slot>
     </div>
     <div
-      class="flex-none mt2 flex flex-row justify-end"
+      class="flex-none mt3 flex flex-row justify-end"
       v-show="isEditing"
     >
       <el-button
