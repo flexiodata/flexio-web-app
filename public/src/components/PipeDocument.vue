@@ -10,7 +10,10 @@
   <!-- fetched -->
   <div v-else-if="is_fetched">
     <!-- header -->
-    <div class="pipe-header flex flex-row">
+    <div
+      class="pipe-header flex flex-row"
+      :class="is_task_editing || is_description_editing ? 'o-40 no-pointer-events no-select' : ''"
+    >
       <div class="flex-fill flex flex-row items-center">
         <div class="f3 fw6 lh-title">{{pipe.name}}</div>
         <LabelSwitch
@@ -38,7 +41,10 @@
 
 
     <!-- configuration -->
-    <div class="pipe-section">
+    <div
+      class="pipe-section"
+      :class="is_description_editing ? 'o-40 no-pointer-events no-select' : ''"
+    >
       <div class="flex flex-row items-center pb2 bb b--black-10">
         <div class="flex-fill f4 fw6 lh-title">Configuration</div>
         <div class="flex-none">
@@ -89,7 +95,10 @@
     </div>
 
     <!-- description -->
-    <div class="pipe-section">
+    <div
+      class="pipe-section"
+      :class="is_task_editing ? 'o-40 no-pointer-events no-select' : ''"
+    >
       <div class="flex flex-row items-center pb2 bb b--black-10">
         <div class="flex-fill f4 fw6 lh-title">Description</div>
         <div class="flex-none">
