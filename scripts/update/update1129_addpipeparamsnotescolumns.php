@@ -51,6 +51,7 @@ try
     // STEP 1: add the pipe params and notes columns
     $sql = <<<EOT
         alter table tbl_pipe
+            add examples json,
             add params json,
             add notes text default '';
 EOT;
