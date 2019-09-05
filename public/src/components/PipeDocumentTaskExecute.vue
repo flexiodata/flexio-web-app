@@ -80,11 +80,11 @@
     </el-form>
     <div
       class="flex-none flex flex-row justify-end"
-      v-show="is_changed"
+      v-show="isEditing"
     >
       <el-button
         class="ttu fw6"
-        @click="initSelf"
+        @click="onCancelClick"
       >
         Cancel
       </el-button>
@@ -169,7 +169,7 @@ exports.flex_handler = function(flex) {
         deep: true
       },
       is_changed: {
-        handler: 'updateIsEditing',
+        handler: 'onChanged',
         immediate: true
       },
       lang: {
@@ -225,14 +225,18 @@ exports.flex_handler = function(flex) {
 
         return ''
       },
-      updateIsEditing() {
-        this.$emit('update:isEditing', this.is_changed)
-      },
       onPathsSelected(path) {
         this.path = path
       },
       onLangChange(val) {
         this.code = this.getCodeByLang(val)
+      },
+      onChanged() {
+        this.$emit('update:isEditing', this.is_changed)
+      },
+      onCancelClick() {
+        this.$emit('update:isEditing', false)
+        this.initSelf()
       },
       onSaveClick() {
         var is_inline = this.remote_state == 'inline'

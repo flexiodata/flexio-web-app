@@ -45,6 +45,8 @@
           <el-button
             style="padding: 0"
             type="text"
+            @click="is_task_editing = true"
+            v-show="!is_task_editing"
             v-require-rights:pipe.update
           >
             Edit

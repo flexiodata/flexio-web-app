@@ -54,11 +54,11 @@
     </el-form>
     <div
       class="flex-none flex flex-row justify-end"
-      v-show="is_changed"
+      v-show="isEditing"
     >
       <el-button
         class="ttu fw6"
-        @click="initSelf"
+        @click="onCancelClick"
       >
         Cancel
       </el-button>
@@ -128,7 +128,7 @@
         deep: true
       },
       is_changed: {
-        handler: 'updateIsEditing',
+        handler: 'onChanged',
         immediate: true
       },
       path: {
@@ -183,9 +183,6 @@
         }
         this.form_errors = _.assign({}, errors)
       },
-      updateIsEditing() {
-        this.$emit('update:isEditing', this.is_changed)
-      },
       fetchStructure() {
         if (this.fetching_structure === true) {
           return
@@ -212,6 +209,13 @@
       onPathChange: _.debounce(function(path) {
         this.fetchStructure()
       }, 1000),
+      onChanged() {
+        this.$emit('update:isEditing', this.is_changed)
+      },
+      onCancelClick() {
+        this.$emit('update:isEditing', false)
+        this.initSelf()
+      },
       onSaveClick() {
         var new_task = {
           op: TASK_OP_EXTRACT,
