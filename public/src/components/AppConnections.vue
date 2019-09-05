@@ -13,7 +13,7 @@
         <!-- sidebar -->
         <div class="flex flex-column min-w5 bg-white br b--black-05">
           <!-- control bar -->
-          <div class="flex-none pa2 relative bg-white bb b--black-05">
+          <div class="flex-none pa2 relative bg-white">
             <div class="flex flex-row items-center">
               <el-input
                 class="w-100 mr2"
@@ -48,6 +48,7 @@
                 <span v-else>There are no connections to show</span>
               </div>
               <ConnectionList
+                class="bt b--black-05"
                 :items="filtered_connections"
                 :selected-item.sync="connection"
                 :show-delete="true"
