@@ -112,33 +112,6 @@
         <span slot="empty"><em>(No description)</em></span>
       </PipeDocumentMarkdownEditor>
     </div>
-
-    <!-- syntax -->
-    <div class="pipe-section">
-      <div class="flex flex-row items-center pb2 bb b--black-10">
-        <div class="flex-fill f4 fw6 lh-title">Syntax</div>
-        <div class="flex-none">
-          <el-button
-            style="padding: 0"
-            type="text"
-            @click="is_syntax_editing = true"
-            v-show="!is_syntax_editing"
-            v-require-rights:pipe.update
-          >
-            Edit
-          </el-button>
-        </div>
-      </div>
-      <PipeDocumentMarkdownEditor
-        class="pipe-editable"
-        :class="is_syntax_editing ? 'is-editing' : ''"
-        :value="pipe_syntax"
-        :is-editing.sync="is_syntax_editing"
-        @save-click="updateSyntax"
-      >
-        <span slot="empty"><em>(No syntax)</em></span>
-      </PipeDocumentMarkdownEditor>
-    </div>
   </div>
 </template>
 
@@ -181,8 +154,7 @@
         is_local_fetching: false,
         is_task_save_allowed: false,
         is_task_editing: false,
-        is_description_editing: false,
-        is_syntax_editing: false,
+        is_description_editing: false
       }
     },
     computed: {
@@ -200,9 +172,6 @@
       },
       pipe_description() {
         return _.get(this.pipe, 'description', '')
-      },
-      pipe_syntax() {
-        return _.get(this.pipe, 'syntax', '')
       },
       pipe_task() {
         return _.get(this.pipe, 'task.items[0]', {})
@@ -274,11 +243,6 @@
         var attrs = { description: obj.new_value }
         this.savePipe(attrs)
         this.is_description_editing = false
-      },
-      updateSyntax(obj) {
-        var attrs = { syntax: obj.new_value }
-        this.savePipe(attrs)
-        this.is_syntax_editing = false
       },
       updateTask(new_task, old_task) {
         var attrs = {
