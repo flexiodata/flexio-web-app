@@ -158,6 +158,7 @@ CREATE TABLE tbl_pipe (
   title text default '',
   description text default '',
   syntax text default '',
+  examples json,
   params json,
   notes text default '',
   task json,
