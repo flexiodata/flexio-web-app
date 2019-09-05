@@ -75,7 +75,6 @@
 </template>
 
 <script>
-  import marked from 'marked'
   import { mapState } from 'vuex'
   import { TASK_OP_EXTRACT } from '@/constants/task-op'
   import api from '@/api'
