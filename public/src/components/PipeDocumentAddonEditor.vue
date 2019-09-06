@@ -103,9 +103,9 @@
             <div class="flex flex-row items-center">
               <el-input
                 size="small"
-                placeholder=", param1, [param2]"
                 auto-complete="off"
                 spellcheck="false"
+                :placeholder="params_syntax_str"
                 @input="onExampleItemChange"
                 v-model="examples[index]"
               >
@@ -244,6 +244,10 @@
       }),
       pipe() {
         return _.get(this.$store.state.pipes, `items.${this.pipeEid}`, {})
+      },
+      params_syntax_str() {
+        var param_names = _.map(this.edit_pipe.params, param => param.name)
+        return param_names.join(', ')
       },
       html_description() {
         return marked(this.edit_pipe.description)
