@@ -1,7 +1,7 @@
 <template>
   <div v-if="!force_render">
     <el-form
-      class="el-form--cozy el-form__label-tiny"
+      class="el-form--compact el-form__label-tiny"
       label-position="top"
       inline
     >
