@@ -2,7 +2,7 @@
   <div>
     <el-form
       ref="form"
-      class="flex-fill el-form--cozy el-form__label-tiny"
+      class="el-form--cozy el-form__label-tiny"
       label-position="top"
       :model="$data"
       :rules="rules"
@@ -100,7 +100,7 @@
       </el-form-item>
     </el-form>
     <div
-      class="flex-none flex flex-row justify-end"
+      class="mt4 w-100 flex flex-row justify-end"
       v-show="isEditing"
     >
       <el-button
