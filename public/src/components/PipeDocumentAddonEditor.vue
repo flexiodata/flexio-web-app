@@ -36,6 +36,38 @@
             v-model="edit_pipe.description"
           />
         </el-form-item>
+        <el-form-item label="Sample Usage">
+          <div
+            class="mv2"
+            :item="item"
+            :index="index"
+            :key="index"
+            v-for="(item, index) in examples"
+          >
+            <div class="flex flex-row items-center">
+              <el-input
+                size="small"
+                placeholder=", param1, [param2]"
+                auto-complete="off"
+                spellcheck="false"
+                @input="onExampleItemChange"
+                v-model="examples[index]"
+              >
+                <template slot="prepend">=FLEX("team/function"</template>
+                <template slot="append">)</template>
+              </el-input>
+              <div
+                class="ml2 pointer f3 black-30 hover-black-60"
+                style="line-height: 1"
+                :class="index >= examples.length-1 ? 'o-0 no-pointer-events' : ''"
+                @click="removeExample(index)"
+
+              >
+                &times;
+              </div>
+            </div>
+          </div>
+        </el-form-item>
         <el-form-item
           key="notes"
           prop="notes"
@@ -102,6 +134,7 @@
         params: [],
         examples: [],
       },
+      examples: []
     }
   }
 
@@ -158,11 +191,25 @@
 
         // reset local objects
         this.edit_pipe = _.assign({}, this.edit_pipe, _.cloneDeep(this.pipe))
+        this.examples = [].concat(this.edit_pipe.examples).concat('')
 
         this.$emit('update:isEditing', false)
       },
+      onExampleItemChange(new_arr, old_arr) {
+        var arr = this.examples
+        if (arr.length > 0 && arr[arr.length-1].length > 0) {
+          this.examples = [].concat(arr).concat('')
+        }
+      },
+      removeExample(index) {
+        var examples = _.cloneDeep(this.examples)
+        _.pullAt(examples, [index])
+        this.examples = examples
+      },
       onSaveClick() {
         var edit_attrs = _.pick(this.edit_pipe, ['title', 'description', 'notes', 'params', 'examples'])
+        edit_attrs.examples = this.examples
+        edit_attrs.examples.pop()
         this.$emit('save-click', edit_attrs, this.pipe)
       },
     }
