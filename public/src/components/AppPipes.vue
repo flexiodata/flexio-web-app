@@ -172,7 +172,7 @@
     <!-- pipe edit dialog -->
     <el-dialog
       custom-class="el-dialog--no-header el-dialog--no-footer"
-      width="46rem"
+      width="36rem"
       top="4vh"
       :modal-append-to-body="false"
       :close-on-click-modal="false"
