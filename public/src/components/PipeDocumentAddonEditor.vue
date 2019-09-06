@@ -246,7 +246,11 @@
         return _.get(this.$store.state.pipes, `items.${this.pipeEid}`, {})
       },
       params_syntax_str() {
-        var param_names = _.map(this.edit_pipe.params, param => param.name)
+        var arr = [].concat(this.params)
+        if (arr.length > 0) {
+          arr.pop()
+        }
+        var param_names = _.map(arr, param => param.name)
         return param_names.join(', ')
       },
       html_description() {
