@@ -171,6 +171,7 @@
         <div v-html="html_description"></div>
         <h3>Syntax</h3>
         <p><code>{{syntax_str}}</code></p>
+        <div v-html="html_params"></div>
         <h3>Sample Usage</h3>
         <div v-html="html_examples"></div>
         <h3>Notes</h3>
@@ -264,6 +265,13 @@
       html_notes() {
         return marked(this.edit_pipe.notes)
       },
+      html_params() {
+        var markdown = ''
+        _.each(this.edit_pipe.params, p => {
+          markdown += '* `' + p.name + '`: ' + p.description + (!p.required ? ' (optional)' : '')
+        })
+        return marked(markdown)
+      },
       html_examples() {
         var examples = _.map(this.edit_pipe.examples, example => getSyntaxStr(this.active_team_name, this.pipe.name, example) )
         var markdown = '`' + examples.join('`\n`') + '`'
@@ -284,7 +292,6 @@
       },
       onParamItemChange() {
         var arr = this.params
-        debugger
         if (arr.length > 0 && arr[arr.length-1].name.length > 0) {
           this.params = [].concat(arr).concat(newParam())
         }
