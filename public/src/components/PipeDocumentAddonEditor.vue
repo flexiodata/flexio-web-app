@@ -256,7 +256,7 @@
         return param_names.join(', ')
       },
       syntax_str() {
-        return getSyntaxStr(this.active_team_name, this.pipe.name, ', ' + this.params_syntax_str)
+        return getSyntaxStr(this.active_team_name, this.pipe.name, this.params_syntax_str)
       },
       html_description() {
         return marked(this.edit_pipe.description)
