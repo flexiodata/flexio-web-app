@@ -68,8 +68,8 @@
         v-show="remote_state == 'inline'"
       >
         <CodeEditor
-          class="bg-white ba b--black-10"
-          style="line-height: 1.15; font-size: 13px"
+          class="bg-white"
+          style="line-height: 1.15; font-size: 13px; border: 1px solid #dcdfe6"
           transpose="base64"
           :lang="code_editor_lang"
           :options="{ minRows: 8, maxRows: 32 }"

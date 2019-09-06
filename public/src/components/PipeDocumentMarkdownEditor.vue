@@ -19,8 +19,8 @@
 
     <CodeEditor
       ref="code-editor"
-      class="bg-white ba b--black-10"
-      style="line-height: 1.15; font-size: 13px"
+      class="bg-white"
+      style="line-height: 1.15; font-size: 13px; border: 1px solid #dcdfe6"
       lang="markdown"
       :options="{
         lineNumbers: false,
