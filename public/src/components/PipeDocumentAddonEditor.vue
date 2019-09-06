@@ -20,7 +20,6 @@
           />
         </el-form-item>
         <el-form-item
-          class="w-100"
           key="description"
           prop="description"
           label="Description"
@@ -34,7 +33,24 @@
               minRows: 4,
               maxRows: 20
             }"
-            v-model="description"
+            v-model="edit_pipe.description"
+          />
+        </el-form-item>
+        <el-form-item
+          key="notes"
+          prop="notes"
+          label="Notes"
+        >
+          <CodeEditor
+            class="bg-white"
+            style="line-height: 1.15; font-size: 13px; border: 1px solid #dcdfe6"
+            lang="markdown"
+            :options="{
+              lineNumbers: false,
+              minRows: 4,
+              maxRows: 20
+            }"
+            v-model="edit_pipe.notes"
           />
         </el-form-item>
       </el-form>
@@ -55,7 +71,19 @@
       </div>
     </div>
     <div v-else>
-      Markdown result...
+      <div class="el-form__label-tiny cf">
+        <label class="el-form-item__label">Preview</label>
+      </div>
+      <div
+        class="markdown br2 pa4"
+        style="border: 1px solid #dcdfe6"
+      >
+        <h2 v-if="edit_pipe.title.length > 0">{{edit_pipe.title}}</h2>
+        <h2 v-else>{{edit_pipe.name}}</h2>
+        <div v-html="html_description"></div>
+        <h3>Notes</h3>
+        <div v-html="html_notes"></div>
+      </div>
     </div>
   </div>
 </template>
@@ -103,12 +131,10 @@
       CodeEditor,
     },
     watch: {
-      value: {
+      pipe: {
         handler: 'initSelf',
-        immediate: true
-      },
-      isEditing: {
-        handler: 'onEditingChange'
+        immediate: true,
+        deep: true
       }
     },
     data() {
@@ -118,36 +144,26 @@
       pipe() {
         return _.get(this.$store.state.pipes, `items.${this.pipeEid}`, {})
       },
-      compiled_html() {
-        return marked(this.edit_value)
+      html_description() {
+        return marked(this.edit_pipe.description)
       },
-      is_changed() {
-        return this.edit_value != this.value
+      html_notes() {
+        return marked(this.edit_pipe.notes)
       },
     },
     methods: {
       initSelf() {
         // reset our local component data
-        _.assign(this.$data, getDefaultState(), { edit_value: this.value })
+        _.assign(this.$data, getDefaultState(this))
+
+        // reset local objects
+        this.edit_pipe = _.assign({}, this.edit_pipe, _.cloneDeep(this.pipe))
 
         this.$emit('update:isEditing', false)
       },
-      onEditingChange(is_editing, was_editing) {
-        if (is_editing && !was_editing) {
-          this.$nextTick(() => {
-            var editor = this.$refs['code-editor']
-            if (editor) {
-              editor.focus()
-            }
-          })
-        }
-      },
       onSaveClick() {
-        var name = this.name
-        var new_value = this.edit_value
-        var old_value = this.value
-
-        this.$emit('save-click', name, new_value, old_value)
+        var edit_attrs = _.pick(this.edit_pipe, ['title', 'description', 'notes', 'params', 'examples'])
+        this.$emit('save-click', edit_attrs, this.pipe)
       },
     }
   }

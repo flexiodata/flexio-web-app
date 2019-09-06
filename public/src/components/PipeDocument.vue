@@ -123,10 +123,9 @@
         </div>
       </div>
       <PipeDocumentAddonEditor
-        name="description"
-        :value="pipe.description"
+        :pipe-eid="pipeEid"
         :is-editing.sync="is_addon_editing"
-        @save-click="updateKeyValue"
+        @save-click="updateAddOnSettings"
       >
         <h3 slot="title">Description</h3>
         <span slot="empty"><em>(No syntax)</em></span>
@@ -261,12 +260,6 @@
         var attrs = { deploy_mode }
         this.savePipe(attrs)
       },
-      updateKeyValue(key, new_value, old_value) {
-        var attrs = {}
-        attrs[key] = new_value
-        this.savePipe(attrs)
-        this.is_addon_editing = false
-      },
       updateTask(new_task, old_task) {
         var attrs = {
           task: {
@@ -275,6 +268,10 @@
           }
         }
         this.savePipe(attrs)
+      },
+      updateAddOnSettings(new_attrs, old_pipe) {
+        this.savePipe(new_attrs)
+        this.is_addon_editing = false
       },
       onEditClick() {
         this.$emit('edit-click', this.pipe)
