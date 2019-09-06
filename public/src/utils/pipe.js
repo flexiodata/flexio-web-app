@@ -1,6 +1,5 @@
-export const getSyntaxStr = (team_name, pipe) => {
-  var syntax = _.get(pipe, 'syntax', '')
-  return `=FLEX("${team_name}/${pipe.name}"${syntax})`
+export const getSyntaxStr = (team_name, pipe_name, syntax) => {
+  return `=FLEX("${team_name}/${pipe_name}"${syntax})`
 }
 
 /*

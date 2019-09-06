@@ -113,6 +113,8 @@
         <h2 v-if="edit_pipe.title.length > 0">{{edit_pipe.title}}</h2>
         <h2 v-else>{{edit_pipe.name}}</h2>
         <div v-html="html_description"></div>
+        <h3>Sample Usage</h3>
+        <div v-html="html_examples"></div>
         <h3>Notes</h3>
         <div v-html="html_notes"></div>
       </div>
@@ -122,6 +124,8 @@
 
 <script>
   import marked from 'marked'
+  import { mapState } from 'vuex'
+  import { getSyntaxStr } from '@/utils/pipe'
   import CodeEditor from '@/components/CodeEditor'
 
   const getDefaultState = () => {
@@ -174,6 +178,9 @@
       return getDefaultState()
     },
     computed: {
+      ...mapState({
+        active_team_name: state => state.teams.active_team_name
+      }),
       pipe() {
         return _.get(this.$store.state.pipes, `items.${this.pipeEid}`, {})
       },
@@ -182,6 +189,11 @@
       },
       html_notes() {
         return marked(this.edit_pipe.notes)
+      },
+      html_examples() {
+        var examples = _.map(this.edit_pipe.examples, example => getSyntaxStr(this.active_team_name, this.pipe.name, example) )
+        var markdown = '`' + examples.join('`\n`') + '`'
+        return marked(markdown)
       },
     },
     methods: {
