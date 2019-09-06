@@ -1,13 +1,13 @@
 <template>
   <!-- fetching -->
   <div v-if="is_fetching">
-    <div class="flex flex-column justify-center bg-nearer-white h-100">
+    <div class="flex flex-column justify-center h-100">
       <Spinner size="large" message="Loading functions..." />
     </div>
   </div>
 
   <!-- fetched -->
-  <div class="flex flex-column bg-nearer-white" v-else-if="is_fetched">
+  <div class="flex flex-column" v-else-if="is_fetched">
     <div class="flex-fill flex flex-row relative" v-if="pipes.length > 0">
       <template v-if="has_pipe">
         <!-- sidebar -->
@@ -135,7 +135,7 @@
         <!-- content area -->
         <div class="flex-fill ph4 pv5 overflow-y-scroll relative">
           <PipeDocument
-            class="w-100 center mw-doc pa4 bg-white br2 css-white-box"
+            class="w-100 center mw-doc"
             style="min-height: 20rem; margin-bottom: 10rem"
             :pipe-eid="pipe.eid"
             :show-test-button="!show_test_panel"
@@ -153,7 +153,7 @@
       </template>
 
       <!-- pipe not found -->
-      <PageNotFound class="flex-fill bg-nearer-white" v-else />
+      <PageNotFound class="flex-fill" v-else />
     </div>
     <EmptyItem class="flex flex-column items-center justify-center h-100" v-else>
       <div class="tc f3" slot="text">
