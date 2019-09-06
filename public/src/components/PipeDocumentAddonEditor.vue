@@ -169,6 +169,8 @@
         <h2 v-if="edit_pipe.title.length > 0">{{edit_pipe.title}}</h2>
         <h2 v-else>{{edit_pipe.name}}</h2>
         <div v-html="html_description"></div>
+        <h3>Syntax</h3>
+        <p><code>{{syntax_str}}</code></p>
         <h3>Sample Usage</h3>
         <div v-html="html_examples"></div>
         <h3>Notes</h3>
@@ -252,6 +254,9 @@
         }
         var param_names = _.map(arr, param => param.name)
         return param_names.join(', ')
+      },
+      syntax_str() {
+        return getSyntaxStr(this.active_team_name, this.pipe.name, ', ' + this.params_syntax_str)
       },
       html_description() {
         return marked(this.edit_pipe.description)
