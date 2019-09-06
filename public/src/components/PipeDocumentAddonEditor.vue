@@ -291,6 +291,16 @@
 
         this.$emit('update:isEditing', false)
       },
+      removeParam(index) {
+        var params = _.cloneDeep(this.params)
+        _.pullAt(params, [index])
+        this.params = params
+      },
+      removeExample(index) {
+        var examples = _.cloneDeep(this.examples)
+        _.pullAt(examples, [index])
+        this.examples = examples
+      },
       onParamItemChange() {
         var arr = this.params
         if (arr.length > 0 && arr[arr.length-1].name.length > 0) {
@@ -302,16 +312,6 @@
         if (arr.length > 0 && arr[arr.length-1].length > 0) {
           this.examples = [].concat(arr).concat('')
         }
-      },
-      removeParam(index) {
-        var params = _.cloneDeep(this.params)
-        _.pullAt(params, [index])
-        this.params = params
-      },
-      removeExample(index) {
-        var examples = _.cloneDeep(this.examples)
-        _.pullAt(examples, [index])
-        this.examples = examples
       },
       onSaveClick() {
         var edit_attrs = _.pick(this.edit_pipe, ['title', 'description', 'notes', 'params', 'examples'])
