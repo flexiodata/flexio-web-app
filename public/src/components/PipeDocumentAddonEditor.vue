@@ -36,6 +36,62 @@
             v-model="edit_pipe.description"
           />
         </el-form-item>
+        <el-form-item label="Parameters">
+          <div
+            class="mv2"
+            :item="item"
+            :index="index"
+            :key="index"
+            v-for="(item, index) in params"
+          >
+            <div class="flex flex-row items-center">
+              <el-input
+                size="small"
+                style="line-height: normal; width: 25%"
+                placeholder="Property"
+                auto-complete="off"
+                spellcheck="false"
+                @input="onParamItemChange"
+                v-model="params[index].name"
+              />
+              <el-input
+                class="ml2"
+                style="line-height: normal; width: 25%"
+                size="small"
+                placeholder="Type"
+                auto-complete="off"
+                spellcheck="false"
+                @input="onParamItemChange"
+                v-model="params[index].type"
+              />
+              <el-input
+                class="ml2"
+                style="line-height: normal; width: 50%"
+                size="small"
+                placeholder="Description"
+                auto-complete="off"
+                @input="onParamItemChange"
+                v-model="params[index].description"
+              />
+              <el-checkbox
+                class="ml2"
+                style="line-height: normal"
+                v-model="params[index].required"
+                >
+                Required
+              </el-checkbox>
+              <div
+                class="ml3 pointer f3 black-30 hover-black-60"
+                style="line-height: 1"
+                :class="index >= params.length-1 ? 'o-0 no-pointer-events' : ''"
+                @click="removeParam(index)"
+
+              >
+                &times;
+              </div>
+            </div>
+          </div>
+        </el-form-item>
         <el-form-item label="Sample Usage">
           <div
             class="mv2"
@@ -138,8 +194,13 @@
         params: [],
         examples: [],
       },
-      examples: []
+      params: [],
+      examples: [],
     }
+  }
+
+  const newParam = (param) => {
+    return _.assign({ name: '', type: 'string', description: '', required: true }, param)
   }
 
   // make sure 'gfm' and 'breaks' are both set to true
@@ -203,15 +264,28 @@
 
         // reset local objects
         this.edit_pipe = _.assign({}, this.edit_pipe, _.cloneDeep(this.pipe))
+        this.params = [].concat(this.edit_pipe.params).concat(newParam())
         this.examples = [].concat(this.edit_pipe.examples).concat('')
 
         this.$emit('update:isEditing', false)
       },
-      onExampleItemChange(new_arr, old_arr) {
+      onParamItemChange() {
+        var arr = this.params
+        debugger
+        if (arr.length > 0 && arr[arr.length-1].name.length > 0) {
+          this.params = [].concat(arr).concat(newParam())
+        }
+      },
+      onExampleItemChange() {
         var arr = this.examples
         if (arr.length > 0 && arr[arr.length-1].length > 0) {
           this.examples = [].concat(arr).concat('')
         }
+      },
+      removeParam(index) {
+        var params = _.cloneDeep(this.params)
+        _.pullAt(params, [index])
+        this.params = params
       },
       removeExample(index) {
         var examples = _.cloneDeep(this.examples)
@@ -220,8 +294,15 @@
       },
       onSaveClick() {
         var edit_attrs = _.pick(this.edit_pipe, ['title', 'description', 'notes', 'params', 'examples'])
+
+        // remove ghost row param
+        edit_attrs.params = this.params
+        edit_attrs.params.pop()
+
+        // remove ghost row example
         edit_attrs.examples = this.examples
         edit_attrs.examples.pop()
+
         this.$emit('save-click', edit_attrs, this.pipe)
       },
     }
