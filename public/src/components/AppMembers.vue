@@ -53,7 +53,10 @@
     v-else-if="is_fetched"
   >
     <div class="ph4 pv5">
-      <div class="w-100 center mw-doc pa4 bg-white br2 css-white-box overflow-hidden" style="min-height: 20rem">
+      <div
+        class="w-100 center mw-doc pa4 bg-white br2 css-white-box overflow-hidden"
+        style="min-height: 20rem; margin-bottom: 10rem"
+      >
         <el-alert
           style="margin-bottom: 2rem"
           type="warning"

@@ -1,7 +1,10 @@
 <template>
   <div class="bg-nearer-white overflow-y-scroll">
     <div class="ph4 pv5">
-      <div class="w-100 center mw-doc pa4 bg-white br2 css-white-box trans-mw" style="max-width: 960px">
+      <div
+        class="w-100 center mw-doc pa4 bg-white br2 css-white-box trans-mw"
+        style="min-height: 20rem; margin-bottom: 10rem; max-width: 960px"
+      >
         <!-- uncomment this to extend tab list right border all the way down -->
         <div class="absolute top-2 bottom-2 tab-list-border" v-if="false"></div>
         <el-tabs

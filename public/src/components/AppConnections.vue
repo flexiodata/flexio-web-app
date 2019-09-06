@@ -67,7 +67,7 @@
         >
           <ConnectionDocument
             class="w-100 center mw-doc pa4 bg-white br2 css-white-box"
-            style="min-height: 20rem"
+            style="min-height: 20rem; margin-bottom: 10rem"
             :connection-eid="connection.eid"
             @edit-click="onEditConnection"
           />
