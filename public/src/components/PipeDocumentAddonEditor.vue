@@ -169,11 +169,12 @@
         <h2 v-if="edit_pipe.title.length > 0">{{edit_pipe.title}}</h2>
         <h2 v-else>{{edit_pipe.name}}</h2>
         <div v-html="html_description"></div>
-        <h3>Syntax</h3>
-        <p><code>{{syntax_str}}</code></p>
-        <div v-html="html_params"></div>
         <h3>Sample Usage</h3>
         <div v-html="html_examples"></div>
+        <h3>Syntax</h3>
+        <p><code>{{syntax_str}}</code></p>
+        <h3>Parameters</h3>
+        <div v-html="html_params"></div>
         <h3>Notes</h3>
         <div v-html="html_notes"></div>
       </div>
@@ -268,7 +269,7 @@
       html_params() {
         var markdown = ''
         _.each(this.edit_pipe.params, p => {
-          markdown += '* `' + p.name + '`: ' + p.description + (!p.required ? ' (optional)' : '')
+          markdown += '* `' + p.name + '`: ' + p.description + (!p.required ? ' (optional)' : '') + '\n'
         })
         return marked(markdown)
       },
