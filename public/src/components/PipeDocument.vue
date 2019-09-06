@@ -51,8 +51,11 @@
 
     <!-- configuration -->
     <div
-      class="pipe-section"
-      :class="is_addon_editing ? 'o-40 no-pointer-events no-select' : ''"
+      class="pipe-section pipe-editable"
+      :class="{
+        'o-40 no-pointer-events no-select': is_addon_editing,
+        'is-editing': is_task_editing
+      }"
     >
       <div class="flex flex-row items-center pb2 bb b--black-10 pipe-section-title">
         <div class="flex-fill f4 fw6 lh-title">Function Configuration</div>
@@ -69,8 +72,6 @@
         </div>
       </div>
       <PipeDocumentTaskExtract
-        class="pipe-editable"
-        :class="is_task_editing ? 'is-editing' : ''"
         :task="pipe_task"
         :is-editing.sync="is_task_editing"
         :is-save-allowed.sync="is_task_save_allowed"
@@ -78,8 +79,6 @@
         v-if="pipe_task_type == 'extract'"
       />
       <PipeDocumentTaskLookup
-        class="pipe-editable"
-        :class="is_task_editing ? 'is-editing' : ''"
         :task="pipe_task"
         :is-editing.sync="is_task_editing"
         :is-save-allowed.sync="is_task_save_allowed"
@@ -87,8 +86,6 @@
         v-else-if="pipe_task_type == 'lookup'"
       />
       <PipeDocumentTaskExecute
-        class="pipe-editable"
-        :class="is_task_editing ? 'is-editing' : ''"
         :task="pipe_task"
         :is-editing.sync="is_task_editing"
         :is-save-allowed.sync="is_task_save_allowed"
@@ -96,7 +93,7 @@
         v-else-if="pipe_task_type == 'execute'"
       />
       <div
-        class="pipe-editable f6 fw4 lh-copy moon-gray"
+        class="f6 fw4 lh-copy moon-gray"
         v-else
       >
         <em>(Unknown task)</em>
@@ -105,40 +102,35 @@
 
     <!-- description -->
     <div
-      class="pipe-section"
-      :class="is_task_editing ? 'o-40 no-pointer-events no-select' : ''"
+      class="pipe-section pipe-editable"
+      :class="{
+        'o-40 no-pointer-events no-select': is_task_editing,
+        'is-editing': is_addon_editing
+      }"
     >
       <div class="flex flex-row items-center pb2 bb b--black-10 pipe-section-title">
         <div class="flex-fill f4 fw6 lh-title">Add-on Configuration</div>
+        <div class="flex-none">
+          <el-button
+            style="padding: 0"
+            type="text"
+            @click="is_addon_editing = true"
+            v-show="!is_addon_editing"
+            v-require-rights:pipe.update
+          >
+            Edit
+          </el-button>
+        </div>
       </div>
-      <PipeDocumentMarkdownEditor
+      <PipeDocumentAddonEditor
         name="description"
-        class="pipe-editable"
-        :class="{
-          'is-editing': is_description_editing,
-          'o-40 no-pointer-events no-select': is_addon_editing && !is_description_editing
-        }"
         :value="pipe.description"
-        :is-editing.sync="is_description_editing"
+        :is-editing.sync="is_addon_editing"
         @save-click="updateKeyValue"
       >
         <h3 slot="title">Description</h3>
         <span slot="empty"><em>(No syntax)</em></span>
-      </PipeDocumentMarkdownEditor>
-      <PipeDocumentMarkdownEditor
-        name="notes"
-        class="pipe-editable"
-        :class="{
-          'is-editing': is_notes_editing,
-          'o-40 no-pointer-events no-select': is_addon_editing && !is_notes_editing
-        }"
-        :value="pipe.notes"
-        :is-editing.sync="is_notes_editing"
-        @save-click="updateKeyValue"
-      >
-        <h3 slot="title">Notes</h3>
-        <span slot="empty"><em>(No notes)</em></span>
-      </PipeDocumentMarkdownEditor>
+      </PipeDocumentAddonEditor>
     </div>
   </div>
 </template>
@@ -147,7 +139,7 @@
   import { mapState } from 'vuex'
   import Spinner from 'vue-simple-spinner'
   import LabelSwitch from '@/components/LabelSwitch'
-  import PipeDocumentMarkdownEditor from '@/components/PipeDocumentMarkdownEditor'
+  import PipeDocumentAddonEditor from '@/components/PipeDocumentAddonEditor'
   import PipeDocumentTaskExtract from '@/components/PipeDocumentTaskExtract'
   import PipeDocumentTaskLookup from '@/components/PipeDocumentTaskLookup'
   import PipeDocumentTaskExecute from '@/components/PipeDocumentTaskExecute'
@@ -170,7 +162,7 @@
     components: {
       Spinner,
       LabelSwitch,
-      PipeDocumentMarkdownEditor,
+      PipeDocumentAddonEditor,
       PipeDocumentTaskExtract,
       PipeDocumentTaskLookup,
       PipeDocumentTaskExecute,
@@ -186,7 +178,7 @@
         is_local_fetching: false,
         is_task_save_allowed: false,
         is_task_editing: false,
-        is_description_editing: false,
+        is_addon_editing: false,
         is_notes_editing: false,
       }
     },
@@ -202,11 +194,6 @@
       },
       is_fetching() {
         return _.get(this.pipe, 'vuex_meta.is_fetching', false) || this.is_local_fetching /* Vuex pipe `is_fetching` isn't yet implemented */
-      },
-      is_addon_editing() {
-        return false ||
-          this.is_description_editing ||
-          this.is_notes_editing
       },
       pipe_task() {
         return _.get(this.pipe, 'task.items[0]', {})
@@ -278,8 +265,7 @@
         var attrs = {}
         attrs[key] = new_value
         this.savePipe(attrs)
-        this.is_description_editing = false
-        this.is_notes_editing = false
+        this.is_addon_editing = false
       },
       updateTask(new_task, old_task) {
         var attrs = {
