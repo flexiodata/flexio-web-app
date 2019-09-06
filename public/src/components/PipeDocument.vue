@@ -114,7 +114,10 @@
       <PipeDocumentMarkdownEditor
         name="description"
         class="pipe-editable"
-        :class="is_description_editing ? 'is-editing' : ''"
+        :class="{
+          'is-editing': is_description_editing,
+          'o-40 no-pointer-events no-select': is_addon_editing && !is_description_editing
+        }"
         :value="pipe.description"
         :is-editing.sync="is_description_editing"
         @save-click="updateKeyValue"
@@ -125,7 +128,10 @@
       <PipeDocumentMarkdownEditor
         name="notes"
         class="pipe-editable"
-        :class="is_notes_editing ? 'is-editing' : ''"
+        :class="{
+          'is-editing': is_notes_editing,
+          'o-40 no-pointer-events no-select': is_addon_editing && !is_notes_editing
+        }"
         :value="pipe.notes"
         :is-editing.sync="is_notes_editing"
         @save-click="updateKeyValue"
