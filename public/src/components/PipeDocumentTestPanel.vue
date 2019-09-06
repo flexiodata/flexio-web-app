@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-column h-100" v-show="visible">
+  <div class="flex flex-column h-100" v-if="visible">
     <!-- header -->
     <div class="flex-none flex flex-row items-center bg-nearer-white bb b--black-05 pa2">
       <div class="f6 fw6">Test Function</div>
@@ -100,6 +100,10 @@
     watch: {
       pipeEid: {
         handler: 'showResetMessage'
+      },
+      visible: {
+        handler: 'initSelf',
+        immediate: true
       }
     },
     data() {
