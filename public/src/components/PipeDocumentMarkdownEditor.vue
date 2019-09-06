@@ -56,6 +56,17 @@
     }
   }
 
+  // make sure 'gfm' and 'breaks' are both set to true
+  // to have Markdown render the same as it does on GitHub
+  marked.setOptions({
+    gfm: true,
+    breaks: true,
+    pedantic: false,
+    sanitize: false,
+    smartLists: true,
+    smartypants: true
+  })
+
   export default {
     props: {
       value: {
