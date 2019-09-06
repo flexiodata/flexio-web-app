@@ -12,7 +12,7 @@
     <!-- header -->
     <div
       class="pipe-header flex flex-row"
-      :class="is_task_editing || is_description_editing ? 'o-40 no-pointer-events no-select' : ''"
+      :class="is_task_editing || is_addon_editing ? 'o-40 no-pointer-events no-select' : ''"
     >
       <div class="flex-fill flex flex-row items-center">
         <div class="f3 fw6 lh-title">{{pipe.name}}</div>
@@ -52,10 +52,10 @@
     <!-- configuration -->
     <div
       class="pipe-section"
-      :class="is_description_editing ? 'o-40 no-pointer-events no-select' : ''"
+      :class="is_addon_editing ? 'o-40 no-pointer-events no-select' : ''"
     >
-      <div class="flex flex-row items-center pb2 bb b--black-10">
-        <div class="flex-fill f4 fw6 lh-title">Configuration</div>
+      <div class="flex flex-row items-center pb2 bb b--black-10 pipe-section-title">
+        <div class="flex-fill f4 fw6 lh-title">Function Configuration</div>
         <div class="flex-none">
           <el-button
             style="padding: 0"
@@ -108,28 +108,30 @@
       class="pipe-section"
       :class="is_task_editing ? 'o-40 no-pointer-events no-select' : ''"
     >
-      <div class="flex flex-row items-center pb2 bb b--black-10">
-        <div class="flex-fill f4 fw6 lh-title">Description</div>
-        <div class="flex-none">
-          <el-button
-            style="padding: 0"
-            type="text"
-            @click="is_description_editing = true"
-            v-show="!is_description_editing"
-            v-require-rights:pipe.update
-          >
-            Edit
-          </el-button>
-        </div>
+      <div class="flex flex-row items-center pb2 bb b--black-10 pipe-section-title">
+        <div class="flex-fill f4 fw6 lh-title">Add-on Configuration</div>
       </div>
       <PipeDocumentMarkdownEditor
+        name="description"
         class="pipe-editable"
         :class="is_description_editing ? 'is-editing' : ''"
-        :value="pipe_description"
+        :value="pipe.description"
         :is-editing.sync="is_description_editing"
-        @save-click="updateDescription"
+        @save-click="updateKeyValue"
       >
-        <span slot="empty"><em>(No description)</em></span>
+        <h3 slot="title">Description</h3>
+        <span slot="empty"><em>(No syntax)</em></span>
+      </PipeDocumentMarkdownEditor>
+      <PipeDocumentMarkdownEditor
+        name="notes"
+        class="pipe-editable"
+        :class="is_notes_editing ? 'is-editing' : ''"
+        :value="pipe.notes"
+        :is-editing.sync="is_notes_editing"
+        @save-click="updateKeyValue"
+      >
+        <h3 slot="title">Notes</h3>
+        <span slot="empty"><em>(No notes)</em></span>
       </PipeDocumentMarkdownEditor>
     </div>
   </div>
@@ -178,7 +180,8 @@
         is_local_fetching: false,
         is_task_save_allowed: false,
         is_task_editing: false,
-        is_description_editing: false
+        is_description_editing: false,
+        is_notes_editing: false,
       }
     },
     computed: {
@@ -194,8 +197,10 @@
       is_fetching() {
         return _.get(this.pipe, 'vuex_meta.is_fetching', false) || this.is_local_fetching /* Vuex pipe `is_fetching` isn't yet implemented */
       },
-      pipe_description() {
-        return _.get(this.pipe, 'description', '')
+      is_addon_editing() {
+        return false ||
+          this.is_description_editing ||
+          this.is_notes_editing
       },
       pipe_task() {
         return _.get(this.pipe, 'task.items[0]', {})
@@ -263,10 +268,12 @@
         var attrs = { deploy_mode }
         this.savePipe(attrs)
       },
-      updateDescription(obj) {
-        var attrs = { description: obj.new_value }
+      updateKeyValue(key, new_value, old_value) {
+        var attrs = {}
+        attrs[key] = new_value
         this.savePipe(attrs)
         this.is_description_editing = false
+        this.is_notes_editing = false
       },
       updateTask(new_task, old_task) {
         var attrs = {
@@ -292,10 +299,15 @@
     margin-top: 24px
     margin-bottom: 24px
 
+  .pipe-section-title
+    margin-bottom: 24px
+
   .pipe-editable
-    padding: 24px
+    padding: 0
     transition: all 0.15s ease
     &.is-editing
+      padding: 24px
+      position: relative
       border-radius: 3px
       box-shadow: 0 0 0 1px rgba(64, 158, 255, 1), 0 0 0 5px rgba(64, 158, 255, 0.4)
 </style>

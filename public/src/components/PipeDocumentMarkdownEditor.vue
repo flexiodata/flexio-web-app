@@ -1,5 +1,22 @@
 <template>
   <div>
+    <div class="flex flex-row items-center">
+      <div class="flex-fill markdown">
+        <slot name="title">Title</slot>
+      </div>
+      <div class="flex-none">
+        <el-button
+          style="padding: 0"
+          type="text"
+          @click="$emit('update:isEditing', true)"
+          v-show="!isEditing"
+          v-require-rights:pipe.update
+        >
+          Edit
+        </el-button>
+      </div>
+    </div>
+
     <CodeEditor
       ref="code-editor"
       class="bg-white ba b--black-10"
@@ -69,6 +86,10 @@
 
   export default {
     props: {
+      name: {
+        type: String,
+        required: true
+      },
       value: {
         type: String,
         required: true
@@ -119,13 +140,11 @@
         }
       },
       onSaveClick() {
-        var save_obj = {
-          new_value: this.edit_value,
-          old_value: this.value,
-          compiled_html: this.compiled_html
-        }
+        var name = this.name
+        var new_value = this.edit_value
+        var old_value = this.value
 
-        this.$emit('save-click', save_obj)
+        this.$emit('save-click', name, new_value, old_value)
       },
     }
   }
