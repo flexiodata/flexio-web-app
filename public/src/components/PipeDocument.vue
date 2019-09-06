@@ -27,10 +27,19 @@
       </div>
       <div class="flex-none">
         <el-button
+          size="small"
           class="ttu fw6"
           style="min-width: 5rem"
+          @click="$emit('test-click')"
+          v-show="showTestButton"
+        >
+          Test
+        </el-button>
+        <el-button
           size="small"
           type="primary"
+          class="ttu fw6"
+          style="min-width: 5rem"
           @click="onEditClick"
           v-require-rights:pipe.update
         >
@@ -144,6 +153,10 @@
       pipeEid: {
         type: String,
         required: true
+      },
+      showTestButton: {
+        type: Boolean,
+        default: true
       }
     },
     components: {

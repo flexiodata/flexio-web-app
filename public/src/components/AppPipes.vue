@@ -133,11 +133,13 @@
         </div>
 
         <!-- content area -->
-        <div class="flex-fill ph4 pv5 overflow-y-scroll">
+        <div class="flex-fill ph4 pv5 overflow-y-scroll relative">
           <PipeDocument
             class="w-100 center mw-doc pa4 bg-white br2 css-white-box"
             style="min-height: 20rem"
             :pipe-eid="pipe.eid"
+            :show-test-button="!show_test_panel"
+            @test-click="show_test_panel = true"
             @edit-click="onEditPipe"
           />
         </div>
@@ -148,16 +150,6 @@
           :pipe-eid="pipe.eid"
           :visible.sync="show_test_panel"
         />
-
-        <el-button
-          size="small"
-          type="text"
-          class="absolute right-2 top-0"
-          @click="show_test_panel = true"
-          v-show="!show_test_panel && false"
-        >
-          Test Function
-        </el-button>
       </template>
 
       <!-- pipe not found -->
