@@ -67,38 +67,28 @@ class Lookup extends \Flexio\Jobs\Base
         if (!is_array($lookup_values))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Invalid lookup values");
 
-        // read the input file and convert it into a table
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "read",
-                "path" => $path
+        // get the file content and convert it to a table
+        $raw_stream = self::getStreamFromFile($process->getOwner(), $path);
+        $converted_stream = \Flexio\Base\Stream::create();
+
+        $convert_params = [
+            "input" => [
+                "format" => "delimited",
+                "header" => true
             ],
-            [
-                "op" => "convert",
-                "input" => [
-                    "format" => "delimited",
-                    "header" => true
-                ],
-                "output" => [
-                    "format" => "table"
-                ]
+            "output" => [
+                "format" => "table"
             ]
-        ]);
+        ];
+        \Flexio\Base\StreamConverter::process($convert_params, $raw_stream, $converted_stream);
 
-        $local_process = \Flexio\Jobs\Process::create();
-        $local_process->setOwner($process->getOwner());
-        $local_process->setStdin($instream);
-        $local_process->execute($task);
-
-        // create a lookup index from the input table
+        // create a lookup index from the table
         $lookup_index = array();
+        $rows = \Flexio\Base\StreamUtil::getStreamContents($converted_stream);
 
-        $local_stdout = $local_process->getStdout();
-        $rows = \Flexio\Base\StreamUtil::getStreamContents($local_stdout);
         foreach ($rows as $r)
         {
             $lookup_row = array_change_key_case($r, CASE_LOWER);
-
             $key = array();
             foreach ($lookup_keys as $k)
             {
@@ -129,6 +119,7 @@ class Lookup extends \Flexio\Jobs\Base
 
         // single result lookup version
         $lookup_values = json_encode($lookup_values);
+        $default_values = array_fill(0, count($return_columns), null);
         if (!array_key_exists($lookup_values, $lookup_index))
             $lookup_result[] = $default_values;
             else
@@ -137,5 +128,48 @@ class Lookup extends \Flexio\Jobs\Base
         $streamwriter = $outstream->getWriter();
         $streamwriter->write(json_encode($lookup_result));
         $outstream->setMimeType(\Flexio\Base\ContentType::JSON);
+    }
+
+    private function getStreamFromFile(string $owner, string $path) : \Flexio\Base\Stream
+    {
+        // TODO: connection mounts in connection object contain a similar caching
+        // mechanism; should factor
+
+        // get the connection identifier and remote path from the given path
+        $connection_identifier = '';
+        $remote_path = '';
+        $vfs = new \Flexio\Services\Vfs($owner);
+        $service = $vfs->getServiceFromPath($path, $connection_identifier, $remote_path);
+
+        // get the file info
+        $connection_eid = \Flexio\Object\Connection::getEidFromName($owner, $connection_identifier);
+        $file_info = $service->getFileInfo($remote_path);
+
+        // generate a handle for the content signature that will uniquely identify it;
+        // use the owner plus a hash of some identifiers that constitute unique content
+        $content_handle = '';
+        $content_handle .= $owner; // include owner in the identifier so that even if the connection owner changes (later?), the cache will only exist for this owner
+        $content_handle .= $file_info['hash']; // not always populated, so also add on info from the file
+        $content_handle .= md5(
+            $remote_path .
+            strval($file_info['size']) .
+            $file_info['modified']
+        );
+
+        // get the cached content; if it doesn't exist, create the cache
+        $stored_stream = \Flexio\Object\Factory::getStreamContentCache($connection_eid, $content_handle);
+        if (!isset($stored_stream))
+            $stored_stream = \Flexio\Object\Factory::createStreamContentCache($connection_eid, $remote_path, $content_handle);
+
+        // copy the stream contents to a memory stream
+        $memory_stream = \Flexio\Base\Stream::create();
+
+        $streamreader = $stored_stream->getReader();
+        $streamwriter = $memory_stream->getWriter();
+
+        while (($data = $streamreader->read(32768)) !== false)
+            $streamwriter->write($data);
+
+        return $memory_stream;
     }
 }
