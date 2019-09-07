@@ -61,14 +61,11 @@ class Lookup extends \Flexio\Jobs\Base
         $return_columns = array_map('strtolower', $return_columns);
 
         // get the lookup values from stdin; should be array of array values
+        // e.g. ["apple", "red"]
         $lookup_values = $instream->getReader()->read();
         $lookup_values = @json_decode($lookup_values, true);
         if (!is_array($lookup_values))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Invalid lookup values");
-
-        // right now, assume the input comes from the stdin of a spreadsheet function,
-        // so that the first element of the array contains the lookup values
-        $lookup_values = $lookup_values[0];
 
         // read the input file and convert it into a table
         $task = \Flexio\Tests\Task::create([
@@ -114,19 +111,28 @@ class Lookup extends \Flexio\Jobs\Base
             $lookup_index[json_encode($key)] = $lookup_row;
         }
 
-        // get the lookup values for the input
-        $lookup_result = array();
-        $default_values = array_fill(0, count($return_columns), null);
+        // TODO: array version that allows multiple lookups from one input param
+        // // get the lookup values for the input
+        //$lookup_values = lookup_values[0];
 
-        foreach ($lookup_values as $l)
-        {
-            $l = json_encode($l);
+        // $lookup_result = array();
+        // $default_values = array_fill(0, count($return_columns), null);
 
-            if (!array_key_exists($l, $lookup_index))
-                $lookup_result[] = $default_values;
-             else
-                $lookup_result[] = array_values(\Flexio\Base\Util::filterArray($lookup_index[$l], $return_columns));
-        }
+        // foreach ($lookup_values as $l)
+        // {
+        //     $l = json_encode($l);
+        //     if (!array_key_exists($l, $lookup_index))
+        //         $lookup_result[] = $default_values;
+        //      else
+        //         $lookup_result[] = array_values(\Flexio\Base\Util::filterArray($lookup_index[$l], $return_columns));
+        // }
+
+        // single result lookup version
+        $lookup_values = json_encode($lookup_values);
+        if (!array_key_exists($lookup_values, $lookup_index))
+            $lookup_result[] = $default_values;
+            else
+            $lookup_result[] = array_values(\Flexio\Base\Util::filterArray($lookup_index[$lookup_values], $return_columns));
 
         $streamwriter = $outstream->getWriter();
         $streamwriter->write(json_encode($lookup_result));
