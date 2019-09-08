@@ -36,6 +36,8 @@
         </el-select>
       </el-form-item>
       <el-form-item
+        class="w-100"
+        style="margin-bottom: 0"
         key="path"
         prop="path"
         label="Remote script path or URL"
@@ -62,6 +64,7 @@
       </el-form-item>
       <el-form-item
         class="w-100"
+        style="margin-bottom: 0"
         key="code"
         prop="code"
         label="Code"
@@ -78,7 +81,7 @@
       </el-form-item>
     </el-form>
     <div
-      class="mt3 w-100 flex flex-row justify-end"
+      class="mt4 w-100 flex flex-row justify-end"
       v-show="isEditing"
     >
       <el-button

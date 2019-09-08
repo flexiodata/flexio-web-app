@@ -282,14 +282,14 @@
 
 <style lang="stylus" scoped>
   .pipe-header
-    margin-bottom: 60px
+    margin-bottom: 48px
 
   .pipe-section
-    margin-top: 24px
+    margin-top: 48px
     margin-bottom: 24px
 
   .pipe-section-title
-    margin-bottom: 24px
+    margin-bottom: 20px
 
   .pipe-editable
     padding: 0
