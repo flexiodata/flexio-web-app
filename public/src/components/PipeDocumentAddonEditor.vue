@@ -254,7 +254,7 @@
         if (arr.length > 0) {
           arr.pop()
         }
-        var param_names = _.map(arr, param => param.name)
+        var param_names = _.map(arr, param => param.required === false ? '[' + param.name + ']' : param.name)
         return param_names.join(', ')
       },
       syntax_str() {
