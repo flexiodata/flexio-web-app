@@ -320,6 +320,9 @@
         edit_attrs.params = this.params
         edit_attrs.params.pop()
 
+        // don't allow parameters that don't have a name
+        _.remove(edit_attrs.params, param => param.name.length == 0)
+
         // remove ghost row example
         edit_attrs.examples = this.examples
         edit_attrs.examples.pop()
