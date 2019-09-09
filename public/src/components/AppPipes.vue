@@ -46,12 +46,20 @@
 
           <!-- list -->
           <div style="max-width: 20rem" v-bar>
-            <div>
-              <div
+            <el-collapse
+              class="el-collapse--plain el-collapse--arrow-left"
+              v-model="expanded_groups"
+            >
+              <el-collapse-item
                 :key="group.id"
+                :name="group.id"
                 v-for="group in grouped_pipes"
               >
-                <div class="pa2 flex flex-row items-center">
+                <div
+                  class="flex flex-row items-center"
+                  style="padding: 0 8px 0 10px"
+                  slot="title"
+                >
                   <ServiceIcon
                     class="br1 square-2"
                     style="margin-right: 8px"
@@ -61,7 +69,7 @@
                   />
                   <i
                     class="material-icons"
-                    style="margin-right: 6px"
+                    style="margin-right: 8px"
                     v-else
                   >
                     home
@@ -71,7 +79,10 @@
                     trigger="click"
                     v-show="group.id != 'local'"
                   >
-                    <span class="el-dropdown-link pointer mr2">
+                    <span
+                      class="el-dropdown-link pointer mr2"
+                      @click.stop
+                    >
                       <svg class="octicon octicon-gear" viewBox="0 0 14 16" version="1.1" width="14" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M14 8.77v-1.6l-1.94-.64-.45-1.09.88-1.84-1.13-1.13-1.81.91-1.09-.45-.69-1.92h-1.6l-.63 1.94-1.11.45-1.84-.88-1.13 1.13.91 1.81-.45 1.09L0 7.23v1.59l1.94.64.45 1.09-.88 1.84 1.13 1.13 1.81-.91 1.09.45.69 1.92h1.59l.63-1.94 1.11-.45 1.84.88 1.13-1.13-.92-1.81.47-1.09L14 8.75v.02zM7 11c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"></path></svg>
                     </span>
                     <el-dropdown-menu style="min-width: 10rem" slot="dropdown">
@@ -97,9 +108,9 @@
                     </el-dropdown-menu>
                   </el-dropdown>
                 </div>
+
                 <div
-                  class="pt1 pb3"
-                  style="padding-left: 17px; padding-right: 0px; margin: 0 12px 0 3px; font-size: 13px"
+                  style="padding: 2px 0 2px 12px; margin: 0 12px 0 8px; font-size: 13px"
                   v-if="isFunctionMountSyncing(group.connection)"
                 >
                   <div class="flex flex-row items-center">
@@ -109,16 +120,15 @@
                   <div class="pt2 lh-title silver i">NOTE: Importing from a function mount may take awhile to complete</div>
                 </div>
                 <div
-                  class="pt1 pb3 lh-title silver i"
-                  style="padding-left: 17px; padding-right: 0px; margin: 0 12px 0 3px; font-size: 13px"
+                  class="lh-title silver i"
+                  style="padding: 2px 0 2px 12px; margin: 0 12px 0 8px; font-size: 13px"
                   v-else-if="group.pipes.length == 0"
                 >
                   <span v-if="pipe_list_filter.length > 0">There are no functions that match the search criteria</span>
                   <span v-else>There are no functions to show</span>
                 </div>
                 <PipeList
-                  class="mb3"
-                  item-style="padding-left: 17px; padding-right: 0px; margin: 0 12px 0 3px"
+                  item-style="padding: 2px 0 2px 12px; margin: 0 12px 0 8px"
                   item-size="mini"
                   :items="group.pipes"
                   :selected-item.sync="pipe"
@@ -127,8 +137,8 @@
                   @item-delete="tryDeletePipe"
                   v-else
                 />
-              </div>
-            </div>
+              </el-collapse-item>
+            </el-collapse>
           </div>
         </div>
 
@@ -292,9 +302,11 @@ def flex_handler(flex):
     data() {
       return {
         is_selecting: false,
+        show_test_panel: false,
         pipe_list_filter: '',
         pipe: {},
         last_selected: {},
+        expanded_groups: [],
         show_pipe_dialog: false,
         pipe_edit_mode: 'add',
         edit_connection: null,
@@ -305,7 +317,6 @@ def flex_handler(flex):
         new_connection_attrs: {
           connection_mode: CONNECTION_MODE_FUNCTION
         },
-        show_test_panel: false
       }
     },
     computed: {
@@ -374,6 +385,7 @@ def flex_handler(flex):
       this.tryFetchPipes()
     },
     mounted() {
+      this.initSelf()
       this.$store.track('Visited Functions Page')
     },
     methods: {
@@ -386,6 +398,10 @@ def flex_handler(flex):
       ...mapGetters('connections', {
         'getAvailableFunctionMounts': 'getAvailableFunctionMounts'
       }),
+      initSelf() {
+        // make sure all nodes on the collapser are expanded by default
+        this.expanded_groups = _.map(this.grouped_pipes, g => g.id)
+      },
       tryFetchPipes() {
         var team_name = this.active_team_name
 
@@ -442,7 +458,10 @@ def flex_handler(flex):
           cancelButtonText: 'Cancel',
           dangerouslyUseHTMLString: true
         }).then(() => {
-          this.$store.dispatch('connections/delete', { team_name, eid })
+          this.$store.dispatch('connections/delete', { team_name, eid }).then(response => {
+            // remove the item from the list of open collapser items
+            _.remove(this.expanded_groups, item => item == eid)
+          })
         })
       },
       syncFunctionMount(connection) {
@@ -451,6 +470,11 @@ def flex_handler(flex):
 
         this.$store.dispatch('connections/sync', { team_name, eid })
         this.show_connection_dialog = false
+
+        // add the item to the list of open collapser items
+        if (this.expanded_groups.indexOf(eid) == -1) {
+          this.expanded_groups = this.expanded_groups.concat([eid])
+        }
       },
       editFunctionMount(connection) {
         this.edit_connection = connection
