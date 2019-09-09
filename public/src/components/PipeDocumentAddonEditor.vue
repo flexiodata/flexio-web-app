@@ -232,7 +232,7 @@
   }
 
   const newParam = (param) => {
-    return _.assign({ name: '', type: 'string', description: '', required: true }, param)
+    return _.assign({ name: '', type: '', description: '', required: true }, param)
   }
 
   // make sure 'gfm' and 'breaks' are both set to true
