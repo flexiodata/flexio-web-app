@@ -56,7 +56,7 @@
               />
               <el-input
                 class="ml2"
-                style="line-height: normal; width: 25%"
+                style="line-height: normal; width: 20%"
                 size="small"
                 placeholder="Type"
                 auto-complete="off"
@@ -66,7 +66,7 @@
               />
               <el-input
                 class="ml2"
-                style="line-height: normal; width: 50%"
+                style="line-height: normal; width: 55%"
                 size="small"
                 placeholder="Description"
                 auto-complete="off"
@@ -77,8 +77,8 @@
                 class="ml2"
                 style="line-height: normal"
                 v-model="params[index].required"
-                >
-                Required
+              >
+                <span style="font-size: 13px">Required</span>
               </el-checkbox>
               <div
                 class="ml3 pointer f3 black-30 hover-black-60"
