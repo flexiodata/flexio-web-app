@@ -78,32 +78,34 @@
             </el-button>
           </div>
         </div>
-        <PipeDocumentTaskExtract
-          :task="pipe_task"
-          :is-editing.sync="is_task_editing"
-          :is-save-allowed.sync="is_task_save_allowed"
-          @save-click="updateTask"
-          v-if="pipe_task_type == 'extract'"
-        />
-        <PipeDocumentTaskLookup
-          :task="pipe_task"
-          :is-editing.sync="is_task_editing"
-          :is-save-allowed.sync="is_task_save_allowed"
-          @save-click="updateTask"
-          v-else-if="pipe_task_type == 'lookup'"
-        />
-        <PipeDocumentTaskExecute
-          :task="pipe_task"
-          :is-editing.sync="is_task_editing"
-          :is-save-allowed.sync="is_task_save_allowed"
-          @save-click="updateTask"
-          v-else-if="pipe_task_type == 'execute'"
-        />
-        <div
-          class="f6 fw4 lh-copy moon-gray"
-          v-else
-        >
-          <em>(Unknown task)</em>
+        <div class="pipe-section-body">
+          <PipeDocumentTaskExtract
+            :task="pipe_task"
+            :is-editing.sync="is_task_editing"
+            :is-save-allowed.sync="is_task_save_allowed"
+            @save-click="updateTask"
+            v-if="pipe_task_type == 'extract'"
+          />
+          <PipeDocumentTaskLookup
+            :task="pipe_task"
+            :is-editing.sync="is_task_editing"
+            :is-save-allowed.sync="is_task_save_allowed"
+            @save-click="updateTask"
+            v-else-if="pipe_task_type == 'lookup'"
+          />
+          <PipeDocumentTaskExecute
+            :task="pipe_task"
+            :is-editing.sync="is_task_editing"
+            :is-save-allowed.sync="is_task_save_allowed"
+            @save-click="updateTask"
+            v-else-if="pipe_task_type == 'execute'"
+          />
+          <div
+            class="f6 fw4 lh-copy moon-gray"
+            v-else
+          >
+            <em>(Unknown task)</em>
+          </div>
         </div>
       </el-collapse-item>
 
@@ -133,12 +135,14 @@
             </el-button>
           </div>
         </div>
-        <PipeDocumentAddonEditor
-          :pipe-eid="pipeEid"
-          :is-editing.sync="is_addon_editing"
-          @edit-click="is_addon_editing = true"
-          @save-click="updateAddOnSettings"
-        />
+        <div class="pipe-section-body">
+          <PipeDocumentAddonEditor
+            :pipe-eid="pipeEid"
+            :is-editing.sync="is_addon_editing"
+            @edit-click="is_addon_editing = true"
+            @save-click="updateAddOnSettings"
+          />
+        </div>
       </el-collapse-item>
     </el-collapse>
   </div>
@@ -298,21 +302,23 @@
   .pipe-section
     margin-top: 24px
     margin-bottom: 24px
+    padding-right: 24px
 
   .pipe-section-title
-    transition: all 0.15s ease
+    transition: all .3s
     min-height: 48px
     padding-left: 10px
     position: relative
     left: 0
 
+  .pipe-section-body
+    transition: all .3s
+    padding-left: 24px
+
   .pipe-editable
-    padding: 0
-    transition: all 0.15s ease
+    transition: all .3s
     &.is-editing
-      padding: 24px
-      padding-top: 12px
-      padding-bottom: 0 // compensate for `.el-collapse-item__content` bottom padding
+      padding: 12px 24px 0 // compensate for `.el-collapse-item__content` bottom padding
       position: relative
       border-radius: 3px
       box-shadow: 0 0 0 1px rgba(64, 158, 255, 1), 0 0 0 5px rgba(64, 158, 255, 0.4)
@@ -320,5 +326,8 @@
       .pipe-section-title
         padding-left: 0
         left: -13px // compensate for hidden `el-collapse-item__arrow`
+
+      .pipe-section-body
+        padding-left: 0
 
 </style>
