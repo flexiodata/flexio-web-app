@@ -139,7 +139,6 @@
           <PipeDocumentAddonEditor
             :pipe-eid="pipeEid"
             :is-editing.sync="is_addon_editing"
-            @edit-click="is_addon_editing = true"
             @save-click="updateAddOnSettings"
           />
         </div>

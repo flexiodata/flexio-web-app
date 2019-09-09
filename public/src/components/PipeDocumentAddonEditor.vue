@@ -168,21 +168,7 @@
       >
         <h2 v-if="edit_pipe.title.length > 0">{{edit_pipe.title}}</h2>
         <h2 v-else>{{edit_pipe.name}}</h2>
-        <div
-          v-html="html_description"
-          v-if="edit_pipe.description.length > 0"
-        ></div>
-        <div v-else>
-          <el-button
-            type="text"
-            style="padding: 0; border: 0; font-weight: 600"
-            @click="$emit('edit-click', 'description')"
-          >
-            Add a description
-          </el-button>
-          &mdash;
-          <em>Styling with Markdown is supported</em>
-        </div>
+        <div v-html="html_description"></div>
         <h3>Syntax</h3>
         <p><code>{{syntax_str}}</code></p>
         <h3>Sample Usage</h3>
@@ -190,21 +176,7 @@
         <h3>Parameters</h3>
         <div v-html="html_params"></div>
         <h3>Notes</h3>
-        <div
-          v-if="edit_pipe.notes.length > 0"
-          v-html="html_notes"
-        ></div>
-        <div v-else>
-          <el-button
-            type="text"
-            style="padding: 0; border: 0; font-weight: 600"
-            @click="$emit('edit-click', 'notes')"
-          >
-            Add notes
-          </el-button>
-          &mdash;
-          <em>Styling with Markdown is supported</em>
-        </div>
+        <div v-html="html_notes"></div>
       </div>
     </div>
   </div>
