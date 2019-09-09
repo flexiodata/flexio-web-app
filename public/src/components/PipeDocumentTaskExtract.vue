@@ -23,7 +23,7 @@
             slot="append"
             class="ttu fw6"
             :fileChooserOptions="{
-              filetypeFilter: ['csv','icsv']
+              filetypeFilter: ['csv','icsv','xls','xlsx']
             }"
             @paths-selected="onPathsSelected"
           >
