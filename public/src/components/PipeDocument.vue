@@ -58,7 +58,7 @@
       }"
     >
       <div class="flex flex-row items-center pb2 bb b--black-10 pipe-section-title">
-        <div class="flex-fill f4 fw6 lh-title">Function Configuration</div>
+        <div class="flex-fill f4 fw6 lh-title">Configuration</div>
         <div class="flex-none">
           <el-button
             style="padding: 0"
@@ -109,7 +109,7 @@
       }"
     >
       <div class="flex flex-row items-center pb2 bb b--black-10 pipe-section-title">
-        <div class="flex-fill f4 fw6 lh-title">Add-on Configuration</div>
+        <div class="flex-fill f4 fw6 lh-title">Documentation</div>
         <div class="flex-none">
           <el-button
             style="padding: 0"
