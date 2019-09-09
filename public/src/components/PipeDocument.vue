@@ -65,7 +65,7 @@
           class="flex flex-row items-center pipe-section-title"
           slot="title"
         >
-          <div class="flex-fill f4 fw6 lh-title">Configuration</div>
+          <div class="flex-fill f4 fw6 lh-title">Definition</div>
           <div class="flex-none">
             <el-button
               style="padding: 0"
