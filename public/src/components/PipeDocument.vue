@@ -55,7 +55,7 @@
       <!-- configuration -->
       <el-collapse-item
         name="configuration"
-        class="pipe-section pipe-editable"
+        class="pipe-section pipe-section-editable"
         :class="{
           'o-40 no-pointer-events no-select': is_addon_editing,
           'is-editing': is_task_editing
@@ -112,7 +112,7 @@
       <!-- description -->
       <el-collapse-item
         name="documentation"
-        class="pipe-section pipe-editable"
+        class="pipe-section pipe-section-editable"
         :class="{
           'o-40 no-pointer-events no-select': is_task_editing,
           'is-editing': is_addon_editing
@@ -315,7 +315,7 @@
     transition: all .3s
     padding-left: 24px
 
-  .pipe-editable
+  .pipe-section-editable
     transition: all .3s
     &.is-editing
       padding: 12px 24px 0 // compensate for `.el-collapse-item__content` bottom padding
