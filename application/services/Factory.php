@@ -40,6 +40,7 @@ class Factory
     public const TYPE_PIPELINEDEALS       = 'pipelinedeals';
     public const TYPE_MAILJET             = 'mailjet';
     public const TYPE_TWILIO              = 'twilio';
+    public const TYPE_LINKEDIN            = 'linkedin';
     public const TYPE_KEYRING             = 'keyring'; // general purpose set of key values; here as a place holder constant to match UI
 
 
@@ -196,6 +197,16 @@ class Factory
                 if (isset($connection_info['expires'])) $auth_params['expires'] = $connection_info['expires'];
                 $service = \Flexio\Services\GitHub::create($auth_params);
                 break;
+
+            case self::TYPE_LINKEDIN:
+                $auth_params = array(
+                    'access_token' => $connection_info['access_token'] ?? '',
+                    'refresh_token' => $connection_info['refresh_token'] ?? '',
+                    'base_path' => $connection_info['base_path'] ?? ''
+                );
+                if (isset($connection_info['expires'])) $auth_params['expires'] = $connection_info['expires'];
+                $service = \Flexio\Services\LinkedIn::create($auth_params);
+            break;
 
             case self::TYPE_SMTP:
             case self::TYPE_EMAIL:
