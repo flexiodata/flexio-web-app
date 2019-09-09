@@ -295,9 +295,11 @@
         return marked(this.edit_pipe.notes)
       },
       html_params() {
-        var markdown = ''
+        var markdown = '' +
+          'Property|Type|Description|Required\n' +
+          '--------|----|-----------|--------\n'
         _.each(this.edit_pipe.params, p => {
-          markdown += '* `' + p.name + '`: ' + p.description + (!p.required ? ' (optional)' : '') + '\n'
+          markdown += '`' + p.name + '`|' + p.type + '|' + p.description + '|' + (p.required ? 'true' : 'false') + '\n'
         })
         return marked(markdown)
       },
