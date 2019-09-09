@@ -275,7 +275,10 @@
       },
       html_examples() {
         var examples = _.map(this.edit_pipe.examples, example => getSyntaxStr(this.active_team_name, this.pipe.name, example) )
-        var markdown = '`' + examples.join('`\n`') + '`'
+        var markdown = ''
+        _.each(examples, example => {
+          markdown += '`' + example + '`\n'
+        })
         return marked(markdown)
       },
     },
