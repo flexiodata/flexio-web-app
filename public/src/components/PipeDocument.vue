@@ -297,7 +297,7 @@
 
 <style lang="stylus" scoped>
   .pipe-header
-    margin-bottom: 48px
+    margin-bottom: 24px
 
   .pipe-section
     margin-top: 24px
