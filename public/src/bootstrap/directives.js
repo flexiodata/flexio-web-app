@@ -90,6 +90,15 @@ Vue.directive('require-rights', {
   }
 })
 
+Vue.directive('deferred-focus', {
+  // when the bound element is inserted into the DOM...
+  inserted: function(el, binding) {
+    // ...focus the element after a delay (in milliseconds)
+    var delay = typeof binding.value == 'number' ? binding.value : 10
+    setTimeout(() => { el.focus() }, delay)
+  }
+})
+
 /*
 import Vue from 'vue'
 
