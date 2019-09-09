@@ -166,8 +166,7 @@
         class="markdown br2 pa4"
         style="border: 1px solid #dcdfe6"
       >
-        <h2 v-if="edit_pipe.title.length > 0">{{edit_pipe.title}}</h2>
-        <h2 v-else>{{edit_pipe.name}}</h2>
+        <h2>{{addon_title}}</h2>
         <div v-html="html_description"></div>
         <h3>Syntax</h3>
         <p><code>{{syntax_str}}</code></p>
@@ -259,6 +258,9 @@
       },
       syntax_str() {
         return getSyntaxStr(this.active_team_name, this.pipe.name, this.params_syntax_str)
+      },
+      addon_title() {
+        return this.edit_pipe.title.length > 0 ? this.edit_pipe.title : this.edit_pipe.name
       },
       html_description() {
         return marked(this.edit_pipe.description)
