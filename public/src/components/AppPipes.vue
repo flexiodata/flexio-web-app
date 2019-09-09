@@ -51,6 +51,7 @@
               v-model="expanded_groups"
             >
               <el-collapse-item
+              style="margin-left: 8px"
                 :key="group.id"
                 :name="group.id"
                 v-for="group in grouped_pipes"
@@ -110,7 +111,7 @@
                 </div>
 
                 <div
-                  style="padding: 2px 0 2px 12px; margin: 0 12px 0 8px; font-size: 13px"
+                  style="padding: 2px 0 2px 12px; margin: 0 12px 0 0; font-size: 13px"
                   v-if="isFunctionMountSyncing(group.connection)"
                 >
                   <div class="flex flex-row items-center">
@@ -121,14 +122,14 @@
                 </div>
                 <div
                   class="lh-title silver i"
-                  style="padding: 2px 0 2px 12px; margin: 0 12px 0 8px; font-size: 13px"
+                  style="padding: 2px 0 2px 12px; margin: 0 12px 0 0; font-size: 13px"
                   v-else-if="group.pipes.length == 0"
                 >
                   <span v-if="pipe_list_filter.length > 0">There are no functions that match the search criteria</span>
                   <span v-else>There are no functions to show</span>
                 </div>
                 <PipeList
-                  item-style="padding: 2px 0 2px 12px; margin: 0 12px 0 8px"
+                  item-style="padding: 2px 0 2px 12px; margin: 0 12px 0 0"
                   item-size="mini"
                   :items="group.pipes"
                   :selected-item.sync="pipe"

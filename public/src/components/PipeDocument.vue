@@ -48,90 +48,99 @@
       </div>
     </div>
 
-
-    <!-- configuration -->
-    <div
-      class="pipe-section pipe-editable"
-      :class="{
-        'o-40 no-pointer-events no-select': is_addon_editing,
-        'is-editing': is_task_editing
-      }"
+    <el-collapse
+      class="el-collapse--plain el-collapse--arrow-left"
+      v-model="expanded_sections"
     >
-      <div class="flex flex-row items-center pb2 bb b--black-10 pipe-section-title">
-        <div class="flex-fill f4 fw6 lh-title">Configuration</div>
-        <div class="flex-none">
-          <el-button
-            style="padding: 0"
-            type="text"
-            @click="is_task_editing = true"
-            v-show="!is_task_editing"
-            v-require-rights:pipe.update
-          >
-            Edit
-          </el-button>
-        </div>
-      </div>
-      <PipeDocumentTaskExtract
-        :task="pipe_task"
-        :is-editing.sync="is_task_editing"
-        :is-save-allowed.sync="is_task_save_allowed"
-        @save-click="updateTask"
-        v-if="pipe_task_type == 'extract'"
-      />
-      <PipeDocumentTaskLookup
-        :task="pipe_task"
-        :is-editing.sync="is_task_editing"
-        :is-save-allowed.sync="is_task_save_allowed"
-        @save-click="updateTask"
-        v-else-if="pipe_task_type == 'lookup'"
-      />
-      <PipeDocumentTaskExecute
-        :task="pipe_task"
-        :is-editing.sync="is_task_editing"
-        :is-save-allowed.sync="is_task_save_allowed"
-        @save-click="updateTask"
-        v-else-if="pipe_task_type == 'execute'"
-      />
-      <div
-        class="f6 fw4 lh-copy moon-gray"
-        v-else
+      <!-- configuration -->
+      <el-collapse-item
+        name="configuration"
+        class="pipe-section pipe-editable"
+        :class="{
+          'o-40 no-pointer-events no-select': is_addon_editing,
+          'is-editing': is_task_editing
+        }"
       >
-        <em>(Unknown task)</em>
-      </div>
-    </div>
+        <div
+          class="flex flex-row items-center pipe-section-title"
+          slot="title"
+        >
+          <div class="flex-fill f4 fw6 lh-title">Configuration</div>
+          <div class="flex-none">
+            <el-button
+              style="padding: 0"
+              type="text"
+              @click.stop="is_task_editing = true"
+              v-show="!is_task_editing"
+              v-require-rights:pipe.update
+            >
+              Edit
+            </el-button>
+          </div>
+        </div>
+        <PipeDocumentTaskExtract
+          :task="pipe_task"
+          :is-editing.sync="is_task_editing"
+          :is-save-allowed.sync="is_task_save_allowed"
+          @save-click="updateTask"
+          v-if="pipe_task_type == 'extract'"
+        />
+        <PipeDocumentTaskLookup
+          :task="pipe_task"
+          :is-editing.sync="is_task_editing"
+          :is-save-allowed.sync="is_task_save_allowed"
+          @save-click="updateTask"
+          v-else-if="pipe_task_type == 'lookup'"
+        />
+        <PipeDocumentTaskExecute
+          :task="pipe_task"
+          :is-editing.sync="is_task_editing"
+          :is-save-allowed.sync="is_task_save_allowed"
+          @save-click="updateTask"
+          v-else-if="pipe_task_type == 'execute'"
+        />
+        <div
+          class="f6 fw4 lh-copy moon-gray"
+          v-else
+        >
+          <em>(Unknown task)</em>
+        </div>
+      </el-collapse-item>
 
-    <!-- description -->
-    <div
-      class="pipe-section pipe-editable"
-      :class="{
-        'o-40 no-pointer-events no-select': is_task_editing,
-        'is-editing': is_addon_editing
-      }"
-    >
-      <div class="flex flex-row items-center pb2 bb b--black-10 pipe-section-title">
-        <div class="flex-fill f4 fw6 lh-title">Documentation</div>
-        <div class="flex-none">
-          <el-button
-            style="padding: 0"
-            type="text"
-            @click="is_addon_editing = true"
-            v-show="!is_addon_editing"
-            v-require-rights:pipe.update
-          >
-            Edit
-          </el-button>
-        </div>
-      </div>
-      <PipeDocumentAddonEditor
-        :pipe-eid="pipeEid"
-        :is-editing.sync="is_addon_editing"
-        @edit-click="is_addon_editing = true"
-        @save-click="updateAddOnSettings"
+      <!-- description -->
+      <el-collapse-item
+        name="documentation"
+        class="pipe-section pipe-editable"
+        :class="{
+          'o-40 no-pointer-events no-select': is_task_editing,
+          'is-editing': is_addon_editing
+        }"
       >
-        <h3 slot="title">Description</h3>
-        <span slot="empty"><em>(No syntax)</em></span>
-      </PipeDocumentAddonEditor>
-    </div>
+        <div
+          class="flex flex-row items-center pipe-section-title"
+          slot="title"
+        >
+          <div class="flex-fill f4 fw6 lh-title">Documentation</div>
+          <div class="flex-none">
+            <el-button
+              style="padding: 0"
+              type="text"
+              @click.stop="is_addon_editing = true"
+              v-show="!is_addon_editing"
+              v-require-rights:pipe.update
+            >
+              Edit
+            </el-button>
+          </div>
+        </div>
+        <PipeDocumentAddonEditor
+          :pipe-eid="pipeEid"
+          :is-editing.sync="is_addon_editing"
+          @edit-click="is_addon_editing = true"
+          @save-click="updateAddOnSettings"
+        />
+      </el-collapse-item>
+    </el-collapse>
   </div>
 </template>
 
@@ -180,6 +189,7 @@
         is_task_editing: false,
         is_addon_editing: false,
         is_notes_editing: false,
+        expanded_sections: ['configuration', 'documentation'],
       }
     },
     computed: {
@@ -286,18 +296,23 @@
     margin-bottom: 48px
 
   .pipe-section
-    margin-top: 48px
+    margin-top: 24px
     margin-bottom: 24px
 
   .pipe-section-title
-    margin-bottom: 20px
+    padding-left: 10px
+    min-height: 48px
 
   .pipe-editable
     padding: 0
     transition: all 0.15s ease
     &.is-editing
       padding: 24px
+      padding-top: 12px
+      padding-bottom: 0 // compensate for `.el-collapse-item__content` bottom padding
       position: relative
       border-radius: 3px
       box-shadow: 0 0 0 1px rgba(64, 158, 255, 1), 0 0 0 5px rgba(64, 158, 255, 0.4)
+      .el-collapse-item__arrow
+        display: none
 </style>
