@@ -26,7 +26,7 @@
         >
           <CodeEditor
             class="bg-white"
-            style="line-height: 1.15; font-size: 13px; border: 1px solid #dcdfe6"
+            style="line-height: 1.15; font-size: 13px; padding: 4px; border: 1px solid #dcdfe6; border-radius: 4px"
             lang="markdown"
             :options="{
               lineNumbers: false,
@@ -131,7 +131,7 @@
         >
           <CodeEditor
             class="bg-white"
-            style="line-height: 1.15; font-size: 13px; border: 1px solid #dcdfe6"
+            style="line-height: 1.15; font-size: 13px; padding: 4px; border: 1px solid #dcdfe6; border-radius: 4px"
             lang="markdown"
             :options="{
               lineNumbers: false,
