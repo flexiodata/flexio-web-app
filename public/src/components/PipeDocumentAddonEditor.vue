@@ -22,11 +22,35 @@
         <el-form-item
           key="description"
           prop="description"
-          label="Description"
         >
+          <div class="flex flex-row items-center el-form__label-tiny cf">
+            <label class="el-form-item__label">Description</label>
+            <div class="flex-fill"></div>
+            <a
+              href="https://guides.github.com/features/mastering-markdown/"
+              class="flex flex-row items-center link blue underline-hover"
+              style="line-height: 1.5; font-size: 12px; outline: none"
+              title="Visit GitHub to learn Markdown"
+              target="_blank"
+            >
+              <svg
+                class="octicon octicon-markdown"
+                style="margin-right: 3px"
+                viewBox="0 0 16 16"
+                version="1.1"
+                width="16"
+                height="16"
+                aria-hidden="true"
+              >
+                <path fill-rule="evenodd" d="M14.85 3H1.15C.52 3 0 3.52 0 4.15v7.69C0 12.48.52 13 1.15 13h13.69c.64 0 1.15-.52 1.15-1.15v-7.7C16 3.52 15.48 3 14.85 3zM9 11H7V8L5.5 9.92 4 8v3H2V5h2l1.5 2L7 5h2v6zm2.99.5L9.5 8H11V5h2v3h1.5l-2.51 3.5z"></path>
+              </svg>
+              <span>Styling with Markdown is supported</span>
+            </a>
+          </div>
           <CodeEditor
             class="bg-white"
             style="line-height: 1.15; font-size: 13px; padding: 4px; border: 1px solid #dcdfe6; border-radius: 4px"
+            placeholder="Add a description"
             lang="markdown"
             :options="{
               lineNumbers: false,
@@ -127,11 +151,35 @@
         <el-form-item
           key="notes"
           prop="notes"
-          label="Notes"
         >
+          <div class="flex flex-row items-center el-form__label-tiny cf">
+            <label class="el-form-item__label">Notes</label>
+            <div class="flex-fill"></div>
+            <a
+              href="https://guides.github.com/features/mastering-markdown/"
+              class="flex flex-row items-center link blue underline-hover"
+              style="line-height: 1.5; font-size: 12px; outline: none"
+              title="Visit GitHub to learn Markdown"
+              target="_blank"
+            >
+              <svg
+                class="octicon octicon-markdown"
+                style="margin-right: 3px"
+                viewBox="0 0 16 16"
+                version="1.1"
+                width="16"
+                height="16"
+                aria-hidden="true"
+              >
+                <path fill-rule="evenodd" d="M14.85 3H1.15C.52 3 0 3.52 0 4.15v7.69C0 12.48.52 13 1.15 13h13.69c.64 0 1.15-.52 1.15-1.15v-7.7C16 3.52 15.48 3 14.85 3zM9 11H7V8L5.5 9.92 4 8v3H2V5h2l1.5 2L7 5h2v6zm2.99.5L9.5 8H11V5h2v3h1.5l-2.51 3.5z"></path>
+              </svg>
+              <span>Styling with Markdown is supported</span>
+            </a>
+          </div>
           <CodeEditor
             class="bg-white"
             style="line-height: 1.15; font-size: 13px; padding: 4px; border: 1px solid #dcdfe6; border-radius: 4px"
+            placeholder="Add additional notes"
             lang="markdown"
             :options="{
               lineNumbers: false,
