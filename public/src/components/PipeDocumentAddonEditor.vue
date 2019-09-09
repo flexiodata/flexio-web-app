@@ -172,7 +172,7 @@
         <h3>Syntax</h3>
         <p><code>{{syntax_str}}</code></p>
         <h3>Parameters</h3>
-        <div v-html="html_params" v-if="edit_pipe.params.length > 0"></div>
+        <div v-html="html_params"></div>
         <h3>Sample Usage</h3>
         <div v-html="html_examples"></div>
         <h3>Notes</h3>
@@ -267,6 +267,10 @@
         return marked(this.edit_pipe.notes)
       },
       html_params() {
+        if (this.edit_pipe.params.length == 0) {
+          return ''
+        }
+
         var markdown = '' +
           'Property|Type|Description|Required\n' +
           '--------|----|-----------|--------\n'
