@@ -300,8 +300,11 @@
     margin-bottom: 24px
 
   .pipe-section-title
-    padding-left: 10px
+    transition: all 0.15s ease
     min-height: 48px
+    padding-left: 10px
+    position: relative
+    left: 0
 
   .pipe-editable
     padding: 0
@@ -313,6 +316,9 @@
       position: relative
       border-radius: 3px
       box-shadow: 0 0 0 1px rgba(64, 158, 255, 1), 0 0 0 5px rgba(64, 158, 255, 0.4)
-      .el-collapse-item__arrow
-        display: none
+
+      .pipe-section-title
+        padding-left: 0
+        left: -13px // compensate for hidden `el-collapse-item__arrow`
+
 </style>
