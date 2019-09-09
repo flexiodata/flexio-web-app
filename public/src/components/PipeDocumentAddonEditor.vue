@@ -171,10 +171,10 @@
         <div v-html="html_description"></div>
         <h3>Syntax</h3>
         <p><code>{{syntax_str}}</code></p>
-        <h3>Sample Usage</h3>
-        <div v-html="html_examples"></div>
         <h3>Parameters</h3>
         <div v-html="html_params"></div>
+        <h3>Sample Usage</h3>
+        <div v-html="html_examples"></div>
         <h3>Notes</h3>
         <div v-html="html_notes"></div>
       </div>
