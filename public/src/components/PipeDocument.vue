@@ -176,7 +176,7 @@
     data() {
       return {
         is_local_fetching: false,
-        is_task_save_allowed: false,
+        is_task_save_allowed: true, // we removed validation for now, so always allow tasks to be saved
         is_task_editing: false,
         is_addon_editing: false,
         is_notes_editing: false,
