@@ -133,7 +133,7 @@
                 @input="onExampleItemChange"
                 v-model="examples[index]"
               >
-                <template slot="prepend">=FLEX("team/function"</template>
+                <template slot="prepend">{{syntax_prefix_str}}{{examples[index].trim().length > 0 ? ',' : '&nbsp;'}}</template>
                 <template slot="append">)</template>
               </el-input>
               <div
@@ -303,6 +303,9 @@
         }
         var param_names = _.map(arr, param => param.required === false ? '[' + param.name + ']' : param.name)
         return param_names.join(', ')
+      },
+      syntax_prefix_str() {
+        return getSyntaxStr(this.active_team_name, this.pipe.name, '').slice(0, -1)
       },
       syntax_str() {
         return getSyntaxStr(this.active_team_name, this.pipe.name, this.params_syntax_str)
