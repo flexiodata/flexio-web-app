@@ -149,7 +149,8 @@
 
 <script>
   import { mapState } from 'vuex'
-  import { TASK_OP_LOOKUP } from '@/constants/task-op'
+  import { TASK_OP_EXTRACT, TASK_OP_LOOKUP } from '@/constants/task-op'
+  import { afterLast } from '@/utils'
   import Spinner from 'vue-simple-spinner'
   import LabelSwitch from '@/components/LabelSwitch'
   import PipeDocumentAddonEditor from '@/components/PipeDocumentAddonEditor'
@@ -294,6 +295,22 @@
               required: true
             }
           })
+        }
+
+        // if our pipe doesn't have a descriptipon yet and we're
+        // saving a lookup or extract task, generate a small default description
+        if (this.pipe.description.length == 0) {
+          if (new_task.op == TASK_OP_LOOKUP) {
+            var fields = _.map(new_task.lookup_keys, k => `\`${k}\``)
+            fields = fields.join(', ')
+
+            var columns = _.map(new_task.return_columns, k => `\`${k}\``)
+            columns = columns.join(', ')
+
+            var filename = afterLast(new_task.path, '/')
+
+            attrs.description = `Using the key fields ${fields}, return ${columns} from "${filename}".`
+          }
         }
 
         this.savePipe(attrs).then(response => {

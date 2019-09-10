@@ -13,6 +13,10 @@ export const afterFirst = (str, char) => {
   return afterNth(str, char, 1)
 }
 
+export const afterLast = (str, char) => {
+  return str.substring(str.lastIndexOf(char) + 1)
+}
+
 export const pluralize = (cnt, many_str, one_str, zero_str) => {
   cnt = parseInt(''+cnt)
   if (cnt > 1)  return many_str
