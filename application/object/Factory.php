@@ -197,8 +197,9 @@ class Factory
             // sample connection with data used for creating some sample functions
             array('eid_type' => \Model::TYPE_CONNECTION, 'path' => $demo_dir . 'connection_amazons3.json'),
 
-            // sample execute function
+            // sample execute functions
             array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_example_currency_rates.json'),
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_example_currency_converter.json'),
 
             // sample extract function
             array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_example_sales.json')
