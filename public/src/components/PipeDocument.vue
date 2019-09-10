@@ -339,7 +339,7 @@
         }
       },
       onEditTaskClick() {
-        this.tryScrollToElement(this.$refs['definition-section'], 600, 40)
+        this.tryScrollToElement(this.$refs['definition-section'], 600, 20)
         setTimeout(() => {
           this.is_task_editing = true
           if (this.expanded_sections.indexOf('definition') == -1) {
@@ -348,7 +348,7 @@
         }, 600)
       },
       onEditDocumentationClick() {
-        this.tryScrollToElement(this.$refs['documentation-section'], 600, 40)
+        this.tryScrollToElement(this.$refs['documentation-section'], 600, 20)
         setTimeout(() => {
           this.is_addon_editing = true
           if (this.expanded_sections.indexOf('documentation') == -1) {
