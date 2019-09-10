@@ -1,5 +1,5 @@
 export const getSyntaxStr = (team_name, pipe_name, syntax) => {
-  var suffix = syntax.length > 0 ? `, ${syntax}` : ''
+  var suffix = syntax.trim().length > 0 ? `, ${syntax}` : ''
   return `=FLEX("${team_name}/${pipe_name}"${suffix})`
 }
 
