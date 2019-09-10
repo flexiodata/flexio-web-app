@@ -290,17 +290,20 @@
             return {
               name: k,
               type: 'string',
-              description: '',
+              description: `The \`${k}\` column`,
               required: true
             }
           })
         }
 
-        this.savePipe(attrs)
+        this.savePipe(attrs).then(response => {
+          this.is_task_editing = false
+        })
       },
       updateAddOnSettings(new_attrs, old_pipe) {
-        this.savePipe(new_attrs)
-        this.is_addon_editing = false
+        this.savePipe(new_attrs).then(response => {
+          this.is_addon_editing = false
+        })
       },
       onEditClick() {
         this.$emit('edit-click', this.pipe)
