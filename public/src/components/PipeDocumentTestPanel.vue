@@ -33,7 +33,7 @@
     <!-- input panel -->
     <div
       class="flex-none pa2 overflow-y-auto"
-      style="max-height: 16rem"
+      style="max-height: 260px"
     >
       <ProcessInput
         ref="process-input"
