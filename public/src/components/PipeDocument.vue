@@ -52,9 +52,9 @@
       class="el-collapse--plain el-collapse--arrow-left"
       v-model="expanded_sections"
     >
-      <!-- definiton -->
+      <!-- definition -->
       <el-collapse-item
-        name="definiton"
+        name="definition"
         class="pipe-section pipe-section-editable"
         :class="{
           'o-40 no-pointer-events no-select': is_addon_editing,
@@ -63,6 +63,7 @@
       >
         <div
           class="flex flex-row items-center pipe-section-title"
+          ref="definition-section"
           slot="title"
         >
           <div class="flex-fill f4 fw6 lh-title">Definition</div>
@@ -120,6 +121,7 @@
       >
         <div
           class="flex flex-row items-center pipe-section-title"
+          ref="documentation-section"
           slot="title"
         >
           <div class="flex-fill f4 fw6 lh-title">Documentation</div>
@@ -148,6 +150,7 @@
 </template>
 
 <script>
+  import zenscroll from 'zenscroll'
   import { mapState } from 'vuex'
   import { TASK_OP_EXTRACT, TASK_OP_LOOKUP } from '@/constants/task-op'
   import { afterLast } from '@/utils'
@@ -167,6 +170,10 @@
       pipeEid: {
         type: String,
         required: true
+      },
+      scrollbarContainerId: {
+        type: String,
+        default: ''
       },
       showTestButton: {
         type: Boolean,
@@ -194,7 +201,7 @@
         is_task_editing: false,
         is_addon_editing: false,
         is_notes_editing: false,
-        expanded_sections: ['definiton', 'documentation'],
+        expanded_sections: ['definition', 'documentation'],
       }
     },
     computed: {
@@ -324,17 +331,30 @@
           this.is_addon_editing = false
         })
       },
-      onEditTaskClick() {
-        this.is_task_editing = true
-        if (this.expanded_sections.indexOf('definiton') == -1) {
-          this.expanded_sections.push('definiton')
+      tryScrollToElement(el, duration, offset) {
+        if (this.scrollbarContainerId.length > 0) {
+          var scroll_container = document.getElementById(this.scrollbarContainerId)
+          var scroller = zenscroll.createScroller(scroll_container, duration, offset)
+          scroller.to(el, duration)
         }
       },
+      onEditTaskClick() {
+        this.tryScrollToElement(this.$refs['definition-section'], 600, 40)
+        setTimeout(() => {
+          this.is_task_editing = true
+          if (this.expanded_sections.indexOf('definition') == -1) {
+            this.expanded_sections.push('definition')
+          }
+        }, 600)
+      },
       onEditDocumentationClick() {
-        this.is_addon_editing = true
-        if (this.expanded_sections.indexOf('documentation') == -1) {
-          this.expanded_sections.push('documentation')
-        }
+        this.tryScrollToElement(this.$refs['documentation-section'], 600, 40)
+        setTimeout(() => {
+          this.is_addon_editing = true
+          if (this.expanded_sections.indexOf('documentation') == -1) {
+            this.expanded_sections.push('documentation')
+          }
+        }, 600)
       },
       onEditClick() {
         this.$emit('edit-click', this.pipe)
