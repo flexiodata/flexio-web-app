@@ -127,29 +127,24 @@ class Factory
         if ($definition === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
+        // STEP 2: get a default pipe name in case name isn't specified in
+        // the pipe info
+        $file_name_base = \Flexio\Base\File::getFilename($file_name);
+        $default_pipe_name = \Flexio\Base\Identifier::makeValid($file_name_base);
+
         // STEP 2: create the object
-        $call_params['name'] = $definition['name'] ?? 'sample-pipe';
+        $call_params['name'] = $definition['name'] ?? $default_pipe_name;
+        $call_params['title'] = $definition['title'] ?? '';
         $call_params['description'] = $definition['description'] ?? '';
-        $call_params['task'] = array();
-
-        if (isset($definition['task']))
-            $call_params['task'] = $definition['task'];
-
-        if (isset($definition['deploy_mode']))
-            $call_params['deploy_mode'] = $definition['deploy_mode'];
-
-        if (isset($definition['deploy_api']))
-            $call_params['deploy_api'] = $definition['deploy_api'];
-
-        if (isset($definition['deploy_schedule']))
-            $call_params['deploy_schedule'] = $definition['deploy_schedule'];
-
-        if (isset($definition['deploy_email']))
-            $call_params['deploy_email'] = $definition['deploy_email'];
-
-        if (isset($definition['deploy_ui']))
-            $call_params['deploy_ui'] = $definition['deploy_ui'];
-
+        $call_params['deploy_mode'] = $definition['deploy_mode'] ?? \Model::PIPE_DEPLOY_MODE_RUN;
+        $call_params['deploy_api'] = $definition['deploy_api'] ?? \Model::PIPE_DEPLOY_STATUS_ACTIVE;
+        $call_params['deploy_schedule'] = $definition['deploy_schedule'] ?? \Model::PIPE_DEPLOY_STATUS_INACTIVE;
+        $call_params['deploy_email'] = $definition['deploy_email'] ?? \Model::PIPE_DEPLOY_STATUS_INACTIVE;
+        $call_params['deploy_ui'] = $definition['deploy_ui'] ?? \Model::PIPE_DEPLOY_STATUS_INACTIVE;
+        $call_params['examples'] = $definition['examples'] ?? [];
+        $call_params['params'] = $definition['params'] ?? [];
+        $call_params['notes'] = $definition['notes'] ?? '';
+        $call_params['task'] = $definition['task'] ?? [];
         $call_params['owned_by'] = $user_eid;
         $call_params['created_by'] = $user_eid;
         $pipe = \Flexio\Object\Pipe::create($call_params);
