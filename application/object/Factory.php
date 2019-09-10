@@ -189,15 +189,20 @@ class Factory
 
         $objects = array(
 
-            // sample connection with data used for creating some sample functions
+            // connection with data used for creating some sample functions
             array('eid_type' => \Model::TYPE_CONNECTION, 'path' => $demo_dir . 'connection_amazons3.json'),
 
-            // sample execute functions
+            // execute function
             array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_example_currency_rates.json'),
+
+            // execute function
             array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_example_currency_converter.json'),
 
-            // sample extract function
-            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_example_sales.json')
+            // extract function
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_example_sales.json'),
+
+            // lookup function
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_example_contact_lookup.json')
         );
 
         return $objects;
