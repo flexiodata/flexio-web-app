@@ -199,7 +199,7 @@ class Factory
             array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_example_currency_converter.json'),
 
             // extract function
-            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_example_sales.json'),
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_example_contact_list.json'),
 
             // lookup function
             array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_example_contact_lookup.json')
