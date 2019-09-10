@@ -52,9 +52,9 @@
       class="el-collapse--plain el-collapse--arrow-left"
       v-model="expanded_sections"
     >
-      <!-- configuration -->
+      <!-- definiton -->
       <el-collapse-item
-        name="configuration"
+        name="definiton"
         class="pipe-section pipe-section-editable"
         :class="{
           'o-40 no-pointer-events no-select': is_addon_editing,
@@ -70,7 +70,7 @@
             <el-button
               style="padding: 0"
               type="text"
-              @click.stop="is_task_editing = true"
+              @click.stop="onEditTaskClick"
               v-show="!is_task_editing"
               v-require-rights:pipe.update
             >
@@ -127,7 +127,7 @@
             <el-button
               style="padding: 0"
               type="text"
-              @click.stop="is_addon_editing = true"
+              @click.stop="onEditDocumentationClick"
               v-show="!is_addon_editing"
               v-require-rights:pipe.update
             >
@@ -194,7 +194,7 @@
         is_task_editing: false,
         is_addon_editing: false,
         is_notes_editing: false,
-        expanded_sections: ['configuration', 'documentation'],
+        expanded_sections: ['definiton', 'documentation'],
       }
     },
     computed: {
@@ -323,6 +323,18 @@
         this.savePipe(new_attrs).then(response => {
           this.is_addon_editing = false
         })
+      },
+      onEditTaskClick() {
+        this.is_task_editing = true
+        if (this.expanded_sections.indexOf('definiton') == -1) {
+          this.expanded_sections.push('definiton')
+        }
+      },
+      onEditDocumentationClick() {
+        this.is_addon_editing = true
+        if (this.expanded_sections.indexOf('documentation') == -1) {
+          this.expanded_sections.push('documentation')
+        }
       },
       onEditClick() {
         this.$emit('edit-click', this.pipe)
