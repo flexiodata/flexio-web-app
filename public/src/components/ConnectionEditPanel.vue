@@ -364,7 +364,7 @@
           return owner.length == 0 || repository.length == 0
         }
 
-        if (this.is_oauth && !this.is_connected) {
+        if (this.mode == 'add' && this.is_oauth && !this.is_connected) {
           return true
         }
 
