@@ -22,6 +22,7 @@
     "private_key": "2Uwr79paYAfUvu54SPuwReyUCeCRedeyTH4GufrU4ruK7zAnaphujA8W6TRa7uVE",
 
     "debug": true,
+    "channel": "release",
     "tests_allowed": false,
     "maintenance": false,
     "version_major": 2,
