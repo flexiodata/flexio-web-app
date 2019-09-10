@@ -149,6 +149,7 @@
 
 <script>
   import { mapState } from 'vuex'
+  import { TASK_OP_LOOKUP } from '@/constants/task-op'
   import Spinner from 'vue-simple-spinner'
   import LabelSwitch from '@/components/LabelSwitch'
   import PipeDocumentAddonEditor from '@/components/PipeDocumentAddonEditor'
@@ -281,6 +282,20 @@
             items: [new_task]
           }
         }
+
+        // if our pipe doesn't have any parameters and we're saving a lookup task,
+        // save the lookup columns as the params
+        if (new_task.op == TASK_OP_LOOKUP && this.pipe.params.length == 0) {
+          attrs.params = _.map(new_task.lookup_keys, k => {
+            return {
+              name: k,
+              type: 'string',
+              description: '',
+              required: true
+            }
+          })
+        }
+
         this.savePipe(attrs)
       },
       updateAddOnSettings(new_attrs, old_pipe) {
