@@ -46,6 +46,10 @@
         type: String,
         default: '0.5rem'
       },
+      fontSize: {
+        type: String,
+        default: '14px'
+      },
       activeLabel: {
         type: String,
         default: 'On'
@@ -105,7 +109,7 @@
         styles.push('top: 1000px')
         styles.push('padding-left: ' + this.spacing)
         styles.push('padding-right: ' + this.spacing)
-        styles.push('font-size: 14px')
+        styles.push('font-size: ' + this.fontSize)
         return styles.join('; ')
       },
       text_style() {
@@ -114,7 +118,7 @@
         styles.push('top: 50%')
         styles.push('margin-top: -' + (Math.floor(this.text_height / 2)) + 'px')
         styles.push(this.value ? 'left: ' + this.spacing : 'right: ' + this.spacing)
-        styles.push('font-size: 14px')
+        styles.push('font-size: ' + this.fontSize)
         return styles.join('; ')
       }
     },
