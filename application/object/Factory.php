@@ -198,10 +198,10 @@ class Factory
             array('eid_type' => \Model::TYPE_CONNECTION, 'path' => $demo_dir . 'connection_amazons3.json'),
 
             // sample execute function
-            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_func_exchangerates.json'),
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_example_currency_rates.json'),
 
             // sample extract function
-            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_func_sales.json')
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_example_sales.json')
         );
 
         return $objects;
