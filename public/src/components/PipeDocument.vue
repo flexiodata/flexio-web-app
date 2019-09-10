@@ -308,8 +308,10 @@
             columns = columns.join(', ')
 
             var filename = afterLast(new_task.path, '/')
-
             attrs.description = `Using the key fields ${fields}, return ${columns} from "${filename}".`
+          } else if (new_task.op == TASK_OP_EXTRACT) {
+            var filename = afterLast(new_task.path, '/')
+            attrs.description = `Return the contents of "${filename}".`
           }
         }
 
