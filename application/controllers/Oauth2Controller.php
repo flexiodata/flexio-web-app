@@ -243,6 +243,15 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
             }
         }
 
+        if ($service === \Flexio\Services\Factory::TYPE_LINKEDIN)
+        {
+            if (strlen(''.($GLOBALS['g_config']->linkedin_client_id ?? '')) > 0 &&
+                strlen(''.($GLOBALS['g_config']->linkedin_client_secret ?? '')) > 0)
+            {
+                return '\Flexio\Services\LinkedIn';
+            }
+        }
+
         if ($service === \Flexio\Services\Factory::TYPE_GMAIL)
         {
             if (strlen(''.($GLOBALS['g_config']->gmail_client_id ?? '')) > 0 &&
