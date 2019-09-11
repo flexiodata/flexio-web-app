@@ -18,13 +18,16 @@ namespace Flexio\Services;
 
 class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 {
+    private $authorization_uri = '';
     private $access_token = '';
     private $owner = '';
     private $repository = '';
 
     public static function create(array $params = null) // TODO: add return type; TODO: fix dual return types which is used for Oauth
     {
-        return self::initialize($params);
+        $obj = new self;
+        $obj->initialize($params);
+        return $obj;
     }
 
     public function authenticated() : bool
@@ -33,6 +36,11 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             return true;
 
         return false;
+    }
+    
+    public function getAuthorizationUri() : string
+    {
+        return $this->authorization_uri;
     }
 
     ////////////////////////////////////////////////////////////
@@ -589,16 +597,13 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return true;
     }
 
-    private static function initialize(array $params = null)
+    private function initialize(array $params = null) : bool
     {
-        if (!isset($params))
-            return new self;
-
         $client_id = $GLOBALS['g_config']->github_client_id ?? '';
         $client_secret = $GLOBALS['g_config']->github_client_secret ?? '';
 
         if (strlen($client_id) == 0 || strlen($client_secret) == 0)
-            return null;
+            return false;
 
         // TODO: handle service error info
 
@@ -616,11 +621,10 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         // from the access token and return it
         if (isset($params['access_token']))
         {
-            $object = new self;
-            $object->access_token = $params['access_token'];
-            $object->owner = $params['owner'] ?? '';
-            $object->repository = $params['repository'] ?? '';
-            return $object;
+            $this->access_token = $params['access_token'];
+            $this->owner = $params['owner'] ?? '';
+            $this->repository = $params['repository'] ?? '';
+            return true;
         }
 
         // STEP 2: instantiate the service
@@ -642,18 +646,17 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         // http client and storage mechanism for the token
         $service = $service_factory->createService('GitHub', $credentials, $storage, array('repo'));
         if (!isset($service))
-            return null;
+            return false;
 
         // STEP 3: if we have a code parameter, we have enough information
         // to authenticate and get the token; do so and return the object
         if (isset($params['code']))
         {
-            $object = new self;
             $token = $service->requestAccessToken($params['code']);
-            $object->access_token = $token->getAccessToken();
-            $object->owner = $params['owner'] ?? '';
-            $object->repository = $param['repository'] ?? '';
-            return $object;
+            $this->access_token = $token->getAccessToken();
+            $this->owner = $params['owner'] ?? '';
+            $this->repository = $param['repository'] ?? '';
+            return true;
         }
 
         // we have state info, return the state information so we can
@@ -662,7 +665,8 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             'state' => $params['state'] ?? ''
         );
 
-        return $service->getAuthorizationUri($additional_params)->getAbsoluteUri();
+        $this->authorization_uri = $oauth->getAuthorizationUri($additional_params)->getAbsoluteUri();
+        return false;
     }
 
     private function getPathParts(string $full_path, &$repository, &$path) : bool

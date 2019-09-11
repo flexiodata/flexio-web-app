@@ -18,12 +18,15 @@ namespace Flexio\Services;
 
 class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 {
+    private $authorization_uri = '';
     private $access_token = '';
     private $base_path = '';
 
     public static function create(array $params = null) // TODO: add return type; TODO: fix dual return types which is used for Oauth
     {
-        return self::initialize($params);
+        $obj = new self;
+        $obj->initialize($params);
+        return $obj;
     }
 
     public function authenticated() : bool
@@ -34,6 +37,11 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return false;
     }
 
+    public function getAuthorizationUri() : string
+    {
+        return $this->authorization_uri;
+    }
+    
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
@@ -435,16 +443,13 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return true;
     }
 
-    private static function initialize(array $params = null) // TODO: add return type
+    private function initialize(array $params = null) : bool
     {
-        if (!isset($params))
-            return new self;
-
         $client_id = $GLOBALS['g_config']->dropbox_client_id ?? '';
         $client_secret = $GLOBALS['g_config']->dropbox_client_secret ?? '';
 
         if (strlen($client_id) == 0 || strlen($client_secret) == 0)
-            return null;
+            return false;
 
         // TODO: handle service error info
 
@@ -460,12 +465,12 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
         // STEP 1: if we have an access token, create an object
         // from the access token and return it
+
         if (isset($params['access_token']))
         {
-            $object = new self;
-            $object->access_token = $params['access_token'];
-            $object->base_path = $params['base_path'] ?? '';
-            return $object;
+            $this->access_token = $params['access_token'];
+            $this->base_path = $params['base_path'] ?? '';
+            return true;
         }
 
         // STEP 2: instantiate the service
@@ -487,17 +492,16 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         // http client and storage mechanism for the token
         $service = $service_factory->createService('dropbox', $credentials, $storage, array());
         if (!isset($service))
-            return null;
+            return false;
 
         // STEP 3: if we have a code parameter, we have enough information
         // to authenticate and get the token; do so and return the object
         if (isset($params['code']))
         {
-            $object = new self;
             $token = $service->requestAccessToken($params['code']);
-            $object->access_token = $token->getAccessToken();
-            $object->base_path = $params['base_path'] ?? '';
-            return $object;
+            $this->access_token = $token->getAccessToken();
+            $this->base_path = $params['base_path'] ?? '';
+            return true;
         }
 
         // we have state info, return the state information so we can
@@ -506,6 +510,7 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             'state' => $params['state'] ?? ''
         );
 
-        return $service->getAuthorizationUri($additional_params)->getAbsoluteUri();
+        $this->authorization_uri = $oauth->getAuthorizationUri($additional_params)->getAbsoluteUri();
+        return false;
     }
 }

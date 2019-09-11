@@ -18,6 +18,7 @@ namespace Flexio\Services;
 
 class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 {
+    private $authorization_uri = '';
     private $access_token = '';
     private $refresh_token = '';
     private $updated = '';
@@ -25,7 +26,9 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
 
     public static function create(array $params = null) // TODO: add return type; TODO: fix dual return types which is used for Oauth
     {
-        return self::initialize($params);
+        $obj = new self;
+        $obj->initialize($params);
+        return $obj;
     }
 
     public function authenticated() : bool
@@ -36,6 +39,11 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
         return false;
     }
 
+    public function getAuthorizationUri() : string
+    {
+        return $this->authorization_uri;
+    }
+    
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
@@ -648,16 +656,13 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
         return true;
     }
 
-    private static function initialize(array $params = null) // TODO: add return type
+    private function initialize(array $params = null) : bool
     {
-        if (!isset($params))
-            return new self;
-
         $client_id = $GLOBALS['g_config']->googledrive_client_id ?? '';
         $client_secret = $GLOBALS['g_config']->googledrive_client_secret ?? '';
 
         if (strlen($client_id) == 0 || strlen($client_secret) == 0)
-            return null;
+            return false;
 
         $oauth_callback = '';
         if (isset($params['redirect']))
@@ -685,22 +690,21 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
             if ($curtime < $expires)
             {
                 // access token is valid (not expired); use it
-                $object = new self;
-                $object->access_token = $params['access_token'];
-                $object->refresh_token = $params['refresh_token'] ?? '';
-                $object->expires = $expires;
-                return $object;
+                $this->access_token = $params['access_token'];
+                $this->refresh_token = $params['refresh_token'] ?? '';
+                $this->expires = $expires;
+                return true;
             }
              else
             {
                 // access token is expired -- try to refresh it
                 $oauth = self::createService($oauth_callback);
                 if (!$oauth)
-                    return null;
+                    return false;
 
                 $access_token = $params['access_token'] ?? null;
                 if (!isset($params['refresh_token']) || strlen($params['refresh_token']) == 0)
-                    return null; // refresh token is missing
+                    return false; // refresh token is missing
                 $refresh_token = $params['refresh_token'];
 
                 $token = new \OAuth\OAuth2\Token\StdOAuth2Token($access_token, $refresh_token);
@@ -711,7 +715,7 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
                 {
                     $token = $oauth->refreshAccessToken($token);
                     if (!$token)
-                        return null;
+                        return false;
                 }
                 catch (\OAuth\Common\Http\Exception\TokenResponseException $e)
                 {
@@ -719,21 +723,20 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE, "Could not refresh access token");
                 }
 
-                $object = new self;
-                $object->expires = $token->getEndOfLife();
-                $object->access_token = $token->getAccessToken();
-                $object->refresh_token = $token->getRefreshToken();
-                if ($object->refresh_token === null || strlen($object->refresh_token) == 0)
-                    $object->refresh_token = $refresh_token;
+                $this->expires = $token->getEndOfLife();
+                $this->access_token = $token->getAccessToken();
+                $this->refresh_token = $token->getRefreshToken();
+                if ($this->refresh_token === null || strlen($this->refresh_token) == 0)
+                    $this->refresh_token = $refresh_token;
 
-                return $object;
+                return true;
             }
         }
 
 
         $oauth = self::createService($oauth_callback);
         if (!$oauth)
-            return null;
+            return false;
 
         // STEP 3: if we have a code parameter, we have enough information
         // to authenticate and get the token; do so and return the object
@@ -741,14 +744,17 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
         {
             $token = $oauth->requestAccessToken($params['code']);
             if (!$token)
-                return null;
-            $object = new self;
-            $object->access_token = $token->getAccessToken();
-            $object->refresh_token = $token->getRefreshToken();
-            $object->expires = $token->getEndOfLife();
-            if (is_null($object->refresh_token)) $object->refresh_token = '';
+                return false;
 
-            return $object;
+            $this->access_token = $token->getAccessToken();
+            $this->refresh_token = $token->getRefreshToken();
+            $this->expires = $token->getEndOfLife();
+            if (is_null($object->refresh_token))
+            {
+                $this->refresh_token = '';
+            }
+
+            return true;
         }
 
 
@@ -756,7 +762,7 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
         // information to authenticate; make sure we have state info,
         // or we don't have enough information to complete the process
         if (!isset($params['state']))
-            return null;
+            return false;
 
         // we have state info, return the authorization uri so we can
         // get a code and complete the process
@@ -765,7 +771,8 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
             'approval_prompt' => 'force'
         );
 
-        return $oauth->getAuthorizationUri($additional_params)->getAbsoluteUri();
+        $this->authorization_uri = $oauth->getAuthorizationUri($additional_params)->getAbsoluteUri();
+        return false;
     }
 
     private static function createService($oauth_callback) // TODO: add return type; TODO: add parameter type

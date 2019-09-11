@@ -22,6 +22,7 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
     {
         parent::init();
     }
+
     public function connectAction() : void
     {
         // note: this function begins to the oauth process
@@ -62,19 +63,25 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
             // the authentication into a separate function call for each service; for now,
             // because this function enforces a return type, downstream exception handling
             // will catch the error if the wrong type is returned
-            $service_oauth_url = $service_class::create($auth_params);
+            $service = $service_class::create($auth_params);
             //fxdebug('redirect URL is: '. $service_oauth_url);
 
-            if (is_null($service_oauth_url))
+            $service_oauth_url = $service->getAuthorizationUri();
+            if (strlen($service_oauth_url))
+            {
+                // service passed us an oauth redirect url, so we need to authorize
+                // with the 3rd party service before we get get an access token
+                $this->_redirect($service_oauth_url);
+                return;
+            }
+
+            if (!$service->authenticated())
             {
                 $properties = array();
                 $properties['connection_status'] = \Model::CONNECTION_STATUS_ERROR;
                 $connection->set($properties);
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED);
             }
-
-            // STEP 4: redirect to the remote service
-            $this->_redirect($service_oauth_url);
         }
         catch (\Flexio\Base\Exception $e)
         {

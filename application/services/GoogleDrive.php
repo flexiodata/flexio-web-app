@@ -18,6 +18,7 @@ namespace Flexio\Services;
 
 class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 {
+    private $authorization_uri = '';
     private $access_token = '';
     private $refresh_token = '';
     private $expires = 0;
@@ -25,7 +26,9 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
 
     public static function create(array $params = null) // TODO: add return type; TODO: fix dual return types which is used for Oauth
     {
-        return self::initialize($params);
+        $obj = new self;
+        $obj->initialize($params);
+        return $obj;
     }
 
     public function authenticated() : bool
@@ -34,6 +37,11 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
             return true;
 
         return false;
+    }
+    
+    public function getAuthorizationUri() : string
+    {
+        return $this->authorization_uri;
     }
 
     ////////////////////////////////////////////////////////////
@@ -510,16 +518,13 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
         return true;
     }
 
-    private static function initialize(array $params = null)
+    private function initialize(array $params = null) : bool
     {
-        if (!isset($params))
-            return new self;
-
         $client_id = $GLOBALS['g_config']->googledrive_client_id ?? '';
         $client_secret = $GLOBALS['g_config']->googledrive_client_secret ?? '';
 
         if (strlen($client_id) == 0 || strlen($client_secret) == 0)
-            return null;
+            return false;
 
         $oauth_callback = '';
         if (isset($params['redirect']))
@@ -546,25 +551,24 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
             if ($curtime < $expires)
             {
                 // access token is valid (not expired); use it
-                $object = new self;
-                $object->access_token = $params['access_token'];
-                $object->refresh_token = $params['refresh_token'] ?? '';
-                $object->expires = $expires;
+                $this->access_token = $params['access_token'];
+                $this->refresh_token = $params['refresh_token'] ?? '';
+                $this->expires = $expires;
 
-                $object->base_path = $params['base_path'] ?? '';
+                $this->base_path = $params['base_path'] ?? '';
 
-                return $object;
+                return true;
             }
              else
             {
                 // access token is expired -- try to refresh it
                 $oauth = self::createService($oauth_callback);
                 if (!$oauth)
-                    return null;
+                    return false;
 
                 $access_token = $params['access_token'] ?? null;
                 if (!isset($params['refresh_token']) || strlen($params['refresh_token']) == 0)
-                    return null; // refresh token is missing
+                    return false; // refresh token is missing
                 $refresh_token = $params['refresh_token'];
 
                 $token = new \OAuth\OAuth2\Token\StdOAuth2Token($access_token, $refresh_token);
@@ -575,7 +579,7 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
                 {
                     $token = $oauth->refreshAccessToken($token);
                     if (!$token)
-                        return null;
+                        return false;
                 }
                 catch (\OAuth\Common\Http\Exception\TokenResponseException $e)
                 {
@@ -583,23 +587,22 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE, "Could not refresh access token");
                 }
 
-                $object = new self;
-                $object->expires = $token->getEndOfLife();
-                $object->access_token = $token->getAccessToken();
-                $object->refresh_token = $token->getRefreshToken();
-                if ($object->refresh_token === null || strlen($object->refresh_token) == 0)
-                    $object->refresh_token = $refresh_token;
+                $this->expires = $token->getEndOfLife();
+                $this->access_token = $token->getAccessToken();
+                $this->refresh_token = $token->getRefreshToken();
+                if ($this->refresh_token === null || strlen($this->refresh_token) == 0)
+                    $this->refresh_token = $refresh_token;
 
-                $object->base_path = $params['base_path'] ?? '';
+                $this->base_path = $params['base_path'] ?? '';
 
-                return $object;
+                return true;
             }
         }
 
 
         $oauth = self::createService($oauth_callback);
         if (!$oauth)
-            return null;
+            return false;
 
         // STEP 3: if we have a code parameter, we have enough information
         // to authenticate and get the token; do so and return the object
@@ -607,16 +610,19 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
         {
             $token = $oauth->requestAccessToken($params['code']);
             if (!$token)
-                return null;
-            $object = new self;
-            $object->access_token = $token->getAccessToken();
-            $object->refresh_token = $token->getRefreshToken();
-            $object->expires = $token->getEndOfLife();
-            if (is_null($object->refresh_token)) $object->refresh_token = '';
+                return false;
 
-            $object->base_path = $params['base_path'] ?? '';
+            $this->access_token = $token->getAccessToken();
+            $this->refresh_token = $token->getRefreshToken();
+            $this->expires = $token->getEndOfLife();
+            if (is_null($this->refresh_token))
+            {
+                $this->refresh_token = '';
+            }
 
-            return $object;
+            $this->base_path = $params['base_path'] ?? '';
+
+            return true;
         }
 
 
@@ -624,7 +630,7 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
         // information to authenticate; make sure we have state info,
         // or we don't have enough information to complete the process
         if (!isset($params['state']))
-            return null;
+            return false;
 
         // we have state info, return the authorization uri so we can
         // get a code and complete the process
@@ -633,7 +639,8 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
             'approval_prompt' => 'force'
         );
 
-        return $oauth->getAuthorizationUri($additional_params)->getAbsoluteUri();
+        $this->authorization_uri = $oauth->getAuthorizationUri($additional_params)->getAbsoluteUri();
+        return false;
     }
 
     private static function createService($oauth_callback) // TODO: add return type; s
