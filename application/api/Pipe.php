@@ -242,6 +242,7 @@ class Pipe
                 'title'           => array('type' => 'string', 'required' => false),
                 'description'     => array('type' => 'string', 'required' => false),
                 'examples'        => array('type' => 'object', 'required' => false),
+                'params'          => array('type' => 'object', 'required' => false),
                 'notes'           => array('type' => 'string', 'required' => false),
                 'task'            => array('type' => 'object', 'required' => false),
                 'schedule'        => array('type' => 'object', 'required' => false),
