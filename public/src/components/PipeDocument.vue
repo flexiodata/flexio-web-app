@@ -53,6 +53,7 @@
       v-model="expanded_sections"
     >
       <!-- definition -->
+      <a href="#" ref="definition-section"></a>
       <el-collapse-item
         name="definition"
         class="pipe-section pipe-section-editable"
@@ -63,7 +64,6 @@
       >
         <div
           class="flex flex-row items-center pipe-section-title"
-          ref="definition-section"
           slot="title"
         >
           <div class="flex-fill f4 fw6 lh-title">Definition</div>
@@ -111,6 +111,7 @@
       </el-collapse-item>
 
       <!-- description -->
+      <a href="#" ref="documentation-section"></a>
       <el-collapse-item
         name="documentation"
         class="pipe-section pipe-section-editable"
@@ -121,7 +122,6 @@
       >
         <div
           class="flex flex-row items-center pipe-section-title"
-          ref="documentation-section"
           slot="title"
         >
           <div class="flex-fill f4 fw6 lh-title">Documentation</div>
@@ -339,22 +339,22 @@
         }
       },
       onEditTaskClick() {
-        this.tryScrollToElement(this.$refs['definition-section'], 600, 20)
+        this.is_task_editing = true
+        if (this.expanded_sections.indexOf('definition') == -1) {
+          this.expanded_sections.push('definition')
+        }
         setTimeout(() => {
-          this.is_task_editing = true
-          if (this.expanded_sections.indexOf('definition') == -1) {
-            this.expanded_sections.push('definition')
-          }
-        }, 600)
+          this.tryScrollToElement(this.$refs['definition-section'], 400, 20)
+        }, 400)
       },
       onEditDocumentationClick() {
-        this.tryScrollToElement(this.$refs['documentation-section'], 600, 20)
+        this.is_addon_editing = true
+        if (this.expanded_sections.indexOf('documentation') == -1) {
+          this.expanded_sections.push('documentation')
+        }
         setTimeout(() => {
-          this.is_addon_editing = true
-          if (this.expanded_sections.indexOf('documentation') == -1) {
-            this.expanded_sections.push('documentation')
-          }
-        }, 600)
+          this.tryScrollToElement(this.$refs['documentation-section'], 400, 20)
+        }, 400)
       },
       onEditClick() {
         this.$emit('edit-click', this.pipe)
