@@ -45,7 +45,6 @@ class Pipe
                 'name'            => array('type' => 'identifier',  'required' => false),
                 'title'           => array('type' => 'string', 'required' => false),
                 'description'     => array('type' => 'string', 'required' => false),
-                'syntax'          => array('type' => 'string', 'required' => false),
                 'examples'        => array('type' => 'object', 'required' => false),
                 'params'          => array('type' => 'object', 'required' => false),
                 'notes'           => array('type' => 'string', 'required' => false),
@@ -54,8 +53,7 @@ class Pipe
                 'deploy_mode'     => array('type' => 'string', 'required' => false),
                 'deploy_schedule' => array('type' => 'string', 'required' => false),
                 'deploy_email'    => array('type' => 'string', 'required' => false),
-                'deploy_api'      => array('type' => 'string', 'required' => false),
-                'deploy_ui'       => array('type' => 'string', 'required' => false)
+                'deploy_api'      => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
@@ -243,7 +241,6 @@ class Pipe
                 'name'            => array('type' => 'identifier',  'required' => false),
                 'title'           => array('type' => 'string', 'required' => false),
                 'description'     => array('type' => 'string', 'required' => false),
-                'syntax'          => array('type' => 'string', 'required' => false),
                 'examples'        => array('type' => 'object', 'required' => false),
                 'params'          => array('type' => 'object', 'required' => false),
                 'notes'           => array('type' => 'string', 'required' => false),
@@ -252,8 +249,7 @@ class Pipe
                 'deploy_mode'     => array('type' => 'string', 'required' => false),
                 'deploy_schedule' => array('type' => 'string', 'required' => false),
                 'deploy_email'    => array('type' => 'string', 'required' => false),
-                'deploy_api'      => array('type' => 'string', 'required' => false),
-                'deploy_ui'       => array('type' => 'string', 'required' => false)
+                'deploy_api'      => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 

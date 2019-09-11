@@ -85,7 +85,6 @@ class Test
                 "name": "name1",
                 "title": "Test Pipe Title",
                 "description": "Test Pipe Description",
-                "syntax": "param1, param2",
                 "examples": ["e1", "e2", "e3"],
                 "params": ["p1", "p2", "p3"],
                 "notes": "Test Pipe Notes",
@@ -106,8 +105,7 @@ class Test
                 "deploy_mode": "B",
                 "deploy_schedule": "I",
                 "deploy_email": "A",
-                "deploy_api": "A",
-                "deploy_ui": "I"
+                "deploy_api": "A"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -123,7 +121,6 @@ class Test
             "name": "name1",
             "title": "Test Pipe Title",
             "description": "Test Pipe Description",
-            "syntax": "param1, param2",
             "examples": ["e1", "e2", "e3"],
             "params": ["p1", "p2", "p3"],
             "notes": "Test Pipe Notes",
@@ -144,7 +141,6 @@ class Test
             "deploy_schedule": "I",
             "deploy_email": "A",
             "deploy_api": "A",
-            "deploy_ui": "I",
             "owned_by": {
                 "eid": "'.$userid1.'",
                 "eid_type": "USR"

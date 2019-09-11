@@ -28,18 +28,15 @@ class Pipe extends ModelBase
                 'name'            => array('type' => 'identifier', 'required' => false, 'default' => $default_name),
                 'title'           => array('type' => 'string', 'required' => false),
                 'description'     => array('type' => 'string', 'required' => false, 'default' => ''),
-                'syntax'          => array('type' => 'string', 'required' => false, 'default' => ''),
                 'examples'        => array('type' => 'string', 'required' => false, 'default' => '{}'),
                 'params'          => array('type' => 'string', 'required' => false, 'default' => '{}'),
                 'notes'           => array('type' => 'string', 'required' => false, 'default' => ''),
-                'ui'              => array('type' => 'string', 'required' => false, 'default' => '{}'),
                 'task'            => array('type' => 'string', 'required' => false, 'default' => '{}'),
                 'schedule'        => array('type' => 'string', 'required' => false, 'default' => ''),
                 'deploy_mode'     => array('type' => 'string', 'required' => false, 'default' => \Model::PIPE_DEPLOY_MODE_BUILD),
                 'deploy_schedule' => array('type' => 'string', 'required' => false, 'default' => \Model::PIPE_DEPLOY_STATUS_INACTIVE),
                 'deploy_email'    => array('type' => 'string', 'required' => false, 'default' => \Model::PIPE_DEPLOY_STATUS_INACTIVE),
                 'deploy_api'      => array('type' => 'string', 'required' => false, 'default' => \Model::PIPE_DEPLOY_STATUS_INACTIVE),
-                'deploy_ui'       => array('type' => 'string', 'required' => false, 'default' => \Model::PIPE_DEPLOY_STATUS_INACTIVE),
                 'owned_by'        => array('type' => 'string', 'required' => false, 'default' => ''),
                 'created_by'      => array('type' => 'string', 'required' => false, 'default' => '')
             ))->hasErrors()) === true)
@@ -60,9 +57,6 @@ class Pipe extends ModelBase
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         if ($process_arr['deploy_api'] != \Model::PIPE_DEPLOY_STATUS_ACTIVE && $process_arr['deploy_api'] != \Model::PIPE_DEPLOY_STATUS_INACTIVE)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-
-        if ($process_arr['deploy_ui'] != \Model::PIPE_DEPLOY_STATUS_ACTIVE && $process_arr['deploy_ui'] != \Model::PIPE_DEPLOY_STATUS_INACTIVE)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $db = $this->getDatabase();
@@ -177,18 +171,15 @@ class Pipe extends ModelBase
                 'name'            => array('type' => 'string', 'required' => false),
                 'title'           => array('type' => 'string', 'required' => false),
                 'description'     => array('type' => 'string', 'required' => false),
-                'syntax'          => array('type' => 'string', 'required' => false),
                 'examples'        => array('type' => 'string', 'required' => false),
                 'params'          => array('type' => 'string', 'required' => false),
                 'notes'           => array('type' => 'string', 'required' => false),
-                'ui'              => array('type' => 'string', 'required' => false),
                 'task'            => array('type' => 'string', 'required' => false),
                 'schedule'        => array('type' => 'string', 'required' => false),
                 'deploy_mode'     => array('type' => 'string', 'required' => false),
                 'deploy_schedule' => array('type' => 'string', 'required' => false),
                 'deploy_email'    => array('type' => 'string', 'required' => false),
                 'deploy_api'      => array('type' => 'string', 'required' => false),
-                'deploy_ui'       => array('type' => 'string', 'required' => false),
                 'owned_by'        => array('type' => 'string', 'required' => false),
                 'created_by'      => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
@@ -250,11 +241,6 @@ class Pipe extends ModelBase
                 if ($process_arr['deploy_api'] != \Model::PIPE_DEPLOY_STATUS_ACTIVE && $process_arr['deploy_api'] != \Model::PIPE_DEPLOY_STATUS_INACTIVE)
                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
             }
-            if (isset($process_arr['deploy_ui']))
-            {
-                if ($process_arr['deploy_ui'] != \Model::PIPE_DEPLOY_STATUS_ACTIVE && $process_arr['deploy_ui'] != \Model::PIPE_DEPLOY_STATUS_INACTIVE)
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-            }
 
             // set the properties
             $updates_made = $db->update('tbl_pipe', $process_arr, $filter_expr);
@@ -299,18 +285,15 @@ class Pipe extends ModelBase
                               'name'            => $row['name'],
                               'title'           => $row['title'],
                               'description'     => $row['description'],
-                              'syntax'          => $row['syntax'],
                               'examples'        => $row['examples'] ?? '{}',
                               'params'          => $row['params'] ?? '{}',
                               'notes'           => $row['notes'],
-                              'ui'              => $row['ui'] ?? '{}',
                               'task'            => $row['task'],
                               'schedule'        => $row['schedule'],
                               'deploy_mode'     => $row['deploy_mode'],
                               'deploy_schedule' => $row['deploy_schedule'],
                               'deploy_email'    => $row['deploy_email'],
                               'deploy_api'      => $row['deploy_api'],
-                              'deploy_ui'       => $row['deploy_ui'],
                               'owned_by'        => $row['owned_by'],
                               'created_by'      => $row['created_by'],
                               'created'         => \Flexio\Base\Util::formatDate($row['created']),

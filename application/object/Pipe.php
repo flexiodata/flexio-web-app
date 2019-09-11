@@ -167,21 +167,6 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             }
         }
 
-        if (isset($properties) && isset($properties['deploy_ui']))
-        {
-            switch ($properties['deploy_ui'])
-            {
-                default:
-                    $properties['deploy_ui'] = \Model::PIPE_DEPLOY_STATUS_INACTIVE;
-                    break;
-
-                case \Model::PIPE_DEPLOY_STATUS_INACTIVE:
-                case \Model::PIPE_DEPLOY_STATUS_ACTIVE:
-                    // leave what's there
-                    break;
-            }
-        }
-
         $object = new static();
         $pipe_model = $object->getModel()->pipe;
         $local_eid = $pipe_model->create($properties);
@@ -288,21 +273,6 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             {
                 default:
                     $properties['deploy_api'] = \Model::PIPE_DEPLOY_STATUS_INACTIVE;
-                    break;
-
-                case \Model::PIPE_DEPLOY_STATUS_INACTIVE:
-                case \Model::PIPE_DEPLOY_STATUS_ACTIVE:
-                    // leave what's there
-                    break;
-            }
-        }
-
-        if (isset($properties) && isset($properties['deploy_ui']))
-        {
-            switch ($properties['deploy_ui'])
-            {
-                default:
-                    $properties['deploy_ui'] = \Model::PIPE_DEPLOY_STATUS_INACTIVE;
                     break;
 
                 case \Model::PIPE_DEPLOY_STATUS_INACTIVE:
@@ -433,7 +403,6 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "name" => null,
                 "title" => null,
                 "description" => null,
-                "syntax" => null,
                 "examples" => null,
                 "params" => null,
                 "notes" => null,
@@ -443,7 +412,6 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "deploy_schedule" => null,
                 "deploy_email" => null,
                 "deploy_api" => null,
-                "deploy_ui" => null,
                 "owned_by" => null,
                 "created_by" => null,
                 "created" => null,
