@@ -1,0 +1,48 @@
+{
+    "eid_type": "PIP",
+    "name": "example-contact-lookup",
+    "title": "Contact Lookup",
+    "description": "Returns an email address for the specified name",
+    "deploy_mode": "R",
+    "deploy_api": "A",
+    "deploy_schedule": "I",
+    "deploy_email": "I",
+    "deploy_ui": "I",
+    "examples": [
+        "\"Lola\", \"Rivera\"",
+        "\"Robert\", \"Rowe\"",
+        "A1, B1"
+    ],
+    "params": [
+        {
+            "name": "firstname",
+            "type": "string",
+            "description": "First name to use in the lookup",
+            "required": true
+        },
+        {
+            "name": "lastname",
+            "type": "string",
+            "description": "Last name to use in the lookup",
+            "required": true
+        }
+    ],
+    "notes": "",
+    "task": {
+        "op": "sequence",
+        "items": [
+            {
+                "op": "lookup",
+                "path": "flexio-public-s3:/contact-list-1.csv",
+                "lookup_keys": [
+                    "firstname",
+                    "lastname"
+                ],
+                "return_columns": [
+                    "email"
+                ]
+            }
+        ]
+    }
+}
+
