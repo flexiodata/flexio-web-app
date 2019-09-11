@@ -403,7 +403,6 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "name" => null,
                 "title" => null,
                 "description" => null,
-                "syntax" => null,
                 "examples" => null,
                 "params" => null,
                 "notes" => null,
