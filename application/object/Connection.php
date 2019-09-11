@@ -439,7 +439,6 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             $pipe_params['deploy_api'] = \Model::PIPE_DEPLOY_STATUS_ACTIVE;
             $pipe_params['deploy_schedule'] = \Model::PIPE_DEPLOY_STATUS_INACTIVE;
             $pipe_params['deploy_email'] = \Model::PIPE_DEPLOY_STATUS_INACTIVE;
-            $pipe_params['deploy_ui'] = \Model::PIPE_DEPLOY_STATUS_INACTIVE;
             $pipe_params['owned_by'] = $connection_info['owned_by']['eid'];
             $pipe_params['created_by'] = $connection_info['created_by']['eid'];
 

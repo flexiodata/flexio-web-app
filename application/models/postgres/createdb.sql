@@ -144,7 +144,7 @@ CREATE INDEX idx_token_created ON tbl_token (created);
 --    B - build
 --    R - run
 
--- deploy_schedule, deploy_api, deploy_ui values:
+-- deploy_schedule, deploy_api values:
 --    A - active
 --    I - inactive
 
@@ -163,12 +163,10 @@ CREATE TABLE tbl_pipe (
   notes text default '',
   task json,
   schedule text default '',
-  ui json,
   deploy_mode varchar(1) NOT NULL default 'B',
   deploy_schedule varchar(1) NOT NULL default 'I',
   deploy_email varchar(1) NOT NULL default 'I',
   deploy_api varchar(1) NOT NULL default 'I',
-  deploy_ui varchar(1) NOT NULL default 'I',
   owned_by varchar(12) NOT NULL default '',
   created_by varchar(12) NOT NULL default '',
   created timestamp NULL default NULL,
@@ -183,7 +181,6 @@ CREATE INDEX idx_pipe_deploy_mode ON tbl_pipe (deploy_mode);
 CREATE INDEX idx_pipe_deploy_schedule ON tbl_pipe (deploy_schedule);
 CREATE INDEX idx_pipe_deploy_email ON tbl_pipe (deploy_email);
 CREATE INDEX idx_pipe_deploy_api ON tbl_pipe (deploy_api);
-CREATE INDEX idx_pipe_deploy_ui ON tbl_pipe (deploy_ui);
 CREATE INDEX idx_pipe_owned_by ON tbl_pipe (owned_by);
 CREATE INDEX idx_pipe_created_by ON tbl_pipe (created_by);
 CREATE INDEX idx_pipe_created ON tbl_pipe (created);

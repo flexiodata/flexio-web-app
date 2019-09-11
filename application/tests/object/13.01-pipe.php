@@ -244,7 +244,6 @@ class Test
             "deploy_schedule": "I",
             "deploy_email": "I",
             "deploy_api": "I",
-            "deploy_ui": "I",
             "owned_by" : {
                 "eid" : null,
                 "eid_type" : null
