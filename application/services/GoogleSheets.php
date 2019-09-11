@@ -25,9 +25,6 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
 
     public static function create(array $params = null) // TODO: add return type; TODO: fix dual return types which is used for Oauth
     {
-        if (!isset($params))
-            return new self;
-
         return self::initialize($params);
     }
 
@@ -651,8 +648,11 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
         return true;
     }
 
-    private static function initialize(array $params) // TODO: add return type
+    private static function initialize(array $params = null) // TODO: add return type
     {
+        if (!isset($params))
+            return new self;
+
         $client_id = $GLOBALS['g_config']->googledrive_client_id ?? '';
         $client_secret = $GLOBALS['g_config']->googledrive_client_secret ?? '';
 

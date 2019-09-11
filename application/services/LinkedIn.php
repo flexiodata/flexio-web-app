@@ -25,9 +25,6 @@ class LinkedIn implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
     public static function create(array $params = null) // TODO: add return type; TODO: fix dual return types which is used for Oauth
     {
-        if (!isset($params))
-            return new self;
-
         return self::initialize($params);
     }
 
@@ -144,6 +141,9 @@ class LinkedIn implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
     private static function initialize(array $params)
     {
+        if (!isset($params))
+            return new self;
+
         $client_id = $GLOBALS['g_config']->linkedin_client_id ?? '';
         $client_secret = $GLOBALS['g_config']->linkedin_client_secret ?? '';
 
