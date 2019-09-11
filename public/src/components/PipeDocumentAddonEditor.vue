@@ -15,7 +15,6 @@
             placeholder="Enter title"
             auto-complete="off"
             spellcheck="false"
-            :autofocus="true"
             v-model="edit_pipe.title"
           />
         </el-form-item>

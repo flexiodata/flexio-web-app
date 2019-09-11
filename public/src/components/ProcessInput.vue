@@ -5,7 +5,7 @@
       label-position="top"
       inline
     >
-      <el-form-item label="How would you like to send the form data?">
+      <el-form-item label="How would you like to send the form data?" v-if="false">
         <el-select
           size="small"
           v-model="ui.form_type"
@@ -20,7 +20,7 @@
       </el-form-item>
       <el-form-item
         label="What content type header would you like to use?"
-        v-if="ui.form_type == 'raw'"
+        v-if="ui.form_type == 'raw' && false"
       >
         <!-- TODO: Added 1px top margin to make it line up. I don't care... -->
         <el-select
@@ -55,6 +55,9 @@
         v-model="ui.json"
         v-if="false"
       />
+      <div class="el-form__label-tiny cf">
+        <label class="el-form-item__label">JSON</label>
+      </div>
       <CodeEditor
         class="bg-white"
         style="line-height: 1.15; font-size: 13px; border: 1px solid #dcdfe6"
@@ -73,7 +76,7 @@
 
   const getDefaultUiValues = () => {
     return _.assign({}, {
-      form_type: 'multipart/form-data',
+      form_type: 'raw',
       raw_type: 'application/json',
       form_data: {},
       x_www_form_urlencoded: {},

@@ -127,29 +127,24 @@ class Factory
         if ($definition === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
+        // STEP 2: get a default pipe name in case name isn't specified in
+        // the pipe info
+        $file_name_base = \Flexio\Base\File::getFilename($file_name);
+        $default_pipe_name = \Flexio\Base\Identifier::makeValid($file_name_base);
+
         // STEP 2: create the object
-        $call_params['name'] = $definition['name'] ?? 'sample-pipe';
+        $call_params['name'] = $definition['name'] ?? $default_pipe_name;
+        $call_params['title'] = $definition['title'] ?? '';
         $call_params['description'] = $definition['description'] ?? '';
-        $call_params['task'] = array();
-
-        if (isset($definition['task']))
-            $call_params['task'] = $definition['task'];
-
-        if (isset($definition['deploy_mode']))
-            $call_params['deploy_mode'] = $definition['deploy_mode'];
-
-        if (isset($definition['deploy_api']))
-            $call_params['deploy_api'] = $definition['deploy_api'];
-
-        if (isset($definition['deploy_schedule']))
-            $call_params['deploy_schedule'] = $definition['deploy_schedule'];
-
-        if (isset($definition['deploy_email']))
-            $call_params['deploy_email'] = $definition['deploy_email'];
-
-        if (isset($definition['deploy_ui']))
-            $call_params['deploy_ui'] = $definition['deploy_ui'];
-
+        $call_params['deploy_mode'] = $definition['deploy_mode'] ?? \Model::PIPE_DEPLOY_MODE_RUN;
+        $call_params['deploy_api'] = $definition['deploy_api'] ?? \Model::PIPE_DEPLOY_STATUS_ACTIVE;
+        $call_params['deploy_schedule'] = $definition['deploy_schedule'] ?? \Model::PIPE_DEPLOY_STATUS_INACTIVE;
+        $call_params['deploy_email'] = $definition['deploy_email'] ?? \Model::PIPE_DEPLOY_STATUS_INACTIVE;
+        $call_params['deploy_ui'] = $definition['deploy_ui'] ?? \Model::PIPE_DEPLOY_STATUS_INACTIVE;
+        $call_params['examples'] = $definition['examples'] ?? [];
+        $call_params['params'] = $definition['params'] ?? [];
+        $call_params['notes'] = $definition['notes'] ?? '';
+        $call_params['task'] = $definition['task'] ?? [];
         $call_params['owned_by'] = $user_eid;
         $call_params['created_by'] = $user_eid;
         $pipe = \Flexio\Object\Pipe::create($call_params);
@@ -194,75 +189,20 @@ class Factory
 
         $objects = array(
 
-            // sample connection with data used for creating some sample functions
+            // connection with data used for creating some sample functions
             array('eid_type' => \Model::TYPE_CONNECTION, 'path' => $demo_dir . 'connection_amazons3.json'),
 
-            // sample execute function
-            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_func_exchangerates.json'),
+            // execute function
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_example_currency_rates.json'),
 
-            // sample extract function
-            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_func_sales.json')
-        );
+            // execute function
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_example_currency_converter.json'),
 
-        return $objects;
-    }
+            // extract function
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_example_contact_list.json'),
 
-    private static function getExampleObjectsOld() : array
-    {
-        // TODO: following examples are the legacy serverless example objects; here for reference,
-        // but can be deleted when new examples are
-
-        $demo_dir = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'demo' . DIRECTORY_SEPARATOR;
-
-        $objects = array(
-            array('eid_type' => \Model::TYPE_CONNECTION, 'path' => $demo_dir . 'connection_amazons3.json'),
-
-            /*
-            TODO:
-
-            Example: Keyword API
-            Description: Create an API from keywords from a website
-            * Demonstrates how to parse data from a website
-            * Demonstrates how to create an use an API endpoint to get pipe contents
-
-            Example: Access APIs that require Oauth
-            Description: Extract keywords from Gmail
-            * Demonstrates ability to access APIs that use Oauth
-            * Demonstrates ability to read read/manipulate Gmail
-
-            Example: Process Incoming Emails
-            * Demonstrates ability to email pipes
-            * Demonstrates how to extract parts from incoming email and process it
-
-            */
-
-            // Example: Email Results of a Python Function
-            // Description: Get the top 5 stories from the Firebase Hacker News Feed and deliver via email
-            // * Demonstrates scheduling
-            // * Demonstrates emailing of results
-            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_email_results_of_python_function.json'),
-
-            // Example: Save Data to Local Storage
-            // Description: Aggregate, de-duplicate and save recent stories from Hacker News to local storage
-            // * Demonstrates saving results to local storage
-            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_save_data_to_local_storage.json'),
-
-            // Example: Analyze Data with Nodejs and Python
-            // Description: Analyze Job Postings on GitHub Jobs with Nodejs Lodash and Python Pandas
-            // * Demonstrates fact that various libraries are supported; execute is more than bare-bones
-            // * Demonstrates fact that executes can be chained together
-            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_analyze_data_with_nodejs_and_python.json'),
-
-            // Example: Server-Side Input Validation
-            // Description: Validate input with a server-side logic that hides data used to validate with Python Cerberus
-            // * Demonstrates how to use input area for testing
-            // * Demonstrates reading from server-side data to validate/invalidate data
-            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_serverside_input_validation.json'),
-
-            // legacy
-            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_generate_sample_data_api_feed.json'),
-            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_visualize_data_from_an_api_feed.json'),
-            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_render_webpage.json')
+            // lookup function
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_example_contact_lookup.json')
         );
 
         return $objects;

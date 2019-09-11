@@ -1,0 +1,27 @@
+{
+    "eid_type": "PIP",
+    "name": "example-contact-list",
+    "title": "Contact List",
+    "description": "Returns a list of contacts",
+    "deploy_mode": "R",
+    "deploy_api": "A",
+    "deploy_schedule": "I",
+    "deploy_email": "I",
+    "deploy_ui": "I",
+    "syntax": "",
+    "examples": [
+        " "
+    ],
+    "params": [],
+    "notes": "",
+    "task": {
+        "op": "sequence",
+        "items": [
+            {
+                "path": "flexio-public-s3:/contact-list-1.csv",
+                "op": "extract"
+            }
+        ]
+    }
+}
+

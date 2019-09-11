@@ -1,0 +1,53 @@
+{
+    "eid_type": "PIP",
+    "name": "example-currency-converter",
+    "title": "Currency Converter",
+    "description": "Converts a currency amount from one currency type to another",
+    "deploy_mode": "R",
+    "deploy_api": "A",
+    "deploy_schedule": "I",
+    "deploy_email": "I",
+    "deploy_ui": "I",
+    "examples": [
+        "100, \"USD\", \"EUR\"",
+        "200, \"EUR\", \"USD\", \"2018-12-31\"",
+        "A1, B1, C1"
+    ],
+    "params": [
+        {
+            "name": "amt",
+            "type": "number",
+            "description": "The value to convert from one currency to another",
+            "required": true
+        },
+        {
+            "name": "cur1",
+            "type": "string",
+            "description": "The currency type to convert from",
+            "required": true
+        },
+        {
+            "name": "cur2",
+            "type": "string",
+            "description": "The currency type to convert to",
+            "required": true
+        },
+        {
+            "name": "date",
+            "type": "date",
+            "description": "The exchange rate date in YYYY-DD-MM format",
+            "required": false
+        }
+    ],
+    "notes": "This function uses the https://exchangeratesapi.io API to convert the rates from one into another.\n\nThe following currency types are allowed: CAD, HKD, ISK, PHP, DKK, HUF, CZK, GBP, RON, SEK, IDR, INR, BRL, RUB, HRK, JPY, THB, CHF, EUR, MYR, BGN, TRY, CNY, NOK, NZD, ZAR, USD, MXN, SGD, AUD, ILS, KRW, PLN",
+    "task": {
+        "op": "sequence",
+        "items": [
+            {
+                "op": "execute",
+                "lang": "python",
+                "code": "CiMgLS0tCiMgbmFtZTogY3VycmVuY3ktY29udmVydGVyCiMgZGVwbG95ZWQ6IHRydWUKIyB0aXRsZTogQ3VycmVuY3kgQ29udmVydGVyCiMgZGVzY3JpcHRpb246IENvbnZlcnRzIGEgY3VycmVuY3kgYW1vdW50IGZyb20gb25lIGN1cnJlbmN5IHR5cGUgdG8gYW5vdGhlcgojIHBhcmFtczoKIyAtIG5hbWU6IGFtdAojICAgdHlwZTogbnVtYmVyCiMgICBkZXNjcmlwdGlvbjogVGhlIHZhbHVlIHRvIGNvbnZlcnQgZnJvbSBvbmUgY3VycmVuY3kgdG8gYW5vdGhlcgojICAgcmVxdWlyZWQ6IHRydWUKIyAtIG5hbWU6IGN1cjEKIyAgIHR5cGU6IG51bWJlcgojICAgZGVzY3JpcHRpb246IFRoZSBjdXJyZW5jeSB0eXBlIHRvIGNvbnZlcnQgZnJvbQojICAgcmVxdWlyZWQ6IHRydWUKIyAtIG5hbWU6IGN1cjIKIyAgIHR5cGU6IG51bWJlcgojICAgZGVzY3JpcHRpb246IFRoZSBjdXJyZW5jeSB0eXBlIHRvIGNvbnZlcnQgdG8KIyAgIHJlcXVpcmVkOiB0cnVlCiMgLSBuYW1lOiBkYXRlCiMgICB0eXBlOiBkYXRlCiMgICBkZXNjcmlwdGlvbjogVGhlIGV4Y2hhbmdlIHJhdGUgZGF0ZSBpbiBZWVlZLURELU1NIGZvcm1hdAojICAgcmVxdWlyZWQ6IGZhbHNlCiMgZXhhbXBsZXM6CiMgLSAiMTAwLCBcIlVTRFwiLCBcIkVVUlwiIgojIC0gIjIwMCwgXCJFVVJcIiwgXCJVU0RcIiwgXCIyMDE4LTEyLTMxXCIiCiMgLSBBMSwgQjEsIEMxCiMgbm90ZXM6IHwtCiMgICBUaGlzIGZ1bmN0aW9uIHVzZXMgdGhlIGh0dHBzOi8vZXhjaGFuZ2VyYXRlc2FwaS5pbyBBUEkgdG8gY29udmVydCB0aGUgcmF0ZXMgZnJvbSBvbmUgaW50byBhbm90aGVyLgojCiMgICBUaGUgZm9sbG93aW5nIGN1cnJlbmN5IHR5cGVzIGFyZSBhbGxvd2VkOiBDQUQsIEhLRCwgSVNLLCBQSFAsIERLSywgSFVGLCBDWkssIEdCUCwgUk9OLCBTRUssIElEUiwgSU5SLCBCUkwsIFJVQiwgSFJLLCBKUFksIFRIQiwgQ0hGLCBFVVIsIE1ZUiwgQkdOLCBUUlksIENOWSwgTk9LLCBOWkQsIFpBUiwgVVNELCBNWE4sIFNHRCwgQVVELCBJTFMsIEtSVywgUExOCiMgLS0tCgoKaW1wb3J0IGpzb24KaW1wb3J0IHJlcXVlc3RzCmZyb20gZGF0ZXRpbWUgaW1wb3J0ICoKZnJvbSBjZXJiZXJ1cyBpbXBvcnQgVmFsaWRhdG9yCmZyb20gY29sbGVjdGlvbnMgaW1wb3J0IE9yZGVyZWREaWN0CgojIG1haW4gZnVuY3Rpb24gZW50cnkgcG9pbnQKZGVmIGZsZXhpb19oYW5kbGVyKGZsZXgpOgogICAgcmVzdWx0ID0gZ2V0cmVzdWx0KGZsZXgpCiAgICBmbGV4Lm91dHB1dC53cml0ZShyZXN1bHQpCgpkZWYgZ2V0cmVzdWx0KGZsZXgpOgoKICAgICMgZ2V0IHRoZSBpbnB1dAogICAgaW5wdXQgPSBmbGV4LmlucHV0LnJlYWQoKQogICAgdHJ5OgogICAgICAgIGlucHV0ID0ganNvbi5sb2FkcyhpbnB1dCkKICAgICAgICBpZiBub3QgaXNpbnN0YW5jZShpbnB1dCwgbGlzdCk6IHJhaXNlIFZhbHVlRXJyb3IKICAgIGV4Y2VwdCBWYWx1ZUVycm9yOgogICAgICAgIHJhaXNlIFZhbHVlRXJyb3IKCiAgICAjIGRlZmluZSB0aGUgZXhwZWN0ZWQgcGFyYW1ldGVycyBhbmQgbWFwIHRoZSB2YWx1ZXMgdG8gdGhlIHBhcmFtZXRlciBuYW1lcwogICAgIyBiYXNlZCBvbiB0aGUgcG9zaXRpb25zIG9mIHRoZSBrZXlzL3ZhbHVlcwogICAgcGFyYW1zID0gT3JkZXJlZERpY3QoKQogICAgcGFyYW1zWydhbXQnXSA9IHsncmVxdWlyZWQnOiBUcnVlLCAndHlwZSc6ICdudW1iZXInLCAnY29lcmNlJzogZmxvYXR9CiAgICBwYXJhbXNbJ2N1cjEnXSA9IHsncmVxdWlyZWQnOiBUcnVlLCAndmFsaWRhdG9yJzogdmFsaWRhdGVfY3VycmVuY3ksICdjb2VyY2UnOiBsYW1iZGEgczogcy51cHBlcigpfQogICAgcGFyYW1zWydjdXIyJ10gPSB7J3JlcXVpcmVkJzogVHJ1ZSwgJ3ZhbGlkYXRvcic6IHZhbGlkYXRlX2N1cnJlbmN5LCAnY29lcmNlJzogbGFtYmRhIHM6IHMudXBwZXIoKX0KICAgIHBhcmFtc1snZGF0ZSddID0geydyZXF1aXJlZCc6IEZhbHNlLCAndHlwZSc6ICdkYXRlJywgJ2NvZXJjZSc6IGxhbWJkYSBzOiBkYXRldGltZS5zdHJwdGltZShzLCAnJVktJW0tJWQnKX0KICAgIGlucHV0ID0gZGljdCh6aXAocGFyYW1zLmtleXMoKSwgaW5wdXQpKQoKICAgICMgdmFsaWRhdGUgdGhlIG1hcHBlZCBpbnB1dCBhZ2FpbnN0IHRoZSB2YWxpZGF0b3IKICAgICMgaWYgdGhlIGlucHV0IGlzIHZhbGlkIHJldHVybiBhbiBlcnJvcgogICAgdiA9IFZhbGlkYXRvcihwYXJhbXMsIGFsbG93X3Vua25vd24gPSBUcnVlKQogICAgaW5wdXQgPSB2LnZhbGlkYXRlZChpbnB1dCkKICAgIGlmIGlucHV0IGlzIE5vbmU6CiAgICAgICAgcmFpc2UgVmFsdWVFcnJvcgoKICAgIHRyeToKCiAgICAgICAgZGF0ZSA9ICdsYXRlc3QnOwogICAgICAgIGlmICdkYXRlJyBpbiBpbnB1dC5rZXlzKCk6CiAgICAgICAgICAgIGRhdGUgPSBpbnB1dFsnZGF0ZSddLnN0cmZ0aW1lKCclWS0lbS0lZCcpCgogICAgICAgIGlmIGlucHV0WydjdXIxJ10gPT0gaW5wdXRbJ2N1cjInXToKICAgICAgICAgICAgcmV0dXJuIGlucHV0WydhbXQnXQoKICAgICAgICB1cmwgPSAnaHR0cHM6Ly9hcGkuZXhjaGFuZ2VyYXRlc2FwaS5pby8nK2RhdGUrJz9iYXNlPScgKyBpbnB1dFsnY3VyMSddCiAgICAgICAgcmVzcG9uc2UgPSByZXF1ZXN0cy5nZXQodXJsKQogICAgICAgIHJhdGVzID0gcmVzcG9uc2UuanNvbigpWydyYXRlcyddCgogICAgICAgIGNvbnZlcnNpb25fcmF0ZSA9IHJhdGVzW2lucHV0WydjdXIyJ11dCiAgICAgICAgcmV0dXJuIGlucHV0WydhbXQnXSpjb252ZXJzaW9uX3JhdGUKCiAgICBleGNlcHQ6CiAgICAgICAgcmFpc2UgUnVudGltZUVycm9yCgoKZGVmIHZhbGlkYXRlX2N1cnJlbmN5KGZpZWxkLCB2YWx1ZSwgZXJyb3IpOgoKICAgIGN1cnJlbmN5X3R5cGVzID0gWwogICAgICAgICdDQUQnLCdIS0QnLCdJU0snLCdQSFAnLCdES0snLCdIVUYnLCdDWksnLCdHQlAnLCdST04nLCdTRUsnLAogICAgICAgICdJRFInLCdJTlInLCdCUkwnLCdSVUInLCdIUksnLCdKUFknLCdUSEInLCdDSEYnLCdFVVInLCdNWVInLAogICAgICAgICdCR04nLCdUUlknLCdDTlknLCdOT0snLCdOWkQnLCdaQVInLCdVU0QnLCdNWE4nLCdTR0QnLCdBVUQnLAogICAgICAgICdJTFMnLCdLUlcnLCdQTE4nCiAgICBdCiAgICBpZiBhbnkodmFsdWUgaW4gYyBmb3IgYyBpbiBjdXJyZW5jeV90eXBlcyk6CiAgICAgICAgcmV0dXJuCgogICAgZXJyb3IoZmllbGQsICdpcyBhbiBpbnZhbGlkIGN1cnJlbmN5IHR5cGUnKQo="
+            }
+        ]
+    }
+}

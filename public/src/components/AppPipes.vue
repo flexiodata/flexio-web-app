@@ -144,11 +144,15 @@
         </div>
 
         <!-- content area -->
-        <div class="flex-fill ph4 pv5 overflow-y-scroll relative">
+        <div
+          class="flex-fill ph4 pv5 overflow-y-scroll relative"
+          :id="scrollbar_container_id"
+        >
           <PipeDocument
             class="w-100 center mw-doc pa4 bg-white br2 css-white-box"
-            style="min-height: 20rem; margin-bottom: 10rem"
+            style="min-height: 20rem; margin-bottom: 15rem"
             :pipe-eid="pipe.eid"
+            :scrollbar-container-id="scrollbar_container_id"
             :show-test-button="!show_test_panel"
             @test-click="show_test_panel = true"
             @edit-click="onEditPipe"
@@ -224,9 +228,9 @@
 
 <script>
   import randomstring from 'randomstring'
+  import { mapState, mapGetters } from 'vuex'
   import { ROUTE_APP_PIPES } from '@/constants/route'
   import { OBJECT_STATUS_AVAILABLE } from '@/constants/object-status'
-  import { mapState, mapGetters } from 'vuex'
   import { btoaUnicode } from '@/utils'
   import Spinner from 'vue-simple-spinner'
   import PipeList from '@/components/PipeList'
@@ -302,6 +306,7 @@ def flex_handler(flex):
     },
     data() {
       return {
+        scrollbar_container_id: _.uniqueId('content-'),
         is_selecting: false,
         show_test_panel: false,
         pipe_list_filter: '',

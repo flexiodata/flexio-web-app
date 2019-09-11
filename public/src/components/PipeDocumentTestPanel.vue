@@ -1,24 +1,23 @@
 <template>
   <div class="flex flex-column h-100" v-if="visible">
     <!-- header -->
-    <div class="flex-none flex flex-row items-center bg-nearer-white bb b--black-05 pa2">
+    <div class="flex-none flex flex-row items-center bg-nearer-white bb b--black-05 ph2 pv1">
       <div class="f6 fw6">Test Function</div>
-      <el-button
-        type="text"
-        size="small"
-        style="margin-left: 8px; padding: 1px 0 0; border: 0"
-        :class="show_input_parameters ? '' : 'hint--bottom'"
-        :aria-label="show_input_parameters ? '' : 'Test this function with input parameters'"
-        @click="show_input_parameters = !show_input_parameters"
-      >
-        {{show_input_parameters ? 'Hide parameters' : 'Show parameters'}}
-      </el-button>
       <div class="flex-fill"></div>
+      <el-button
+        size="small"
+        type="text"
+        style="padding: 0"
+        @click="show_advanced_input = !show_advanced_input"
+      >
+        <span v-if="show_advanced_input">Test with parameters</span>
+        <span v-else>Test with JSON</span>
+      </el-button>
       <el-button
         size="mini"
         type="primary"
         class="ttu fw6"
-        style="margin-right: 8px"
+        style="margin: 2px 8px; padding: 6px 12px"
         @click="runTest"
       >
         Run test
@@ -34,24 +33,49 @@
 
     <!-- input panel -->
     <div
-      class="flex-none pa3 bb b--black-05 overflow-y-auto"
-      style="max-height: 16rem"
-      v-show="show_input_parameters"
+      class="flex-none pa2 overflow-y-auto"
+      style="max-height: 260px"
     >
       <ProcessInput
         ref="process-input"
-        v-model="process_input"
+        v-model="process_input_advanced"
         :process-data.sync="process_data"
+        v-if="show_advanced_input"
       />
+      <div
+        class="mv3 tc lh-title silver i f7"
+        v-else-if="pipe_params.length == 0"
+      >
+        There are no parameters to specify on this function</span>
+      </div>
+      <el-form
+        class="el-form--compact el-form__label-tiny"
+        size="small"
+        :model="process_input_simple"
+        v-else
+      >
+        <el-form-item
+          style="margin-bottom: 5px"
+          :label="item.name"
+          :item="item"
+          :index="index"
+          :key="item.name"
+          v-for="(item, index) in pipe_params"
+        >
+          <el-input
+            auto-complete="off"
+            spellcheck="false"
+            style="line-height: 24px"
+            v-model="process_input_simple.data[index]"
+          />
+        </el-form-item>
+      </el-form>
     </div>
 
     <!-- output panel -->
     <div class="flex-fill flex flex-column">
       <!-- output panel header -->
-      <div
-        class="flex-none flex flex-row items-center bg-nearer-white bb b--black-05 pa2"
-        v-show="show_input_parameters"
-      >
+      <div class="flex-none flex flex-row items-center bg-nearer-white bt bb b--black-05 pa2">
         <div class="f6 fw6">Result</div>
       </div>
 
@@ -73,11 +97,21 @@
   import ProcessInput from '@/components/ProcessInput'
   import ProcessContent from '@/components/ProcessContent'
 
+  const getSimpleProcessInput = () => {
+    return {
+      data: [],
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+  }
+
   const getDefaultState = () => {
     return {
       active_process_eid: '',
-      show_input_parameters: false,
-      process_input: {},
+      show_advanced_input: false,
+      process_input_simple: getSimpleProcessInput(),
+      process_input_advanced: {},
       process_data: {},
     }
   }
@@ -98,8 +132,8 @@
       ProcessContent,
     },
     watch: {
-      pipeEid: {
-        handler: 'showResetMessage'
+      pipe_params: {
+        handler: 'initProcessInputFromParams'
       },
       visible: {
         handler: 'initSelf',
@@ -116,19 +150,23 @@
       pipe() {
         return _.get(this.$store.state.pipes, `items.${this.pipeEid}`, {})
       },
+      pipe_params() {
+        return _.get(this.pipe, 'params', [])
+      }
     },
     methods: {
       initSelf() {
         // reset our local component data
         _.assign(this.$data, getDefaultState())
+        this.initProcessInputFromParams()
       },
-      showResetMessage() {
-        //console.log('TODO')
+      initProcessInputFromParams() {
+        this.process_input_simple = _.assign({}, getSimpleProcessInput())
       },
       runTest() {
         var team_name = this.active_team_name
         var attrs = _.pick(this.pipe, ['task'])
-        var cfg = this.process_input
+        var cfg = this.show_advanced_input ? this.process_input_advanced : this.process_input_simple
 
         _.assign(attrs, {
           parent_eid: this.pipe.eid,
