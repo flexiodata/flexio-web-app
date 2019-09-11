@@ -4,19 +4,20 @@
     <div class="flex-none flex flex-row items-center bg-nearer-white bb b--black-05 ph2 pv1">
       <div class="f6 fw6">Test Function</div>
       <div class="flex-fill"></div>
-      <LabelSwitch
-        class="hint--bottom"
-        active-label=""
-        inactive-label=""
-        font-size="12px"
-        :aria-label="show_advanced_input ? 'Hide advanced input options' : 'Show advanced input options'"
-        v-model="show_advanced_input"
-      />
+      <el-button
+        size="small"
+        type="text"
+        style="padding: 0"
+        @click="show_advanced_input = !show_advanced_input"
+      >
+        <span v-if="show_advanced_input">Test with parameters</span>
+        <span v-else>Test with JSON</span>
+      </el-button>
       <el-button
         size="mini"
         type="primary"
         class="ttu fw6"
-        style="margin: 2px 12px; padding: 6px 12px"
+        style="margin: 2px 8px; padding: 6px 12px"
         @click="runTest"
       >
         Run test
@@ -95,7 +96,6 @@
   import { PROCESS_MODE_BUILD } from '@/constants/process'
   import ProcessInput from '@/components/ProcessInput'
   import ProcessContent from '@/components/ProcessContent'
-  import LabelSwitch from '@/components/LabelSwitch'
 
   const getSimpleProcessInput = () => {
     return {
@@ -130,7 +130,6 @@
     components: {
       ProcessInput,
       ProcessContent,
-      LabelSwitch,
     },
     watch: {
       pipe_params: {
