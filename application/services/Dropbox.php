@@ -490,15 +490,15 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
         // instantiate the dropbox service using the credentials,
         // http client and storage mechanism for the token
-        $service = $service_factory->createService('dropbox', $credentials, $storage, array());
-        if (!isset($service))
+        $oauth = $service_factory->createService('dropbox', $credentials, $storage, array());
+        if (!isset($oauth))
             return false;
 
         // STEP 3: if we have a code parameter, we have enough information
         // to authenticate and get the token; do so and return the object
         if (isset($params['code']))
         {
-            $token = $service->requestAccessToken($params['code']);
+            $token = $oauth->requestAccessToken($params['code']);
             $this->access_token = $token->getAccessToken();
             $this->base_path = $params['base_path'] ?? '';
             return true;
