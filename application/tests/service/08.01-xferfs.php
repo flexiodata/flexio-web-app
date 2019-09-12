@@ -29,7 +29,7 @@ class Test
         // BEGIN TEST
         $service = new \Flexio\Services\XFerFs;
         $actual = get_class($service);
-        $expected = 'Flexio\Services\Store';
-        \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\Store; basic file syntax check',  $actual, $expected, $results);
+        $expected = 'Flexio\Services\XFerFs';
+        \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\XFerFs; basic file syntax check',  $actual, $expected, $results);
     }
 }
