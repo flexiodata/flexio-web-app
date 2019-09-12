@@ -260,7 +260,7 @@ class Gmail implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return false;
     }
 
-    private static function createService($oauth_callback) // TODO: set parameter/return type
+    private static function createService($oauth_callback) : ?\OAuth\OAuth2\Service\Google
     {
         $client_id = $GLOBALS['g_config']->gmail_client_id ?? '';
         $client_secret = $GLOBALS['g_config']->gmail_client_secret ?? '';
