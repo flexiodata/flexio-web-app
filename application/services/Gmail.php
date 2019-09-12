@@ -24,7 +24,7 @@ class Gmail implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     private $updated = '';
     private $expires = 0;
 
-    public static function create(array $params = null) // TODO: fix dual return types which is used for Oauth
+    public static function create(array $params = null) : \Flexio\Services\Gmail
     {
         $obj = new self;
         $obj->initialize($params);
@@ -230,7 +230,7 @@ class Gmail implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             $token = $oauth->requestAccessToken($params['code']);
             if (!$token)
                 return false;
-            
+
             $this->access_token = $token->getAccessToken();
             $this->refresh_token = $token->getRefreshToken();
             $this->expires = $token->getEndOfLife();

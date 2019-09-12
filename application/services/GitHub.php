@@ -23,7 +23,7 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     private $owner = '';
     private $repository = '';
 
-    public static function create(array $params = null) // TODO: add return type; TODO: fix dual return types which is used for Oauth
+    public static function create(array $params = null) : \Flexio\Services\Github
     {
         $obj = new self;
         $obj->initialize($params);
@@ -37,7 +37,7 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
         return false;
     }
-    
+
     public function getAuthorizationUri() : string
     {
         return $this->authorization_uri;

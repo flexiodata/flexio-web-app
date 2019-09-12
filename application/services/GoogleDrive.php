@@ -24,7 +24,7 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
     private $expires = 0;
     private $base_path = '';
 
-    public static function create(array $params = null) // TODO: add return type; TODO: fix dual return types which is used for Oauth
+    public static function create(array $params = null) : \Flexio\Services\GoogleDrive
     {
         $obj = new self;
         $obj->initialize($params);
@@ -38,7 +38,7 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
 
         return false;
     }
-    
+
     public function getAuthorizationUri() : string
     {
         return $this->authorization_uri;

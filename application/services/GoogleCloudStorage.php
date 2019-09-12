@@ -25,7 +25,7 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
     private $bucket = '';
     private $base_path = '';
 
-    public static function create(array $params = null) // TODO: add return type; TODO: fix dual return types which is used for Oauth
+    public static function create(array $params = null) : \Flexio\Services\GoogleCloudStorage
     {
         $obj = new self;
         $obj->initialize($params);
@@ -39,7 +39,7 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
 
         return false;
     }
-    
+
     public function getAuthorizationUri() : string
     {
         return $this->authorization_uri;
