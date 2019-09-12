@@ -18,24 +18,35 @@ namespace Flexio\Tests;
 
 class Base
 {
-    public const TEST_SERVICE_FLEX = true;
+    public const TEST_SERVICE_HTTP = true;
+    public const TEST_SERVICE_EMAIL = true;
+    public const TEST_SERVICE_NOTICEEMAIL = true;
+    public const TEST_SERVICE_PROCESSCONTEXT = true;
+    public const TEST_SERVICE_STORAGEFS = true;
+    public const TEST_SERVICE_STORE = true;
+    public const TEST_SERVICE_XFERFS = true;
+    public const TEST_SERVICE_XFERFSS3 = true;
+
     public const TEST_SERVICE_AMAZONS3 = true;
-    public const TEST_SERVICE_BOX = false;
-    public const TEST_SERVICE_DROPBOX = false;
-    public const TEST_SERVICE_GOOGLEDRIVE = false;
-    public const TEST_SERVICE_GOOGLESHEETS = false;
-    public const TEST_SERVICE_GOOGLECLOUDSTORAGE = false;
-    public const TEST_SERVICE_FTP = false;
-    public const TEST_SERVICE_SFTP = false;
-    public const TEST_SERVICE_GITHUB = false;
-    public const TEST_SERVICE_MYSQL = false;
-    public const TEST_SERVICE_POSTGRES = false;
-    public const TEST_SERVICE_ELASTICSEARCH = false;
-    public const TEST_SERVICE_TWILIO = false;
-    public const TEST_SERVICE_PIPELINEDEALS = false;
-    public const TEST_SERVICE_SOCRATA = false;
-    public const TEST_SERVICE_FIREBASE = false;
-    public const TEST_SERVICE_HTTP = false;
+    public const TEST_SERVICE_BOX = true;
+    public const TEST_SERVICE_DROPBOX = true;
+    public const TEST_SERVICE_ELASTICSEARCH = true;
+    public const TEST_SERVICE_FIREBASE = true;
+    public const TEST_SERVICE_FTP = true;
+    public const TEST_SERVICE_GITHUB = true;
+    public const TEST_SERVICE_GMAIL = true;
+    public const TEST_SERVICE_GOOGLECLOUDSTORAGE = true;
+    public const TEST_SERVICE_GOOGLEDRIVE = true;
+    public const TEST_SERVICE_GOOGLESHEETS = true;
+    public const TEST_SERVICE_LINKEDIN = true;
+    public const TEST_SERVICE_MAILJET = true;
+    public const TEST_SERVICE_MYSQL = true;
+    public const TEST_SERVICE_PIPELINEDEALS = true;
+    public const TEST_SERVICE_POSTGRES = true;
+    public const TEST_SERVICE_SFTP = true;
+    public const TEST_SERVICE_SOCRATA = true;
+    public const TEST_SERVICE_TWILIO = true;
+    public const TEST_SERVICE_TWITTER = true;
 
     public const ERROR_EXCEPTION = 'error-exception';
     public const ERROR_NO_EXCEPTION = 'error-no-exception';
