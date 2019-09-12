@@ -32,6 +32,7 @@ class Base
     public const TEST_SERVICE_DROPBOX = true;
     public const TEST_SERVICE_ELASTICSEARCH = true;
     public const TEST_SERVICE_FIREBASE = true;
+    public const TEST_SERVICE_FLEX = true; // TODO: should we use TEST_SERVICE_STORE instead?
     public const TEST_SERVICE_FTP = true;
     public const TEST_SERVICE_GITHUB = true;
     public const TEST_SERVICE_GMAIL = true;
