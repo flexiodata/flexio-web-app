@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        if (\Flexio\Tests\Base::TEST_STORAGE_SFTP === false)
+        if (\Flexio\Tests\Base::TEST_SERVICE_SFTP === false)
             return;
 
 

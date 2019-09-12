@@ -18,15 +18,15 @@ namespace Flexio\Tests;
 
 class Base
 {
-    public const TEST_STORAGE_FLEX = true;
-    public const TEST_STORAGE_AMAZONS3 = true;
-    public const TEST_STORAGE_BOX = false;
-    public const TEST_STORAGE_DROPBOX = false;
-    public const TEST_STORAGE_GOOGLEDRIVE = false;
-    public const TEST_STORAGE_GOOGLESHEETS = false;
-    public const TEST_STORAGE_GOOGLECLOUDSTORAGE = false;
-    public const TEST_STORAGE_SFTP = false;
-    public const TEST_STORAGE_GITHUB = false;
+    public const TEST_SERVICE_FLEX = true;
+    public const TEST_SERVICE_AMAZONS3 = true;
+    public const TEST_SERVICE_BOX = false;
+    public const TEST_SERVICE_DROPBOX = false;
+    public const TEST_SERVICE_GOOGLEDRIVE = false;
+    public const TEST_SERVICE_GOOGLESHEETS = false;
+    public const TEST_SERVICE_GOOGLECLOUDSTORAGE = false;
+    public const TEST_SERVICE_SFTP = false;
+    public const TEST_SERVICE_GITHUB = false;
 
     public const ERROR_EXCEPTION = 'error-exception';
     public const ERROR_NO_EXCEPTION = 'error-no-exception';

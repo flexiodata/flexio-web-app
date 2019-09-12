@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        if (\Flexio\Tests\Base::TEST_STORAGE_GOOGLESHEETS === false)
+        if (\Flexio\Tests\Base::TEST_SERVICE_GOOGLESHEETS === false)
             return;
 
 
