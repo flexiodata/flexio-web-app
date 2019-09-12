@@ -292,9 +292,9 @@ class Twitter implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             $oauth_callback
         );
 
-        // instantiate the google service using the credentials,
+        // instantiate the twitter service using the credentials,
         // http client and storage mechanism for the token
-        $service = $service_factory->createService('google', $credentials, $storage, array('Twitter', 'spreadsheets', 'documentslist'));
+        $service = $service_factory->createService('twitter', $credentials, $storage, array());
         if (!isset($service))
             return null;
 
