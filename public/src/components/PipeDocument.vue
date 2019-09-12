@@ -69,9 +69,11 @@
           <div class="flex-fill f4 fw6 lh-title">Definition</div>
           <div class="flex-none">
             <el-button
-              style="padding: 0"
               type="text"
-              @click.stop="onEditTaskClick"
+              class="hint--top"
+              style="padding: 0"
+              aria-label="Edit Definition"
+              @click.stop="onEditDefinitionClick"
               v-show="!is_task_editing"
               v-require-rights:pipe.update
             >
@@ -127,8 +129,10 @@
           <div class="flex-fill f4 fw6 lh-title">Documentation</div>
           <div class="flex-none">
             <el-button
-              style="padding: 0"
               type="text"
+              class="hint--top"
+              style="padding: 0"
+              aria-label="Edit Documentation"
               @click.stop="onEditDocumentationClick"
               v-show="!is_addon_editing"
               v-require-rights:pipe.update
@@ -338,7 +342,7 @@
           scroller.to(el, duration)
         }
       },
-      onEditTaskClick() {
+      onEditDefinitionClick() {
         this.is_task_editing = true
         if (this.expanded_sections.indexOf('definition') == -1) {
           this.expanded_sections.push('definition')
