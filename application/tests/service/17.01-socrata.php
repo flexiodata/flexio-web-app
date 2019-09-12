@@ -20,6 +20,10 @@ class Test
 {
     public function run(&$results)
     {
+        if (\Flexio\Tests\Base::TEST_SERVICE_SOCRATA === false)
+            return;
+
+
         // TEST: service creation
 
         // BEGIN TEST

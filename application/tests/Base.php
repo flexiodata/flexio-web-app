@@ -25,8 +25,17 @@ class Base
     public const TEST_SERVICE_GOOGLEDRIVE = false;
     public const TEST_SERVICE_GOOGLESHEETS = false;
     public const TEST_SERVICE_GOOGLECLOUDSTORAGE = false;
+    public const TEST_SERVICE_FTP = false;
     public const TEST_SERVICE_SFTP = false;
     public const TEST_SERVICE_GITHUB = false;
+    public const TEST_SERVICE_MYSQL = false;
+    public const TEST_SERVICE_POSTGRES = false;
+    public const TEST_SERVICE_ELASTICSEARCH = false;
+    public const TEST_SERVICE_TWILIO = false;
+    public const TEST_SERVICE_PIPELINEDEALS = false;
+    public const TEST_SERVICE_SOCRATA = false;
+    public const TEST_SERVICE_FIREBASE = false;
+    public const TEST_SERVICE_HTTP = false;
 
     public const ERROR_EXCEPTION = 'error-exception';
     public const ERROR_NO_EXCEPTION = 'error-no-exception';
