@@ -24,7 +24,7 @@ class Twitter implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     private $expires = 0;
     private $base_path = '';
 
-    public static function create(array $params = null) // TODO: add return type; TODO: fix dual return types which is used for Oauth
+    public static function create(array $params = null) : \Flexio\Services\Twitter
     {
         $obj = new self;
         $obj->initialize($params);
@@ -173,7 +173,7 @@ class Twitter implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
         // STEP 1: if we have an access token and it's not expired, create an object
         // from the access token and return it
-        
+
         if (isset($params['access_token']) && strlen($params['access_token']) > 0)
         {
             $curtime = time();
@@ -274,7 +274,7 @@ class Twitter implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return false;
     }
 
-    private static function createService($oauth_callback) // TODO: add return type; s
+    private static function createService($oauth_callback) : ?\Flexio\Services\Twitter
     {
         $client_id = $GLOBALS['g_config']->twitter_client_id ?? '';
         $client_secret = $GLOBALS['g_config']->twitter_client_secret ?? '';
