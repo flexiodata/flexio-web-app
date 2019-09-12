@@ -775,7 +775,7 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
         return false;
     }
 
-    private static function createService($oauth_callback) // TODO: add return type; TODO: add parameter type
+    private static function createService($oauth_callback) : ?\Flexio\Services\GoogleSheets
     {
         $client_id = $GLOBALS['g_config']->googledrive_client_id ?? '';
         $client_secret = $GLOBALS['g_config']->googledrive_client_secret ?? '';

@@ -643,7 +643,7 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
         return false;
     }
 
-    private static function createService($oauth_callback) // TODO: add return type; s
+    private static function createService($oauth_callback) : ?\Flexio\Services\GoogleDrive
     {
         $client_id = $GLOBALS['g_config']->googledrive_client_id ?? '';
         $client_secret = $GLOBALS['g_config']->googledrive_client_secret ?? '';

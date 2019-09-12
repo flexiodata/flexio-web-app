@@ -685,7 +685,7 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
         return false;
     }
 
-    private static function createService($oauth_callback) // TODO: add return type; s
+    private static function createService($oauth_callback) : ?\Flexio\Services\GoogleCloudStorage
     {
         $client_id = $GLOBALS['g_config']->googlecloudstorage_client_id ?? '';
         $client_secret = $GLOBALS['g_config']->googlecloudstorage_client_secret ?? '';

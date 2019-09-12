@@ -274,7 +274,7 @@ class Twitter implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return false;
     }
 
-    private static function createService($oauth_callback) // TODO: add return type; s
+    private static function createService($oauth_callback) : ?\Flexio\Services\Twitter
     {
         $client_id = $GLOBALS['g_config']->twitter_client_id ?? '';
         $client_secret = $GLOBALS['g_config']->twitter_client_secret ?? '';

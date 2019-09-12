@@ -649,7 +649,7 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return false;
     }
 
-    private static function createService($oauth_callback) // TODO: add return type; TODO: add parameter type
+    private static function createService($oauth_callback) : ?\Flexio\Services\Box // TODO: add parameter type
     {
         $client_id = $GLOBALS['g_config']->box_client_id ?? '';
         $client_secret = $GLOBALS['g_config']->box_client_secret ?? '';
