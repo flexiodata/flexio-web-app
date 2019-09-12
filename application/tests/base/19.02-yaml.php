@@ -207,5 +207,39 @@ EOD;
         ';
         \Flexio\Tests\Check::assertArray('B.2', '\Flexio\Base\Yaml::parse(); extract and parse yaml from front matter in comments',  $actual, $expected, $results);
 
+    // BEGIN TEST
+    $content = <<<EOD
+# ---
+# examples:
+# - 100, "USD"
+# ---
+EOD;
+        $yaml = \Flexio\Base\Yaml::extract($content);
+        $actual = \Flexio\Base\Yaml::parse($yaml);
+        $expected = '
+        {
+            "examples":["100, \"USD\""]
+        }
+        ';
+        \Flexio\Tests\Check::assertArray('B.3', '\Flexio\Base\Yaml::parse(); extract and parse yaml from front matter in comments',  $actual, $expected, $results);
+
+    // BEGIN TEST
+    $content = <<<EOD
+# ---
+# examples:
+# - '"USD"'
+# - "\"USD\""
+# - '100, "USD"'
+# ---
+EOD;
+        $yaml = \Flexio\Base\Yaml::extract($content);
+        $actual = \Flexio\Base\Yaml::parse($yaml);
+        $expected = '
+        {
+            "examples":["\"USD\"", "\"USD\"", "100, \"USD\""]
+        }
+        ';
+        \Flexio\Tests\Check::assertArray('B.4', '\Flexio\Base\Yaml::parse(); extract and parse yaml from front matter in comments',  $actual, $expected, $results);
+
     }
 }
