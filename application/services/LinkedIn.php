@@ -270,7 +270,7 @@ class LinkedIn implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return false;
     }
 
-    private static function createService($oauth_callback) : ?\Flexio\Services\LinkedIn
+    private static function createService($oauth_callback) : ?\OAuth\OAuth2\Service\LinkedIn
     {
         $client_id = $GLOBALS['g_config']->linkedin_client_id ?? '';
         $client_secret = $GLOBALS['g_config']->linkedin_client_secret ?? '';
