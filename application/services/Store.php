@@ -201,7 +201,7 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         }
          else
         {
-            // make sure the existant stream has a type of file (SF) as opposed to directory (SD)
+            // make sure the existent stream has a type of file (SF) as opposed to directory (SD)
             $stream_properties = $stream->get();
             if ($stream_properties['stream_type'] != \Flexio\Object\Stream::TYPE_FILE)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
