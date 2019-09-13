@@ -20,12 +20,16 @@ class Test
 {
     public function run(&$results)
     {
+        if (\Flexio\Tests\Base::TEST_SERVICE_SOCRATA === false)
+            return;
+
+
         // TEST: service creation
 
         // BEGIN TEST
-        $service = new \Flexio\Services\MailJet;
+        $service = new \Flexio\Services\Socrata;
         $actual = get_class($service);
-        $expected = 'Flexio\Services\MailJet';
-        \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\MailJet::create(); basic file syntax check',  $actual, $expected, $results);
+        $expected = 'Flexio\Services\Socrata';
+        \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\Socrata::create(); basic file syntax check',  $actual, $expected, $results);
     }
 }

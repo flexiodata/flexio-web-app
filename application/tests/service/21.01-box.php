@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        if (\Flexio\Tests\Base::TEST_STORAGE_BOX === false)
+        if (\Flexio\Tests\Base::TEST_SERVICE_BOX === false)
             return;
 
 

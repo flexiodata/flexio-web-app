@@ -20,12 +20,16 @@ class Test
 {
     public function run(&$results)
     {
+        if (\Flexio\Tests\Base::TEST_SERVICE_TWILIO === false)
+            return;
+
+
         // TEST: service creation
 
         // BEGIN TEST
-        $service = new \Flexio\Services\PipelineDeals;
+        $service = new \Flexio\Services\Twilio;
         $actual = get_class($service);
-        $expected = 'Flexio\Services\PipelineDeals';
-        \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\PipelineDeals; basic file syntax check',  $actual, $expected, $results);
+        $expected = 'Flexio\Services\Twilio';
+        \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\Twilio; basic file syntax check',  $actual, $expected, $results);
     }
 }

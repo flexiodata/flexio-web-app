@@ -5,7 +5,7 @@
  *
  * Project:  Flex.io App
  * Author:   Aaron L. Williams
- * Created:  2016-10-31
+ * Created:  2016-05-16
  *
  * @package flexio
  * @subpackage Tests
@@ -20,12 +20,16 @@ class Test
 {
     public function run(&$results)
     {
+        if (\Flexio\Tests\Base::TEST_SERVICE_POSTGRES === false)
+            return;
+
+
         // TEST: service creation
 
         // BEGIN TEST
-        $service = new \Flexio\Services\Twilio;
+        $service = new \Flexio\Services\Postgres;
         $actual = get_class($service);
-        $expected = 'Flexio\Services\Twilio';
-        \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\Twilio; basic file syntax check',  $actual, $expected, $results);
+        $expected = 'Flexio\Services\Postgres';
+        \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\Postgres::create(); basic file syntax check',  $actual, $expected, $results);
     }
 }

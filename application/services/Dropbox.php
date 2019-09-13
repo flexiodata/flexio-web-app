@@ -22,7 +22,7 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     private $access_token = '';
     private $base_path = '';
 
-    public static function create(array $params = null) // TODO: add return type; TODO: fix dual return types which is used for Oauth
+    public static function create(array $params = null) : \Flexio\Services\Dropbox
     {
         $obj = new self;
         $obj->initialize($params);
@@ -41,7 +41,7 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     {
         return $this->authorization_uri;
     }
-    
+
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////

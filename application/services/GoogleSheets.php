@@ -24,7 +24,7 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
     private $updated = '';
     private $expires = 0;
 
-    public static function create(array $params = null) // TODO: add return type; TODO: fix dual return types which is used for Oauth
+    public static function create(array $params = null) : \Flexio\Services\GoogleSheets
     {
         $obj = new self;
         $obj->initialize($params);
@@ -43,7 +43,7 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
     {
         return $this->authorization_uri;
     }
-    
+
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
@@ -775,7 +775,7 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
         return false;
     }
 
-    private static function createService($oauth_callback) // TODO: add return type; TODO: add parameter type
+    private static function createService($oauth_callback) : ?\OAuth\OAuth2\Service\Google
     {
         $client_id = $GLOBALS['g_config']->googledrive_client_id ?? '';
         $client_secret = $GLOBALS['g_config']->googledrive_client_secret ?? '';

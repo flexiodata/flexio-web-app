@@ -25,7 +25,7 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     private $folders = [];
     private $base_path = '';
 
-    public static function create(array $params = null) // TODO: add return type; fix dual return types which is used for Oauth
+    public static function create(array $params = null) : \Flexio\Services\Box
     {
         $obj = new self;
         $obj->initialize($params);
@@ -618,7 +618,7 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             $token = $oauth->requestAccessToken($params['code']);
             if (!$token)
                 return false;
-            
+
             $this->access_token = $token->getAccessToken();
             $this->refresh_token = $token->getRefreshToken();
             $this->expires = $token->getEndOfLife();
@@ -649,7 +649,7 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return false;
     }
 
-    private static function createService($oauth_callback) // TODO: add return type; TODO: add parameter type
+    private static function createService($oauth_callback) : ?\OAuth\OAuth2\Service\Box // TODO: add parameter type
     {
         $client_id = $GLOBALS['g_config']->box_client_id ?? '';
         $client_secret = $GLOBALS['g_config']->box_client_secret ?? '';

@@ -5,7 +5,7 @@
  *
  * Project:  Flex.io App
  * Author:   Aaron L. Williams
- * Created:  2016-10-31
+ * Created:  2016-05-16
  *
  * @package flexio
  * @subpackage Tests
@@ -20,12 +20,16 @@ class Test
 {
     public function run(&$results)
     {
+        if (\Flexio\Tests\Base::TEST_SERVICE_FTP === false)
+            return;
+
+
         // TEST: service creation
 
         // BEGIN TEST
-        $service = new \Flexio\Services\Socrata;
+        $service = new \Flexio\Services\Ftp;
         $actual = get_class($service);
-        $expected = 'Flexio\Services\Socrata';
-        \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\Socrata::create(); basic file syntax check',  $actual, $expected, $results);
+        $expected = 'Flexio\Services\Ftp';
+        \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\Ftp::create(); basic file syntax check',  $actual, $expected, $results);
     }
 }
