@@ -36,7 +36,7 @@ class Base
     public const TEST_SERVICE_FTP = true;
     public const TEST_SERVICE_GITHUB = true;
     public const TEST_SERVICE_GMAIL = true;
-    public const TEST_SERVICE_GOOGLECLOUDSTORAGE = true;
+    public const TEST_SERVICE_GOOGLECLOUDSTORAGE = false; // disabled
     public const TEST_SERVICE_GOOGLEDRIVE = true;
     public const TEST_SERVICE_GOOGLESHEETS = true;
     public const TEST_SERVICE_LINKEDIN = true;
