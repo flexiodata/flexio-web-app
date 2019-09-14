@@ -39,39 +39,40 @@ RUN yarn add underscore && \
 
 # network
 RUN pip3 install zmq && \
-    pip3 install requests && \ 
+    pip3 install requests && \
+    pip3 install asyncio && \
     pip3 install aiohttp && \
-    pip3 install arrow && \ 
-    pip3 install pendulum && \ 
-    pip3 install numpy && \ 
-    pip3 install scipy && \ 
-    pip3 install scikit-learn && \ 
-    pip3 install sympy && \ 
-    pip3 install pandas && \ 
-    pip3 install pillow && \ 
-    pip3 install beautifulsoup4 && \ 
-    pip3 install lxml && \ 
-    pip3 install pypdf2 && \ 
-    pip3 install fpdf && \ 
+    pip3 install arrow && \
+    pip3 install pendulum && \
+    pip3 install numpy && \
+    pip3 install scipy && \
+    pip3 install scikit-learn && \
+    pip3 install sympy && \
+    pip3 install pandas && \
+    pip3 install pillow && \
+    pip3 install beautifulsoup4 && \
+    pip3 install lxml && \
+    pip3 install pypdf2 && \
+    pip3 install fpdf && \
     pip3 install openpyxl && \
     pip3 install matplotlib && \
-    pip3 install bokeh && \ 
-    pip3 install seaborn && \ 
-    pip3 install plotly && \ 
-    pip3 install nltk && \ 
-    pip3 install gensim && \ 
-    pip3 install tensorflow && \ 
-    pip3 install keras && \ 
-    pip3 install cerberus && \ 
-    pip3 install faker && \ 
-    pip3 install sqlalchemy && \ 
-    pip3 install plaid && \ 
+    pip3 install bokeh && \
+    pip3 install seaborn && \
+    pip3 install plotly && \
+    pip3 install nltk && \
+    pip3 install gensim && \
+    pip3 install tensorflow && \
+    pip3 install keras && \
+    pip3 install cerberus && \
+    pip3 install faker && \
+    pip3 install sqlalchemy && \
+    pip3 install plaid && \
     pip3 install pandasql && \
     pip3 install pysqldf && \
     pip3 install boto3 && \
     pip3 install mysql-connector && \
     pip3 install selenium
-    
+
 
 
 RUN cd /tmp && wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
