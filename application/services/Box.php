@@ -622,14 +622,14 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             $this->access_token = $token->getAccessToken();
             $this->refresh_token = $token->getRefreshToken();
             $this->expires = $token->getEndOfLife();
-            if (is_null($object->refresh_token))
+            if (is_null($this->refresh_token))
             {
-                $object->refresh_token = '';
+                $this->refresh_token = '';
             }
 
             $this->base_path = $params['base_path'] ?? '';
 
-            return $this;
+            return true;
         }
 
         // STEP 4: we don't have a code parameter, so we need more
