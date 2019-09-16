@@ -31,6 +31,7 @@ class Connection extends ModelBase
                 'connection_mode'   => array('type' => 'string', 'required' => false, 'default' => \Model::CONNECTION_MODE_RESOURCE),
                 'connection_status' => array('type' => 'string', 'required' => false, 'default' => \Model::CONNECTION_STATUS_UNAVAILABLE),
                 'connection_info'   => array('type' => 'string', 'required' => false, 'default' => '{}'),
+                'setup_config'      => array('type' => 'string', 'required' => false, 'default' => '{}'),
                 'expires'           => array('type' => 'date',   'required' => false, 'default' => null, 'allow_null' => true),
                 'owned_by'          => array('type' => 'string', 'required' => false, 'default' => ''),
                 'created_by'        => array('type' => 'string', 'required' => false, 'default' => '')
@@ -45,8 +46,9 @@ class Connection extends ModelBase
         if (self::isValidConnectionStatus($process_arr['connection_status']) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
-        // encrypt the connection info
+        // encrypt the connection and setup info
         $process_arr['connection_info'] = \Flexio\Base\Util::encrypt($process_arr['connection_info'], $GLOBALS['g_store']->connection_enckey);
+        $process_arr['setup_config'] = \Flexio\Base\Util::encrypt($process_arr['setup_config'], $GLOBALS['g_store']->connection_enckey);
 
         $db = $this->getDatabase();
         try
@@ -146,6 +148,7 @@ class Connection extends ModelBase
                 'connection_mode'   => array('type' => 'string', 'required' => false),
                 'connection_status' => array('type' => 'string', 'required' => false),
                 'connection_info'   => array('type' => 'string', 'required' => false),
+                'setup_config'      => array('type' => 'string', 'required' => false),
                 'expires'           => array('type' => 'date',   'required' => false, 'allow_null' => true),
                 'owned_by'          => array('type' => 'string', 'required' => false),
                 'created_by'        => array('type' => 'string', 'required' => false)
@@ -161,9 +164,11 @@ class Connection extends ModelBase
         if (isset($params['connection_status']) && self::isValidConnectionStatus($params['connection_status']) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
-        // encrypt the connection info
+        // encrypt the connection and setup info
         if (isset($process_arr['connection_info']))
             $process_arr['connection_info'] = \Flexio\Base\Util::encrypt($process_arr['connection_info'], $GLOBALS['g_store']->connection_enckey);
+        if (isset($process_arr['setup_config']))
+            $process_arr['setup_config'] = \Flexio\Base\Util::encrypt($process_arr['setup_config'], $GLOBALS['g_store']->connection_enckey);
 
         try
         {
@@ -201,7 +206,12 @@ class Connection extends ModelBase
         $output = array();
         foreach ($rows as $row)
         {
-            $row['connection_info'] = \Flexio\Base\Util::decrypt($row['connection_info'], $GLOBALS['g_store']->connection_enckey);
+            $connection_info = \Flexio\Base\Util::decrypt($row['connection_info'], $GLOBALS['g_store']->connection_enckey);
+            $setup_config = \Flexio\Base\Util::decrypt($row['setup_config'], $GLOBALS['g_store']->connection_enckey);
+
+            // if we can't decrypt the info return empty param info
+            $row['connection_info'] = $connection_info ?? '{}';
+            $row['setup_config'] = $setup_config ?? '{}';
 
             $output[] = array('eid'               => $row['eid'],
                               'eid_type'          => \Model::TYPE_CONNECTION,
@@ -213,6 +223,7 @@ class Connection extends ModelBase
                               'connection_mode'   => $row['connection_mode'],
                               'connection_status' => $row['connection_status'],
                               'connection_info'   => $row['connection_info'],
+                              'setup_config'      => $row['setup_config'],
                               'expires'           => $row['expires'],
                               'owned_by'          => $row['owned_by'],
                               'created_by'        => $row['created_by'],

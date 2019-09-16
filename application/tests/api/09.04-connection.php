@@ -219,13 +219,14 @@ class Test
             );
             $result = \Flexio\Tests\Util::callApi($params);
             $actual = json_decode($result['response'],true);
+
             $expected = '
             {
                 "error" : {
                     "code": "connection-failed"
                 }
             }';
-            \Flexio\Tests\Check::assertInArray("D.$idx", "POST /:teamid/connections/:objeid/connect; copy of $type: test connecting within invalid info",  $actual, $expected, $results);
+            \Flexio\Tests\Check::assertInArray("D.$idx", "POST /:teamid/connections/:objeid/connect; copy of $type: test connecting with invalid info",  $actual, $expected, $results);
         }
     }
 }

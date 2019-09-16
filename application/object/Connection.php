@@ -73,10 +73,12 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         if (!isset($properties))
             $properties = array();
 
-        // connection info is stored as an encrypted json string, so this need to be encoded;
+        // connection and setup info is stored as an encrypted json string, so this need to be encoded;
         // encryption will happen elsewhere
         if (isset($properties) && isset($properties['connection_info']))
             $properties['connection_info'] = json_encode($properties['connection_info']);
+        if (isset($properties) && isset($properties['setup_config']))
+            $properties['setup_config'] = json_encode($properties['setup_config']);
 
         $object = new static();
         $connection_model = $object->getModel()->connection;
@@ -126,9 +128,11 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         // connection types to fail
         $properties = $this->getConnectionPropertiesToUpdate($properties);
 
-        // encode the connection info
+        // encode the connection and setup info
         if (isset($properties) && isset($properties['connection_info']))
             $properties['connection_info'] = json_encode($properties['connection_info']);
+        if (isset($properties) && isset($properties['setup_config']))
+            $properties['setup_config'] = json_encode($properties['setup_config']);
 
         $this->clearCache();
         $connection_model = $this->getModel()->connection;
@@ -567,6 +571,7 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "connection_mode" => null,
                 "connection_status" => null,
                 "connection_info" => null,
+                "setup_config" => null,
                 "expires" => null,
                 "owned_by" => null,
                 "created_by" => null,
@@ -583,6 +588,11 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $connection_info = @json_decode($mapped_properties['connection_info'],true);
         if ($connection_info !== false)
             $mapped_properties['connection_info'] = $connection_info;
+
+        // unpack the setup config json
+        $setup_config = @json_decode($mapped_properties['setup_config'],true);
+        if ($setup_config !== false)
+            $mapped_properties['setup_config'] = $setup_config;
 
         // expand the user info
         $mapped_properties['owned_by'] = array(

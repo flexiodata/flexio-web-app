@@ -96,6 +96,7 @@ class Test
             'connection_type' => '',
             'connection_status' => \Model::CONNECTION_STATUS_UNAVAILABLE,
             'connection_info' => '{}',
+            'setup_config' => '{}',
             'expires' => null,
             'owned_by' => '',
             'created_by' => ''
@@ -178,6 +179,18 @@ class Test
         \Flexio\Tests\Check::assertInArray('C.7', '\Flexio\Model\Connection::create(); in connection creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
+        $handle = \Flexio\Base\Util::generateHandle();
+        $info = array(
+            'setup_config' => 'sc'
+        );
+        $eid = $model->create($info);
+        $actual = $model->get($eid);
+        $expected = array(
+            'setup_config' => 'sc'
+        );
+        \Flexio\Tests\Check::assertInArray('C.8', '\Flexio\Model\Connection::create(); in connection creation, make sure parameter is set when specified',  $actual, $expected, $results);
+
+        // BEGIN TEST
         $info = array(
         );
         $eid = $model->create($info);
@@ -185,7 +198,7 @@ class Test
         $expected = array(
             'owned_by' => ''
         );
-        \Flexio\Tests\Check::assertInArray('C.8', '\Flexio\Model\Connection::create(); in connection creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.9', '\Flexio\Model\Connection::create(); in connection creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $random_eid1 = \Flexio\Base\Eid::generate();
@@ -200,6 +213,6 @@ class Test
             'owned_by' => $random_eid1,
             'created_by' => $random_eid2
         );
-        \Flexio\Tests\Check::assertInArray('C.8', '\Flexio\Model\Connection::create(); in connection creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.10', '\Flexio\Model\Connection::create(); in connection creation, make sure parameter is set when specified',  $actual, $expected, $results);
     }
 }

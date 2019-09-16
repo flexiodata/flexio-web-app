@@ -202,6 +202,7 @@ CREATE TABLE tbl_connection (
   connection_mode varchar(1) NOT NULL default 'R',
   connection_status varchar(1) NOT NULL default 'U',
   connection_info text default '',
+  setup_config text default '',
   expires timestamp NULL default NULL,
   owned_by varchar(12) NOT NULL default '',
   created_by varchar(12) NOT NULL default '',

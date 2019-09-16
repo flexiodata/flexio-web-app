@@ -241,6 +241,10 @@ class Test
                     "username": "default",
                     "password": "default"
                 },
+                "setup_config": {
+                    "param1": "value1",
+                    "param2": "value2"
+                },
                 "expires": "2018-01-02 03:04:05"
             }'
         );
@@ -262,6 +266,10 @@ class Test
                 "port": 443,
                 "username": "default",
                 "password": "*****"
+            },
+            "setup_config": {
+                "param1": "value1",
+                "param2": "value2"
             },
             "expires": null,
             "owned_by": {

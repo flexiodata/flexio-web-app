@@ -37,7 +37,8 @@ class Connection
                 'connection_type'   => array('type' => 'string', 'required' => false),
                 'connection_mode'   => array('type' => 'string', 'required' => false),
                 'connection_status' => array('type' => 'string', 'required' => false),
-                'connection_info'   => array('type' => 'object', 'required' => false)
+                'connection_info'   => array('type' => 'object', 'required' => false),
+                'setup_config'      => array('type' => 'object', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
@@ -117,7 +118,8 @@ class Connection
                 'connection_type'   => array('type' => 'string', 'required' => false),
                 'connection_mode'   => array('type' => 'string', 'required' => false),
                 'connection_status' => array('type' => 'string', 'required' => false),
-                'connection_info'   => array('type' => 'object', 'required' => false)
+                'connection_info'   => array('type' => 'object', 'required' => false),
+                'setup_config'      => array('type' => 'object', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
@@ -348,6 +350,8 @@ class Connection
 
     private static function cleanProperties(array $properties) : array
     {
+        // TODO: clean setup_config?
+
         if (!isset($properties['connection_info']))
             return $properties;
 

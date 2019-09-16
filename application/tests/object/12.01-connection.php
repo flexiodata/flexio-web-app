@@ -216,6 +216,8 @@ class Test
             "connection_status" : null,
             "connection_info" : {
             },
+            "setup_config" : {
+            },
             "expires" : null,
             "owned_by" : {
                 "eid" : null,

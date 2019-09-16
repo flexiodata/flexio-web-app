@@ -83,6 +83,7 @@ class Test
             'content_type' => 'application/json',
             'params' => '{
                 "name": "name1",
+                "title": "Test Connection Title",
                 "description": "Test Connection Description",
                 "connection_type": "'.\Flexio\Services\Factory::TYPE_HTTP.'",
                 "connection_mode": "'.\Model::CONNECTION_MODE_RESOURCE.'",
@@ -92,6 +93,10 @@ class Test
                     "port": 443,
                     "username": "default",
                     "password": "default"
+                },
+                "setup_config": {
+                    "param1": "value1",
+                    "param2": "value2"
                 },
                 "expires": null
             }'
@@ -103,6 +108,7 @@ class Test
             "eid_type": "CTN",
             "eid_status": "A",
             "name": "name1",
+            "title": "Test Connection Title",
             "description": "Test Connection Description",
             "connection_type": "http",
             "connection_mode": "R",
@@ -112,6 +118,10 @@ class Test
                 "port": 443,
                 "username": "default",
                 "password": "*****"
+            },
+            "setup_config": {
+                "param1": "value1",
+                "param2": "value2"
             },
             "expires": null,
             "owned_by": {
