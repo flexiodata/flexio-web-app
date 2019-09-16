@@ -897,6 +897,11 @@ class Util
         $parts = array_slice($parts, -2);
         return implode('/', $parts);
     }
+
+    public static function createExcel(string $filename, array $values) : bool
+    {
+        // TODO: fill out
+    }
 }
 
 
