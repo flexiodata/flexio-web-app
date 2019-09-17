@@ -160,6 +160,10 @@
         type: Boolean,
         default: true
       },
+      formValues: {
+        type: Object,
+        default: () => {}
+      },
       formErrors: {
         type: Object,
         default: () => {}
@@ -174,8 +178,15 @@
         immediate: true,
         deep: true
       },
-      form_errors(val) {
-        this.$emit('update:formErrors', val)
+      edit_values: {
+        handler: 'emitFormValues',
+        immediate: true,
+        deep: true
+      },
+      form_errors: {
+        handler: 'emitFormErrors',
+        immediate: true,
+        deep: true
       }
     },
     data() {
@@ -229,6 +240,12 @@
             }
           }
         })
+      },
+      emitFormValues() {
+        this.$emit('update:formValues', this.edit_values)
+      },
+      emitFormErrors() {
+        this.$emit('update:formErrors', this.form_errors)
       },
       isDatePickerType(type) {
         return ['year','month','date','datetime','week','datetimerange','daterange'].indexOf(type) != -1

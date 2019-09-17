@@ -5,6 +5,7 @@
         class="mb5"
         :key="prompt.name"
         :item="prompt"
+        :form-values.sync="item_form_values[index]"
         :form-errors.sync="item_form_errors[index]"
         :visible="index == active_idx"
         v-for="(prompt, index) in def.prompts"
@@ -35,10 +36,10 @@
   import BuilderItemForm from '@/components/BuilderItemForm'
 
   const getDefaultState = (def) => {
-
     return {
       def,
       is_next_allowed: true,
+      item_form_values: _.map(def.prompts, p => {}),
       item_form_errors: _.map(def.prompts, p => {}),
       active_idx: 0,
     }
@@ -62,13 +63,15 @@
     methods: {
       onBackClick() {
         this.is_next_allowed = true
-        this.active_item_errors = {}
         this.active_idx--
       },
       onNextClick() {
         this.is_next_allowed = true
-        this.active_item_errors = {}
-        this.active_idx++
+        if (this.is_last_item) {
+          this.$emit('done-clicked')
+        } else {
+          this.active_idx++
+        }
       }
     }
   }
