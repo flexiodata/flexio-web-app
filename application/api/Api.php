@@ -95,6 +95,9 @@ class Api
         'DEL /:teamid/connections/:objid'             => '\Flexio\Api\Connection::delete',
         'POS /:teamid/connections/:objid/connect'     => '\Flexio\Api\Connection::connect',
         'POS /:teamid/connections/:objid/disconnect'  => '\Flexio\Api\Connection::disconnect',
+
+        // mounts
+        'GET /:teamid/connections/init'               => '\Flexio\Api\Connection::init',
         'POS /:teamid/connections/:objid/sync'        => '\Flexio\Api\Connection::sync',
 
         // pipes

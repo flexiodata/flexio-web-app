@@ -291,6 +291,50 @@ class Connection
         \Flexio\Api\Response::sendContent($result);
     }
 
+    public static function init(\Flexio\Api\Request $request) : void
+    {
+        // gets information from a configuration file for a mount;
+        // used to load initial information needed into order to create
+        // the configuration wizard for a mount
+
+        $query_params = $request->getQueryParams();
+        $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($query_params, array(
+                'q' => array('type' => 'string', 'required' => false)
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        $validated_query_params = $validator->getParams();
+        $path = $validated_query_params['q'] ?? '';
+
+        // load the object
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+
+        // check the rights on the object
+        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_STREAM_READ) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        // get the content
+        $content = '';
+        $vfs = new \Flexio\Services\Vfs($owner_user_eid);
+        $vfs->read($path, function($data) use (&$content) {
+            $content .= $data;
+        });
+
+        // parse the yaml for the config file and return the result
+        $result = \Flexio\Base\Yaml::parse($content);
+        if ($result === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        \Flexio\Api\Response::sendContent($result);
+    }
+
     public static function sync(\Flexio\Api\Request $request) : void
     {
         // syncs pipes in a mounted a connection with the source files in the connection
