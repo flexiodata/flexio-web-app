@@ -10,8 +10,6 @@ import AppPipes from '@/components/AppPipes'
 import AppConnections from '@/components/AppConnections'
 import AppMembers from '@/components/AppMembers'
 
-import PipeDocument from '@/components/PipeDocument'
-
 import SignInPage from '@/components/SignInPage'
 import SignOutPage from '@/components/SignOutPage'
 import SignUpPage from '@/components/SignUpPage'
