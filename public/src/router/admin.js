@@ -1,12 +1,13 @@
 import { ROUTE_APP_ADMIN } from '@/constants/route'
-import AdminHome from '@/components/AdminHome'
+
+import AppAdmin from '@/components/AppAdmin'
 import AdminTest from '@/components/AdminTest'
 import AdminProcessActivity from '@/components/AdminProcessActivity'
 import AdminUserActivity from '@/components/AdminUserActivity'
 
 export default {
   path: '/admin',
-  component: AdminHome,
+  component: AppAdmin,
   meta: { requiresAuth: true },
   children: [
     {
