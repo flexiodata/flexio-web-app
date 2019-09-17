@@ -18,6 +18,8 @@
       :model="edit_values"
       :label-position="label_position"
       :label-width="label_width"
+      :rules="rules"
+      @validate="onValidateItem"
     >
       <el-form-item
         :class="fi.class"
@@ -132,6 +134,8 @@
   const getDefaultState = () => {
     return {
       edit_values: {},
+      form_errors: {},
+      rules: {},
     }
   }
 
@@ -151,6 +155,10 @@
       item: {
         type: Object,
         required: true
+      },
+      formErrors: {
+        type: Object,
+        default: () => {}
       }
     },
     components: {
@@ -161,6 +169,9 @@
         handler: 'initSelf',
         immediate: true,
         deep: true
+      },
+      form_errors(val) {
+        this.$emit('update:formErrors', val)
       }
     },
     data() {
@@ -182,6 +193,9 @@
       form_items() {
         return _.get(this.item, 'form_items', [])
       },
+      form_rules() {
+        return _.cloneDeep(this.item.rules || {})
+      },
       form_values() {
         var obj = {}
         _.each(this.form_items, item => {
@@ -190,13 +204,14 @@
           obj[item.name] = val
         })
         return obj
-      }
+      },
     },
     methods: {
       initSelf() {
         // reset our local component data
         var edit_values = this.form_values
-        _.assign(this.$data, getDefaultState(), { edit_values })
+        var rules = this.form_rules
+        _.assign(this.$data, getDefaultState(), { edit_values, rules })
 
         this.autoFocus()
       },
@@ -216,6 +231,15 @@
       },
       getMarkdown(val) {
         return marked(val)
+      },
+      onValidateItem(key, valid) {
+        var errors = _.assign({}, this.form_errors)
+        if (valid) {
+          errors = _.omit(errors, [key])
+        } else {
+          errors[key] = true
+        }
+        this.form_errors = _.assign({}, errors)
       },
     }
   }

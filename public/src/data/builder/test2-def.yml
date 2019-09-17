@@ -13,6 +13,7 @@
           label: Text Input
           placeholder: No default value
           value: ''
+          required: true
         - element: input
           type: textarea
           name: input_textarea
