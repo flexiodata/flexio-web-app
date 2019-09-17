@@ -21,7 +21,7 @@
           :key="item.route"
           v-for="item in nav_items"
         >
-          <i class="material-icons md-24 v-mid" :class="item.class">{{item.icon}}</i>
+          <i class="material-icons md-24 v-mid mr1" :class="item.class">{{item.icon}}</i>
           <span class="dn dib-ns v-mid">{{item.name}}</span>
         </router-link>
       </div>
@@ -49,6 +49,10 @@
       route: 'tests',
       name: 'Tests',
       icon: 'gavel'
+    },{
+      route: 'prototype',
+      name: 'Prototype',
+      icon: 'build'
     }
   ]
 

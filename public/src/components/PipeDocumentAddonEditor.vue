@@ -343,7 +343,7 @@
     methods: {
       initSelf() {
         // reset our local component data
-        _.assign(this.$data, getDefaultState(this))
+        _.assign(this.$data, getDefaultState())
 
         // reset local objects
         this.edit_pipe = _.assign({}, this.edit_pipe, _.cloneDeep(this.pipe))

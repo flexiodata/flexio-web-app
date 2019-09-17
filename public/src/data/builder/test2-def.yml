@@ -1,0 +1,128 @@
+  prompts:
+    - element: form
+      name: form1
+      title: Form 1
+      description: This is the form description. Text is written in Markdown so it can be quite descriptive.
+      class: el-form--compact
+      label_position: left
+      label_width: 9rem
+      form_items:
+        - element: input
+          type: text
+          name: input_text
+          label: Text Input
+          placeholder: No default value
+          value: ''
+        - element: input
+          type: textarea
+          name: input_textarea
+          label: Textarea
+          placeholder: Textarea
+          value: 'Default textarea value'
+        - element: code-editor
+          lang: markdown
+          name: markdown
+          label: Markdown
+          value: |
+            # This is my heading
+
+            ## This is my subheading
+
+            This is my body text
+    - element: form
+      name: Form 2
+      title: Standard form
+      description: This is the form description. Text is written in Markdown so it can be quite descriptive.
+      class: el-form--compact
+      label_position: left
+      label_width: 9rem
+      form_items:
+        - element: input
+          type: text
+          name: input_text
+          label: Text Input
+          placeholder: Text Input
+          value: ''
+    - element: form
+      name: form3
+      title: Form (Complete)
+      description: This is the form description. Text is written in Markdown so it can be quite descriptive.
+      class: el-form--compact
+      label_position: left
+      label_width: 9rem
+      form_items:
+        - element: input
+          type: text
+          name: input_text
+          label: Text Input
+          placeholder: Text Input
+          value: ''
+        - element: input
+          type: textarea
+          name: input_textarea
+          label: Textarea
+          placeholder: Textarea
+          value: ''
+        - element: code-editor
+          lang: javascript
+          name: code
+          label: Code
+          value: ''
+        - element: input
+          type: date
+          name: input_date
+          label: Date Input
+          placeholder: Date Input
+          value: ''
+        - element: input
+          type: daterange
+          name: input_daterange
+          label: Date Range Input
+          placeholder: Date Range Input
+          value: ''
+        - element: select
+          name: input_select
+          label: Select
+          placeholder: Select
+          value: IL
+          options:
+            - label: California
+              value: CA
+            - label: Illinois
+              value: IL
+            - label: Wyoming
+              value: WY
+        - element: radio-group
+          name: radio_group
+          label: Radio Group
+          placeholder: Radio Group
+          value: []
+          options:
+            - label: California
+              value: CA
+            - label: Illinois
+              value: IL
+            - label: Wyoming
+              value: WY
+        - element: checkbox-group
+          name: checkbox_group
+          label: Checkbox Group
+          placeholder: Checkbox Group
+          value: []
+          options:
+            - label: California
+              value: CA
+            - label: Illinois
+              value: IL
+            - label: Wyoming
+              value: WY
+        - element: checkbox
+          name: checkbox
+          label: Checkbox
+          placeholder: Checkbox
+          value: false
+        - element: switch
+          name: switch
+          label: Switch
+          placeholder: Switch
+          value: false
