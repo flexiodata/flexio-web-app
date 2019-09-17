@@ -224,7 +224,7 @@
       },
       validateForm(clear) {
         if (this.$refs.form) {
-          this.$refs.form.validate((valid) => {
+          this.$refs.form.validate(valid => {
             this.$emit('update:isSaveAllowed', valid)
             if (clear === true) {
               this.$refs.form.clearValidate()

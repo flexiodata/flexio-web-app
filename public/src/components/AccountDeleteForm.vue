@@ -146,12 +146,12 @@
         })
       },
       doFormValidate: _.debounce(function() {
-        this.$refs.form.validate((valid) => {
+        this.$refs.form.validate(valid => {
           this.is_delete_allowed = valid
         })
       }, 500),
       deleteUser() {
-        this.$refs.form.validate((valid) => {
+        this.$refs.form.validate(valid => {
           if (!valid) {
             return
           }

@@ -3,9 +3,13 @@
       name: form1
       title: Form 1
       description: This is the form description. Text is written in Markdown so it can be quite descriptive.
-      class: el-form--compact
+      class: el-form--cozy
       label_position: left
       label_width: 9rem
+      rules:
+        input_text:
+          - required: true
+            message: This field is required. Please enter a value to continue.
       form_items:
         - element: input
           type: text
@@ -13,7 +17,6 @@
           label: Text Input
           placeholder: No default value
           value: ''
-          required: true
         - element: input
           type: textarea
           name: input_textarea
@@ -37,12 +40,16 @@
       class: el-form--compact
       label_position: left
       label_width: 9rem
+      rules:
+        input_text2:
+          - required: true
+            message: This field is required. Please enter a value to continue.
       form_items:
         - element: input
           type: text
-          name: input_text
-          label: Text Input
-          placeholder: Text Input
+          name: input_text2
+          label: Text Input 2
+          placeholder: Text Input 2
           value: ''
     - element: form
       name: form3
@@ -51,6 +58,10 @@
       class: el-form--compact
       label_position: left
       label_width: 9rem
+      rules:
+        input_textarea:
+          - required: true
+            message: This field is required. Please enter a value to continue.
       form_items:
         - element: input
           type: text

@@ -123,7 +123,7 @@
         })
       },
       tryChangePassword() {
-        this.$refs.form.validate((valid) => {
+        this.$refs.form.validate(valid => {
           if (!valid)
             return
 

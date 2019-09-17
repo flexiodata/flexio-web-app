@@ -177,7 +177,7 @@
         })
       },
       trySaveChanges() {
-        this.$refs.form.validate((valid) => {
+        this.$refs.form.validate(valid => {
           if (!valid) {
             return
           }
@@ -194,7 +194,7 @@
         })
       },
       saveChanges() {
-        this.$refs.form.validate((valid) => {
+        this.$refs.form.validate(valid => {
           if (!valid)
             return
 

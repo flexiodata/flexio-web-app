@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-show="visible">
     <div
       class="tl pb3"
       v-show="title.length > 0"
@@ -156,6 +156,10 @@
         type: Object,
         required: true
       },
+      visible: {
+        type: Boolean,
+        default: true
+      },
       formErrors: {
         type: Object,
         default: () => {}
@@ -231,6 +235,20 @@
       },
       getMarkdown(val) {
         return marked(val)
+      },
+      validateForm(clear) {
+        this.$nextTick(() => {
+          if (this.$refs.form) {
+            this.$refs.form.validate((valid, errors) => {
+              if (clear === true) {
+                this.$refs.form.clearValidate()
+                this.form_errors = {}
+              } else {
+                this.form_errors = _.assign({}, errors)
+              }
+            })
+          }
+        })
       },
       onValidateItem(key, valid) {
         var errors = _.assign({}, this.form_errors)
