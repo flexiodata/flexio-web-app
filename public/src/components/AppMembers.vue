@@ -133,22 +133,13 @@
           </el-select>
         </el-form-item>
       </el-form>
-      <div class="mt4 w-100 flex flex-row justify-end">
-        <el-button
-          class="ttu fw6"
-          @click="show_add_dialog = false"
-        >
-          Cancel
-        </el-button>
-        <el-button
-          class="ttu fw6"
-          type="primary"
-          @click="sendInvites"
-          :disabled="add_dialog_has_errors == true"
-        >
-          Send Invites
-        </el-button>
-      </div>
+      <ButtonBar
+        class="mt4"
+        :submit-button-disabled="add_dialog_has_errors == true"
+        :submit-button-text="'Send Invites'"
+        @cancel-click="show_add_dialog = false"
+        @submit-click="sendInvites"
+      />
     </el-dialog>
   </div>
 </template>
@@ -159,6 +150,7 @@
   import { mapState, mapGetters } from 'vuex'
   import { isValidEmail } from '@/utils'
   import Spinner from 'vue-simple-spinner'
+  import ButtonBar from '@/components/ButtonBar'
   import MemberItem from '@/components/MemberItem'
   import PageNotFound from '@/components/PageNotFound'
 
@@ -177,6 +169,7 @@
     },
     components: {
       Spinner,
+      ButtonBar,
       MemberItem,
       PageNotFound
     },
