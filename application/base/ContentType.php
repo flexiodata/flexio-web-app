@@ -49,7 +49,7 @@ class ContentType
     public const FLEXIO_HTML   = 'application/vnd.flexio.html';
     public const FLEXIO_FOLDER = 'application/vnd.flexio.folder';
 
-    public static function getMimeType($extension, $buffer, $content_length = false) : string
+    public static function getMimeType($extension, $buffer = '', $content_length = false) : string
     {
         // takes a filename/extension, a buffer, and an option length of content;
         // if a specific mime type is available from the buffer (e.g. from using)

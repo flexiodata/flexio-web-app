@@ -173,13 +173,19 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             }
         }
 
+
         $entry = $result;
-        return array('id'=> $entry['id'] ?? null,
+        $content_type = \Flexio\Base\ContentType::getMimeType($remote_path);
+
+        $result = array('id'=> $entry['id'] ?? null,
                      'name' => $entry['name'],
                      'size' => $entry['size'] ?? null,
                      'modified' => $entry['client_modified'] ?? '',
                      'hash' => $entry['content_hash'] ?? '',
-                     'type' => ($entry['.tag'] == 'folder' ? 'DIR' : 'FILE'));
+                     'type' => ($entry['.tag'] == 'folder' ? 'DIR' : 'FILE'),
+                     'content_type' => $content_type);
+        
+        return $result;
     }
 
     public function exists(string $path) : bool

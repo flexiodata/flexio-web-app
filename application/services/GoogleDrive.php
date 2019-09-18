@@ -152,7 +152,8 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
             'size' => $info['size'] ?? null,
             'modified' => $info['modifiedTime'] ?? '',
             'hash' => '', // TODO: available?
-            'type' => (($info['mimeType']??'') == 'application/vnd.google-apps.folder' ? 'DIR' : 'FILE')
+            'type' => (($info['mimeType']??'') == 'application/vnd.google-apps.folder' ? 'DIR' : 'FILE'),
+            'content_type' => ($info['mimeType'] ?? 'application/octet-stream')
         ];
     }
 
