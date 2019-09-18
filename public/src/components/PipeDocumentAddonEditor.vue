@@ -189,21 +189,12 @@
           />
         </el-form-item>
       </el-form>
-      <div class="mt4 w-100 flex flex-row justify-end">
-        <el-button
-          class="ttu fw6"
-          @click="initSelf"
-        >
-          Cancel
-        </el-button>
-        <el-button
-          class="ttu fw6"
-          type="primary"
-          @click="onSaveClick"
-        >
-          Save Changes
-        </el-button>
-      </div>
+      <ButtonBar
+        class="mt4"
+        :submit-button-text="'Save Changes'"
+        @cancel-click="initSelf"
+        @submit-click="onSaveClick"
+      />
     </div>
     <div v-else>
       <div class="el-form__label-tiny cf">
@@ -233,6 +224,7 @@
   import { mapState } from 'vuex'
   import { getSyntaxStr } from '@/utils/pipe'
   import CodeEditor from '@/components/CodeEditor'
+  import ButtonBar from '@/components/ButtonBar'
 
   const getDefaultState = () => {
     return {
@@ -277,6 +269,7 @@
     },
     components: {
       CodeEditor,
+      ButtonBar
     },
     watch: {
       pipe: {
