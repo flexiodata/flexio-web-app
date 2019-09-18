@@ -9,6 +9,12 @@
     />
 
     <!-- body -->
+    <FunctionMountList
+      @item-click="onFunctionPackClick"
+    />
+    <ServiceList
+      :filter-by="filterByFunctionMount"
+    />
 
     <!-- footer -->
     <ButtonBar
@@ -16,7 +22,7 @@
       :submit-button-text="submit_label"
       @cancel-click="onCancel"
       @submit-click="submit"
-      v-show="showFooter"
+      v-show="showFooter && show_footer"
     />
   </div>
 </template>
@@ -24,10 +30,13 @@
 <script>
   import HeaderBar from '@/components/HeaderBar'
   import ButtonBar from '@/components/ButtonBar'
+  import ServiceList from '@/components/ServiceList'
+  import FunctionMountList from '@/components/FunctionMountList'
+  import MixinConnection from '@/components/mixins/connection'
 
   const getDefaultState = (component) => {
     return {
-      edit_mount: {}
+      edit_mount: {},
     }
   }
 
@@ -54,9 +63,12 @@
         default: 'add' // 'add' or 'edit'
       }
     },
+    mixins: [MixinConnection],
     components: {
       HeaderBar,
-      ButtonBar
+      ButtonBar,
+      ServiceList,
+      FunctionMountList,
     },
     watch: {
       mount: {
@@ -82,6 +94,9 @@
       submit_label() {
         return this.mode == 'edit' ? 'Save changes' : 'Create function mount'
       },
+      show_footer() {
+        return true
+      },
     },
     methods: {
       initSelf() {
@@ -95,6 +110,12 @@
         if (this.$refs.form) {
           this.$refs.form.resetFields()
         }
+      },
+      filterByFunctionMount(connection) {
+        return this.$_Connection_isFunctionMount(connection)
+      },
+      onFunctionPackClick(item) {
+        alert(item.id)
       },
       onClose() {
         this.initSelf()
