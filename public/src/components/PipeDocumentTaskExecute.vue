@@ -80,25 +80,14 @@
         />
       </el-form-item>
     </el-form>
-    <div
-      class="mt4 w-100 flex flex-row justify-end"
+    <ButtonBar
+      class="mt4"
+      :submit-button-disabled="!isSaveAllowed"
+      :submit-button-text="'Save Changes'"
+      @cancel-click="onCancelClick"
+      @submit-click="onSaveClick"
       v-show="isEditing"
-    >
-      <el-button
-        class="ttu fw6"
-        @click="onCancelClick"
-      >
-        Cancel
-      </el-button>
-      <el-button
-        class="ttu fw6"
-        type="primary"
-        :disabled="!isSaveAllowed"
-        @click="onSaveClick"
-      >
-        Save Changes
-      </el-button>
-    </div>
+    />
   </div>
 </template>
 
@@ -106,6 +95,7 @@
   import { TASK_OP_EXECUTE } from '@/constants/task-op'
   import { btoaUnicode } from '@/utils'
   import CodeEditor from '@/components/CodeEditor'
+  import ButtonBar from '@/components/ButtonBar'
   import BrowseButton from '@/components/BrowseButton'
 
   const code_python = btoaUnicode(`# basic hello world example
@@ -162,6 +152,7 @@ exports.flex_handler = function(flex) {
     },
     components: {
       CodeEditor,
+      ButtonBar,
       BrowseButton
     },
     watch: {
