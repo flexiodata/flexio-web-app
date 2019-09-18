@@ -33,22 +33,14 @@
     </el-form>
 
     <!-- footer -->
-    <div class="mt4 w-100 flex flex-row justify-end" v-if="showFooter">
-      <el-button
-        class="ttu fw6"
-        @click="onCancel"
-      >
-        Cancel
-      </el-button>
-      <el-button
-        class="ttu fw6"
-        type="primary"
-        :disabled="has_errors"
-        @click="submit"
-      >
-        {{submit_label}}
-      </el-button>
-    </div>
+    <ButtonBar
+      class="mt4"
+      :submit-button-disabled="has_errors"
+      :submit-button-text="submit_label"
+      @cancel-click="onCancel"
+      @submit-click="submit"
+      v-show="showFooter"
+    />
   </div>
 </template>
 
@@ -57,6 +49,7 @@
   import { mapState } from 'vuex'
   import { OBJECT_TYPE_PIPE } from '@/constants/object-type'
   import CodeEditor from '@/components/CodeEditor'
+  import ButtonBar from '@/components/ButtonBar'
   import MixinValidation from '@/components/mixins/validation'
 
   const getNameSuffix = (length) => {
@@ -111,7 +104,8 @@
     },
     mixins: [MixinValidation],
     components: {
-      CodeEditor
+      CodeEditor,
+      ButtonBar
     },
     watch: {
       pipe: {
