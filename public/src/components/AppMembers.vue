@@ -24,22 +24,13 @@
           </div>
         </div>
         <p>You've been invited to become a member of the team <strong>"{{active_team_name}}"</strong> on Flex.io. Would you like to join this team?</p>
-        <div class="h2"></div>
-        <div class="flex flex-row items-center justify-end">
-          <el-button
-            class="ttu fw6"
-            @click="rejectJoinTeam"
-          >
-            No thanks
-          </el-button>
-          <el-button
-            class="ttu fw6"
-            type="primary"
-            @click="joinTeam"
-          >
-            Yes, I want to join
-          </el-button>
-        </div>
+        <ButtonBar
+          class="mt4"
+          :cancel-button-text="'No thanks'"
+          :submit-button-text="'Yes, I want to join'"
+          @cancel-click="rejectJoinTeam"
+          @submit-click="joinTeam"
+        />
       </div>
     </div>
 
