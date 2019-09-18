@@ -366,7 +366,18 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             $connection_item_info[$item_info['name']] = $item_info;
         }
 
-        // STEP 2: create the pipes
+        // STEP 2: get a list of existing pipe names for this owner so
+        // we can make sure the pipe name created is unique
+        $existing_pipe_names = array();
+        $filter = array('owned_by' => $this->getOwner(), 'eid_status' => \Model::STATUS_AVAILABLE);
+        $existing_pipes = \Flexio\Object\Pipe::list($filter);
+        foreach ($existing_pipes as $p)
+        {
+            $pipe_info = $p->get();
+            $existing_pipe_names[$pipe_info['name']] = 1;
+        }
+
+        // STEP 3: create the pipes
         foreach ($connection_item_info as $key => $value)
         {
             // get the file extension and set the language
@@ -416,13 +427,16 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             if (!isset($pipe_info_from_content))
                 continue;
 
-            // make sure the name is set and is valid; prefix the connection name for uniqueness
+            // see if the pipe name is in the list of existing pipes; if so, postfix it
+            // with a unique identifier
+            // get the pipe name and make sure it's unique
             $pipe_name = $pipe_info_from_content['name'] ?? '';
-            $pipe_name = $connection_info['name'] . '-' . $pipe_name;
+            $pipe_name = self::getUniquePipeName($pipe_name, $existing_pipe_names);
 
             if (\Flexio\Base\Identifier::isValid($pipe_name) === false)
                 continue; // TODO: throw exception
 
+            $existing_pipe_names[$pipe_name] = 1;
             $pipe_deployed = $pipe_info_from_content['deployed'] ?? false; // don't deploy by default
             $pipe_title = $pipe_info_from_content['title'] ?? '';
             $pipe_description = $pipe_info_from_content['description'] ?? '';
@@ -555,6 +569,26 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $connection_model = $this->getModel()->connection;
         $properties = $connection_model->get($this->getEid());
         $this->properties = self::formatProperties($properties);
+    }
+
+    private static function getUniquePipeName(string $pipe_name, array $existing_pipe_names) : string
+    {
+        // see if the pipe is in the existing list of pipes; if it isn't,
+        // simply return the pipe
+        if (array_key_exists($pipe_name, $existing_pipe_names) === false)
+            return $pipe_name;
+
+        // try to add a count suffix and see if we can find something
+        for ($idx = 1; $idx <= 100; ++$idx)
+        {
+            $adjusted_pipe_name = $pipe_name . '-dup' . $idx;
+            if (array_key_exists($adjusted_pipe_name, $existing_pipe_names) === false)
+                return $adjusted_pipe_name;
+        }
+
+        // if we haven't found anything, return something that will be unique
+        // TODO: different approach?
+        $pipe_name = $pipe_name . '-' . \Flexio\Base\Util::generateRandomString(10);
     }
 
     private static function formatProperties(array $properties) : array
