@@ -42,30 +42,20 @@
     >
       <slot name="empty"><em>(No value)</em></slot>
     </div>
-    <div
-      class="flex-none mt3 flex flex-row justify-end"
+    <ButtonBar
+      class="mt4"
+      :submit-button-text="'Save Changes'"
+      @cancel-click="initSelf"
+      @submit-click="onSaveClick"
       v-show="isEditing"
-    >
-      <el-button
-        class="ttu fw6"
-        @click="initSelf"
-      >
-        Cancel
-      </el-button>
-      <el-button
-        class="ttu fw6"
-        type="primary"
-        @click="onSaveClick"
-      >
-        Save Changes
-      </el-button>
-    </div>
+    />
   </div>
 </template>
 
 <script>
   import marked from 'marked'
   import CodeEditor from '@/components/CodeEditor'
+  import ButtonBar from '@/components/ButtonBar'
 
   const getDefaultState = () => {
     return {
@@ -101,6 +91,7 @@
     },
     components: {
       CodeEditor,
+      ButtonBar
     },
     watch: {
       value: {

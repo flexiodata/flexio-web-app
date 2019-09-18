@@ -117,7 +117,7 @@
   @import '../stylesheets/variables.styl'
 
   .el-dropdown-link
-    color: $body-color
+    color: $primary-text
     outline: none
     .arrow
       transition: transform .2s ease

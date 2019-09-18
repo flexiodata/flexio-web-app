@@ -99,25 +99,14 @@
         </el-select>
       </el-form-item>
     </el-form>
-    <div
-      class="mt4 w-100 flex flex-row justify-end"
+    <ButtonBar
+      class="mt4"
+      :submit-button-disabled="!isSaveAllowed"
+      :submit-button-text="'Save Changes'"
+      @cancel-click="onCancelClick"
+      @submit-click="onSaveClick"
       v-show="isEditing"
-    >
-      <el-button
-        class="ttu fw6"
-        @click="onCancelClick"
-      >
-        Cancel
-      </el-button>
-      <el-button
-        class="ttu fw6"
-        type="primary"
-        :disabled="!isSaveAllowed"
-        @click="onSaveClick"
-      >
-        Save Changes
-      </el-button>
-    </div>
+    />
   </div>
 </template>
 
@@ -126,6 +115,7 @@
   import { TASK_OP_LOOKUP } from '@/constants/task-op'
   import api from '@/api'
   import Spinner from 'vue-simple-spinner'
+  import ButtonBar from '@/components/ButtonBar'
   import BrowseButton from '@/components/BrowseButton'
   import SimpleTable from '@/components/SimpleTable'
 
@@ -173,6 +163,7 @@
     },
     components: {
       Spinner,
+      ButtonBar,
       BrowseButton,
       SimpleTable
     },

@@ -91,7 +91,7 @@
     padding-top: 4px
     padding-bottom: 2px
     border-bottom: 2px solid transparent
-    color: $body-color
+    color: $primary-text
     transition: border 0.3s ease-in-out
 
     &.router-link-active

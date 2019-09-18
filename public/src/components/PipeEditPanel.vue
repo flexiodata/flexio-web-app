@@ -1,12 +1,12 @@
 <template>
   <div>
     <!-- header -->
-    <div class="w-100 mb4" v-if="showHeader">
-      <div class="flex flex-row items-center">
-        <span class="flex-fill f4 lh-title">{{our_title}}</span>
-        <i class="el-icon-close pointer f3 black-30 hover-black-60" @click="onClose"></i>
-      </div>
-    </div>
+    <HeaderBar
+      class="mb4"
+      :title="our_title"
+      @close-click="onClose"
+      v-show="showHeader"
+    />
 
     <!-- body -->
     <el-form
@@ -33,22 +33,14 @@
     </el-form>
 
     <!-- footer -->
-    <div class="mt4 w-100 flex flex-row justify-end" v-if="showFooter">
-      <el-button
-        class="ttu fw6"
-        @click="onCancel"
-      >
-        Cancel
-      </el-button>
-      <el-button
-        class="ttu fw6"
-        type="primary"
-        :disabled="has_errors"
-        @click="submit"
-      >
-        {{submit_label}}
-      </el-button>
-    </div>
+    <ButtonBar
+      class="mt4"
+      :submit-button-disabled="has_errors"
+      :submit-button-text="submit_label"
+      @cancel-click="onCancel"
+      @submit-click="submit"
+      v-show="showFooter"
+    />
   </div>
 </template>
 
@@ -57,6 +49,8 @@
   import { mapState } from 'vuex'
   import { OBJECT_TYPE_PIPE } from '@/constants/object-type'
   import CodeEditor from '@/components/CodeEditor'
+  import HeaderBar from '@/components/HeaderBar'
+  import ButtonBar from '@/components/ButtonBar'
   import MixinValidation from '@/components/mixins/validation'
 
   const getNameSuffix = (length) => {
@@ -111,7 +105,9 @@
     },
     mixins: [MixinValidation],
     components: {
-      CodeEditor
+      CodeEditor,
+      HeaderBar,
+      ButtonBar
     },
     watch: {
       pipe: {
