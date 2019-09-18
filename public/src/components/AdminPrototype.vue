@@ -5,9 +5,9 @@
         :key="prompt.name"
         :item="prompt"
         :visible="index == active_idx"
-        :cancelButtonText="'Back'"
-        :cancelButtonClass="active_idx == 0 ? 'o-0 no-pointer-events' : undefined"
-        :submitButtonText="is_last_item ? 'Done' : 'Continue'"
+        :cancel-button-visible="active_idx > 0"
+        :cancel-button-text="'Back'"
+        :submit-button-text="is_last_item ? 'Done' : 'Next'"
         @cancel-click="onBackClick"
         @submit-click="onNextClick"
         v-for="(prompt, index) in def.prompts"
@@ -44,7 +44,9 @@
     },
     methods: {
       onBackClick() {
-        this.active_idx--
+        if (this.active_idx > 0) {
+          this.active_idx--
+        }
       },
       onNextClick() {
         if (this.is_last_item) {

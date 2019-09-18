@@ -124,28 +124,20 @@
         />
       </el-form-item>
     </el-form>
-    <div class="mt4 w-100 flex flex-row justify-end">
-      <el-button
-        :class="cancelButtonClass"
-        @click="onCancelClick"
-      >
-        {{cancelButtonText}}
-      </el-button>
-      <el-button
-        :class="submitButtonClass"
-        :type="submitButtonType"
-        :disabled="has_errors"
-        @click="onSubmitClick"
-      >
-        {{submitButtonText}}
-      </el-button>
-    </div>
+    <ButtonBar
+      class="mt4"
+      :submit-button-disabled="has_errors"
+      @cancel-click="onCancelClick"
+      @submit-click="onSubmitClick"
+      v-bind="$attrs"
+    />
   </div>
 </template>
 
 <script>
   import marked from 'marked'
   import CodeEditor from '@/components/CodeEditor'
+  import ButtonBar from '@/components/ButtonBar'
 
   const getDefaultState = () => {
     return {
@@ -167,6 +159,7 @@
   })
 
   export default {
+    inheritAttrs: false,
     props: {
       item: {
         type: Object,
@@ -180,29 +173,10 @@
         type: Object,
         default: () => {}
       },
-      cancelButtonText: {
-        type: String,
-        default: 'Cancel'
-      },
-      submitButtonText: {
-        type: String,
-        default: 'Submit'
-      },
-      cancelButtonClass: {
-        type: String,
-        default: 'ttu fw6'
-      },
-      submitButtonClass: {
-        type: String,
-        default: 'ttu fw6'
-      },
-      submitButtonType: {
-        type: String,
-        default: 'primary'
-      }
     },
     components: {
-      CodeEditor
+      CodeEditor,
+      ButtonBar
     },
     watch: {
       item: {
