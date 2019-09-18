@@ -131,23 +131,14 @@
         </div>
       </div>
     </div>
-
-    <div class="mt4 w-100 flex flex-row justify-end" v-show="showFooter && has_connection">
-      <el-button
-        class="ttu fw6"
-        @click="$emit('cancel')"
-      >
-        Cancel
-      </el-button>
-      <el-button
-        class="ttu fw6"
-        type="primary"
-        @click="submit"
-        :disabled="has_errors"
-      >
-        {{submit_label}}
-      </el-button>
-    </div>
+    <ButtonBar
+      class="mt4"
+      :submit-button-disabled="has_errors"
+      :submit-button-text="submit_label"
+      @cancel-click="$emit('cancel')"
+      @submit-click="submit"
+      v-show="showFooter && has_connection"
+    />
   </div>
 </template>
 
@@ -164,6 +155,7 @@
   import ServiceList from '@/components/ServiceList'
   import ServiceIcon from '@/components/ServiceIcon'
   import KeypairList from '@/components/KeypairList'
+  import ButtonBar from '@/components/ButtonBar'
   import ConnectionAuthenticationPanel from '@/components/ConnectionAuthenticationPanel'
   import ConnectionInfoPanel from '@/components/ConnectionInfoPanel'
   import MixinConnection from '@/components/mixins/connection'
@@ -248,6 +240,7 @@
       ServiceList,
       ServiceIcon,
       KeypairList,
+      ButtonBar,
       ConnectionAuthenticationPanel,
       ConnectionInfoPanel
     },

@@ -4,9 +4,9 @@
       :class="utilityButtonClass"
       :type="utilityButtonType"
       :disabled="utilityButtonDisabled"
+      @click="$emit('utility-click')"
       v-show="utilityButtonVisible"
       v-bind="utilityButtonOptions"
-      @click="$emit('utility-click')"
     >
       {{utilityButtonText}}
     </el-button>
@@ -15,9 +15,9 @@
       :class="cancelButtonClass"
       :type="cancelButtonType"
       :disabled="cancelButtonDisabled"
+      @click="$emit('cancel-click')"
       v-show="cancelButtonVisible"
       v-bind="cancelButtonOptions"
-      @click="$emit('cancel-click')"
     >
       {{cancelButtonText}}
     </el-button>
@@ -25,9 +25,9 @@
       :class="submitButtonClass"
       :type="submitButtonType"
       :disabled="submitButtonDisabled"
+      @click="$emit('submit-click')"
       v-show="submitButtonVisible"
       v-bind="submitButtonOptions"
-      @click="$emit('submit-click')"
     >
       {{submitButtonText}}
     </el-button>
