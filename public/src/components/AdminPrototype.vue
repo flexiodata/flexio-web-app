@@ -1,13 +1,13 @@
 <template>
   <div class="pa5 overflow-y-scroll">
-    <div class="w-100 center mw-doc pa4 bg-white br2 css-white-box trans-mw">
+    <div class="w-100 center mw-doc pa4 bg-white br2 css-white-box trans-mw" style="max-width: 800px">
       <BuilderItemForm
         :key="prompt.name"
         :item="prompt"
         :visible="index == active_idx"
         :cancelButtonText="'Back'"
-        :cancelButtonClass="active_idx == 0 ? 'dn' : undefined"
-        :submitButtonText="is_last_item ? 'Done' : 'Next'"
+        :cancelButtonClass="active_idx == 0 ? 'o-0 no-pointer-events' : undefined"
+        :submitButtonText="is_last_item ? 'Done' : 'Continue'"
         @cancel-click="onBackClick"
         @submit-click="onNextClick"
         v-for="(prompt, index) in def.prompts"
@@ -17,7 +17,7 @@
 </template>
 
 <script>
-  import test_def from '../data/builder/test2-def.yml'
+  import hubspot_def from '../data/builder/hubspot-example.yml'
   import BuilderItemForm from '@/components/BuilderItemForm'
 
   const getDefaultState = (def) => {
@@ -35,7 +35,7 @@
       BuilderItemForm
     },
     data() {
-      return getDefaultState(test_def)
+      return getDefaultState(hubspot_def)
     },
     computed: {
       is_last_item() {

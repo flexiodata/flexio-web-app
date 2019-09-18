@@ -52,6 +52,9 @@ export default {
   testConnection:          (team_name, object_name, attrs) => AxiosResource(team_name)[POS] (`/connections/${object_name}/connect`, attrs),
   disconnectConnection:    (team_name, object_name, attrs) => AxiosResource(team_name)[POS] (`/connections/${object_name}/disconnect`, attrs) ,
 
+  // function mounts
+  fetchFunctionPackConfig: (team_name, path)               => AxiosResource(team_name)[GET] (`/connections/init`, { q: path }),
+
   // members
   fetchMembers:            (team_name)                     => AxiosResource(team_name)[GET] (`/members`),
   fetchMember:             (team_name, object_name)        => AxiosResource(team_name)[GET] (`/members/${object_name}`),
