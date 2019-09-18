@@ -1,12 +1,12 @@
 <template>
   <div>
     <!-- header -->
-    <div class="w-100 mb4" v-if="showHeader">
-      <div class="flex flex-row items-center">
-        <span class="flex-fill f4 lh-title">{{our_title}}</span>
-        <i class="el-icon-close pointer f3 black-30 hover-black-60" @click="onClose"></i>
-      </div>
-    </div>
+    <HeaderBar
+      class="mb4"
+      :title="our_title"
+      @close-click="onClose"
+      v-show="showHeader"
+    />
 
     <!-- body -->
     <el-form
@@ -49,6 +49,7 @@
   import { mapState } from 'vuex'
   import { OBJECT_TYPE_PIPE } from '@/constants/object-type'
   import CodeEditor from '@/components/CodeEditor'
+  import HeaderBar from '@/components/HeaderBar'
   import ButtonBar from '@/components/ButtonBar'
   import MixinValidation from '@/components/mixins/validation'
 
@@ -105,6 +106,7 @@
     mixins: [MixinValidation],
     components: {
       CodeEditor,
+      HeaderBar,
       ButtonBar
     },
     watch: {

@@ -1,10 +1,11 @@
 <template>
   <div>
     <div class="w-100 mb4" v-if="showHeader">
-      <div class="flex flex-row items-center" v-if="showTitle">
-        <span class="flex-fill f4 lh-title">{{our_title}}</span>
-        <i class="el-icon-close pointer f3 black-30 hover-black-60" @click="$emit('close')"></i>
-      </div>
+      <HeaderBar
+        :title="our_title"
+        @close-click="$emit('close')"
+        v-show="showTitle"
+      />
       <div
         class="flex flex-row"
         :class="showTitle ? 'mt2 pt2 bt b--black-10' : ''"
@@ -155,6 +156,7 @@
   import ServiceList from '@/components/ServiceList'
   import ServiceIcon from '@/components/ServiceIcon'
   import KeypairList from '@/components/KeypairList'
+  import HeaderBar from '@/components/HeaderBar'
   import ButtonBar from '@/components/ButtonBar'
   import ConnectionAuthenticationPanel from '@/components/ConnectionAuthenticationPanel'
   import ConnectionInfoPanel from '@/components/ConnectionInfoPanel'
@@ -240,6 +242,7 @@
       ServiceList,
       ServiceIcon,
       KeypairList,
+      HeaderBar,
       ButtonBar,
       ConnectionAuthenticationPanel,
       ConnectionInfoPanel

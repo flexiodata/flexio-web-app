@@ -1,5 +1,5 @@
 <template>
-  <div class="w-100 flex flex-row">
+  <div class="w-100 flex flex-row items-center">
     <el-button
       :class="utilityButtonClass"
       :type="utilityButtonType"
