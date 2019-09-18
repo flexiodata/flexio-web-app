@@ -124,6 +124,22 @@
         />
       </el-form-item>
     </el-form>
+    <div class="mt4 w-100 flex flex-row justify-end">
+      <el-button
+        :class="cancelButtonClass"
+        @click="onCancelClick"
+      >
+        {{cancelButtonText}}
+      </el-button>
+      <el-button
+        :class="submitButtonClass"
+        :type="submitButtonType"
+        :disabled="has_errors"
+        @click="onSubmitClick"
+      >
+        {{submitButtonText}}
+      </el-button>
+    </div>
   </div>
 </template>
 
@@ -160,13 +176,29 @@
         type: Boolean,
         default: true
       },
-      formValues: {
-        type: Object,
-        default: () => {}
-      },
       formErrors: {
         type: Object,
         default: () => {}
+      },
+      cancelButtonText: {
+        type: String,
+        default: 'Cancel'
+      },
+      submitButtonText: {
+        type: String,
+        default: 'Submit'
+      },
+      cancelButtonClass: {
+        type: String,
+        default: 'ttu fw6'
+      },
+      submitButtonClass: {
+        type: String,
+        default: 'ttu fw6'
+      },
+      submitButtonType: {
+        type: String,
+        default: 'primary'
       }
     },
     components: {
@@ -219,6 +251,9 @@
           obj[item.name] = val
         })
         return obj
+      },
+      has_errors() {
+        return _.keys(this.form_errors).length > 0
       },
     },
     methods: {
@@ -275,6 +310,17 @@
           errors[key] = true
         }
         this.form_errors = _.assign({}, errors)
+      },
+      onCancelClick() {
+        this.$emit('cancel-click', this.edit_values)
+      },
+      onSubmitClick() {
+        this.validateForm()
+        this.$nextTick(() => {
+          if (!this.has_errors) {
+            this.$emit('submit-click', this.edit_values)
+          }
+        })
       },
     }
   }

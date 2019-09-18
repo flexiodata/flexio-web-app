@@ -1,32 +1,17 @@
 <template>
-  <div class="pa5">
+  <div class="pa5 overflow-y-scroll">
     <div class="w-100 center mw-doc pa4 bg-white br2 css-white-box trans-mw">
       <BuilderItemForm
-        class="mb5"
         :key="prompt.name"
         :item="prompt"
-        :form-values.sync="item_form_values[index]"
-        :form-errors.sync="item_form_errors[index]"
         :visible="index == active_idx"
+        :cancelButtonText="'Back'"
+        :cancelButtonClass="active_idx == 0 ? 'dn' : undefined"
+        :submitButtonText="is_last_item ? 'Done' : 'Next'"
+        @cancel-click="onBackClick"
+        @submit-click="onNextClick"
         v-for="(prompt, index) in def.prompts"
       />
-      <div class="mt4 w-100 flex flex-row justify-end">
-        <el-button
-          class="ttu fw6"
-          @click="onBackClick"
-          v-show="active_idx > 0"
-        >
-          Back
-        </el-button>
-        <el-button
-          class="ttu fw6"
-          type="primary"
-          :disabled="!is_next_allowed"
-          @click="onNextClick"
-        >
-          {{is_last_item ? 'Done' : 'Next'}}
-        </el-button>
-      </div>
     </div>
   </div>
 </template>
@@ -38,9 +23,6 @@
   const getDefaultState = (def) => {
     return {
       def,
-      is_next_allowed: true,
-      item_form_values: _.map(def.prompts, p => {}),
-      item_form_errors: _.map(def.prompts, p => {}),
       active_idx: 0,
     }
   }
@@ -62,11 +44,9 @@
     },
     methods: {
       onBackClick() {
-        this.is_next_allowed = true
         this.active_idx--
       },
       onNextClick() {
-        this.is_next_allowed = true
         if (this.is_last_item) {
           this.$emit('done-clicked')
         } else {
