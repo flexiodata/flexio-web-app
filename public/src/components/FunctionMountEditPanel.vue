@@ -48,11 +48,11 @@
     />
 
     <!-- step 3: setup config -->
-    <div
-      v-if="active_step == 'setup-config' && has_mount"
-    >
-      Setup Config
-    </div>
+    <FunctionMountConfigWizard
+      :definition="manifest"
+      @done-click="saveMountSetupConfig"
+      v-if="active_step == 'setup-config' && has_manifest"
+    />
 
     <!-- footer -->
     <ButtonBar
@@ -69,11 +69,13 @@
   import randomstring from 'randomstring'
   import { mapState } from 'vuex'
   import { OBJECT_STATUS_PENDING } from '@/constants/object-status'
+  import api from '@/api'
   import { slugify } from '@/utils'
   import HeaderBar from '@/components/HeaderBar'
   import ButtonBar from '@/components/ButtonBar'
   import IconList from '@/components/IconList'
   import ConnectionEditPanel from '@/components/ConnectionEditPanel'
+  import FunctionMountConfigWizard from '@/components/FunctionMountConfigWizard'
   import MixinConnection from '@/components/mixins/connection'
 
   const CONNECTION_MODE_RESOURCE = 'R'
@@ -119,6 +121,7 @@
   const getDefaultState = (component) => {
     return {
       edit_mount: {},
+      manifest: {},
       active_step: 'choose-source',
       active_tab_name: 'function-packs',
     }
@@ -153,6 +156,7 @@
       ButtonBar,
       IconList,
       ConnectionEditPanel,
+      FunctionMountConfigWizard,
     },
     watch: {
       mount: {
@@ -174,6 +178,9 @@
       has_mount() {
         var eid = _.get(this.edit_mount, 'eid', '')
         return eid.length > 0
+      },
+      has_manifest() {
+        return _.get(this.manifest, 'prompts', []).length > 0
       },
       our_title() {
         if (this.title.length > 0) {
@@ -222,6 +229,15 @@
           this.omitMaskedValues(mount)
         })
       },
+      saveMountSetupConfig(setup_config) {
+        var team_name = this.active_team_name
+        var eid = this.edit_mount.eid
+        var attrs = { eid, setup_config }
+
+        return this.$store.dispatch('connections/update', { team_name, eid, attrs }).then(response => {
+          this.$emit('close')
+        })
+      },
       omitMaskedValues(attrs) {
         var connection_info = _.get(attrs, 'connection_info', {})
         connection_info = _.omitBy(connection_info, (val, key) => { return val == '*****' })
@@ -246,12 +262,17 @@
         this.$emit('cancel')
       },
       onUpdateConnection(connection) {
-        debugger
         this.edit_mount = _.cloneDeep(connection)
         this.active_step = 'setup-config'
+
+        var path = this.edit_mount.name + ':/flexio.yml'
+        api.fetchFunctionPackConfig(this.active_team_name, path).then(response => {
+          debugger
+          this.manifest = _.assign({}, response.data)
+        })
       },
       submit() {
-        this.$emit('update-mount', {})
+        this.$emit('close')
       },
     }
   }
