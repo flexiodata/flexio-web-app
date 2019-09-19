@@ -280,8 +280,10 @@ class StoredProcess implements \Flexio\IFace\IProcess
     {
         // STEP 1: add the environment variables in
         $environment_variables = $this->getEnvironmentParams();
+        $mount_variables = $this->getMountParams();
+
         $user_variables = $this->getParams();
-        $this->setParams(array_merge($user_variables, $environment_variables));
+        $this->setParams(array_merge($user_variables, $mount_variables, $environment_variables));
 
         // STEP 2: get events for logging, if necessary
         $this->addEventHandler([$this, 'handleEvent']);
@@ -357,6 +359,42 @@ class StoredProcess implements \Flexio\IFace\IProcess
         }
 
         return $storable_stream;
+    }
+
+    private function getMountParams() : array
+    {
+        // if the process was created from a pipe (parent_eid), and that
+        // pipe is part of a connection (mount), then get the setup_config
+        // and return them as the mount params
+
+        try
+        {
+            $process_obj_info = $this->procobj->get();
+
+            if (isset($process_obj_info['parent']) && isset($process_obj_info['parent']['eid']))
+            {
+                $parent_eid = $process_obj_info['parent']['eid'];
+
+                $pipe = \Flexio\Object\Pipe::load($parent_eid);
+                $pipe_info = $pipe->get();
+
+                if (isset($pipe_info['parent']) && isset($pipe_info['parent']['eid']))
+                {
+                    $connection_eid = $pipe_info['parent']['eid'];
+                    $connection = \Flexio\Object\Connection::load($connection_eid);
+                    $connection_info = $connection->get();
+
+                    if (isset($connection_info['setup_config']))
+                        return $connection_info['setup_config'];
+                }
+            }
+
+        }
+        catch (\Exception $e)
+        {
+        }
+
+        return array();
     }
 
     private function getEnvironmentParams() : array
