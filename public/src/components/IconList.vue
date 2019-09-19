@@ -76,7 +76,7 @@
 
         switch (this.items) {
           case 'mounts': return this.mounts
-          case 'services': return this.services
+          case 'services': return _.reject(this.services, { connection_type: CONNECTION_TYPE_FLEX })
         }
 
         return []

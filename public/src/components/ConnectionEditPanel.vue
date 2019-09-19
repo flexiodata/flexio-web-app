@@ -56,9 +56,10 @@
     </div>
 
     <div>
-      <ServiceList
+      <IconList
+        items="services"
         :filter-by="filterBy"
-        @item-activate="createPendingConnection"
+        @item-click="createPendingConnection"
         v-show="!has_connection"
       />
       <div class="ph3 ph4-l" v-if="has_connection">
@@ -153,7 +154,7 @@
   import * as ctypes from '@/constants/connection-type'
   import * as connections from '@/constants/connection-info'
   import { slugify } from '@/utils'
-  import ServiceList from '@/components/ServiceList'
+  import IconList from '@/components/IconList'
   import ServiceIcon from '@/components/ServiceIcon'
   import KeypairList from '@/components/KeypairList'
   import HeaderBar from '@/components/HeaderBar'
@@ -239,7 +240,7 @@
     },
     mixins: [MixinConnection, MixinValidation],
     components: {
-      ServiceList,
+      IconList,
       ServiceIcon,
       KeypairList,
       HeaderBar,

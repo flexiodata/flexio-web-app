@@ -12,8 +12,7 @@
     <div
       v-if="active_step == 'choose-source' && !has_mount"
     >
-      <p>Function mounts can be created from pre-configured function packs or self-hosted using one of the services below.</p>
-      <p>Visit our <a href="#" class="blue" target="_blank">online documentation</a> to learn how to <a href="#" class="blue" target="_blank">create and host your own function pack</a>.</p>
+      <p>Function mounts can be created from pre-configured function packs or self-hosted using one of the services below. Visit our <a href="#" class="blue" target="_blank">online documentation</a> to learn how to <a href="#" class="blue" target="_blank">create and host your own function pack</a>.</p>
       <el-tabs
         v-model="active_tab_name"
       >
@@ -42,6 +41,7 @@
       :show-title="false"
       :show-steps="false"
       :connection="edit_mount"
+      :filter-by="filterByFunctionMount"
       @cancel="onCancel"
       @update-connection="onUpdateConnection"
       v-if="active_step == 'configure-connection' && has_mount"
