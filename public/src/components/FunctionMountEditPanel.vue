@@ -53,6 +53,18 @@
       @done-click="saveMountSetupConfig"
       v-if="active_step == 'setup-config' && has_manifest"
     />
+    <div
+
+      v-else-if="active_step == 'setup-config' && !has_manifest"
+    >
+      <p>Your function mount was created successfully. Click <strong>"Done"</strong> to begin importing functions.</p>
+      <ButtonBar
+        class="mt4"
+        :cancel-button-visible="false"
+        :submit-button-text="'Done'"
+        @submit-click="onSubmit"
+      />
+    </div>
 
     <!-- footer -->
     <ButtonBar
@@ -204,6 +216,16 @@
       filterByFunctionMount(connection) {
         return this.$_Connection_isFunctionMount(connection)
       },
+      createFunctionPackConnection(item) {
+        var team_name = this.active_team_name
+        var attrs = _.get(item, 'connection', {})
+        attrs.name = attrs.name + '-' + getNameSuffix(4)
+
+        return this.$store.dispatch('connections/create', { team_name, attrs }).then(response => {
+          this.edit_mount = _.assign({}, this.edit_mount, response.data)
+          this.fetchFunctionPackConfig()
+        })
+      },
       createPendingConnection(item) {
         var ctype = item.connection_type
         var ctitle = item.title || item.service_name
@@ -225,8 +247,15 @@
 
         return this.$store.dispatch('connections/create', { team_name, attrs }).then(response => {
           var mount = _.cloneDeep(response.data)
-          mount.name = `${service_slug}-` + getNameSuffix(4),
+          mount.name = `${service_slug}-` + getNameSuffix(4)
           this.omitMaskedValues(mount)
+        })
+      },
+      fetchFunctionPackConfig() {
+        var path = this.edit_mount.name + ':/flexio.yml'
+        api.fetchFunctionPackConfig(this.active_team_name, path).then(response => {
+          this.active_step = 'setup-config'
+          this.manifest = _.assign({}, response.data)
         })
       },
       saveMountSetupConfig(setup_config) {
@@ -247,7 +276,7 @@
         this.edit_mount = _.assign({}, this.edit_mount, update_attrs)
       },
       onFunctionPackClick(item) {
-        alert(item.id)
+        this.createFunctionPackConnection(item)
       },
       onServiceClick(item) {
         this.createPendingConnection(item).then(response => {
@@ -256,12 +285,7 @@
       },
       onUpdateConnection(connection) {
         this.edit_mount = _.cloneDeep(connection)
-
-        var path = this.edit_mount.name + ':/flexio.yml'
-        api.fetchFunctionPackConfig(this.active_team_name, path).then(response => {
-          this.active_step = 'setup-config'
-          this.manifest = _.assign({}, response.data)
-        })
+        this.fetchFunctionPackConfig()
       },
       onClose() {
         this.initSelf()
