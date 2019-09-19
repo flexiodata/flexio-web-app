@@ -48,7 +48,7 @@
     v-else-if="is_json || is_html || is_text"
   />
 
-  <div v-else>Could not read content type</div>
+  <div v-else></div>
 </template>
 
 <script>
