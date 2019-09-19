@@ -27,6 +27,16 @@
           :title="getItemTitle(item)"
         />
       </div>
+      <div
+        class="item-img flex flex-column justify-center"
+        v-else-if="item.url"
+      >
+        <ServiceIcon
+          class="item-img-icon"
+          :url="item.url"
+          :title="getItemTitle(item)"
+        />
+      </div>
       <i
         class="item-icon material-icons"
         :title="getItemTitle(item)"
