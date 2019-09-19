@@ -2,7 +2,7 @@
   <div>
     <!-- header -->
     <HeaderBar
-      class="pb2 mb3 bb b--black-10"
+      class="mb4"
       :title="our_title"
       @close-click="onClose"
       v-show="showHeader"
@@ -12,20 +12,28 @@
     <div
       v-if="active_step == 'choose-source' && !has_mount"
     >
-      <h3>Function Packs</h3>
-      <p>Choose from one of the pre-configured function packs below.</p>
-      <IconList
-        items="mounts"
-        @item-click="onFunctionPackClick"
-      />
-      <TextSeparator class="w5 center mv4" />
-      <h3>Host Your Own</h3>
-      <p>Host your own function pack using one of the services below. Visit our <a href="#" class="blue" target="_blank">online documentation</a> to learn how to <a href="#" class="blue" target="_blank">create and host your own function pack</a>.</p>
-      <IconList
-        items="services"
-        :filter-by="filterByFunctionMount"
-        @item-click="onServiceClick"
-      />
+      <p>Function mounts can be created from pre-configured function packs or self-hosted using one of the services below.</p>
+      <p>Visit our <a href="#" class="blue" target="_blank">online documentation</a> to learn how to <a href="#" class="blue" target="_blank">create and host your own function pack</a>.</p>
+      <el-tabs
+        v-model="active_tab_name"
+      >
+        <el-tab-pane name="function-packs">
+          <div slot="label"><div style="min-width: 5rem">Function Packs</div></div>
+          <IconList
+            items="mounts"
+            @item-click="onFunctionPackClick"
+          />
+        </el-tab-pane>
+
+        <el-tab-pane name="self-hosted">
+          <div slot="label"><div style="min-width: 5rem">Self-Hosted</div></div>
+          <IconList
+            items="services"
+            :filter-by="filterByFunctionMount"
+            @item-click="onServiceClick"
+          />
+        </el-tab-pane>
+      </el-tabs>
     </div>
 
     <!-- step 2: configure connection -->
@@ -65,7 +73,6 @@
   import HeaderBar from '@/components/HeaderBar'
   import ButtonBar from '@/components/ButtonBar'
   import IconList from '@/components/IconList'
-  import TextSeparator from '@/components/TextSeparator'
   import ConnectionEditPanel from '@/components/ConnectionEditPanel'
   import MixinConnection from '@/components/mixins/connection'
 
@@ -112,7 +119,8 @@
   const getDefaultState = (component) => {
     return {
       edit_mount: {},
-      active_step: 'choose-source'
+      active_step: 'choose-source',
+      active_tab_name: 'function-packs',
     }
   }
 
@@ -144,7 +152,6 @@
       HeaderBar,
       ButtonBar,
       IconList,
-      TextSeparator,
       ConnectionEditPanel,
     },
     watch: {
