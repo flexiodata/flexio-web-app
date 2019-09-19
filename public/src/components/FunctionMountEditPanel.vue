@@ -2,29 +2,49 @@
   <div>
     <!-- header -->
     <HeaderBar
-      class="mb4"
+      class="pb2 mb3 bb b--black-10"
       :title="our_title"
       @close-click="onClose"
       v-show="showHeader"
     />
 
-    <!-- body -->
-    <h3>Function Packs</h3>
-    <p>Choose from one of the pre-configured function packs below.</p>
-    <IconList
-      class="ph2"
-      items="mounts"
-      @item-click="onFunctionPackClick"
+    <!-- step 1: choose source -->
+    <div
+      v-if="active_step == 'choose-source' && !has_mount"
+    >
+      <h3>Function Packs</h3>
+      <p>Choose from one of the pre-configured function packs below.</p>
+      <IconList
+        items="mounts"
+        @item-click="onFunctionPackClick"
+      />
+      <TextSeparator class="w5 center mv4" />
+      <h3>Host Your Own</h3>
+      <p>Host your own function pack using one of the services below. Visit our <a href="#" class="blue" target="_blank">online documentation</a> to learn how to <a href="#" class="blue" target="_blank">create and host your own function pack</a>.</p>
+      <IconList
+        items="services"
+        :filter-by="filterByFunctionMount"
+        @item-click="onServiceClick"
+      />
+    </div>
+
+    <!-- step 2: configure connection -->
+    <ConnectionEditPanel
+      :mode="mode"
+      :show-title="false"
+      :show-steps="false"
+      :connection="edit_mount"
+      @cancel="onCancel"
+      @update-connection="onUpdateConnection"
+      v-if="active_step == 'configure-connection' && has_mount"
     />
-    <TextSeparator class="w5 center mv4" />
-    <h3>Host Your Own</h3>
-    <p>Host your own function pack using one of the services below. Visit our <a href="#" class="blue" target="_blank">online documentation</a> to learn how to <a href="#" class="blue" target="_blank">create and host your own function pack</a>.</p>
-    <IconList
-      class="ph2"
-      items="services"
-      :filter-by="filterByFunctionMount"
-      @item-click="onServiceClick"
-    />
+
+    <!-- step 3: setup config -->
+    <div
+      v-if="active_step == 'setup-config' && has_mount"
+    >
+      Setup Config
+    </div>
 
     <!-- footer -->
     <ButtonBar
@@ -32,7 +52,7 @@
       :submit-button-text="submit_label"
       @cancel-click="onCancel"
       @submit-click="submit"
-      v-show="showFooter && has_mount"
+      v-show="showFooter && false"
     />
   </div>
 </template>
@@ -46,6 +66,7 @@
   import ButtonBar from '@/components/ButtonBar'
   import IconList from '@/components/IconList'
   import TextSeparator from '@/components/TextSeparator'
+  import ConnectionEditPanel from '@/components/ConnectionEditPanel'
   import MixinConnection from '@/components/mixins/connection'
 
   const CONNECTION_MODE_RESOURCE = 'R'
@@ -91,6 +112,7 @@
   const getDefaultState = (component) => {
     return {
       edit_mount: {},
+      active_step: 'choose-source'
     }
   }
 
@@ -123,6 +145,7 @@
       ButtonBar,
       IconList,
       TextSeparator,
+      ConnectionEditPanel,
     },
     watch: {
       mount: {
@@ -186,7 +209,7 @@
           connection_type: ctype
         })
 
-        this.$store.dispatch('connections/create', { team_name, attrs }).then(response => {
+        return this.$store.dispatch('connections/create', { team_name, attrs }).then(response => {
           var mount = _.cloneDeep(response.data)
           mount.name = `${service_slug}-` + getNameSuffix(4),
           this.omitMaskedValues(mount)
@@ -203,7 +226,9 @@
         alert(item.id)
       },
       onServiceClick(item) {
-        this.createPendingConnection(item)
+        this.createPendingConnection(item).then(response => {
+          this.active_step = 'configure-connection'
+        })
       },
       onClose() {
         this.initSelf()
@@ -212,6 +237,11 @@
       onCancel() {
         this.initSelf()
         this.$emit('cancel')
+      },
+      onUpdateConnection(connection) {
+        debugger
+        this.edit_mount = _.cloneDeep(connection)
+        this.active_step = 'setup-config'
       },
       submit() {
         this.$emit('update-mount', {})
