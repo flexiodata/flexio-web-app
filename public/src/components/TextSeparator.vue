@@ -11,11 +11,11 @@
     props: {
       lineColor: {
         type: String,
-        default: 'rgba(0,0,0,0.1)'
+        default: '#ddd'
       },
       textColor: {
         type: String,
-        default: '#ccc'
+        default: '#bbb'
       }
     },
     computed: {
@@ -31,8 +31,8 @@
 
 <style lang="stylus" scoped>
   .separator-line
-    border-bottom: 1px solid rgba(0,0,0,0.1)
+    border-bottom: 1px solid #ddd
   .separator-text
-    color: #ccc
+    color: #bbb
     padding: 0 8px
 </style>
