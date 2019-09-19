@@ -38,10 +38,12 @@
         return 'ba b--black-20 b--dashed'
       },
       url_src() {
-        var base_url = this.url.substring(this.url.indexOf('//') + 2)
-        if (base_url.indexOf('/') != -1)
-          base_url = base_url.substr(0, base_url.indexOf('/'))
-        return 'https://logo.clearbit.com/' + base_url
+        var idx = this.url.indexOf('//')
+        var url = idx >= 0 ? this.url.substring(idx + 2) : this.url
+        if (url.indexOf('/') != -1) {
+          url = url.substr(0, url.indexOf('/'))
+        }
+        return 'https://logo.clearbit.com/' + url
       }
     },
     methods: {
