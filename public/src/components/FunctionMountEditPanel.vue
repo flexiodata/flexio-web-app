@@ -13,6 +13,12 @@
       items="mounts"
       @item-click="onFunctionPackClick"
     />
+    <hr>
+    <FunctionMountList
+      items="services"
+      :filter-by="filterByFunctionMount"
+    />
+    <hr>
     <ServiceList
       :filter-by="filterByFunctionMount"
     />

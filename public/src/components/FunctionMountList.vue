@@ -3,39 +3,52 @@
     <div
       class="flex flex-column items-center justify-center item-container"
       :key="item.id"
-      :title="item.title"
+      :title="getItemTitle(item)"
       @click="onItemClick(item)"
-      v-for="item in internal_items"
+      v-for="item in filtered_items"
     >
       <div
         class="item-img flex flex-column justify-center"
-        v-if="item.url"
+        v-if="item.connection_type"
+      >
+        <ServiceIcon
+          class="item-img-icon"
+          :type="item.connection_type"
+          :title="getItemTitle(item)"
+        />
+      </div>
+      <div
+        class="item-img flex flex-column justify-center"
+        v-else-if="item.url"
       >
         <ServiceIcon
           class="item-img-icon"
           :url="item.url"
-          :title="item.title"
+          :title="getItemTitle(item)"
         />
       </div>
       <i
         class="item-icon material-icons"
-        :title="item.title"
+        :title="getItemTitle(item)"
         v-else-if="item.icon"
       >
         {{item.icon}}
       </i>
-      <div class="item-label">{{item.title}}</div>
+      <div class="item-label">{{getItemTitle(item)}}</div>
     </div>
   </div>
 </template>
 
 <script>
   import mounts from '@/data/mount-items.yml'
+  import { CONNECTION_TYPE_FLEX }  from '@/constants/connection-type'
+  import * as services from '@/constants/connection-info'
   import ServiceIcon from '@/components/ServiceIcon'
 
   const getDefaultState = () => {
     return {
-      mounts
+      mounts,
+      services
     }
   }
 
@@ -44,6 +57,9 @@
       items: {
         type: [String, Array], // 'mounts', 'services', []
         default: []
+      },
+      filterBy: {
+        type: Function
       }
     },
     components: {
@@ -53,17 +69,26 @@
       return getDefaultState()
     },
     computed: {
-      internal_items() {
+      computed_items() {
         if (Array.isArray(this.items)) {
           return this.items
         }
 
         switch (this.items) {
           case 'mounts': return this.mounts
+          case 'services': return this.services
         }
-      }
+
+        return []
+      },
+      filtered_items() {
+        return this.filterBy ? _.filter(this.computed_items, this.filterBy) : this.computed_items
+      },
     },
     methods: {
+      getItemTitle(item) {
+        return item.title || item.service_name || ''
+      },
       onItemClick(item) {
         this.$emit('item-click', item)
       }
