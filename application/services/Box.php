@@ -116,12 +116,13 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
 
+            $content_type = '';
         }
          else
         {
             $type = 'FILE';
             $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, "https://api.box.com/2.0/files/" . $fileid . "?fields=modified_at,name,size");
+            curl_setopt($ch, CURLOPT_URL, "https://api.box.com/2.0/files/" . $fileid . "?fields=modified_at,name,size,sha1");
             curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token]);
             curl_setopt($ch, CURLOPT_HTTPGET, true);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -129,6 +130,8 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             $info = @json_decode($result, true);
             $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
+
+            $content_type = \Flexio\Base\ContentType::getMimeType($info['name']);
         }
 
         if (($info['code'] ?? '') === 'not_found')
@@ -137,13 +140,16 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         if (!isset($info['name']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL);
 
-        return [
+        $result = [
             'name' => $info['name'],
             'size' => $info['size'] ?? null,
             'modified' => $info['modified_at'] ?? '',
             'hash' => $info['sha1'] ?? '',
-            'type' => $type
+            'type' => $type,
+            'content_type' => $content_type
         ];
+
+        return $result;
     }
 
     public function internalGetFileInfo(string $path) : ?array

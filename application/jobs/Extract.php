@@ -52,8 +52,8 @@ class Extract extends \Flexio\Jobs\Base
             [
                 "op" => "convert",
                 "input" => [
-                    "format" => "delimited",
-                    "header" => true
+                    //"format" => "delimited",
+                    //"header" => true
                 ],
                 "output" => [
                     "format" => "table"
