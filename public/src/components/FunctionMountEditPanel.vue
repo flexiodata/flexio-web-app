@@ -32,17 +32,61 @@
       :submit-button-text="submit_label"
       @cancel-click="onCancel"
       @submit-click="submit"
-      v-show="showFooter && show_footer"
+      v-show="showFooter && has_mount"
     />
   </div>
 </template>
 
 <script>
+  import randomstring from 'randomstring'
+  import { mapState } from 'vuex'
+  import { OBJECT_STATUS_PENDING } from '@/constants/object-status'
+  import { slugify } from '@/utils'
   import HeaderBar from '@/components/HeaderBar'
   import ButtonBar from '@/components/ButtonBar'
   import IconList from '@/components/IconList'
   import TextSeparator from '@/components/TextSeparator'
   import MixinConnection from '@/components/mixins/connection'
+
+  const CONNECTION_MODE_RESOURCE = 'R'
+  const CONNECTION_MODE_FUNCTION = 'F'
+
+  const defaultAttrs = () => {
+    var connection_info = {
+      method: '',
+      url: '',
+      auth: 'none',
+      username: '',
+      password: '',
+      token: '',
+      access_token: '',
+      refresh_token: '',
+      expires: '',
+      headers: {},
+      data: {}
+    }
+
+    var suffix = getNameSuffix()
+
+    return {
+      eid: null,
+      eid_status: OBJECT_STATUS_PENDING,
+      name: `connection-${suffix}`,
+      title: '',
+      description: '',
+      connection_type: '',
+      connection_mode: CONNECTION_MODE_RESOURCE,
+      connection_info
+    }
+  }
+
+  const getNameSuffix = (length) => {
+    return randomstring.generate({
+      length,
+      charset: 'alphabetic',
+      capitalization: 'lowercase'
+    })
+  }
 
   const getDefaultState = (component) => {
     return {
@@ -66,7 +110,7 @@
       },
       mount: {
         type: Object,
-        required: true
+        default: () => {}
       },
       mode: {
         type: String,
@@ -91,21 +135,25 @@
       return getDefaultState()
     },
     computed: {
-      fname() {
+      ...mapState({
+        active_team_name: state => state.teams.active_team_name
+      }),
+      cname() {
         return _.get(this.mount, 'name', '')
+      },
+      has_mount() {
+        var eid = _.get(this.edit_mount, 'eid', '')
+        return eid.length > 0
       },
       our_title() {
         if (this.title.length > 0) {
           return this.title
         }
 
-        return this.mode == 'edit' ? `Edit "${this.fname}" Function Mount` : 'New Function Mount'
+        return this.mode == 'edit' ? `Edit "${this.cname}" Function Mount` : 'New Function Mount'
       },
       submit_label() {
         return this.mode == 'edit' ? 'Save changes' : 'Create function mount'
-      },
-      show_footer() {
-        return true
       },
     },
     methods: {
@@ -115,20 +163,47 @@
 
         // reset local objects
         this.edit_mount = _.assign({}, this.edit_mount, _.cloneDeep(this.mount))
-
-        // reset the form
-        if (this.$refs.form) {
-          this.$refs.form.resetFields()
-        }
       },
       filterByFunctionMount(connection) {
         return this.$_Connection_isFunctionMount(connection)
+      },
+      createPendingConnection(item) {
+        var ctype = item.connection_type
+        var ctitle = item.title || item.service_name
+        var service_slug = slugify(ctitle)
+        var team_name = this.active_team_name
+
+        // when using this panel in 'add' mode, if the panel
+        // is created with a `mount` prop, use the attributes of
+        // this prop when creating the pending connection -- we use this
+        // for creating 'function mount' connections
+        var prop_mount_attrs = _.cloneDeep(this.mount)
+
+        var attrs = _.assign({}, defaultAttrs(), prop_mount_attrs, {
+          eid_status: OBJECT_STATUS_PENDING,
+          name: `${service_slug}-` + getNameSuffix(16),
+          title: ctitle,
+          connection_type: ctype
+        })
+
+        this.$store.dispatch('connections/create', { team_name, attrs }).then(response => {
+          var mount = _.cloneDeep(response.data)
+          mount.name = `${service_slug}-` + getNameSuffix(4),
+          this.omitMaskedValues(mount)
+        })
+      },
+      omitMaskedValues(attrs) {
+        var connection_info = _.get(attrs, 'connection_info', {})
+        connection_info = _.omitBy(connection_info, (val, key) => { return val == '*****' })
+
+        var update_attrs = _.assign({}, attrs, { connection_info })
+        this.edit_mount = _.assign({}, this.edit_mount, update_attrs)
       },
       onFunctionPackClick(item) {
         alert(item.id)
       },
       onServiceClick(item) {
-        alert(item.connection_type)
+        this.createPendingConnection(item)
       },
       onClose() {
         this.initSelf()
