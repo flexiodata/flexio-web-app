@@ -210,17 +210,16 @@
       top="4vh"
       :modal-append-to-body="false"
       :close-on-click-modal="false"
-      :visible.sync="show_connection_dialog"
+      :visible.sync="show_mount_dialog"
     >
-      <ConnectionEditPanel
-        :mode="connection_edit_mode"
-        :show-steps="connection_edit_mode == 'edit' ? false : true"
-        :connection="connection_edit_mode == 'edit' ? edit_connection : new_connection_attrs"
-        :filter-by="filterByFunctionMount"
-        @close="show_connection_dialog = false"
-        @cancel="show_connection_dialog = false"
-        @update-connection="syncFunctionMount"
-        v-if="show_connection_dialog"
+      <FunctionMountEditPanel
+        :mode="mount_edit_mode"
+        :show-steps="mount_edit_mode == 'edit' ? false : true"
+        :mount="mount_edit_mode == 'edit' ? edit_connection : new_connection_attrs"
+        @close="show_mount_dialog = false"
+        @cancel="show_mount_dialog = false"
+        @submit="syncFunctionMount"
+        v-if="show_mount_dialog"
       />
     </el-dialog>
   </div>
@@ -237,7 +236,7 @@
   import PipeDocument from '@/components/PipeDocument'
   import PipeDocumentTestPanel from '@/components/PipeDocumentTestPanel'
   import PipeEditPanel from '@/components/PipeEditPanel'
-  import ConnectionEditPanel from '@/components/ConnectionEditPanel'
+  import FunctionMountEditPanel from '@/components/FunctionMountEditPanel'
   import ServiceIcon from '@/components/ServiceIcon'
   import EmptyItem from '@/components/EmptyItem'
   import PageNotFound from '@/components/PageNotFound'
@@ -288,7 +287,7 @@ def flex_handler(flex):
       PipeDocument,
       PipeDocumentTestPanel,
       PipeEditPanel,
-      ConnectionEditPanel,
+      FunctionMountEditPanel,
       ServiceIcon,
       EmptyItem,
       PageNotFound
@@ -317,8 +316,8 @@ def flex_handler(flex):
         pipe_edit_mode: 'add',
         edit_connection: null,
         new_pipe_attrs: {},
-        show_connection_dialog: false,
-        connection_edit_mode: 'add',
+        show_mount_dialog: false,
+        mount_edit_mode: 'add',
         edit_connection: null,
         new_connection_attrs: {
           connection_mode: CONNECTION_MODE_FUNCTION
@@ -475,7 +474,7 @@ def flex_handler(flex):
         var eid = _.get(connection, 'eid', '')
 
         this.$store.dispatch('connections/sync', { team_name, eid })
-        this.show_connection_dialog = false
+        this.show_mount_dialog = false
 
         // add the item to the list of open collapser items
         if (this.expanded_groups.indexOf(eid) == -1) {
@@ -484,8 +483,8 @@ def flex_handler(flex):
       },
       editFunctionMount(connection) {
         this.edit_connection = connection
-        this.connection_edit_mode = 'edit'
-        this.show_connection_dialog = true
+        this.mount_edit_mode = 'edit'
+        this.show_mount_dialog = true
       },
       isFunctionMountSyncing(connection) {
         return _.get(connection, 'vuex_meta.is_syncing', false)
@@ -570,8 +569,8 @@ def flex_handler(flex):
         this.show_pipe_dialog = true
       },
       onNewFunctionMount() {
-        this.connection_edit_mode = 'add'
-        this.show_connection_dialog = true
+        this.mount_edit_mode = 'add'
+        this.show_mount_dialog = true
       },
     }
   }

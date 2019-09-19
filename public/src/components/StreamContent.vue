@@ -48,13 +48,6 @@
     v-else-if="is_json || is_html || is_text"
   />
 
-  <Grid
-    :data-url="stream_content_url"
-    :live-scroll="false"
-    :style="inner_style"
-    v-else-if="is_table"
-  />
-
   <div v-else></div>
 </template>
 
@@ -62,7 +55,6 @@
   import { mapState } from 'vuex'
   import * as mt from '@/constants/mimetype'
   import { API_ROOT } from '../api/resources'
-  import Grid from 'vue-grid2'
   import Spinner from 'vue-simple-spinner'
   import StreamText from '@/components/StreamText'
 
@@ -86,7 +78,6 @@
       }
     },
     components: {
-      Grid,
       Spinner,
       StreamText
     },

@@ -168,11 +168,7 @@
       visible: {
         type: Boolean,
         default: true
-      },
-      formErrors: {
-        type: Object,
-        default: () => {}
-      },
+      }
     },
     components: {
       CodeEditor,
@@ -251,10 +247,10 @@
         })
       },
       emitFormValues() {
-        this.$emit('update:formValues', this.edit_values)
+        this.$emit('values-change', this.edit_values, this.item)
       },
       emitFormErrors() {
-        this.$emit('update:formErrors', this.form_errors)
+        this.$emit('errors-change', this.form_errors, this.item)
       },
       isDatePickerType(type) {
         return ['year','month','date','datetime','week','datetimerange','daterange'].indexOf(type) != -1

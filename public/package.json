@@ -1,6 +1,6 @@
 {
   "name": "flexio",
-  "version": "2.4.2",
+  "version": "2.4.3",
   "description": "Flex.io Client Web Application",
   "author": "David Z. Williams <dave@flex.io>",
   "private": true,
@@ -28,7 +28,6 @@
     "stickybits": "^3.3.1",
     "vue": "2.5.17",
     "vue-codemirror": "^4.0.5",
-    "vue-grid2": "^0.2.14",
     "vue-meta": "^1.5.5",
     "vue-multipane": "^0.9.5",
     "vue-router": "^3.0.1",
