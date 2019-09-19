@@ -1,60 +1,67 @@
 <template>
   <div class="w-100 flex flex-row flex-wrap">
     <div
-      class="flex flex-column items-center justify-center mount-item"
-      :key="mount.id"
-      :title="mount.title"
-      @click="onItemClick(mount)"
-      v-for="mount in mounts"
+      class="flex flex-column items-center justify-center item-container"
+      :key="item.id"
+      :title="item.title"
+      @click="onItemClick(item)"
+      v-for="item in internal_items"
     >
       <div
-        class="mount-img flex flex-column justify-center"
-        v-if="mount.url"
+        class="item-img flex flex-column justify-center"
+        v-if="item.url"
       >
         <ServiceIcon
-          :url="mount.url"
-          :title="mount.title"
+          class="item-img-icon"
+          :url="item.url"
+          :title="item.title"
         />
       </div>
       <i
-        class="mount-icon material-icons"
-        :title="mount.title"
-        v-else-if="mount.icon"
+        class="item-icon material-icons"
+        :title="item.title"
+        v-else-if="item.icon"
       >
-        {{mount.icon}}
+        {{item.icon}}
       </i>
-      <div class="mount-label">{{mount.title}}</div>
+      <div class="item-label">{{item.title}}</div>
     </div>
   </div>
 </template>
 
 <script>
+  import mounts from '@/data/mount-items.yml'
   import ServiceIcon from '@/components/ServiceIcon'
 
-  const getDefaultState = (component) => {
+  const getDefaultState = () => {
     return {
-      mounts: [
-        { id: 'hubspot',   url: 'hubspot.com',      title: 'HubSpot'     },
-        { id: 'youtube',   url: 'youtube.com',      title: 'YouTube'     },
-        { id: 'wikipedia', url: 'en.wikipedia.org', title: 'Wikipedia'   },
-        { id: 'facebook',  url: 'facebook.com',     title: 'Facebook'    },
-        { id: 'twitter',   url: 'twitter.com',      title: 'Twitter'     },
-        { id: 'amazon',    url: 'amazon.com',       title: 'Amazon'      },
-        { id: 'imdb',      url: 'imdb.com',         title: 'IMDB'        },
-        { id: 'reddit',    url: 'reddit.com',       title: 'Reddit'      },
-        { id: 'pinterest', url: 'pinterest.com',    title: 'Pinterest'   },
-        { id: 'ebay',      url: 'ebay.com',         title: 'Ebay'        },
-        { id: 'custom',    icon: 'settings',        title: 'Self-Hosted' },
-      ]
+      mounts
     }
   }
 
   export default {
+    props: {
+      items: {
+        type: [String, Array], // 'mounts', 'services', []
+        default: []
+      }
+    },
     components: {
       ServiceIcon
     },
     data() {
       return getDefaultState()
+    },
+    computed: {
+      internal_items() {
+        if (Array.isArray(this.items)) {
+          return this.items
+        }
+
+        switch (this.items) {
+          case 'mounts': return this.mounts
+        }
+      }
     },
     methods: {
       onItemClick(item) {
@@ -67,7 +74,7 @@
 <style lang="stylus" scoped>
   @import '../stylesheets/variables.styl'
 
-  .mount-item
+  .item-container
     border-radius: 4px
     cursor: pointer
     padding: 24px 16px
@@ -75,15 +82,17 @@
     &:hover
       background-color: $black-10
 
-  .mount-img
-    border-radius: 4px
+  .item-img
     width: 64px
     height: 64px
 
-  .mount-icon
+  .item-img-icon
+    border-radius: 4px
+
+  .item-icon
     font-size: 64px
 
-  .mount-label
+  .item-label
     font-weight: 600
     margin-top: 12px
 

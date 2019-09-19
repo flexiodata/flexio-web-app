@@ -10,6 +10,7 @@
 
     <!-- body -->
     <FunctionMountList
+      items="mounts"
       @item-click="onFunctionPackClick"
     />
     <ServiceList
