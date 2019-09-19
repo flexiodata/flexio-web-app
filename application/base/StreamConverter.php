@@ -181,7 +181,6 @@ class StreamConverter
             while (true)
             {
                 $row = $streamreader->readRow();
-                var_dump($row);
                 if ($row === false)
                     break;
                 $streamwriter->write($row);
