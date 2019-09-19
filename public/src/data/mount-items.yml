@@ -1,33 +1,94 @@
 - id: hubspot
-  url: hubspot.com
   title: HubSpot
-- id: youtube
-  url: youtube.com
-  title: YouTube
+  image:
+    src: https://logo.clearbit.com/hubspot.com
+    alt: HubSpot logo
+  connection:
+    title: HubSpot
+    name: hubspot
+    connection_type: github
+    connection_mode: F
+    connection_info:
+      owner: flexiodata
+      repository: functions-hubspot
+
 - id: wikipedia
-  url: en.wikipedia.org
   title: Wikipedia
-- id: facebook
-  url: facebook.com
-  title: Facebook
-- id: twitter
-  url: twitter.com
-  title: Twitter
-- id: amazon
-  url: amazon.com
-  title: Amazon
-- id: imdb
-  url: imdb.com
-  title: IMDB
-- id: reddit
-  url: reddit.com
-  title: Reddit
-- id: pinterest
-  url: pinterest.com
-  title: Pinterest
-- id: ebay
-  url: ebay.com
-  title: Ebay
-#- id: custom
-#  icon: settings
-#  title: Self-Hosted
+  image:
+    src: https://logo.clearbit.com/en.wikipedia.org
+    alt: Wikipedia logo
+  connection:
+    title: Wikipedia
+    name: wikipedia
+    connection_type: github
+    connection_mode: F
+    connection_info:
+      owner: flexiodata
+      repository: functions-wikipedia
+
+- id: currency
+  title: Currency
+  image:
+    src: https://logo.clearbit.com/zentral-bank.eu
+    alt: Zentral Bank logo
+  connection:
+    title: Currency
+    name: currency
+    connection_type: github
+    connection_mode: F
+    connection_info:
+      owner: flexiodata
+      repository: functions-currency
+
+# - id: youtube
+#   title: YouTube
+#   image:
+#     src: https://logo.clearbit.com/youtube.com
+#     alt: YouTube logo
+#
+# - id: facebook
+#   title: Facebook
+#   image:
+#     src: https://logo.clearbit.com/facebook.com
+#     alt: Facebook logo
+#
+# - id: twitter
+#   title: Twitter
+#   image:
+#     src: https://logo.clearbit.com/twitter.com
+#     alt: Twitter logo
+#
+# - id: amazon
+#   title: Amazon
+#   image:
+#     src: https://logo.clearbit.com/amazon.com
+#     alt: Amazon logo
+#
+# - id: imdb
+#   title: IMDB
+#   image:
+#     src: https://logo.clearbit.com/imdb.com
+#     alt: IMDB logo
+#
+# - id: reddit
+#   title: Reddit
+#   image:
+#     src: https://logo.clearbit.com/reddit.com
+#     alt: Reddit logo
+#
+# - id: pinterest
+#   title: Pinterest
+#   image:
+#     src: https://logo.clearbit.com/pinterest.com
+#     alt: Pinterest logo
+#
+# - id: ebay
+#   title: Ebay
+#   image:
+#     src: https://logo.clearbit.com/ebay.com
+#     alt: Ebay logo
+#
+# - id: custom
+#   title: Self-Hosted
+#   icon: settings
+#

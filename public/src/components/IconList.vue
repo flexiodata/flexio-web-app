@@ -19,11 +19,11 @@
       </div>
       <div
         class="item-img flex flex-column justify-center"
-        v-else-if="item.url"
+        v-else-if="item.image"
       >
         <ServiceIcon
           class="item-img-icon"
-          :url="item.url"
+          :url="item.image.src"
           :title="getItemTitle(item)"
         />
       </div>
