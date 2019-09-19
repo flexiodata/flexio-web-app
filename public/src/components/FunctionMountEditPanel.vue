@@ -9,18 +9,21 @@
     />
 
     <!-- body -->
-    <FunctionMountList
+    <h3>Function Packs</h3>
+    <p>Choose from one of the pre-configured function packs below.</p>
+    <IconList
+      class="ph2"
       items="mounts"
       @item-click="onFunctionPackClick"
     />
-    <hr>
-    <FunctionMountList
+    <TextSeparator class="w5 center mv4" />
+    <h3>Host Your Own</h3>
+    <p>Host your own function pack using one of the services below. Visit our <a href="#" class="blue" target="_blank">online documentation</a> to learn how to <a href="#" class="blue" target="_blank">create and host your own function pack</a>.</p>
+    <IconList
+      class="ph2"
       items="services"
       :filter-by="filterByFunctionMount"
-    />
-    <hr>
-    <ServiceList
-      :filter-by="filterByFunctionMount"
+      @item-click="onServiceClick"
     />
 
     <!-- footer -->
@@ -37,8 +40,8 @@
 <script>
   import HeaderBar from '@/components/HeaderBar'
   import ButtonBar from '@/components/ButtonBar'
-  import ServiceList from '@/components/ServiceList'
-  import FunctionMountList from '@/components/FunctionMountList'
+  import IconList from '@/components/IconList'
+  import TextSeparator from '@/components/TextSeparator'
   import MixinConnection from '@/components/mixins/connection'
 
   const getDefaultState = (component) => {
@@ -74,8 +77,8 @@
     components: {
       HeaderBar,
       ButtonBar,
-      ServiceList,
-      FunctionMountList,
+      IconList,
+      TextSeparator,
     },
     watch: {
       mount: {
@@ -123,6 +126,9 @@
       },
       onFunctionPackClick(item) {
         alert(item.id)
+      },
+      onServiceClick(item) {
+        alert(item.connection_type)
       },
       onClose() {
         this.initSelf()

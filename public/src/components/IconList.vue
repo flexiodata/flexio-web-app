@@ -2,7 +2,7 @@
   <div class="w-100 flex flex-row flex-wrap">
     <div
       class="flex flex-column items-center justify-center item-container"
-      :key="item.id"
+      :key="getItemId(item)"
       :title="getItemTitle(item)"
       @click="onItemClick(item)"
       v-for="item in filtered_items"
@@ -86,6 +86,9 @@
       },
     },
     methods: {
+      getItemId(item) {
+        return item.id || item.connection_type
+      },
       getItemTitle(item) {
         return item.title || item.service_name || ''
       },
