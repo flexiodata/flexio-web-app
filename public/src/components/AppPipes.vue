@@ -218,7 +218,7 @@
         :mount="mount_edit_mode == 'edit' ? edit_connection : new_connection_attrs"
         @close="show_mount_dialog = false"
         @cancel="show_mount_dialog = false"
-        @update-mount="show_mount_dialog = false"
+        @submit="syncFunctionMount"
         v-if="show_mount_dialog"
       />
     </el-dialog>

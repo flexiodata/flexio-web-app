@@ -59,7 +59,7 @@
       class="mt4"
       :submit-button-text="submit_label"
       @cancel-click="onCancel"
-      @submit-click="submit"
+      @submit-click="onSubmit"
       v-show="showFooter && false"
     />
   </div>
@@ -235,7 +235,8 @@
         var attrs = { eid, setup_config }
 
         return this.$store.dispatch('connections/update', { team_name, eid, attrs }).then(response => {
-          this.$emit('close')
+          this.edit_mount = _.assign({}, this.edit_mount, _.cloneDeep(response.data))
+          this.$emit('submit', this.edit_mount)
         })
       },
       omitMaskedValues(attrs) {
@@ -253,6 +254,15 @@
           this.active_step = 'configure-connection'
         })
       },
+      onUpdateConnection(connection) {
+        this.edit_mount = _.cloneDeep(connection)
+
+        var path = this.edit_mount.name + ':/flexio.yml'
+        api.fetchFunctionPackConfig(this.active_team_name, path).then(response => {
+          this.active_step = 'setup-config'
+          this.manifest = _.assign({}, response.data)
+        })
+      },
       onClose() {
         this.initSelf()
         this.$emit('close')
@@ -261,18 +271,8 @@
         this.initSelf()
         this.$emit('cancel')
       },
-      onUpdateConnection(connection) {
-        this.edit_mount = _.cloneDeep(connection)
-        this.active_step = 'setup-config'
-
-        var path = this.edit_mount.name + ':/flexio.yml'
-        api.fetchFunctionPackConfig(this.active_team_name, path).then(response => {
-          debugger
-          this.manifest = _.assign({}, response.data)
-        })
-      },
-      submit() {
-        this.$emit('close')
+      onSubmit() {
+        this.$emit('submit', this.edit_mount)
       },
     }
   }
