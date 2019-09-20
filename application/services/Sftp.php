@@ -70,15 +70,29 @@ class Sftp implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return $service;
     }
 
+    ////////////////////////////////////////////////////////////
+    // IConnection interface
+    ////////////////////////////////////////////////////////////
+
+    public function connect() : bool
+    {
+        $host = $this->host;
+        $username = $this->username;
+        $password = $this->password;
+
+        if ($this->initialize($host, $username, $password) === false)
+            return false;
+
+        return true;
+    }
+
+    public function disconnect() : void
+    {
+    }
+
     public function authenticated() : bool
     {
         return $this->authenticated;
-    }
-
-
-    private function getRemotePath(string $path) : string
-    {
-        return \Flexio\Services\Util::mergePath($this->base_path, $path);
     }
 
     ////////////////////////////////////////////////////////////
@@ -286,6 +300,11 @@ class Sftp implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     // additional functions
     ////////////////////////////////////////////////////////////
 
+    private function getRemotePath(string $path) : string
+    {
+        return \Flexio\Services\Util::mergePath($this->base_path, $path);
+    }
+
     private function checkConnect() : bool
     {
         if (!$this->authenticated())
@@ -295,18 +314,6 @@ class Sftp implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             if (!$this->authenticated())
                 return false;
         }
-        return true;
-    }
-
-    private function connect() : bool
-    {
-        $host = $this->host;
-        $username = $this->username;
-        $password = $this->password;
-
-        if ($this->initialize($host, $username, $password) === false)
-            return false;
-
         return true;
     }
 

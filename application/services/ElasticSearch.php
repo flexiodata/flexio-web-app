@@ -16,7 +16,8 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
+class ElasticSearch implements \Flexio\IFace\IConnection,
+                               \Flexio\IFace\IFileSystem
 {
     private $authenticated = false;
     private $host = '';
@@ -50,6 +51,27 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
         return $service;
+    }
+
+    ////////////////////////////////////////////////////////////
+    // IConnection interface
+    ////////////////////////////////////////////////////////////
+
+    public function connect() : bool
+    {
+        $host = $this->host;
+        $port = $this->port;
+        $user = $this->user;
+        $password = $this->password;
+
+        if ($this->initialize($host, $port, $username, $password) === false)
+            return false;
+
+        return true;
+    }
+
+    public function disconnect() : void
+    {
     }
 
     public function authenticated() : bool
@@ -438,19 +460,6 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
                 );
                 return $info;
         }
-    }
-
-    private function connect() : bool
-    {
-        $host = $this->host;
-        $port = $this->port;
-        $user = $this->user;
-        $password = $this->password;
-
-        if ($this->initialize($host, $port, $username, $password) === false)
-            return false;
-
-        return true;
     }
 
     private function initialize(string $host, int $port, string $username, string $password) : bool

@@ -16,7 +16,8 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class MailJet implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
+class MailJet implements \Flexio\IFace\IConnection,
+                         \Flexio\IFace\IFileSystem
 {
     private $authenticated = false;
     private $username = '';
@@ -42,6 +43,25 @@ class MailJet implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
         return $service;
+    }
+
+    ////////////////////////////////////////////////////////////
+    // IConnection interface
+    ////////////////////////////////////////////////////////////
+
+    public function connect() : bool
+    {
+        $username = $this->username;
+        $password = $this->password;
+
+        if ($service->initialize($username, $password) === false)
+            return false;
+
+        return true;
+    }
+
+    public function disconnect() : void
+    {
     }
 
     public function authenticated() : bool
@@ -301,17 +321,6 @@ class MailJet implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         }
 
         return $result;
-    }
-
-    private function connect() : bool
-    {
-        $username = $this->username;
-        $password = $this->password;
-
-        if ($service->initialize($username, $password) === false)
-            return false;
-
-        return true;
     }
 
     private function initialize(string $username, string $password) : bool

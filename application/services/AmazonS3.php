@@ -16,7 +16,8 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class AmazonS3 implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
+class AmazonS3 implements \Flexio\IFace\IConnection,
+                          \Flexio\IFace\IFileSystem
 {
     private $authenticated = false;
     private $bucket = '';
@@ -55,30 +56,30 @@ class AmazonS3 implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return $service;
     }
 
+    ////////////////////////////////////////////////////////////
+    // IConnection interface
+    ////////////////////////////////////////////////////////////
+
+    public function connect() : bool
+    {
+        $region = $this->region;
+        $bucket = $this->bucket;
+        $accesskey = $this->accesskey;
+        $secretkey = $this->secretkey;
+
+        if ($this->initialize($region, $bucket, $accesskey, $secretkey) === false)
+            return false;
+
+        return true;
+    }
+
+    public function disconnect() : void
+    {
+    }
+
     public function authenticated() : bool
     {
         return $this->authenticated;
-    }
-
-    private function getS3(string $path) // TODO: add return type
-    {
-        if (strpos($path, "s3://") !== 0)
-        {
-            return $this->s3;
-        }
-         else
-        {
-            $urlparts = parse_url($path);
-
-            $s3 = new \Aws\S3\S3Client([
-                'version'     => 'latest',
-                'region'      => $this->region,
-                'endpoint'    => $urlparts['host'],
-                'credentials' => false
-            ]);
-
-            return $s3;
-        }
     }
 
     ////////////////////////////////////////////////////////////
@@ -593,19 +594,6 @@ class AmazonS3 implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     // additional functions
     ////////////////////////////////////////////////////////////
 
-    private function connect() : bool
-    {
-        $region = $this->region;
-        $bucket = $this->bucket;
-        $accesskey = $this->accesskey;
-        $secretkey = $this->secretkey;
-
-        if ($this->initialize($region, $bucket, $accesskey, $secretkey) === false)
-            return false;
-
-        return true;
-    }
-
     private function initialize(string $region, string $bucket, string $accesskey, string $secretkey) : bool
     {
         $this->authenticated = false;
@@ -650,5 +638,26 @@ class AmazonS3 implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         }
 
         return false;
+   }
+
+   private function getS3(string $path) // TODO: add return type
+   {
+       if (strpos($path, "s3://") !== 0)
+       {
+           return $this->s3;
+       }
+        else
+       {
+           $urlparts = parse_url($path);
+
+           $s3 = new \Aws\S3\S3Client([
+               'version'     => 'latest',
+               'region'      => $this->region,
+               'endpoint'    => $urlparts['host'],
+               'credentials' => false
+           ]);
+
+           return $s3;
+       }
    }
 }

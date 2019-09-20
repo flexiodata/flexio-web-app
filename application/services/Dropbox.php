@@ -16,7 +16,9 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
+class Dropbox implements \Flexio\IFace\IConnection,
+                         \Flexio\IFace\IOAuthConnection,
+                         \Flexio\IFace\IFileSystem
 {
     private $authorization_uri = '';
     private $access_token = '';
@@ -29,6 +31,19 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return $obj;
     }
 
+    ////////////////////////////////////////////////////////////
+    // IConnection interface
+    ////////////////////////////////////////////////////////////
+
+    public function connect() : bool
+    {
+        return true;
+    }
+
+    public function disconnect() : void
+    {
+    }
+
     public function authenticated() : bool
     {
         if (strlen($this->access_token) > 0)
@@ -37,9 +52,20 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return false;
     }
 
+    ////////////////////////////////////////////////////////////
+    // OAuth interface
+    ////////////////////////////////////////////////////////////
+
     public function getAuthorizationUri() : string
     {
         return $this->authorization_uri;
+    }
+
+    public function getTokens() : array
+    {
+        return [ 'access_token' => $this->access_token,
+                 'refresh_token' => '',           // dropbox doesn't use refresh tokens
+                 'expires' => 0  ];               // dropbox tokens are usable until revocation
     }
 
     ////////////////////////////////////////////////////////////
@@ -184,7 +210,7 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                      'hash' => $entry['content_hash'] ?? '',
                      'type' => ($entry['.tag'] == 'folder' ? 'DIR' : 'FILE'),
                      'content_type' => $content_type);
-        
+
         return $result;
     }
 
@@ -436,18 +462,6 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     ////////////////////////////////////////////////////////////
     // additional functions
     ////////////////////////////////////////////////////////////
-
-    public function getTokens() : array
-    {
-        return [ 'access_token' => $this->access_token,
-                 'refresh_token' => '',           // dropbox doesn't use refresh tokens
-                 'expires' => 0  ];               // dropbox tokens are usable until revocation
-    }
-
-    private function connect() : bool
-    {
-        return true;
-    }
 
     private function initialize(array $params = null) : bool
     {

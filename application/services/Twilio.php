@@ -16,7 +16,8 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class Twilio implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
+class Twilio implements \Flexio\IFace\IConnection,
+                        \Flexio\IFace\IFileSystem
 {
     private $authenticated = false;
     private $username = '';
@@ -42,6 +43,25 @@ class Twilio implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
         return $service;
+    }
+
+    ////////////////////////////////////////////////////////////
+    // IConnection interface
+    ////////////////////////////////////////////////////////////
+
+    public function connect() : bool
+    {
+        $username = $this->username;
+        $password = $this->password;
+
+        if ($this->initialize($username, $password) === false)
+            return false;
+
+        return false;
+    }
+
+    public function disconnect() : void
+    {
     }
 
     public function authenticated() : bool
@@ -280,17 +300,6 @@ class Twilio implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
         // we found the specified path
         return $currentpath;
-    }
-
-    private function connect() : bool
-    {
-        $username = $this->username;
-        $password = $this->password;
-
-        if ($this->initialize($username, $password) === false)
-            return false;
-
-        return false;
     }
 
     private function initialize(string $username, string $password) : bool

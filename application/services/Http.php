@@ -16,12 +16,31 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class Http implements \Flexio\IFace\IFileSystem
+class Http implements \Flexio\IFace\IConnection,
+                      \Flexio\IFace\IFileSystem
 {
     public static function create(array $params = null) : \Flexio\Services\Http
     {
         $service = new self;
         return $service;
+    }
+
+    ////////////////////////////////////////////////////////////
+    // IConnection interface
+    ////////////////////////////////////////////////////////////
+
+    public function connect() : bool
+    {
+        return true;
+    }
+
+    public function disconnect() : void
+    {
+    }
+
+    public function authenticated() : bool
+    {
+        return true;
     }
 
     ////////////////////////////////////////////////////////////
@@ -136,8 +155,5 @@ class Http implements \Flexio\IFace\IFileSystem
     // additional functions
     ////////////////////////////////////////////////////////////
 
-    private function connect() : bool
-    {
-        return true;
-    }
+    // TODO: add here
 }

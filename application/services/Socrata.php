@@ -16,7 +16,8 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class Socrata implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
+class Socrata implements \Flexio\IFace\IConnection,
+                         \Flexio\IFace\IFileSystem
 {
     private $host;
     private $port;
@@ -41,6 +42,25 @@ class Socrata implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
         return $service;
+    }
+
+    ////////////////////////////////////////////////////////////
+    // IConnection interface
+    ////////////////////////////////////////////////////////////
+
+    public function connect() : bool
+    {
+        $host = $this->host;
+        $port = $this->port;
+
+        if ($this->initialize($host, $port) === false)
+            return false;
+
+        return true;
+    }
+
+    public function disconnect() : void
+    {
     }
 
     public function authenticated() : bool
@@ -382,17 +402,6 @@ class Socrata implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                 $res[] = null;
         }
         return $res;
-    }
-
-    private function connect() : bool
-    {
-        $host = $this->host;
-        $port = $this->port;
-
-        if ($this->initialize($host, $port) === false)
-            return false;
-
-        return true;
     }
 
     private function initialize(string $host, int $port) : bool

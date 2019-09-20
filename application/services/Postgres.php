@@ -16,7 +16,8 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class Postgres implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
+class Postgres implements \Flexio\IFace\IConnection,
+                          \Flexio\IFace\IFileSystem
 {
     private $authenticated = false;
     private $db = null;
@@ -50,6 +51,28 @@ class Postgres implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
         return $service;
+    }
+
+    ////////////////////////////////////////////////////////////
+    // IConnection interface
+    ////////////////////////////////////////////////////////////
+
+    public function connect() : bool
+    {
+        $host = $this->host;
+        $port = $this->port;
+        $database = $this->database;
+        $username = $this->username;
+        $password = $this->password;
+
+        if ($this->initialize($host, $port, $database, $username, $password) === false)
+            return false;
+
+        return true;
+    }
+
+    public function disconnect() : void
+    {
     }
 
     public function authenticated() : bool
@@ -295,20 +318,6 @@ class Postgres implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         }
 
         return null;
-    }
-
-    private function connect() : bool
-    {
-        $host = $this->host;
-        $port = $this->port;
-        $database = $this->database;
-        $username = $this->username;
-        $password = $this->password;
-
-        if ($this->initialize($host, $port, $database, $username, $password) === false)
-            return false;
-
-        return true;
     }
 
     private function initialize(string $host, int $port, string $database, string $username, string $password) : bool

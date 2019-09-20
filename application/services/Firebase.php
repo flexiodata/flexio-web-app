@@ -16,7 +16,8 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class Firebase implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
+class Firebase implements \Flexio\IFace\IConnection,
+                          \Flexio\IFace\IFileSystem
 {
     private $authenticated = false;
 
@@ -24,6 +25,19 @@ class Firebase implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     {
         $service = new self;
         return $service;
+    }
+
+    ////////////////////////////////////////////////////////////
+    // IConnection interface
+    ////////////////////////////////////////////////////////////
+
+    public function connect() : bool
+    {
+        return true;
+    }
+
+    public function disconnect() : void
+    {
     }
 
     public function authenticated() : bool
@@ -122,8 +136,5 @@ class Firebase implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     // additional functions
     ////////////////////////////////////////////////////////////
 
-    private function connect() : bool
-    {
-        return true;
-    }
+    // TODO: add here
 }

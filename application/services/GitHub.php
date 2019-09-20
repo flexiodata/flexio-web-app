@@ -16,7 +16,9 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
+class GitHub implements \Flexio\IFace\IConnection,
+                        \Flexio\IFace\IOAuthConnection,
+                        \Flexio\IFace\IFileSystem
 {
     private $authorization_uri = '';
     private $access_token = '';
@@ -30,6 +32,19 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return $obj;
     }
 
+    ////////////////////////////////////////////////////////////
+    // IConnection interface
+    ////////////////////////////////////////////////////////////
+
+    public function connect() : bool
+    {
+        return true;
+    }
+
+    public function disconnect() : void
+    {
+    }
+
     public function authenticated() : bool
     {
         if (strlen($this->access_token) > 0)
@@ -38,9 +53,20 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return false;
     }
 
+    ////////////////////////////////////////////////////////////
+    // OAuth interface
+    ////////////////////////////////////////////////////////////
+
     public function getAuthorizationUri() : string
     {
         return $this->authorization_uri;
+    }
+
+    public function getTokens() : array
+    {
+        return [ 'access_token' => $this->access_token,
+                 'refresh_token' => '',
+                 'expires' => 0  ];
     }
 
     ////////////////////////////////////////////////////////////
@@ -385,13 +411,6 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     // additional functions
     ////////////////////////////////////////////////////////////
 
-    public function getTokens() : array
-    {
-        return [ 'access_token' => $this->access_token,
-                 'refresh_token' => '',
-                 'expires' => 0  ];
-    }
-
     private function getRepositories($username = null) : array
     {
         // General Request Notes:
@@ -590,11 +609,6 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         }
 
         return $folder_items;
-    }
-
-    private function connect() : bool
-    {
-        return true;
     }
 
     private function initialize(array $params = null) : bool

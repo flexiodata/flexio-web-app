@@ -16,7 +16,8 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class PipelineDeals implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
+class PipelineDeals implements \Flexio\IFace\IConnection,
+                               \Flexio\IFace\IFileSystem
 {
     private $authenticated = false;
     private $access_token = '';
@@ -39,6 +40,23 @@ class PipelineDeals implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
         return $service;
+    }
+
+    ////////////////////////////////////////////////////////////
+    // IConnection interface
+    ////////////////////////////////////////////////////////////
+
+    public function connect() : bool
+    {
+        $access_token = $this->access_token;
+        if ($this->initialize($access_token) === false)
+            return false;
+
+        return true;
+    }
+
+    public function disconnect() : void
+    {
     }
 
     public function authenticated() : bool
@@ -273,15 +291,6 @@ class PipelineDeals implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
 
         // we found the specified path
         return $currentpath;
-    }
-
-    private function connect() : bool
-    {
-        $access_token = $this->access_token;
-        if ($this->initialize($access_token) === false)
-            return false;
-
-        return true;
     }
 
     private function initialize(string $access_token) : bool
