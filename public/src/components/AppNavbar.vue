@@ -2,8 +2,8 @@
   <nav>
     <div class="flex flex-row items-center bg-white pv1 ph2 ph3-ns" style="height: 60px">
       <div class="flex-fill flex flex-row items-center" style="letter-spacing: 0.03em">
-        <router-link to="/" class="mr3 link min-w3 hint--bottom" aria-label="Home">
-          <img src="../assets/logo-flexio-navbar.png" alt="Flex.io">
+        <router-link to="/" class="mr3 link hint--bottom" aria-label="Home">
+          <img src="../assets/logo-circle-48x48.png" alt="Flex.io" class="v-mid">
         </router-link>
         <div
           class="ml3"
