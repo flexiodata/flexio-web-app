@@ -31,6 +31,8 @@ import {
   RadioButton,
   RadioGroup,
   Select,
+  Step,
+  Steps,
   Switch,
   Table,
   TableColumn,
@@ -70,6 +72,8 @@ Vue.use(Radio)
 Vue.use(RadioButton)
 Vue.use(RadioGroup)
 Vue.use(Select)
+Vue.use(Step)
+Vue.use(Steps)
 Vue.use(Switch)
 Vue.use(Table)
 Vue.use(TableColumn)
