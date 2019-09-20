@@ -121,7 +121,7 @@ class GitHub implements \Flexio\IFace\IConnection,
         $path = '';
         $result = $this->getPathParts($full_path, $repository, $path);
         if ($result === false)
-            return [];
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         $url = "https://api.github.com/repos/$repository/contents/$path";
 
@@ -150,16 +150,12 @@ class GitHub implements \Flexio\IFace\IConnection,
         curl_close($ch);
 
         if ($httpcode == 404)
-        {
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        }
 
         $entry = @json_decode($result);
 
         if ($entry === null)
-        {
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-        }
 
         if (is_array($entry))
         {

@@ -170,6 +170,9 @@ class Dropbox implements \Flexio\IFace\IConnection,
 
     public function getFileInfo(string $path) : array
     {
+        if (!$this->authenticated())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED);
+
         $remote_path = $this->getRemotePath($path);
 
         $postdata = json_encode([

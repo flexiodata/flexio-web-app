@@ -83,16 +83,13 @@ class LinkedIn implements \Flexio\IFace\IConnection,
     {
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return [];
     }
 
     public function getFileInfo(string $path) : array
     {
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return [];
     }
-
 
     public function exists(string $path) : bool
     {

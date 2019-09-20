@@ -246,14 +246,12 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection,
         $path = ltrim($path,'/');
 
         if (!$this->authenticated())
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED);
 
         $bucket = '';
         $bucket_path = '';
         if (!$this->getPathParts($path, $bucket, $bucket_path))
-        {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-        }
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         $bucket_path = trim($bucket_path,'/');
         $bucket_path_len = strlen($bucket_path);

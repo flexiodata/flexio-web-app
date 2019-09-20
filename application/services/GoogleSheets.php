@@ -149,7 +149,7 @@ class GoogleSheets implements \Flexio\IFace\IConnection,
     public function getFileInfo(string $path) : array
     {
         if (!$this->authenticated())
-            return null;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED);
 
         $ids = $this->getIdsFromPath($path);
         if (isset($ids['spreadsheet_id']))

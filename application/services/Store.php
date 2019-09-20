@@ -126,9 +126,7 @@ class Store implements \Flexio\IFace\IConnection,
 
         $stream = $this->getStreamFromPath($path);
         if (!$stream)
-        {
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        }
 
         $entry = $stream->get();
 

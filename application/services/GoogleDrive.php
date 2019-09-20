@@ -154,7 +154,7 @@ class GoogleDrive implements \Flexio\IFace\IConnection,
     public function getFileInfo(string $path) : array
     {
         if (!$this->authenticated())
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED);
 
         $fileid = $this->getFileId($path);
         if ($fileid === null)
@@ -172,7 +172,7 @@ class GoogleDrive implements \Flexio\IFace\IConnection,
         curl_close($ch);
 
         if (!isset($info['name']))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         return [
             'id' => $info['id'],

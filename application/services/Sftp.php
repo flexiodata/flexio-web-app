@@ -160,9 +160,7 @@ class Sftp implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         $info = $this->connection->lstat($this->getRemotePath($path));
 
         if (!isset($info['type']))
-        {
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        }
 
         $arr = \Flexio\Base\File::splitBasePathAndName($path);
         $base = $arr['base'];

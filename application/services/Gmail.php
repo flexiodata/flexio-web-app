@@ -133,11 +133,10 @@ class Gmail implements \Flexio\IFace\IConnection,
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
-
-    public function retrieveEmailAddress()
+    public function retrieveEmailAddress() : string
     {
         if (!$this->authenticated())
-            return array();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED);
 
         $url = "https://www.googleapis.com/gmail/v1/users/me/profile";
 

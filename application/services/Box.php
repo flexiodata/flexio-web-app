@@ -122,13 +122,13 @@ class Box implements \Flexio\IFace\IConnection,
     public function getFileInfo(string $path) : array
     {
         if (!$this->authenticated())
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED);
 
         $info = $this->internalGetFileInfo($path);
         if (!isset($info['id']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        $fileid = $info['id'];
 
+        $fileid = $info['id'];
         if (($info['content_type'] ?? '') == \Flexio\Base\ContentType::FLEXIO_FOLDER)
         {
             $type = 'DIR';
