@@ -9,13 +9,13 @@
     />
 
     <el-steps
-      class="mb3"
+      class="pb3 mb3 bb b--black-05"
       align-center
       :active="active_step_idx"
       v-show="showSteps"
     >
       <el-step title="Choose Source" />
-      <el-step title="Authenticate" />
+      <el-step title="Connect &amp; Authenticate" />
       <el-step title="Edit Properties" />
     </el-steps>
 
@@ -23,10 +23,16 @@
     <IconList
       items="services"
       :filter-by="filterBy"
+      @item-click="createPendingConnection"
       v-show="active_step == 'choose-source'"
     />
 
     <!-- step 2: authenticate -->
+    <ConnectionAuthenticationPanel
+      :connection.sync="edit_connection"
+      :mode="mode"
+      v-if="active_step == 'authenticate'"
+    />
 
     <!-- footer -->
     <ButtonBar
@@ -40,9 +46,43 @@
 </template>
 
 <script>
-  import IconList from '@/components/IconList'
+  import randomstring from 'randomstring'
+  import { mapState } from 'vuex'
+  import { OBJECT_STATUS_PENDING } from '@/constants/object-status'
+  import { slugify } from '@/utils'
   import HeaderBar from '@/components/HeaderBar'
   import ButtonBar from '@/components/ButtonBar'
+  import IconList from '@/components/IconList'
+  import ConnectionAuthenticationPanel from '@/components/ConnectionAuthenticationPanel'
+
+  const CONNECTION_MODE_RESOURCE = 'R'
+  const CONNECTION_MODE_FUNCTION = 'F'
+
+  const getNameSuffix = (length) => {
+    return randomstring.generate({
+      length,
+      charset: 'alphabetic',
+      capitalization: 'lowercase'
+    })
+  }
+
+  const getDefaultName = (length) => {
+    var suffix = getNameSuffix(length || 16)
+    return `connection-${suffix}`
+  }
+
+  const getDefaultAttrs = () => {
+    return {
+      eid: null,
+      eid_status: OBJECT_STATUS_PENDING,
+      name: getDefaultName(),
+      title: '',
+      description: '',
+      connection_type: '',
+      connection_mode: CONNECTION_MODE_RESOURCE,
+      connection_info: {}
+    }
+  }
 
   const getDefaultState = () => {
     return {
@@ -83,9 +123,10 @@
       }
     },
     components: {
-      IconList,
       HeaderBar,
       ButtonBar,
+      IconList,
+      ConnectionAuthenticationPanel,
     },
     watch: {
       mount: {
@@ -98,6 +139,9 @@
       return getDefaultState()
     },
     computed: {
+      ...mapState({
+        active_team_name: state => state.teams.active_team_name
+      }),
       cname() {
         return _.get(this.connection, 'name', '')
       },
@@ -125,6 +169,31 @@
 
         // reset local objects
         this.edit_connection = _.assign({}, this.edit_connection, _.cloneDeep(this.connection))
+      },
+      createPendingConnection(item) {
+        var ctype = item.connection_type
+        var service_slug = slugify(item.service_name)
+        var team_name = this.active_team_name
+
+        // when using the connection edit panel in 'add' mode, if the panel
+        // is created with a `connection` prop, use the attributes of
+        // this prop when creating the pending connection -- we use this
+        // for creating 'function mount' connections
+        var prop_connection_attrs = _.cloneDeep(this.connection)
+
+        var attrs = _.assign({}, getDefaultAttrs(), prop_connection_attrs, {
+          eid_status: OBJECT_STATUS_PENDING,
+          name: `${service_slug}-` + getNameSuffix(16),
+          title: item.service_name,
+          connection_type: ctype
+        })
+
+        this.$store.dispatch('connections/create', { team_name, attrs }).then(response => {
+          var connection = _.cloneDeep(response.data)
+          connection.name = `${service_slug}-` + getNameSuffix(4)
+          this.edit_connection = connection
+          this.active_step = 'authenticate'
+        })
       },
       onClose() {
         this.initSelf()
