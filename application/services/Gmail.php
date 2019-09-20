@@ -31,6 +31,10 @@ class Gmail implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return $obj;
     }
 
+    ////////////////////////////////////////////////////////////
+    // IConnection interface
+    ////////////////////////////////////////////////////////////
+
     public function connect() : bool
     {
         return true;

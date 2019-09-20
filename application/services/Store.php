@@ -35,6 +35,24 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     }
 
     ////////////////////////////////////////////////////////////
+    // IConnection interface
+    ////////////////////////////////////////////////////////////
+
+    public function connect() : bool
+    {
+        return true;
+    }
+
+    public function disconnect() : void
+    {
+    }
+
+    public function authenticated() : bool
+    {
+        return true;
+    }
+
+    ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
 
@@ -97,11 +115,6 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         }
 
         return $files;
-    }
-
-    public function authenticated() : bool
-    {
-        return true;
     }
 
     public function getFileInfo(string $path) : array
