@@ -105,6 +105,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
             }
 
             $item = array(
+                'id' => $entry['id'] ?? sha1($full_path),
                 'name' => $entry['name'],
                 'path' =>  $entry['path'],
                 'full_path' => $full_path,

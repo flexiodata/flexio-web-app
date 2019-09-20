@@ -106,6 +106,7 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
             $full_path .= $file;
 
             $f = array(
+                'id' => sha1($row['id']),
                 'name' => $file,
                 'path' => $full_path,
                 'size' => null,
@@ -148,6 +149,7 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL);
 
         return [
+            'id' => $info['id'],
             'name' => $info['name'],
             'size' => $info['size'] ?? null,
             'modified' => $info['modifiedTime'] ?? '',

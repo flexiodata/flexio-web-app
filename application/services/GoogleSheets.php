@@ -70,6 +70,7 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
                 //$worksheets = $spreadsheet->getWorksheets();
 
                 $fileinfo = array(
+                    'id' => sha1($spreadsheet->spreadsheet_id),
                     'spreadsheet_id' => $spreadsheet->spreadsheet_id,
                     'name' => $spreadsheet->title,
                     'path' => '/' . $spreadsheet->title,
@@ -101,6 +102,7 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
             foreach ($worksheets as $worksheet)
             {
                 $fileinfo = array(
+                    'id' => sha1($spreadsheet->spreadsheet_id . ';' . $worksheet->worksheet_id),
                     'spreadsheet_id' => $spreadsheet->spreadsheet_id,
                     'worksheet_id' => $worksheet->worksheet_id,
                     'name' => $worksheet->title,
