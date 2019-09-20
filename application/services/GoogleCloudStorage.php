@@ -32,6 +32,19 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
         return $obj;
     }
 
+    ////////////////////////////////////////////////////////////
+    // IConnection interface
+    ////////////////////////////////////////////////////////////
+
+    public function connect() : bool
+    {
+        return true;
+    }
+
+    public function disconnect() : void
+    {
+    }
+
     public function authenticated() : bool
     {
         if (strlen($this->access_token) > 0)
@@ -40,9 +53,20 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
         return false;
     }
 
+    ////////////////////////////////////////////////////////////
+    // OAuth interface; TODO: implement
+    ////////////////////////////////////////////////////////////
+
     public function getAuthorizationUri() : string
     {
         return $this->authorization_uri;
+    }
+
+    public function getTokens() : array
+    {
+        return [ 'access_token' => $this->access_token,
+                 'refresh_token' => $this->refresh_token,
+                 'expires' => $this->expires ];
     }
 
     ////////////////////////////////////////////////////////////
@@ -544,18 +568,6 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
     ////////////////////////////////////////////////////////////
     // additional functions
     ////////////////////////////////////////////////////////////
-
-    public function getTokens() : array
-    {
-        return [ 'access_token' => $this->access_token,
-                 'refresh_token' => $this->refresh_token,
-                 'expires' => $this->expires ];
-    }
-
-    private function connect() : bool
-    {
-        return true;
-    }
 
     private function initialize(array $params = null) : bool
     {

@@ -368,11 +368,6 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return $this->owner_eid;
     }
 
-    private function connect() : bool
-    {
-        return true;
-    }
-
     private function getStreamFromPath(string $path, bool $create_dir_structure = false) : ?\Flexio\Object\Stream
     {
         $owner_user_eid = $this->getOwner();

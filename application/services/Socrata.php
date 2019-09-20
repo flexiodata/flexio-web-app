@@ -43,6 +43,25 @@ class Socrata implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return $service;
     }
 
+    ////////////////////////////////////////////////////////////
+    // IConnection interface
+    ////////////////////////////////////////////////////////////
+
+    public function connect() : bool
+    {
+        $host = $this->host;
+        $port = $this->port;
+
+        if ($this->initialize($host, $port) === false)
+            return false;
+
+        return true;
+    }
+
+    public function disconnect() : void
+    {
+    }
+
     public function authenticated() : bool
     {
         return $this->authenticated;
@@ -382,17 +401,6 @@ class Socrata implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                 $res[] = null;
         }
         return $res;
-    }
-
-    private function connect() : bool
-    {
-        $host = $this->host;
-        $port = $this->port;
-
-        if ($this->initialize($host, $port) === false)
-            return false;
-
-        return true;
     }
 
     private function initialize(string $host, int $port) : bool

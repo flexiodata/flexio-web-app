@@ -44,6 +44,25 @@ class MailJet implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return $service;
     }
 
+    ////////////////////////////////////////////////////////////
+    // IConnection interface
+    ////////////////////////////////////////////////////////////
+
+    public function connect() : bool
+    {
+        $username = $this->username;
+        $password = $this->password;
+
+        if ($service->initialize($username, $password) === false)
+            return false;
+
+        return true;
+    }
+
+    public function disconnect() : void
+    {
+    }
+
     public function authenticated() : bool
     {
         return $this->authenticated;
@@ -301,17 +320,6 @@ class MailJet implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         }
 
         return $result;
-    }
-
-    private function connect() : bool
-    {
-        $username = $this->username;
-        $password = $this->password;
-
-        if ($service->initialize($username, $password) === false)
-            return false;
-
-        return true;
     }
 
     private function initialize(string $username, string $password) : bool

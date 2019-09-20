@@ -52,6 +52,27 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
         return $service;
     }
 
+    ////////////////////////////////////////////////////////////
+    // IConnection interface
+    ////////////////////////////////////////////////////////////
+
+    public function connect() : bool
+    {
+        $host = $this->host;
+        $port = $this->port;
+        $user = $this->user;
+        $password = $this->password;
+
+        if ($this->initialize($host, $port, $username, $password) === false)
+            return false;
+
+        return true;
+    }
+
+    public function disconnect() : void
+    {
+    }
+
     public function authenticated() : bool
     {
         return $this->authenticated;
@@ -438,19 +459,6 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
                 );
                 return $info;
         }
-    }
-
-    private function connect() : bool
-    {
-        $host = $this->host;
-        $port = $this->port;
-        $user = $this->user;
-        $password = $this->password;
-
-        if ($this->initialize($host, $port, $username, $password) === false)
-            return false;
-
-        return true;
     }
 
     private function initialize(string $host, int $port, string $username, string $password) : bool

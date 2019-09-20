@@ -31,6 +31,19 @@ class LinkedIn implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return $obj;
     }
 
+    ////////////////////////////////////////////////////////////
+    // IConnection interface
+    ////////////////////////////////////////////////////////////
+
+    public function connect() : bool
+    {
+        return true;
+    }
+
+    public function disconnect() : void
+    {
+    }
+
     public function authenticated() : bool
     {
         if (strlen($this->access_token) > 0)
@@ -39,9 +52,20 @@ class LinkedIn implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return false;
     }
 
+    ////////////////////////////////////////////////////////////
+    // OAuth interface; TODO: implement
+    ////////////////////////////////////////////////////////////
+
     public function getAuthorizationUri() : string
     {
         return $this->authorization_uri;
+    }
+
+    public function getTokens() : array
+    {
+        return [ 'access_token' => $this->access_token,
+                 'refresh_token' => $this->refresh_token,
+                 'expires' => $this->expires ];
     }
 
     ////////////////////////////////////////////////////////////
@@ -127,24 +151,12 @@ class LinkedIn implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     // additional functions
     ////////////////////////////////////////////////////////////
 
-    public function getTokens() : array
-    {
-        return [ 'access_token' => $this->access_token,
-                 'refresh_token' => $this->refresh_token,
-                 'expires' => $this->expires ];
-    }
-
     public function getFileId(string $path) // TODO: add return type (: ?string)
     {
         $info = $this->internalGetFileInfo($path);
         if (!isset($info['id']))
             return null;
         return $info['id'];
-    }
-
-    private function connect() : bool
-    {
-        return true;
     }
 
     private function initialize(array $params) : bool

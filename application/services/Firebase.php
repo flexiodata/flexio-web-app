@@ -26,6 +26,19 @@ class Firebase implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return $service;
     }
 
+    ////////////////////////////////////////////////////////////
+    // IConnection interface
+    ////////////////////////////////////////////////////////////
+
+    public function connect() : bool
+    {
+        return true;
+    }
+
+    public function disconnect() : void
+    {
+    }
+
     public function authenticated() : bool
     {
         return $this->authenticated;
@@ -122,8 +135,5 @@ class Firebase implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     // additional functions
     ////////////////////////////////////////////////////////////
 
-    private function connect() : bool
-    {
-        return true;
-    }
+    // TODO: add here
 }

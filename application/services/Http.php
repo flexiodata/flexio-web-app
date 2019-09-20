@@ -25,6 +25,24 @@ class Http implements \Flexio\IFace\IFileSystem
     }
 
     ////////////////////////////////////////////////////////////
+    // IConnection interface
+    ////////////////////////////////////////////////////////////
+
+    public function connect() : bool
+    {
+        return true;
+    }
+
+    public function disconnect() : void
+    {
+    }
+
+    public function authenticated() : bool
+    {
+        return true;
+    }
+
+    ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
 
@@ -136,8 +154,5 @@ class Http implements \Flexio\IFace\IFileSystem
     // additional functions
     ////////////////////////////////////////////////////////////
 
-    private function connect() : bool
-    {
-        return true;
-    }
+    // TODO: add here
 }
