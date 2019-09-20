@@ -45,6 +45,12 @@ class Test
         $expected = 'Flexio\Services\AmazonS3';
         \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\AmazonS3::create(); basic file syntax check',  $actual, $expected, $results);
 
+        // BEGIN TEST
+        $service = new \Flexio\Services\AmazonS3;
+        $actual = ($service instanceof \Flexio\IFace\IConnection) ? true : false;
+        $expected = true;
+        \Flexio\Tests\Check::assertBoolean('A.2', 'new \Flexio\Services\AmazonS3; instance of IConnection ',  $actual, $expected, $results);
+
 
         // TEST: basic service functions
 

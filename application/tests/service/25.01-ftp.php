@@ -31,5 +31,11 @@ class Test
         $actual = get_class($service);
         $expected = 'Flexio\Services\Ftp';
         \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\Ftp::create(); basic file syntax check',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $service = new \Flexio\Services\Ftp;
+        $actual = ($service instanceof \Flexio\IFace\IConnection) ? true : false;
+        $expected = true;
+        \Flexio\Tests\Check::assertBoolean('A.2', 'new \Flexio\Services\Ftp; instance of IConnection ',  $actual, $expected, $results);
     }
 }
