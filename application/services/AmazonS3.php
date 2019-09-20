@@ -33,19 +33,19 @@ class AmazonS3 implements \Flexio\IFace\IConnection,
     {
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
-                'region'    => array('type' => 'string', 'required' => true),
-                'bucket'    => array('type' => 'string', 'required' => true),
-                'accesskey' => array('type' => 'string', 'required' => true),
-                'secretkey' => array('type' => 'string', 'required' => true),
-                'base_path' => array('type' => 'string', 'required' => false),
+                'region'     => array('type' => 'string', 'required' => true),
+                'bucket'     => array('type' => 'string', 'required' => true),
+                'aws_key'    => array('type' => 'string', 'required' => true),
+                'aws_secret' => array('type' => 'string', 'required' => true),
+                'base_path'  => array('type' => 'string', 'required' => false),
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_params = $validator->getParams();
         $region = $validated_params['region'];
         $bucket = $validated_params['bucket'];
-        $accesskey = $validated_params['accesskey'];
-        $secretkey = $validated_params['secretkey'];
+        $accesskey = $validated_params['aws_key'];
+        $secretkey = $validated_params['aws_secret'];
 
         $service = new self;
         if ($service->initialize($region, $bucket, $accesskey, $secretkey) === false)
