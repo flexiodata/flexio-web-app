@@ -194,15 +194,6 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
 
     private static function getServiceClass(string $service) : string
     {
-        if ($service === \Flexio\Services\Factory::TYPE_DROPBOX)
-        {
-            if (strlen(''.($GLOBALS['g_config']->dropbox_client_id ?? '')) > 0 &&
-                strlen(''.($GLOBALS['g_config']->dropbox_client_secret ?? '')) > 0)
-            {
-                return '\Flexio\Services\Dropbox';
-            }
-        }
-
         if ($service === \Flexio\Services\Factory::TYPE_BOX)
         {
             if (strlen(''.($GLOBALS['g_config']->box_client_id ?? '')) > 0 &&
@@ -212,12 +203,39 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
             }
         }
 
+        if ($service === \Flexio\Services\Factory::TYPE_DROPBOX)
+        {
+            if (strlen(''.($GLOBALS['g_config']->dropbox_client_id ?? '')) > 0 &&
+                strlen(''.($GLOBALS['g_config']->dropbox_client_secret ?? '')) > 0)
+            {
+                return '\Flexio\Services\Dropbox';
+            }
+        }
+
         if ($service === \Flexio\Services\Factory::TYPE_GITHUB)
         {
             if (strlen(''.($GLOBALS['g_config']->github_client_id ?? '')) > 0 &&
                 strlen(''.($GLOBALS['g_config']->github_client_secret ?? '')) > 0)
             {
                 return '\Flexio\Services\GitHub';
+            }
+        }
+
+        if ($service === \Flexio\Services\Factory::TYPE_GMAIL)
+        {
+            if (strlen(''.($GLOBALS['g_config']->gmail_client_id ?? '')) > 0 &&
+                strlen(''.($GLOBALS['g_config']->gmail_client_secret ?? '')) > 0)
+            {
+                return '\Flexio\Services\Gmail';
+            }
+        }
+
+        if ($service === \Flexio\Services\Factory::TYPE_GOOGLECLOUDSTORAGE)
+        {
+            if (strlen(''.($GLOBALS['g_config']->googlecloudstorage_client_id ?? '')) > 0 &&
+                strlen(''.($GLOBALS['g_config']->googlecloudstorage_client_secret ?? '')) > 0)
+            {
+                return '\Flexio\Services\GoogleCloudStorage';
             }
         }
 
@@ -241,30 +259,12 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
             }
         }
 
-        if ($service === \Flexio\Services\Factory::TYPE_GOOGLECLOUDSTORAGE)
-        {
-            if (strlen(''.($GLOBALS['g_config']->googlecloudstorage_client_id ?? '')) > 0 &&
-                strlen(''.($GLOBALS['g_config']->googlecloudstorage_client_secret ?? '')) > 0)
-            {
-                return '\Flexio\Services\GoogleCloudStorage';
-            }
-        }
-
         if ($service === \Flexio\Services\Factory::TYPE_LINKEDIN)
         {
             if (strlen(''.($GLOBALS['g_config']->linkedin_client_id ?? '')) > 0 &&
                 strlen(''.($GLOBALS['g_config']->linkedin_client_secret ?? '')) > 0)
             {
                 return '\Flexio\Services\LinkedIn';
-            }
-        }
-
-        if ($service === \Flexio\Services\Factory::TYPE_GMAIL)
-        {
-            if (strlen(''.($GLOBALS['g_config']->gmail_client_id ?? '')) > 0 &&
-                strlen(''.($GLOBALS['g_config']->gmail_client_secret ?? '')) > 0)
-            {
-                return '\Flexio\Services\Gmail';
             }
         }
 
