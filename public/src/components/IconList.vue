@@ -38,7 +38,7 @@
         />
       </div>
       <i
-        class="item-icon material-icons"
+        class="item-img material-icons"
         :title="getItemTitle(item)"
         v-else-if="item.icon"
       >
@@ -110,7 +110,20 @@
 </script>
 
 <style lang="stylus" scoped>
-  @import '../stylesheets/variables.styl'
+  .item-img
+    font-size: 64px
+    width: 74px
+    height: 74px
+    padding: 5px
+    background-color: #fff
+    border-radius: 6px
+
+  .item-img-icon
+    border-radius: 4px
+
+  .item-label
+    font-weight: 600
+    margin-top: 10px
 
   .item-container
     border-radius: 4px
@@ -118,20 +131,7 @@
     padding: 24px 16px
     width: 20%
     &:hover
-      background-color: $black-10
-
-  .item-img
-    width: 64px
-    height: 64px
-
-  .item-img-icon
-    border-radius: 4px
-
-  .item-icon
-    font-size: 64px
-
-  .item-label
-    font-weight: 600
-    margin-top: 12px
-
+      background-color: rgba(0,0,0,0.1)
+      .item-img
+        box-shadow: 0 1px 2px -1px rgba(0,0,0,0.2)
 </style>
