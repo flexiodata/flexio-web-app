@@ -16,7 +16,9 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
+class GoogleSheets implements \Flexio\IFace\IConnection,
+                              \Flexio\IFace\IOAuthConnection,
+                              \Flexio\IFace\IFileSystem
 {
     private $authorization_uri = '';
     private $access_token = '';
@@ -53,7 +55,7 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
     }
 
     ////////////////////////////////////////////////////////////
-    // OAuth interface; TODO: implement
+    // OAuth interface
     ////////////////////////////////////////////////////////////
 
     public function getAuthorizationUri() : string

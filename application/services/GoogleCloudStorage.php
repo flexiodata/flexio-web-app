@@ -16,7 +16,9 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
+class GoogleCloudStorage implements \Flexio\IFace\IConnection,
+                                    \Flexio\IFace\IOAuthConnection,
+                                    \Flexio\IFace\IFileSystem
 {
     private $authorization_uri = '';
     private $access_token = '';
@@ -54,7 +56,7 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
     }
 
     ////////////////////////////////////////////////////////////
-    // OAuth interface; TODO: implement
+    // OAuth interface
     ////////////////////////////////////////////////////////////
 
     public function getAuthorizationUri() : string
