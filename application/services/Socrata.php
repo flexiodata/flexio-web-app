@@ -16,7 +16,8 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class Socrata implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
+class Socrata implements \Flexio\IFace\IConnection,
+                         \Flexio\IFace\IFileSystem
 {
     private $host;
     private $port;

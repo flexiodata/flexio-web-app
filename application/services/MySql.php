@@ -16,7 +16,8 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class MySql implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
+class MySql implements \Flexio\IFace\IConnection,
+                       \Flexio\IFace\IFileSystem
 {
     private $authenticated = false;
     private $host = '';

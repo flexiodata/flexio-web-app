@@ -16,7 +16,8 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IFace\IStreamWriter
+class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader,
+                                         \Flexio\IFace\IStreamWriter
 {
     private $fspath = null;
     private $file = null;

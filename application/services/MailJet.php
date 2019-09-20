@@ -16,7 +16,8 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class MailJet implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
+class MailJet implements \Flexio\IFace\IConnection,
+                         \Flexio\IFace\IFileSystem
 {
     private $authenticated = false;
     private $username = '';

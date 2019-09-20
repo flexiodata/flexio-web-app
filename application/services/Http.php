@@ -16,7 +16,8 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class Http implements \Flexio\IFace\IFileSystem
+class Http implements \Flexio\IFace\IConnection,
+                      \Flexio\IFace\IFileSystem
 {
     public static function create(array $params = null) : \Flexio\Services\Http
     {

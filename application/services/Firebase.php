@@ -16,7 +16,8 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class Firebase implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
+class Firebase implements \Flexio\IFace\IConnection,
+                          \Flexio\IFace\IFileSystem
 {
     private $authenticated = false;
 

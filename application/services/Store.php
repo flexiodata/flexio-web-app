@@ -16,7 +16,8 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
+class Store implements \Flexio\IFace\IConnection,
+                       \Flexio\IFace\IFileSystem
 {
 
     private $owner_eid = '';

@@ -16,7 +16,8 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class Ftp implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
+class Ftp implements \Flexio\IFace\IConnection,
+                     \Flexio\IFace\IFileSystem
 {
     private $host;
     private $username;

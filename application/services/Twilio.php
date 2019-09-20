@@ -16,7 +16,8 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class Twilio implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
+class Twilio implements \Flexio\IFace\IConnection,
+                        \Flexio\IFace\IFileSystem
 {
     private $authenticated = false;
     private $username = '';
