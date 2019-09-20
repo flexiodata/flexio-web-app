@@ -27,11 +27,18 @@
       v-show="active_step == 'choose-source'"
     />
 
-    <!-- step 2: authenticate -->
+    <!-- step 2: connect & authenticate -->
     <ConnectionAuthenticationPanel
       :connection.sync="edit_connection"
       :mode="mode"
       v-if="active_step == 'authenticate'"
+    />
+
+    <!-- step 2: edit properties -->
+    <ConnectionPropertiesPanel
+      :connection="edit_connection"
+      :mode="mode"
+      v-if="active_step == 'edit-properties'"
     />
 
     <!-- footer -->
@@ -54,6 +61,7 @@
   import ButtonBar from '@/components/ButtonBar'
   import IconList from '@/components/IconList'
   import ConnectionAuthenticationPanel from '@/components/ConnectionAuthenticationPanel'
+  import ConnectionPropertiesPanel from '@/components/ConnectionPropertiesPanel'
 
   const CONNECTION_MODE_RESOURCE = 'R'
   const CONNECTION_MODE_FUNCTION = 'F'
@@ -67,7 +75,7 @@
   }
 
   const getDefaultName = (length) => {
-    var suffix = getNameSuffix(length || 16)
+    var suffix = getNameSuffix(16)
     return `connection-${suffix}`
   }
 
@@ -108,7 +116,7 @@
       },
       showSteps: {
         type: Boolean,
-        default: true
+        default: false
       },
       connection: {
         type: Object,
@@ -127,6 +135,7 @@
       ButtonBar,
       IconList,
       ConnectionAuthenticationPanel,
+      ConnectionPropertiesPanel,
     },
     watch: {
       mount: {
@@ -156,7 +165,7 @@
         switch (this.active_step) {
           case 'choose-source': return 0
           case 'authenticate': return 1
-          case 'choose-name': return 2
+          case 'edit-properties': return 2
         }
 
         return 1
