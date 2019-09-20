@@ -80,7 +80,7 @@
 <script>
   import randomstring from 'randomstring'
   import { mapState } from 'vuex'
-  import { OBJECT_STATUS_PENDING } from '@/constants/object-status'
+  import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '@/constants/object-status'
   import api from '@/api'
   import { slugify } from '@/utils'
   import HeaderBar from '@/components/HeaderBar'
@@ -220,14 +220,14 @@
         var team_name = this.active_team_name
         var attrs = _.get(item, 'connection', {})
         attrs.name = attrs.name + '-' + getNameSuffix(4)
+        attrs.eid_status = OBJECT_STATUS_PENDING
 
         return this.$store.dispatch('connections/create', { team_name, attrs }).then(response => {
           this.edit_mount = _.assign({}, this.edit_mount, response.data)
           this.fetchFunctionPackConfig()
         })
       },
-      createPendingConnection(item) {
-        var ctype = item.connection_type
+      createPendingFunctionMount(item) {
         var ctitle = item.title || item.service_name
         var service_slug = slugify(ctitle)
         var team_name = this.active_team_name
@@ -242,7 +242,7 @@
           eid_status: OBJECT_STATUS_PENDING,
           name: `${service_slug}-` + getNameSuffix(16),
           title: ctitle,
-          connection_type: ctype
+          connection_type: item.connection_type
         })
 
         return this.$store.dispatch('connections/create', { team_name, attrs }).then(response => {
@@ -261,7 +261,8 @@
       saveMountSetupConfig(setup_config) {
         var team_name = this.active_team_name
         var eid = this.edit_mount.eid
-        var attrs = { eid, setup_config }
+        var eid_status = OBJECT_STATUS_AVAILABLE
+        var attrs = { eid_status, setup_config }
 
         return this.$store.dispatch('connections/update', { team_name, eid, attrs }).then(response => {
           this.edit_mount = _.assign({}, this.edit_mount, _.cloneDeep(response.data))
@@ -279,7 +280,7 @@
         this.createFunctionPackConnection(item)
       },
       onServiceClick(item) {
-        this.createPendingConnection(item).then(response => {
+        this.createPendingFunctionMount(item).then(response => {
           this.active_step = 'configure-connection'
         })
       },
@@ -296,7 +297,19 @@
         this.$emit('cancel')
       },
       onSubmit() {
-        this.$emit('submit', this.edit_mount)
+        if (_.get(this.edit_mount, 'eid_status') == OBJECT_STATUS_PENDING) {
+          var team_name = this.active_team_name
+          var eid = this.edit_mount.eid
+          var eid_status = OBJECT_STATUS_AVAILABLE
+          var attrs = { eid_status }
+
+          this.$store.dispatch('connections/update', { team_name, eid, attrs }).then(response => {
+            this.edit_mount = _.assign({}, this.edit_mount, _.cloneDeep(response.data))
+            this.$emit('submit', this.edit_mount)
+          })
+        } else {
+          this.$emit('submit', this.edit_mount)
+        }
       },
     }
   }
