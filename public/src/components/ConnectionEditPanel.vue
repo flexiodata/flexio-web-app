@@ -8,15 +8,38 @@
       v-show="showHeader"
     />
 
-    <el-steps
-      class="pb3 mb3 bb b--black-05"
-      align-center
-      :active="active_step_idx"
-      v-show="showSteps"
+    <div
+      class="flex flex-column items-center justify-center mb4"
+      v-show="showTitle && active_step != 'choose-source'"
     >
-      <el-step title="Choose Source" />
-      <el-step title="Connect &amp; Authenticate" />
-      <el-step title="Edit Properties" />
+      <ServiceIcon
+        class="br2"
+        style="background: #fff; min-width: 64px; width: 64px; height: 64px"
+        :type="edit_connection.connection_type"
+      />
+      <div class="mt2 f4 fw6 lh-title">{{service_name}}</div>
+    </div>
+
+    <el-steps
+      class="mb4"
+      align-center
+      finish-status="success"
+      :active="active_step_idx"
+      v-show="showSteps && active_step != 'choose-source'"
+    >
+      <el-step>
+        <div class="flex flex-row items-center justify-center" style="font-weight: 600; color: #000" slot="title">
+          <ServiceIcon
+            slot="icon"
+            class="br1 mr1"
+            style="background: #fff; min-width: 24px; width: 24px; height: 24px"
+            :type="edit_connection.connection_type"
+          />
+          <div>{{service_name}}</div>
+        </div>
+      </el-step>
+      <el-step title="Authentication" />
+      <el-step title="Properties" />
     </el-steps>
 
     <!-- step 1: choose source -->
@@ -28,11 +51,12 @@
     />
 
     <!-- step 2: connect & authenticate -->
-    <ConnectionAuthenticationPanel
-      :connection.sync="edit_connection"
-      :mode="mode"
-      v-if="active_step == 'authenticate'"
-    />
+    <template v-if="active_step == 'authenticate'">
+      <ConnectionAuthenticationPanel
+        class="br2 ba b--black-10 pa4"
+        :connection.sync="edit_connection"
+      />
+    </template>
 
     <!-- step 2: edit properties -->
     <ConnectionPropertiesPanel
@@ -56,10 +80,12 @@
   import randomstring from 'randomstring'
   import { mapState } from 'vuex'
   import { OBJECT_STATUS_PENDING } from '@/constants/object-status'
+  import * as cinfos from '@/constants/connection-info'
   import { slugify } from '@/utils'
   import HeaderBar from '@/components/HeaderBar'
   import ButtonBar from '@/components/ButtonBar'
   import IconList from '@/components/IconList'
+  import ServiceIcon from '@/components/ServiceIcon'
   import ConnectionAuthenticationPanel from '@/components/ConnectionAuthenticationPanel'
   import ConnectionPropertiesPanel from '@/components/ConnectionPropertiesPanel'
 
@@ -114,6 +140,10 @@
         type: Boolean,
         default: true
       },
+      showTitle: {
+        type: Boolean,
+        default: false
+      },
       showSteps: {
         type: Boolean,
         default: false
@@ -134,6 +164,7 @@
       HeaderBar,
       ButtonBar,
       IconList,
+      ServiceIcon,
       ConnectionAuthenticationPanel,
       ConnectionPropertiesPanel,
     },
@@ -153,6 +184,9 @@
       }),
       cname() {
         return _.get(this.connection, 'name', '')
+      },
+      service_name() {
+        return _.result(this, 'cinfo.service_name', '')
       },
       our_title() {
         if (this.title.length > 0) {
@@ -178,6 +212,10 @@
 
         // reset local objects
         this.edit_connection = _.assign({}, this.edit_connection, _.cloneDeep(this.connection))
+      },
+      cinfo() {
+        var ctype = _.get(this.edit_connection, 'connection_type', '')
+        return _.find(cinfos, { connection_type: ctype })
       },
       createPendingConnection(item) {
         var ctype = item.connection_type
