@@ -8,6 +8,7 @@
       v-show="showHeader"
     />
 
+    <!-- title -->
     <div
       class="flex flex-column items-center justify-center mb4"
       v-show="showTitle && active_step != 'choose-source'"
@@ -20,6 +21,7 @@
       <div class="mt2 f4 fw6 lh-title">{{service_name}}</div>
     </div>
 
+    <!-- steps -->
     <el-steps
       class="mb4"
       align-center
@@ -47,16 +49,15 @@
       items="services"
       :filter-by="filterBy"
       @item-click="createPendingConnection"
-      v-show="active_step == 'choose-source'"
+      v-if="active_step == 'choose-source'"
     />
 
     <!-- step 2: connect & authenticate -->
-    <template v-if="active_step == 'authenticate'">
-      <ConnectionAuthenticationPanel
-        class="br2 ba b--black-10 pa4"
-        :connection.sync="edit_connection"
-      />
-    </template>
+    <ConnectionAuthenticationPanel
+      class="br2 ba b--black-10 pa4"
+      :connection.sync="edit_connection"
+      v-if="active_step == 'authenticate'"
+    />
 
     <!-- step 3: edit properties -->
     <ConnectionPropertiesPanel
@@ -82,7 +83,7 @@
 <script>
   import randomstring from 'randomstring'
   import { mapState } from 'vuex'
-  import { OBJECT_STATUS_PENDING } from '@/constants/object-status'
+  import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '@/constants/object-status'
   import * as cinfos from '@/constants/connection-info'
   import { slugify } from '@/utils'
   import HeaderBar from '@/components/HeaderBar'
@@ -103,16 +104,13 @@
     })
   }
 
-  const getDefaultName = (length) => {
-    var suffix = getNameSuffix(16)
-    return `connection-${suffix}`
-  }
-
   const getDefaultAttrs = () => {
+    var suffix = getNameSuffix(16)
+
     return {
       eid: null,
       eid_status: OBJECT_STATUS_PENDING,
-      name: getDefaultName(),
+      name: `connection-${suffix}`,
       title: '',
       description: '',
       connection_type: '',
@@ -123,7 +121,7 @@
 
   const getDefaultState = () => {
     return {
-      edit_connection: {},
+      edit_connection: getDefaultAttrs(),
       active_step: 'choose-source'
     }
   }
@@ -260,8 +258,8 @@
         if (_.get(this.edit_connection, 'eid_status') == OBJECT_STATUS_PENDING) {
           var team_name = this.active_team_name
           var eid = this.edit_connection.eid
-          var eid_status = OBJECT_STATUS_AVAILABLE
-          var attrs = { eid_status }
+          var attrs = _.pick(this.edit_connection, ['name', 'connection_info'])
+          attrs.eid_status = OBJECT_STATUS_AVAILABLE
 
           this.$store.dispatch('connections/update', { team_name, eid, attrs }).then(response => {
             this.edit_connection = _.assign({}, this.edit_connection, _.cloneDeep(response.data))

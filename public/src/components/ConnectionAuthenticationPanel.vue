@@ -61,7 +61,7 @@
           ref="form"
           class="el-form--compact el-form__label-tiny"
           label-position="top"
-          :model="$data"
+          :model="edit_connection.connection_info"
           :rules="rules"
         >
           <el-form-item
@@ -72,7 +72,7 @@
             <el-input
               placeholder="/path/to/folder"
               spellcheck="false"
-              v-model="base_path"
+              v-model="edit_connection.connection_info.base_path"
             />
           </el-form-item>
         </el-form>
@@ -91,9 +91,9 @@
 
   const getDefaultState = () => {
     return {
+      emitting_update: false,
       edit_connection: {},
       github_url: '',
-      base_path: '',
       rules: {
         github_url: [
           { required: true, message: 'Please enter the URL of the GitHub repository' }
@@ -115,7 +115,14 @@
         handler: 'initSelf',
         immediate: true,
         deep: true
-      }
+      },
+      edit_connection: {
+        handler: 'emitUpdate',
+        deep: true
+      },
+      github_url: {
+        handler: 'updateOwnerAndRepository',
+      },
     },
     data() {
       return getDefaultState()
@@ -155,6 +162,10 @@
     },
     methods: {
       initSelf() {
+        if (this.emitting_update === true ) {
+          return
+        }
+
         // reset our local component data
         _.assign(this.$data, getDefaultState())
 
@@ -167,6 +178,25 @@
           if (owner.length > 0 && repository.length > 0) {
             this.github_url = 'https://github.com/' + `${owner}/${repository}`
           }
+        }
+      },
+      emitUpdate() {
+        this.emitting_update = true
+        this.$emit('update:connection', this.edit_connection)
+        this.$nextTick(() => { this.emitting_update = false })
+      },
+      updateEditConnection(attrs) {
+        this.edit_connection = _.assign({}, this.edit_connection, attrs)
+      },
+      updateOwnerAndRepository() {
+        var url = this.github_url.substring(this.github_url.indexOf('github.com/') + 11)
+        var arr = url.split('/')
+        if (arr.length == 2) {
+          var connection_info = {
+            owner: arr[0],
+            repository: arr[1]
+          }
+          this.updateEditConnection({ connection_info })
         }
       },
       cinfo() {
@@ -207,11 +237,15 @@
         var eid = _.get(this.connection, 'eid', '')
         var team_name = this.active_team_name
 
-        this.$_Oauth_showPopup(this.oauth_url, (params) => {
+        this.$_Oauth_showPopup(this.oauth_url, params => {
           // TODO: handle 'code' and 'state' and 'error' here...
 
           // for now, re-fetch the connection to update its state
           this.$store.dispatch('connections/fetch', { team_name, eid }).then(response => {
+            debugger
+            var connection_status = _.get(response.data, 'connection_status', '')
+            this.updateEditConnection({ connection_status })
+
             this.$nextTick(() => {
               if (this.is_connected) {
                 this.$message({
