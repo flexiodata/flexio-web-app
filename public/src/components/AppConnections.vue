@@ -102,7 +102,7 @@
     >
       <ConnectionEditPanel
         :mode="edit_mode"
-        :show-steps="edit_mode == 'edit' ? false : true"
+        :show-title="true"
         :connection="edit_mode == 'edit' ? connection : undefined"
         @close="cancelChanges"
         @cancel="cancelChanges"

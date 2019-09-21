@@ -10,7 +10,7 @@
 
     <!-- body -->
     <div>
-      <p>Enter the name of the connection. This is how you will reference this connection in your functions (e.g. in the path of a lookup function).</p>
+      <p>Enter the name of the connection. The connection name is how you will reference this connection in your functions (e.g. in the path of a lookup function).</p>
       <el-form
         ref="form"
         class="el-form--cozy el-form__label-tiny"
