@@ -56,6 +56,7 @@
 
   const getDefaultState = (component) => {
     return {
+      emitting_update: false,
       rules: {
         name: [
           { required: true, message: 'Please input a name', trigger: 'blur' },
@@ -102,7 +103,11 @@
         handler: 'initSelf',
         immediate: true,
         deep: true
-      }
+      },
+      edit_connection: {
+        handler: 'emitUpdate',
+        deep: true
+      },
     },
     data() {
       return getDefaultState(this)
@@ -128,6 +133,10 @@
     },
     methods: {
       initSelf() {
+        if (this.emitting_update === true ) {
+          return
+        }
+
         // reset our local component data
         _.assign(this.$data, getDefaultState(this))
 
@@ -138,6 +147,11 @@
         if (this.$refs.form) {
           this.$refs.form.resetFields()
         }
+      },
+      emitUpdate() {
+        this.emitting_update = true
+        this.$emit('update:connection', this.edit_connection)
+        this.$nextTick(() => { this.emitting_update = false })
       },
       onClose() {
         this.initSelf()
