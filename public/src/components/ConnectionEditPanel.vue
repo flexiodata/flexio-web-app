@@ -29,7 +29,7 @@
       :active="active_step_idx"
       v-show="showSteps && active_step != 'choose-source'"
     >
-      <el-step :title="service_name" />
+      <el-step :title="'Source: ' + service_name" />
       <el-step title="Authentication" />
       <el-step title="Properties" />
     </el-steps>

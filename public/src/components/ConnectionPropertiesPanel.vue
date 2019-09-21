@@ -15,7 +15,7 @@
         ref="form"
         class="el-form--cozy el-form__label-tiny"
         label-position="top"
-        :model="edit_connection"
+        :model="$data"
         :rules="rules"
         @validate="onValidateItem"
       >
@@ -29,7 +29,7 @@
             auto-complete="off"
             spellcheck="false"
             :autofocus="true"
-            v-model="edit_connection.name"
+            v-model="name"
           />
         </el-form-item>
       </el-form>
@@ -57,6 +57,7 @@
   const getDefaultState = (component) => {
     return {
       emitting_update: false,
+      name: '',
       rules: {
         name: [
           { required: true, message: 'Please input a name', trigger: 'blur' },
@@ -108,6 +109,9 @@
         handler: 'emitUpdate',
         deep: true
       },
+      name: {
+        handler: 'updateName',
+      },
     },
     data() {
       return getDefaultState(this)
@@ -143,6 +147,8 @@
         // reset local objects
         this.edit_connection = _.assign({}, this.edit_connection, _.cloneDeep(this.connection))
 
+        this.name = _.get(this.edit_connection, 'name', '')
+
         // reset the form
         if (this.$refs.form) {
           this.$refs.form.resetFields()
@@ -152,6 +158,13 @@
         this.emitting_update = true
         this.$emit('update:connection', this.edit_connection)
         this.$nextTick(() => { this.emitting_update = false })
+      },
+      updateEditConnection(attrs) {
+        this.edit_connection = _.assign({}, this.edit_connection, attrs)
+      },
+      updateName() {
+        var name = this.name
+        this.updateEditConnection({ name })
       },
       onClose() {
         this.initSelf()
