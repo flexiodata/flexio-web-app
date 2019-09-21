@@ -43,7 +43,7 @@
       :connection="edit_mount"
       :filter-by="filterByFunctionMount"
       @cancel="onCancel"
-      @update-connection="onUpdateConnection"
+      @submit="onUpdateConnection"
       v-if="active_step == 'configure-connection' && has_mount"
     />
 

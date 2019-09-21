@@ -29,17 +29,7 @@
       :active="active_step_idx"
       v-show="showSteps && active_step != 'choose-source'"
     >
-      <el-step>
-        <div class="flex flex-row items-center justify-center" style="font-weight: 600; color: #000" slot="title">
-          <ServiceIcon
-            slot="icon"
-            class="br1 mr1"
-            style="background: #fff; min-width: 24px; width: 24px; height: 24px"
-            :type="edit_connection.connection_type"
-          />
-          <div>{{service_name}}</div>
-        </div>
-      </el-step>
+      <el-step :title="service_name" />
       <el-step title="Authentication" />
       <el-step title="Properties" />
     </el-steps>

@@ -60,7 +60,7 @@
       <ConnectionEditPanel
         @close="show_new_connection_dialog = false"
         @cancel="show_new_connection_dialog = false"
-        @update-connection="onUpdateConnection"
+        @submit="onUpdateConnection"
         v-if="show_new_connection_dialog"
       />
     </el-dialog>

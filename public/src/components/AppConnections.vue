@@ -106,7 +106,7 @@
         :connection="edit_mode == 'edit' ? connection : undefined"
         @close="cancelChanges"
         @cancel="cancelChanges"
-        @update-connection="onUpdateConnection"
+        @submit="onUpdateConnection"
         v-if="show_connection_dialog"
       />
     </el-dialog>

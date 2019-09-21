@@ -92,13 +92,15 @@
   const getDefaultState = () => {
     return {
       emitting_update: false,
-      edit_connection: {},
       github_url: '',
       rules: {
         github_url: [
           { required: true, message: 'Please enter the URL of the GitHub repository' }
         ]
       },
+
+      // connection values
+      edit_connection: {},
     }
   }
 
@@ -242,7 +244,6 @@
 
           // for now, re-fetch the connection to update its state
           this.$store.dispatch('connections/fetch', { team_name, eid }).then(response => {
-            debugger
             var connection_status = _.get(response.data, 'connection_status', '')
             this.updateEditConnection({ connection_status })
 
