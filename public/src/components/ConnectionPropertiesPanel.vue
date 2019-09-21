@@ -9,28 +9,31 @@
     />
 
     <!-- body -->
-    <el-form
-      ref="form"
-      class="el-form--cozy el-form__label-tiny"
-      label-position="top"
-      :model="edit_connection"
-      :rules="rules"
-      @validate="onValidateItem"
-    >
-      <el-form-item
-        key="name"
-        prop="name"
-        label="Name"
+    <div>
+      <p>Enter the name of the connection. This is how you will reference this connection in your functions (e.g. in the path of a lookup function).</p>
+      <el-form
+        ref="form"
+        class="el-form--cozy el-form__label-tiny"
+        label-position="top"
+        :model="edit_connection"
+        :rules="rules"
+        @validate="onValidateItem"
       >
-        <el-input
-          placeholder="Enter name"
-          auto-complete="off"
-          spellcheck="false"
-          :autofocus="true"
-          v-model="edit_connection.name"
-        />
-      </el-form-item>
-    </el-form>
+        <el-form-item
+          key="name"
+          prop="name"
+          label="Name"
+        >
+          <el-input
+            placeholder="Enter name"
+            auto-complete="off"
+            spellcheck="false"
+            :autofocus="true"
+            v-model="edit_connection.name"
+          />
+        </el-form-item>
+      </el-form>
+    </div>
 
     <!-- footer -->
     <ButtonBar

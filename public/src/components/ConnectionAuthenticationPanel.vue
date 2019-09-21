@@ -204,7 +204,7 @@
         })
       },
       tryOauthConnect() {
-        var eid = this.eid
+        var eid = _.get(this.connection, 'eid', '')
         var team_name = this.active_team_name
 
         this.$_Oauth_showPopup(this.oauth_url, (params) => {
@@ -212,9 +212,6 @@
 
           // for now, re-fetch the connection to update its state
           this.$store.dispatch('connections/fetch', { team_name, eid }).then(response => {
-            var connection = response.data
-            this.$emit('change', _.omit(connection, ['name', 'title', 'description']))
-
             this.$nextTick(() => {
               if (this.is_connected) {
                 this.$message({

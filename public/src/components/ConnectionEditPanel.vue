@@ -58,9 +58,12 @@
       />
     </template>
 
-    <!-- step 2: edit properties -->
+    <!-- step 3: edit properties -->
     <ConnectionPropertiesPanel
-      :connection="edit_connection"
+      class="br2 ba b--black-10 pa4"
+      :connection.sync="edit_connection"
+      :show-header="false"
+      :show-footer="false"
       :mode="mode"
       v-if="active_step == 'edit-properties'"
     />
@@ -70,7 +73,7 @@
       class="mt4"
       @cancel-click="onCancel"
       @submit-click="onSubmit"
-      v-bind="$attrs"
+      v-bind="button_bar_attrs"
       v-show="showFooter && active_step != 'choose-source'"
     />
   </div>
@@ -169,7 +172,7 @@
       ConnectionPropertiesPanel,
     },
     watch: {
-      mount: {
+      connection: {
         handler: 'initSelf',
         immediate: true,
         deep: true
@@ -202,7 +205,18 @@
           case 'edit-properties': return 2
         }
 
-        return 1
+        return 0
+      },
+      submit_label() {
+        return this.mode == 'edit' ? 'Save changes'
+          : this.active_step == 'authenticate' ? 'Continue'
+          : this.active_step == 'edit-properties' ? 'Create connection'
+          : 'Submit'
+      },
+      button_bar_attrs() {
+        return _.assign({
+          submitButtonText: this.submit_label
+        }, this.$attrs)
       }
     },
     methods: {
@@ -242,6 +256,21 @@
           this.active_step = 'authenticate'
         })
       },
+      doSubmit() {
+        if (_.get(this.edit_connection, 'eid_status') == OBJECT_STATUS_PENDING) {
+          var team_name = this.active_team_name
+          var eid = this.edit_connection.eid
+          var eid_status = OBJECT_STATUS_AVAILABLE
+          var attrs = { eid_status }
+
+          this.$store.dispatch('connections/update', { team_name, eid, attrs }).then(response => {
+            this.edit_connection = _.assign({}, this.edit_connection, _.cloneDeep(response.data))
+            this.$emit('submit', this.edit_connection)
+          })
+        } else {
+          this.$emit('submit', this.edit_connection)
+        }
+      },
       onClose() {
         this.initSelf()
         this.$emit('close')
@@ -251,18 +280,18 @@
         this.$emit('cancel')
       },
       onSubmit() {
-        if (_.get(this.edit_mount, 'eid_status') == OBJECT_STATUS_PENDING) {
-          var team_name = this.active_team_name
-          var eid = this.edit_mount.eid
-          var eid_status = OBJECT_STATUS_AVAILABLE
-          var attrs = { eid_status }
+        switch (this.active_step) {
+          case 'authenticate':
+            if (this.mode == 'edit') {
+              this.doSubmit()
+            } else {
+              this.active_step = 'edit-properties'
+            }
+            return
 
-          this.$store.dispatch('connections/update', { team_name, eid, attrs }).then(response => {
-            this.edit_mount = _.assign({}, this.edit_mount, _.cloneDeep(response.data))
-            this.$emit('submit', this.edit_mount)
-          })
-        } else {
-          this.$emit('submit', this.edit_mount)
+          case 'edit-properties':
+            this.doSubmit()
+            return
         }
       },
     }
