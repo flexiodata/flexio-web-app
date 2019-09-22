@@ -61,7 +61,7 @@
           ref="form"
           class="el-form--compact el-form__label-tiny"
           label-position="top"
-          :model="edit_connection.connection_info"
+          :model="edit_connection_info"
           :rules="rules"
         >
           <el-form-item
@@ -72,7 +72,7 @@
             <el-input
               placeholder="/path/to/folder"
               spellcheck="false"
-              v-model="edit_connection.connection_info.base_path"
+              v-model="edit_connection_info.base_path"
             />
           </el-form-item>
         </el-form>
@@ -92,15 +92,16 @@
   const getDefaultState = () => {
     return {
       emitting_update: false,
-      github_url: '',
       rules: {
         github_url: [
           { required: true, message: 'Please enter the URL of the GitHub repository' }
         ]
       },
 
-      // connection values
+      // edit values
       edit_connection: {},
+      edit_connection_info: {},
+      github_url: '',
     }
   }
 
@@ -120,6 +121,12 @@
       },
       edit_connection: {
         handler: 'emitUpdate',
+        deep: true
+      },
+      edit_connection_info: {
+        handler(connection_info) {
+          this.updateEditConnection({ connection_info })
+        },
         deep: true
       },
       github_url: {
@@ -173,10 +180,12 @@
 
         // reset local objects
         this.edit_connection = _.assign({}, this.edit_connection, _.cloneDeep(this.connection))
+        this.edit_connection_info = _.cloneDeep(_.get(this.connection, 'connection_info', {}))
 
+        // set up value for GitHub repo URL input model
         if (this.is_github) {
-          var owner = _.get(this.edit_connection, 'connection_info.owner', '')
-          var repository = _.get(this.edit_connection, 'connection_info.repository', '')
+          var owner = _.get(this.edit_connection_info, 'owner', '')
+          var repository = _.get(this.edit_connection_info, 'repository', '')
           if (owner.length > 0 && repository.length > 0) {
             this.github_url = 'https://github.com/' + `${owner}/${repository}`
           }
@@ -194,11 +203,11 @@
         var url = this.github_url.substring(this.github_url.indexOf('github.com/') + 11)
         var arr = url.split('/')
         if (arr.length == 2) {
-          var connection_info = {
+          var attrs = {
             owner: arr[0],
             repository: arr[1]
           }
-          this.updateEditConnection({ connection_info })
+          this.edit_connection_info = _.assign({}, this.edit_connection_info, attrs)
         }
       },
       cinfo() {
@@ -207,7 +216,7 @@
       onDisconnectClick() {
         /*
         var attrs = _.cloneDeep(this.connection)
-        _.assign(attrs, { connection_info: this.connection_info })
+        _.assign(attrs, { connection_info: this.edit_connection_info })
         this.tryDisconnect(attrs)
         */
       },

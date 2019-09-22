@@ -73,7 +73,7 @@
       },
       form_errors: {},
 
-      // pipe values
+      // edit values
       edit_pipe: {
         name: `func-${suffix}`
       },

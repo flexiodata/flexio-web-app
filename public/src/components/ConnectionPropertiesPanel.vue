@@ -57,7 +57,6 @@
   const getDefaultState = (component) => {
     return {
       emitting_update: false,
-      name: '',
       rules: {
         name: [
           { required: true, message: 'Please input a name', trigger: 'blur' },
@@ -66,8 +65,9 @@
       },
       form_errors: {},
 
-      // connection values
+      // edit values
       edit_connection: {},
+      name: '',
     }
   }
 
