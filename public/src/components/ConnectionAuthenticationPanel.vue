@@ -100,12 +100,18 @@
 
   // form definitons
   import amazons3 from '../data/connection/amazons3.yml'
+  import mysql from '../data/connection/mysql.yml'
+  import postgres from '../data/connection/postgres.yml'
+  import sftp from '../data/connection/sftp.yml'
 
   const getDefaultState = () => {
     return {
       emitting_update: false,
       forms: {
-        amazons3
+        amazons3,
+        mysql,
+        postgres,
+        sftp
       },
       rules: {
         github_url: [
@@ -191,10 +197,7 @@
         return 'https://' + HOSTNAME + '/oauth2/connect' + '?service=' + this.ctype + '&eid=' + eid
       },
       form_json() {
-        switch (this.ctype) {
-          case ctypes.CONNECTION_TYPE_AMAZONS3:
-            return this.forms.amazons3
-        }
+        return this.forms[this.ctype] || {}
       }
     },
     methods: {

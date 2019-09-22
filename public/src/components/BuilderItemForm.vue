@@ -1,5 +1,8 @@
 <template>
-  <div v-show="visible">
+  <div
+    :class="item.class"
+    v-show="visible"
+  >
     <div
       class="tl pb3"
       v-show="title.length > 0"
@@ -14,7 +17,6 @@
     </div>
     <el-form
       ref="form"
-      :class="item.class"
       :model="edit_values"
       :label-position="label_position"
       :label-width="label_width"
@@ -101,27 +103,16 @@
           v-else-if="fi.element == 'input' && isDatePickerType(fi.type)"
         />
         <el-input
-          type="textarea"
-          :placeholder="fi.placeholder"
-          v-model="edit_values[fi.name]"
-          v-else-if="fi.element == 'input' && fi.type == 'textarea'"
-        />
-        <el-input
           type="number"
           :placeholder="fi.placeholder"
           v-model.number="edit_values[fi.name]"
           v-else-if="fi.element == 'input' && fi.type == 'number'"
         />
         <el-input
-          type="hidden"
+          :type="getInputType(fi.type)"
           :placeholder="fi.placeholder"
           v-model="edit_values[fi.name]"
-          v-else-if="fi.element == 'input' && fi.type == 'hidden'"
-        />
-        <el-input
-          :placeholder="fi.placeholder"
-          v-model="edit_values[fi.name]"
-          v-else
+          v-else-if="fi.element == 'input'"
         />
       </el-form-item>
     </el-form>
@@ -264,6 +255,9 @@
       },
       getMarkdown(val) {
         return marked(val)
+      },
+      getInputType(input_type) {
+        return _.defaultTo(input_type, 'text')
       },
       validateForm(clear) {
         this.$nextTick(() => {
