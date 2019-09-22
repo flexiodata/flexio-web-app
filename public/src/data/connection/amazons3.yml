@@ -1,9 +1,10 @@
 element: form
 name: form_authentication
 title: ''
-description:
-class: el-form--compact el-form__label-tiny w-50-ns center
+description: ''
+class: w-50-ns center
 form_props:
+  class: el-form--cozy el-form__label-tiny
   size: small
 form_items:
   - element: input

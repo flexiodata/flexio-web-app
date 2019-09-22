@@ -84,6 +84,7 @@
     <BuilderItemForm
       :item="form_json"
       :show-footer="false"
+      @values-change="onValuesChange"
     />
   </div>
 </template>
@@ -243,6 +244,9 @@
       },
       cinfo() {
         return _.find(cinfos, { connection_type: this.ctype })
+      },
+      onValuesChange(values) {
+        this.edit_connection_info = _.assign({}, this.edit_connection_info, values)
       },
       onDisconnectClick() {
         /*
