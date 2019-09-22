@@ -15,7 +15,7 @@
     >
       <ServiceIcon
         class="br2"
-        style="background: #fff; min-width: 64px; width: 64px; height: 64px"
+        style="background: #fff; width: 64px; height: 64px"
         :type="edit_connection.connection_type"
       />
       <div class="mt2 f4 fw6 lh-title">{{service_name}}</div>
@@ -42,22 +42,54 @@
       v-if="active_step == 'choose-source'"
     />
 
+    <div class="h1" v-if="showFormLogo && active_step != 'choose-source'"></div>
+
     <!-- step 2: connect & authenticate -->
-    <ConnectionAuthenticationPanel
-      class="br2 ba b--black-10 pa4"
-      :connection.sync="edit_connection"
+    <div
+      class="flex flex-column br2 ba b--black-10 pa4"
       v-if="active_step == 'authenticate'"
-    />
+    >
+      <div
+        class="center relative"
+        style="top: -56px; margin-bottom: -2rem; background: #fff; padding: 0 8px"
+        v-if="showFormLogo"
+      >
+        <ServiceIcon
+          class="br2"
+          style="width: 48px; height: 48px"
+          :type="edit_connection.connection_type"
+        />
+      </div>
+      <div class="mb3 tc ttu fw6 f4">Authentication</div>
+      <ConnectionAuthenticationPanel
+        :connection.sync="edit_connection"
+      />
+    </div>
 
     <!-- step 3: edit properties -->
-    <ConnectionPropertiesPanel
-      class="br2 ba b--black-10 pa4"
-      :connection.sync="edit_connection"
-      :show-header="false"
-      :show-footer="false"
-      :mode="mode"
+    <div
+      class="flex flex-column br2 ba b--black-10 pa4"
       v-if="active_step == 'edit-properties'"
-    />
+    >
+      <div
+        class="center relative"
+        style="top: -56px; margin-bottom: -2rem; background: #fff; padding: 0 8px"
+        v-if="showFormLogo"
+      >
+        <ServiceIcon
+          class="br2"
+          style="width: 48px; height: 48px"
+          :type="edit_connection.connection_type"
+        />
+      </div>
+      <div class="mb3 tc ttu fw6 f4">Properties</div>
+      <ConnectionPropertiesPanel
+        :connection.sync="edit_connection"
+        :show-header="false"
+        :show-footer="false"
+        :mode="mode"
+      />
+    </div>
 
     <!-- footer -->
     <ButtonBar
@@ -138,6 +170,10 @@
       showSteps: {
         type: Boolean,
         default: false
+      },
+      showFormLogo: {
+        type: Boolean,
+        default: true
       },
       connection: {
         type: Object,

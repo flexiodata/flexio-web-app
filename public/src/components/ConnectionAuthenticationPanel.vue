@@ -80,7 +80,7 @@
     </div>
   </div>
   <div v-else>
-    <p>To use this connection, you must first connect {{service_name}} to Flex.io.</p>
+    <p class="tc">To use this connection, you must first connect {{service_name}} to Flex.io.</p>
     <BuilderItemForm
       :item="form_json"
       :show-footer="false"
