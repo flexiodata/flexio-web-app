@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="is_oauth">
     <template v-if="is_github">
       <p>Enter the URL of the GitHub repository to which you'd like to connect.</p>
       <el-form
@@ -79,6 +79,13 @@
       </div>
     </div>
   </div>
+  <div v-else>
+    <p>To use this connection, you must first connect {{service_name}} to Flex.io.</p>
+    <BuilderItemForm
+      :item="form_json"
+      :show-footer="false"
+    />
+  </div>
 </template>
 
 <script>
@@ -87,16 +94,25 @@
   import { CONNECTION_STATUS_AVAILABLE } from '@/constants/connection-status'
   import * as ctypes from '@/constants/connection-type'
   import * as cinfos from '@/constants/connection-info'
+  import BuilderItemForm from '@/components/BuilderItemForm'
   import MixinOauth from '@/components/mixins/oauth'
+  import MixinConnection from '@/components/mixins/connection'
+
+  // form definitons
+  import amazons3 from '../data/connection/amazons3.yml'
 
   const getDefaultState = () => {
     return {
       emitting_update: false,
+      forms: {
+        amazons3
+      },
       rules: {
         github_url: [
           { required: true, message: 'Please enter the URL of the GitHub repository' }
         ]
       },
+
 
       // edit values
       edit_connection: {},
@@ -112,7 +128,10 @@
         required: true
       }
     },
-    mixins: [MixinOauth],
+    mixins: [MixinOauth, MixinConnection],
+    components: {
+      BuilderItemForm
+    },
     watch: {
       connection: {
         handler: 'initSelf',
@@ -146,6 +165,9 @@
       cstatus() {
         return _.get(this.connection, 'connection_status', '')
       },
+      is_oauth() {
+        return this.$_Connection_isOauth(this.ctype)
+      },
       is_connected() {
         return this.cstatus == CONNECTION_STATUS_AVAILABLE
       },
@@ -167,6 +189,12 @@
       oauth_url() {
         var eid = _.get(this.connection, 'eid', '')
         return 'https://' + HOSTNAME + '/oauth2/connect' + '?service=' + this.ctype + '&eid=' + eid
+      },
+      form_json() {
+        switch (this.ctype) {
+          case ctypes.CONNECTION_TYPE_AMAZONS3:
+            return this.forms.amazons3
+        }
       }
     },
     methods: {

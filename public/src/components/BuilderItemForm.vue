@@ -20,6 +20,7 @@
       :label-width="label_width"
       :rules="rules"
       @validate="onValidateItem"
+      v-bind="item.form_props"
     >
       <el-form-item
         :class="fi.class"
@@ -130,6 +131,7 @@
       @cancel-click="onCancelClick"
       @submit-click="onSubmitClick"
       v-bind="$attrs"
+      v-show="showFooter"
     />
   </div>
 </template>
@@ -168,6 +170,10 @@
       visible: {
         type: Boolean,
         default: true
+      },
+      showFooter: {
+        type: Boolean,
+        default: true
       }
     },
     components: {
@@ -199,7 +205,8 @@
         return _.get(this.item, 'title', '')
       },
       description() {
-        return marked(_.get(this.item, 'description', ''))
+        var desc = _.get(this.item, 'description', '')
+        return _.isString(desc) && desc.length > 0 ? marked(desc) : ''
       },
       label_position() {
         return _.get(this.item, 'label_position', 'top')
@@ -211,7 +218,7 @@
         return _.get(this.item, 'form_items', [])
       },
       form_rules() {
-        return _.cloneDeep(this.item.rules || {})
+        return _.get(this.item, 'rules', {})
       },
       form_values() {
         var obj = {}
@@ -230,7 +237,7 @@
       initSelf() {
         // reset our local component data
         var edit_values = this.form_values
-        var rules = this.form_rules
+        var rules = _.cloneDeep(this.form_rules)
         _.assign(this.$data, getDefaultState(), { edit_values, rules })
 
         this.autoFocus()
