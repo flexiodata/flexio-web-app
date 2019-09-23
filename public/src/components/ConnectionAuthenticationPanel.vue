@@ -107,6 +107,7 @@
     </p>
     <BuilderItemForm
       :item="form_json"
+      :default-values="edit_connection_info"
       :show-footer="false"
       @values-change="onValuesChange"
     >
