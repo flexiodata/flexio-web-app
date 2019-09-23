@@ -9,38 +9,27 @@
     />
 
     <!-- step 1: choose source -->
-    <div
-      v-if="active_step == 'choose-source' && !has_mount"
-    >
-      <p>Function mounts can be created from pre-configured function packs or self-hosted using one of the services below. Visit our <a href="#" class="blue" target="_blank">online documentation</a> to learn how to <a href="#" class="blue" target="_blank">create and host your own function pack</a>.</p>
-      <el-tabs
-        v-model="active_tab_name"
-      >
-        <el-tab-pane name="function-packs">
-          <div slot="label"><div style="min-width: 5rem">Function Packs</div></div>
-          <IconList
-            items="mounts"
-            @item-click="onFunctionPackClick"
-          />
-        </el-tab-pane>
+    <div v-if="active_step == 'choose-source' && !has_mount">
+      <IconList
+        items="mounts"
+        @item-click="onIntegrationClick"
+        v-show="mountType == 'integration'"
+      />
 
-        <el-tab-pane name="self-hosted">
-          <div slot="label"><div style="min-width: 5rem">Self-Hosted</div></div>
-          <IconList
-            items="services"
-            :filter-by="filterByFunctionMount"
-            @item-click="onServiceClick"
-          />
-        </el-tab-pane>
-      </el-tabs>
+      <IconList
+        items="services"
+        :filter-by="filterByFunctionMount"
+        @item-click="onServiceClick"
+        v-show="mountType == 'mount'"
+      />
     </div>
 
     <!-- step 2: configure connection -->
     <ConnectionEditPanel
       :mode="mode"
-      :show-title="false"
-      :show-steps="false"
+      :active-step="'authentication'"
       :connection="edit_mount"
+      :show-header="false"
       :filter-by="filterByFunctionMount"
       @cancel="onCancel"
       @submit="onUpdateConnection"
@@ -134,8 +123,7 @@
     return {
       edit_mount: {},
       manifest: {},
-      active_step: 'choose-source',
-      active_tab_name: 'function-packs',
+      active_step: 'choose-source'
     }
   }
 
@@ -160,6 +148,10 @@
       mode: {
         type: String,
         default: 'add' // 'add' or 'edit'
+      },
+      mountType: {
+        type: String,
+        default: 'integration' // 'integration' or 'mount'
       }
     },
     mixins: [MixinConnection],
@@ -199,7 +191,12 @@
           return this.title
         }
 
-        return this.mode == 'edit' ? `Edit "${this.cname}" Function Mount` : 'New Function Mount'
+        switch (this.mountType) {
+          case 'integration':
+            return this.mode == 'edit' ? `Edit "${this.cname}" Integration` : 'New Integration'
+          case 'mount':
+            return this.mode == 'edit' ? `Edit "${this.cname}" Function Mount` : 'New Function Mount'
+        }
       },
       submit_label() {
         return this.mode == 'edit' ? 'Save changes' : 'Create function mount'
@@ -216,7 +213,7 @@
       filterByFunctionMount(connection) {
         return this.$_Connection_isFunctionMount(connection)
       },
-      createFunctionPackConnection(item) {
+      createIntegrationConnection(item) {
         var team_name = this.active_team_name
         var attrs = _.get(item, 'connection', {})
         attrs.name = attrs.name + '-' + getNameSuffix(4)
@@ -276,8 +273,8 @@
         var update_attrs = _.assign({}, attrs, { connection_info })
         this.edit_mount = _.assign({}, this.edit_mount, update_attrs)
       },
-      onFunctionPackClick(item) {
-        this.createFunctionPackConnection(item)
+      onIntegrationClick(item) {
+        this.createIntegrationConnection(item)
       },
       onServiceClick(item) {
         this.createPendingFunctionMount(item).then(response => {

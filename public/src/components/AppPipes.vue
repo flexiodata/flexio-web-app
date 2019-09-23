@@ -38,7 +38,8 @@
                   <el-dropdown-item @click.native="onNewPipe('lookup')">Lookup</el-dropdown-item>
                   <el-dropdown-item @click.native="onNewPipe('execute')">Execute</el-dropdown-item>
                   <el-dropdown-item divided></el-dropdown-item>
-                  <el-dropdown-item @click.native="onNewFunctionMount">Function Mount</el-dropdown-item>
+                  <el-dropdown-item @click.native="onNewFunctionMount('integration')">Integration</el-dropdown-item>
+                  <el-dropdown-item @click.native="onNewFunctionMount('mount')">Function Mount</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </div>
@@ -214,7 +215,7 @@
     >
       <FunctionMountEditPanel
         :mode="mount_edit_mode"
-        :show-steps="mount_edit_mode == 'edit' ? false : true"
+        :mount-type="mount_type"
         :mount="mount_edit_mode == 'edit' ? edit_connection : new_connection_attrs"
         @close="show_mount_dialog = false"
         @cancel="show_mount_dialog = false"
@@ -318,6 +319,7 @@ def flex_handler(flex):
         new_pipe_attrs: {},
         show_mount_dialog: false,
         mount_edit_mode: 'add',
+        mount_type: 'integration',
         edit_connection: null,
         new_connection_attrs: {
           connection_mode: CONNECTION_MODE_FUNCTION
@@ -568,8 +570,9 @@ def flex_handler(flex):
         this.pipe_edit_mode = 'edit'
         this.show_pipe_dialog = true
       },
-      onNewFunctionMount() {
+      onNewFunctionMount(mount_type) {
         this.mount_edit_mode = 'add'
+        this.mount_type = mount_type
         this.show_mount_dialog = true
       },
     }

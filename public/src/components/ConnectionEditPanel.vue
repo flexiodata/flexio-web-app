@@ -235,7 +235,7 @@
 
         // reset local objects
         this.edit_connection = _.assign({}, this.edit_connection, _.cloneDeep(this.connection))
-        this.active_step = this.mode == 'edit' ? this.activeStep : 'choose-source'
+        this.active_step = this.activeStep
       },
       cinfo() {
         var ctype = _.get(this.edit_connection, 'connection_type', '')
