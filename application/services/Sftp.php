@@ -37,7 +37,8 @@ class SftpCapture
 }
 
 
-class Sftp implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
+class Sftp implements \Flexio\IFace\IConnection,
+                      \Flexio\IFace\IFileSystem
 {
     private $host;
     private $username;
