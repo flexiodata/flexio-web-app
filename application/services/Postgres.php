@@ -25,6 +25,7 @@ class Postgres implements \Flexio\IFace\IConnection,
     private $database;
     private $username;
     private $password;
+    private $path;
 
     // state info
     private $authenticated = false;
@@ -54,8 +55,8 @@ class Postgres implements \Flexio\IFace\IConnection,
         $password = $validated_params['password'];
 
         $service = new self;
-        if ($service->initialize($host, $port, $database, $username, $password) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+        $service->initialize($host, $port, $database, $username, $password);
+        $service->path = $validated_params['path'];
 
         return $service;
     }

@@ -44,8 +44,7 @@ class Ftp implements \Flexio\IFace\IConnection,
         $password = $validated_params['password'];
 
         $service = new self;
-        if ($service->initialize($host, $username, $password) == false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+        $service->initialize($host, $username, $password);
 
         return $service;
     }

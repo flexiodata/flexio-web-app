@@ -101,6 +101,8 @@ class Connect extends \Flexio\Jobs\Base
         $service = \Flexio\Services\Factory::create($connection_properties);
         if (!$service)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED, "Could not create connection");
+        if ($service->connect() === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED, "Could not create connection");
 
         // add the connection to the process
         $process->addLocalConnection($name, $connection_properties);

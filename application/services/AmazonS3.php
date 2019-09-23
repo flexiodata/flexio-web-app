@@ -50,9 +50,7 @@ class AmazonS3 implements \Flexio\IFace\IConnection,
         $secretkey = $validated_params['aws_secret'];
 
         $service = new self;
-        if ($service->initialize($region, $bucket, $accesskey, $secretkey) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
-
+        $service->initialize($region, $bucket, $accesskey, $secretkey);
         $service->base_path = $validated_params['base_path'] ?? '';
 
         return $service;
