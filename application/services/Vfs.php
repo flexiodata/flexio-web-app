@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class Vfs // TODO: implements \Flexio\IFace\IFileSystem
+class Vfs implements \Flexio\IFace\IFileSystem
 {
     private $owner_eid = ''; // the user to use when evaluating vfs paths
     private $process_context_service = null;
@@ -436,7 +436,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         return $service;
     }
 
-    public function splitPath(string $path) : array
+    private function splitPath(string $path) : array
     {
         $path = trim($path);
         if (strlen($path) == 0)
