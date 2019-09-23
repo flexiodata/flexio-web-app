@@ -521,8 +521,6 @@ class GoogleDrive implements \Flexio\IFace\IConnection,
         return \Flexio\Services\Util::mergePath($this->base_path, $path);
     }
 
-
-
     ////////////////////////////////////////////////////////////
     // additional functions
     ////////////////////////////////////////////////////////////
