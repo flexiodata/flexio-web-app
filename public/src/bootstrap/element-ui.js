@@ -3,6 +3,7 @@ import lang from 'element-ui/lib/locale/lang/en'
 import locale from 'element-ui/lib/locale'
 import {
   Alert,
+  Autocomplete,
   Breadcrumb,
   BreadcrumbItem,
   Button,
@@ -46,6 +47,7 @@ import {
 locale.use(lang)
 
 Vue.use(Alert)
+Vue.use(Autocomplete)
 Vue.use(Breadcrumb)
 Vue.use(BreadcrumbItem)
 Vue.use(Button)

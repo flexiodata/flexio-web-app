@@ -24,6 +24,17 @@
           >
             <div slot="prepend">https://github.com/</div>
           </el-input>
+          <el-autocomplete
+            class="w-100"
+            placeholder="flexiodata/functions-currency"
+            spellcheck="false"
+            :fetch-suggestions="queryGitHubReposAsync"
+            :trigger-on-focus="false"
+            v-model="github_url"
+            v-if="false"
+          >
+            <div slot="prepend">https://github.com/</div>
+          </el-autocomplete>
         </el-form-item>
       </el-form>
     </div>
@@ -125,6 +136,7 @@
 </template>
 
 <script>
+  import axios from 'axios'
   import { mapState } from 'vuex'
   import { HOSTNAME } from '@/constants/common'
   import { CONNECTION_STATUS_AVAILABLE } from '@/constants/connection-status'
@@ -408,6 +420,19 @@
           })
         })
       },
+      queryGitHubReposAsync(q, cb) {
+        var url = 'https://api.github.com/search/repositories'
+        axios.get(url, { params: { q } }).then(response => {
+          var items = response.data.items
+          items = _.map(items, item => {
+            return {
+              value: item.full_name,
+              link: item.full_name,
+            }
+          })
+          cb(items)
+        })
+      }
     }
   }
 </script>
