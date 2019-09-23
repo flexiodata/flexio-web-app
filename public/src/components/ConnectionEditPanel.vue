@@ -8,28 +8,15 @@
       v-show="showHeader"
     />
 
-    <!-- title -->
-    <div
-      class="flex flex-column items-center justify-center mb4"
-      v-show="showTitle && active_step != 'choose-source'"
-    >
-      <ServiceIcon
-        class="br2"
-        style="background: #fff; width: 64px; height: 64px"
-        :type="edit_connection.connection_type"
-      />
-      <div class="mt2 f4 fw6 lh-title">{{service_name}}</div>
-    </div>
-
     <!-- steps -->
     <el-steps
       class="mb4"
       align-center
       finish-status="success"
       :active="active_step_idx"
-      v-show="showSteps && active_step != 'choose-source'"
+      v-show="showSteps && mode == 'add'"
     >
-      <el-step :title="'Source: ' + service_name" />
+      <el-step :title="service_name.length == 0 ? 'Choose Source' : 'Source: ' + service_name" />
       <el-step title="Authentication" />
       <el-step title="Properties" />
     </el-steps>
@@ -50,17 +37,16 @@
       v-if="active_step == 'authenticate'"
     >
       <div
-        class="center relative"
-        style="top: -56px; margin-bottom: -2.5rem; background: #fff; padding: 0 8px"
+        class="form-logo"
         v-if="showFormLogo"
       >
         <ServiceIcon
-          class="br2"
-          style="width: 48px; height: 48px"
+          class="form-logo-icon"
           :type="edit_connection.connection_type"
         />
       </div>
-      <div class="tc ttu fw6 f4" style="margin-bottom: 24px">Authentication</div>
+      <div class="mt3" v-if="showSteps && mode == 'add'"></div>
+      <div class="tc ttu fw6 f4 form-title" v-else>Authentication</div>
       <ConnectionAuthenticationPanel
         :connection.sync="edit_connection"
       />
@@ -72,17 +58,16 @@
       v-if="active_step == 'edit-properties'"
     >
       <div
-        class="center relative"
-        style="top: -56px; margin-bottom: -2.5rem; background: #fff; padding: 0 8px"
+        class="form-logo"
         v-if="showFormLogo"
       >
         <ServiceIcon
-          class="br2"
-          style="width: 48px; height: 48px"
+          class="form-logo-icon"
           :type="edit_connection.connection_type"
         />
       </div>
-      <div class="tc ttu fw6 f4" style="margin-bottom: 24px">Properties</div>
+      <div class="mt3" v-if="showSteps && mode == 'add'"></div>
+      <div class="tc ttu fw6 f4 form-title" v-else>Properties</div>
       <ConnectionPropertiesPanel
         :connection.sync="edit_connection"
         :show-header="false"
@@ -162,10 +147,6 @@
       showFooter: {
         type: Boolean,
         default: true
-      },
-      showTitle: {
-        type: Boolean,
-        default: false
       },
       showSteps: {
         type: Boolean,
@@ -321,3 +302,20 @@
     }
   }
 </script>
+
+<style lang="stylus" scoped>
+  .form-logo
+    background: #fff
+    margin: 0 auto -2.5rem
+    padding: 0 8px
+    position: relative
+    top: -56px
+
+  .form-logo-icon
+    border-radius: 4px
+    height: 48px
+    width: 48px
+
+  .form-title
+    margin-bottom: 24px
+</style>
