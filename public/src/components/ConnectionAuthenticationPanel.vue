@@ -32,14 +32,11 @@
     </div>
 
     <div
-      class="mt4 pt4 bt b--black-10"
       v-show="is_connected"
       v-if="is_github"
     >
+      <TextSeparator class="mt4 mb3 lh-copy ttu fw6 f6">Additional configuration</TextSeparator>
       <div class="center mw6">
-        <div class="mb2 lh-copy ttu fw6 f6">
-          Additional configuration
-        </div>
         <p>Enter the URL of the GitHub repository to which you'd like to connect.</p>
         <el-form
           ref="form"
@@ -66,14 +63,12 @@
     </div>
 
     <div
-      class="mt4 pt4 bt b--black-10"
       v-show="is_connected"
       v-else-if="is_box || is_dropbox || is_google_drive"
     >
+      <TextSeparator class="mt4 mb3 lh-copy ttu fw6 f6">Additional configuration</TextSeparator>
       <div class="center mw6">
-        <div class="mb2 lh-copy ttu fw6 f6">
-          Additional configuration
-        </div>
+        <p>Enter a base path to change the root folder for this connection.</p>
         <el-form
           ref="form"
           class="el-form--compact el-form__label-tiny"
@@ -139,6 +134,7 @@
   import * as ctypes from '@/constants/connection-type'
   import * as cinfos from '@/constants/connection-info'
   import BuilderItemForm from '@/components/BuilderItemForm'
+  import TextSeparator from '@/components/TextSeparator'
   import MixinOauth from '@/components/mixins/oauth'
   import MixinConnection from '@/components/mixins/connection'
 
@@ -181,7 +177,8 @@
     },
     mixins: [MixinOauth, MixinConnection],
     components: {
-      BuilderItemForm
+      BuilderItemForm,
+      TextSeparator,
     },
     watch: {
       connection: {
