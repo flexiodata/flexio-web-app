@@ -192,25 +192,9 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $properties = array();
         $properties['connection_status'] = \Model::CONNECTION_STATUS_UNAVAILABLE;
 
-        try
-        {
-            $service = $this->getService();
-
-            if ($service instanceof \Flexio\IFace\IConnection)
-            {
-                if ($service->authenticated())
-                    $properties['connection_status'] = \Model::CONNECTION_STATUS_AVAILABLE;
-            }
-            else
-            {
-                $properties['connection_status'] = \Model::CONNECTION_STATUS_AVAILABLE;
-            }
-        }
-        catch(\Flexio\Base\Exception $e)
-        {
-            // service couldn't be created, perhaps because of invalid credentials;
-            // connection is unavailable
-        }
+        $connected = $this->getService()->connect();
+        if ($connected === true)
+            $properties['connection_status'] = \Model::CONNECTION_STATUS_AVAILABLE;
 
         $this->set($properties);
         return $this;
@@ -220,17 +204,19 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
     {
         $this->clearCache();
 
-        // TODO: what values do we want to use to reset the params?
-        // if we want to reset anything within the connection_info, we need
-        // to feed the info into the service, which should be responsible for
-        // returning us valid initializated params;
-        // see 08.04-connection.php: "TODO: we need a better way of resetting credentials"
+        // get the service, disconnect, and get the update connection info
+        // that has the secret credentials reset
+        $service = $this->getService();
+        $service->disconnect();
+        $connection_info = $service->get();
 
+        // update the connection info
         $properties = array();
         $properties['connection_status'] = \Model::CONNECTION_STATUS_UNAVAILABLE;
         $properties['expires'] = \Flexio\System\System::getTimestamp(); // set the expiration to the current time
-
+        $properties['connection_info'] = $connection_info;
         $this->set($properties);
+
         return $this;
     }
 
@@ -263,6 +249,10 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         // load the services from the services store
         $service = \Flexio\Services\Factory::create($connection_properties);
         if ($service === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+
+        // for connections, make sure the service is a connection type
+        if (!($service instanceof \Flexio\IFace\IConnection))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
         // for some of the connections, refresh the token
