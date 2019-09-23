@@ -88,12 +88,37 @@
     </div>
   </div>
   <div v-else>
-    <p class="tc">To use this connection, you must first connect {{service_name}} to Flex.io.</p>
+    <div
+      class="flex flex-row items-center justify-center lh-copy mb3"
+      v-if="is_connected"
+    >
+      <i class="el-icon-success dark-green f4 mr2"></i>
+      <span class="dn dib-ns dark-green f5">You are connected to {{service_name}}!</span>
+    </div>
+    <p
+      class="tc"
+      v-else
+    >
+      To use this connection, you must first connect {{service_name}} to Flex.io.
+    </p>
     <BuilderItemForm
       :item="form_json"
       :show-footer="false"
       @values-change="onValuesChange"
-    />
+    >
+      <el-form-item class="mt3" slot="form-append">
+        <el-button
+          class="ttu fw6"
+          :type="test_btn_type"
+          :icon="test_btn_icon"
+          :loading="test_state == 'testing'"
+          :disabled="test_state == 'success' || test_state == 'error'"
+          @click="onTestClick"
+        >
+          {{test_btn_label}}
+        </el-button>
+      </el-form-item>
+    </BuilderItemForm>
   </div>
 </template>
 
@@ -116,6 +141,7 @@
   const getDefaultState = () => {
     return {
       emitting_update: false,
+      test_state: 'none', // none, testing, error, success
       forms: {
         amazons3,
         mysql,
@@ -207,7 +233,37 @@
       },
       form_json() {
         return this.forms[this.ctype] || {}
-      }
+      },
+      test_btn_type() {
+        switch (this.test_state) {
+          case 'none':    return 'primary'
+          case 'testing': return 'primary'
+          case 'success': return 'success'
+          case 'error':   return 'danger'
+        }
+
+        return 'primary'
+      },
+      test_btn_icon() {
+        switch (this.test_state) {
+          case 'none':    return ''
+          case 'testing': return ''
+          case 'success': return 'el-icon-success'
+          case 'error':   return 'el-icon-error'
+        }
+
+        return 'Test connection'
+      },
+      test_btn_label() {
+        switch (this.test_state) {
+          case 'none':    return 'Test connection'
+          case 'testing': return 'Testing...'
+          case 'success': return 'Success!'
+          case 'error':   return 'Error'
+        }
+
+        return 'Test connection'
+      },
     },
     methods: {
       initSelf() {
@@ -256,30 +312,63 @@
       onValuesChange(values) {
         this.edit_connection_info = _.assign({}, this.edit_connection_info, values)
       },
+      onTestClick() {
+        this.tryTest()
+      },
       onDisconnectClick() {
-        /*
-        var attrs = _.cloneDeep(this.connection)
-        _.assign(attrs, { connection_info: this.edit_connection_info })
-        this.tryDisconnect(attrs)
-        */
+        this.tryDisconnect()
       },
       onConnectClick() {
         this.tryOauthConnect()
       },
+      tryTest() {
+        var eid = _.get(this.connection, 'eid', '')
+        var team_name = this.active_team_name
+        var attrs = _.pick(this.edit_connection, ['name', 'description', 'connection_info'])
+
+        // update the connection
+        this.$store.dispatch('connections/update', { team_name, eid, attrs }).then(response => {
+          this.test_state = 'testing'
+
+          // test the connection
+          this.$store.dispatch('connections/test', { team_name, eid, attrs }).then(response => {
+            var connection_status = _.get(response.data, 'connection_status', '')
+            this.updateEditConnection({ connection_status })
+
+            this.test_state = 'success'
+            setTimeout(() => { this.test_state = 'none' }, 4000)
+          }).catch(error => {
+            this.test_state = 'error'
+            setTimeout(() => { this.test_state = 'none' }, 4000)
+          })
+        }).catch(error => {
+          this.test_state = 'error'
+          setTimeout(() => { this.test_state = 'none' }, 4000)
+        })
+      },
       tryDisconnect(attrs) {
         var eid = _.get(this.connection, 'eid', '')
         var team_name = this.active_team_name
+        var attrs = _.pick(this.edit_connection, ['name', 'description', 'connection_info'])
 
         // disconnect from this connection (oauth only)
         this.$store.dispatch('connections/disconnect', { team_name, eid, attrs }).then(response => {
-          var connection = response.data
+          var connection_status = _.get(response.data, 'connection_status', '')
+          this.updateEditConnection({ connection_status })
 
-          this.$message({
-            message: "You've successfully disconnected from " + this.service_name + ".",
-            type: 'success'
+          this.$nextTick(() => {
+            if (!this.is_connected) {
+              this.$message({
+                message: "You've successfully disconnected from " + this.service_name + ".",
+                type: 'success'
+              })
+            } else {
+              this.$message({
+                message: "There was a problem disconnecting from " + this.service_name + ".",
+                type: 'error'
+              })
+            }
           })
-
-          this.$emit('change', connection)
         }).catch(error => {
           this.$message({
             message: _.get(error, 'response.data.error.message', ''),

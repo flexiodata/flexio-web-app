@@ -115,6 +115,7 @@
           v-else-if="fi.element == 'input'"
         />
       </el-form-item>
+      <slot name="form-append"></slot>
     </el-form>
     <ButtonBar
       class="mt4"
