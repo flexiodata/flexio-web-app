@@ -72,7 +72,6 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
             case 'googlecloudstorage':
             case 'amazons3':
             case 'elasticsearch':
-            case 'twilio':
                 return true;
         }
     }

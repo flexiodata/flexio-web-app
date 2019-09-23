@@ -46,7 +46,6 @@ class Base
     public const TEST_SERVICE_POSTGRES = true;
     public const TEST_SERVICE_SFTP = true;
     public const TEST_SERVICE_SOCRATA = true;
-    public const TEST_SERVICE_TWILIO = true;
     public const TEST_SERVICE_TWITTER = true;
 
     public const ERROR_EXCEPTION = 'error-exception';

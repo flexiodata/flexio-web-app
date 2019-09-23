@@ -108,13 +108,8 @@ class Test
         \Flexio\Tests\Check::assertString('A.21', 'Type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Services\Factory::TYPE_TWILIO;
-        $expected = 'twilio';
-        \Flexio\Tests\Check::assertString('A.22', 'Type constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
         $actual = \Flexio\Services\Factory::TYPE_KEYRING;
         $expected = 'keyring';
-        \Flexio\Tests\Check::assertString('A.23', 'Type constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.22', 'Type constant',  $actual, $expected, $results);
     }
 }

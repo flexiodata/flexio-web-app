@@ -39,7 +39,6 @@ class Factory
     public const TYPE_SOCRATA             = 'socrata';
     public const TYPE_PIPELINEDEALS       = 'pipelinedeals';
     public const TYPE_MAILJET             = 'mailjet';
-    public const TYPE_TWILIO              = 'twilio';
     public const TYPE_LINKEDIN            = 'linkedin';
     public const TYPE_KEYRING             = 'keyring'; // general purpose set of key values; here as a place holder constant to match UI
 
@@ -129,9 +128,6 @@ class Factory
 
             case self::TYPE_MAILJET:
                 return \Flexio\Services\MailJet::create($connection_info);
-
-            case self::TYPE_TWILIO:
-                return \Flexio\Services\Twilio::create($connection_info);
         }
 
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
