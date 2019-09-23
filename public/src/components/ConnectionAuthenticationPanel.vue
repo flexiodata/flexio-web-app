@@ -1,47 +1,7 @@
 <template>
   <div v-if="is_oauth">
-    <div
-      class="mb4"
-      v-if="is_github"
-    >
-      <p>Enter the URL of the GitHub repository to which you'd like to connect.</p>
-      <el-form
-        ref="form"
-        class="el-form--cozy el-form__label-tiny"
-        label-position="top"
-        :model="$data"
-        :rules="rules"
-      >
-        <el-form-item
-          key="github_url"
-          prop="github_url"
-          label="Repository URL"
-        >
-          <el-input
-            placeholder="flexiodata/functions-currency"
-            spellcheck="false"
-            v-model="github_url"
-          >
-            <div slot="prepend">https://github.com/</div>
-          </el-input>
-          <el-autocomplete
-            class="w-100"
-            placeholder="flexiodata/functions-currency"
-            spellcheck="false"
-            :fetch-suggestions="queryGitHubReposAsync"
-            :trigger-on-focus="false"
-            v-model="github_url"
-            v-if="false"
-          >
-            <div slot="prepend">https://github.com/</div>
-          </el-autocomplete>
-        </el-form-item>
-      </el-form>
-    </div>
-
     <div v-if="!is_connected">
-      <p v-if="is_github">To use this connection with a private repository, you must also connect GitHub to Flex.io.</p>
-      <p class="tc" v-else>To use this connection, you must first connect {{service_name}} to Flex.io.</p>
+      <p class="tc">To use this connection, you must first connect {{service_name}} to Flex.io.</p>
       <div class="mv3 tc">
         <el-button
           class="ttu fw6"
@@ -53,10 +13,7 @@
       </div>
     </div>
 
-    <div
-      style="margin-bottom: -1px"
-      v-else
-    >
+    <div v-else>
       <div class="flex flex-row items-center justify-center lh-copy">
         <i class="el-icon-success dark-green f3 mr2"></i>
         <span class="dn dib-ns dark-green f4">You are connected to {{service_name}}!</span>
@@ -65,15 +22,54 @@
         <el-button
           class="ttu fw6"
           size="small"
+          plain
           @click="onDisconnectClick"
           v-if="is_connected"
         >
-          Disconnect from your {{service_name}} account
+          Disconnect from {{service_name}}
         </el-button>
       </div>
     </div>
 
-    <div class="br2 bg-nearer-white mt4 pa4" v-if="is_box || is_dropbox || is_google_drive">
+    <div
+      class="mt4 pt4 bt b--black-10"
+      v-show="is_connected"
+      v-if="is_github"
+    >
+      <div class="center mw6">
+        <div class="mb2 lh-copy ttu fw6 f6">
+          Additional configuration
+        </div>
+        <p>Enter the URL of the GitHub repository to which you'd like to connect.</p>
+        <el-form
+          ref="form"
+          class="el-form--cozy el-form__label-tiny"
+          label-position="top"
+          :model="$data"
+          :rules="rules"
+        >
+          <el-form-item
+            key="github_url"
+            prop="github_url"
+            label="Repository URL"
+          >
+            <el-input
+              placeholder="flexiodata/functions-currency"
+              spellcheck="false"
+              v-model="github_url"
+            >
+              <div slot="prepend">https://github.com/</div>
+            </el-input>
+          </el-form-item>
+        </el-form>
+      </div>
+    </div>
+
+    <div
+      class="mt4 pt4 bt b--black-10"
+      v-show="is_connected"
+      v-else-if="is_box || is_dropbox || is_google_drive"
+    >
       <div class="center mw6">
         <div class="mb2 lh-copy ttu fw6 f6">
           Additional configuration
@@ -86,12 +82,12 @@
           :rules="rules"
         >
           <el-form-item
-            label="Base path"
+            label="Base Path"
             key="base_path"
             prop="base_path"
           >
             <el-input
-              placeholder="/path/to/folder"
+              placeholder="Base Path (optional)"
               spellcheck="false"
               v-model="edit_connection_info.base_path"
             />
@@ -420,19 +416,6 @@
           })
         })
       },
-      queryGitHubReposAsync(q, cb) {
-        var url = 'https://api.github.com/search/repositories'
-        axios.get(url, { params: { q } }).then(response => {
-          var items = response.data.items
-          items = _.map(items, item => {
-            return {
-              value: item.full_name,
-              link: item.full_name,
-            }
-          })
-          cb(items)
-        })
-      }
     }
   }
 </script>
