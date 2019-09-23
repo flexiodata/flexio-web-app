@@ -75,6 +75,9 @@ class AmazonS3 implements \Flexio\IFace\IConnection,
 
     public function disconnect() : void
     {
+        // reset secret credentials and authentication flag
+        $this->secretkey = '';
+        $this->authenticated = false;
     }
 
     public function authenticated() : bool

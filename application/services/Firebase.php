@@ -42,6 +42,8 @@ class Firebase implements \Flexio\IFace\IConnection,
 
     public function disconnect() : void
     {
+        // reset secret credentials and authentication flag
+        $this->authenticated = false;
     }
 
     public function authenticated() : bool

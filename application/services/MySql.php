@@ -82,6 +82,9 @@ class MySql implements \Flexio\IFace\IConnection,
 
     public function disconnect() : void
     {
+        // reset secret credentials and authentication flag
+        $this->password = '';
+        $this->authenticated = false;
     }
 
     public function authenticated() : bool

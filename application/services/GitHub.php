@@ -46,6 +46,11 @@ class GitHub implements \Flexio\IFace\IConnection,
 
     public function disconnect() : void
     {
+        // reset oauth credential info
+        $this->authorization_uri = '';
+        $this->access_token = '';
+        $this->refresh_token = '';
+        $this->expires = 0;
     }
 
     public function authenticated() : bool
