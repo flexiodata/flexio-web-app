@@ -23,7 +23,7 @@
                 <td>
                   <div class="flex flex-row items-center">
                     <ServiceIcon class="flex-none mr1 br1 square-1" :type="ctype" :url="url" :empty-cls="''" />
-                    <span class="f6 fw6">{{service_name}}</span>
+                    <span class="fw6">{{service_name}}</span>
                   </div>
                 </td>
               </tr>
@@ -33,24 +33,33 @@
                   <div class="flex flex-row items-center">
                     <i class="el-icon-success dark-green mr1" v-if="is_available"></i>
                     <i class="el-icon-error dark-red mr1" v-else></i>
-                    <span class="f6 fw6">{{is_available ? 'Connected' : 'Not Connected'}}</span>
+                    <span class="fw6">{{is_available ? 'Connected' : 'Not Connected'}}</span>
                   </div>
                 </td>
               </tr>
               <tr v-if="has_owner && has_repository">
                 <td>Repository</td>
-                <td><span class="f6 fw6">{{owner}}/{{repository}}</span></td>
+                <td><span class="fw6">{{owner}}/{{repository}}</span></td>
               </tr>
               <tr v-if="has_basepath">
                 <td>Base Path</td>
-                <td class="f6 moon-gray" v-if="base_path.length == 0"><em>(root folder)</em></td>
-                <td class="f6 fw6" v-else>{{base_path}}</td>
+                <td class="moon-gray" v-if="base_path.length == 0"><em>(root folder)</em></td>
+                <td class="fw6" v-else>{{base_path}}</td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
       <div class="flex-none">
+        <el-button
+          class="ttu fw6"
+          style="min-width: 5rem"
+          size="small"
+          @click="onReconnectClick"
+          v-require-rights:connection.update
+        >
+          Reconnect
+        </el-button>
         <el-button
           class="ttu fw6"
           style="min-width: 5rem"
@@ -163,6 +172,9 @@
       cinfo() {
         return _.find(connections, { connection_type: this.ctype })
       },
+      onReconnectClick() {
+        this.$emit('reconnect-click', this.connection)
+      },
       onEditClick() {
         this.$emit('edit-click', this.connection)
       },
@@ -172,8 +184,8 @@
 
 <style lang="stylus" scoped>
   td
-    padding: 0 0.5rem 0.25rem 0
-    font-size: .875rem
+    padding: 0 8px 2px 0
+    font-size: .75rem
     line-height: 1.5
   td:first-child::after
     content: ":"
