@@ -169,6 +169,10 @@
         type: Boolean,
         default: true
       },
+      defaultValues: {
+        type: Object,
+        default: () => {}
+      },
       showFooter: {
         type: Boolean,
         default: true
@@ -234,7 +238,7 @@
     methods: {
       initSelf() {
         // reset our local component data
-        var edit_values = this.form_values
+        var edit_values = _.assign({}, this.form_values, this.defaultValues)
         var rules = _.cloneDeep(this.form_rules)
         _.assign(this.$data, getDefaultState(), { edit_values, rules })
 
