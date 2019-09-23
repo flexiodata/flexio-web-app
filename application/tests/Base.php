@@ -42,7 +42,6 @@ class Base
     public const TEST_SERVICE_LINKEDIN = true;
     public const TEST_SERVICE_MAILJET = true;
     public const TEST_SERVICE_MYSQL = true;
-    public const TEST_SERVICE_PIPELINEDEALS = true;
     public const TEST_SERVICE_POSTGRES = true;
     public const TEST_SERVICE_SFTP = true;
     public const TEST_SERVICE_SOCRATA = true;

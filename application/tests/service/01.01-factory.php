@@ -98,18 +98,13 @@ class Test
         \Flexio\Tests\Check::assertString('A.19', 'Type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Services\Factory::TYPE_PIPELINEDEALS;
-        $expected = 'pipelinedeals';
-        \Flexio\Tests\Check::assertString('A.20', 'Type constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
         $actual = \Flexio\Services\Factory::TYPE_MAILJET;
         $expected = 'mailjet';
-        \Flexio\Tests\Check::assertString('A.21', 'Type constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.20', 'Type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Services\Factory::TYPE_KEYRING;
         $expected = 'keyring';
-        \Flexio\Tests\Check::assertString('A.22', 'Type constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.21', 'Type constant',  $actual, $expected, $results);
     }
 }

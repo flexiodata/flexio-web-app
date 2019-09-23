@@ -37,7 +37,6 @@ class Factory
     public const TYPE_SMTP                = 'smtp';
     public const TYPE_HTTP                = 'http';
     public const TYPE_SOCRATA             = 'socrata';
-    public const TYPE_PIPELINEDEALS       = 'pipelinedeals';
     public const TYPE_MAILJET             = 'mailjet';
     public const TYPE_LINKEDIN            = 'linkedin';
     public const TYPE_KEYRING             = 'keyring'; // general purpose set of key values; here as a place holder constant to match UI
@@ -122,9 +121,6 @@ class Factory
 
             case self::TYPE_SOCRATA:
                 return \Flexio\Services\Socrata::create($connection_info);
-
-            case self::TYPE_PIPELINEDEALS:
-                return \Flexio\Services\PipelineDeals::create($connection_info);
 
             case self::TYPE_MAILJET:
                 return \Flexio\Services\MailJet::create($connection_info);
