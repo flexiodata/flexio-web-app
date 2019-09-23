@@ -589,7 +589,10 @@ class Box implements \Flexio\IFace\IConnection,
         // will return an object with a serialized access token
 
 
-        // STEP 1: if we have an access token and it's not expired, create an object
+        // STEP 1: set the non-oauth params
+        $this->base_path = $params['base_path'] ?? '';
+
+        // STEP 2: if we have an access token and it's not expired, create an object
         // from the access token and return it
         if (isset($params['access_token']) && strlen($params['access_token']) > 0)
         {
@@ -601,8 +604,6 @@ class Box implements \Flexio\IFace\IConnection,
                 $this->access_token = $params['access_token'];
                 $this->refresh_token = $params['refresh_token'] ?? '';
                 $this->expires = $expires;
-
-                $this->base_path = $params['base_path'] ?? '';
 
                 return true;
             }
@@ -640,12 +641,9 @@ class Box implements \Flexio\IFace\IConnection,
                 if ($this->refresh_token === null || strlen($this->refresh_token) == 0)
                     $this->refresh_token = $refresh_token;
 
-                $this->base_path = $params['base_path'] ?? '';
-
                 return false;
             }
         }
-
 
         $oauth = self::createService($oauth_callback);
         if (!$oauth)
@@ -666,8 +664,6 @@ class Box implements \Flexio\IFace\IConnection,
             {
                 $this->refresh_token = '';
             }
-
-            $this->base_path = $params['base_path'] ?? '';
 
             return true;
         }

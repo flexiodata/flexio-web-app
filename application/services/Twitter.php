@@ -24,7 +24,6 @@ class Twitter implements \Flexio\IFace\IConnection,
     private $access_token = '';
     private $refresh_token = '';
     private $expires = 0;
-    private $base_path = '';
 
     public static function create(array $params = null) : \Flexio\Services\Twitter
     {
@@ -62,7 +61,6 @@ class Twitter implements \Flexio\IFace\IConnection,
     public function get() : array
     {
         $properties = array(
-            'base_path'     => $this->base_path,
             'access_token'  => $this->access_token,
             'refresh_token' => $this->refresh_token,
             'expires'       => $this->expires
@@ -127,9 +125,9 @@ class Twitter implements \Flexio\IFace\IConnection,
         // authentication url; when initialization is complete the following
         // will return an object with a serialized access token
 
+
         // STEP 1: if we have an access token and it's not expired, create an object
         // from the access token and return it
-
         if (isset($params['access_token']) && strlen($params['access_token']) > 0)
         {
             $curtime = time();
@@ -141,8 +139,6 @@ class Twitter implements \Flexio\IFace\IConnection,
                 $this->access_token = $params['access_token'];
                 $this->refresh_token = $params['refresh_token'] ?? '';
                 $this->expires = $expires;
-
-                $this->base_path = $params['base_path'] ?? '';
 
                 return true;
             }
@@ -180,18 +176,15 @@ class Twitter implements \Flexio\IFace\IConnection,
                 if ($this->refresh_token === null || strlen($this->refresh_token) == 0)
                     $this->refresh_token = $refresh_token;
 
-                $this->base_path = $params['base_path'] ?? '';
-
                 return true;
             }
         }
-
 
         $oauth = self::createService($oauth_callback);
         if (!$oauth)
             return false;
 
-        // STEP 3: if we have a code parameter, we have enough information
+        // STEP 2: if we have a code parameter, we have enough information
         // to authenticate and get the token; do so and return the object
         if (isset($params['code']))
         {
@@ -207,13 +200,10 @@ class Twitter implements \Flexio\IFace\IConnection,
                 $this->refresh_token = '';
             }
 
-            $this->base_path = $params['base_path'] ?? '';
-
             return true;
         }
 
-
-        // STEP 4: we don't have a code parameter, so we need more
+        // STEP 3: we don't have a code parameter, so we need more
         // information to authenticate; make sure we have state info,
         // or we don't have enough information to complete the process
         if (!isset($params['state']))

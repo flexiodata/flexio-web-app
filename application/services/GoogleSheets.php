@@ -769,12 +769,11 @@ class GoogleSheets implements \Flexio\IFace\IConnection,
             }
         }
 
-
         $oauth = self::createService($oauth_callback);
         if (!$oauth)
             return false;
 
-        // STEP 3: if we have a code parameter, we have enough information
+        // STEP 2: if we have a code parameter, we have enough information
         // to authenticate and get the token; do so and return the object
         if (isset($params['code']))
         {
@@ -790,12 +789,11 @@ class GoogleSheets implements \Flexio\IFace\IConnection,
             {
                 $this->refresh_token = '';
             }
-            
+
             return true;
         }
 
-
-        // STEP 4: we don't have a code parameter, so we need more
+        // STEP 3: we don't have a code parameter, so we need more
         // information to authenticate; make sure we have state info,
         // or we don't have enough information to complete the process
         if (!isset($params['state']))

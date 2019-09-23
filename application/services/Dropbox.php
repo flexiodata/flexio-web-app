@@ -508,17 +508,19 @@ class Dropbox implements \Flexio\IFace\IConnection,
         // authentication url; when initialization is complete the following
         // will return an object with a serialized access token
 
-        // STEP 1: if we have an access token, create an object
-        // from the access token and return it
 
+        // STEP 1: set the non-oauth params
+        $this->base_path = $params['base_path'] ?? '';
+
+        // STEP 2: if we have an access token, create an object
+        // from the access token and return it
         if (isset($params['access_token']))
         {
             $this->access_token = $params['access_token'];
-            $this->base_path = $params['base_path'] ?? '';
             return true;
         }
 
-        // STEP 2: instantiate the service
+        // STEP 3: instantiate the service
         $service_factory = new \OAuth\ServiceFactory();
         $storage = new \OAuth\Common\Storage\Memory();
 
@@ -545,7 +547,6 @@ class Dropbox implements \Flexio\IFace\IConnection,
         {
             $token = $oauth->requestAccessToken($params['code']);
             $this->access_token = $token->getAccessToken();
-            $this->base_path = $params['base_path'] ?? '';
             return true;
         }
 

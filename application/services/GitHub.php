@@ -653,17 +653,20 @@ class GitHub implements \Flexio\IFace\IConnection,
         // authentication url; when initialization is complete the following
         // will return an object with a serialized access token
 
-        // STEP 1: if we have an access token, create an object
+
+        // STEP 1: set the non-oauth params
+        $this->owner = $params['owner'] ?? '';
+        $this->repository = $params['repository'] ?? '';
+
+        // STEP 2: if we have an access token, create an object
         // from the access token and return it
         if (isset($params['access_token']))
         {
             $this->access_token = $params['access_token'];
-            $this->owner = $params['owner'] ?? '';
-            $this->repository = $params['repository'] ?? '';
             return true;
         }
 
-        // STEP 2: instantiate the service
+        // STEP 3: instantiate the service
         $service_factory = new \OAuth\ServiceFactory();
         $storage = new \OAuth\Common\Storage\Memory();
 
@@ -684,14 +687,12 @@ class GitHub implements \Flexio\IFace\IConnection,
         if (!isset($oauth))
             return false;
 
-        // STEP 3: if we have a code parameter, we have enough information
+        // STEP 4: if we have a code parameter, we have enough information
         // to authenticate and get the token; do so and return the object
         if (isset($params['code']))
         {
             $token = $oauth->requestAccessToken($params['code']);
             $this->access_token = $token->getAccessToken();
-            $this->owner = $params['owner'] ?? '';
-            $this->repository = $param['repository'] ?? '';
             return true;
         }
 
