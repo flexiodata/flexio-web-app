@@ -209,6 +209,7 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $service = $this->getService();
         $service->disconnect();
         $connection_info = $service->get();
+        $connection_info = json_encode($connection_info);
 
         // update the connection info
         $properties = array();
