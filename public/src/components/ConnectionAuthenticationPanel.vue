@@ -224,8 +224,11 @@
       is_github() {
         return this.ctype == ctypes.CONNECTION_TYPE_GITHUB
       },
+      cinfo() {
+        return _.find(cinfos, { connection_type: this.ctype })
+      },
       service_name() {
-        return _.result(this, 'cinfo.service_name', '')
+        return _.result(this.cinfo, 'service_name', '')
       },
       oauth_url() {
         var eid = _.get(this.connection, 'eid', '')
@@ -306,9 +309,6 @@
           this.edit_connection_info = _.assign({}, this.edit_connection_info, attrs)
         }
       },
-      cinfo() {
-        return _.find(cinfos, { connection_type: this.ctype })
-      },
       onValuesChange(values) {
         this.edit_connection_info = _.assign({}, this.edit_connection_info, values)
       },
@@ -346,7 +346,7 @@
           setTimeout(() => { this.test_state = 'none' }, 4000)
         })
       },
-      tryDisconnect(attrs) {
+      tryDisconnect() {
         var eid = _.get(this.connection, 'eid', '')
         var team_name = this.active_team_name
         var attrs = _.pick(this.edit_connection, ['name', 'description', 'connection_info'])
