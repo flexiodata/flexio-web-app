@@ -69,6 +69,7 @@
             class="w-100 center mw-doc pa4 bg-white br2 css-white-box"
             style="min-height: 20rem; margin-bottom: 15rem"
             :connection-eid="connection.eid"
+            @reconnect-click="onReconnectConnection"
             @edit-click="onEditConnection"
           />
         </div>
@@ -102,6 +103,7 @@
     >
       <ConnectionEditPanel
         :mode="edit_mode"
+        :active-step="edit_active_step"
         :connection="edit_mode == 'edit' ? connection : undefined"
         @close="cancelChanges"
         @cancel="cancelChanges"
@@ -162,6 +164,7 @@
         connection: {},
         last_selected: {},
         edit_mode: 'add',
+        edit_active_step: 'choose-source',
         scrollbar_container_id: _.uniqueId('content-'),
       }
     },
@@ -297,10 +300,17 @@
       },
       onNewConnection() {
         this.edit_mode = 'add'
+        this.edit_active_step = 'choose-source'
+        this.show_connection_dialog = true
+      },
+      onReconnectConnection() {
+        this.edit_mode = 'edit'
+        this.edit_active_step = 'authentication'
         this.show_connection_dialog = true
       },
       onEditConnection() {
         this.edit_mode = 'edit'
+        this.edit_active_step = 'properties'
         this.show_connection_dialog = true
       },
       cancelChanges(item) {

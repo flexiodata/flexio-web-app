@@ -34,7 +34,7 @@
     <!-- step 2: connect & authenticate -->
     <div
       class="flex flex-column br2 ba b--black-10 pa4"
-      v-if="active_step == 'authenticate'"
+      v-if="active_step == 'authentication'"
     >
       <div
         class="form-logo"
@@ -55,7 +55,7 @@
     <!-- step 3: edit properties -->
     <div
       class="flex flex-column br2 ba b--black-10 pa4"
-      v-if="active_step == 'edit-properties'"
+      v-if="active_step == 'properties'"
     >
       <div
         class="form-logo"
@@ -166,6 +166,10 @@
       mode: {
         type: String,
         default: 'add' // 'add' or 'edit'
+      },
+      activeStep: {
+        type: String,
+        default: 'choose-source'
       }
     },
     components: {
@@ -206,16 +210,16 @@
       active_step_idx() {
         switch (this.active_step) {
           case 'choose-source': return 0
-          case 'authenticate': return 1
-          case 'edit-properties': return 2
+          case 'authentication': return 1
+          case 'properties': return 2
         }
 
         return 0
       },
       submit_label() {
         return this.mode == 'edit' ? 'Save changes'
-          : this.active_step == 'authenticate' ? 'Continue'
-          : this.active_step == 'edit-properties' ? 'Create connection'
+          : this.active_step == 'authentication' ? 'Continue'
+          : this.active_step == 'properties' ? 'Create connection'
           : 'Submit'
       },
       button_bar_attrs() {
@@ -231,6 +235,7 @@
 
         // reset local objects
         this.edit_connection = _.assign({}, this.edit_connection, _.cloneDeep(this.connection))
+        this.active_step = this.mode == 'edit' ? this.activeStep : 'choose-source'
       },
       cinfo() {
         var ctype = _.get(this.edit_connection, 'connection_type', '')
@@ -258,23 +263,19 @@
           var connection = _.cloneDeep(response.data)
           connection.name = `${service_slug}-` + getNameSuffix(4)
           this.edit_connection = connection
-          this.active_step = 'authenticate'
+          this.active_step = 'authentication'
         })
       },
-      doSubmit() {
-        if (_.get(this.edit_connection, 'eid_status') == OBJECT_STATUS_PENDING) {
-          var team_name = this.active_team_name
-          var eid = this.edit_connection.eid
-          var attrs = _.pick(this.edit_connection, ['name', 'connection_info'])
-          attrs.eid_status = OBJECT_STATUS_AVAILABLE
+      doSubmit(keys) {
+        var team_name = this.active_team_name
+        var eid = this.edit_connection.eid
+        var attrs = _.pick(this.edit_connection, keys)
+        attrs.eid_status = OBJECT_STATUS_AVAILABLE
 
-          this.$store.dispatch('connections/update', { team_name, eid, attrs }).then(response => {
-            this.edit_connection = _.assign({}, this.edit_connection, _.cloneDeep(response.data))
-            this.$emit('submit', this.edit_connection)
-          })
-        } else {
+        this.$store.dispatch('connections/update', { team_name, eid, attrs }).then(response => {
+          this.edit_connection = _.assign({}, this.edit_connection, _.cloneDeep(response.data))
           this.$emit('submit', this.edit_connection)
-        }
+        })
       },
       onClose() {
         this.initSelf()
@@ -286,16 +287,16 @@
       },
       onSubmit() {
         switch (this.active_step) {
-          case 'authenticate':
+          case 'authentication':
             if (this.mode == 'edit') {
-              this.doSubmit()
+              this.doSubmit(['connection_info'])
             } else {
-              this.active_step = 'edit-properties'
+              this.active_step = 'properties'
             }
             return
 
-          case 'edit-properties':
-            this.doSubmit()
+          case 'properties':
+            this.doSubmit(['name'])
             return
         }
       },
