@@ -425,11 +425,11 @@ class Vfs implements \Flexio\IFace\IFileSystem
         if ($connection->allows($owner_user_eid, \Flexio\Api\Action::TYPE_CONNECTION_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        $connection_info = $connection->get();
-        if (!self::isStorageConnectionType($connection_info['connection_type'] ?? ''))
+        // get the service and make sure it has the file system interface
+        $service = $connection->getService();
+        if (!($service instanceof \Flexio\IFace\IFileSystem))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
-        $service = $connection->getService();
         $this->service_map[$connection_identifier] = $service;
         return $service;
     }
@@ -466,28 +466,6 @@ class Vfs implements \Flexio\IFace\IFileSystem
          else
         {
             return [ substr($path, $off, $pos-$off), substr($path, $pos) ];
-        }
-    }
-
-    private function isStorageConnectionType(string $type) : bool
-    {
-        switch ($type)
-        {
-            default:
-                return false;
-            case 'ftp':
-            case 'sftp':
-            case 'mysql':
-            case 'postgres':
-            case 'dropbox':
-            case 'box':
-            case 'github':
-            case 'googledrive':
-            case 'googlesheets':
-            case 'googlecloudstorage':
-            case 'amazons3':
-            case 'elasticsearch':
-                return true;
         }
     }
 }
