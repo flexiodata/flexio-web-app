@@ -1,5 +1,8 @@
 <template>
-  <div v-show="visible">
+  <div
+    :class="item.class"
+    v-show="visible"
+  >
     <div
       class="tl pb3"
       v-show="title.length > 0"
@@ -14,12 +17,12 @@
     </div>
     <el-form
       ref="form"
-      :class="item.class"
       :model="edit_values"
       :label-position="label_position"
       :label-width="label_width"
       :rules="rules"
       @validate="onValidateItem"
+      v-bind="item.form_props"
     >
       <el-form-item
         :class="fi.class"
@@ -100,29 +103,25 @@
           v-else-if="fi.element == 'input' && isDatePickerType(fi.type)"
         />
         <el-input
-          type="textarea"
-          :placeholder="fi.placeholder"
-          v-model="edit_values[fi.name]"
-          v-else-if="fi.element == 'input' && fi.type == 'textarea'"
-        />
-        <el-input
           type="number"
           :placeholder="fi.placeholder"
           v-model.number="edit_values[fi.name]"
           v-else-if="fi.element == 'input' && fi.type == 'number'"
         />
         <el-input
-          type="hidden"
+          :type="getInputType(fi.type)"
           :placeholder="fi.placeholder"
           v-model="edit_values[fi.name]"
-          v-else-if="fi.element == 'input' && fi.type == 'hidden'"
+          v-else-if="fi.element == 'input'"
         />
-        <el-input
-          :placeholder="fi.placeholder"
-          v-model="edit_values[fi.name]"
-          v-else
-        />
+        <div
+          class="form-item-append"
+          v-html="getMarkdown(fi.append.value)"
+          v-bind="fi.append"
+          v-if="hasAppend(fi)"
+        ></div>
       </el-form-item>
+      <slot name="form-append"></slot>
     </el-form>
     <ButtonBar
       class="mt4"
@@ -130,6 +129,7 @@
       @cancel-click="onCancelClick"
       @submit-click="onSubmitClick"
       v-bind="$attrs"
+      v-show="showFooter"
     />
   </div>
 </template>
@@ -168,6 +168,14 @@
       visible: {
         type: Boolean,
         default: true
+      },
+      defaultValues: {
+        type: Object,
+        default: () => {}
+      },
+      showFooter: {
+        type: Boolean,
+        default: true
       }
     },
     components: {
@@ -199,7 +207,8 @@
         return _.get(this.item, 'title', '')
       },
       description() {
-        return marked(_.get(this.item, 'description', ''))
+        var desc = _.get(this.item, 'description', '')
+        return _.isString(desc) && desc.length > 0 ? marked(desc) : ''
       },
       label_position() {
         return _.get(this.item, 'label_position', 'top')
@@ -211,7 +220,7 @@
         return _.get(this.item, 'form_items', [])
       },
       form_rules() {
-        return _.cloneDeep(this.item.rules || {})
+        return _.get(this.item, 'rules', {})
       },
       form_values() {
         var obj = {}
@@ -229,8 +238,8 @@
     methods: {
       initSelf() {
         // reset our local component data
-        var edit_values = this.form_values
-        var rules = this.form_rules
+        var edit_values = _.assign({}, this.form_values, this.defaultValues)
+        var rules = _.cloneDeep(this.form_rules)
         _.assign(this.$data, getDefaultState(), { edit_values, rules })
 
         this.autoFocus()
@@ -255,8 +264,14 @@
       isDatePickerType(type) {
         return ['year','month','date','datetime','week','datetimerange','daterange'].indexOf(type) != -1
       },
+      hasAppend(fi) {
+        return _.get(fi, 'append.value', '').length > 0
+      },
       getMarkdown(val) {
         return marked(val)
+      },
+      getInputType(input_type) {
+        return _.defaultTo(input_type, 'text')
       },
       validateForm(clear) {
         this.$nextTick(() => {
@@ -295,3 +310,8 @@
     }
   }
 </script>
+
+<style lang="stylus" scoped>
+  .form-item-append
+    margin: 6px 0 12px
+</style>

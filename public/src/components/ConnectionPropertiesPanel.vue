@@ -9,28 +9,31 @@
     />
 
     <!-- body -->
-    <el-form
-      ref="form"
-      class="el-form--cozy el-form__label-tiny"
-      label-position="top"
-      :model="edit_pipe"
-      :rules="rules"
-      @validate="onValidateItem"
-    >
-      <el-form-item
-        key="name"
-        prop="name"
-        label="Name"
+    <div>
+      <p>Enter the name of the connection. The connection name is how you will reference this connection in your functions (e.g. in the path of a lookup function).</p>
+      <el-form
+        ref="form"
+        class="el-form--cozy el-form__label-tiny"
+        label-position="top"
+        :model="$data"
+        :rules="rules"
+        @validate="onValidateItem"
       >
-        <el-input
-          placeholder="Enter name"
-          auto-complete="off"
-          spellcheck="false"
-          :autofocus="true"
-          v-model="edit_pipe.name"
-        />
-      </el-form-item>
-    </el-form>
+        <el-form-item
+          key="name"
+          prop="name"
+          label="Name"
+        >
+          <el-input
+            placeholder="Enter name"
+            auto-complete="off"
+            spellcheck="false"
+            :autofocus="true"
+            v-model="name"
+          />
+        </el-form-item>
+      </el-form>
+    </div>
 
     <!-- footer -->
     <ButtonBar
@@ -38,33 +41,22 @@
       :submit-button-disabled="has_errors"
       :submit-button-text="submit_label"
       @cancel-click="onCancel"
-      @submit-click="submit"
+      @submit-click="onSubmit"
       v-show="showFooter"
     />
   </div>
 </template>
 
 <script>
-  import randomstring from 'randomstring'
   import { mapState } from 'vuex'
-  import { OBJECT_TYPE_PIPE } from '@/constants/object-type'
-  import CodeEditor from '@/components/CodeEditor'
+  import { OBJECT_TYPE_CONNECTION } from '@/constants/object-type'
   import HeaderBar from '@/components/HeaderBar'
   import ButtonBar from '@/components/ButtonBar'
   import MixinValidation from '@/components/mixins/validation'
 
-  const getNameSuffix = (length) => {
-    return randomstring.generate({
-      length,
-      charset: 'alphabetic',
-      capitalization: 'lowercase'
-    })
-  }
-
   const getDefaultState = (component) => {
-    var suffix = getNameSuffix(4)
-
     return {
+      emitting_update: false,
       rules: {
         name: [
           { required: true, message: 'Please input a name', trigger: 'blur' },
@@ -74,9 +66,8 @@
       form_errors: {},
 
       // edit values
-      edit_pipe: {
-        name: `func-${suffix}`
-      },
+      edit_connection: {},
+      name: '',
     }
   }
 
@@ -94,7 +85,7 @@
         type: Boolean,
         default: true
       },
-      pipe: {
+      connection: {
         type: Object,
         required: true
       },
@@ -105,16 +96,22 @@
     },
     mixins: [MixinValidation],
     components: {
-      CodeEditor,
       HeaderBar,
       ButtonBar
     },
     watch: {
-      pipe: {
+      connection: {
         handler: 'initSelf',
         immediate: true,
         deep: true
-      }
+      },
+      edit_connection: {
+        handler: 'emitUpdate',
+        deep: true
+      },
+      name: {
+        handler: 'updateName',
+      },
     },
     data() {
       return getDefaultState(this)
@@ -123,18 +120,16 @@
       ...mapState({
         active_team_name: state => state.teams.active_team_name
       }),
-      pname() {
-        return _.get(this.pipe, 'name', '')
-      },
       our_title() {
         if (this.title.length > 0) {
           return this.title
         }
 
-        return this.mode == 'edit' ? `Edit "${this.pname}" Function` : 'New Function'
+        var cname = _.get(this.connection, 'name', '')
+        return this.mode == 'edit' ? `Edit "${cname}" Connection` : 'New Connection'
       },
       submit_label() {
-        return this.mode == 'edit' ? 'Save changes' : 'Create function'
+        return this.mode == 'edit' ? 'Save changes' : 'Create connection'
       },
       has_errors() {
         return _.keys(this.form_errors).length > 0
@@ -142,16 +137,34 @@
     },
     methods: {
       initSelf() {
+        if (this.emitting_update === true ) {
+          return
+        }
+
         // reset our local component data
         _.assign(this.$data, getDefaultState(this))
 
         // reset local objects
-        this.edit_pipe = _.assign({}, this.edit_pipe, _.cloneDeep(this.pipe))
+        this.edit_connection = _.assign({}, this.edit_connection, _.cloneDeep(this.connection))
+
+        this.name = _.get(this.edit_connection, 'name', '')
 
         // reset the form
         if (this.$refs.form) {
           this.$refs.form.resetFields()
         }
+      },
+      emitUpdate() {
+        this.emitting_update = true
+        this.$emit('update:connection', this.edit_connection)
+        this.$nextTick(() => { this.emitting_update = false })
+      },
+      updateEditConnection(attrs) {
+        this.edit_connection = _.assign({}, this.edit_connection, attrs)
+      },
+      updateName() {
+        var name = this.name
+        this.updateEditConnection({ name })
       },
       onClose() {
         this.initSelf()
@@ -161,52 +174,17 @@
         this.initSelf()
         this.$emit('cancel')
       },
-      submit() {
-        this.mode == 'edit' ? this.submitEditPipe() : this.submitCreatePipe()
-      },
-      submitCreatePipe() {
-        var team_name = this.active_team_name
-        var attrs = this.edit_pipe
-
-        this.$store.dispatch('pipes/create', { team_name, attrs }).then(response => {
-          this.$message({
-            message: 'The function was created successfully.',
-            type: 'success'
-          })
-
-          var analytics_payload = _.pick(response.data, ['eid', 'name', 'title', 'description', 'created'])
-          this.$store.track('Created Function', analytics_payload)
-
-          this.$emit('update-pipe', response.data)
-        })
-      },
-      submitEditPipe() {
-        var team_name = this.active_team_name
-        var eid = _.get(this.edit_pipe, 'eid', '')
-        var attrs = _.pick(this.edit_pipe, ['name'])
-
-        this.$store.dispatch('pipes/update', { team_name, eid, attrs }).then(response => {
-          this.$message({
-            message: 'The function was updated successfully.',
-            type: 'success'
-          })
-
-          this.$emit('update-pipe', response.data)
-        })
+      onSubmit() {
+        this.$emit('submit', this.edit_connection)
       },
       formValidateName(rule, value, callback) {
-        if (value.length == 0) {
-          callback()
-          return
-        }
-
         // we haven't changed the name; trying to validate it will tell us if it already exists
-        if (value == _.get(this.pipe, 'name', '')) {
+        if (value == _.get(this.connection, 'name', '')) {
           callback()
           return
         }
 
-        this.$_Validation_validateName(this.active_team_name, OBJECT_TYPE_PIPE, value, (response, errors) => {
+        this.$_Validation_validateName(this.active_team_name, OBJECT_TYPE_CONNECTION, value, (response, errors) => {
           var message = _.get(errors, 'name.message', '')
           if (message.length > 0) {
             callback(new Error(message))

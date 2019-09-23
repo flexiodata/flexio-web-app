@@ -9,41 +9,30 @@
     />
 
     <!-- step 1: choose source -->
-    <div
-      v-if="active_step == 'choose-source' && !has_mount"
-    >
-      <p>Function mounts can be created from pre-configured function packs or self-hosted using one of the services below. Visit our <a href="#" class="blue" target="_blank">online documentation</a> to learn how to <a href="#" class="blue" target="_blank">create and host your own function pack</a>.</p>
-      <el-tabs
-        v-model="active_tab_name"
-      >
-        <el-tab-pane name="function-packs">
-          <div slot="label"><div style="min-width: 5rem">Function Packs</div></div>
-          <IconList
-            items="mounts"
-            @item-click="onFunctionPackClick"
-          />
-        </el-tab-pane>
+    <div v-if="active_step == 'choose-source' && !has_mount">
+      <IconList
+        items="mounts"
+        @item-click="onIntegrationClick"
+        v-show="mountType == 'integration'"
+      />
 
-        <el-tab-pane name="self-hosted">
-          <div slot="label"><div style="min-width: 5rem">Self-Hosted</div></div>
-          <IconList
-            items="services"
-            :filter-by="filterByFunctionMount"
-            @item-click="onServiceClick"
-          />
-        </el-tab-pane>
-      </el-tabs>
+      <IconList
+        items="services"
+        :filter-by="filterByFunctionMount"
+        @item-click="onServiceClick"
+        v-show="mountType == 'mount'"
+      />
     </div>
 
     <!-- step 2: configure connection -->
     <ConnectionEditPanel
       :mode="mode"
-      :show-title="false"
-      :show-steps="false"
+      :active-step="'authentication'"
       :connection="edit_mount"
+      :show-header="false"
       :filter-by="filterByFunctionMount"
       @cancel="onCancel"
-      @update-connection="onUpdateConnection"
+      @submit="onUpdateConnection"
       v-if="active_step == 'configure-connection' && has_mount"
     />
 
@@ -80,7 +69,7 @@
 <script>
   import randomstring from 'randomstring'
   import { mapState } from 'vuex'
-  import { OBJECT_STATUS_PENDING } from '@/constants/object-status'
+  import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '@/constants/object-status'
   import api from '@/api'
   import { slugify } from '@/utils'
   import HeaderBar from '@/components/HeaderBar'
@@ -94,20 +83,6 @@
   const CONNECTION_MODE_FUNCTION = 'F'
 
   const defaultAttrs = () => {
-    var connection_info = {
-      method: '',
-      url: '',
-      auth: 'none',
-      username: '',
-      password: '',
-      token: '',
-      access_token: '',
-      refresh_token: '',
-      expires: '',
-      headers: {},
-      data: {}
-    }
-
     var suffix = getNameSuffix()
 
     return {
@@ -118,7 +93,7 @@
       description: '',
       connection_type: '',
       connection_mode: CONNECTION_MODE_RESOURCE,
-      connection_info
+      connection_info: {}
     }
   }
 
@@ -134,8 +109,7 @@
     return {
       edit_mount: {},
       manifest: {},
-      active_step: 'choose-source',
-      active_tab_name: 'function-packs',
+      active_step: 'choose-source'
     }
   }
 
@@ -160,6 +134,10 @@
       mode: {
         type: String,
         default: 'add' // 'add' or 'edit'
+      },
+      mountType: {
+        type: String,
+        default: 'integration' // 'integration' or 'mount'
       }
     },
     mixins: [MixinConnection],
@@ -199,7 +177,12 @@
           return this.title
         }
 
-        return this.mode == 'edit' ? `Edit "${this.cname}" Function Mount` : 'New Function Mount'
+        switch (this.mountType) {
+          case 'integration':
+            return this.mode == 'edit' ? `Edit "${this.cname}" Integration` : 'New Integration'
+          case 'mount':
+            return this.mode == 'edit' ? `Edit "${this.cname}" Function Mount` : 'New Function Mount'
+        }
       },
       submit_label() {
         return this.mode == 'edit' ? 'Save changes' : 'Create function mount'
@@ -216,18 +199,18 @@
       filterByFunctionMount(connection) {
         return this.$_Connection_isFunctionMount(connection)
       },
-      createFunctionPackConnection(item) {
+      createIntegrationConnection(item) {
         var team_name = this.active_team_name
         var attrs = _.get(item, 'connection', {})
         attrs.name = attrs.name + '-' + getNameSuffix(4)
+        attrs.eid_status = OBJECT_STATUS_PENDING
 
         return this.$store.dispatch('connections/create', { team_name, attrs }).then(response => {
           this.edit_mount = _.assign({}, this.edit_mount, response.data)
           this.fetchFunctionPackConfig()
         })
       },
-      createPendingConnection(item) {
-        var ctype = item.connection_type
+      createPendingFunctionMount(item) {
         var ctitle = item.title || item.service_name
         var service_slug = slugify(ctitle)
         var team_name = this.active_team_name
@@ -242,7 +225,7 @@
           eid_status: OBJECT_STATUS_PENDING,
           name: `${service_slug}-` + getNameSuffix(16),
           title: ctitle,
-          connection_type: ctype
+          connection_type: item.connection_type
         })
 
         return this.$store.dispatch('connections/create', { team_name, attrs }).then(response => {
@@ -261,7 +244,8 @@
       saveMountSetupConfig(setup_config) {
         var team_name = this.active_team_name
         var eid = this.edit_mount.eid
-        var attrs = { eid, setup_config }
+        var eid_status = OBJECT_STATUS_AVAILABLE
+        var attrs = { eid_status, setup_config }
 
         return this.$store.dispatch('connections/update', { team_name, eid, attrs }).then(response => {
           this.edit_mount = _.assign({}, this.edit_mount, _.cloneDeep(response.data))
@@ -275,11 +259,11 @@
         var update_attrs = _.assign({}, attrs, { connection_info })
         this.edit_mount = _.assign({}, this.edit_mount, update_attrs)
       },
-      onFunctionPackClick(item) {
-        this.createFunctionPackConnection(item)
+      onIntegrationClick(item) {
+        this.createIntegrationConnection(item)
       },
       onServiceClick(item) {
-        this.createPendingConnection(item).then(response => {
+        this.createPendingFunctionMount(item).then(response => {
           this.active_step = 'configure-connection'
         })
       },
@@ -296,7 +280,19 @@
         this.$emit('cancel')
       },
       onSubmit() {
-        this.$emit('submit', this.edit_mount)
+        if (_.get(this.edit_mount, 'eid_status') == OBJECT_STATUS_PENDING) {
+          var team_name = this.active_team_name
+          var eid = this.edit_mount.eid
+          var eid_status = OBJECT_STATUS_AVAILABLE
+          var attrs = { eid_status }
+
+          this.$store.dispatch('connections/update', { team_name, eid, attrs }).then(response => {
+            this.edit_mount = _.assign({}, this.edit_mount, _.cloneDeep(response.data))
+            this.$emit('submit', this.edit_mount)
+          })
+        } else {
+          this.$emit('submit', this.edit_mount)
+        }
       },
     }
   }

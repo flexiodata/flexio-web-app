@@ -19,9 +19,17 @@ namespace Flexio\Services;
 class Postgres implements \Flexio\IFace\IConnection,
                           \Flexio\IFace\IFileSystem
 {
+    // conneciton info
+    private $host;
+    private $port;
+    private $database;
+    private $username;
+    private $password;
+    private $path;
+
+    // state info
     private $authenticated = false;
     private $db = null;
-    private $host, $port, $database, $username, $password;
 
     public static function create(array $params = null) : \Flexio\Services\Postgres
     {
@@ -47,8 +55,8 @@ class Postgres implements \Flexio\IFace\IConnection,
         $password = $validated_params['password'];
 
         $service = new self;
-        if ($service->initialize($host, $port, $database, $username, $password) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+        $service->initialize($host, $port, $database, $username, $password);
+        $service->path = $validated_params['path'];
 
         return $service;
     }
@@ -73,6 +81,9 @@ class Postgres implements \Flexio\IFace\IConnection,
 
     public function disconnect() : void
     {
+        // reset secret credentials and authentication flag
+        $this->password = '';
+        $this->authenticated = false;
     }
 
     public function authenticated() : bool

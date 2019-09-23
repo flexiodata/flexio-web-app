@@ -20,8 +20,11 @@ class GitHub implements \Flexio\IFace\IConnection,
                         \Flexio\IFace\IOAuthConnection,
                         \Flexio\IFace\IFileSystem
 {
+    // connection info
     private $authorization_uri = '';
     private $access_token = '';
+    private $refresh_token = ''; // note: service doesn't use refresh tokens; here for consistency
+    private $expires = 0;        // note: service doesn't user refresh tokens; tokens are usable until revocation
     private $owner = '';
     private $repository = '';
 
@@ -43,6 +46,11 @@ class GitHub implements \Flexio\IFace\IConnection,
 
     public function disconnect() : void
     {
+        // reset oauth credential info
+        $this->authorization_uri = '';
+        $this->access_token = '';
+        $this->refresh_token = '';
+        $this->expires = 0;
     }
 
     public function authenticated() : bool
@@ -55,7 +63,13 @@ class GitHub implements \Flexio\IFace\IConnection,
 
     public function get() : array
     {
-        return $this->getTokens();
+        $properties = array(
+            'access_token'  => $this->access_token,
+            'refresh_token' => $this->refresh_token,
+            'expires'       => $this->expires
+        );
+
+        return $properties;
     }
 
     ////////////////////////////////////////////////////////////
@@ -69,9 +83,7 @@ class GitHub implements \Flexio\IFace\IConnection,
 
     public function getTokens() : array
     {
-        return [ 'access_token' => $this->access_token,
-                 'refresh_token' => '',
-                 'expires' => 0  ];
+        return $this->get();
     }
 
     ////////////////////////////////////////////////////////////

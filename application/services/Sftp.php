@@ -40,12 +40,15 @@ class SftpCapture
 class Sftp implements \Flexio\IFace\IConnection,
                       \Flexio\IFace\IFileSystem
 {
+    // connection info
     private $host;
     private $username;
     private $password;
-    private $connection = false;
     private $base_path = '';
+
+    // state info
     private $authenticated = false;
+    private $connection = false;
 
     public static function create(array $params = null) : \Flexio\Services\Sftp
     {
@@ -65,8 +68,7 @@ class Sftp implements \Flexio\IFace\IConnection,
         $base_path = $validated_params['base_path'] ?? '';
 
         $service = new self;
-        if ($service->initialize($host, $username, $password, $base_path) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+        $service->initialize($host, $username, $password, $base_path);
 
         return $service;
     }
@@ -80,8 +82,9 @@ class Sftp implements \Flexio\IFace\IConnection,
         $host = $this->host;
         $username = $this->username;
         $password = $this->password;
+        $base_path = $this->base_path;
 
-        if ($this->initialize($host, $username, $password) === false)
+        if ($this->initialize($host, $username, $password, $base_path) === false)
             return false;
 
         return true;
@@ -89,6 +92,9 @@ class Sftp implements \Flexio\IFace\IConnection,
 
     public function disconnect() : void
     {
+        // reset secret credentials and authentication flag
+        $this->password = '';
+        $this->authenticated = false;
     }
 
     public function authenticated() : bool

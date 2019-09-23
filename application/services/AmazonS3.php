@@ -19,13 +19,15 @@ namespace Flexio\Services;
 class AmazonS3 implements \Flexio\IFace\IConnection,
                           \Flexio\IFace\IFileSystem
 {
-    private $authenticated = false;
+    // connection info
+    private $region = '';
     private $bucket = '';
     private $accesskey = '';
     private $secretkey = '';
-    private $region = '';
     private $base_path = '';
 
+    // state info
+    private $authenticated = false;
     private $aws = null;
     private $s3 = null;
 
@@ -48,9 +50,7 @@ class AmazonS3 implements \Flexio\IFace\IConnection,
         $secretkey = $validated_params['aws_secret'];
 
         $service = new self;
-        if ($service->initialize($region, $bucket, $accesskey, $secretkey) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
-
+        $service->initialize($region, $bucket, $accesskey, $secretkey);
         $service->base_path = $validated_params['base_path'] ?? '';
 
         return $service;
@@ -75,6 +75,9 @@ class AmazonS3 implements \Flexio\IFace\IConnection,
 
     public function disconnect() : void
     {
+        // reset secret credentials and authentication flag
+        $this->secretkey = '';
+        $this->authenticated = false;
     }
 
     public function authenticated() : bool

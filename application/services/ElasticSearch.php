@@ -19,11 +19,14 @@ namespace Flexio\Services;
 class ElasticSearch implements \Flexio\IFace\IConnection,
                                \Flexio\IFace\IFileSystem
 {
-    private $authenticated = false;
+    // connection info
     private $host = '';
     private $port = '';
-    private $user = '';
+    private $username = '';
     private $password = '';
+
+    // state info
+    private $authenticated = false;
 
     public static function create(array $params = null) : \Flexio\Services\ElasticSearch
     {
@@ -47,8 +50,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         $password = $validated_params['password'];
 
         $service = new self;
-        if ($service->initialize($host, $port, $username, $password) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+        $service->initialize($host, $port, $username, $password);
 
         return $service;
     }
@@ -61,7 +63,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
     {
         $host = $this->host;
         $port = $this->port;
-        $user = $this->user;
+        $username = $this->username;
         $password = $this->password;
 
         if ($this->initialize($host, $port, $username, $password) === false)
@@ -72,6 +74,9 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
     public function disconnect() : void
     {
+        // reset secret credentials and authentication flag
+        $this->password = '';
+        $this->authenticated = false;
     }
 
     public function authenticated() : bool
@@ -84,7 +89,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         $properties = array(
             'host'     => $this->host,
             'port'     => $this->port,
-            'username' => $this->user,
+            'username' => $this->username,
             'password' => $this->password
         );
 

@@ -3,6 +3,7 @@ import lang from 'element-ui/lib/locale/lang/en'
 import locale from 'element-ui/lib/locale'
 import {
   Alert,
+  Autocomplete,
   Breadcrumb,
   BreadcrumbItem,
   Button,
@@ -31,6 +32,8 @@ import {
   RadioButton,
   RadioGroup,
   Select,
+  Step,
+  Steps,
   Switch,
   Table,
   TableColumn,
@@ -44,6 +47,7 @@ import {
 locale.use(lang)
 
 Vue.use(Alert)
+Vue.use(Autocomplete)
 Vue.use(Breadcrumb)
 Vue.use(BreadcrumbItem)
 Vue.use(Button)
@@ -70,6 +74,8 @@ Vue.use(Radio)
 Vue.use(RadioButton)
 Vue.use(RadioGroup)
 Vue.use(Select)
+Vue.use(Step)
+Vue.use(Steps)
 Vue.use(Switch)
 Vue.use(Table)
 Vue.use(TableColumn)

@@ -1,0 +1,69 @@
+element: form
+name: form_authentication
+title: ''
+description: ''
+class: w-50-ns center
+form_props:
+  class: el-form--compact el-form__label-tiny
+  size: small
+form_items:
+  - element: input
+    type: text
+    name: aws_key
+    label: AWS Access Key
+    placeholder: AWS Access Key
+    value: ''
+  - element: input
+    type: text
+    name: aws_secret
+    label: AWS Secret Key
+    placeholder: AWS Secret Key
+    value: ''
+  - element: input
+    type: text
+    name: bucket
+    label: Bucket
+    placeholder: Bucket
+    value: ''
+  - element: input
+    type: text
+    name: base_path
+    label: Base Path
+    placeholder: Base Path (optional)
+    value: ''
+  - element: select
+    name: region
+    label: Region
+    placeholder: Region
+    value: us-east-1
+    options:
+      - value: us-east-1
+        label: US East (N. Virginia)
+      - value: us-east-2
+        label: US East (Ohio)
+      - value: us-west-1
+        label: US West (N. California)
+      - value: us-west-2
+        label: US West (Oregon)
+      - value: ca-central-1
+        label: Canada (Central)
+      - value: ap-south-1
+        label: Asia Pacific (Mumbai)
+      - value: ap-northeast-2
+        label: Asia Pacific (Seoul)
+      - value: ap-southeast-1
+        label: Asia Pacific (Singapore)
+      - value: ap-southeast-2
+        label: Asia Pacific (Sydney)
+      - value: ap-northeast-1
+        label: Asia Pacific (Tokyo)
+      - value: cn-northwest-1
+        label: China (Ningxia)
+      - value: eu-central-1
+        label: EU (Frankfurt)
+      - value: eu-west-1
+        label: EU (Ireland)
+      - value: eu-west-2
+        label: EU (London)
+      - value: sa-east-1
+        label: South America (São Paulo)

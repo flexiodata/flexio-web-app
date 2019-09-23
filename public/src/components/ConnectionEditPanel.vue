@@ -1,145 +1,88 @@
 <template>
   <div>
-    <div class="w-100 mb4" v-if="showHeader">
-      <HeaderBar
-        :title="our_title"
-        @close-click="$emit('close')"
-        v-show="showTitle"
-      />
+    <!-- header -->
+    <HeaderBar
+      class="mb4"
+      :title="our_title"
+      @close-click="onClose"
+      v-show="showHeader"
+    />
+
+    <!-- steps -->
+    <el-steps
+      class="mb4"
+      align-center
+      finish-status="success"
+      :active="active_step_idx"
+      v-show="showSteps && mode == 'add'"
+    >
+      <el-step :title="service_name.length == 0 ? 'Choose Source' : 'Source: ' + service_name" />
+      <el-step title="Authentication" />
+      <el-step title="Properties" />
+    </el-steps>
+
+    <!-- step 1: choose source -->
+    <IconList
+      items="services"
+      :filter-by="filterBy"
+      @item-click="createPendingConnection"
+      v-if="active_step == 'choose-source'"
+    />
+
+    <div class="h1" v-if="showFormLogo && active_step != 'choose-source'"></div>
+
+    <!-- step 2: connect & authenticate -->
+    <div
+      class="flex flex-column br2 ba b--black-10 pa4"
+      v-if="active_step == 'authentication'"
+    >
       <div
-        class="flex flex-row"
-        :class="showTitle ? 'mt2 pt2 bt b--black-10' : ''"
-        v-if="has_connection"
+        class="form-logo"
+        v-if="showFormLogo"
       >
-        <ServiceIcon class="flex-none mt1 br2 square-4" :type="ctype" :url="url" :empty-cls="''" />
-        <div class="flex-fill flex flex-column" style="margin-left: 12px">
-          <div class="f4 fw6 lh-title">{{service_name}}</div>
-          <div class="f6 fw4 mt1">{{service_description}}</div>
-          <div class="flex flex-row items-center" v-if="false">
-            <el-tag
-              class="hint--top"
-              style="margin-top: 6px"
-              size="small"
-              aria-label="Storage connection"
-              v-if="is_storage"
-            >
-              <div class="flex flex-row items-center cursor-default">
-                <i class="db material-icons" style="font-size: 14px">layers</i>
-                <span class="f8" style="margin-left: 3px">Storage</span>
-              </div>
-            </el-tag>
-            <el-tag
-              class="hint--top"
-              style="margin-top: 6px"
-              size="small"
-              aria-label="Email connection"
-              v-if="is_email"
-            >
-              <div class="flex flex-row items-center cursor-default">
-                <i class="db material-icons" style="font-size: 14px">email</i>
-                <span class="f8" style="margin-left: 3px">Email</span>
-              </div>
-            </el-tag>
-          </div>
-        </div>
-        <div v-if="showSteps && mode != 'edit'">
-          <div
-            class="flex flex-row items-center f5 fw6 hover-blue pointer"
-            title="Back to Step 1"
-            @click="reset()"
-          >
-            <i class="material-icons">chevron_left</i>
-            <span>Step 2 of 2</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div>
-      <IconList
-        items="services"
-        :filter-by="filterBy"
-        @item-click="createPendingConnection"
-        v-show="!has_connection"
-      />
-      <div class="ph3 ph4-l" v-if="has_connection">
-        <div class="mb2 lh-copy ttu fw6 f6">Connection Properties</div>
-        <el-form
-          ref="form"
-          class="el-form--compact el-form__label-tiny relative"
-          label-position="top"
-          :model="edit_connection"
-          :rules="rules"
-          @validate="onValidateItem"
-        >
-          <el-form-item
-            key="name"
-            prop="name"
-          >
-            <template slot="label">
-              <span>Name</span>
-              <span class="lh-1 hint--top hint--large" aria-label="A unique identifier that can be used to reference this connection in a function">
-                <i class="el-icon-info blue"></i>
-              </span>
-            </template>
-            <el-input
-              placeholder="Enter name"
-              auto-complete="off"
-              spellcheck="false"
-              :autofocus="true"
-              v-model="edit_connection.name"
-            />
-          </el-form-item>
-
-          <el-form-item
-            key="description"
-            prop="description"
-            label="Description"
-          >
-            <el-input
-              type="textarea"
-              placeholder="Description"
-              :rows="2"
-              v-model="edit_connection.description"
-            />
-          </el-form-item>
-        </el-form>
-
-        <ConnectionInfoPanel
-          ref="connection-info-panel"
-          :connection-info.sync="connection_info"
-          :form-errors.sync="connection_info_form_errors"
-          v-if="is_http"
+        <ServiceIcon
+          class="form-logo-icon"
+          :type="edit_connection.connection_type"
         />
-
-        <div class="mt4" v-else-if="is_keyring">
-          <div class="mb2 lh-copy ttu fw6 f6">Keypair Values</div>
-          <KeypairList
-            class="pa4 ba b--black-10 br2"
-            :header="{ key: 'Key', val: 'Value' }"
-            v-model="connection_info"
-          />
-        </div>
-
-        <div class="mt4" v-else>
-          <div class="mb2 lh-copy ttu fw6 f6">Authentication</div>
-          <ConnectionAuthenticationPanel
-            ref="connection-authentication-panel"
-            class="pa4 ba b--black-10 br2"
-            :connection="edit_connection"
-            :mode="mode"
-            @change="updateConnection"
-          />
-        </div>
       </div>
+      <div class="mt3" v-if="showSteps && mode == 'add'"></div>
+      <div class="tc ttu fw6 f4 form-title" v-else>Authentication</div>
+      <ConnectionAuthenticationPanel
+        :connection.sync="edit_connection"
+      />
     </div>
+
+    <!-- step 3: edit properties -->
+    <div
+      class="flex flex-column br2 ba b--black-10 pa4"
+      v-if="active_step == 'properties'"
+    >
+      <div
+        class="form-logo"
+        v-if="showFormLogo"
+      >
+        <ServiceIcon
+          class="form-logo-icon"
+          :type="edit_connection.connection_type"
+        />
+      </div>
+      <div class="mt3" v-if="showSteps && mode == 'add'"></div>
+      <div class="tc ttu fw6 f4 form-title" v-else>Properties</div>
+      <ConnectionPropertiesPanel
+        :connection.sync="edit_connection"
+        :show-header="false"
+        :show-footer="false"
+        :mode="mode"
+      />
+    </div>
+
+    <!-- footer -->
     <ButtonBar
       class="mt4"
-      :submit-button-disabled="has_errors"
-      :submit-button-text="submit_label"
-      @cancel-click="$emit('cancel')"
-      @submit-click="submit"
-      v-show="showFooter && has_connection"
+      @cancel-click="onCancel"
+      @submit-click="onSubmit"
+      v-bind="button_bar_attrs"
+      v-show="showFooter && active_step != 'choose-source'"
     />
   </div>
 </template>
@@ -147,22 +90,15 @@
 <script>
   import randomstring from 'randomstring'
   import { mapState } from 'vuex'
-  import { OBJECT_TYPE_CONNECTION } from '@/constants/object-type'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '@/constants/object-status'
-  import { CONNECTION_TYPE_KEYRING } from '@/constants/connection-type'
-  import { CONNECTION_STATUS_AVAILABLE } from '@/constants/connection-status'
-  import * as ctypes from '@/constants/connection-type'
-  import * as connections from '@/constants/connection-info'
+  import * as cinfos from '@/constants/connection-info'
   import { slugify } from '@/utils'
-  import IconList from '@/components/IconList'
-  import ServiceIcon from '@/components/ServiceIcon'
-  import KeypairList from '@/components/KeypairList'
   import HeaderBar from '@/components/HeaderBar'
   import ButtonBar from '@/components/ButtonBar'
+  import IconList from '@/components/IconList'
+  import ServiceIcon from '@/components/ServiceIcon'
   import ConnectionAuthenticationPanel from '@/components/ConnectionAuthenticationPanel'
-  import ConnectionInfoPanel from '@/components/ConnectionInfoPanel'
-  import MixinConnection from '@/components/mixins/connection'
-  import MixinValidation from '@/components/mixins/validation'
+  import ConnectionPropertiesPanel from '@/components/ConnectionPropertiesPanel'
 
   const CONNECTION_MODE_RESOURCE = 'R'
   const CONNECTION_MODE_FUNCTION = 'F'
@@ -175,22 +111,8 @@
     })
   }
 
-  const defaultAttrs = (ctype) => {
-    var connection_info = ctype === ctypes.CONNECTION_TYPE_KEYRING ? {} : {
-      method: '',
-      url: '',
-      auth: 'none',
-      username: '',
-      password: '',
-      token: '',
-      access_token: '',
-      refresh_token: '',
-      expires: '',
-      headers: {},
-      data: {}
-    }
-
-    var suffix = getNameSuffix()
+  const getDefaultAttrs = () => {
+    var suffix = getNameSuffix(16)
 
     return {
       eid: null,
@@ -200,11 +122,19 @@
       description: '',
       connection_type: '',
       connection_mode: CONNECTION_MODE_RESOURCE,
-      connection_info
+      connection_info: {}
+    }
+  }
+
+  const getDefaultState = () => {
+    return {
+      edit_connection: getDefaultAttrs(),
+      active_step: 'choose-source'
     }
   }
 
   export default {
+    inheritAttrs: false,
     props: {
       title: {
         type: String,
@@ -218,11 +148,11 @@
         type: Boolean,
         default: true
       },
-      showTitle: {
-        type: Boolean,
-        default: true
-      },
       showSteps: {
+        type: Boolean,
+        default: false
+      },
+      showFormLogo: {
         type: Boolean,
         default: true
       },
@@ -237,193 +167,79 @@
         type: String,
         default: 'add' // 'add' or 'edit'
       },
+      activeStep: {
+        type: String,
+        default: 'choose-source'
+      }
     },
-    mixins: [MixinConnection, MixinValidation],
     components: {
-      IconList,
-      ServiceIcon,
-      KeypairList,
       HeaderBar,
       ButtonBar,
+      IconList,
+      ServiceIcon,
       ConnectionAuthenticationPanel,
-      ConnectionInfoPanel
+      ConnectionPropertiesPanel,
     },
     watch: {
       connection: {
-        handler: 'initConnection',
+        handler: 'initSelf',
         immediate: true,
         deep: true
-      },
-      eid() {
-        this.$nextTick(() => {
-          if (this.$refs.form) {
-            this.$refs.form.validateField('name')
-          }
-        })
       }
     },
     data() {
-      var ctype = _.get(this.connection, 'connection_type')
-
-      return {
-        orig_connection: _.assign({}, defaultAttrs(ctype), this.connection),
-        edit_connection: _.assign({}, defaultAttrs(ctype), this.connection),
-        rules: {
-          name: [
-            { required: true, message: 'Please input a name', trigger: 'blur' },
-            { validator: this.formValidateName }
-          ]
-        },
-        form_errors: {},
-        connection_info_form_errors: {}
-      }
+      return getDefaultState()
     },
     computed: {
       ...mapState({
         active_team_name: state => state.teams.active_team_name
       }),
-      eid() {
-        return _.get(this.edit_connection, 'eid', '')
-      },
-      ctype() {
-        return _.get(this.edit_connection, 'connection_type', '')
-      },
-      cstatus() {
-        return _.get(this.edit_connection, 'connection_status', '')
-      },
       cname() {
-        return _.get(this.orig_connection, 'name', '')
-      },
-      url() {
-        return _.get(this.orig_connection, 'connection_info.url', '')
-      },
-      is_connected() {
-        return this.cstatus == CONNECTION_STATUS_AVAILABLE
-      },
-      is_http() {
-        return this.ctype == ctypes.CONNECTION_TYPE_HTTP
-      },
-      is_keyring() {
-        return this.ctype == ctypes.CONNECTION_TYPE_KEYRING
-      },
-      is_github() {
-        return this.ctype == ctypes.CONNECTION_TYPE_GITHUB
-      },
-      is_oauth() {
-        return this.$_Connection_isOauth(this.ctype)
-      },
-      is_storage() {
-        return this.$_Connection_isStorage(this.ctype)
-      },
-      is_email() {
-        return this.$_Connection_isEmail(this.ctype)
+        return _.get(this.connection, 'name', '')
       },
       service_name() {
         return _.result(this, 'cinfo.service_name', '')
-      },
-      service_description() {
-        return _.result(this, 'cinfo.service_description', '')
-      },
-      has_connection() {
-        return this.ctype.length > 0
-      },
-      is_function_mount() {
-        return _.get(this.edit_connection, 'connection_mode', '') == CONNECTION_MODE_FUNCTION
       },
       our_title() {
         if (this.title.length > 0) {
           return this.title
         }
 
-        if (this.is_function_mount) {
-          return this.mode == 'edit' ? `Edit "${this.cname}" Function Mount` : 'New Function Mount'
-        } else {
-          return this.mode == 'edit' ? `Edit "${this.cname}" Connection` : 'New Connection'
+        return this.mode == 'edit' ? `Edit "${this.cname}" Connection` : 'New Connection'
+      },
+      active_step_idx() {
+        switch (this.active_step) {
+          case 'choose-source': return 0
+          case 'authentication': return 1
+          case 'properties': return 2
         }
+
+        return 0
       },
       submit_label() {
-        return this.mode == 'edit' ? 'Save changes' : this.is_function_mount ? 'Create function mount' : 'Create connection'
+        return this.mode == 'edit' ? 'Save changes'
+          : this.active_step == 'authentication' ? 'Continue'
+          : this.active_step == 'properties' ? 'Create connection'
+          : 'Submit'
       },
-      has_http_errors() {
-        return _.keys(this.connection_info_form_errors).length > 0
-      },
-      has_errors() {
-        if (this.is_http && this.has_http_errors) {
-          return true
-        }
-
-        // don't ever disable the submit button for GitHub connections
-        // since we now allow the user to connect to public repos
-        if (this.is_github) {
-          var owner = _.get(this.connection_info, 'owner', '')
-          var repository = _.get(this.connection_info, 'repository', '')
-
-          return owner.length == 0 || repository.length == 0
-        }
-
-        if (this.mode == 'add' && this.is_oauth && !this.is_connected) {
-          return true
-        }
-
-        return _.keys(this.form_errors).length > 0
-      },
-      connection_info: {
-        get() {
-          return _.get(this.edit_connection, 'connection_info', {})
-        },
-        set(value) {
-          this.edit_connection = _.assign({}, this.edit_connection, { connection_info: value })
-        }
+      button_bar_attrs() {
+        return _.assign({
+          submitButtonText: this.submit_label
+        }, this.$attrs)
       }
     },
-    mounted() {
-      this.$nextTick(() => {
-        if (this.$refs.form) {
-          this.$refs.form.validateField('name')
-        }
-      })
-    },
     methods: {
+      initSelf() {
+        // reset our local component data
+        _.assign(this.$data, getDefaultState())
+
+        // reset local objects
+        this.edit_connection = _.assign({}, this.edit_connection, _.cloneDeep(this.connection))
+        this.active_step = this.activeStep
+      },
       cinfo() {
-        return _.find(connections, { connection_type: this.ctype })
-      },
-      submit() {
-        this.$refs.form.validate(valid => {
-          if (!valid) {
-            return
-          }
-
-          var auth_panel = this.$refs['connection-authentication-panel']
-          var info_panel = this.$refs['connection-info-panel']
-
-          if (auth_panel) {
-            auth_panel.validate(valid2 => {
-              if (!valid2) {
-                return
-              }
-
-              // there are no errors in the form; do the submit
-              this.tryUpdateConnection()
-            })
-          } else if (info_panel) {
-            info_panel.validate(valid3 => {
-              if (!valid3) {
-                return
-              }
-
-              // there are no errors in the form; do the submit
-              this.tryUpdateConnection()
-            })
-          } else {
-            // there are no errors in the form; do the submit
-            this.tryUpdateConnection()
-          }
-        })
-      },
-      reset(attrs) {
-        var ctype = _.get(attrs, 'connection_type')
-        this.orig_connection = _.assign({}, defaultAttrs(ctype), attrs)
-        this.edit_connection = _.assign({}, defaultAttrs(ctype), attrs)
+        var ctype = _.get(this.edit_connection, 'connection_type', '')
+        return _.find(cinfos, { connection_type: ctype })
       },
       createPendingConnection(item) {
         var ctype = item.connection_type
@@ -436,7 +252,7 @@
         // for creating 'function mount' connections
         var prop_connection_attrs = _.cloneDeep(this.connection)
 
-        var attrs = _.assign({}, defaultAttrs(ctype), prop_connection_attrs, {
+        var attrs = _.assign({}, getDefaultAttrs(), prop_connection_attrs, {
           eid_status: OBJECT_STATUS_PENDING,
           name: `${service_slug}-` + getNameSuffix(16),
           title: item.service_name,
@@ -445,99 +261,62 @@
 
         this.$store.dispatch('connections/create', { team_name, attrs }).then(response => {
           var connection = _.cloneDeep(response.data)
-          connection.name = `${service_slug}-` + getNameSuffix(4),
-          this.updateConnection(connection)
+          connection.name = `${service_slug}-` + getNameSuffix(4)
+          this.edit_connection = connection
+          this.active_step = 'authentication'
         })
       },
-      tryUpdateConnection(attrs) {
-        var attrs = this.edit_connection
-        var eid = attrs.eid
-        var ctype = _.get(attrs, 'connection_type', '')
-        var is_pending = _.get(attrs, 'eid_status') == OBJECT_STATUS_PENDING
-        var orig_name = _.get(this.orig_connection, 'name')
+      doSubmit() {
         var team_name = this.active_team_name
+        var eid = this.edit_connection.eid
+        var attrs = _.pick(this.edit_connection, ['name', 'connection_info'])
+        attrs.eid_status = OBJECT_STATUS_AVAILABLE
 
-        attrs = _.pick(attrs, ['name', 'title', 'description', 'connection_info'])
-        _.assign(attrs, { eid_status: OBJECT_STATUS_AVAILABLE })
-
-        // TODO: backend should probably handle this for us
-        // keyring connections don't need to connect, so they are always available
-        if (ctype == CONNECTION_TYPE_KEYRING) {
-          _.assign(attrs, { connection_status: OBJECT_STATUS_AVAILABLE })
-        }
-
-        // update the connection and make it available
-        this.$store.dispatch('connections/update', { team_name, eid, attrs }).then(response => {
-          this.$message({
-            message: is_pending ? 'The connection was created successfully.' : 'The connection was updated successfully.',
-            type: 'success'
-          })
-
-          if (ctype != CONNECTION_TYPE_KEYRING) {
-            // try to connect to the connection
-            this.$store.dispatch('connections/test', { team_name, eid, attrs })
-          }
-
-          if (is_pending) {
-            var analytics_payload = _.pick(response.data, ['eid', 'name', 'title', 'description', 'connection_type'])
-            this.$store.track('Created Connection', analytics_payload)
-          }
-
-          this.$emit('update-connection', response.data)
-        }).catch(error => {
-          this.$message({
-            message: is_pending ? 'There was a problem creating the connection.' : 'There was a problem updating the connection.',
-            type: 'error'
-          })
-
-          this.$store.track('Created Connection (Error)')
+        return this.$store.dispatch('connections/update', { team_name, eid, attrs }).then(response => {
+          this.edit_connection = _.assign({}, this.edit_connection, _.cloneDeep(response.data))
+          this.$emit('submit', this.edit_connection)
         })
       },
-      formValidateName(rule, value, callback) {
-        if (value.length == 0) {
-          callback()
-          return
-        }
-
-        if (this.mode == 'edit' && value == _.get(this.connection, 'name', '')) {
-          callback()
-          return
-        }
-
-        this.$_Validation_validateName(this.active_team_name, OBJECT_TYPE_CONNECTION, value, (response, errors) => {
-          var message = _.get(errors, 'name.message', '')
-          if (message.length > 0) {
-            callback(new Error(message))
-          } else {
-            callback()
-          }
-        })
+      onClose() {
+        this.initSelf()
+        this.$emit('close')
       },
-      initConnection() {
-        var connection = _.cloneDeep(this.connection)
-
-        // we have to do this to force watcher validation
-        this.$nextTick(() => {
-          this.orig_connection = _.cloneDeep(connection)
-          this.edit_connection = _.cloneDeep(connection)
-        })
+      onCancel() {
+        this.initSelf()
+        this.$emit('cancel')
       },
-      updateConnection(attrs) {
-        var connection_info = _.get(attrs, 'connection_info', {})
-        connection_info = _.omitBy(connection_info, (val, key) => { return val == '*****' })
+      onSubmit() {
+        switch (this.active_step) {
+          case 'authentication':
+            if (this.mode == 'edit') {
+              this.doSubmit()
+            } else {
+              this.active_step = 'properties'
+            }
+            return
 
-        var update_attrs = _.assign({}, attrs, { connection_info })
-        this.edit_connection = _.assign({}, this.edit_connection, update_attrs)
-      },
-      onValidateItem(key, valid) {
-        var errors = _.assign({}, this.form_errors)
-        if (valid) {
-          errors = _.omit(errors, [key])
-        } else {
-          errors[key] = true
+          case 'properties':
+            this.doSubmit()
+            return
         }
-        this.form_errors = _.assign({}, errors)
       },
     }
   }
 </script>
+
+<style lang="stylus" scoped>
+  .form-logo
+    background: #fff
+    margin: 0 auto -2.5rem
+    padding: 0 8px
+    position: relative
+    top: -56px
+
+  .form-logo-icon
+    border-radius: 4px
+    height: 48px
+    width: 48px
+
+  .form-title
+    margin-bottom: 24px
+</style>

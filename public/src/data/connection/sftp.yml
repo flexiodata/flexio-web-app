@@ -1,0 +1,39 @@
+element: form
+name: form_authentication
+title: ''
+description: ''
+class: w-50-ns center
+form_props:
+  class: el-form--compact el-form__label-tiny
+  size: small
+form_items:
+  - element: input
+    type: text
+    name: host
+    label: Host
+    placeholder: Host
+    value: ''
+  - element: input
+    type: text
+    name: port
+    label: Port
+    placeholder: Port
+    value: ''
+  - element: input
+    type: text
+    name: username
+    label: Username
+    placeholder: Username
+    value: ''
+  - element: input
+    type: password
+    name: password
+    label: Password
+    placeholder: Password
+    value: ''
+  - element: input
+    type: text
+    name: base_path
+    label: Base Path
+    placeholder: Base Path (optional)
+    value: ''

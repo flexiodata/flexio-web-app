@@ -19,10 +19,10 @@ namespace Flexio\Services;
 class Gmail implements \Flexio\IFace\IConnection,
                        \Flexio\IFace\IOAuthConnection
 {
+    // connection info
     private $authorization_uri = '';
     private $access_token = '';
     private $refresh_token = '';
-    private $updated = '';
     private $expires = 0;
 
     public static function create(array $params = null) : \Flexio\Services\Gmail
@@ -43,6 +43,11 @@ class Gmail implements \Flexio\IFace\IConnection,
 
     public function disconnect() : void
     {
+        // reset oauth credential info
+        $this->authorization_uri = '';
+        $this->access_token = '';
+        $this->refresh_token = '';
+        $this->expires = 0;
     }
 
     public function authenticated() : bool
@@ -55,7 +60,13 @@ class Gmail implements \Flexio\IFace\IConnection,
 
     public function get() : array
     {
-        return $this->getTokens();
+        $properties = array(
+            'access_token'  => $this->access_token,
+            'refresh_token' => $this->refresh_token,
+            'expires'       => $this->expires
+        );
+
+        return $properties;
     }
 
     ////////////////////////////////////////////////////////////
@@ -69,16 +80,14 @@ class Gmail implements \Flexio\IFace\IConnection,
 
     public function getTokens() : array
     {
-        return [ 'access_token' => $this->access_token,
-                 'refresh_token' => $this->refresh_token,
-                 'expires' => $this->expires ];
+        return $this->get();
     }
 
     ////////////////////////////////////////////////////////////
     // additional functions
     ////////////////////////////////////////////////////////////
 
-    public function retrieveEmailAddress() : string
+    private function retrieveEmailAddress() : string
     {
         if (!$this->authenticated())
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED);

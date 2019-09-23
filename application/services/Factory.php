@@ -69,6 +69,9 @@ class Factory
     {
         switch ($connection_type)
         {
+            default:
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
             case self::TYPE_HTTP:
                 return \Flexio\Services\Http::create($connection_info);
 
@@ -121,8 +124,6 @@ class Factory
             case self::TYPE_SOCRATA:
                 return \Flexio\Services\Socrata::create($connection_info);
         }
-
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
     }
 
     private static function createConnectionHash(array $connection_info) : string

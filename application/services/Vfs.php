@@ -400,9 +400,6 @@ class Vfs implements \Flexio\IFace\IFileSystem
             if ($connection_properties)
             {
                 $service = \Flexio\Services\Factory::create($connection_properties);
-                if (!$service)
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE, "Process-local service not found");
-
                 $this->service_map[$connection_identifier] = $service;
                 return $service;
             }

@@ -19,8 +19,11 @@ namespace Flexio\Services;
 class Socrata implements \Flexio\IFace\IConnection,
                          \Flexio\IFace\IFileSystem
 {
+    // connection info
     private $host;
     private $port;
+
+    // state info
     private $base_url = null;
     private $authenticated = false;
 
@@ -38,8 +41,7 @@ class Socrata implements \Flexio\IFace\IConnection,
         $port = intval($validated_params['port']);
 
         $service = new self;
-        if ($service->initialize($host, $port) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+        $service->initialize($host, $port);
 
         return $service;
     }
