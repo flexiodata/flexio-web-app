@@ -266,9 +266,6 @@ class GitHub implements \Flexio\IFace\IConnection,
         $path = '';
         $result = $this->getPathParts($full_path, $repository, $path);
 
-var_dump($repository);
-die;
-
         if ($result === false)
             return;
 
