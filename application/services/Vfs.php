@@ -35,6 +35,16 @@ class Vfs implements \Flexio\IFace\IFileSystem
         $this->process_context_service = new \Flexio\Services\ProcessContext($process);
     }
 
+    public function setRootConnection($connection_identifier)
+    {
+        $this->root_connection_identifier = $connection_identifier;
+    }
+
+    public function getOwner() : string
+    {
+        return $this->owner_eid;
+    }
+
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
@@ -228,16 +238,6 @@ class Vfs implements \Flexio\IFace\IFileSystem
     // additional functions
     ////////////////////////////////////////////////////////////
 
-    public function getOwner() : string
-    {
-        return $this->owner_eid;
-    }
-
-    public function setRootConnection($connection_identifier)
-    {
-        $this->root_connection_identifier = $connection_identifier;
-    }
-
     public function listWithWildcard(string $path = '', array $options = []) : array
     {
         $parts = \Flexio\Base\File::splitPath($path);
@@ -393,7 +393,6 @@ class Vfs implements \Flexio\IFace\IFileSystem
             return $this->store_service;
         }
 
-
         if ($this->process)
         {
             // first, check the process's local connections for a hit
@@ -408,7 +407,6 @@ class Vfs implements \Flexio\IFace\IFileSystem
                 return $service;
             }
         }
-
 
         $owner_user_eid = $this->getOwner();
 
@@ -458,10 +456,9 @@ class Vfs implements \Flexio\IFace\IFileSystem
 
         }
 
-
         $off = ($path[0] == '/' ? 1:0);
-
         $pos = strpos($path, '/', $off);
+
         if ($pos === false)
         {
             return [ substr($path, $off), '/' ];
