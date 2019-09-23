@@ -18,10 +18,12 @@
           label="Repository URL"
         >
           <el-input
-            placeholder="https://github.com/flexiodata/functions-currency"
+            placeholder="flexiodata/functions-currency"
             spellcheck="false"
             v-model="github_url"
-          />
+          >
+            <div slot="prepend">https://github.com/</div>
+          </el-input>
         </el-form-item>
       </el-form>
     </div>
@@ -286,7 +288,7 @@
           var owner = _.get(this.edit_connection_info, 'owner', '')
           var repository = _.get(this.edit_connection_info, 'repository', '')
           if (owner.length > 0 && repository.length > 0) {
-            this.github_url = 'https://github.com/' + `${owner}/${repository}`
+            this.github_url = `${owner}/${repository}`
           }
         }
       },
@@ -299,13 +301,15 @@
         this.edit_connection = _.assign({}, this.edit_connection, attrs)
       },
       updateOwnerAndRepository() {
-        var url = this.github_url.substring(this.github_url.indexOf('github.com/') + 11)
-        var arr = url.split('/')
+        var idx = this.github_url.indexOf('github.com/')
+        var suffix = idx == -1 ? this.github_url : this.github_url.substring(idx + 11)
+        var arr = suffix.split('/')
         if (arr.length == 2) {
-          var attrs = {
-            owner: arr[0],
-            repository: arr[1]
-          }
+          var owner = arr[0]
+          var repository = arr[1]
+          var attrs = { owner, repository }
+
+          this.github_url = `${owner}/${repository}`
           this.edit_connection_info = _.assign({}, this.edit_connection_info, attrs)
         }
       },
