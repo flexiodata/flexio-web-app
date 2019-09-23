@@ -87,7 +87,7 @@ class Gmail implements \Flexio\IFace\IConnection,
     // additional functions
     ////////////////////////////////////////////////////////////
 
-    public function retrieveEmailAddress() : string
+    private function retrieveEmailAddress() : string
     {
         if (!$this->authenticated())
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED);

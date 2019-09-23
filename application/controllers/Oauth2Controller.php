@@ -148,9 +148,6 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
             if (isset($tokens['expires']))
                 $properties['connection_info']['expires'] = $tokens['expires'];
 
-            if ($connection_type == 'gmail')
-                $properties['connection_info']['email'] = $service_object->retrieveEmailAddress();
-
             $connection->set($properties);
         }
         catch (\Flexio\Base\Exception $e)
