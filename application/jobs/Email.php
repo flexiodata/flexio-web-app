@@ -96,8 +96,8 @@ class Email extends \Flexio\Jobs\Base
                 if ($connection['connection_type'] == 'gmail')
                 {
                     $service = \Flexio\Services\Factory::create($connection);
-                    if (!$service)
-                        throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE, "Process-local service not found");
+                    if (!($service instanceof \Flexio\IFace\IOAuthConnection))
+                        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
                     $tokens = $service->getTokens();
                     $email_params['access_token'] = $tokens['access_token'];
                 }

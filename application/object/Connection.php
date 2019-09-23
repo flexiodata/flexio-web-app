@@ -246,12 +246,9 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         // get the connection properties
         $connection_properties = $this->get();
 
-        // load the services from the services store
+        // load the services from the services store; for connections,
+        // make sure the service also has the connection interface
         $service = \Flexio\Services\Factory::create($connection_properties);
-        if ($service === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
-
-        // for connections, make sure the service is a connection type
         if (!($service instanceof \Flexio\IFace\IConnection))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
