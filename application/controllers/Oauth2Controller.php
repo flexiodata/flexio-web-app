@@ -121,6 +121,7 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
                 'redirect' => self::getCallbackUrl()
             );
 
+            // sanity check: the service should be an oauth type service
             $service = \Flexio\Services\Factory::create($service_factory_params);
             if (!($service instanceof \Flexio\IFace\IOAuthConnection))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
@@ -134,20 +135,14 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED);
             }
 
-            // we're authenticated; get the tokens
-            $tokens = $service->getTokens();
-
             // DEBUG:
-            // file_put_contents('/tmp/tokens.txt', "Tokens :" . json_encode($tokens)."\n", FILE_APPEND);
+            // $connection_info = $service->get();
+            // file_put_contents('/tmp/tokens.txt', "Tokens :" . json_encode($connection_info)."\n", FILE_APPEND);
 
+            // save the connection info from the service
             $properties = array();
             $properties['connection_status'] = \Model::CONNECTION_STATUS_AVAILABLE;
-            $properties['connection_info']['access_token'] = $tokens['access_token'];
-            $properties['connection_info']['refresh_token'] = $tokens['refresh_token'];
-
-            if (isset($tokens['expires']))
-                $properties['connection_info']['expires'] = $tokens['expires'];
-
+            $properties['connection_info'] = $service->get();
             $connection->set($properties);
         }
         catch (\Flexio\Base\Exception $e)
