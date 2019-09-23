@@ -51,7 +51,7 @@
     >
       <div
         class="center relative"
-        style="top: -56px; margin-bottom: -2rem; background: #fff; padding: 0 8px"
+        style="top: -56px; margin-bottom: -2.5rem; background: #fff; padding: 0 8px"
         v-if="showFormLogo"
       >
         <ServiceIcon
@@ -60,7 +60,7 @@
           :type="edit_connection.connection_type"
         />
       </div>
-      <div class="mb3 tc ttu fw6 f4">Authentication</div>
+      <div class="tc ttu fw6 f4" style="margin-bottom: 24px">Authentication</div>
       <ConnectionAuthenticationPanel
         :connection.sync="edit_connection"
       />
@@ -73,7 +73,7 @@
     >
       <div
         class="center relative"
-        style="top: -56px; margin-bottom: -2rem; background: #fff; padding: 0 8px"
+        style="top: -56px; margin-bottom: -2.5rem; background: #fff; padding: 0 8px"
         v-if="showFormLogo"
       >
         <ServiceIcon
@@ -82,7 +82,7 @@
           :type="edit_connection.connection_type"
         />
       </div>
-      <div class="mb3 tc ttu fw6 f4">Properties</div>
+      <div class="tc ttu fw6 f4" style="margin-bottom: 24px">Properties</div>
       <ConnectionPropertiesPanel
         :connection.sync="edit_connection"
         :show-header="false"

@@ -1,6 +1,9 @@
 <template>
   <div v-if="is_oauth">
-    <template v-if="is_github">
+    <div
+      class="mb4"
+      v-if="is_github"
+    >
       <p>Enter the URL of the GitHub repository to which you'd like to connect.</p>
       <el-form
         ref="form"
@@ -21,38 +24,43 @@
           />
         </el-form-item>
       </el-form>
-      <p class="mt4">To use this connection with a private repository, you must also connect GitHub to Flex.io.</p>
-    </template>
-    <template v-else-if="!is_connected">
-      <p class="tc">To use this connection, you must first connect {{service_name}} to Flex.io.</p>
-    </template>
+    </div>
 
-    <template v-if="is_connected">
+    <div v-if="!is_connected">
+      <p v-if="is_github">To use this connection with a private repository, you must also connect GitHub to Flex.io.</p>
+      <p class="tc" v-else>To use this connection, you must first connect {{service_name}} to Flex.io.</p>
+      <div class="mv3 tc">
+        <el-button
+          class="ttu fw6"
+          type="primary"
+          @click="onConnectClick"
+        >
+          Connect to your {{service_name}} account
+        </el-button>
+      </div>
+    </div>
+
+    <div
+      style="margin-bottom: -1px"
+      v-else
+    >
       <div class="flex flex-row items-center justify-center lh-copy">
-        <i class="el-icon-success v-mid dark-green f2 mr2"></i>
-        <span class="dn dib-ns f4 fw6">You are connected to {{service_name}}!</span>
+        <i class="el-icon-success dark-green f3 mr2"></i>
+        <span class="dn dib-ns dark-green f4">You are connected to {{service_name}}!</span>
       </div>
       <div class="mv3 tc">
         <el-button
           class="ttu fw6"
+          size="small"
           @click="onDisconnectClick"
           v-if="is_connected"
         >
           Disconnect from your {{service_name}} account
         </el-button>
       </div>
-    </template>
-    <div class="mv3 tc" v-else>
-      <el-button
-        class="ttu fw6"
-        type="primary"
-        @click="onConnectClick"
-      >
-        Authenticate your {{service_name}} account
-      </el-button>
     </div>
 
-    <div class="br2 bg-nearer-white mt4 pv3 ph4" v-if="is_box || is_dropbox || is_google_drive">
+    <div class="br2 bg-nearer-white mt4 pa4" v-if="is_box || is_dropbox || is_google_drive">
       <div class="center mw6">
         <div class="mb2 lh-copy ttu fw6 f6">
           Additional configuration
@@ -310,9 +318,3 @@
     }
   }
 </script>
-
-<style lang="stylus" scoped>
-  .para
-    margin: 6px 0 12px
-    line-height: 1.5
-</style>
