@@ -17,8 +17,7 @@ namespace Flexio\Services;
 
 
 class LinkedIn implements \Flexio\IFace\IConnection,
-                          \Flexio\IFace\IOAuthConnection,
-                          \Flexio\IFace\IFileSystem
+                          \Flexio\IFace\IOAuthConnection
 {
     private $authorization_uri = '';
     private $access_token = '';
@@ -69,82 +68,6 @@ class LinkedIn implements \Flexio\IFace\IConnection,
                  'refresh_token' => $this->refresh_token,
                  'expires' => $this->expires ];
     }
-
-    ////////////////////////////////////////////////////////////
-    // IFileSystem interface
-    ////////////////////////////////////////////////////////////
-
-    public function getFlags() : int
-    {
-        return 0;
-    }
-
-    public function list(string $path = '', array $options = []) : array
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-    }
-
-    public function getFileInfo(string $path) : array
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-    }
-
-    public function exists(string $path) : bool
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
-    }
-
-    public function open($path) : \Flexio\IFace\IStream
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-    }
-
-    public function createFile(string $path, array $properties = []) : bool
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
-    }
-
-    public function createDirectory(string $path, array $properties = []) : bool
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
-    }
-
-    public function unlink(string $path) : bool
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
-    }
-
-    public function read(array $params, callable $callback)
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
-    }
-
-    public function write(array $params, callable $callback)
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
-    }
-
-    private function getRemotePath(string $path) : string
-    {
-        return \Flexio\Services\Util::mergePath($this->base_path, $path);
-    }
-
-
 
     ////////////////////////////////////////////////////////////
     // additional functions
