@@ -16,7 +16,8 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
+class Store implements \Flexio\IFace\IConnection,
+                       \Flexio\IFace\IFileSystem
 {
 
     private $owner_eid = '';
@@ -32,6 +33,29 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         $service = new self();
         $service->owner_eid = $params['owned_by'];
         return $service;
+    }
+
+    ////////////////////////////////////////////////////////////
+    // IConnection interface
+    ////////////////////////////////////////////////////////////
+
+    public function connect() : bool
+    {
+        return true;
+    }
+
+    public function disconnect() : void
+    {
+    }
+
+    public function authenticated() : bool
+    {
+        return true;
+    }
+
+    public function get() : array
+    {
+        return array();
     }
 
     ////////////////////////////////////////////////////////////
@@ -99,11 +123,6 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return $files;
     }
 
-    public function authenticated() : bool
-    {
-        return true;
-    }
-
     public function getFileInfo(string $path) : array
     {
         $path = $path['path'] ?? (is_string($path) ? $path : '');
@@ -112,9 +131,7 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
         $stream = $this->getStreamFromPath($path);
         if (!$stream)
-        {
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        }
 
         $entry = $stream->get();
 
@@ -357,8 +374,6 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return true;
     }
 
-
-
     ////////////////////////////////////////////////////////////
     // additional functions
     ////////////////////////////////////////////////////////////
@@ -366,11 +381,6 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     public function getOwner() : string
     {
         return $this->owner_eid;
-    }
-
-    private function connect() : bool
-    {
-        return true;
     }
 
     private function getStreamFromPath(string $path, bool $create_dir_structure = false) : ?\Flexio\Object\Stream

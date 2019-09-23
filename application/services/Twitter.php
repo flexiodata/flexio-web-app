@@ -16,8 +16,10 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class Twitter implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
+class Twitter implements \Flexio\IFace\IConnection,
+                         \Flexio\IFace\IOAuthConnection
 {
+    // connection info
     private $authorization_uri = '';
     private $access_token = '';
     private $refresh_token = '';
@@ -31,6 +33,24 @@ class Twitter implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return $obj;
     }
 
+    ////////////////////////////////////////////////////////////
+    // IConnection interface
+    ////////////////////////////////////////////////////////////
+
+    public function connect() : bool
+    {
+        return true;
+    }
+
+    public function disconnect() : void
+    {
+        // reset oauth credential info
+        $this->authorization_uri = '';
+        $this->access_token = '';
+        $this->refresh_token = '';
+        $this->expires = 0;
+    }
+
     public function authenticated() : bool
     {
         if (strlen($this->access_token) > 0)
@@ -39,100 +59,34 @@ class Twitter implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return false;
     }
 
+    public function get() : array
+    {
+        $properties = array(
+            'access_token'  => $this->access_token,
+            'refresh_token' => $this->refresh_token,
+            'expires'       => $this->expires
+        );
+
+        return $properties;
+    }
+
+    ////////////////////////////////////////////////////////////
+    // OAuth interface
+    ////////////////////////////////////////////////////////////
+
     public function getAuthorizationUri() : string
     {
         return $this->authorization_uri;
     }
 
-    ////////////////////////////////////////////////////////////
-    // IFileSystem interface
-    ////////////////////////////////////////////////////////////
-
-    public function getFlags() : int
+    public function getTokens() : array
     {
-        return 0;
+        return $this->get();
     }
-
-    public function list(string $path = '', array $options = []) : array
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return [];
-    }
-
-    public function getFileInfo(string $path) : array
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return [];
-    }
-
-
-    public function exists(string $path) : bool
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
-    }
-
-    public function open($path) : \Flexio\IFace\IStream
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-    }
-
-    public function createFile(string $path, array $properties = []) : bool
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
-    }
-
-    public function createDirectory(string $path, array $properties = []) : bool
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
-    }
-
-    public function unlink(string $path) : bool
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
-    }
-
-    public function read(array $params, callable $callback)
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
-    }
-
-    public function write(array $params, callable $callback)
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
-    }
-
-    private function getRemotePath(string $path) : string
-    {
-        return \Flexio\Services\Util::mergePath($this->base_path, $path);
-    }
-
-
 
     ////////////////////////////////////////////////////////////
     // additional functions
     ////////////////////////////////////////////////////////////
-
-    public function getTokens() : array
-    {
-        return [ 'access_token' => $this->access_token,
-                 'refresh_token' => $this->refresh_token,
-                 'expires' => $this->expires ];
-    }
 
     public function getFileId(string $path) // TODO: add return type (: ?string)
     {
@@ -140,11 +94,6 @@ class Twitter implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         if (!isset($info['id']))
             return null;
         return $info['id'];
-    }
-
-    private function connect() : bool
-    {
-        return true;
     }
 
     private function initialize(array $params) : bool

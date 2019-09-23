@@ -166,13 +166,32 @@ class StreamConverter
         if ($instream_mime_type != \Flexio\Base\ContentType::FLEXIO_TABLE)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED, "Input file must be a table");
 
-        $outstream->setMimeType($output_mime_type);
 
-        $streamreader = $instream->getReader();
-        $streamwriter = $outstream->getWriter();
-
-        if ($output_mime_type == \Flexio\Base\ContentType::JSON)
+        if ($output_mime_type == \Flexio\Base\ContentType::FLEXIO_TABLE)
         {
+            $streamreader = $instream->getReader();
+
+            $properties = [];
+            $properties['mime_type'] = \Flexio\Base\ContentType::FLEXIO_TABLE;
+            $properties['structure'] = $instream->getStructure()->enum();
+            $outstream->set($properties);
+
+            $streamwriter = $outstream->getWriter();
+
+            while (true)
+            {
+                $row = $streamreader->readRow();
+                if ($row === false)
+                    break;
+                $streamwriter->write($row);
+            }
+        }
+         else if ($output_mime_type == \Flexio\Base\ContentType::JSON)
+        {
+            $outstream->setMimeType($output_mime_type);
+            $streamreader = $instream->getReader();
+            $streamwriter = $outstream->getWriter();
+    
             $rown = 0;
 
             // transfer the data
@@ -196,6 +215,10 @@ class StreamConverter
         }
          else if ($output_mime_type == \Flexio\Base\ContentType::XLSX || $output_mime_type == \Flexio\Base\ContentType::XLS || $output_mime_type == \Flexio\Base\ContentType::ODS)
         {
+            $outstream->setMimeType($output_mime_type);
+            $streamreader = $instream->getReader();
+            $streamwriter = $outstream->getWriter();
+    
             $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
             $worksheet = $spreadsheet->getActiveSheet();
 
@@ -250,6 +273,10 @@ class StreamConverter
         }
          else
         {
+            $outstream->setMimeType($output_mime_type);
+            $streamreader = $instream->getReader();
+            $streamwriter = $outstream->getWriter();
+    
             $delimiter = $convert_params['output']['delimiter'] ?? self::DELIMITER_COMMA;
             $header = toBoolean($convert_params['output']['header'] ?? true);
             $qualifier = $convert_params['output']['qualifier'] ?? self::TEXT_QUALIFIER_DOUBLE_QUOTE;

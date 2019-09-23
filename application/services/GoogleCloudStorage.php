@@ -16,8 +16,11 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
+class GoogleCloudStorage implements \Flexio\IFace\IConnection,
+                                    \Flexio\IFace\IOAuthConnection,
+                                    \Flexio\IFace\IFileSystem
 {
+    // connection info
     private $authorization_uri = '';
     private $access_token = '';
     private $refresh_token = '';
@@ -32,6 +35,24 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
         return $obj;
     }
 
+    ////////////////////////////////////////////////////////////
+    // IConnection interface
+    ////////////////////////////////////////////////////////////
+
+    public function connect() : bool
+    {
+        return true;
+    }
+
+    public function disconnect() : void
+    {
+        // reset oauth credential info
+        $this->authorization_uri = '';
+        $this->access_token = '';
+        $this->refresh_token = '';
+        $this->expires = 0;
+    }
+
     public function authenticated() : bool
     {
         if (strlen($this->access_token) > 0)
@@ -40,9 +61,29 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
         return false;
     }
 
+    public function get() : array
+    {
+        $properties = array(
+            'access_token'  => $this->access_token,
+            'refresh_token' => $this->refresh_token,
+            'expires'       => $this->expires
+        );
+
+        return $properties;
+    }
+
+    ////////////////////////////////////////////////////////////
+    // OAuth interface
+    ////////////////////////////////////////////////////////////
+
     public function getAuthorizationUri() : string
     {
         return $this->authorization_uri;
+    }
+
+    public function getTokens() : array
+    {
+        return $this->get();
     }
 
     ////////////////////////////////////////////////////////////
@@ -220,14 +261,12 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
         $path = ltrim($path,'/');
 
         if (!$this->authenticated())
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED);
 
         $bucket = '';
         $bucket_path = '';
         if (!$this->getPathParts($path, $bucket, $bucket_path))
-        {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-        }
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         $bucket_path = trim($bucket_path,'/');
         $bucket_path_len = strlen($bucket_path);
@@ -544,18 +583,6 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
     ////////////////////////////////////////////////////////////
     // additional functions
     ////////////////////////////////////////////////////////////
-
-    public function getTokens() : array
-    {
-        return [ 'access_token' => $this->access_token,
-                 'refresh_token' => $this->refresh_token,
-                 'expires' => $this->expires ];
-    }
-
-    private function connect() : bool
-    {
-        return true;
-    }
 
     private function initialize(array $params = null) : bool
     {

@@ -16,13 +16,17 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class Ftp implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
+class Ftp implements \Flexio\IFace\IConnection,
+                     \Flexio\IFace\IFileSystem
 {
+    // connection info
     private $host;
     private $username;
     private $password;
-    private $connection = false;
+
+    // additional state info
     private $authenticated = false;
+    private $connection = false;
 
     public static function create(array $params = null) : \Flexio\Services\Ftp
     {
@@ -40,15 +44,48 @@ class Ftp implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         $password = $validated_params['password'];
 
         $service = new self;
-        if ($service->initialize($host, $username, $password) == false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+        $service->initialize($host, $username, $password);
 
         return $service;
+    }
+
+    ////////////////////////////////////////////////////////////
+    // IConnection interface
+    ////////////////////////////////////////////////////////////
+
+    public function connect() : bool
+    {
+        $host = $this->host;
+        $username = $this->username;
+        $password = $this->password;
+
+        if ($this->initialize($host, $username, $password) === false)
+            return false;
+
+        return true;
+    }
+
+    public function disconnect() : void
+    {
+        // reset secret credentials and authentication flag
+        $this->password = '';
+        $this->authenticated = false;
     }
 
     public function authenticated() : bool
     {
         return $this->authenticated;
+    }
+
+    public function get() : array
+    {
+        $properties = array(
+            'host'     => $this->host,
+            'username' => $this->username,
+            'password' => $this->password
+        );
+
+        return $properties;
     }
 
     ////////////////////////////////////////////////////////////
@@ -183,18 +220,6 @@ class Ftp implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     ////////////////////////////////////////////////////////////
     // additional functions
     ////////////////////////////////////////////////////////////
-
-    private function connect() : bool
-    {
-        $host = $this->host;
-        $username = $this->username;
-        $password = $this->password;
-
-        if ($this->initialize($host, $username, $password) === false)
-            return false;
-
-        return true;
-    }
 
     private function initialize(string $host, string $username, string $password) : bool
     {

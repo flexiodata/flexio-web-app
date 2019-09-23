@@ -16,10 +16,15 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
+class GitHub implements \Flexio\IFace\IConnection,
+                        \Flexio\IFace\IOAuthConnection,
+                        \Flexio\IFace\IFileSystem
 {
+    // connection info
     private $authorization_uri = '';
     private $access_token = '';
+    private $refresh_token = ''; // note: service doesn't use refresh tokens; here for consistency
+    private $expires = 0;        // note: service doesn't user refresh tokens; tokens are usable until revocation
     private $owner = '';
     private $repository = '';
 
@@ -30,6 +35,24 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return $obj;
     }
 
+    ////////////////////////////////////////////////////////////
+    // IConnection interface
+    ////////////////////////////////////////////////////////////
+
+    public function connect() : bool
+    {
+        return true;
+    }
+
+    public function disconnect() : void
+    {
+        // reset oauth credential info
+        $this->authorization_uri = '';
+        $this->access_token = '';
+        $this->refresh_token = '';
+        $this->expires = 0;
+    }
+
     public function authenticated() : bool
     {
         if (strlen($this->access_token) > 0)
@@ -38,9 +61,29 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return false;
     }
 
+    public function get() : array
+    {
+        $properties = array(
+            'access_token'  => $this->access_token,
+            'refresh_token' => $this->refresh_token,
+            'expires'       => $this->expires
+        );
+
+        return $properties;
+    }
+
+    ////////////////////////////////////////////////////////////
+    // OAuth interface
+    ////////////////////////////////////////////////////////////
+
     public function getAuthorizationUri() : string
     {
         return $this->authorization_uri;
+    }
+
+    public function getTokens() : array
+    {
+        return $this->get();
     }
 
     ////////////////////////////////////////////////////////////
@@ -95,7 +138,7 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         $path = '';
         $result = $this->getPathParts($full_path, $repository, $path);
         if ($result === false)
-            return [];
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         $url = "https://api.github.com/repos/$repository/contents/$path";
 
@@ -124,16 +167,12 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         curl_close($ch);
 
         if ($httpcode == 404)
-        {
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        }
 
         $entry = @json_decode($result);
 
         if ($entry === null)
-        {
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-        }
 
         if (is_array($entry))
         {
@@ -385,13 +424,6 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     // additional functions
     ////////////////////////////////////////////////////////////
 
-    public function getTokens() : array
-    {
-        return [ 'access_token' => $this->access_token,
-                 'refresh_token' => '',
-                 'expires' => 0  ];
-    }
-
     private function getRepositories($username = null) : array
     {
         // General Request Notes:
@@ -590,11 +622,6 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         }
 
         return $folder_items;
-    }
-
-    private function connect() : bool
-    {
-        return true;
     }
 
     private function initialize(array $params = null) : bool

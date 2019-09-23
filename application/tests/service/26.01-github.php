@@ -45,6 +45,18 @@ class Test
         $expected = 'Flexio\Services\GitHub';
         \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\Github::create(); basic file syntax check',  $actual, $expected, $results);
 
+        // BEGIN TEST
+        $service = new \Flexio\Services\GitHub;
+        $actual = ($service instanceof \Flexio\IFace\IConnection) ? true : false;
+        $expected = true;
+        \Flexio\Tests\Check::assertBoolean('A.2', 'new \Flexio\Services\GitHub; instance of IConnection ',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $service = new \Flexio\Services\GitHub;
+        $actual = ($service instanceof \Flexio\IFace\IOAuthConnection) ? true : false;
+        $expected = true;
+        \Flexio\Tests\Check::assertBoolean('A.3', 'new \Flexio\Services\GitHub; instance of IOAuthConnection ',  $actual, $expected, $results);
+
 
         // TEST: basic service functions
 

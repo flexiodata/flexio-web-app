@@ -192,25 +192,9 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $properties = array();
         $properties['connection_status'] = \Model::CONNECTION_STATUS_UNAVAILABLE;
 
-        try
-        {
-            $service = $this->getService();
-
-            if ($service instanceof \Flexio\IFace\IConnection)
-            {
-                if ($service->authenticated())
-                    $properties['connection_status'] = \Model::CONNECTION_STATUS_AVAILABLE;
-            }
-            else
-            {
-                $properties['connection_status'] = \Model::CONNECTION_STATUS_AVAILABLE;
-            }
-        }
-        catch(\Flexio\Base\Exception $e)
-        {
-            // service couldn't be created, perhaps because of invalid credentials;
-            // connection is unavailable
-        }
+        $connected = $this->getService()->connect();
+        if ($connected === true)
+            $properties['connection_status'] = \Model::CONNECTION_STATUS_AVAILABLE;
 
         $this->set($properties);
         return $this;
@@ -220,17 +204,20 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
     {
         $this->clearCache();
 
-        // TODO: what values do we want to use to reset the params?
-        // if we want to reset anything within the connection_info, we need
-        // to feed the info into the service, which should be responsible for
-        // returning us valid initializated params;
-        // see 08.04-connecxtion.php: "TODO: we need a better way of resetting credentials"
+        // get the service, disconnect, and get the update connection info
+        // that has the secret credentials reset
+        $service = $this->getService();
+        $service->disconnect();
+        $connection_info = $service->get();
+        $connection_info = json_encode($connection_info);
 
+        // update the connection info
         $properties = array();
         $properties['connection_status'] = \Model::CONNECTION_STATUS_UNAVAILABLE;
         $properties['expires'] = \Flexio\System\System::getTimestamp(); // set the expiration to the current time
-
+        $properties['connection_info'] = $connection_info;
         $this->set($properties);
+
         return $this;
     }
 
@@ -255,20 +242,15 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $this;
     }
 
-    public function getAccessToken()
-    {
-        $tokens = $this->getService()->getTokens();
-        return $tokens['access_token'];
-    }
-
     public function getService() // TODO: add function return type
     {
         // get the connection properties
         $connection_properties = $this->get();
 
-        // load the services from the services store
+        // load the services from the services store; for connections,
+        // make sure the service also has the connection interface
         $service = \Flexio\Services\Factory::create($connection_properties);
-        if ($service === false)
+        if (!($service instanceof \Flexio\IFace\IConnection))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
         // for some of the connections, refresh the token
@@ -331,6 +313,117 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $pipe_model->update($pipes_to_update, $process_arr);
     }
 
+    private function getConnectionItemsToImport() : array
+    {
+        $connection_info = $this->get();
+
+        // if we have a regular file type service, just get the list of files
+        // from the service
+        if ($connection_info['connection_type'] !== \Flexio\Services\Factory::TYPE_HTTP)
+        {
+            $service = $this->getService();
+            return $service->list();
+        }
+
+        // in the case of HTTP, the list of files to return is specific to a particular
+        // manifest at a URL (which is why a general service list implementation isn't
+        // used); get the manifest and build up the list of files from the manifest
+
+        $manifest_url = '';
+        if (isset($connection_info['connection_info']) && isset($connection_info['connection_info']['url']))
+            $manifest_url = $connection_info['connection_info']['url'];
+        $manifest_url_base = dirname($manifest_url);
+
+        try
+        {
+            $content = '';
+            $http_service = \Flexio\Services\Http::create();
+            $http_service->read(['path' => $manifest_url], function($data) use (&$content) {
+                $content .= $data;
+            });
+
+            $manifest_info = \Flexio\Base\Yaml::parse($content);
+
+            if (!$manifest_info)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+            if (!isset($manifest_info['functions']))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+            $functions = $manifest_info['functions'];
+            $result = [];
+            foreach ($functions as $f)
+            {
+                if (!isset($f['path']))
+                    continue;
+
+                $function_path = \Flexio\Base\Util::appendUrlPath($manifest_url_base, $f['path']);
+                $item = [];
+                $item['type'] = 'FILE';
+                $item['path'] = $function_path;
+                $item['hash'] = '';
+                $item['size'] = 0;
+                $result[] = $item;
+            }
+
+            return $result;
+        }
+        catch (\Exception $e)
+        {
+            // fall through
+        }
+
+        return array();
+    }
+
+    private static function getContentFromCacheOrPath(array $connection_info, array $item_info) : ?string
+    {
+        $connection_eid = $connection_info['eid'];
+
+        // if we have an http connection type, load the content each time; TODO: use
+        // etags to get a hash signature, and then we can cache content
+        if ($connection_info['connection_type'] === \Flexio\Services\Factory::TYPE_HTTP)
+        {
+            $content = '';
+            $http_service = \Flexio\Services\Http::create();
+            $http_service->read(['path' => $item_info['path']], function($data) use (&$content) {
+                $content .= $data;
+            });
+
+            return $content;
+        }
+
+        // generate a handle for the content signature that will uniquely identify it;
+        // use the owner plus a hash of some identifiers that constitute unique content
+        $content_handle = '';
+        $content_handle .= $connection_info['owned_by']['eid']; // include owner in the identifier so that even if the connection owner changes (later?), the cache will only exist for this owner
+        $content_handle .= $item_info['hash']; // not always populated, so also add on info from the file
+        $content_handle .= md5(
+            $item_info['path'] .
+            strval($item_info['size']) .
+            $item_info['modified']
+        );
+
+        // get the cached content; if it doesn't exist, create the cache
+        $stream = \Flexio\Object\Factory::getStreamContentCache($connection_eid, $content_handle);
+        if (!isset($stream))
+        {
+            $remote_path = $item_info['path'];
+            $stream = \Flexio\Object\Factory::createStreamContentCache($connection_eid, $remote_path, $content_handle);
+        }
+
+        if (!isset($stream))
+            return null;
+
+        $content = '';
+        $reader = $stream->getReader();
+        while (($data = $reader->read()) != false)
+        {
+            $content .= $data;
+        }
+
+        return $content;
+    }
+
     private function createAssociatedPipes() : void
     {
         // note: creates associated pipes for a mounted connection
@@ -344,8 +437,7 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             return;
 
         // STEP 1: get the list of files to use to create pipes
-        $service = $this->getService();
-        $connection_items = $service->list();
+        $connection_items = $this->getConnectionItemsToImport();
 
         $connection_item_info = array();
         foreach ($connection_items as $item)
@@ -363,7 +455,7 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             if ($ext !== 'flexio' && $ext !== 'py' && $ext !== 'js')
                 continue;
 
-            $connection_item_info[$item_info['name']] = $item_info;
+            $connection_item_info[] = $item_info;
         }
 
         // STEP 2: get a list of existing pipe names for this owner so
@@ -378,11 +470,11 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         }
 
         // STEP 3: create the pipes
-        foreach ($connection_item_info as $key => $value)
+        foreach ($connection_item_info as $item_info)
         {
             // get the file extension and set the language
             $language = false;
-            $ext = strtolower(\Flexio\Base\File::getFileExtension($value['path']));
+            $ext = strtolower(\Flexio\Base\File::getFileExtension($item_info['path']));
             if ($ext === 'flexio')
                 $language = 'flexio'; // execute content as a JSON pipe
             if ($ext === 'py')
@@ -393,34 +485,7 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             if ($language === false)
                 continue;
 
-            // generate a handle for the content signature that will uniquely identify it;
-            // use the owner plus a hash of some identifiers that constitute unique content
-            $content_handle = '';
-            $content_handle .= $connection_info['owned_by']['eid']; // include owner in the identifier so that even if the connection owner changes (later?), the cache will only exist for this owner
-            $content_handle .= $value['hash']; // not always populated, so also add on info from the file
-            $content_handle .= md5(
-                $value['path'] .
-                strval($value['size']) .
-                $value['modified']
-            );
-
-            // get the cached content; if it doesn't exist, create the cache
-            $stream = \Flexio\Object\Factory::getStreamContentCache($connection_eid, $content_handle);
-            if (!isset($stream))
-            {
-                $remote_path = $value['path'];
-                $stream = \Flexio\Object\Factory::createStreamContentCache($connection_eid, $remote_path, $content_handle);
-            }
-
-            if (!isset($stream))
-                continue; // TODO: throw exception
-
-            $content = '';
-            $reader = $stream->getReader();
-            while (($data = $reader->read()) != false)
-            {
-                $content .= $data;
-            }
+            $content = self::getContentFromCacheOrPath($connection_info, $item_info);
 
             // get the pipe info from the content; if we can't find any, don't import the pipe
             $pipe_info_from_content = self::getPipeInfoFromContent($content);

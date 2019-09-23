@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class Vfs // TODO: implements \Flexio\IFace\IFileSystem
+class Vfs implements \Flexio\IFace\IFileSystem
 {
     private $owner_eid = ''; // the user to use when evaluating vfs paths
     private $process_context_service = null;
@@ -35,13 +35,9 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         $this->process_context_service = new \Flexio\Services\ProcessContext($process);
     }
 
-    ////////////////////////////////////////////////////////////
-    // IFileSystem interface
-    ////////////////////////////////////////////////////////////
-
-    public function getFlags() : int
+    public function setRootConnection($connection_identifier)
     {
-        return 0;
+        $this->root_connection_identifier = $connection_identifier;
     }
 
     public function getOwner() : string
@@ -49,32 +45,13 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         return $this->owner_eid;
     }
 
-    public function setRootConnection($connection_identifier)
-    {
-        $this->root_connection_identifier = $connection_identifier;
-    }
+    ////////////////////////////////////////////////////////////
+    // IFileSystem interface
+    ////////////////////////////////////////////////////////////
 
-    private function isStorageConnectionType(string $type) : bool
+    public function getFlags() : int
     {
-        switch ($type)
-        {
-            default:
-                return false;
-            case 'ftp':
-            case 'sftp':
-            case 'mysql':
-            case 'postgres':
-            case 'dropbox':
-            case 'box':
-            case 'github':
-            case 'googledrive':
-            case 'googlesheets':
-            case 'googlecloudstorage':
-            case 'amazons3':
-            case 'elasticsearch':
-            case 'twilio':
-                return true;
-        }
+        return 0;
     }
 
     public function list(string $path = '', array $options = []) : array
@@ -105,6 +82,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
             }
 
             $item = array(
+                'id' => $entry['id'] ?? sha1($full_path),
                 'name' => $entry['name'],
                 'path' =>  $entry['path'],
                 'full_path' => $full_path,
@@ -120,50 +98,6 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
             }
 
             $results[] = $item;
-        }
-
-
-        return $results;
-    }
-
-
-    public function listWithWildcard(string $path = '', array $options = []) : array
-    {
-        $parts = \Flexio\Base\File::splitPath($path);
-        $lastpart = array_pop($parts);
-
-        foreach ($parts as $part)
-        {
-            if (strpos($part, '*') !== false)
-            {
-                // only the last part of the path may contain a wildcard
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Invalid parameter 'path'. Only the last part of the path may contain a wildcard");
-            }
-        }
-
-        $wildcard = null;
-        if ($lastpart !== null)
-        {
-            if (strpos($lastpart, '*') !== false)
-                $wildcard = $lastpart;
-                else
-                $parts[] = $lastpart;
-        }
-
-        $path = '/' . implode('/', $parts);
-
-        $files = $this->list($path);
-
-        $results = [];
-        foreach ($files as $f)
-        {
-            if ($wildcard !== null)
-            {
-                if (!\Flexio\Base\File::matchPath($f['name'], $wildcard, false))
-                    continue;
-            }
-
-            $results[] = $f;
         }
 
         return $results;
@@ -300,6 +234,52 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         return $service->write($arr, $callback);
     }
 
+    ////////////////////////////////////////////////////////////
+    // additional functions
+    ////////////////////////////////////////////////////////////
+
+    public function listWithWildcard(string $path = '', array $options = []) : array
+    {
+        $parts = \Flexio\Base\File::splitPath($path);
+        $lastpart = array_pop($parts);
+
+        foreach ($parts as $part)
+        {
+            if (strpos($part, '*') !== false)
+            {
+                // only the last part of the path may contain a wildcard
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Invalid parameter 'path'. Only the last part of the path may contain a wildcard");
+            }
+        }
+
+        $wildcard = null;
+        if ($lastpart !== null)
+        {
+            if (strpos($lastpart, '*') !== false)
+                $wildcard = $lastpart;
+                else
+                $parts[] = $lastpart;
+        }
+
+        $path = '/' . implode('/', $parts);
+
+        $files = $this->list($path);
+
+        $results = [];
+        foreach ($files as $f)
+        {
+            if ($wildcard !== null)
+            {
+                if (!\Flexio\Base\File::matchPath($f['name'], $wildcard, false))
+                    continue;
+            }
+
+            $results[] = $f;
+        }
+
+        return $results;
+    }
+
     public function insert(string $path, array $rows) // TODO: add return type
     {
         // path can either be an array [ 'path' => value ] or a string containing the path
@@ -313,42 +293,6 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         $service = $this->getServiceFromPath($path, $connection_identifier, $rpath);
 
         return $service->insert([ 'path' => $rpath ], $rows);
-    }
-
-    public function splitPath(string $path) : array
-    {
-        $path = trim($path);
-        if (strlen($path) == 0)
-            return [];
-
-        $urlsep_pos = strpos($path, '://');
-        if ($urlsep_pos !== false)
-        {
-            $protocol = substr($path, 0, $urlsep_pos);
-            if ($protocol == 'context')
-            {
-                // split off the schema portion context://; the path portion will retain the preceding slash
-                return [ substr($path, 0, $urlsep_pos+3), substr($path, 9) ];
-            }
-            else if ($protocol == 'https' || $protocol == 'http' || $protocol == 's3')
-            {
-                return [ substr($path, 0, $urlsep_pos+3), $path ];
-            }
-
-        }
-
-
-        $off = ($path[0] == '/' ? 1:0);
-
-        $pos = strpos($path, '/', $off);
-        if ($pos === false)
-        {
-            return [ substr($path, $off), '/' ];
-        }
-         else
-        {
-            return [ substr($path, $off, $pos-$off), substr($path, $pos) ];
-        }
     }
 
     public function getServiceFromPath(string $path, string &$connection_identifier, string &$rpath) // TODO: add return type
@@ -449,7 +393,6 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
             return $this->store_service;
         }
 
-
         if ($this->process)
         {
             // first, check the process's local connections for a hit
@@ -457,14 +400,10 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
             if ($connection_properties)
             {
                 $service = \Flexio\Services\Factory::create($connection_properties);
-                if (!$service)
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE, "Process-local service not found");
-
                 $this->service_map[$connection_identifier] = $service;
                 return $service;
             }
         }
-
 
         $owner_user_eid = $this->getOwner();
 
@@ -483,12 +422,47 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         if ($connection->allows($owner_user_eid, \Flexio\Api\Action::TYPE_CONNECTION_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        $connection_info = $connection->get();
-        if (!self::isStorageConnectionType($connection_info['connection_type'] ?? ''))
+        // get the service and make sure it has the file system interface
+        $service = $connection->getService();
+        if (!($service instanceof \Flexio\IFace\IFileSystem))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
-        $service = $connection->getService();
         $this->service_map[$connection_identifier] = $service;
         return $service;
+    }
+
+    private function splitPath(string $path) : array
+    {
+        $path = trim($path);
+        if (strlen($path) == 0)
+            return [];
+
+        $urlsep_pos = strpos($path, '://');
+        if ($urlsep_pos !== false)
+        {
+            $protocol = substr($path, 0, $urlsep_pos);
+            if ($protocol == 'context')
+            {
+                // split off the schema portion context://; the path portion will retain the preceding slash
+                return [ substr($path, 0, $urlsep_pos+3), substr($path, 9) ];
+            }
+            else if ($protocol == 'https' || $protocol == 'http' || $protocol == 's3')
+            {
+                return [ substr($path, 0, $urlsep_pos+3), $path ];
+            }
+
+        }
+
+        $off = ($path[0] == '/' ? 1:0);
+        $pos = strpos($path, '/', $off);
+
+        if ($pos === false)
+        {
+            return [ substr($path, $off), '/' ];
+        }
+         else
+        {
+            return [ substr($path, $off, $pos-$off), substr($path, $pos) ];
+        }
     }
 }

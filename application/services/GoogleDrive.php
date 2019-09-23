@@ -16,8 +16,11 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
+class GoogleDrive implements \Flexio\IFace\IConnection,
+                             \Flexio\IFace\IOAuthConnection,
+                             \Flexio\IFace\IFileSystem
 {
+    // connection info
     private $authorization_uri = '';
     private $access_token = '';
     private $refresh_token = '';
@@ -31,6 +34,24 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
         return $obj;
     }
 
+    ////////////////////////////////////////////////////////////
+    // IConnection interface
+    ////////////////////////////////////////////////////////////
+
+    public function connect() : bool
+    {
+        return true;
+    }
+
+    public function disconnect() : void
+    {
+        // reset oauth credential info
+        $this->authorization_uri = '';
+        $this->access_token = '';
+        $this->refresh_token = '';
+        $this->expires = 0;
+    }
+
     public function authenticated() : bool
     {
         if (strlen($this->access_token) > 0)
@@ -39,9 +60,29 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
         return false;
     }
 
+    public function get() : array
+    {
+        $properties = array(
+            'access_token'  => $this->access_token,
+            'refresh_token' => $this->refresh_token,
+            'expires'       => $this->expires
+        );
+
+        return $properties;
+    }
+
+    ////////////////////////////////////////////////////////////
+    // OAuth interface
+    ////////////////////////////////////////////////////////////
+
     public function getAuthorizationUri() : string
     {
         return $this->authorization_uri;
+    }
+
+    public function getTokens() : array
+    {
+        return $this->get();
     }
 
     ////////////////////////////////////////////////////////////
@@ -106,6 +147,7 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
             $full_path .= $file;
 
             $f = array(
+                'id' => sha1($row['id']),
                 'name' => $file,
                 'path' => $full_path,
                 'size' => null,
@@ -127,7 +169,7 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
     public function getFileInfo(string $path) : array
     {
         if (!$this->authenticated())
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED);
 
         $fileid = $this->getFileId($path);
         if ($fileid === null)
@@ -145,9 +187,10 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
         curl_close($ch);
 
         if (!isset($info['name']))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         return [
+            'id' => $info['id'],
             'name' => $info['name'],
             'size' => $info['size'] ?? null,
             'modified' => $info['modifiedTime'] ?? '',
@@ -493,18 +536,9 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
         return \Flexio\Services\Util::mergePath($this->base_path, $path);
     }
 
-
-
     ////////////////////////////////////////////////////////////
     // additional functions
     ////////////////////////////////////////////////////////////
-
-    public function getTokens() : array
-    {
-        return [ 'access_token' => $this->access_token,
-                 'refresh_token' => $this->refresh_token,
-                 'expires' => $this->expires ];
-    }
 
     public function getFileId(string $path) // TODO: add return type (: ?string)
     {
@@ -512,11 +546,6 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
         if (!isset($info['id']))
             return null;
         return $info['id'];
-    }
-
-    private function connect() : bool
-    {
-        return true;
     }
 
     private function initialize(array $params = null) : bool

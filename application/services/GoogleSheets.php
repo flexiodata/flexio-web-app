@@ -16,19 +16,39 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
+class GoogleSheets implements \Flexio\IFace\IConnection,
+                              \Flexio\IFace\IOAuthConnection,
+                              \Flexio\IFace\IFileSystem
 {
     private $authorization_uri = '';
     private $access_token = '';
     private $refresh_token = '';
-    private $updated = '';
     private $expires = 0;
+    private $updated = '';
 
     public static function create(array $params = null) : \Flexio\Services\GoogleSheets
     {
         $obj = new self;
         $obj->initialize($params);
         return $obj;
+    }
+
+    ////////////////////////////////////////////////////////////
+    // IConnection interface
+    ////////////////////////////////////////////////////////////
+
+    public function connect() : bool
+    {
+        return true;
+    }
+
+    public function disconnect() : void
+    {
+        // reset oauth credential info
+        $this->authorization_uri = '';
+        $this->access_token = '';
+        $this->refresh_token = '';
+        $this->expires = 0;
     }
 
     public function authenticated() : bool
@@ -39,9 +59,29 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
         return false;
     }
 
+    public function get() : array
+    {
+        $properties = array(
+            'access_token'  => $this->access_token,
+            'refresh_token' => $this->refresh_token,
+            'expires'       => $this->expires
+        );
+
+        return $properties;
+    }
+
+    ////////////////////////////////////////////////////////////
+    // OAuth interface
+    ////////////////////////////////////////////////////////////
+
     public function getAuthorizationUri() : string
     {
         return $this->authorization_uri;
+    }
+
+    public function getTokens() : array
+    {
+        return $this->get();
     }
 
     ////////////////////////////////////////////////////////////
@@ -70,6 +110,7 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
                 //$worksheets = $spreadsheet->getWorksheets();
 
                 $fileinfo = array(
+                    'id' => sha1($spreadsheet->spreadsheet_id),
                     'spreadsheet_id' => $spreadsheet->spreadsheet_id,
                     'name' => $spreadsheet->title,
                     'path' => '/' . $spreadsheet->title,
@@ -101,6 +142,7 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
             foreach ($worksheets as $worksheet)
             {
                 $fileinfo = array(
+                    'id' => sha1($spreadsheet->spreadsheet_id . ';' . $worksheet->worksheet_id),
                     'spreadsheet_id' => $spreadsheet->spreadsheet_id,
                     'worksheet_id' => $worksheet->worksheet_id,
                     'name' => $worksheet->title,
@@ -121,7 +163,7 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
     public function getFileInfo(string $path) : array
     {
         if (!$this->authenticated())
-            return null;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED);
 
         $ids = $this->getIdsFromPath($path);
         if (isset($ids['spreadsheet_id']))
@@ -485,7 +527,6 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
         return true;
     }
 
-
     ////////////////////////////////////////////////////////////
     // Google Sheets API abstraction
     ////////////////////////////////////////////////////////////
@@ -501,9 +542,6 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
             return null;
 
         $file_limit = 1000; // limit return results to 1000; max is 1000, default is 100
-
-
-
 
         $ch = curl_init();
 
@@ -641,18 +679,6 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
             }
         }
 
-        return true;
-    }
-
-    public function getTokens() : array
-    {
-        return [ 'access_token' => $this->access_token,
-                 'refresh_token' => $this->refresh_token,
-                 'expires' => $this->expires ];
-    }
-
-    private function connect() : bool
-    {
         return true;
     }
 

@@ -207,7 +207,6 @@ class Test
         $idx = 0;
         foreach ($test_connection_eids as $objeid1 => $type)
         {
-            // TODO: we need a better way of resetting credentials
             $connection_model = \Flexio\Tests\Util::getModel()->connection;
             $connection_model->set($objeid1, array('connection_info' => '{}'));
 

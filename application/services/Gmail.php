@@ -16,12 +16,13 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class Gmail implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
+class Gmail implements \Flexio\IFace\IConnection,
+                       \Flexio\IFace\IOAuthConnection
 {
+    // connection info
     private $authorization_uri = '';
     private $access_token = '';
     private $refresh_token = '';
-    private $updated = '';
     private $expires = 0;
 
     public static function create(array $params = null) : \Flexio\Services\Gmail
@@ -29,6 +30,24 @@ class Gmail implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         $obj = new self;
         $obj->initialize($params);
         return $obj;
+    }
+
+    ////////////////////////////////////////////////////////////
+    // IConnection interface
+    ////////////////////////////////////////////////////////////
+
+    public function connect() : bool
+    {
+        return true;
+    }
+
+    public function disconnect() : void
+    {
+        // reset oauth credential info
+        $this->authorization_uri = '';
+        $this->access_token = '';
+        $this->refresh_token = '';
+        $this->expires = 0;
     }
 
     public function authenticated() : bool
@@ -39,79 +58,39 @@ class Gmail implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return false;
     }
 
+    public function get() : array
+    {
+        $properties = array(
+            'access_token'  => $this->access_token,
+            'refresh_token' => $this->refresh_token,
+            'expires'       => $this->expires
+        );
+
+        return $properties;
+    }
+
+    ////////////////////////////////////////////////////////////
+    // OAuth interface
+    ////////////////////////////////////////////////////////////
+
     public function getAuthorizationUri() : string
     {
         return $this->authorization_uri;
     }
 
+    public function getTokens() : array
+    {
+        return $this->get();
+    }
+
     ////////////////////////////////////////////////////////////
-    // IFileSystem interface
+    // additional functions
     ////////////////////////////////////////////////////////////
 
-    public function getFlags() : int
-    {
-        return 0;
-    }
-
-    public function list(string $path = '', array $options = []) : array
-    {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-    }
-
-    public function getFileInfo(string $path) : array
-    {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-    }
-
-    public function exists(string $path) : bool
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
-    }
-
-
-
-    public function createFile(string $path, array $properties = []) : bool
-    {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-    }
-
-    public function createDirectory(string $path, array $properties = []) : bool
-    {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-    }
-
-    public function unlink(string $path) : bool
-    {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-    }
-
-    public function open($path) : \Flexio\IFace\IStream
-    {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-    }
-
-    public function read(array $params, callable $callback)
-    {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-    }
-
-    public function write(array $params, callable $callback)
-    {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-    }
-
-    public function insert(array $params, array $rows)  // $rows is an array of rows
-    {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-    }
-
-
-    public function retrieveEmailAddress()
+    public function retrieveEmailAddress() : string
     {
         if (!$this->authenticated())
-            return array();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED);
 
         $url = "https://www.googleapis.com/gmail/v1/users/me/profile";
 
@@ -126,19 +105,6 @@ class Gmail implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         $result = @json_decode($result, true);
 
         return $result['emailAddress'];
-    }
-
-
-    public function getTokens() : array
-    {
-        return [ 'access_token' => $this->access_token,
-                 'refresh_token' => $this->refresh_token,
-                 'expires' => $this->expires ];
-    }
-
-    private function connect() : bool
-    {
-        return true;
     }
 
     private function initialize(array $params = null) : bool
@@ -287,6 +253,5 @@ class Gmail implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         $service->setAccessType('offline');
         return $service;
     }
-
 }
 

@@ -308,11 +308,6 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
     // additional functions
     ////////////////////////////////////////////////////////////
 
-    private function connect() : bool
-    {
-        return true;
-    }
-
     private function isOk() : bool
     {
         return $this->process ? true : false;

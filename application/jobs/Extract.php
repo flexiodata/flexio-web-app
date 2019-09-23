@@ -61,12 +61,13 @@ class Extract extends \Flexio\Jobs\Base
             ]
         ]);
 
-        $local_process = \Flexio\Jobs\Process::create();
-        $local_process->setOwner($process->getOwner());
-        $local_process->setStdin($instream);
-        $local_process->execute($task);
 
-        $local_stdout = $local_process->getStdout();
+        $inner_process = \Flexio\Jobs\Process::create();
+        $inner_process->setOwner($process->getOwner());
+        $inner_process->setStdin($instream);
+        $inner_process->execute($task);
+
+        $inner_process_output = $inner_process->getStdout();
 
         // convert the table to json, but do so manually so we can
         // handle large tables
@@ -76,11 +77,12 @@ class Extract extends \Flexio\Jobs\Base
         $streamwriter->write("[");
 
         // write out the column names
-        $column_names = $local_stdout->getStructure()->getNames();
+        $column_names = $inner_process_output->getStructure()->getNames();
+
         $streamwriter->write(json_encode($column_names));
 
         // write out each row
-        $rows = \Flexio\Base\StreamUtil::getStreamContents($local_stdout);
+        $rows = \Flexio\Base\StreamUtil::getStreamContents($inner_process_output);
         foreach ($rows as $r)
         {
             $row_values = array_values($r);

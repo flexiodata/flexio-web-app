@@ -45,6 +45,18 @@ class Test
         $expected = 'Flexio\Services\Box';
         \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\Box::create(); basic file syntax check',  $actual, $expected, $results);
 
+        // BEGIN TEST
+        $service = new \Flexio\Services\Box;
+        $actual = ($service instanceof \Flexio\IFace\IConnection) ? true : false;
+        $expected = true;
+        \Flexio\Tests\Check::assertBoolean('A.2', 'new \Flexio\Services\Box; instance of IConnection ',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $service = new \Flexio\Services\Box;
+        $actual = ($service instanceof \Flexio\IFace\IOAuthConnection) ? true : false;
+        $expected = true;
+        \Flexio\Tests\Check::assertBoolean('A.3', 'new \Flexio\Services\Box; instance of IOAuthConnection ',  $actual, $expected, $results);
+
 
         // TEST: basic service functions
 

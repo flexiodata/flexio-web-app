@@ -16,13 +16,15 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
+class Box implements \Flexio\IFace\IConnection,
+                     \Flexio\IFace\IOAuthConnection,
+                     \Flexio\IFace\IFileSystem
 {
+    // connection info
     private $authorization_uri = '';
     private $access_token = '';
     private $refresh_token = '';
     private $expires = 0;
-    private $folders = [];
     private $base_path = '';
 
     public static function create(array $params = null) : \Flexio\Services\Box
@@ -30,6 +32,24 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         $obj = new self;
         $obj->initialize($params);
         return $obj;
+    }
+
+    ////////////////////////////////////////////////////////////
+    // IConnection interface
+    ////////////////////////////////////////////////////////////
+
+    public function connect() : bool
+    {
+        return true;
+    }
+
+    public function disconnect() : void
+    {
+        // reset oauth credential info
+        $this->authorization_uri = '';
+        $this->access_token = '';
+        $this->refresh_token = '';
+        $this->expires = 0;
     }
 
     public function authenticated() : bool
@@ -40,9 +60,29 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return false;
     }
 
+    public function get() : array
+    {
+        $properties = array(
+            'access_token'  => $this->access_token,
+            'refresh_token' => $this->refresh_token,
+            'expires'       => $this->expires
+        );
+
+        return $properties;
+    }
+
+    ////////////////////////////////////////////////////////////
+    // OAuth interface
+    ////////////////////////////////////////////////////////////
+
     public function getAuthorizationUri() : string
     {
         return $this->authorization_uri;
+    }
+
+    public function getTokens() : array
+    {
+        return $this->get();
     }
 
     ////////////////////////////////////////////////////////////
@@ -96,13 +136,13 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     public function getFileInfo(string $path) : array
     {
         if (!$this->authenticated())
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED);
 
         $info = $this->internalGetFileInfo($path);
         if (!isset($info['id']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        $fileid = $info['id'];
 
+        $fileid = $info['id'];
         if (($info['content_type'] ?? '') == \Flexio\Base\ContentType::FLEXIO_FOLDER)
         {
             $type = 'DIR';
@@ -481,17 +521,9 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return \Flexio\Services\Util::mergePath($this->base_path, $path);
     }
 
-
     ////////////////////////////////////////////////////////////
     // additional functions
     ////////////////////////////////////////////////////////////
-
-    public function getTokens() : array
-    {
-        return [ 'access_token' => $this->access_token,
-                 'refresh_token' => $this->refresh_token,
-                 'expires' => $this->expires ];
-    }
 
     private function getFolderItems($folder_id, $fields = null) : array
     {
@@ -523,11 +555,6 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         if (!isset($info['id']))
             return null;
         return $info['id'];
-    }
-
-    private function connect() : bool
-    {
-        return true;
     }
 
     private function initialize(array $params = null) : bool

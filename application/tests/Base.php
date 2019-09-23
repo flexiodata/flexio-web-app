@@ -40,13 +40,10 @@ class Base
     public const TEST_SERVICE_GOOGLEDRIVE = true;
     public const TEST_SERVICE_GOOGLESHEETS = true;
     public const TEST_SERVICE_LINKEDIN = true;
-    public const TEST_SERVICE_MAILJET = true;
     public const TEST_SERVICE_MYSQL = true;
-    public const TEST_SERVICE_PIPELINEDEALS = true;
     public const TEST_SERVICE_POSTGRES = true;
     public const TEST_SERVICE_SFTP = true;
     public const TEST_SERVICE_SOCRATA = true;
-    public const TEST_SERVICE_TWILIO = true;
     public const TEST_SERVICE_TWITTER = true;
 
     public const ERROR_EXCEPTION = 'error-exception';
