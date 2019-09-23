@@ -86,6 +86,9 @@ class GoogleSheets implements \Flexio\IFace\IConnection,
 
     public function list(string $path = '', array $options = []) : array
     {
+        if (!$this->authenticated())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED);
+
         $base_path = $path;
         if ($base_path == '')
             $base_path = '/';
@@ -704,6 +707,7 @@ class GoogleSheets implements \Flexio\IFace\IConnection,
         {
             $curtime = time();
             $expires = $params['expires'] ?? 0;
+
             if ($curtime < $expires)
             {
                 // access token is valid (not expired); use it
@@ -766,11 +770,12 @@ class GoogleSheets implements \Flexio\IFace\IConnection,
             $this->access_token = $token->getAccessToken();
             $this->refresh_token = $token->getRefreshToken();
             $this->expires = $token->getEndOfLife();
-            if (is_null($object->refresh_token))
+
+            if (is_null($this->refresh_token))
             {
                 $this->refresh_token = '';
             }
-
+            
             return true;
         }
 
