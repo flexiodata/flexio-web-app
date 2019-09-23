@@ -98,7 +98,14 @@ class Sftp implements \Flexio\IFace\IConnection,
 
     public function get() : array
     {
-        return array();
+        $properties = array(
+            'host'     => $this->host,
+            'username' => $this->username,
+            'password' => $this->password,
+            'base_path' => $this->base_path
+        );
+
+        return $properties;
     }
 
     ////////////////////////////////////////////////////////////

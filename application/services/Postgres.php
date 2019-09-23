@@ -82,7 +82,16 @@ class Postgres implements \Flexio\IFace\IConnection,
 
     public function get() : array
     {
-        return array();
+        $properties = array(
+            'host'     => $this->host,
+            'port'     => $this->port,
+            'username' => $this->username,
+            'password' => $this->password,
+            'database' => $this->database,
+            'path'     => $this->path
+        );
+
+        return $properties;
     }
 
     ////////////////////////////////////////////////////////////

@@ -55,7 +55,7 @@ class GitHub implements \Flexio\IFace\IConnection,
 
     public function get() : array
     {
-        return array();
+        return $this->getTokens();
     }
 
     ////////////////////////////////////////////////////////////

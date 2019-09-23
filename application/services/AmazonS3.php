@@ -84,7 +84,15 @@ class AmazonS3 implements \Flexio\IFace\IConnection,
 
     public function get() : array
     {
-        return array();
+        $properties = array(
+            'region'     => $this->region,
+            'bucket'     => $this->bucket,
+            'aws_key'    => $this->accesskey,
+            'aws_secret' => $this->secretkey,
+            'base_path'  => $this->base_path
+        );
+
+        return $properties;
     }
 
     ////////////////////////////////////////////////////////////

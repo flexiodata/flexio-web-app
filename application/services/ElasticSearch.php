@@ -81,7 +81,14 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
     public function get() : array
     {
-        return array();
+        $properties = array(
+            'host'     => $this->host,
+            'port'     => $this->port,
+            'username' => $this->user,
+            'password' => $this->password
+        );
+
+        return $properties;
     }
 
     ////////////////////////////////////////////////////////////
