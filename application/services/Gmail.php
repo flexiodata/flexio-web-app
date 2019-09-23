@@ -17,8 +17,7 @@ namespace Flexio\Services;
 
 
 class Gmail implements \Flexio\IFace\IConnection,
-                       \Flexio\IFace\IOAuthConnection,
-                       \Flexio\IFace\IFileSystem
+                       \Flexio\IFace\IOAuthConnection
 {
     private $authorization_uri = '';
     private $access_token = '';
@@ -71,67 +70,8 @@ class Gmail implements \Flexio\IFace\IConnection,
     }
 
     ////////////////////////////////////////////////////////////
-    // IFileSystem interface
+    // additional functions
     ////////////////////////////////////////////////////////////
-
-    public function getFlags() : int
-    {
-        return 0;
-    }
-
-    public function list(string $path = '', array $options = []) : array
-    {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-    }
-
-    public function getFileInfo(string $path) : array
-    {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-    }
-
-    public function exists(string $path) : bool
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
-    }
-
-
-
-    public function createFile(string $path, array $properties = []) : bool
-    {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-    }
-
-    public function createDirectory(string $path, array $properties = []) : bool
-    {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-    }
-
-    public function unlink(string $path) : bool
-    {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-    }
-
-    public function open($path) : \Flexio\IFace\IStream
-    {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-    }
-
-    public function read(array $params, callable $callback)
-    {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-    }
-
-    public function write(array $params, callable $callback)
-    {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-    }
-
-    public function insert(array $params, array $rows)  // $rows is an array of rows
-    {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-    }
 
     public function retrieveEmailAddress() : string
     {
@@ -299,6 +239,5 @@ class Gmail implements \Flexio\IFace\IConnection,
         $service->setAccessType('offline');
         return $service;
     }
-
 }
 
