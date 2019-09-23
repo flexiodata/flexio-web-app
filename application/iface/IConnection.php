@@ -21,5 +21,6 @@ interface IConnection
     public function connect() : bool;
     public function disconnect() : void;
     public function authenticated() : bool;
+    public function get() : array; // returns list of connection properties; general name matches pattern for other objects
 }
 

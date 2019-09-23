@@ -53,6 +53,11 @@ class Store implements \Flexio\IFace\IConnection,
         return true;
     }
 
+    public function get() : array
+    {
+        return array();
+    }
+
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////

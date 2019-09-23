@@ -54,6 +54,11 @@ class GoogleDrive implements \Flexio\IFace\IConnection,
         return false;
     }
 
+    public function get() : array
+    {
+        return array();
+    }
+
     ////////////////////////////////////////////////////////////
     // OAuth interface
     ////////////////////////////////////////////////////////////

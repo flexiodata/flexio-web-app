@@ -80,6 +80,11 @@ class Postgres implements \Flexio\IFace\IConnection,
         return $this->authenticated;
     }
 
+    public function get() : array
+    {
+        return array();
+    }
+
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
