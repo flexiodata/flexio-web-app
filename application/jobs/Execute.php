@@ -860,8 +860,8 @@ class ScriptHost
         if ($local_connection_properties)
         {
             $service = \Flexio\Services\Factory::create($local_connection_properties);
-            if (!$service)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE, "Process-local service not found");
+            if (!($service instanceof \Flexio\IFace\IOAuthConnection))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
             $tokens = $service->getTokens();
             return $tokens['access_token'];
@@ -881,7 +881,12 @@ class ScriptHost
             if ($owner_user_eid !== $connection->getOwner())
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
-            return $connection->getAccessToken();
+            $service = $connection->getService();
+            if (!($service instanceof \Flexio\IFace\IOAuthConnection))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+            $tokens = $service->getTokens();
+            return $tokens['access_token'];
         }
     }
 

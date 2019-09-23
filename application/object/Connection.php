@@ -255,12 +255,6 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $this;
     }
 
-    public function getAccessToken()
-    {
-        $tokens = $this->getService()->getTokens();
-        return $tokens['access_token'];
-    }
-
     public function getService() // TODO: add function return type
     {
         // get the connection properties
