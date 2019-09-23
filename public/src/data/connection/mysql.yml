@@ -37,3 +37,9 @@ form_items:
     label: Database
     placeholder: Database
     value: ''
+    append:
+      class: f7
+      value: >
+        **NOTE:** If your database is protected by a firewall, you will need
+        to grant Flex.io access to it. This can be done by allowing connections
+        from the following IP address: 34.205.178.37.

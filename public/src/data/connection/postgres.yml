@@ -37,3 +37,13 @@ form_items:
     label: Database
     placeholder: Database
     value: ''
+    append:
+      class: f7
+      value: |
+        **NOTE:** If your database is protected by a firewall, you will need to grant Flex.io access to it. This can be done by allowing connections from the following IP address: 34.205.178.37.
+
+        In addition, you’ll need to grant SELECT access so that Flex.io is allowed to retrieve data from your database. The command is:
+
+        <div class="code lh-title pa2 bg-nearer-white">
+          GRANT SELECT ON your_database.your_table TO your_username@'34.205.178.37' IDENTIFIED BY 'your_password';
+        </div>

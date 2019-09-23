@@ -114,6 +114,12 @@
           v-model="edit_values[fi.name]"
           v-else-if="fi.element == 'input'"
         />
+        <div
+          class="form-item-append"
+          v-html="getMarkdown(fi.append.value)"
+          v-bind="fi.append"
+          v-if="hasAppend(fi)"
+        ></div>
       </el-form-item>
       <slot name="form-append"></slot>
     </el-form>
@@ -254,6 +260,9 @@
       isDatePickerType(type) {
         return ['year','month','date','datetime','week','datetimerange','daterange'].indexOf(type) != -1
       },
+      hasAppend(fi) {
+        return _.get(fi, 'append.value', '').length > 0
+      },
       getMarkdown(val) {
         return marked(val)
       },
@@ -297,3 +306,8 @@
     }
   }
 </script>
+
+<style lang="stylus" scoped>
+  .form-item-append
+    margin: 6px 0 12px
+</style>
