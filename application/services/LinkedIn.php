@@ -62,6 +62,7 @@ class LinkedIn implements \Flexio\IFace\IConnection,
     public function get() : array
     {
         $properties = array(
+            'base_path'     => $this->base_path,
             'access_token'  => $this->access_token,
             'refresh_token' => $this->refresh_token,
             'expires'       => $this->expires
@@ -81,7 +82,13 @@ class LinkedIn implements \Flexio\IFace\IConnection,
 
     public function getTokens() : array
     {
-        return $this->get();
+        $properties = array(
+            'access_token'  => $this->access_token,
+            'refresh_token' => $this->refresh_token,
+            'expires'       => $this->expires
+        );
+
+        return $properties;
     }
 
     ////////////////////////////////////////////////////////////

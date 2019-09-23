@@ -64,6 +64,8 @@ class GitHub implements \Flexio\IFace\IConnection,
     public function get() : array
     {
         $properties = array(
+            'owner'         => $this->owner,
+            'repository'    => $this->repository,
             'access_token'  => $this->access_token,
             'refresh_token' => $this->refresh_token,
             'expires'       => $this->expires
@@ -83,7 +85,13 @@ class GitHub implements \Flexio\IFace\IConnection,
 
     public function getTokens() : array
     {
-        return $this->get();
+        $properties = array(
+            'access_token'  => $this->access_token,
+            'refresh_token' => $this->refresh_token,
+            'expires'       => $this->expires
+        );
+
+        return $properties;
     }
 
     ////////////////////////////////////////////////////////////
@@ -257,6 +265,10 @@ class GitHub implements \Flexio\IFace\IConnection,
         $repository = '';
         $path = '';
         $result = $this->getPathParts($full_path, $repository, $path);
+
+var_dump($repository);
+die;
+
         if ($result === false)
             return;
 

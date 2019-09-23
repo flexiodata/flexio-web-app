@@ -64,6 +64,8 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection,
     public function get() : array
     {
         $properties = array(
+            'bucket'        => $this->bucket,
+            'base_path'     => $this->base_path,
             'access_token'  => $this->access_token,
             'refresh_token' => $this->refresh_token,
             'expires'       => $this->expires
@@ -83,7 +85,13 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection,
 
     public function getTokens() : array
     {
-        return $this->get();
+        $properties = array(
+            'access_token'  => $this->access_token,
+            'refresh_token' => $this->refresh_token,
+            'expires'       => $this->expires
+        );
+
+        return $properties;
     }
 
     ////////////////////////////////////////////////////////////
