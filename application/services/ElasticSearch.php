@@ -19,11 +19,14 @@ namespace Flexio\Services;
 class ElasticSearch implements \Flexio\IFace\IConnection,
                                \Flexio\IFace\IFileSystem
 {
-    private $authenticated = false;
+    // connection info
     private $host = '';
     private $port = '';
     private $username = '';
     private $password = '';
+
+    // state info
+    private $authenticated = false;
 
     public static function create(array $params = null) : \Flexio\Services\ElasticSearch
     {

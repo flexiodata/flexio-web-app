@@ -40,12 +40,15 @@ class SftpCapture
 class Sftp implements \Flexio\IFace\IConnection,
                       \Flexio\IFace\IFileSystem
 {
+    // connection info
     private $host;
     private $username;
     private $password;
-    private $connection = false;
     private $base_path = '';
+
+    // state info
     private $authenticated = false;
+    private $connection = false;
 
     public static function create(array $params = null) : \Flexio\Services\Sftp
     {

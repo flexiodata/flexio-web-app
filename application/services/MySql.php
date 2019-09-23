@@ -19,16 +19,17 @@ namespace Flexio\Services;
 class MySql implements \Flexio\IFace\IConnection,
                        \Flexio\IFace\IFileSystem
 {
-    private $authenticated = false;
+    // connection info
     private $host = '';
     private $port = '';
     private $database = '';
     private $username = '';
     private $password = '';
+
+    // state info
+    private $authenticated = false;
     private $db = null;
     private $dbresult = null;
-    private $dbtablestructure = null;
-    private $rowbuffersize = 100;
 
     public static function create(array $params = null) : \Flexio\Services\MySql
     {
@@ -231,8 +232,6 @@ class MySql implements \Flexio\IFace\IConnection,
 
         $this->db = null;
         $this->dbresult = null;
-        $this->dbtablestructure = null;
-        $this->rowbuffersize = 100;
         $this->authenticated = false;
 
         $this->db = $this->newConnection();

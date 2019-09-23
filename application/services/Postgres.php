@@ -19,13 +19,16 @@ namespace Flexio\Services;
 class Postgres implements \Flexio\IFace\IConnection,
                           \Flexio\IFace\IFileSystem
 {
-    private $authenticated = false;
-    private $db = null;
+    // conneciton info
     private $host;
     private $port;
     private $database;
     private $username;
     private $password;
+
+    // state info
+    private $authenticated = false;
+    private $db = null;
 
     public static function create(array $params = null) : \Flexio\Services\Postgres
     {

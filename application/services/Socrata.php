@@ -19,8 +19,11 @@ namespace Flexio\Services;
 class Socrata implements \Flexio\IFace\IConnection,
                          \Flexio\IFace\IFileSystem
 {
+    // connection info
     private $host;
     private $port;
+
+    // state info
     private $base_url = null;
     private $authenticated = false;
 

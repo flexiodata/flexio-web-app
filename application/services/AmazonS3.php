@@ -19,13 +19,15 @@ namespace Flexio\Services;
 class AmazonS3 implements \Flexio\IFace\IConnection,
                           \Flexio\IFace\IFileSystem
 {
-    private $authenticated = false;
+    // connection info
+    private $region = '';
     private $bucket = '';
     private $accesskey = '';
     private $secretkey = '';
-    private $region = '';
     private $base_path = '';
 
+    // state info
+    private $authenticated = false;
     private $aws = null;
     private $s3 = null;
 

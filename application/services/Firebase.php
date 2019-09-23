@@ -19,6 +19,10 @@ namespace Flexio\Services;
 class Firebase implements \Flexio\IFace\IConnection,
                           \Flexio\IFace\IFileSystem
 {
+    // connection info
+    // TODO: add
+
+    // state info
     private $authenticated = false;
 
     public static function create(array $params = null) : \Flexio\Services\Firebase
