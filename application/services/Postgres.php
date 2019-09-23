@@ -21,7 +21,11 @@ class Postgres implements \Flexio\IFace\IConnection,
 {
     private $authenticated = false;
     private $db = null;
-    private $host, $port, $database, $username, $password;
+    private $host;
+    private $port;
+    private $database;
+    private $username;
+    private $password;
 
     public static function create(array $params = null) : \Flexio\Services\Postgres
     {

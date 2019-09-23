@@ -22,7 +22,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
     private $authenticated = false;
     private $host = '';
     private $port = '';
-    private $user = '';
+    private $username = '';
     private $password = '';
 
     public static function create(array $params = null) : \Flexio\Services\ElasticSearch
@@ -61,7 +61,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
     {
         $host = $this->host;
         $port = $this->port;
-        $user = $this->user;
+        $username = $this->username;
         $password = $this->password;
 
         if ($this->initialize($host, $port, $username, $password) === false)
@@ -84,7 +84,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         $properties = array(
             'host'     => $this->host,
             'port'     => $this->port,
-            'username' => $this->user,
+            'username' => $this->username,
             'password' => $this->password
         );
 

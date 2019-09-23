@@ -23,7 +23,7 @@ class MySql implements \Flexio\IFace\IConnection,
     private $host = '';
     private $port = '';
     private $database = '';
-    private $user = '';
+    private $username = '';
     private $password = '';
     private $db = null;
     private $dbresult = null;
@@ -94,7 +94,7 @@ class MySql implements \Flexio\IFace\IConnection,
         $properties = array(
             'host'     => $this->host,
             'port'     => $this->port,
-            'username' => $this->user,
+            'username' => $this->username,
             'password' => $this->password,
             'database' => $this->database,
             'path'     => $this->path
