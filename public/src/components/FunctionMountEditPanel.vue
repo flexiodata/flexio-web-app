@@ -83,20 +83,6 @@
   const CONNECTION_MODE_FUNCTION = 'F'
 
   const defaultAttrs = () => {
-    var connection_info = {
-      method: '',
-      url: '',
-      auth: 'none',
-      username: '',
-      password: '',
-      token: '',
-      access_token: '',
-      refresh_token: '',
-      expires: '',
-      headers: {},
-      data: {}
-    }
-
     var suffix = getNameSuffix()
 
     return {
@@ -107,7 +93,7 @@
       description: '',
       connection_type: '',
       connection_mode: CONNECTION_MODE_RESOURCE,
-      connection_info
+      connection_info: {}
     }
   }
 

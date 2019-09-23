@@ -266,13 +266,13 @@
           this.active_step = 'authentication'
         })
       },
-      doSubmit(keys) {
+      doSubmit() {
         var team_name = this.active_team_name
         var eid = this.edit_connection.eid
-        var attrs = _.pick(this.edit_connection, keys)
+        var attrs = _.pick(this.edit_connection, ['name', 'connection_info'])
         attrs.eid_status = OBJECT_STATUS_AVAILABLE
 
-        this.$store.dispatch('connections/update', { team_name, eid, attrs }).then(response => {
+        return this.$store.dispatch('connections/update', { team_name, eid, attrs }).then(response => {
           this.edit_connection = _.assign({}, this.edit_connection, _.cloneDeep(response.data))
           this.$emit('submit', this.edit_connection)
         })
@@ -289,14 +289,14 @@
         switch (this.active_step) {
           case 'authentication':
             if (this.mode == 'edit') {
-              this.doSubmit(['connection_info'])
+              this.doSubmit()
             } else {
               this.active_step = 'properties'
             }
             return
 
           case 'properties':
-            this.doSubmit(['name'])
+            this.doSubmit()
             return
         }
       },
