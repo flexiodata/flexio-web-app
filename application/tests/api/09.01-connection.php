@@ -85,7 +85,7 @@ class Test
                 "name": "name1",
                 "title": "Test Connection Title",
                 "description": "Test Connection Description",
-                "connection_type": "'.\Flexio\Services\Factory::TYPE_HTTP.'",
+                "connection_type": "'.\Model::CONNECTION_TYPE_HTTP.'",
                 "connection_mode": "'.\Model::CONNECTION_MODE_RESOURCE.'",
                 "connection_status": "'.\Model::CONNECTION_STATUS_AVAILABLE.'",
                 "connection_info": {

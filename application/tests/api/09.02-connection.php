@@ -232,7 +232,7 @@ class Test
                 "name": "name1-updated",
                 "title": "Test Connection Updated",
                 "description": "Test Connection Description Updated",
-                "connection_type": "'.\Flexio\Services\Factory::TYPE_HTTP.'",
+                "connection_type": "'.\Model::CONNECTION_TYPE_HTTP.'",
                 "connection_mode": "'.\Model::CONNECTION_MODE_FUNCTION.'",
                 "connection_status": "'.\Model::CONNECTION_STATUS_AVAILABLE.'",
                 "connection_info": {

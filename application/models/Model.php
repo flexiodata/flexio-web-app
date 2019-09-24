@@ -134,15 +134,6 @@ class Model
     public const REGISTRY_VALUE_DATETIME  = 'T'; // (YYYY-MM-DD HH:MM:SS)
     public const REGISTRY_VALUE_BINARY    = 'X';
 
-    public const CONNECTION_MODE_UNDEFINED   = '';
-    public const CONNECTION_MODE_RESOURCE      = 'R';
-    public const CONNECTION_MODE_FUNCTION      = 'F';
-
-    public const CONNECTION_STATUS_UNDEFINED   = '';
-    public const CONNECTION_STATUS_AVAILABLE   = 'A';
-    public const CONNECTION_STATUS_UNAVAILABLE = 'U';
-    public const CONNECTION_STATUS_ERROR       = 'E';
-
     public const PIPE_DEPLOY_MODE_UNDEFINED  = '';
     public const PIPE_DEPLOY_MODE_BUILD      = 'B';
     public const PIPE_DEPLOY_MODE_RUN        = 'R';
@@ -170,6 +161,37 @@ class Model
     public const TEAM_ROLE_CONTRIBUTOR     = 'C';
     public const TEAM_ROLE_ADMINISTRATOR   = 'A';
     public const TEAM_ROLE_OWNER           = 'O';
+
+    public const CONNECTION_MODE_UNDEFINED   = '';
+    public const CONNECTION_MODE_RESOURCE      = 'R';
+    public const CONNECTION_MODE_FUNCTION      = 'F';
+
+    public const CONNECTION_STATUS_UNDEFINED   = '';
+    public const CONNECTION_STATUS_AVAILABLE   = 'A';
+    public const CONNECTION_STATUS_UNAVAILABLE = 'U';
+    public const CONNECTION_STATUS_ERROR       = 'E';
+
+    public const CONNECTION_TYPE_UNDEFINED          = '';
+    public const CONNECTION_TYPE_FLEXIO             = 'flexio';
+    public const CONNECTION_TYPE_FTP                = 'ftp';
+    public const CONNECTION_TYPE_SFTP               = 'sftp';
+    public const CONNECTION_TYPE_MYSQL              = 'mysql';
+    public const CONNECTION_TYPE_POSTGRES           = 'postgres';
+    public const CONNECTION_TYPE_ELASTICSEARCH      = 'elasticsearch';
+    public const CONNECTION_TYPE_DROPBOX            = 'dropbox';
+    public const CONNECTION_TYPE_BOX                = 'box';
+    public const CONNECTION_TYPE_GMAIL              = 'gmail';
+    public const CONNECTION_TYPE_GOOGLEDRIVE        = 'googledrive';
+    public const CONNECTION_TYPE_GOOGLESHEETS       = 'googlesheets';
+    public const CONNECTION_TYPE_GOOGLECLOUDSTORAGE = 'googlecloudstorage';
+    public const CONNECTION_TYPE_GITHUB             = 'github';
+    public const CONNECTION_TYPE_AMAZONS3           = 'amazons3';
+    public const CONNECTION_TYPE_EMAIL              = 'email';
+    public const CONNECTION_TYPE_SMTP               = 'smtp';
+    public const CONNECTION_TYPE_HTTP               = 'http';
+    public const CONNECTION_TYPE_SOCRATA            = 'socrata';
+    public const CONNECTION_TYPE_LINKEDIN           = 'linkedin';
+    public const CONNECTION_TYPE_KEYRING            = 'keyring';
 
     private $objs = array();
     private $database = null;

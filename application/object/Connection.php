@@ -302,8 +302,8 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $connection_info = $this->get();
 
         // if we have a regular file type service, just get the list of files
-        // from the service
-        if ($connection_info['connection_type'] !== \Flexio\Services\Factory::TYPE_HTTP)
+        // from the service; TODO: use file system interface as test
+        if ($connection_info['connection_type'] !== \Model::CONNECTION_TYPE_HTTP)
         {
             $service = $this->getService();
             return $service->list();
@@ -365,7 +365,7 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
         // if we have an http connection type, load the content each time; TODO: use
         // etags to get a hash signature, and then we can cache content
-        if ($connection_info['connection_type'] === \Flexio\Services\Factory::TYPE_HTTP)
+        if ($connection_info['connection_type'] === \Model::CONNECTION_TYPE_HTTP)
         {
             $content = '';
             $http_service = \Flexio\Services\Http::create();
