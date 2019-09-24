@@ -77,6 +77,8 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         // encryption will happen elsewhere
         if (isset($properties) && isset($properties['connection_info']))
             $properties['connection_info'] = json_encode($properties['connection_info']);
+        if (isset($properties) && isset($properties['setup_template']))
+            $properties['setup_template'] = json_encode($properties['setup_template']);
         if (isset($properties) && isset($properties['setup_config']))
             $properties['setup_config'] = json_encode($properties['setup_config']);
 
@@ -131,6 +133,8 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         // encode the connection and setup info
         if (isset($properties) && isset($properties['connection_info']))
             $properties['connection_info'] = json_encode($properties['connection_info']);
+        if (isset($properties) && isset($properties['setup_template']))
+            $properties['setup_template'] = json_encode($properties['setup_template']);
         if (isset($properties) && isset($properties['setup_config']))
             $properties['setup_config'] = json_encode($properties['setup_config']);
 
