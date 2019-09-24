@@ -13,7 +13,7 @@
       <!-- step 1: choose source -->
       <div v-if="active_step == 'choose-source' && !has_mount">
         <IconList
-          items="mounts"
+          :items="integrations"
           @item-click="onIntegrationClick"
           v-show="mountType == 'integration'"
         />
@@ -91,7 +91,7 @@
 
 <script>
   import randomstring from 'randomstring'
-  import { mapState } from 'vuex'
+  import { mapState, mapGetters } from 'vuex'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '@/constants/object-status'
   import api from '@/api'
   import { slugify } from '@/utils'
@@ -184,10 +184,13 @@
     },
     computed: {
       ...mapState({
-        active_team_name: state => state.teams.active_team_name
+        active_team_name: state => state.teams.active_team_name,
       }),
       cname() {
         return _.get(this.mount, 'name', '')
+      },
+      integrations() {
+        return this.getProductionIntegrations()
       },
       has_mount() {
         var eid = _.get(this.edit_mount, 'eid', '')
@@ -213,6 +216,9 @@
       },
     },
     methods: {
+      ...mapGetters('integrations', {
+        'getProductionIntegrations': 'getProductionIntegrations',
+      }),
       initSelf() {
         // reset our local component data
         _.assign(this.$data, getDefaultState())
@@ -225,7 +231,7 @@
       },
       createIntegrationConnection(item) {
         var team_name = this.active_team_name
-        var attrs = _.get(item, 'connection', {})
+        var attrs = _.cloneDeep(_.get(item, 'connection', {}))
         attrs.name = attrs.name + '-' + getNameSuffix(4)
         attrs.eid_status = OBJECT_STATUS_PENDING
 
@@ -262,7 +268,8 @@
       fetchFunctionPackConfig() {
         var team_name = this.active_team_name
         var eid = this.edit_mount.eid
-        var path = this.edit_mount.name + ':/flexio.yml'
+        var url = _.get(this.edit_mount, 'connection_info.url', '')
+        var path = url.length > 0 ? url : this.edit_mount.name + ':/flexio.yml'
 
         api.fetchFunctionPackConfig(team_name, path).then(response => {
           var prompts = _.get(response.data, 'prompts', [])
