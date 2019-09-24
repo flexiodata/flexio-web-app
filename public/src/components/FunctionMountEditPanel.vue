@@ -8,51 +8,72 @@
       v-show="showHeader"
     />
 
-    <!-- step 1: choose source -->
-    <div v-if="active_step == 'choose-source' && !has_mount">
-      <IconList
-        items="mounts"
-        @item-click="onIntegrationClick"
-        v-show="mountType == 'integration'"
-      />
+    <!-- body -->
+    <div>
+      <!-- step 1: choose source -->
+      <div v-if="active_step == 'choose-source' && !has_mount">
+        <IconList
+          items="mounts"
+          @item-click="onIntegrationClick"
+          v-show="mountType == 'integration'"
+        />
 
-      <IconList
-        items="services"
+        <IconList
+          items="services"
+          :filter-by="filterByFunctionMount"
+          @item-click="onServiceClick"
+          v-show="mountType == 'mount'"
+        />
+      </div>
+
+      <!-- step 2: configure connection -->
+      <ConnectionEditPanel
+        :mode="mode"
+        :active-step="'authentication'"
+        :connection="edit_mount"
+        :show-header="false"
         :filter-by="filterByFunctionMount"
-        @item-click="onServiceClick"
-        v-show="mountType == 'mount'"
+        @cancel="onCancel"
+        @submit="onUpdateConnection"
+        v-if="active_step == 'configure-connection' && has_mount"
       />
-    </div>
 
-    <!-- step 2: configure connection -->
-    <ConnectionEditPanel
-      :mode="mode"
-      :active-step="'authentication'"
-      :connection="edit_mount"
-      :show-header="false"
-      :filter-by="filterByFunctionMount"
-      @cancel="onCancel"
-      @submit="onUpdateConnection"
-      v-if="active_step == 'configure-connection' && has_mount"
-    />
-
-    <!-- step 3: setup config -->
-    <FunctionMountConfigWizard
-      :definition="manifest"
-      @done-click="saveMountSetupConfig"
-      v-if="active_step == 'setup-config' && has_manifest"
-    />
-    <div
-
-      v-else-if="active_step == 'setup-config' && !has_manifest"
-    >
-      <p>Your function mount was created successfully. Click <strong>"Done"</strong> to begin importing functions.</p>
-      <ButtonBar
-        class="mt4"
-        :cancel-button-visible="false"
-        :submit-button-text="'Done'"
-        @submit-click="onSubmit"
+      <!-- step 3: setup config (optional) -->
+      <FunctionMountConfigWizard
+        :definition="manifest"
+        @done-click="saveMountSetupConfig"
+        v-if="active_step == 'setup-config' && has_prompts"
       />
+
+      <!-- step 4: show result (success) -->
+      <div v-else-if="active_step == 'setup-success'">
+        <div style="height: 18px"></div>
+        <div class="flex flex-column items-center br2 ba b--black-10 pa4">
+          <i class="el-icon-success dark-green f2 nt4 relative" style="background: #fff; top: -18px; padding: 0 8px"></i>
+          <p>Your function mount was created successfully. Click <strong>"Done"</strong> to begin importing functions.</p>
+        </div>
+        <ButtonBar
+          class="mt4"
+          :cancel-button-visible="false"
+          :submit-button-text="'Done'"
+          @submit-click="onSubmit"
+        />
+      </div>
+
+      <!-- step 4: show result (failure) -->
+      <div v-else-if="active_step == 'setup-error'">
+        <div style="height: 18px"></div>
+        <div class="flex flex-column items-center br2 ba b--black-10 pa4">
+          <i class="el-icon-warning dark-red f2 nt4 relative" style="background: #fff; top: -18px; padding: 0 8px"></i>
+          <p>No <strong>flexio.yml</strong> manifest file could be found at the specified location. Please try again.</p>
+        </div>
+        <ButtonBar
+          class="mt4"
+          :cancel-button-visible="false"
+          :submit-button-text="'Done'"
+          @submit-click="onCancel"
+        />
+      </div>
     </div>
 
     <!-- footer -->
@@ -109,7 +130,8 @@
     return {
       edit_mount: {},
       manifest: {},
-      active_step: 'choose-source'
+      active_step: 'choose-source',
+      error_msg: ''
     }
   }
 
@@ -169,7 +191,7 @@
         var eid = _.get(this.edit_mount, 'eid', '')
         return eid.length > 0
       },
-      has_manifest() {
+      has_prompts() {
         return _.get(this.manifest, 'prompts', []).length > 0
       },
       our_title() {
@@ -211,6 +233,7 @@
         })
       },
       createPendingFunctionMount(item) {
+        var ctype = item.connection_type
         var ctitle = item.title || item.service_name
         var service_slug = slugify(ctitle)
         var team_name = this.active_team_name
@@ -225,7 +248,7 @@
           eid_status: OBJECT_STATUS_PENDING,
           name: `${service_slug}-` + getNameSuffix(16),
           title: ctitle,
-          connection_type: item.connection_type
+          connection_type: ctype
         })
 
         return this.$store.dispatch('connections/create', { team_name, attrs }).then(response => {
@@ -237,8 +260,12 @@
       fetchFunctionPackConfig() {
         var path = this.edit_mount.name + ':/flexio.yml'
         api.fetchFunctionPackConfig(this.active_team_name, path).then(response => {
-          this.active_step = 'setup-config'
+          var prompts = _.get(response.data, 'prompts', [])
           this.manifest = _.assign({}, response.data)
+          this.active_step = prompts.length > 0 ? 'setup-config' : 'setup-success'
+        }).catch(error => {
+          this.active_step = 'setup-error'
+          this.error_msg = _.get(error, 'response.data.error.message', '')
         })
       },
       saveMountSetupConfig(setup_config) {
@@ -249,7 +276,7 @@
 
         return this.$store.dispatch('connections/update', { team_name, eid, attrs }).then(response => {
           this.edit_mount = _.assign({}, this.edit_mount, _.cloneDeep(response.data))
-          this.$emit('submit', this.edit_mount)
+          this.active_step = 'setup-success'
         })
       },
       omitMaskedValues(attrs) {

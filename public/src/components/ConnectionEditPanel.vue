@@ -245,6 +245,7 @@
       },
       createPendingConnection(item) {
         var ctype = item.connection_type
+        var ctitle = item.service_name
         var service_slug = slugify(item.service_name)
         var team_name = this.active_team_name
 
@@ -257,7 +258,7 @@
         var attrs = _.assign({}, getDefaultAttrs(), prop_connection_attrs, {
           eid_status: OBJECT_STATUS_PENDING,
           name: `${service_slug}-` + getNameSuffix(16),
-          title: item.service_name,
+          title: ctitle,
           connection_type: ctype
         })
 
