@@ -426,24 +426,39 @@ class Test
         \Flexio\Tests\Check::assertString('K.8', 'Type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
+        $actual = \Model::CONNECTION_TYPE_BOX;
+        $expected = 'box';
+        \Flexio\Tests\Check::assertString('K.9', 'Type constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Model::CONNECTION_TYPE_GMAIL;
+        $expected = 'gmail';
+        \Flexio\Tests\Check::assertString('K.10', 'Type constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_GOOGLEDRIVE;
         $expected = 'googledrive';
-        \Flexio\Tests\Check::assertString('K.9', 'Type constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('K.11', 'Type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_GOOGLESHEETS;
         $expected = 'googlesheets';
-        \Flexio\Tests\Check::assertString('K.10', 'Type constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('K.12', 'Type constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Model::CONNECTION_TYPE_GOOGLECLOUDSTORAGE;
+        $expected = 'googlecloudstorage';
+        \Flexio\Tests\Check::assertString('K.13', 'Type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_GITHUB;
         $expected = 'github';
-        \Flexio\Tests\Check::assertString('K.11', 'Type constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('K.14', 'Type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_AMAZONS3;
         $expected = 'amazons3';
-        \Flexio\Tests\Check::assertString('K.12', 'Type constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('K.15', 'Type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_EMAIL;
@@ -451,9 +466,14 @@ class Test
         \Flexio\Tests\Check::assertString('K.16', 'Type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
+        $actual = \Model::CONNECTION_TYPE_SMTP;
+        $expected = 'email';
+        \Flexio\Tests\Check::assertString('K.17', 'Type constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_HTTP;
         $expected = 'http';
-        \Flexio\Tests\Check::assertString('K.17', 'Type constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('K.18', 'Type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_SOCRATA;
@@ -461,8 +481,18 @@ class Test
         \Flexio\Tests\Check::assertString('K.19', 'Type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
+        $actual = \Model::CONNECTION_TYPE_LINKEDIN;
+        $expected = 'linkedin';
+        \Flexio\Tests\Check::assertString('K.20', 'Type constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Model::CONNECTION_TYPE_TWITTER;
+        $expected = 'twitter';
+        \Flexio\Tests\Check::assertString('K.21', 'Type constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_KEYRING;
         $expected = 'keyring';
-        \Flexio\Tests\Check::assertString('K.20', 'Type constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('K.22', 'Type constant',  $actual, $expected, $results);
     }
 }

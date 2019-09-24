@@ -36,7 +36,8 @@ class Factory
         \Model::CONNECTION_TYPE_SMTP                => '\Flexio\Services\Email', // use email for SMTP
         \Model::CONNECTION_TYPE_HTTP                => '\Flexio\Services\Http',
         \Model::CONNECTION_TYPE_SOCRATA             => '\Flexio\Services\Socrata',
-        \Model::CONNECTION_TYPE_LINKEDIN            => '\Flexio\Services\LinkedIn'
+        \Model::CONNECTION_TYPE_LINKEDIN            => '\Flexio\Services\LinkedIn',
+        \Model::CONNECTION_TYPE_TWITTER             => '\Flexio\Services\Twitter'
     );
 
     public static function create(array $connection_properties) // TODO: add return type
