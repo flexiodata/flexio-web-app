@@ -28,8 +28,10 @@
 
       <!-- step 2: configure connection -->
       <ConnectionEditPanel
+        active-step="authentication"
+        last-step="authentication"
+        submit-button-text="Create Function Mount"
         :mode="mode"
-        :active-step="'authentication'"
         :connection="edit_mount"
         :show-header="false"
         :filter-by="filterByFunctionMount"
