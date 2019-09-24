@@ -95,7 +95,7 @@ class Email extends \Flexio\Jobs\Base
 
                 if ($connection['connection_type'] == 'gmail')
                 {
-                    $service = \Flexio\Services\Factory::create($connection);
+                    $service = \Flexio\Services\Factory::create($connection['connection_type'], $connection['connection_info']);
                     if (!($service instanceof \Flexio\IFace\IOAuthConnection))
                         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
                     $tokens = $service->getTokens();

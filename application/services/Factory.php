@@ -40,20 +40,20 @@ class Factory
         \Model::CONNECTION_TYPE_TWITTER             => '\Flexio\Services\Twitter'
     );
 
-    public static function create(array $connection_properties) // TODO: add return type
+    public static function create(string $connection_type, array $connection_info = array()) // TODO: add return type
     {
         global $g_store;
 
         // create a connection hash for storing/retrieving caches of the service
+        $connection_properties = array(
+            'connection_type' => $connection_type,
+            'connection_info' => $connection_info
+        );
         $connection_hash = self::createConnectionHash($connection_properties);
 
         // if we have a cached connection, use it
         if ($connection_hash !== false && isset($g_store->connections[$connection_hash]))
             return $g_store->connections[$connection_hash];
-
-        // get the connection type and info
-        $connection_type = $connection_properties['connection_type'] ?? '';
-        $connection_info = $connection_properties['connection_info'] ?? array();
 
         // try to load a corresponding service for the connection
         $service_class_name = self::$manifest[$connection_type] ?? false;
