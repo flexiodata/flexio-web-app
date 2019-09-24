@@ -365,7 +365,7 @@ def flex_handler(flex):
           return {
             id: key.length == 0 ? 'local' : key,
             ctype: _.get(connection, 'connection_type', ''),
-            title: key.length == 0 ? 'Local' : _.get(connection, 'name', `Not found (${key})`),
+            title: key.length == 0 ? 'My Functions' : _.get(connection, 'name', `Not found (${key})`),
             pipes: _.sortBy(val, ['name']),
             connection,
           }
