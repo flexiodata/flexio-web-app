@@ -260,14 +260,19 @@
         })
       },
       fetchFunctionPackConfig() {
+        var team_name = this.active_team_name
+        var eid = this.edit_mount.eid
         var path = this.edit_mount.name + ':/flexio.yml'
-        api.fetchFunctionPackConfig(this.active_team_name, path).then(response => {
+
+        api.fetchFunctionPackConfig(team_name, path).then(response => {
           var prompts = _.get(response.data, 'prompts', [])
           this.manifest = _.assign({}, response.data)
           this.active_step = prompts.length > 0 ? 'setup-config' : 'setup-success'
         }).catch(error => {
-          this.active_step = 'setup-error'
-          this.error_msg = _.get(error, 'response.data.error.message', '')
+          this.$store.dispatch('connections/delete', { team_name, eid }).then(response => {
+            this.active_step = 'setup-error'
+            this.error_msg = _.get(error, 'response.data.error.message', '')
+          })
         })
       },
       saveMountSetupConfig(setup_config) {
