@@ -84,6 +84,7 @@ class Test
             'params' => '{
                 "name": "name1",
                 "title": "Test Pipe Title",
+                "icon": "https://localhost/image.png",
                 "description": "Test Pipe Description",
                 "examples": ["e1", "e2", "e3"],
                 "params": ["p1", "p2", "p3"],
@@ -120,6 +121,7 @@ class Test
             },
             "name": "name1",
             "title": "Test Pipe Title",
+            "icon": "https://localhost/image.png",
             "description": "Test Pipe Description",
             "examples": ["e1", "e2", "e3"],
             "params": ["p1", "p2", "p3"],

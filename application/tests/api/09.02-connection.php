@@ -257,6 +257,7 @@ class Test
             "eid_status": "A",
             "name": "name1-updated",
             "title": "Test Connection Updated",
+            "icon": "https://localhost/image.png",
             "description": "Test Connection Description Updated",
             "connection_type": "http",
             "connection_mode": "F",

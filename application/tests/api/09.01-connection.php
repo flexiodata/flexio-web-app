@@ -84,6 +84,7 @@ class Test
             'params' => '{
                 "name": "name1",
                 "title": "Test Connection Title",
+                "icon": "https://localhost/image.png",
                 "description": "Test Connection Description",
                 "connection_type": "'.\Model::CONNECTION_TYPE_HTTP.'",
                 "connection_mode": "'.\Model::CONNECTION_MODE_RESOURCE.'",
@@ -109,6 +110,7 @@ class Test
             "eid_status": "A",
             "name": "name1",
             "title": "Test Connection Title",
+            "icon": "https://localhost/image.png",
             "description": "Test Connection Description",
             "connection_type": "http",
             "connection_mode": "R",

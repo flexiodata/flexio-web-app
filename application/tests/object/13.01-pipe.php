@@ -230,6 +230,7 @@ class Test
             },
             "name" : null,
             "title" : null,
+            "icon" : null,
             "description" : null,
             "examples": {
             },
