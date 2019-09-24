@@ -231,6 +231,7 @@ class Test
             'params' => '{
                 "name": "name1-updated",
                 "title": "Test Connection Updated",
+                "icon": "https://localhost/image-updated.png",
                 "description": "Test Connection Description Updated",
                 "connection_type": "'.\Model::CONNECTION_TYPE_HTTP.'",
                 "connection_mode": "'.\Model::CONNECTION_MODE_FUNCTION.'",
@@ -257,7 +258,7 @@ class Test
             "eid_status": "A",
             "name": "name1-updated",
             "title": "Test Connection Updated",
-            "icon": "https://localhost/image.png",
+            "icon": "https://localhost/image-updated.png",
             "description": "Test Connection Description Updated",
             "connection_type": "http",
             "connection_mode": "F",
