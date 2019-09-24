@@ -278,8 +278,8 @@ class Test
                 "param2": "t2"
             },
             "setup_config": {
-                "param1": "value1",
-                "param2": "value2"
+                "param1": "c1",
+                "param2": "c2"
             },
             "expires": null,
             "owned_by": {
