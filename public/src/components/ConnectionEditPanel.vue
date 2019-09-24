@@ -217,10 +217,12 @@
         return 0
       },
       submit_label() {
-        return this.mode == 'edit' ? 'Save changes'
-          : this.active_step == 'authentication' ? 'Continue'
-          : this.active_step == 'properties' ? 'Create connection'
-          : 'Submit'
+        switch (this.active_step) {
+          case 'authentication': return 'Continue'
+          case 'properties': return this.mode == 'edit' ? 'Save changes' : 'Create connection'
+        }
+
+        return 'Submit'
       },
       button_bar_attrs() {
         return _.assign({
@@ -288,11 +290,7 @@
       onSubmit() {
         switch (this.active_step) {
           case 'authentication':
-            if (this.mode == 'edit') {
-              this.doSubmit()
-            } else {
-              this.active_step = 'properties'
-            }
+            this.active_step = 'properties'
             return
 
           case 'properties':

@@ -55,15 +55,6 @@
           class="ttu fw6"
           style="min-width: 5rem"
           size="small"
-          @click="onReconnectClick"
-          v-require-rights:connection.update
-        >
-          Reconnect
-        </el-button>
-        <el-button
-          class="ttu fw6"
-          style="min-width: 5rem"
-          size="small"
           type="primary"
           @click="onEditClick"
           v-require-rights:connection.update
@@ -184,8 +175,8 @@
 
 <style lang="stylus" scoped>
   td
-    padding: 0 8px 2px 0
-    font-size: .75rem
+    padding: 0 8px 4px 0
+    font-size: .875rem
     line-height: 1.5
   td:first-child::after
     content: ":"
