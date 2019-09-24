@@ -26,6 +26,7 @@ export default {
         commit('appconnections/RESET_STATE')
         commit('apppipes/RESET_STATE')
         commit('connections/RESET_STATE')
+        commit('integrations/RESET_STATE')
         commit('members/RESET_STATE')
         commit('pipes/RESET_STATE')
         commit('processes/RESET_STATE')
@@ -37,6 +38,7 @@ export default {
           dispatch('teams/fetch', { team_name: active_username }),
           dispatch('members/fetch', { team_name }),
           dispatch('connections/fetch', { team_name }),
+          dispatch('integrations/fetch'),
         ])
         .then(axios.spread((teams_response, members_response, connections_response) => {
           dispatch('members/fetchRights', { team_name, eid: active_user_eid, username: active_username }).finally(response => {

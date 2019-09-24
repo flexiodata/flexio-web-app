@@ -66,7 +66,7 @@
     props: {
       items: {
         type: [String, Array], // 'mounts', 'services', []
-        default: []
+        default: () => []
       },
       filterBy: {
         type: Function
