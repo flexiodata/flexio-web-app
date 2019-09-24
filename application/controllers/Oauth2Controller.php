@@ -40,22 +40,19 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
 
             // STEP 2: prepare the params to pass to the remote service, including
             // a state parameter the stores the connection eid and the redirect url
-            $connection_info = $connection->get();
-            $connection_type = $connection_info['connection_type'];
-
             $state = array(
                 'eid' => $connection->getEid()
             );
 
-            $service_factory_params = array();
-            $service_factory_params['connection_type'] = $connection_type;
-            $service_factory_params['connection_info'] = array(
+            $connection_properties = $connection->get();
+            $connection_type = $connection_properties['connection_type'] ?? '';
+            $connection_info = array(
                 'state' => base64_encode(json_encode($state)),
                 'redirect' => self::getCallbackUrl()
             );
 
             // STEP 3: get the remote service authorization url to redirect to authenticate
-            $service = \Flexio\Services\Factory::create($service_factory_params);
+            $service = \Flexio\Services\Factory::create($connection_type, $connection_info);
             if (!($service instanceof \Flexio\IFace\IOAuthConnection))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
@@ -111,18 +108,15 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
 
             // STEP 3: get the access token from the code and save it in the
             // connection info
-            $connection_info = $connection->get();
-            $connection_type = $connection_info['connection_type'] ?? '';
-
-            $service_factory_params = array();
-            $service_factory_params['connection_type'] = $connection_type;
-            $service_factory_params['connection_info'] = array(
+            $connection_properties = $connection->get();
+            $connection_type = $connection_properties['connection_type'] ?? '';
+            $connection_info = array(
                 'code' => $params['code'],
                 'redirect' => self::getCallbackUrl()
             );
 
             // sanity check: the service should be an oauth type service
-            $service = \Flexio\Services\Factory::create($service_factory_params);
+            $service = \Flexio\Services\Factory::create($connection_type, $connection_info);
             if (!($service instanceof \Flexio\IFace\IOAuthConnection))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 

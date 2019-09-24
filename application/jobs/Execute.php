@@ -859,7 +859,9 @@ class ScriptHost
         $local_connection_properties = $this->getProcess()->getLocalConnection($identifier);
         if ($local_connection_properties)
         {
-            $service = \Flexio\Services\Factory::create($local_connection_properties);
+            $connection_type = $local_connection_properties['connection_type'];
+            $connection_info = $local_connection_properties['connection_info'];
+            $service = \Flexio\Services\Factory::create($connection_type, $connection_info);
             if (!($service instanceof \Flexio\IFace\IOAuthConnection))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 

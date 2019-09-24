@@ -249,47 +249,33 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
         // load the services from the services store; for connections,
         // make sure the service also has the connection interface
-        $service = \Flexio\Services\Factory::create($connection_properties);
+        $connection_type = $connection_properties['connection_type'];
+        $connection_info = $connection_properties['connection_info'];
+        $service = \Flexio\Services\Factory::create($connection_type, $connection_info);
         if (!($service instanceof \Flexio\IFace\IConnection))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
-        // for some of the connections, refresh the token
-        $connection_type = $connection_properties['connection_type'] ?? '';
-        switch ($connection_type)
+        // for oauth services, the access token may have been refreshed via
+        // a refresh token, so these should be saved so that the access token
+        // isn't refreshed in every subsequent call
+        if ($service instanceof \Flexio\IFace\IOAuthConnection)
         {
-            case \Flexio\Services\Factory::TYPE_BOX:
-            case \Flexio\Services\Factory::TYPE_GOOGLEDRIVE:
-            case \Flexio\Services\Factory::TYPE_GOOGLESHEETS:
+            $tokens = $service->getTokens();
+            $connection_info = $connection_properties['connection_info'];
+
+            if (isset($tokens['access_token']) && isset($tokens['expires']) && isset($connection_info) &&
+                $tokens['access_token'] != $connection_info['access_token'])
             {
-                // if access token was refreshed (via refresh token), write it out
-                // to the tbl_connection table so that we don't refresh the access token
-                // in every subsequent call
+                $connection_info['access_token'] = $tokens['access_token'];
+                $connection_info['refresh_token'] = $tokens['refresh_token'];
 
-                $tokens = $service->getTokens();
-
-                $connection_info = $connection_properties['connection_info'];
-
-                if (isset($tokens['access_token']) && isset($tokens['expires']) && isset($connection_info) &&
-                    $tokens['access_token'] != $connection_info['access_token'])
-                {
-                    $connection_info['access_token'] = $tokens['access_token'];
-                    $connection_info['refresh_token'] = $tokens['refresh_token'];
-                    if (isset($tokens['expires']))
-                    {
-                        $connection_info['expires'] = $tokens['expires'];
-                    }
+                if (isset($tokens['expires']))
+                    $connection_info['expires'] = $tokens['expires'];
                      else
-                    {
-                        unset($connection_info['expires']);
-                    }
+                    unset($connection_info['expires']);
 
-                    $this->set([ 'connection_info' => $connection_info]);
-
-                    // DEBUG:
-                    // file_put_contents('/tmp/tokens.txt', "Refresh:" . json_encode($tokens)."\n", FILE_APPEND);
-                }
+                $this->set([ 'connection_info' => $connection_info]);
             }
-            break;
         }
 
         return $service;
@@ -318,8 +304,8 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $connection_info = $this->get();
 
         // if we have a regular file type service, just get the list of files
-        // from the service
-        if ($connection_info['connection_type'] !== \Flexio\Services\Factory::TYPE_HTTP)
+        // from the service; TODO: use file system interface as test
+        if ($connection_info['connection_type'] !== \Model::CONNECTION_TYPE_HTTP)
         {
             $service = $this->getService();
             return $service->list();
@@ -381,7 +367,7 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
         // if we have an http connection type, load the content each time; TODO: use
         // etags to get a hash signature, and then we can cache content
-        if ($connection_info['connection_type'] === \Flexio\Services\Factory::TYPE_HTTP)
+        if ($connection_info['connection_type'] === \Model::CONNECTION_TYPE_HTTP)
         {
             $content = '';
             $http_service = \Flexio\Services\Http::create();

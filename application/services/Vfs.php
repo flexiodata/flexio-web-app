@@ -399,7 +399,9 @@ class Vfs implements \Flexio\IFace\IFileSystem
             $connection_properties = $this->process->getLocalConnection($connection_identifier);
             if ($connection_properties)
             {
-                $service = \Flexio\Services\Factory::create($connection_properties);
+                $connection_type = $connection_properties['connection_type'];
+                $connection_info = $connection_properties['connection_info'];
+                $service = \Flexio\Services\Factory::create($connection_type, $connection_info);
                 $this->service_map[$connection_identifier] = $service;
                 return $service;
             }
