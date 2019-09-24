@@ -253,43 +253,27 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         if (!($service instanceof \Flexio\IFace\IConnection))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
-        // for some of the connections, refresh the token
-        $connection_type = $connection_properties['connection_type'] ?? '';
-        switch ($connection_type)
+        // for oauth services, the access token may have been refreshed via
+        // a refresh token, so these should be saved so that the access token
+        // isn't refreshed in every subsequent call
+        if ($service instanceof \Flexio\IFace\IOAuthConnection)
         {
-            case \Flexio\Services\Factory::TYPE_BOX:
-            case \Flexio\Services\Factory::TYPE_GOOGLEDRIVE:
-            case \Flexio\Services\Factory::TYPE_GOOGLESHEETS:
+            $tokens = $service->getTokens();
+            $connection_info = $connection_properties['connection_info'];
+
+            if (isset($tokens['access_token']) && isset($tokens['expires']) && isset($connection_info) &&
+                $tokens['access_token'] != $connection_info['access_token'])
             {
-                // if access token was refreshed (via refresh token), write it out
-                // to the tbl_connection table so that we don't refresh the access token
-                // in every subsequent call
+                $connection_info['access_token'] = $tokens['access_token'];
+                $connection_info['refresh_token'] = $tokens['refresh_token'];
 
-                $tokens = $service->getTokens();
-
-                $connection_info = $connection_properties['connection_info'];
-
-                if (isset($tokens['access_token']) && isset($tokens['expires']) && isset($connection_info) &&
-                    $tokens['access_token'] != $connection_info['access_token'])
-                {
-                    $connection_info['access_token'] = $tokens['access_token'];
-                    $connection_info['refresh_token'] = $tokens['refresh_token'];
-                    if (isset($tokens['expires']))
-                    {
-                        $connection_info['expires'] = $tokens['expires'];
-                    }
+                if (isset($tokens['expires']))
+                    $connection_info['expires'] = $tokens['expires'];
                      else
-                    {
-                        unset($connection_info['expires']);
-                    }
+                    unset($connection_info['expires']);
 
-                    $this->set([ 'connection_info' => $connection_info]);
-
-                    // DEBUG:
-                    // file_put_contents('/tmp/tokens.txt', "Refresh:" . json_encode($tokens)."\n", FILE_APPEND);
-                }
+                $this->set([ 'connection_info' => $connection_info]);
             }
-            break;
         }
 
         return $service;
