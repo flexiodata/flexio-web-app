@@ -659,6 +659,7 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "connection_mode" => null,
                 "connection_status" => null,
                 "connection_info" => null,
+                "setup_template" => null,
                 "setup_config" => null,
                 "expires" => null,
                 "owned_by" => null,
@@ -676,6 +677,11 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $connection_info = @json_decode($mapped_properties['connection_info'],true);
         if ($connection_info !== false)
             $mapped_properties['connection_info'] = $connection_info;
+
+        // unpack the setup template json
+        $setup_template = @json_decode($mapped_properties['setup_template'],true);
+        if ($setup_template !== false)
+            $mapped_properties['setup_template'] = $setup_template;
 
         // unpack the setup config json
         $setup_config = @json_decode($mapped_properties['setup_config'],true);

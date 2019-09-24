@@ -217,6 +217,8 @@ class Test
             "connection_status" : null,
             "connection_info" : {
             },
+            "setup_template" : {
+            },
             "setup_config" : {
             },
             "expires" : null,

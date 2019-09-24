@@ -242,9 +242,13 @@ class Test
                     "username": "default",
                     "password": "default"
                 },
+                "setup_template": {
+                    "param1": "t1",
+                    "param2": "t2"
+                },
                 "setup_config": {
-                    "param1": "value1",
-                    "param2": "value2"
+                    "param1": "c1",
+                    "param2": "c2"
                 },
                 "expires": "2018-01-02 03:04:05"
             }'
@@ -268,6 +272,10 @@ class Test
                 "port": 443,
                 "username": "default",
                 "password": "*****"
+            },
+            "setup_template": {
+                "param1": "t1",
+                "param2": "t2"
             },
             "setup_config": {
                 "param1": "value1",
