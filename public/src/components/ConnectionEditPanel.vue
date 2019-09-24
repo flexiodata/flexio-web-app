@@ -170,6 +170,10 @@
       activeStep: {
         type: String,
         default: 'choose-source'
+      },
+      lastStep: {
+        type: String,
+        default: 'properties'
       }
     },
     components: {
@@ -184,6 +188,10 @@
       connection: {
         handler: 'initSelf',
         immediate: true,
+        deep: true
+      },
+      edit_connection: {
+        handler: 'emitChange',
         deep: true
       }
     },
@@ -217,16 +225,17 @@
         return 0
       },
       submit_label() {
-        switch (this.active_step) {
-          case 'authentication': return 'Continue'
-          case 'properties': return this.mode == 'edit' ? 'Save changes' : 'Create connection'
+        if (this.active_step == this.lastStep) {
+          return this.mode == 'edit' ? 'Save changes' : 'Create connection'
         }
 
-        return 'Submit'
+        return 'Continue'
       },
       button_bar_attrs() {
-        return _.assign({
-          submitButtonText: this.submit_label
+        // we must use kebab-case here since that is how
+        // the attribute will be passed to this component
+        return _.assign({}, {
+          'submit-button-text': this.submit_label
         }, this.$attrs)
       }
     },
@@ -238,6 +247,9 @@
         // reset local objects
         this.edit_connection = _.assign({}, this.edit_connection, _.cloneDeep(this.connection))
         this.active_step = this.activeStep
+      },
+      emitChange() {
+        this.$emit('connection-change', this.edit_connection)
       },
       cinfo() {
         var ctype = _.get(this.edit_connection, 'connection_type', '')
@@ -289,6 +301,11 @@
         this.$emit('cancel')
       },
       onSubmit() {
+        if (this.active_step == this.lastStep) {
+          this.doSubmit()
+          return
+        }
+
         switch (this.active_step) {
           case 'authentication':
             this.active_step = 'properties'
