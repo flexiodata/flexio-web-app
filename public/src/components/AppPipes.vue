@@ -63,7 +63,6 @@
                 >
                   <ServiceIcon
                     class="group-item-icon"
-                    :empty-cls="''"
                     :url="group.icon"
                     :type="group.connection_type"
                     v-if="group.connection_type.length > 0"

@@ -14,7 +14,6 @@
         <ServiceIcon
           class="br1"
           :class="itemSize == 'small' ? 'square-2' : 'square-3'"
-          :empty-cls="''"
           :type="ctype"
         />
         <div class="absolute z-1" style="top: -9px; right: -6px" v-if="showStatus && !is_flexio">

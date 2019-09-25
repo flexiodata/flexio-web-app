@@ -1,7 +1,7 @@
 <template>
   <img v-if="url.length > 0" :src="url_src" :alt="name" :title="name">
   <img v-else-if="icon" :src="icon" :alt="name" :title="name">
-  <div v-else :class="empty_cls"></div>
+  <div v-else :class="emptyCls"></div>
 </template>
 
 <script>
@@ -18,8 +18,8 @@
         required: false
       },
       'empty-cls': {
-        type: [Boolean, String],
-        default: false
+        type: String,
+        default: 'ba b--black-20 b--dashed'
       }
     },
     computed: {
@@ -28,14 +28,6 @@
       },
       name() {
         return _.result(this, 'cinfo.service_name', '')
-      },
-      empty_cls() {
-        var sel_cls = this.is_selected ? this.selectedCls : ''
-
-        if (_.isString(this.emptyCls))
-          return this.emptyCls
-
-        return 'ba b--black-20 b--dashed'
       },
       url_src() {
         var url = this.url
