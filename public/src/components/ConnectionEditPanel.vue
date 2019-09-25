@@ -112,12 +112,10 @@
   }
 
   const getDefaultAttrs = () => {
-    var suffix = getNameSuffix(16)
-
     return {
       eid: null,
       eid_status: OBJECT_STATUS_PENDING,
-      name: `connection-${suffix}`,
+      name: '',
       title: '',
       description: '',
       connection_type: '',
@@ -276,10 +274,17 @@
 
         this.$store.dispatch('connections/create', { team_name, attrs }).then(response => {
           var connection = _.cloneDeep(response.data)
-          connection.name = `${service_slug}-` + getNameSuffix(4)
-          this.edit_connection = connection
+          connection.name = this.$store.getUniqueName(service_slug, 'connections')
+          this.omitMaskedValues(connection)
           this.active_step = 'authentication'
         })
+      },
+      omitMaskedValues(attrs) {
+        var connection_info = _.get(attrs, 'connection_info', {})
+        connection_info = _.omitBy(connection_info, (val, key) => { return val == '*****' })
+
+        var update_attrs = _.assign({}, attrs, { connection_info })
+        this.edit_connection = _.assign({}, this.edit_connection, update_attrs)
       },
       doSubmit() {
         var team_name = this.active_team_name

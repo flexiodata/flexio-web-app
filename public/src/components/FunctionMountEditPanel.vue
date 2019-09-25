@@ -114,12 +114,10 @@
   }
 
   const getDefaultAttrs = () => {
-    var suffix = getNameSuffix(16)
-
     return {
       eid: null,
       eid_status: OBJECT_STATUS_PENDING,
-      name: `mount-${suffix}`,
+      name: '',
       title: '',
       description: '',
       connection_type: '',
@@ -232,7 +230,7 @@
       createIntegrationConnection(item) {
         var team_name = this.active_team_name
         var attrs = _.cloneDeep(_.get(item, 'connection', {}))
-        attrs.name = attrs.name + '-' + getNameSuffix(4)
+        attrs.name = this.$store.getUniqueName(attrs.name, 'connections')
         attrs.eid_status = OBJECT_STATUS_PENDING
 
         return this.$store.dispatch('connections/create', { team_name, attrs }).then(response => {
@@ -261,9 +259,16 @@
 
         return this.$store.dispatch('connections/create', { team_name, attrs }).then(response => {
           var mount = _.cloneDeep(response.data)
-          mount.name = `${service_slug}-` + getNameSuffix(4)
+          mount.name = this.$store.getUniqueName(service_slug, 'connections')
           this.omitMaskedValues(mount)
         })
+      },
+      omitMaskedValues(attrs) {
+        var connection_info = _.get(attrs, 'connection_info', {})
+        connection_info = _.omitBy(connection_info, (val, key) => { return val == '*****' })
+
+        var update_attrs = _.assign({}, attrs, { connection_info })
+        this.edit_mount = _.assign({}, this.edit_mount, update_attrs)
       },
       fetchFunctionPackConfig() {
         var team_name = this.active_team_name
@@ -295,13 +300,6 @@
           this.edit_mount = _.assign({}, this.edit_mount, _.cloneDeep(response.data))
           this.active_step = 'setup-success'
         })
-      },
-      omitMaskedValues(attrs) {
-        var connection_info = _.get(attrs, 'connection_info', {})
-        connection_info = _.omitBy(connection_info, (val, key) => { return val == '*****' })
-
-        var update_attrs = _.assign({}, attrs, { connection_info })
-        this.edit_mount = _.assign({}, this.edit_mount, update_attrs)
       },
       onIntegrationClick(item) {
         this.createIntegrationConnection(item)
