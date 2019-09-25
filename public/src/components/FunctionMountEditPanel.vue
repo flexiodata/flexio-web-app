@@ -43,7 +43,7 @@
       <!-- step 3: setup config (optional) -->
       <FunctionMountConfigWizard
         :definition="manifest"
-        @done-click="saveMountSetupConfig"
+        @done-click="saveMountSetup"
         v-if="active_step == 'setup-config' && has_prompts"
       />
 
@@ -272,8 +272,10 @@
         var path = url.length > 0 ? url : this.edit_mount.name + ':/flexio.yml'
 
         api.fetchFunctionPackConfig(team_name, path).then(response => {
-          var prompts = _.get(response.data, 'prompts', [])
-          this.manifest = _.assign({}, response.data)
+          var setup_template = response.data
+          var prompts = _.get(setup_template, 'prompts', [])
+          this.edit_mount = _.assign({}, this.edit_mount, { setup_template })
+          this.manifest = _.assign({}, setup_template)
           this.active_step = prompts.length > 0 ? 'setup-config' : 'setup-success'
         }).catch(error => {
           this.$store.dispatch('connections/delete', { team_name, eid }).then(response => {
@@ -282,11 +284,12 @@
           })
         })
       },
-      saveMountSetupConfig(setup_config) {
+      saveMountSetup(setup_config) {
         var team_name = this.active_team_name
         var eid = this.edit_mount.eid
         var eid_status = OBJECT_STATUS_AVAILABLE
-        var attrs = { eid_status, setup_config }
+        var setup_template = this.edit_mount.setup_template
+        var attrs = { eid_status, setup_template, setup_config }
 
         return this.$store.dispatch('connections/update', { team_name, eid, attrs }).then(response => {
           this.edit_mount = _.assign({}, this.edit_mount, _.cloneDeep(response.data))
