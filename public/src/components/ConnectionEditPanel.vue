@@ -37,7 +37,7 @@
       v-if="active_step == 'authentication'"
     >
       <div
-        class="form-logo"
+        class="flex flex-column justify-center form-logo"
         v-if="showFormLogo"
       >
         <ServiceIcon
@@ -328,13 +328,13 @@
 <style lang="stylus" scoped>
   .form-logo
     background: #fff
-    margin: -56px auto 1rem
+    height: 48px
+    margin: -56px auto 24px
     padding: 0 8px
 
   .form-logo-icon
     border-radius: 4px
-    height: 48px
-    width: 48px
+    max-height: 48px
 
   .form-title
     margin-bottom: 24px

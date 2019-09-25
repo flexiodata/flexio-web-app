@@ -2,7 +2,7 @@
   <div>
     <div class="flex flex-column br2 ba b--black-10 pa4">
       <div
-        class="form-logo"
+        class="flex flex-column justify-center form-logo"
         v-show="showFormLogo && url.length > 0"
       >
         <ServiceIcon
@@ -93,9 +93,9 @@
 <style lang="stylus" scoped>
   .form-logo
     background: #fff
-    margin: 0 auto 1.5rem
+    height: 48px
+    margin: -56px auto 24px
     padding: 0 8px
-    position: relative
 
   .form-logo-icon
     border-radius: 4px
