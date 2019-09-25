@@ -274,8 +274,8 @@
         api.fetchFunctionPackConfig(team_name, path).then(response => {
           var setup_template = response.data
           var prompts = _.get(setup_template, 'prompts', [])
-          this.edit_mount = _.assign({}, this.edit_mount, { setup_template })
           this.manifest = _.assign({}, setup_template)
+          this.edit_mount = _.assign({}, this.edit_mount, { setup_template })
           this.active_step = prompts.length > 0 ? 'setup-config' : 'setup-success'
         }).catch(error => {
           this.$store.dispatch('connections/delete', { team_name, eid }).then(response => {
