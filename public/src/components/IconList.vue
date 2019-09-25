@@ -2,48 +2,19 @@
   <div class="w-100 flex flex-row flex-wrap">
     <div
       class="flex flex-column items-center justify-center item-container"
-      :key="getItemId(item)"
+      :key="getItemKey(item)"
       :title="getItemTitle(item)"
       @click="onItemClick(item)"
       v-for="item in filtered_items"
     >
-      <div
-        class="item-img flex flex-column justify-center"
-        v-if="item.connection_type"
-      >
+      <div class="item-img flex flex-column justify-center">
         <ServiceIcon
           class="item-img-icon"
-          :type="item.connection_type"
+          :type="getItemConnectionType(item)"
+          :url="getItemUrl(item)"
           :title="getItemTitle(item)"
         />
       </div>
-      <div
-        class="item-img flex flex-column justify-center"
-        v-else-if="item.image"
-      >
-        <ServiceIcon
-          class="item-img-icon"
-          :url="item.image.src"
-          :title="getItemTitle(item)"
-        />
-      </div>
-      <div
-        class="item-img flex flex-column justify-center"
-        v-else-if="item.url"
-      >
-        <ServiceIcon
-          class="item-img-icon"
-          :url="item.url"
-          :title="getItemTitle(item)"
-        />
-      </div>
-      <i
-        class="item-img material-icons"
-        :title="getItemTitle(item)"
-        v-else-if="item.icon"
-      >
-        {{item.icon}}
-      </i>
       <div class="item-label">{{getItemTitle(item)}}</div>
     </div>
   </div>
@@ -96,11 +67,17 @@
       },
     },
     methods: {
-      getItemId(item) {
-        return item.id || item.connection_type
+      getItemKey(item) {
+        return item.repository || item.connection_type
       },
       getItemTitle(item) {
-        return item.title || item.service_name || ''
+        return _.get(item, 'connection.title') || _.get(item, 'service_name') || ''
+      },
+      getItemConnectionType(item) {
+        return _.get(item, 'connection_type')
+      },
+      getItemUrl(item) {
+        return _.get(item, 'connection.icon') || _.get(item, 'url')
       },
       onItemClick(item) {
         this.$emit('item-click', item)

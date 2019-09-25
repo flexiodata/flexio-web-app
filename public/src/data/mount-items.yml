@@ -1,94 +1,143 @@
-- id: hubspot
-  title: HubSpot
-  image:
-    src: https://logo.clearbit.com/hubspot.com
-    alt: HubSpot logo
+- repository: https://github.com/flexiodata/functions-crunchbase
   connection:
-    title: HubSpot
+    name: crunchbase
+    title: Crunchbase
+    icon: https://logo.clearbit.com/crunchbase.com
+    connection_type: http
+    connection_status: A
+    connection_mode: F
+    connection_info:
+      url: https://static.flex.io/integrations/functions-crunchbase/flexio.yml
+  in_production: true
+
+- repository: https://github.com/flexiodata/functions-hubspot
+  connection:
     name: hubspot
-    connection_type: github
+    title: HubSpot
+    icon: https://logo.clearbit.com/hubspot.com
+    connection_type: http
+    connection_status: A
     connection_mode: F
     connection_info:
-      owner: flexiodata
-      repository: functions-hubspot
+      url: https://static.flex.io/integrations/functions-hubspot/flexio.yml
+  in_production: true
 
-- id: wikipedia
-  title: Wikipedia
-  image:
-    src: https://logo.clearbit.com/en.wikipedia.org
-    alt: Wikipedia logo
+- repository: https://github.com/flexiodata/functions-wikipedia
   connection:
-    title: Wikipedia
     name: wikipedia
-    connection_type: github
+    title: Wikipedia
+    icon: https://logo.clearbit.com/en.wikipedia.org
+    connection_type: http
+    connection_status: A
     connection_mode: F
     connection_info:
-      owner: flexiodata
-      repository: functions-wikipedia
+      url: https://static.flex.io/integrations/functions-wikipedia/flexio.yml
+  in_production: true
 
-- id: currency
-  title: Currency
-  image:
-    src: https://logo.clearbit.com/zentral-bank.eu
-    alt: Zentral Bank logo
+- repository: https://github.com/flexiodata/functions-currency
   connection:
-    title: Currency
     name: currency
-    connection_type: github
+    title: Currency
+    icon: https://logo.clearbit.com/zentral-bank.eu
+    connection_type: http
+    connection_status: A
     connection_mode: F
     connection_info:
-      owner: flexiodata
-      repository: functions-currency
+      url: https://static.flex.io/integrations/functions-currency/flexio.yml
+  in_production: true
 
-# - id: youtube
-#   title: YouTube
-#   image:
-#     src: https://logo.clearbit.com/youtube.com
-#     alt: YouTube logo
-#
-# - id: facebook
-#   title: Facebook
-#   image:
-#     src: https://logo.clearbit.com/facebook.com
-#     alt: Facebook logo
-#
-# - id: twitter
-#   title: Twitter
-#   image:
-#     src: https://logo.clearbit.com/twitter.com
-#     alt: Twitter logo
-#
-# - id: amazon
-#   title: Amazon
-#   image:
-#     src: https://logo.clearbit.com/amazon.com
-#     alt: Amazon logo
-#
-# - id: imdb
-#   title: IMDB
-#   image:
-#     src: https://logo.clearbit.com/imdb.com
-#     alt: IMDB logo
-#
-# - id: reddit
-#   title: Reddit
-#   image:
-#     src: https://logo.clearbit.com/reddit.com
-#     alt: Reddit logo
-#
-# - id: pinterest
-#   title: Pinterest
-#   image:
-#     src: https://logo.clearbit.com/pinterest.com
-#     alt: Pinterest logo
-#
-# - id: ebay
-#   title: Ebay
-#   image:
-#     src: https://logo.clearbit.com/ebay.com
-#     alt: Ebay logo
-#
-# - id: custom
-#   title: Self-Hosted
-#   icon: settings
-#
+- repository: https://github.com/flexiodata/functions-youtube
+  connection:
+    name: youTube
+    title: YouTube
+    icon: https://logo.clearbit.com/youtube.com
+    connection_type: http
+    connection_status: A
+    connection_mode: F
+    connection_info:
+      url: https://static.flex.io/integrations/functions-youtube/flexio.yml
+  in_production: false
+
+- repository: https://github.com/flexiodata/functions-facebook
+  connection:
+    name: facebook
+    title: Facebook
+    icon: https://logo.clearbit.com/facebook.com
+    connection_type: http
+    connection_status: A
+    connection_mode: F
+    connection_info:
+      url: https://static.flex.io/integrations/functions-facebook/flexio.yml
+  in_production: false
+
+- repository: https://github.com/flexiodata/functions-twitter
+  connection:
+    name: twitter
+    title: Twitter
+    icon: https://logo.clearbit.com/twitter.com
+    connection_type: http
+    connection_status: A
+    connection_mode: F
+    connection_info:
+      url: https://static.flex.io/integrations/functions-twitter/flexio.yml
+  in_production: false
+
+- repository: https://github.com/flexiodata/functions-amazon
+  connection:
+    name: amazon
+    title: Amazon
+    icon: https://logo.clearbit.com/amazon.com
+    connection_type: http
+    connection_status: A
+    connection_mode: F
+    connection_info:
+      url: https://static.flex.io/integrations/functions-amazon/flexio.yml
+  in_production: false
+
+- repository: https://github.com/flexiodata/functions-imdb
+  connection:
+    name: imdb
+    title: IMDB
+    icon: https://logo.clearbit.com/imdb.com
+    connection_type: http
+    connection_status: A
+    connection_mode: F
+    connection_info:
+      url: https://static.flex.io/integrations/functions-imdb/flexio.yml
+  in_production: false
+
+- repository: https://github.com/flexiodata/functions-reddit
+  connection:
+    name: reddit
+    title: Reddit
+    icon: https://logo.clearbit.com/reddit.com
+    connection_type: http
+    connection_status: A
+    connection_mode: F
+    connection_info:
+      url: https://static.flex.io/integrations/functions-reddit/flexio.yml
+  in_production: false
+
+- repository: https://github.com/flexiodata/functions-pinterest
+  connection:
+    name: pinterest
+    title: Pinterest
+    icon: https://logo.clearbit.com/pinterest.com
+    connection_type: http
+    connection_status: A
+    connection_mode: F
+    connection_info:
+      url: https://static.flex.io/integrations/functions-pinterest/flexio.yml
+  in_production: false
+
+- repository: https://github.com/flexiodata/functions-ebay
+  connection:
+    name: ebay
+    title: eBay
+    icon: https://logo.clearbit.com/ebay.com
+    connection_type: http
+    connection_status: A
+    connection_mode: F
+    connection_info:
+      url: https://static.flex.io/integrations/functions-ebay/flexio.yml
+  in_production: false

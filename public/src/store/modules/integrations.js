@@ -37,8 +37,7 @@ const actions = {
     return axios.get('https://static.flex.io/integrations/integrations.yml').then(response => {
       var items = []
       try {
-        var obj = yaml.safeLoad(response.data)
-        items = _.get(obj, 'items', [])
+        items = yaml.safeLoad(response.data)
       }
       catch (e) {
         items = []
