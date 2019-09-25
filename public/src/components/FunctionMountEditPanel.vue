@@ -105,21 +105,6 @@
   const CONNECTION_MODE_RESOURCE = 'R'
   const CONNECTION_MODE_FUNCTION = 'F'
 
-  const defaultAttrs = () => {
-    var suffix = getNameSuffix()
-
-    return {
-      eid: null,
-      eid_status: OBJECT_STATUS_PENDING,
-      name: `connection-${suffix}`,
-      title: '',
-      description: '',
-      connection_type: '',
-      connection_mode: CONNECTION_MODE_RESOURCE,
-      connection_info: {}
-    }
-  }
-
   const getNameSuffix = (length) => {
     return randomstring.generate({
       length,
@@ -128,7 +113,22 @@
     })
   }
 
-  const getDefaultState = (component) => {
+  const getDefaultAttrs = () => {
+    var suffix = getNameSuffix(16)
+
+    return {
+      eid: null,
+      eid_status: OBJECT_STATUS_PENDING,
+      name: `mount-${suffix}`,
+      title: '',
+      description: '',
+      connection_type: '',
+      connection_mode: CONNECTION_MODE_FUNCTION,
+      connection_info: {}
+    }
+  }
+
+  const getDefaultState = () => {
     return {
       edit_mount: {},
       manifest: {},
@@ -252,7 +252,7 @@
         // for creating 'function mount' connections
         var prop_mount_attrs = _.cloneDeep(this.mount)
 
-        var attrs = _.assign({}, defaultAttrs(), prop_mount_attrs, {
+        var attrs = _.assign({}, getDefaultAttrs(), prop_mount_attrs, {
           eid_status: OBJECT_STATUS_PENDING,
           name: `${service_slug}-` + getNameSuffix(16),
           title: ctitle,
