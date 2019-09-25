@@ -259,8 +259,7 @@ def flex_handler(flex):
     })
   }
 
-  const defaultAttrs = () => {
-    // when creating a new function, start out with a basic Python 'Hello World' script
+  const getDefaultAttrs = () => {
     return {
       deploy_mode: 'R',
       deploy_api: 'A',
@@ -268,6 +267,31 @@ def flex_handler(flex):
         op: 'sequence',
         items: []
       }
+    }
+  }
+
+  const getDefaultState = () => {
+    return {
+      scrollbar_container_id: _.uniqueId('content-'),
+      is_selecting: false,
+      show_test_panel: false,
+      pipe_list_filter: '',
+      pipe: {},
+      last_selected: {},
+      expanded_groups: [],
+
+      show_pipe_dialog: false,
+      pipe_edit_mode: 'add',
+      edit_pipe: null,
+      new_pipe_attrs: {},
+
+      show_mount_dialog: false,
+      mount_edit_mode: 'add',
+      mount_type: 'integration',
+      edit_connection: null,
+      new_connection_attrs: {
+        connection_mode: CONNECTION_MODE_FUNCTION
+      },
     }
   }
 
@@ -304,26 +328,7 @@ def flex_handler(flex):
       }
     },
     data() {
-      return {
-        scrollbar_container_id: _.uniqueId('content-'),
-        is_selecting: false,
-        show_test_panel: false,
-        pipe_list_filter: '',
-        pipe: {},
-        last_selected: {},
-        expanded_groups: [],
-        show_pipe_dialog: false,
-        pipe_edit_mode: 'add',
-        edit_connection: null,
-        new_pipe_attrs: {},
-        show_mount_dialog: false,
-        mount_edit_mode: 'add',
-        mount_type: 'integration',
-        edit_connection: null,
-        new_connection_attrs: {
-          connection_mode: CONNECTION_MODE_FUNCTION
-        },
-      }
+      return getDefaultState()
     },
     computed: {
       // mix this into the outer object with the object spread operator
@@ -554,7 +559,7 @@ def flex_handler(flex):
           items: [step]
         }
 
-        return _.assign({}, defaultAttrs(), { name, task })
+        return _.assign({}, getDefaultAttrs(), { name, task })
       },
       onPipeAdded(pipe) {
         this.selectPipe(pipe)
