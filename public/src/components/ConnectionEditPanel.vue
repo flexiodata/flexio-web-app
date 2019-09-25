@@ -128,7 +128,7 @@
 
   const getDefaultState = () => {
     return {
-      edit_connection: getDefaultAttrs(),
+      edit_connection: {},
       active_step: 'choose-source'
     }
   }
