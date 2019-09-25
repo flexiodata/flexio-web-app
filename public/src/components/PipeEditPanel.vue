@@ -45,7 +45,6 @@
 </template>
 
 <script>
-  import randomstring from 'randomstring'
   import { mapState } from 'vuex'
   import { OBJECT_TYPE_PIPE } from '@/constants/object-type'
   import CodeEditor from '@/components/CodeEditor'
@@ -53,17 +52,7 @@
   import ButtonBar from '@/components/ButtonBar'
   import MixinValidation from '@/components/mixins/validation'
 
-  const getNameSuffix = (length) => {
-    return randomstring.generate({
-      length,
-      charset: 'alphabetic',
-      capitalization: 'lowercase'
-    })
-  }
-
   const getDefaultState = (component) => {
-    var suffix = getNameSuffix(4)
-
     return {
       rules: {
         name: [
@@ -75,7 +64,7 @@
 
       // edit values
       edit_pipe: {
-        name: `func-${suffix}`
+        name: ''
       },
     }
   }
