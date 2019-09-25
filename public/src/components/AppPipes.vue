@@ -58,16 +58,15 @@
                 v-for="group in grouped_pipes"
               >
                 <div
-                  class="flex flex-row items-center"
-                  style="padding: 0 8px 0 10px"
+                  class="flex flex-row items-center group-item-title"
                   slot="title"
                 >
                   <ServiceIcon
-                    class="br1 square-2"
-                    style="margin-right: 8px"
+                    class="group-item-icon"
                     :empty-cls="''"
-                    :type="group.ctype"
-                    v-if="group.ctype.length > 0"
+                    :url="group.icon"
+                    :type="group.connection_type"
+                    v-if="group.connection_type.length > 0"
                   />
                   <i
                     class="material-icons"
@@ -364,7 +363,8 @@ def flex_handler(flex):
 
           return {
             id: key.length == 0 ? 'local' : key,
-            ctype: _.get(connection, 'connection_type', ''),
+            icon: _.get(connection, 'icon', ''),
+            connection_type: _.get(connection, 'connection_type', ''),
             title: key.length == 0 ? 'My Functions' : _.get(connection, 'name', `Not found (${key})`),
             pipes: _.sortBy(val, ['name']),
             connection,
@@ -578,3 +578,14 @@ def flex_handler(flex):
     }
   }
 </script>
+
+<style lang="stylus" scoped>
+  .group-item-title
+    padding: 0 8px 0 10px
+
+  .group-item-icon
+    border-radius: 2px
+    margin-right: 8px
+    max-height: 24px
+    max-width: 48px
+</style>
