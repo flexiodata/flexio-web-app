@@ -42,8 +42,8 @@
 
       <!-- step 3: setup config (optional) -->
       <FunctionMountConfigWizard
-        :definition="manifest"
-        @done-click="saveMountSetup"
+        :manifest="manifest"
+        @submit="saveMountSetup"
         v-if="active_step == 'setup-config' && has_prompts"
       />
 

@@ -50,7 +50,7 @@
       },
       onNextClick() {
         if (this.is_last_item) {
-          this.$emit('done-clicked')
+          this.$emit('submit')
         } else {
           this.active_idx++
         }
