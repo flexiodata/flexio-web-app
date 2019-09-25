@@ -328,10 +328,8 @@
 <style lang="stylus" scoped>
   .form-logo
     background: #fff
-    margin: 0 auto -2.5rem
+    margin: -56px auto 1rem
     padding: 0 8px
-    position: relative
-    top: -56px
 
   .form-logo-icon
     border-radius: 4px
