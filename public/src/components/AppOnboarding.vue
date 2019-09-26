@@ -6,6 +6,7 @@
         style="margin-bottom: 15rem"
       >
 
+        <!-- step 1: welcome -->
         <div v-if="active_step == 'welcome'">
           <h1 class="fw6 f2 tc">Welcome to Flex.io!</h1>
           <p class="center mw7">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem corporis accusantium, blanditiis nostrum unde dolores totam iste. Blanditiis voluptates consectetur laudantium, repudiandae voluptatibus ducimus fugit rem sequi, corporis nesciunt quas?</p>
@@ -33,34 +34,38 @@
             </div>
           </div>
         </div>
-        <div v-else>
-          <!-- join a team steps -->
-          <div v-if="onboarding_method == 'spreadsheet-user'">
-            <div v-if="active_step == 'add-in-links'">
-              Show blurb and links to add-ins here...
-            </div>
-          </div>
 
-          <!-- build functions steps -->
-          <div v-if="onboarding_method == 'technical-user'">
-            <el-steps
-              class="mb4 pb2"
-              align-center
-              finish-status="success"
-              :active="0"
-            >
-              <el-step title="Choose Integrations" />
-              <el-step title="Set Up" />
-              <el-step title="Invite Your Team" />
-              <el-step title="Get Add-ons " />
-            </el-steps>
+        <!-- step: install add-ons -->
+        <div v-if="active_step == 'install-add-ons'">
+          <h3 class="fw6 f3 tc">Get Add-Ons</h3>
+          <p>Welcome aboard! To join your team, install the add-on for either Microsoft Excel or Google Sheets below. After installing the add-on, sign in with your Flex.io account, select the team name and begin working with your functions.</p>
+          <p>[icon] Google Sheets</p>
+          <p>[GET THE GOOGLE SHEETS ADD-ON]</p>
+          <p>[icon] Microsoft Excel 365</p>
+          <p>[GET THE EXCEL ADD-ON]</p>
+        </div>
+
+        <div v-if="active_step != 'welcome' && onboarding_method == 'technical-user'">
+          <el-steps
+            class="mb4 pb2"
+            align-center
+            finish-status="success"
+            :active="active_step_idx - 1"
+          >
+            <el-step title="Choose Integrations" />
+            <el-step title="Set Up" />
+            <el-step title="Invite Your Team" />
+            <el-step title="Get Add-ons " />
+          </el-steps>
+
+          <!-- step: choose integrations -->
+          <div v-if="active_step == 'choose-integrations'">
             <h3 class="fw6 f3 tc">Choose Your Integrations</h3>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur ipsum a eaque odit ut magnam architecto voluptate quae commodi optio quisquam praesentium illo natus dolor assumenda doloremque, suscipit deserunt nostrum?</p>
             <p>Please select the integrations you would like to add. Once you have selected all of the integrations you would like to add, click the <strong>Continue</strong> button below to continue with the setup process.</p>
             <IconList
               class="mv4"
               :items="integrations"
-              v-if="active_step == 'choose-onboarding-items'"
             />
           </div>
         </div>
@@ -115,6 +120,19 @@
       integrations() {
         return this.getProductionIntegrations()
       },
+      active_step_idx() {
+        return _.indexOf(this.step_order, this.active_step)
+      },
+      step_order() {
+        switch (this.onboarding_method) {
+          case 'spreadsheet-user':
+            return ['welcome', 'install-add-ons']
+          case 'technical-user':
+            return ['welcome', 'choose-integrations', 'install-add-ons']
+        }
+
+        return ['welcome']
+      },
     },
     mounted() {
       this.$store.dispatch('integrations/fetch')
@@ -135,14 +153,14 @@
         })
       },
       onBackClick() {
-
+        this.active_step = this.step_order[this.active_step_idx - 1]
       },
       onNextClick() {
 
       },
       chooseOnboardingMethod(method) {
         this.onboarding_method = method
-        this.active_step = method == 'spreadsheet-user' ? 'add-in-links' : 'choose-onboarding-items'
+        this.active_step = method == 'spreadsheet-user' ? 'install-add-ons' : 'choose-integrations'
       }
     }
   }
