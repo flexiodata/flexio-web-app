@@ -43,10 +43,22 @@
 
           <!-- build functions steps -->
           <div v-if="onboarding_method == 'technical-user'">
-            <h3 class="fw6 f3 mt0">Choose Your Integrations</h3>
+            <el-steps
+              class="mb4 pb2"
+              align-center
+              finish-status="success"
+              :active="0"
+            >
+              <el-step title="Choose Integrations" />
+              <el-step title="Set Up" />
+              <el-step title="Invite Your Team" />
+              <el-step title="Get Add-ons " />
+            </el-steps>
+            <h3 class="fw6 f3 tc">Choose Your Integrations</h3>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur ipsum a eaque odit ut magnam architecto voluptate quae commodi optio quisquam praesentium illo natus dolor assumenda doloremque, suscipit deserunt nostrum?</p>
             <p>Please select the integrations you would like to add. Once you have selected all of the integrations you would like to add, click the <strong>Continue</strong> button below to continue with the setup process.</p>
             <IconList
+              class="mv4"
               :items="integrations"
               v-if="active_step == 'choose-onboarding-items'"
             />
