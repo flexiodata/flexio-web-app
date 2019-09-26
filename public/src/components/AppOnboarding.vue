@@ -9,24 +9,20 @@
         <!-- step 1: welcome -->
         <div v-if="active_step == 'welcome'">
           <h1 class="fw6 f2 tc">Welcome to Flex.io!</h1>
-          <p class="center mw7">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem corporis accusantium, blanditiis nostrum unde dolores totam iste. Blanditiis voluptates consectetur laudantium, repudiandae voluptatibus ducimus fugit rem sequi, corporis nesciunt quas?</p>
-          <p class="center mw7">What would you like to do today?</p>
+          <p class="">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem corporis accusantium, blanditiis nostrum unde dolores totam iste. Blanditiis voluptates consectetur laudantium, repudiandae voluptatibus ducimus fugit rem sequi, corporis nesciunt quas?</p>
+          <p class="">What would you like to do today?</p>
           <div class="flex flex-row center mw7">
             <div
-              class="onboarding-big-button"
-              :class="{
-                'active': onboarding_method == 'spreadsheet-user'
-              }"
+              class="flex-fill onboarding-big-button"
+              :class="{ 'active': onboarding_method == 'spreadsheet-user' }"
               @click="chooseOnboardingMethod('spreadsheet-user')"
             >
               <h4>I'd like to join a team.</h4>
               <p class="tl mt1 mb0">Choose this option if you are primarily a spreadsheet user and have already been invited to join someone's team.</p>
             </div>
             <div
-              class="onboarding-big-button"
-              :class="{
-                'active': onboarding_method == 'technical-user'
-              }"
+              class="flex-fill onboarding-big-button"
+              :class="{ 'active': onboarding_method == 'technical-user' }"
               @click="chooseOnboardingMethod('technical-user')"
             >
               <h4>I'd like to build functions.</h4>
@@ -186,5 +182,4 @@
       margin-top: 0
     p
       font-size: 14px
-      padding-right: 12px
 </style>
