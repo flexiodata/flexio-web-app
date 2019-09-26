@@ -15,7 +15,9 @@
           :title="getItemTitle(item)"
         />
       </div>
-      <div class="item-label">{{getItemTitle(item)}}</div>
+      <div class="item-label w-100">
+        <div class="tc truncate">{{getItemTitle(item)}}</div>
+      </div>
     </div>
   </div>
 </template>
@@ -105,7 +107,7 @@
   .item-container
     border-radius: 4px
     cursor: pointer
-    padding: 24px 16px
+    padding: 24px 8px
     width: 20%
     &:hover
       background-color: rgba(0,0,0,0.1)
