@@ -6,9 +6,10 @@ import * as rn from '@/constants/route'
 import admin_routes from './admin'
 
 import AppAccount from '@/components/AppAccount'
-import AppPipes from '@/components/AppPipes'
 import AppConnections from '@/components/AppConnections'
 import AppMembers from '@/components/AppMembers'
+import AppOnboarding from '@/components/AppOnboarding'
+import AppPipes from '@/components/AppPipes'
 
 import SignInPage from '@/components/SignInPage'
 import SignOutPage from '@/components/SignOutPage'
@@ -40,6 +41,7 @@ const routes = [
   { path: '/resetpassword',                         name: rn.ROUTE_RESETPASSWORD_PAGE,  component: ResetPasswordPage         },
   { path: '/initsession',                           name: rn.ROUTE_INITSESSION_PAGE,    component: InitSessionPage           },
   { path: '/verify',                                name: rn.ROUTE_VERIFY_PAGE,         component: VerifyPage                },
+  { path: '/welcome',                               name: rn.ROUTE_APP_ONBOARDING,      component: AppOnboarding             },
   { path: '/account/:action?',                      name: rn.ROUTE_APP_ACCOUNT,         component: AppAccount,          meta },
   { path: '/:team_name?/members/:action?',          name: rn.ROUTE_APP_MEMBERS,         component: AppMembers,          meta },
   { path: '/:team_name?/connections/:object_name?', name: rn.ROUTE_APP_CONNECTIONS,     component: AppConnections,      meta },
