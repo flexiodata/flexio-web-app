@@ -227,8 +227,6 @@
 <script>
   import randomstring from 'randomstring'
   import { mapState, mapGetters } from 'vuex'
-  import { ROUTE_APP_PIPES } from '@/constants/route'
-  import { OBJECT_STATUS_AVAILABLE } from '@/constants/object-status'
   import { btoaUnicode } from '@/utils'
   import Spinner from 'vue-simple-spinner'
   import PipeList from '@/components/PipeList'

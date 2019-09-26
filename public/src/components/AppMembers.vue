@@ -136,7 +136,6 @@
 </template>
 
 <script>
-  import { OBJECT_STATUS_AVAILABLE } from '@/constants/object-status'
   import { ROUTE_APP_PIPES } from '@/constants/route'
   import { mapState, mapGetters } from 'vuex'
   import { isValidEmail } from '@/utils'
