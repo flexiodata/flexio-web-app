@@ -1,0 +1,35 @@
+title: Dropbox Function Pack
+description: Functions for accessing your Dropbox info
+image:
+  src: https://logo.clearbit.com/dropbox.com
+  alt: Dropbox logo
+functions:
+- path: hubspot-contacts.py
+prompts:
+  - element: auth
+    name: auth
+    title: Connect to Dropbox
+    description: |
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Impedit fuga porro blanditiis eaque repellendus obcaecati expedita consequuntur tenetur molestiae itaque ut atque repellat dolores eveniet provident, numquam, doloremque maiores eos.
+    connection:
+      name: dropbox
+      connection_type: dropbox
+  - element: form
+    name: form_api_key
+    title: Dropbox API key
+    description: |
+      Use your Dropbox API key to access the same APIs that power all Dropbox tools.
+
+      This key is stored securely by Flex.io and will allow the functions in this function pack to access your Dropbox account without exposing your credentials.
+    class: el-form--cozy el-form__label-tiny
+    rules:
+      hubspot_api_key:
+        - required: true
+          message: Please enter a valid API key to continue.
+    form_items:
+      - element: input
+        type: text
+        name: hubspot_api_key
+        label: API key
+        placeholder: API key
+        value: ''
