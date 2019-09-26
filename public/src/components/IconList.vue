@@ -154,7 +154,6 @@
     margin-top: 10px
 
   .item-wrapper
-    border: 2px solid transparent
     border-radius: 4px
     cursor: pointer
     padding: 24px 16px
@@ -174,8 +173,9 @@
 
     .item-wrapper
       border: 2px solid transparent
-      width: calc(20% - 16px)
       margin: 8px
+      padding: 28px 16px
+      width: calc(20% - 16px)
 
     .item-selected
       border-color: $blue
