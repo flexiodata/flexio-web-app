@@ -67,6 +67,15 @@
               :allow-multiple="true"
             />
           </div>
+
+          <!-- step: set up integrations -->
+          <div v-if="active_step == 'set-up-integrations'">
+            <FunctionMountConfigWizard
+              :manifest="active_manifest"
+              @submit="saveIntegration"
+              v-if="has_active_manifest"
+            />
+          </div>
         </div>
 
         <ButtonBar
@@ -89,13 +98,17 @@
 
 <script>
   import { mapGetters } from 'vuex'
+  import api from '@/api'
   import ButtonBar from '@/components/ButtonBar'
   import IconList from '@/components/IconList'
+  import FunctionMountConfigWizard from '@/components/FunctionMountConfigWizard'
 
   const getDefaultState = () => {
     return {
-      active_step: 'welcome',
       onboarding_method: '', // 'spreadsheet-user' or 'technical-user'
+      active_step: 'welcome',
+      active_integration_idx: 0,
+      active_manifest: null,
       selected_integrations: []
     }
   }
@@ -111,7 +124,8 @@
     },
     components: {
       ButtonBar,
-      IconList
+      IconList,
+      FunctionMountConfigWizard
     },
     data() {
       return getDefaultState()
@@ -122,6 +136,12 @@
       },
       active_step_idx() {
         return _.indexOf(this.step_order, this.active_step)
+      },
+      active_integration() {
+        return this.selected_integrations[this.active_integration_idx]
+      },
+      has_active_manifest() {
+        return !_.isNil(this.active_manifest)
       },
       step_order() {
         switch (this.onboarding_method) {
@@ -153,14 +173,42 @@
         })
       },
       onBackClick() {
-        this.active_step = this.step_order[this.active_step_idx - 1]
+        if (this.active_step == 'invite-members' && this.selected_integrations.length == 0) {
+          // skip back over integration set up if none were selected
+          this.active_step = this.step_order[this.active_step_idx - 2]
+        } else {
+          this.active_step = this.step_order[this.active_step_idx - 1]
+        }
       },
       onNextClick() {
-        this.active_step = this.step_order[this.active_step_idx + 1]
+        if (this.active_step == 'choose-integrations' && this.selected_integrations.length == 0) {
+          // skip over integration set up if none were selected
+          this.active_step = this.step_order[this.active_step_idx + 2]
+        } else {
+          this.active_step = this.step_order[this.active_step_idx + 1]
+        }
+
+        if (this.active_step == 'set-up-integrations') {
+          this.fetchIntegrationConfig()
+        }
       },
       chooseOnboardingMethod(method) {
         this.onboarding_method = method
         this.active_step = method == 'spreadsheet-user' ? 'install-add-ons' : 'choose-integrations'
+      },
+      fetchIntegrationConfig() {
+        var team_name = this.getActiveUsername()
+        var url = _.get(this.active_integration, 'connection.connection_info.url', '')
+
+        api.fetchFunctionPackConfig(team_name, url).then(response => {
+          var setup_template = response.data
+          var prompts = _.get(setup_template, 'prompts', [])
+          this.active_manifest = _.assign({}, setup_template)
+        })
+      },
+
+      saveIntegration(setup_config) {
+        console.log(setup_config)
       }
     }
   }
