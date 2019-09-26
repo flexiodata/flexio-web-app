@@ -1,22 +1,25 @@
 <template>
   <div>
-    <BuilderItemForm
-      :key="prompt.name"
-      :item="prompt"
-      :visible="index == active_idx"
-      :cancel-button-visible="active_idx > 0"
-      :cancel-button-text="'Back'"
-      :submit-button-text="is_last_item ? 'Done' : 'Next'"
-      @values-change="onValuesChange"
-      @cancel-click="onBackClick"
-      @submit-click="onNextClick"
-      v-for="(prompt, index) in prompts"
-    />
+    <ServiceIconWrapper :url="manifest_image_url">
+      <BuilderItemForm
+        :key="prompt.name"
+        :item="prompt"
+        :visible="index == active_idx"
+        :cancel-button-visible="active_idx > 0"
+        :cancel-button-text="'Back'"
+        :submit-button-text="'Next'"
+        @values-change="onValuesChange"
+        @cancel-click="onBackClick"
+        @submit-click="onNextClick"
+        v-for="(prompt, index) in prompts"
+      />
+    </ServiceIconWrapper>
   </div>
 </template>
 
 <script>
   import BuilderItemForm from '@/components/BuilderItemForm'
+  import ServiceIconWrapper from '@/components/ServiceIconWrapper'
 
   const getDefaultState = () => {
     return {
@@ -33,7 +36,8 @@
       }
     },
     components: {
-      BuilderItemForm
+      BuilderItemForm,
+      ServiceIconWrapper
     },
     data() {
       return getDefaultState()
@@ -45,7 +49,7 @@
       is_last_item() {
         return this.active_idx == this.prompts.length - 1
       },
-      url() {
+      manifest_image_url() {
         return _.get(this.manifest, 'image.src', '')
       },
     },
