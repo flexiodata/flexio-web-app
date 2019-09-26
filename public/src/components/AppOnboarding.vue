@@ -47,14 +47,14 @@
 
         <div v-if="active_step != 'welcome' && onboarding_method == 'technical-user'">
           <el-steps
-            class="mb4 pb2"
+            class="mt3 mb4 pb2"
             align-center
             finish-status="success"
             :active="active_step_idx - 1"
           >
             <el-step title="Choose Integrations" />
             <el-step title="Set Up" />
-            <el-step title="Invite Your Team" />
+            <el-step title="Invite Others" />
             <el-step title="Get Add-ons " />
           </el-steps>
 
@@ -64,8 +64,11 @@
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur ipsum a eaque odit ut magnam architecto voluptate quae commodi optio quisquam praesentium illo natus dolor assumenda doloremque, suscipit deserunt nostrum?</p>
             <p>Please select the integrations you would like to add. Once you have selected all of the integrations you would like to add, click the <strong>Continue</strong> button below to continue with the setup process.</p>
             <IconList
-              class="mv4"
+              class="mt4 mb5"
               :items="integrations"
+              :selected-items.sync="selected_integrations"
+              :allow-selection="true"
+              :allow-multiple="true"
             />
           </div>
         </div>
@@ -78,7 +81,7 @@
           :cancel-button-visible="active_step != 'welcome'"
           :submit-button-visible="active_step != 'welcome'"
           :cancel-button-text="'Back'"
-          :submit-button-text="'Continue'"
+          :submit-button-text="active_step_idx == step_order.length - 1 ? 'Done' : 'Continue'"
           @utility-click="onSkipClick"
           @cancel-click="onBackClick"
           @submit-click="onNextClick"
@@ -97,6 +100,7 @@
     return {
       active_step: 'welcome',
       onboarding_method: '', // 'spreadsheet-user' or 'technical-user'
+      selected_integrations: []
     }
   }
 
@@ -128,7 +132,7 @@
           case 'spreadsheet-user':
             return ['welcome', 'install-add-ons']
           case 'technical-user':
-            return ['welcome', 'choose-integrations', 'install-add-ons']
+            return ['welcome', 'choose-integrations', 'set-up-integrations', 'invite-members', 'install-add-ons']
         }
 
         return ['welcome']
@@ -156,7 +160,7 @@
         this.active_step = this.step_order[this.active_step_idx - 1]
       },
       onNextClick() {
-
+        this.active_step = this.step_order[this.active_step_idx + 1]
       },
       chooseOnboardingMethod(method) {
         this.onboarding_method = method
