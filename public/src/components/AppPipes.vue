@@ -432,7 +432,7 @@ def flex_handler(flex):
           cancelButtonClass: 'ttu fw6',
           confirmButtonText: 'Delete function',
           cancelButtonText: 'Cancel',
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         }).then(() => {
           var selected_idx = _.findIndex(this.sorted_pipes, { eid: this.pipe.eid })
           var deleting_idx = _.findIndex(this.sorted_pipes, { eid: attrs.eid })
@@ -461,11 +461,13 @@ def flex_handler(flex):
 
         this.$confirm(msg, title, {
           type: 'warning',
+          customClass: 'el-message-box--center-reset el-message-box--wide',
           confirmButtonClass: 'ttu fw6',
           cancelButtonClass: 'ttu fw6',
           confirmButtonText: 'Remove function mount',
           cancelButtonText: 'Cancel',
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
+          center: true,
         }).then(() => {
           this.$store.dispatch('connections/delete', { team_name, eid }).then(response => {
             // remove the item from the list of open collapser items

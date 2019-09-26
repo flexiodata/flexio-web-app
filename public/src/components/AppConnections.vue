@@ -237,7 +237,7 @@
           cancelButtonClass: 'ttu fw6',
           confirmButtonText: 'Delete connection',
           cancelButtonText: 'Cancel',
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         }).then(() => {
           var selected_idx = _.findIndex(this.sorted_connections, { eid: this.connection.eid })
           var deleting_idx = _.findIndex(this.sorted_connections, { eid: attrs.eid })

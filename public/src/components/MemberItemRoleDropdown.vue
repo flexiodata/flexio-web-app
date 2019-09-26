@@ -99,7 +99,7 @@
           var email_str = full_name.length > 0 ? ` (${email})` : ''
 
           var msg = `Are you sure you want to make <strong>${member}${email_str}</strong> an administrator?`
-          var title = `Make ${member} an administrator?`
+          var title = `Make administrator?`
 
           this.$confirm(msg, title, {
             type: 'warning',
@@ -139,7 +139,7 @@
             cancelButtonClass: 'ttu fw6',
             confirmButtonText: 'Remove',
             cancelButtonText: 'Cancel',
-            dangerouslyUseHTMLString: true
+            dangerouslyUseHTMLString: true,
           }).then(() => {
             this.$emit('remove-member', member)
             this.is_visible = false

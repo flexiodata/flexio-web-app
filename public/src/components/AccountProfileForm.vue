@@ -210,11 +210,11 @@
       },
       openConfirmModal() {
         this.$confirm('Changing your username can have unintended effects. Are you sure you want to change your username?', 'Really change your username?', {
+          type: 'warning',
           confirmButtonClass: 'ttu fw6',
           cancelButtonClass: 'ttu fw6',
           confirmButtonText: 'Change my username',
           cancelButtonText: 'Cancel',
-          type: 'warning'
         }).then(() => {
           this.saveChanges()
         }).catch(error => {

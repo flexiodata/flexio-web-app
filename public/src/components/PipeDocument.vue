@@ -234,11 +234,11 @@
         set(value) {
           if (value === false) {
             this.$confirm('This function is turned on and is possibly being used in a production environment. Are you sure you want to continue?', 'Really turn function off?', {
+              type: 'warning',
               confirmButtonClass: 'ttu fw6',
               cancelButtonClass: 'ttu fw6',
               confirmButtonText: 'Turn function off',
               cancelButtonText: 'Cancel',
-              type: 'warning'
             }).then(() => {
               this.deployPipe(value)
             })
