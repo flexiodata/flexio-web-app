@@ -30,51 +30,29 @@
     />
 
     <!-- step 2: connect & authenticate -->
-    <div class="h1" v-if="showFormLogo && active_step == 'authentication'"></div>
-    <div
-      class="flex flex-column br2 ba b--black-10 pa4"
+    <ServiceIconWrapper
+      :type="edit_connection.connection_type"
       v-if="active_step == 'authentication'"
     >
-      <div
-        class="flex flex-column justify-center form-logo"
-        v-if="showFormLogo"
-      >
-        <ServiceIcon
-          class="form-logo-icon"
-          :type="edit_connection.connection_type"
-        />
-      </div>
-      <div class="mt3" v-if="showSteps && mode == 'add'"></div>
-      <div class="tc ttu fw6 f4 form-title" v-else>Authentication</div>
+      <div class="tc ttu fw6 f4 form-title">Authentication</div>
       <ConnectionAuthenticationPanel
         :connection.sync="edit_connection"
       />
-    </div>
+    </ServiceIconWrapper>
 
     <!-- step 3: edit properties -->
-    <div class="h1" v-if="showFormLogo && active_step == 'properties'"></div>
-    <div
-      class="flex flex-column br2 ba b--black-10 pa4"
+    <ServiceIconWrapper
+      :type="edit_connection.connection_type"
       v-if="active_step == 'properties'"
     >
-      <div
-        class="form-logo"
-        v-if="showFormLogo"
-      >
-        <ServiceIcon
-          class="form-logo-icon"
-          :type="edit_connection.connection_type"
-        />
-      </div>
-      <div class="mt3" v-if="showSteps && mode == 'add'"></div>
-      <div class="tc ttu fw6 f4 form-title" v-else>Properties</div>
+      <div class="tc ttu fw6 f4 form-title">Properties</div>
       <ConnectionPropertiesPanel
         :connection.sync="edit_connection"
         :show-header="false"
         :show-footer="false"
         :mode="mode"
       />
-    </div>
+    </ServiceIconWrapper>
 
     <!-- footer -->
     <ButtonBar
@@ -96,7 +74,7 @@
   import HeaderBar from '@/components/HeaderBar'
   import ButtonBar from '@/components/ButtonBar'
   import IconList from '@/components/IconList'
-  import ServiceIcon from '@/components/ServiceIcon'
+  import ServiceIconWrapper from '@/components/ServiceIconWrapper'
   import ConnectionAuthenticationPanel from '@/components/ConnectionAuthenticationPanel'
   import ConnectionPropertiesPanel from '@/components/ConnectionPropertiesPanel'
 
@@ -150,10 +128,6 @@
         type: Boolean,
         default: false
       },
-      showFormLogo: {
-        type: Boolean,
-        default: true
-      },
       connection: {
         type: Object,
         default: () => {}
@@ -178,7 +152,7 @@
       HeaderBar,
       ButtonBar,
       IconList,
-      ServiceIcon,
+      ServiceIconWrapper,
       ConnectionAuthenticationPanel,
       ConnectionPropertiesPanel,
     },
@@ -326,16 +300,6 @@
 </script>
 
 <style lang="stylus" scoped>
-  .form-logo
-    background: #fff
-    height: 48px
-    margin: -56px auto 24px
-    padding: 0 8px
-
-  .form-logo-icon
-    border-radius: 4px
-    max-height: 48px
-
   .form-title
     margin-bottom: 24px
 </style>
