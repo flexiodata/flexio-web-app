@@ -1,18 +1,21 @@
 <template>
   <div>
-    <div :style="spacer_style"></div>
+    <div :style="top_spacer_style"></div>
     <div
       class="flex flex-column"
       :class="showWrapper ? 'br2 ba b--black-10 pa4' : ''"
     >
       <div
         class="flex flex-column justify-center form-logo"
+        :style="form_logo_style"
         v-if="showIcon"
       >
-        <ServiceIcon
-          class="form-logo-icon"
-          v-bind="$attrs"
-        />
+        <slot name="icon">
+          <ServiceIcon
+            class="form-logo-icon"
+            v-bind="$attrs"
+          />
+        </slot>
       </div>
       <slot></slot>
     </div>
@@ -25,9 +28,13 @@
   export default {
     inheritAttrs: false,
     props: {
-      topSpacer: {
+      topSpacing: {
         type: Number,
         default: 16
+      },
+      innerSpacing: {
+        type: Number,
+        default: 24
       },
       showWrapper: {
         type: Boolean,
@@ -42,8 +49,11 @@
       ServiceIcon
     },
     computed: {
-      spacer_style() {
-        return `height: ${this.topSpacer}px`
+      top_spacer_style() {
+        return { height: this.topSpacing + 'px' }
+      },
+      form_logo_style() {
+        return { marginBottom: this.innerSpacing + 'px' }
       }
     }
   }

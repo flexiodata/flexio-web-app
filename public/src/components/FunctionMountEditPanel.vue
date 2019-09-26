@@ -49,11 +49,13 @@
 
       <!-- step 4: show result (success) -->
       <div v-else-if="active_step == 'setup-success'">
-        <div style="height: 18px"></div>
-        <div class="flex flex-column items-center br2 ba b--black-10 pa4">
-          <i class="el-icon-success dark-green f2 nt4 relative" style="background: #fff; top: -18px; padding: 0 8px"></i>
-          <p>Your function mount was created successfully. Click <strong>"Done"</strong> to begin importing functions.</p>
-        </div>
+        <ServiceIconWrapper :innerSpacing="10">
+          <i
+            class="el-icon-success bg-white f2 dark-green"
+            slot="icon"
+          ></i>
+          <p class="tc">Your function mount was created successfully. Click <strong>"Done"</strong> to begin importing functions.</p>
+        </ServiceIconWrapper>
         <ButtonBar
           class="mt4"
           :cancel-button-visible="false"
@@ -64,11 +66,13 @@
 
       <!-- step 4: show result (failure) -->
       <div v-else-if="active_step == 'setup-error'">
-        <div style="height: 18px"></div>
-        <div class="flex flex-column items-center br2 ba b--black-10 pa4">
-          <i class="el-icon-warning dark-red f2 nt4 relative" style="background: #fff; top: -18px; padding: 0 8px"></i>
-          <p>No <strong>flexio.yml</strong> manifest file could be found at the specified location. Please try again.</p>
-        </div>
+        <ServiceIconWrapper :innerSpacing="10">
+          <i
+            class="el-icon-warning bg-white f2 dark-red"
+            slot="icon"
+          ></i>
+          <p class="tc">No <strong>flexio.yml</strong> manifest file could be found at the specified location. Please try again.</p>
+        </ServiceIconWrapper>
         <ButtonBar
           class="mt4"
           :cancel-button-visible="false"
@@ -98,6 +102,7 @@
   import HeaderBar from '@/components/HeaderBar'
   import ButtonBar from '@/components/ButtonBar'
   import IconList from '@/components/IconList'
+  import ServiceIconWrapper from '@/components/ServiceIconWrapper'
   import ConnectionEditPanel from '@/components/ConnectionEditPanel'
   import FunctionMountConfigWizard from '@/components/FunctionMountConfigWizard'
   import MixinConnection from '@/components/mixins/connection'
@@ -167,6 +172,7 @@
       HeaderBar,
       ButtonBar,
       IconList,
+      ServiceIconWrapper,
       ConnectionEditPanel,
       FunctionMountConfigWizard,
     },
