@@ -29,9 +29,8 @@
       v-if="active_step == 'choose-source'"
     />
 
-    <div class="h1" v-if="showFormLogo && active_step != 'choose-source'"></div>
-
     <!-- step 2: connect & authenticate -->
+    <div class="h1" v-if="showFormLogo && active_step == 'authentication'"></div>
     <div
       class="flex flex-column br2 ba b--black-10 pa4"
       v-if="active_step == 'authentication'"
@@ -53,6 +52,7 @@
     </div>
 
     <!-- step 3: edit properties -->
+    <div class="h1" v-if="showFormLogo && active_step == 'properties'"></div>
     <div
       class="flex flex-column br2 ba b--black-10 pa4"
       v-if="active_step == 'properties'"

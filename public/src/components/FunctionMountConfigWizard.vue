@@ -1,41 +1,25 @@
 <template>
   <div>
-    <div class="flex flex-column br2 ba b--black-10 pa4">
-      <div
-        class="flex flex-column justify-center form-logo"
-        v-show="showFormLogo && url.length > 0"
-      >
-        <ServiceIcon
-          ref="icon"
-          class="form-logo-icon"
-          :url="url"
-          :icon-height.sync="icon_height"
-          :calc-height="true"
-        />
-      </div>
-      <BuilderItemForm
-        :key="prompt.name"
-        :item="prompt"
-        :visible="index == active_idx"
-        :cancel-button-visible="active_idx > 0"
-        :cancel-button-text="'Back'"
-        :submit-button-text="is_last_item ? 'Done' : 'Next'"
-        @values-change="onValuesChange"
-        @cancel-click="onBackClick"
-        @submit-click="onNextClick"
-        v-for="(prompt, index) in prompts"
-      />
-    </div>
+    <BuilderItemForm
+      :key="prompt.name"
+      :item="prompt"
+      :visible="index == active_idx"
+      :cancel-button-visible="active_idx > 0"
+      :cancel-button-text="'Back'"
+      :submit-button-text="is_last_item ? 'Done' : 'Next'"
+      @values-change="onValuesChange"
+      @cancel-click="onBackClick"
+      @submit-click="onNextClick"
+      v-for="(prompt, index) in prompts"
+    />
   </div>
 </template>
 
 <script>
-  import ServiceIcon from '@/components/ServiceIcon'
   import BuilderItemForm from '@/components/BuilderItemForm'
 
   const getDefaultState = () => {
     return {
-      icon_height: 0,
       active_idx: 0,
       config: {}
     }
@@ -46,14 +30,9 @@
       manifest: {
         type: Object,
         default: () => {}
-      },
-      showFormLogo: {
-        type: Boolean,
-        default: true
-      },
+      }
     },
     components: {
-      ServiceIcon,
       BuilderItemForm
     },
     data() {
@@ -89,18 +68,3 @@
     }
   }
 </script>
-
-<style lang="stylus" scoped>
-  .form-logo
-    background: #fff
-    height: 48px
-    margin: -56px auto 24px
-    padding: 0 8px
-
-  .form-logo-icon
-    border-radius: 4px
-    max-height: 48px
-
-  .form-title
-    margin-bottom: 24px
-</style>
