@@ -12,24 +12,27 @@
         <!-- step: welcome -->
         <div v-if="active_step == 'welcome'">
           <h1 class="fw6 f2 tc">Welcome to Flex.io!</h1>
-          <p class="">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem corporis accusantium, blanditiis nostrum unde dolores totam iste. Blanditiis voluptates consectetur laudantium, repudiandae voluptatibus ducimus fugit rem sequi, corporis nesciunt quas?</p>
-          <p class="">What would you like to do today?</p>
-          <div class="flex flex-row center">
-            <div
-              class="flex-fill onboarding-big-button"
-              :class="{ 'active': onboarding_method == 'spreadsheet-user' }"
-              @click="chooseOnboardingMethod('spreadsheet-user')"
-            >
-              <h4>I'd like to join a team.</h4>
-              <p class="tl mt1 mb0">Choose this option if you are primarily a spreadsheet user and have already been invited to join someone's team.</p>
-            </div>
-            <div
-              class="flex-fill onboarding-big-button"
-              :class="{ 'active': onboarding_method == 'technical-user' }"
-              @click="chooseOnboardingMethod('technical-user')"
-            >
-              <h4>I'd like to build functions.</h4>
-              <p class="tl mt1 mb0">Choose this option if you are primarily a technical user or developer and would like to build functions to share with your team.</p>
+          <p class="center mw7">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem corporis accusantium, blanditiis nostrum unde dolores totam iste. Blanditiis voluptates consectetur laudantium, repudiandae voluptatibus ducimus fugit rem sequi, corporis nesciunt quas?</p>
+          <p class="center mw7">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis aut ut dicta fuga id nobis qui, dignissimos totam neque rerum perspiciatis ratione rem nemo in! Distinctio corporis nobis, illo veniam.</p>
+          <div v-if="false">
+            <p>What would you like to do today?</p>
+            <div class="flex flex-row center">
+              <div
+                class="flex-fill onboarding-big-button"
+                :class="{ 'active': onboarding_method == 'spreadsheet-user' }"
+                @click="chooseOnboardingMethod('spreadsheet-user')"
+              >
+                <h4>I'd like to join a team.</h4>
+                <p class="tl mt1 mb0">Choose this option if you are primarily a spreadsheet user and have already been invited to join someone's team.</p>
+              </div>
+              <div
+                class="flex-fill onboarding-big-button"
+                :class="{ 'active': onboarding_method == 'technical-user' }"
+                @click="chooseOnboardingMethod('technical-user')"
+              >
+                <h4>I'd like to build functions.</h4>
+                <p class="tl mt1 mb0">Choose this option if you are primarily a technical user or developer and would like to build functions to share with your team.</p>
+              </div>
             </div>
           </div>
         </div>
@@ -123,6 +126,7 @@
           </FunctionMountConfigWizard>
         </div>
 
+        <!-- button bar for the entire onboarding wizard -->
         <ButtonBar
           class="mt4"
           :utility-button-visible="true"
@@ -142,6 +146,7 @@
 </template>
 
 <script>
+  import axios from 'axios'
   import { mapGetters } from 'vuex'
   import api from '@/api'
   import ButtonBar from '@/components/ButtonBar'
@@ -150,7 +155,7 @@
 
   const getDefaultState = () => {
     return {
-      onboarding_method: '', // 'spreadsheet-user' or 'technical-user'
+      onboarding_method: 'technical-user', // 'spreadsheet-user' or 'technical-user'
       active_step: 'welcome',
       active_integration_idx: 0,
       active_manifest: null,
@@ -197,7 +202,7 @@
         return this.active_step_idx == 1 || (this.active_step == 'invite-members' && this.selected_integrations.length == 0)
       },
       submit_button_visible() {
-        return this.active_step != 'welcome' && this.active_step != 'set-up-integrations'
+        return this.active_step != 'set-up-integrations'
       },
       step_order() {
         switch (this.onboarding_method) {
@@ -239,7 +244,8 @@
       onNextStepClick() {
         // we're on the last step; commit all changes to the backend and take the user to the app
         if (this.active_step_idx == this.step_order.length - 1) {
-          // TODO
+          this.submitOnboardingConfig()
+          return
         }
 
         if (this.active_step == 'choose-integrations' && this.selected_integrations.length == 0) {
@@ -281,6 +287,25 @@
           this.fetchIntegrationConfig()
         }
       },
+      submitOnboardingConfig() {
+        var team_name = this.getActiveUsername()
+        var xhrs = []
+
+        _.each(this.output_mounts, attrs => {
+          var xhr = this.$store.dispatch('connections/create', { team_name, attrs })
+          xhrs.push(xhr)
+        })
+
+        // once all of the mounts have been created start syncing all of them
+        // and take the user to the pipes area
+        axios.all(xhrs)
+        .then(axios.spread(responses => {
+          alert('it worked!')
+        }))
+        .catch(error => {
+
+        })
+      }
     }
   }
 </script>
