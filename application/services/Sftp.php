@@ -174,7 +174,7 @@ class Sftp implements \Flexio\IFace\IConnection,
     public function getFileInfo(string $path) : array
     {
         if (!$this->checkConnect())
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         $info = $this->connection->lstat($this->getRemotePath($path));
 
