@@ -43,7 +43,7 @@ class Box implements \Flexio\IFace\IConnection,
         if ($this->authenticated() === false)
             return false;
 
-        // TODO: return
+        // TODO: check connection with basic api request
 
         return true;
     }
