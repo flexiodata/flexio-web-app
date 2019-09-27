@@ -40,6 +40,11 @@ class Box implements \Flexio\IFace\IConnection,
 
     public function connect() : bool
     {
+        if ($this->authenticated() === false)
+            return false;
+
+        // TODO: return
+
         return true;
     }
 

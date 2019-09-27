@@ -37,8 +37,12 @@ class Firebase implements \Flexio\IFace\IConnection,
 
     public function connect() : bool
     {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        if ($this->authenticated() === false)
+            return false;
+
+        // TODO: check connection with basic api request
+
+        return true;
     }
 
     public function disconnect() : void

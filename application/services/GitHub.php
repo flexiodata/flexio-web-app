@@ -41,6 +41,12 @@ class GitHub implements \Flexio\IFace\IConnection,
 
     public function connect() : bool
     {
+        // github connections can be public and private, so don't
+        // check if we're authenticated; simply make a basic api
+        // request
+
+        // TODO: check connection with basic api request
+
         return true;
     }
 
