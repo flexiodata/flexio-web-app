@@ -35,8 +35,9 @@
 </template>
 
 <script>
-  import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
+  import { mapState, mapGetters } from 'vuex'
+  import { ROUTE_APP_ONBOARDING } from '@/constants/route'
   import AppNavbar from '@/components/AppNavbar'
   import PageNotFound from '@/components/PageNotFound'
 
@@ -96,7 +97,7 @@
         return this.active_user_eid.length > 0
       },
       show_navbar() {
-        return this.requires_auth
+        return this.requires_auth && this.$route.name != ROUTE_APP_ONBOARDING
       },
       show_intercom_button() {
         return this.requires_auth

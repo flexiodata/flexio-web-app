@@ -128,7 +128,7 @@
 
         <!-- button bar for the entire onboarding wizard -->
         <ButtonBar
-          class="mt4"
+          class="mt5"
           :utility-button-visible="true"
           :utility-button-type="'text'"
           :utility-button-text="'Skip setup'"
