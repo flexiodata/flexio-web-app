@@ -467,7 +467,7 @@ class Test
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_SMTP;
-        $expected = 'email';
+        $expected = 'smtp';
         \Flexio\Tests\Check::assertString('K.17', 'Type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
