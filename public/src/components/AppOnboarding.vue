@@ -195,7 +195,7 @@
       },
       onNextClick() {
         // we're on the last step; commit all changes to the backend and take the user to the app
-        if (this.active_step_idx == this.step_order.length = 1) {
+        if (this.active_step_idx == this.step_order.length - 1) {
           // TODO
         }
 
