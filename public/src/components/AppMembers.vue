@@ -61,7 +61,7 @@
           <el-button
             class="ttu fw6"
             type="primary"
-            @click="show_add_dialog = true"
+            @click="show_invite_dialog = true"
             v-require-rights:teammember.update
           >
             Add Members
@@ -80,57 +80,17 @@
     </div>
 
     <el-dialog
+      custom-class="el-dialog--no-header el-dialog--no-footer"
       width="42rem"
       top="4vh"
-      title="Add Team Members"
       :modal-append-to-body="false"
-      :visible.sync="show_add_dialog"
-      @open="onAddDialogOpen"
-      @close="onAddDialogClose"
+      :visible.sync="show_invite_dialog"
     >
-      <el-form
-        ref="form"
-        class="el-form--cozy el-form__label-tiny"
-        label-position="top"
-        :model="add_dialog_model"
-        :rules="add_dialog_rules"
-        v-if="show_add_dialog"
-        @submit.prevent.native
-      >
-        <p class="f5">Enter the email addresses of the people you would like to invite to your team. New team members will get an email with a link to accept the invitation.</p>
-        <el-form-item
-          key="users"
-          prop="users"
-          label="Send invites to the following email addresses"
-        >
-          <el-select
-            ref="email-invite-select"
-            multiple
-            filterable
-            allow-create
-            default-first-option
-            popper-class="dn"
-            class="w-100"
-            spellcheck="false"
-            placeholder="Enter email addresses"
-            v-model="add_dialog_model.users"
-            v-tag-input
-          >
-            <el-option
-              :label="item.label"
-              :value="item.value"
-              :key="item.value"
-              v-for="item in []"
-            />
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <ButtonBar
-        class="mt4"
-        :submit-button-disabled="add_dialog_has_errors == true"
-        :submit-button-text="'Send Invites'"
-        @cancel-click="show_add_dialog = false"
-        @submit-click="sendInvites"
+      <MemberInvitePanel
+        @close="show_invite_dialog = false"
+        @cancel="show_invite_dialog = false"
+        @submit="show_invite_dialog = false"
+        v-if="show_invite_dialog"
       />
     </el-dialog>
   </div>
@@ -139,10 +99,10 @@
 <script>
   import { ROUTE_APP_PIPES } from '@/constants/route'
   import { mapState, mapGetters } from 'vuex'
-  import { isValidEmail } from '@/utils'
   import Spinner from 'vue-simple-spinner'
   import ButtonBar from '@/components/ButtonBar'
   import MemberItem from '@/components/MemberItem'
+  import MemberInvitePanel from '@/components/MemberInvitePanel'
   import PageNotFound from '@/components/PageNotFound'
 
   export default {
@@ -162,6 +122,7 @@
       Spinner,
       ButtonBar,
       MemberItem,
+      MemberInvitePanel,
       PageNotFound
     },
     watch: {
@@ -173,28 +134,13 @@
         immediate: true,
         handler: 'checkAlreadyMember'
       },
-      'add_dialog_model.users'() {
-        // for some reason the 'change' trigger doesn't work here --
-        // using a watcher here will have the same effect
-        this.$refs.form.validateField('users')
-      }
     },
     data() {
       return {
+        show_invite_dialog: false,
         is_checking_already_member: false,
         is_already_member: false,
         join_error_msg: '',
-        show_add_dialog: false,
-        add_dialog_has_errors: false,
-        add_dialog_model: {
-          users: [],
-          options: []
-        },
-        add_dialog_rules: {
-          users: [
-            { validator: this.formValidateEmailArray }
-          ],
-        }
       }
     },
     computed: {
@@ -266,39 +212,6 @@
           setTimeout(() => { this.is_checking_already_member = false }, 10)
         }
       },
-      sendInvites() {
-        var timeout = 1
-
-        // quick hack to allow multiple users to be added until the API supports it
-        _.forEach(this.add_dialog_model.users, user => {
-          setTimeout(() => { this.sendInvite(user) }, timeout)
-          timeout += 50
-        })
-
-        this.show_add_dialog = false
-      },
-      formValidateEmailArray(rule, value, callback) {
-        var has_errors = false
-        _.each(value, v => {
-          has_errors = has_errors || !isValidEmail(v)
-        })
-
-        if (value.length == 0) {
-          this.add_dialog_has_errors = true
-          callback(new Error('Please input at least one email address'))
-        } else if (has_errors) {
-          this.add_dialog_has_errors = true
-          callback(new Error('One or more of the email addresses entered is invalid'))
-        } else {
-          this.add_dialog_has_errors = false
-          callback()
-        }
-      },
-      sendInvite(member) {
-        var team_name = this.active_team_name
-        var attrs = { member }
-        this.$store.dispatch('members/create', { team_name, attrs })
-      },
       rejectJoinTeam() {
         this.$router.push({ name: ROUTE_APP_PIPES })
       },
@@ -315,15 +228,6 @@
           //this.join_error_msg = _.get(error, 'response.data.error.message', '')
           this.join_error_msg = 'There was a problem joining the team'
         })
-      },
-      onAddDialogOpen() {
-        this.$nextTick(() => this.$refs['email-invite-select'].focus())
-      },
-      onAddDialogClose() {
-        this.add_dialog_model = {
-          users: [],
-          options: []
-        }
       }
     }
   }
