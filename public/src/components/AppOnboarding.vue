@@ -144,7 +144,6 @@
           :utility-button-visible="true"
           :utility-button-type="'text'"
           :utility-button-text="'Skip setup'"
-          :cancel-button-visible="cancel_button_visible"
           :submit-button-visible="submit_button_visible"
           :cancel-button-text="'Back'"
           :submit-button-text="active_step_idx == step_order.length - 1 ? 'Done' : 'Continue'"
@@ -211,13 +210,6 @@
       has_active_manifest() {
         return !_.isNil(this.active_manifest)
       },
-      cancel_button_visible() {
-        if (this.active_step == 'set-up-integrations') {
-          return false
-        }
-
-        return this.active_step_idx == 1 || (this.active_step == 'invite-members' && this.selected_integrations.length == 0)
-      },
       submit_button_visible() {
         return this.active_step != 'set-up-integrations'
       },
@@ -243,8 +235,15 @@
         this.endOnboarding()
       },
       onPrevStepClick() {
-        if (this.active_step == 'invite-members' && this.selected_integrations.length == 0) {
-          // skip back over integration set up if none were selected
+        if (this.active_step == 'set-up-integrations'/* && this.active_integration_idx > 0 */) {
+          // TODO: Fix this; user should be able to step backward through
+          //       multiple configurations and have their values populate in the forms
+          // skip back to the previous integration setup
+          //this.active_integration_idx--
+          //this.fetchIntegrationConfig()
+          this.active_step = this.step_order[this.active_step_idx - 1]
+        } else if (this.active_step == 'invite-members'/* && this.selected_integrations.length == 0 */) {
+          // skip back over integration setup if none were selected
           this.active_step = this.step_order[this.active_step_idx - 2]
         } else {
           this.active_step = this.step_order[this.active_step_idx - 1]
