@@ -39,6 +39,11 @@ class GoogleSheets implements \Flexio\IFace\IConnection,
 
     public function connect() : bool
     {
+        if ($this->authenticated() === false)
+            return false;
+
+        // TODO: check connection with basic api request
+
         return true;
     }
 
@@ -257,7 +262,6 @@ class GoogleSheets implements \Flexio\IFace\IConnection,
     {
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
     }
 
     private function internalCreateFile(string $path, array $properties = []) // TODO: add return type
@@ -372,8 +376,8 @@ class GoogleSheets implements \Flexio\IFace\IConnection,
 
     public function unlink(string $path) : bool
     {
+        // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
     }
 
     public function open($path) : \Flexio\IFace\IStream

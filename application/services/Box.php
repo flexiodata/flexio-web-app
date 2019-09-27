@@ -40,6 +40,11 @@ class Box implements \Flexio\IFace\IConnection,
 
     public function connect() : bool
     {
+        if ($this->authenticated() === false)
+            return false;
+
+        // TODO: check connection with basic api request
+
         return true;
     }
 
@@ -248,7 +253,6 @@ class Box implements \Flexio\IFace\IConnection,
     {
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
     }
 
     public function createFile(string $path, array $properties = []) : bool

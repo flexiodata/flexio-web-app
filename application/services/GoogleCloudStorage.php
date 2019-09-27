@@ -41,6 +41,11 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection,
 
     public function connect() : bool
     {
+        if ($this->authenticated() === false)
+            return false;
+
+        // TODO: check connection with basic api request
+
         return true;
     }
 
@@ -743,7 +748,6 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection,
         return $service;
     }
 
-
     private function getPathParts(string $full_path, &$bucket, &$path) : bool
     {
         if (strlen($this->bucket) > 0)
@@ -789,5 +793,4 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection,
 
         return true;
     }
-
 }

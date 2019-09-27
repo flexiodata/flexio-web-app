@@ -41,6 +41,12 @@ class GitHub implements \Flexio\IFace\IConnection,
 
     public function connect() : bool
     {
+        // github connections can be public and private, so don't
+        // check if we're authenticated; simply make a basic api
+        // request
+
+        // TODO: check connection with basic api request
+
         return true;
     }
 
@@ -225,7 +231,6 @@ class GitHub implements \Flexio\IFace\IConnection,
     {
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        //return false;
     }
 
     public function createFile(string $path, array $properties = []) : bool
@@ -245,8 +250,8 @@ class GitHub implements \Flexio\IFace\IConnection,
 
     public function unlink(string $path) : bool
     {
+        // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
     }
 
     public function open($path) : \Flexio\IFace\IStream

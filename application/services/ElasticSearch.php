@@ -113,6 +113,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
     public function getFileInfo(string $path) : array
     {
+        // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
@@ -120,7 +121,6 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
     {
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
     }
 
     public function createFile(string $path, array $properties = []) : bool
@@ -152,7 +152,6 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
     {
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
     }
 
     public function write(array $params, callable $callback) // TODO: add return type

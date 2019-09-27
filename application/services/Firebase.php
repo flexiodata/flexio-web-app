@@ -37,23 +37,30 @@ class Firebase implements \Flexio\IFace\IConnection,
 
     public function connect() : bool
     {
+        if ($this->authenticated() === false)
+            return false;
+
+        // TODO: check connection with basic api request
+
         return true;
     }
 
     public function disconnect() : void
     {
-        // reset secret credentials and authentication flag
-        $this->authenticated = false;
+        // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
     public function authenticated() : bool
     {
-        return $this->authenticated;
+        // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
     public function get() : array
     {
-        return array();
+        // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
     ////////////////////////////////////////////////////////////
@@ -97,11 +104,11 @@ class Firebase implements \Flexio\IFace\IConnection,
     {
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
     }
 
     public function getFileInfo(string $path) : array
     {
+        // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
@@ -119,8 +126,8 @@ class Firebase implements \Flexio\IFace\IConnection,
 
     public function unlink(string $path) : bool
     {
+        // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
     }
 
     public function open($path) : \Flexio\IFace\IStream

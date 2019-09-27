@@ -40,6 +40,11 @@ class GoogleDrive implements \Flexio\IFace\IConnection,
 
     public function connect() : bool
     {
+        if ($this->authenticated() === false)
+            return false;
+
+        // TODO: check connection with basic api request
+
         return true;
     }
 
@@ -251,8 +256,8 @@ class GoogleDrive implements \Flexio\IFace\IConnection,
 
     public function exists(string $path) : bool
     {
+        // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
     }
 
     public function open($path) : \Flexio\IFace\IStream
