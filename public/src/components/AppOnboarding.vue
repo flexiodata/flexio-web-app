@@ -310,19 +310,28 @@
       },
       submitOnboardingConfig() {
         var team_name = this.getActiveUsername()
-        var xhrs = []
+        var create_xhrs = []
 
         _.each(this.output_mounts, attrs => {
           var xhr = this.$store.dispatch('connections/create', { team_name, attrs })
-          xhrs.push(xhr)
+          create_xhrs.push(xhr)
         })
 
-        // once all of the mounts have been created start syncing all of them
-        // and take the user to the pipes area
-        axios.all(xhrs)
-        .then(axios.spread(responses => {
+        // create all of the function mounts
+        axios.all(create_xhrs).then(responses => {
+          var sync_xhrs = []
+
+          // start syncing all of the function mounts
+          _.each(responses, response => {
+            var eid = _.get(response.data, 'eid', '')
+            var xhr = this.$store.dispatch('connections/sync', { team_name, eid })
+            sync_xhrs.push(xhr)
+          })
+
+          // syncing can take a long time; end the onboarding
+          // while the syncing is going on
           this.endOnboarding()
-        }))
+        })
         .catch(error => {
 
         })
