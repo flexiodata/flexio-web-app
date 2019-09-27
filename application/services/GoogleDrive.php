@@ -251,8 +251,8 @@ class GoogleDrive implements \Flexio\IFace\IConnection,
 
     public function exists(string $path) : bool
     {
+        // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
     }
 
     public function open($path) : \Flexio\IFace\IStream

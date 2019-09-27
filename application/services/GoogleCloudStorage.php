@@ -743,7 +743,6 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection,
         return $service;
     }
 
-
     private function getPathParts(string $full_path, &$bucket, &$path) : bool
     {
         if (strlen($this->bucket) > 0)
@@ -789,5 +788,4 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection,
 
         return true;
     }
-
 }

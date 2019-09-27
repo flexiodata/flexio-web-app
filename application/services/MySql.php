@@ -174,7 +174,6 @@ class MySql implements \Flexio\IFace\IConnection,
     {
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
     }
 
     public function createFile(string $path, array $properties = []) : bool
@@ -191,8 +190,8 @@ class MySql implements \Flexio\IFace\IConnection,
 
     public function unlink(string $path) : bool
     {
+        // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
     }
 
     public function open($path) : \Flexio\IFace\IStream
