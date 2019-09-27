@@ -149,7 +149,7 @@
 
   const getDefaultState = () => {
     return {
-      emitting_update: false,
+      is_emitting_update: false,
       test_state: 'none', // none, testing, error, success
       forms: {
         amazons3,
@@ -280,7 +280,7 @@
     },
     methods: {
       initSelf() {
-        if (this.emitting_update === true ) {
+        if (this.is_emitting_update === true ) {
           return
         }
 
@@ -301,9 +301,9 @@
         }
       },
       emitUpdate() {
-        this.emitting_update = true
+        this.is_emitting_update = true
         this.$emit('update:connection', this.edit_connection)
-        this.$nextTick(() => { this.emitting_update = false })
+        this.$nextTick(() => { this.is_emitting_update = false })
       },
       updateEditConnection(attrs) {
         this.edit_connection = _.assign({}, this.edit_connection, attrs)

@@ -251,7 +251,7 @@
       return {
         active_tab_name: 'authorization',
         force_render: false,
-        emitting: false,
+        is_emitting_update: false,
         method_options,
         auth_options,
         form_values: getDefaultInfo(),
@@ -266,7 +266,7 @@
     },
     methods: {
       initSelf() {
-        if (this.emitting) {
+        if (this.is_emitting_update) {
           return
         }
 
@@ -295,10 +295,9 @@
         var connection_info = _.cloneDeep(this.form_values)
 
         // make sure our update below doesn't trigger another call to 'initSelf'
-        this.emitting = true
-        this.$nextTick(() => { this.emitting = false })
-
+        this.is_emitting_update = true
         this.$emit('update:connectionInfo', connection_info)
+        this.$nextTick(() => { this.is_emitting_update = false })
       },
       validate(callback) {
         if (this.$refs.form) {
