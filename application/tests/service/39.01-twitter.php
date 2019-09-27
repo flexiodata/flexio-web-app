@@ -27,20 +27,20 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $service = new \Flexio\Services\Twitter;
-        $actual = get_class($service);
+        $instance = new \Flexio\Services\Twitter;
+        $actual = get_class($instance);
         $expected = 'Flexio\Services\Twitter';
         \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\Twitter::create(); basic file syntax check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $service = new \Flexio\Services\Twitter;
-        $actual = ($service instanceof \Flexio\IFace\IConnection) ? true : false;
+        $instance = new \Flexio\Services\Twitter;
+        $actual = ($instance instanceof \Flexio\IFace\IConnection) ? true : false;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('A.2', 'new \Flexio\Services\Twitter; instance of IConnection ',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $service = new \Flexio\Services\Twitter;
-        $actual = ($service instanceof \Flexio\IFace\IOAuthConnection) ? true : false;
+        $instance = new \Flexio\Services\Twitter;
+        $actual = ($instance instanceof \Flexio\IFace\IOAuthConnection) ? true : false;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('A.3', 'new \Flexio\Services\Twitter; instance of IConnection ',  $actual, $expected, $results);
     }

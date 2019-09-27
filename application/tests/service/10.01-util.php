@@ -23,8 +23,8 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $service = new \Flexio\Services\Util;
-        $actual = get_class($service);
+        $instance = new \Flexio\Services\Util;
+        $actual = get_class($instance);
         $expected = 'Flexio\Services\Util';
         \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\Util; basic file syntax check',  $actual, $expected, $results);
     }

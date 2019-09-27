@@ -27,8 +27,8 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $service = new \Flexio\Services\ProcessContext;
-        $actual = get_class($service);
+        $instance = new \Flexio\Services\ProcessContext;
+        $actual = get_class($instance);
         $expected = 'Flexio\Services\ProcessContext';
         \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\ProcessContext; basic file syntax check',  $actual, $expected, $results);
     }

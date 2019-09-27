@@ -27,8 +27,8 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $service = new \Flexio\Services\StorageFs;
-        $actual = get_class($service);
+        $instance = new \Flexio\Services\StorageFs;
+        $actual = get_class($instance);
         $expected = 'Flexio\Services\StorageFs';
         \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\StorageFs; basic file syntax check',  $actual, $expected, $results);
     }

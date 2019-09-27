@@ -27,14 +27,14 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $service = new \Flexio\Services\Http;
-        $actual = get_class($service);
+        $instance = new \Flexio\Services\Http;
+        $actual = get_class($instance);
         $expected = 'Flexio\Services\Http';
         \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\Http; basic file syntax check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $service = new \Flexio\Services\Http;
-        $actual = ($service instanceof \Flexio\IFace\IConnection) ? true : false;
+        $instance = new \Flexio\Services\Http;
+        $actual = ($instance instanceof \Flexio\IFace\IConnection) ? true : false;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('A.2', 'new \Flexio\Services\Http; instance of IConnection ',  $actual, $expected, $results);
     }
