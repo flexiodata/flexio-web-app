@@ -143,7 +143,8 @@
       active_step: 'welcome',
       active_integration_idx: 0,
       active_manifest: null,
-      selected_integrations: []
+      selected_integrations: [],
+      output_mounts: [],
     }
   }
 
@@ -255,10 +256,20 @@
           this.active_manifest = _.assign({}, setup_template)
         })
       },
-
       saveIntegration(setup_config) {
-        console.log(setup_config)
-      }
+        var setup_template = this.active_manifest
+        var mount = _.cloneDeep(_.get(this.active_integration, 'connection', {}))
+        mount = _.assign({}, mount, { setup_config, setup_template })
+
+        this.output_mounts = [].concat(this.output_mounts).concat([mount])
+
+        if (this.active_integration_idx == this.selected_integrations.length - 1) {
+          this.onNextClick()
+        } else {
+          this.active_integration_idx++
+          this.fetchIntegrationConfig()
+        }
+      },
     }
   }
 </script>
