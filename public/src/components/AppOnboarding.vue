@@ -14,7 +14,7 @@
           <h1 class="fw6 f2 tc">Welcome to Flex.io!</h1>
           <p class="">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem corporis accusantium, blanditiis nostrum unde dolores totam iste. Blanditiis voluptates consectetur laudantium, repudiandae voluptatibus ducimus fugit rem sequi, corporis nesciunt quas?</p>
           <p class="">What would you like to do today?</p>
-          <div class="flex flex-row center mw7">
+          <div class="flex flex-row center">
             <div
               class="flex-fill onboarding-big-button"
               :class="{ 'active': onboarding_method == 'spreadsheet-user' }"
@@ -109,7 +109,18 @@
             :manifest="active_manifest"
             @submit="saveIntegration"
             v-if="has_active_manifest"
-          />
+          >
+            <div slot="no-prompts">
+              <div class="tc f6 fw4 lh-copy moon-gray"><em>No configuration is required for this integration.</em></div>
+              <ButtonBar
+                class="mt4"
+                :cancel-button-visible="false"
+                :cancel-button-text="'Back'"
+                :submit-button-text="'Next'"
+                @submit-click="saveIntegration({})"
+              />
+            </div>
+          </FunctionMountConfigWizard>
         </div>
 
         <ButtonBar
@@ -121,9 +132,9 @@
           :submit-button-visible="submit_button_visible"
           :cancel-button-text="'Back'"
           :submit-button-text="active_step_idx == step_order.length - 1 ? 'Done' : 'Continue'"
-          @utility-click="onSkipClick"
-          @cancel-click="onBackClick"
-          @submit-click="onNextClick"
+          @utility-click="onSkipSetupClick"
+          @cancel-click="onPrevStepClick"
+          @submit-click="onNextStepClick"
         />
      </div>
       </div>
@@ -209,7 +220,7 @@
       ...mapGetters('integrations', {
         'getProductionIntegrations': 'getProductionIntegrations',
       }),
-      onSkipClick() {
+      onSkipSetupClick() {
         var team_name = this.getActiveUsername()
 
         this.$store.dispatch('teams/changeActiveTeam', { team_name }).then(response => {
@@ -217,7 +228,7 @@
           this.$router.push({ path: `/${team_name}/pipes` })
         })
       },
-      onBackClick() {
+      onPrevStepClick() {
         if (this.active_step == 'invite-members' && this.selected_integrations.length == 0) {
           // skip back over integration set up if none were selected
           this.active_step = this.step_order[this.active_step_idx - 2]
@@ -225,7 +236,7 @@
           this.active_step = this.step_order[this.active_step_idx - 1]
         }
       },
-      onNextClick() {
+      onNextStepClick() {
         // we're on the last step; commit all changes to the backend and take the user to the app
         if (this.active_step_idx == this.step_order.length - 1) {
           // TODO
@@ -264,7 +275,7 @@
         this.output_mounts = [].concat(this.output_mounts).concat([mount])
 
         if (this.active_integration_idx == this.selected_integrations.length - 1) {
-          this.onNextClick()
+          this.onNextStepClick()
         } else {
           this.active_integration_idx++
           this.fetchIntegrationConfig()
