@@ -1,12 +1,15 @@
 <template>
-  <div class="flex flex-column bg-nearer-white overflow-y-scroll">
-    <div class="ph4 pv5">
+  <main class="pa3 ph3-m pa5-ns bg-nearer-white overflow-y-scroll">
+    <div class="mt4">
       <div
-        class="w-100 center mw-doc pa4 bg-white br2 css-white-box overflow-hidden"
+        class="w-100 center mw-doc pt4 pb5 ph5 bg-white br2 css-white-box"
         style="margin-bottom: 15rem"
       >
+        <div class="tc" style="margin-top: -76px">
+          <img src="../assets/logo-square-80x80.png" alt="Flex.io" class="br-100 ba bw1 b--white" style="width: 84px; box-shadow: 0 0 3px rgba(0,0,0,0.4)">
+        </div>
 
-        <!-- step 1: welcome -->
+        <!-- step: welcome -->
         <div v-if="active_step == 'welcome'">
           <h1 class="fw6 f2 tc">Welcome to Flex.io!</h1>
           <p class="">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem corporis accusantium, blanditiis nostrum unde dolores totam iste. Blanditiis voluptates consectetur laudantium, repudiandae voluptatibus ducimus fugit rem sequi, corporis nesciunt quas?</p>
@@ -31,6 +34,20 @@
           </div>
         </div>
 
+        <!-- step heading when going down the "technical user" route (e.g. selecting integrations, etc.) -->
+        <el-steps
+          class="mv4 pb2"
+          align-center
+          finish-status="success"
+          :active="active_step_idx - 1"
+          v-if="active_step != 'welcome' && onboarding_method == 'technical-user'"
+        >
+          <el-step title="Choose Integrations" />
+          <el-step title="Set Up" />
+          <el-step title="Invite Others" />
+          <el-step title="Get Add-ons " />
+        </el-steps>
+
         <!-- step: install add-ons -->
         <div v-if="active_step == 'install-add-ons'">
           <h3 class="fw6 f3 tc">Get Add-Ons</h3>
@@ -41,41 +58,27 @@
           <p>[GET THE EXCEL ADD-ON]</p>
         </div>
 
-        <div v-if="active_step != 'welcome' && onboarding_method == 'technical-user'">
-          <el-steps
-            class="mt3 mb4 pb2"
-            align-center
-            finish-status="success"
-            :active="active_step_idx - 1"
-          >
-            <el-step title="Choose Integrations" />
-            <el-step title="Set Up" />
-            <el-step title="Invite Others" />
-            <el-step title="Get Add-ons " />
-          </el-steps>
+        <!-- step: choose integrations -->
+        <div v-if="active_step == 'choose-integrations'">
+          <h3 class="fw6 f3 tc">Choose Your Integrations</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur ipsum a eaque odit ut magnam architecto voluptate quae commodi optio quisquam praesentium illo natus dolor assumenda doloremque, suscipit deserunt nostrum?</p>
+          <p>Please select the integrations you would like to add. Once you have selected all of the integrations you would like to add, click the <strong>Continue</strong> button below to continue with the setup process.</p>
+          <IconList
+            class="mt4 mb5"
+            :items="integrations"
+            :selected-items.sync="selected_integrations"
+            :allow-selection="true"
+            :allow-multiple="true"
+          />
+        </div>
 
-          <!-- step: choose integrations -->
-          <div v-if="active_step == 'choose-integrations'">
-            <h3 class="fw6 f3 tc">Choose Your Integrations</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur ipsum a eaque odit ut magnam architecto voluptate quae commodi optio quisquam praesentium illo natus dolor assumenda doloremque, suscipit deserunt nostrum?</p>
-            <p>Please select the integrations you would like to add. Once you have selected all of the integrations you would like to add, click the <strong>Continue</strong> button below to continue with the setup process.</p>
-            <IconList
-              class="mt4 mb5"
-              :items="integrations"
-              :selected-items.sync="selected_integrations"
-              :allow-selection="true"
-              :allow-multiple="true"
-            />
-          </div>
-
-          <!-- step: set up integrations -->
-          <div v-if="active_step == 'set-up-integrations'">
-            <FunctionMountConfigWizard
-              :manifest="active_manifest"
-              @submit="saveIntegration"
-              v-if="has_active_manifest"
-            />
-          </div>
+        <!-- step: set up integrations -->
+        <div v-if="active_step == 'set-up-integrations'">
+          <FunctionMountConfigWizard
+            :manifest="active_manifest"
+            @submit="saveIntegration"
+            v-if="has_active_manifest"
+          />
         </div>
 
         <ButtonBar
@@ -83,8 +86,8 @@
           :utility-button-visible="true"
           :utility-button-type="'text'"
           :utility-button-text="'Skip setup'"
-          :cancel-button-visible="active_step != 'welcome'"
-          :submit-button-visible="active_step != 'welcome'"
+          :cancel-button-visible="cancel_button_visible"
+          :submit-button-visible="submit_button_visible"
           :cancel-button-text="'Back'"
           :submit-button-text="active_step_idx == step_order.length - 1 ? 'Done' : 'Continue'"
           @utility-click="onSkipClick"
@@ -93,7 +96,7 @@
         />
      </div>
       </div>
-  </div>
+  </main>
 </template>
 
 <script>
@@ -143,6 +146,16 @@
       has_active_manifest() {
         return !_.isNil(this.active_manifest)
       },
+      cancel_button_visible() {
+        if (this.active_step == 'set-up-integrations') {
+          return false
+        }
+
+        return this.active_step_idx == 1 || (this.active_step == 'invite-members' && this.selected_integrations.length == 0)
+      },
+      submit_button_visible() {
+        return this.active_step != 'welcome' && this.active_step != 'set-up-integrations'
+      },
       step_order() {
         switch (this.onboarding_method) {
           case 'spreadsheet-user':
@@ -181,6 +194,11 @@
         }
       },
       onNextClick() {
+        // we're on the last step; commit all changes to the backend and take the user to the app
+        if (this.active_step_idx == this.step_order.length = 1) {
+          // TODO
+        }
+
         if (this.active_step == 'choose-integrations' && this.selected_integrations.length == 0) {
           // skip over integration set up if none were selected
           this.active_step = this.step_order[this.active_step_idx + 2]
