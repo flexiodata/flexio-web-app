@@ -28,7 +28,7 @@
 </template>
 
 <script>
-  import { ROUTE_SIGNIN_PAGE } from '@/constants/route'
+  import { ROUTE_APP_ONBOARDING } from '@/constants/route'
   import api from '@/api'
   import Spinner from 'vue-simple-spinner'
 
@@ -48,7 +48,7 @@
           this.is_verified = true
           setTimeout(() => {
             this.$router.replace({
-              name: ROUTE_SIGNIN_PAGE,
+              name: ROUTE_APP_ONBOARDING,
               query: this.$route.query
             })
           }, 3000)
