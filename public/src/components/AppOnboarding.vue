@@ -215,9 +215,6 @@
         return ['welcome']
       },
     },
-    mounted() {
-      this.$store.dispatch('integrations/fetch')
-    },
     methods: {
       ...mapGetters('users', {
         'getActiveUsername': 'getActiveUsername'
