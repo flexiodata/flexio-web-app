@@ -27,8 +27,8 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $service = new \Flexio\Services\NoticeEmail;
-        $actual = get_class($service);
+        $instance = new \Flexio\Services\NoticeEmail;
+        $actual = get_class($instance);
         $expected = 'Flexio\Services\NoticeEmail';
         \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\NoticeEmail; basic file syntax check',  $actual, $expected, $results);
     }

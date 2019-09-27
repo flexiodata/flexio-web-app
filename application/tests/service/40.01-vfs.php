@@ -49,7 +49,8 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $actual = get_class($service);
+        $instance = new \Flexio\Services\Postgres;
+        $actual = get_class($instance);
         $expected = 'Flexio\Services\Vfs';
         \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\Vfs; basic file syntax check',  $actual, $expected, $results);
 

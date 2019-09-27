@@ -27,14 +27,14 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $service = new \Flexio\Services\Postgres;
-        $actual = get_class($service);
+        $instance = new \Flexio\Services\Postgres;
+        $actual = get_class($instance);
         $expected = 'Flexio\Services\Postgres';
         \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\Postgres::create(); basic file syntax check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $service = new \Flexio\Services\Postgres;
-        $actual = ($service instanceof \Flexio\IFace\IConnection) ? true : false;
+        $instance = new \Flexio\Services\Postgres;
+        $actual = ($instance instanceof \Flexio\IFace\IConnection) ? true : false;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('A.2', 'new \Flexio\Services\Postgres; instance of IConnection ',  $actual, $expected, $results);
     }
