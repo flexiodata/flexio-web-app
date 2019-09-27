@@ -12,8 +12,8 @@
         <!-- step: welcome -->
         <div v-if="active_step == 'welcome'">
           <h1 class="fw6 f2 tc">Welcome to Flex.io!</h1>
-          <p class="center mw7">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem corporis accusantium, blanditiis nostrum unde dolores totam iste. Blanditiis voluptates consectetur laudantium, repudiandae voluptatibus ducimus fugit rem sequi, corporis nesciunt quas?</p>
-          <p class="center mw7">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis aut ut dicta fuga id nobis qui, dignissimos totam neque rerum perspiciatis ratione rem nemo in! Distinctio corporis nobis, illo veniam.</p>
+          <p class="center mw7">To get started, we'll add some spreadsheet functions that lookup data from a third-party source (like an API or a web service) of your choice.</p>
+          <p class="center mw7">Set up will only take a couple minutes, but will immediately show you how Flex.io interacts with Excel or Google Sheets. Let's get started!</p>
           <div v-if="false">
             <p>What would you like to do today?</p>
             <div class="flex flex-row center">
@@ -54,7 +54,8 @@
         <!-- step: install add-ons -->
         <div v-if="active_step == 'install-add-ons'">
           <h3 class="fw6 f3 tc">Get Add-Ons</h3>
-          <p>Welcome aboard! To join your team, install the add-on for either Microsoft Excel or Google Sheets below. After installing the add-on, sign in with your Flex.io account, select the team name and begin working with your functions.</p>
+          <p>To use lookup functions in a spreadsheet, you just need to get the add-on for either Microsoft Excel or Google Sheerts. Click on the spreadsheet you'd like to use below and then follow the instructions to install the add-on.</p>
+          <p>Once you have the add-on, simply login with your Flex.io account and you can begin working with your Flex.io lookup functions.</p>
           <div class="flex flex-column flex-row-l mv3 nl3 nr3">
             <div class="flex-fill ma3 pa4 bg-nearer-white br3">
               <div class="flex flex-row items-center justify-center">
@@ -93,8 +94,8 @@
         <!-- step: choose integrations -->
         <div v-if="active_step == 'choose-integrations'">
           <h3 class="fw6 f3 tc">Choose Your Integrations</h3>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur ipsum a eaque odit ut magnam architecto voluptate quae commodi optio quisquam praesentium illo natus dolor assumenda doloremque, suscipit deserunt nostrum?</p>
-          <p>Please select the integrations you would like to add. Once you have selected all of the integrations you would like to add, click the <strong>Continue</strong> button below to continue with the setup process.</p>
+          <p>Here are some out-of-the-box integrations you can use. Click on any integrations you'd like to add. After set up, you'll magically get access to lookup functions using these services in your spreadsheet.</p>
+          <p>Please select the integrations you would like to add, then click the <strong>Continue</strong> button below to continue with the setup process.</p>
           <IconList
             class="mt4 mb5"
             :items="integrations"
@@ -105,38 +106,42 @@
         </div>
 
         <!-- step: set up integrations -->
-        <FunctionMountConfigWizard
-          :manifest="active_manifest"
-          @submit="saveIntegration"
-          v-if="active_step == 'set-up-integrations' && has_active_manifest"
-        >
-          <div slot="no-prompts">
-            <div class="tc f6 fw4 lh-copy moon-gray"><em>No configuration is required for this integration.</em></div>
-            <ButtonBar
-              class="mt4"
-              :cancel-button-visible="false"
-              :cancel-button-text="'Back'"
-              :submit-button-text="'Next'"
-              @submit-click="saveIntegration({})"
-            />
-          </div>
-        </FunctionMountConfigWizard>
+        <div v-if="active_step == 'set-up-integrations' && has_active_manifest">
+          <h3 class="fw6 f3 tc">Set Up Your Integrations</h3>
+          <FunctionMountConfigWizard
+            :manifest="active_manifest"
+            @submit="saveIntegration"
+          >
+            <div slot="no-prompts">
+              <div class="tc f6 fw4 lh-copy moon-gray"><em>No configuration is required for this integration.</em></div>
+              <ButtonBar
+                class="mt4"
+                :cancel-button-visible="false"
+                :cancel-button-text="'Back'"
+                :submit-button-text="'Next'"
+                @submit-click="saveIntegration({})"
+              />
+            </div>
+          </FunctionMountConfigWizard>
+        </div>
 
         <!-- step: invite others -->
-        <ServiceIconWrapper
-          v-if="active_step == 'invite-members'"
-        >
-          <i
-            class="material-icons moon-gray bg-white" style="font-size: 4rem"
-            slot="icon"
-          >people</i>
-          <MemberInvitePanel
-            :show-header="false"
-            :emails="email_invites"
-            @submit="onMemberInviteSubmit"
+        <div v-if="active_step == 'invite-members'">
+          <h3 class="fw6 f3 tc">Invite Others</h3>
+          <p>If you'd like, you can also share your functions with your team. Simply add their email addresses below and they'll get an invitation to join your team and use your functions. You can also skip this step and add people later in the <strong>Members</strong> tab.</p>
+          <ServiceIconWrapper class="mv4">
+            <i
+              class="material-icons moon-gray bg-white" style="font-size: 4rem"
+              slot="icon"
+            >people</i>
+            <MemberInvitePanel
+              :show-header="false"
+              :emails="email_invites"
+              @submit="onMemberInviteSubmit"
 
-          />
-        </ServiceIconWrapper>
+            />
+          </ServiceIconWrapper>
+        </div>
 
         <!-- button bar for the entire onboarding wizard -->
         <ButtonBar
