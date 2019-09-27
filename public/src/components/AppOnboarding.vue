@@ -54,7 +54,7 @@
         <!-- step: install add-ons -->
         <div v-if="active_step == 'install-add-ons'">
           <h3 class="fw6 f3 tc">Get Add-Ons</h3>
-          <p>To use lookup functions in a spreadsheet, you just need to get the add-on for either Microsoft Excel or Google Sheerts. Click on the spreadsheet you'd like to use below and then follow the instructions to install the add-on.</p>
+          <p>To use lookup functions in a spreadsheet, you just need to get the add-on for either Microsoft Excel or Google Sheets. Click on the spreadsheet you'd like to use below and then follow the instructions to install the add-on.</p>
           <p>Once you have the add-on, simply login with your Flex.io account and you can begin working with your Flex.io lookup functions.</p>
           <div class="flex flex-column flex-row-l mv3 nl3 nr3">
             <div class="flex-fill ma3 pa4 bg-nearer-white br3">
