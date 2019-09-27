@@ -233,14 +233,20 @@
       filterByFunctionMount(connection) {
         return this.$_Connection_isFunctionMount(connection)
       },
-      createIntegrationConnection(item) {
+      createPendingIntegrationConnection(item) {
         var team_name = this.active_team_name
-        var attrs = _.cloneDeep(_.get(item, 'connection', {}))
-        attrs.name = this.$store.getUniqueName(attrs.name, 'connections')
-        attrs.eid_status = OBJECT_STATUS_PENDING
+        var integration_attrs = _.cloneDeep(_.get(item, 'connection', {}))
+        var slug = integration_attrs.name
+
+        var attrs = _.assign({}, getDefaultAttrs(), integration_attrs, {
+          eid_status: OBJECT_STATUS_PENDING,
+          name: `${slug}-` + getNameSuffix(16)
+        })
 
         return this.$store.dispatch('connections/create', { team_name, attrs }).then(response => {
-          this.edit_mount = _.assign({}, this.edit_mount, response.data)
+          var mount = _.cloneDeep(response.data)
+          mount.name = this.$store.getUniqueName(slug, 'connections')
+          this.omitMaskedValues(mount)
           this.fetchFunctionPackConfig()
         })
       },
@@ -254,9 +260,9 @@
         // is created with a `mount` prop, use the attributes of
         // this prop when creating the pending connection -- we use this
         // for creating 'function mount' connections
-        var prop_mount_attrs = _.cloneDeep(this.mount)
+        var mount_attrs = _.cloneDeep(this.mount)
 
-        var attrs = _.assign({}, getDefaultAttrs(), prop_mount_attrs, {
+        var attrs = _.assign({}, getDefaultAttrs(), mount_attrs, {
           eid_status: OBJECT_STATUS_PENDING,
           name: `${service_slug}-` + getNameSuffix(16),
           title: ctitle,
@@ -299,8 +305,9 @@
         var team_name = this.active_team_name
         var eid = this.edit_mount.eid
         var eid_status = OBJECT_STATUS_AVAILABLE
+        var name = this.edit_mount.name
         var setup_template = this.edit_mount.setup_template
-        var attrs = { eid_status, setup_template, setup_config }
+        var attrs = { eid_status, name, setup_template, setup_config }
 
         return this.$store.dispatch('connections/update', { team_name, eid, attrs }).then(response => {
           this.edit_mount = _.assign({}, this.edit_mount, _.cloneDeep(response.data))
@@ -308,7 +315,7 @@
         })
       },
       onIntegrationClick(item) {
-        this.createIntegrationConnection(item)
+        this.createPendingIntegrationConnection(item)
       },
       onServiceClick(item) {
         this.createPendingFunctionMount(item).then(response => {
