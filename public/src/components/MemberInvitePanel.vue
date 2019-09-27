@@ -103,6 +103,11 @@
       ButtonBar
     },
     watch: {
+      emails: {
+        handler: 'initSelf',
+        immediate: true,
+        deep: true
+      },
       our_emails: {
         handler: 'emitChange',
         deep: true

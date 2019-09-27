@@ -105,29 +105,38 @@
         </div>
 
         <!-- step: set up integrations -->
-        <div v-if="active_step == 'set-up-integrations'">
-          <FunctionMountConfigWizard
-            :manifest="active_manifest"
-            @submit="saveIntegration"
-            v-if="has_active_manifest"
-          >
-            <div slot="no-prompts">
-              <div class="tc f6 fw4 lh-copy moon-gray"><em>No configuration is required for this integration.</em></div>
-              <ButtonBar
-                class="mt4"
-                :cancel-button-visible="false"
-                :cancel-button-text="'Back'"
-                :submit-button-text="'Next'"
-                @submit-click="saveIntegration({})"
-              />
-            </div>
-          </FunctionMountConfigWizard>
-        </div>
+        <FunctionMountConfigWizard
+          :manifest="active_manifest"
+          @submit="saveIntegration"
+          v-if="active_step == 'set-up-integrations' && has_active_manifest"
+        >
+          <div slot="no-prompts">
+            <div class="tc f6 fw4 lh-copy moon-gray"><em>No configuration is required for this integration.</em></div>
+            <ButtonBar
+              class="mt4"
+              :cancel-button-visible="false"
+              :cancel-button-text="'Back'"
+              :submit-button-text="'Next'"
+              @submit-click="saveIntegration({})"
+            />
+          </div>
+        </FunctionMountConfigWizard>
 
-        <!-- step: set up integrations -->
-        <div v-if="active_step == 'invite-members'">
-          Invite Members goes here...
-        </div>
+        <!-- step: invite others -->
+        <ServiceIconWrapper
+          v-if="active_step == 'invite-members'"
+        >
+          <i
+            class="material-icons moon-gray bg-white" style="font-size: 4rem"
+            slot="icon"
+          >people</i>
+          <MemberInvitePanel
+            :show-header="false"
+            :emails="email_invites"
+            @submit="onMemberInviteSubmit"
+
+          />
+        </ServiceIconWrapper>
 
         <!-- button bar for the entire onboarding wizard -->
         <ButtonBar
@@ -155,6 +164,8 @@
   import ButtonBar from '@/components/ButtonBar'
   import IconList from '@/components/IconList'
   import FunctionMountConfigWizard from '@/components/FunctionMountConfigWizard'
+  import ServiceIconWrapper from '@/components/ServiceIconWrapper'
+  import MemberInvitePanel from '@/components/MemberInvitePanel'
 
   const getDefaultState = () => {
     return {
@@ -164,6 +175,7 @@
       active_manifest: null,
       selected_integrations: [],
       output_mounts: [],
+      email_invites: []
     }
   }
 
@@ -179,7 +191,9 @@
     components: {
       ButtonBar,
       IconList,
-      FunctionMountConfigWizard
+      FunctionMountConfigWizard,
+      ServiceIconWrapper,
+      MemberInvitePanel,
     },
     data() {
       return getDefaultState()
@@ -226,12 +240,7 @@
         'getProductionIntegrations': 'getProductionIntegrations',
       }),
       onSkipSetupClick() {
-        var team_name = this.getActiveUsername()
-
-        this.$store.dispatch('teams/changeActiveTeam', { team_name }).then(response => {
-          var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path', 'query'])
-          this.$router.push({ path: `/${team_name}/pipes` })
-        })
+        this.endOnboarding()
       },
       onPrevStepClick() {
         if (this.active_step == 'invite-members' && this.selected_integrations.length == 0) {
@@ -258,6 +267,14 @@
         if (this.active_step == 'set-up-integrations') {
           this.fetchIntegrationConfig()
         }
+      },
+      onMemberInviteSubmit() {
+        this.email_invites = []
+
+        this.$message({
+          message: "Your team members have been sent an invitation to join your team.",
+          type: 'success'
+        })
       },
       chooseOnboardingMethod(method) {
         this.onboarding_method = method
@@ -300,10 +317,18 @@
         // and take the user to the pipes area
         axios.all(xhrs)
         .then(axios.spread(responses => {
-          alert('it worked!')
+          this.endOnboarding()
         }))
         .catch(error => {
 
+        })
+      },
+      endOnboarding() {
+        var team_name = this.getActiveUsername()
+
+        this.$store.dispatch('teams/changeActiveTeam', { team_name }).then(response => {
+          var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path', 'query'])
+          this.$router.push({ path: `/${team_name}/pipes` })
         })
       }
     }
