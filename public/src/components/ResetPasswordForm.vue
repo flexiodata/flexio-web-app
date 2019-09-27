@@ -32,6 +32,7 @@
         class="mt3"
         :model="$data"
         :rules="rules"
+        @submit.prevent.native
       >
         <el-form-item
           key="password"

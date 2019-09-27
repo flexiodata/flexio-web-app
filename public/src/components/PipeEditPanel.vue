@@ -16,6 +16,7 @@
       :model="edit_pipe"
       :rules="rules"
       @validate="onValidateItem"
+      @submit.prevent.native
     >
       <el-form-item
         key="name"

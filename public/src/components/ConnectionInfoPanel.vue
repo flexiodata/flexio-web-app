@@ -6,6 +6,7 @@
       :model="form_values"
       :rules="rules"
       @validate="onValidateItem"
+      @submit.prevent.native
     >
       <el-form-item
         key="url"

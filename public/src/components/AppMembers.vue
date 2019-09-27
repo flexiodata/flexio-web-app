@@ -95,6 +95,7 @@
         :model="add_dialog_model"
         :rules="add_dialog_rules"
         v-if="show_add_dialog"
+        @submit.prevent.native
       >
         <p class="f5">Enter the email addresses of the people you would like to invite to your team. New team members will get an email with a link to accept the invitation.</p>
         <el-form-item

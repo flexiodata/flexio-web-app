@@ -17,6 +17,7 @@
     <el-form
       class="mt3 el-form--cozy el-form__label-tiny"
       :model="$data"
+      @submit.prevent.native
     >
       <el-form-item
         key="timezone"

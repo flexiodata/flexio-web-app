@@ -44,6 +44,7 @@
           label-position="top"
           :model="$data"
           :rules="rules"
+          @submit.prevent.native
         >
           <el-form-item
             key="github_url"
@@ -75,6 +76,7 @@
           label-position="top"
           :model="edit_connection_info"
           :rules="rules"
+          @submit.prevent.native
         >
           <el-form-item
             label="Base Path"

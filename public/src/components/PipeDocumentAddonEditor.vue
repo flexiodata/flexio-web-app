@@ -5,6 +5,7 @@
         class="el-form--cozy el-form__label-tiny"
         label-position="top"
         :model="edit_pipe"
+        @submit.prevent.native
       >
         <el-form-item
           key="title"

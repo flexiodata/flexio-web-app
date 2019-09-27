@@ -12,6 +12,7 @@
       class="el-form--cozy el-form__label-tiny"
       :model="edit_info"
       :rules="rules"
+      @submit.prevent.native
     >
       <el-form-item
         key="username"

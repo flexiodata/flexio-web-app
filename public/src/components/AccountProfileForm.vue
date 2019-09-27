@@ -27,6 +27,7 @@
       style="max-width: 28rem"
       :model="edit_info"
       :rules="rules"
+      @submit.prevent.native
     >
       <el-form-item
         key="first_name"

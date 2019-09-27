@@ -4,6 +4,7 @@
       class="el-form--compact el-form__label-tiny"
       label-position="top"
       inline
+      @submit.prevent.native
     >
       <el-form-item label="How would you like to send the form data?" v-if="false">
         <el-select

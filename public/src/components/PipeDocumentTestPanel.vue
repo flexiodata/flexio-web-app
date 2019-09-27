@@ -52,6 +52,7 @@
         class="el-form--compact el-form__label-tiny"
         size="small"
         :model="process_input_simple"
+        @submit.prevent.native
         v-else
       >
         <el-form-item

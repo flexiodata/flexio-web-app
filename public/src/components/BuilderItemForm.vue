@@ -22,6 +22,7 @@
       :label-width="label_width"
       :rules="rules"
       @validate="onValidateItem"
+      @submit.prevent.native
       v-bind="item.form_props"
     >
       <el-form-item

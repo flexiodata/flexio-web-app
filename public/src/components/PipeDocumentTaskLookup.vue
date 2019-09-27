@@ -7,6 +7,7 @@
       :model="$data"
       :rules="rules"
       @validate="onValidateItem"
+      @submit.prevent.native
     >
       <el-form-item
         label="1. Select the path of the lookup file or table"

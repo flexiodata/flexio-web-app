@@ -5,6 +5,7 @@
       label-position="top"
       inline
       :model="$data"
+      @submit.prevent.native
     >
       <el-form-item
         key="remote_state"

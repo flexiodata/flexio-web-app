@@ -7,6 +7,7 @@
       :model="$data"
       :rules="rules"
       @validate="onValidateItem"
+      @submit.prevent.native
     >
       <el-form-item
         label="Select the path of the extract file or table"

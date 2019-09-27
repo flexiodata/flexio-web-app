@@ -19,6 +19,7 @@
       class="mt3 el-form--cozy el-form__label-tiny"
       :model="$data"
       :rules="rules"
+      @submit.prevent.native
     >
       <el-form-item
         key="old_password"
