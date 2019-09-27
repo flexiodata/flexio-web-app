@@ -55,41 +55,39 @@
         <div v-if="active_step == 'install-add-ons'">
           <h3 class="fw6 f3 tc">Get Add-Ons</h3>
           <p>Welcome aboard! To join your team, install the add-on for either Microsoft Excel or Google Sheets below. After installing the add-on, sign in with your Flex.io account, select the team name and begin working with your functions.</p>
-
-            <div class="flex flex-column flex-row-l mv3 nl3 nr3">
-              <div class="flex-fill ma3 pa4 bg-nearer-white br3">
-                <div class="flex flex-row items-center justify-center">
-                  <img src="../assets/icon/icon-google-sheets-128.png" alt="Google Sheets" style="height: 48px" />
-                  <div class="ml2 fw6 f4">Google Sheets</div>
-                </div>
-                <div class="center mw6 mt4">
-                  <a
-                    href="https://chrome.google.com/webstore/detail/flexio/cklkghdhggmiooefncfkfgchgocceddj"
-                    class="w-100 el-button el-button--default is-plain no-underline ttu fw6"
-                    target="_blank"
-                  >
-                    <span class="ph2">Get the Google Sheets add-on</span>
-                  </a>
-                </div>
+          <div class="flex flex-column flex-row-l mv3 nl3 nr3">
+            <div class="flex-fill ma3 pa4 bg-nearer-white br3">
+              <div class="flex flex-row items-center justify-center">
+                <img src="../assets/icon/icon-google-sheets-128.png" alt="Google Sheets" style="height: 48px" />
+                <div class="ml2 fw6 f4">Google Sheets</div>
               </div>
-
-              <div class="flex-fill ma3 pa4 bg-nearer-white br3">
-                <div class="flex flex-row items-center justify-center">
-                  <img src="../assets/icon/icon-excel-128.png" alt="Microsoft Excel" style="height: 48px" />
-                  <div class="ml3 fw6 f4">Microsoft Excel</div>
-                </div>
-                <div class="center mw6 mt4">
-                  <a
-                    href="https://appsource.microsoft.com/en-us/product/office/WA200000394?src=office"
-                    class="w-100 el-button el-button--default is-plain no-underline ttu fw6"
-                    target="_blank"
-                  >
-                    <span class="ph2">Get the Excel add-in</span>
-                  </a>
-                </div>
+              <div class="center mw6 mt4">
+                <a
+                  href="https://chrome.google.com/webstore/detail/flexio/cklkghdhggmiooefncfkfgchgocceddj"
+                  class="w-100 el-button el-button--default is-plain no-underline ttu fw6"
+                  target="_blank"
+                >
+                  <span class="ph2">Get the Google Sheets add-on</span>
+                </a>
               </div>
             </div>
 
+            <div class="flex-fill ma3 pa4 bg-nearer-white br3">
+              <div class="flex flex-row items-center justify-center">
+                <img src="../assets/icon/icon-excel-128.png" alt="Microsoft Excel" style="height: 48px" />
+                <div class="ml3 fw6 f4">Microsoft Excel</div>
+              </div>
+              <div class="center mw6 mt4">
+                <a
+                  href="https://appsource.microsoft.com/en-us/product/office/WA200000394?src=office"
+                  class="w-100 el-button el-button--default is-plain no-underline ttu fw6"
+                  target="_blank"
+                >
+                  <span class="ph2">Get the Excel add-in</span>
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- step: choose integrations -->
@@ -124,6 +122,11 @@
               />
             </div>
           </FunctionMountConfigWizard>
+        </div>
+
+        <!-- step: set up integrations -->
+        <div v-if="active_step == 'invite-members'">
+          Invite Members goes here...
         </div>
 
         <!-- button bar for the entire onboarding wizard -->
