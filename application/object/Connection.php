@@ -267,19 +267,23 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             $tokens = $service->getTokens();
             $connection_info = $connection_properties['connection_info'];
 
-            if (isset($tokens['access_token']) && isset($tokens['expires']) && isset($connection_info) &&
-                $tokens['access_token'] != $connection_info['access_token'])
+            $info_changed = false;
+            if (!isset($connection_info))
             {
-                $connection_info['access_token'] = $tokens['access_token'];
-                $connection_info['refresh_token'] = $tokens['refresh_token'];
-
-                if (isset($tokens['expires']))
-                    $connection_info['expires'] = $tokens['expires'];
-                     else
-                    unset($connection_info['expires']);
-
-                $this->set([ 'connection_info' => $connection_info]);
+                $info_changed = true;
             }
+            else
+            {
+                if (($connection_info['access_token'] ?? false) !== $tokens['access_token'])
+                    $info_changed = true;
+                if (($connection_info['refresh_token'] ?? false) !== $tokens['refresh_token'])
+                    $info_changed = true;
+                if (($connection_info['expires'] ?? false) !== $tokens['expires'])
+                    $info_changed = true;
+            }
+
+            if ($info_changed === true)
+                $this->set([ 'connection_info' => $tokens]);
         }
 
         return $service;
