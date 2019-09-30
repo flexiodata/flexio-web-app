@@ -232,9 +232,22 @@ class LinkedIn implements \Flexio\IFace\IConnection,
             $oauth_callback
         );
 
+        // set the scopes
+        // see here for implementation values: https://github.com/Lusitanian/PHPoAuthLib/blob/master/src/OAuth/OAuth2/Service/Linkedin.php
+        // see here for information on scopes: https://docs.microsoft.com/en-us/linkedin/shared/references/v2/profile/full-profile?context=linkedin/consumer/context
+        // see here for general authorization flow, including scope requirement: https://docs.microsoft.com/en-us/linkedin/shared/authentication/authorization-code-flow?context=linkedin/context
+
+        $scope = array(
+            'r_basicprofile',
+            // 'r_fullprofile',  // TODO: need to authorize for application
+            'r_emailaddress',
+            // 'r_network',      // TODO: need to authorize for application
+            // 'r_contactinfo'   // TODO: need to authorize for application
+        );
+
         // instantiate the google service using the credentials,
         // http client and storage mechanism for the token
-        $service = $service_factory->createService('linkedin', $credentials, $storage, array());
+        $service = $service_factory->createService('linkedin', $credentials, $storage, $scope);
         if (!isset($service))
             return null;
 
