@@ -69,6 +69,8 @@
   import randomstring from 'randomstring'
   import { mapState } from 'vuex'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '@/constants/object-status'
+  import { CONNECTION_TYPE_CRUNCHBASE, CONNECTION_TYPE_KEYRING } from '@/constants/connection-type'
+  import { CONNECTION_STATUS_AVAILABLE } from '@/constants/connection-status'
   import * as cinfos from '@/constants/connection-info'
   import { slugify } from '@/utils'
   import HeaderBar from '@/components/HeaderBar'
@@ -263,8 +265,14 @@
       doSubmit() {
         var team_name = this.active_team_name
         var eid = this.edit_connection.eid
+        var ctype = this.edit_connection.connection_type
         var attrs = _.pick(this.edit_connection, ['name', 'connection_info'])
         attrs.eid_status = OBJECT_STATUS_AVAILABLE
+
+        // these connection types know nothing about whether or not they are connected
+        if (ctype == CONNECTION_TYPE_CRUNCHBASE || ctype == CONNECTION_TYPE_KEYRING) {
+          attrs.connection_status = CONNECTION_STATUS_AVAILABLE
+        }
 
         return this.$store.dispatch('connections/update', { team_name, eid, attrs }).then(response => {
           this.edit_connection = _.assign({}, this.edit_connection, _.cloneDeep(response.data))

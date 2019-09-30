@@ -65,7 +65,7 @@
     </div>
 
     <!-- content -->
-    <template v-if="is_keyring_connection">
+    <template v-if="is_keyring || is_crunchbase">
       <div class="mv3 bt bw1 b--black-05"></div>
       <div class="mb2 lh-copy ttu fw6 f6">Keypair Values</div>
       <JsonDetailsPanel
@@ -75,14 +75,14 @@
     <FileChooser
       class="mt3"
       :connection="connection"
-      v-if="is_storage_connection"
+      v-else-if="is_storage_connection"
     />
   </div>
 </template>
 
 <script>
   import { CONNECTION_STATUS_AVAILABLE } from '@/constants/connection-status'
-  import { CONNECTION_TYPE_KEYRING } from '@/constants/connection-type'
+  import { CONNECTION_TYPE_CRUNCHBASE, CONNECTION_TYPE_KEYRING } from '@/constants/connection-type'
   import * as ctypes from '@/constants/connection-type'
   import * as connections from '@/constants/connection-info'
   import ServiceIcon from '@/components/ServiceIcon'
@@ -125,7 +125,10 @@
       is_available() {
         return this.cstatus == CONNECTION_STATUS_AVAILABLE
       },
-      is_keyring_connection() {
+      is_crunchbase() {
+        return this.ctype == CONNECTION_TYPE_CRUNCHBASE
+      },
+      is_keyring() {
         return this.ctype == CONNECTION_TYPE_KEYRING
       },
       is_storage_connection() {

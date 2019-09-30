@@ -34,9 +34,9 @@
             >
               <td class="nowrap b">{{key}}</td>
               <td>
-                <pre class="ma0 tl lh-title f7 i moon-gray" v-if="val === undefined || val === null || val === ''"
+                <pre class="ma0 tl lh-title f7 i moon-gray bg-white" v-if="val === undefined || val === null || val === ''"
                 >{{val === undefined ? '(undefined)' : val === null ? '(null)' : val === '' ? '(empty string)' : val}}</pre>
-                <pre class="ma0 overflow-x-auto mb0 tl lh-title f7" v-else>{{val}}</pre>
+                <pre class="ma0 mb0 tl lh-title f7 bg-white overflow-x-auto" v-else>{{val}}</pre>
               </td>
             </tr>
           </tbody>

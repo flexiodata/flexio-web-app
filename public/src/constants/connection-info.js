@@ -24,6 +24,17 @@ const BOX = {
   is_email: false
 }
 
+const CRUNCHBASE = {
+  service_name: 'Crunchbase',
+  service_description: 'Discover innovative companies and the people behind them',
+  connection_type: types.CONNECTION_TYPE_CRUNCHBASE,
+  icon: require('../assets/icon/icon-crunchbase-128.png'),
+  is_oauth: false,
+  is_storage: false,
+  is_function_mount: false,
+  is_email: false
+}
+
 const DROPBOX = {
   service_name: 'Dropbox',
   service_description: 'Cloud file storage and syncing',
@@ -131,17 +142,6 @@ const API = {
   icon: require('../assets/icon/icon-custom-api-128.png'),
   is_oauth: false,
   is_storage: false,
-  is_function_mount: false,
-  is_email: false
-}
-
-const CRUNCHBASE = {
-  service_name: 'Crunchbase',
-  service_description: 'Discover innovative companies and the people behind them',
-  connection_type: types.CONNECTION_TYPE_CRUNCHBASE,
-  icon: require('../assets/icon/icon-crunchbase-128.png'),
-  is_oauth: false,
-  is_storage: true,
   is_function_mount: false,
   is_email: false
 }
@@ -311,10 +311,11 @@ export const CONNECTION_INFO_DROPBOX              = DROPBOX
 export const CONNECTION_INFO_GITHUB               = GITHUB
 export const CONNECTION_INFO_GOOGLEDRIVE          = GOOGLEDRIVE
 export const CONNECTION_INFO_GOOGLESHEETS         = GOOGLESHEETS
-export const CONNECTION_INFO_KEYRING              = KEYRING
+export const CONNECTION_INFO_CRUNCHBASE           = CRUNCHBASE
 export const CONNECTION_INFO_MYSQL                = MYSQL
 export const CONNECTION_INFO_POSTGRES             = POSTGRES
 export const CONNECTION_INFO_SFTP                 = SFTP
+export const CONNECTION_INFO_KEYRING              = KEYRING
 
 // TODO: what are we going to do with these?
 //export const CONNECTION_INFO_API                  = API
@@ -322,7 +323,6 @@ export const CONNECTION_INFO_SFTP                 = SFTP
 //export const CONNECTION_INFO_STDOUT               = STDOUT
 //export const CONNECTION_INFO_UPLOAD               = UPLOAD
 //export const CONNECTION_INFO_DOWNLOAD             = DOWNLOAD
-//export const CONNECTION_INFO_CRUNCHBASE           = CRUNCHBASE
 //export const CONNECTION_INFO_ELASTICSEARCH        = ELASTICSEARCH
 //export const CONNECTION_INFO_FIREBASE             = FIREBASE
 //export const CONNECTION_INFO_MAILJET              = MAILJET

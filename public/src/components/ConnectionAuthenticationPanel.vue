@@ -113,7 +113,11 @@
       :show-footer="false"
       @values-change="onValuesChange"
     >
-      <el-form-item class="mt3" slot="form-append">
+      <el-form-item
+        class="mt3"
+        slot="form-append"
+        v-show="!is_crunchbase && !is_keyring"
+      >
         <el-button
           class="ttu fw6"
           :type="test_btn_type"
@@ -146,6 +150,8 @@
   import mysql from '../data/connection/mysql.yml'
   import postgres from '../data/connection/postgres.yml'
   import sftp from '../data/connection/sftp.yml'
+  import crunchbase from '../data/connection/crunchbase.yml'
+  import keyring from '../data/connection/keyring.yml'
 
   const getDefaultState = () => {
     return {
@@ -155,14 +161,15 @@
         amazons3,
         mysql,
         postgres,
-        sftp
+        sftp,
+        crunchbase,
+        keyring,
       },
       rules: {
         github_url: [
           { required: true, message: 'Please enter the URL of the GitHub repository' }
         ]
       },
-
 
       // edit values
       edit_connection: {},
@@ -233,6 +240,12 @@
       },
       is_github() {
         return this.ctype == ctypes.CONNECTION_TYPE_GITHUB
+      },
+      is_crunchbase() {
+        return this.ctype == ctypes.CONNECTION_TYPE_CRUNCHBASE
+      },
+      is_keyring() {
+        return this.ctype == ctypes.CONNECTION_TYPE_KEYRING
       },
       cinfo() {
         return _.find(cinfos, { connection_type: this.ctype })
@@ -321,18 +334,6 @@
           this.edit_connection_info = _.assign({}, this.edit_connection_info, attrs)
         }
       },
-      onValuesChange(values) {
-        this.edit_connection_info = _.assign({}, this.edit_connection_info, values)
-      },
-      onTestClick() {
-        this.tryTest()
-      },
-      onDisconnectClick() {
-        this.tryDisconnect()
-      },
-      onConnectClick() {
-        this.tryOauthConnect()
-      },
       tryTest() {
         var eid = _.get(this.connection, 'eid', '')
         var team_name = this.active_team_name
@@ -415,6 +416,18 @@
             })
           })
         })
+      },
+      onValuesChange(values) {
+        this.edit_connection_info = _.assign({}, this.edit_connection_info, values)
+      },
+      onTestClick() {
+        this.tryTest()
+      },
+      onDisconnectClick() {
+        this.tryDisconnect()
+      },
+      onConnectClick() {
+        this.tryOauthConnect()
       },
     }
   }

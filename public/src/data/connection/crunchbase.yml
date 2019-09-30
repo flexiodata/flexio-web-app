@@ -1,0 +1,15 @@
+element: form
+name: form_authentication
+title: ''
+description: ''
+class: w-50-ns center
+form_props:
+  class: el-form--compact el-form__label-tiny
+  size: small
+form_items:
+  - element: input
+    type: text
+    name: api_key
+    label: API Key
+    placeholder: API Key
+    value: ''
