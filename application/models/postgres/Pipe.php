@@ -88,24 +88,12 @@ class Pipe extends ModelBase
 
     public function delete(string $eid) : bool
     {
-        // if the item doesn't exist, return false
         if (!\Flexio\Base\Eid::isValid($eid))
             return false;
-        if ($this->exists($eid) === false)
-            return false;
 
-        // set the status to deleted and clear out any existing name
-        $db = $this->getDatabase();
-        try
-        {
-            $process_arr = array('eid_status' => \Model::STATUS_DELETED, 'name' => '');
-            $db->update('tbl_pipe', $process_arr, 'eid = ' . $db->quote($eid));
-            return true;
-        }
-        catch (\Exception $e)
-        {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, (IS_DEBUG() ? $e->getMessage() : null));
-        }
+        $filter = array('eid' => $eid);
+        $params = array('eid_status' => \Model::STATUS_DELETED);
+        return $this->update($filter, $params);
     }
 
     public function set(string $eid, array $params) : bool
@@ -178,6 +166,12 @@ class Pipe extends ModelBase
 
         if (isset($process_arr['eid_status']) && \Model::isValidStatus($process_arr['eid_status']) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        // if we're deleting pipes, clear out the name
+        if (isset($process_arr['eid_status']) && $process_arr['eid_status'] === \Model::STATUS_DELETED)
+        {
+            $process_arr['name'] = '';
+        }
 
         try
         {
