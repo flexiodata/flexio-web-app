@@ -46,6 +46,15 @@
     "ses_access_key": "",
     "ses_secret_key": "",
 
+    "box_client_id": "",
+    "box_client_secret": "",
+
+    "dropbox_client_id": "",
+    "dropbox_client_secret": "",
+
+    "github_client_id": "",
+    "github_client_secret": "",
+
     "gmail_client_id": "",
     "gmail_client_secret": "",
 
@@ -55,12 +64,12 @@
     "googlecloudstorage_client_id": "",
     "googlecloudstorage_client_secret": "",
 
-    "dropbox_client_id": "",
-    "dropbox_client_secret": "",
+    "intercom_client_id": "",
+    "intercom_client_secret": "",
 
-    "box_client_id": "",
-    "box_client_secret": "",
+    "linkedin_client_id": "",
+    "linkedin_client_secret": "",
 
-    "github_client_id": "",
-    "github_client_secret": ""
+    "twitter_client_id": "",
+    "twitter_client_secret": ""
 }

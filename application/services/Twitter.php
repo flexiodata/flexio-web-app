@@ -98,14 +98,6 @@ class Twitter implements \Flexio\IFace\IConnection,
     // additional functions
     ////////////////////////////////////////////////////////////
 
-    public function getFileId(string $path) // TODO: add return type (: ?string)
-    {
-        $info = $this->internalGetFileInfo($path);
-        if (!isset($info['id']))
-            return null;
-        return $info['id'];
-    }
-
     private function initialize(array $params) : bool
     {
         $client_id = $GLOBALS['g_config']->twitter_client_id ?? '';
