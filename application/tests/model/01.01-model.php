@@ -491,8 +491,13 @@ class Test
         \Flexio\Tests\Check::assertString('K.21', 'Type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
+        $actual = \Model::CONNECTION_TYPE_CRUNCHBASE;
+        $expected = 'crunchbase';
+        \Flexio\Tests\Check::assertString('K.22', 'Type constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_KEYRING;
         $expected = 'keyring';
-        \Flexio\Tests\Check::assertString('K.22', 'Type constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('K.23', 'Type constant',  $actual, $expected, $results);
     }
 }

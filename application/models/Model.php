@@ -192,6 +192,7 @@ class Model
     public const CONNECTION_TYPE_SOCRATA            = 'socrata';
     public const CONNECTION_TYPE_LINKEDIN           = 'linkedin';
     public const CONNECTION_TYPE_TWITTER            = 'twitter';
+    public const CONNECTION_TYPE_CRUNCHBASE         = 'crunchbase';
     public const CONNECTION_TYPE_KEYRING            = 'keyring';
 
     private $objs = array();
