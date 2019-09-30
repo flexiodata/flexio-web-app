@@ -153,6 +153,11 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
 
     private static function getCallbackUrl() : string
     {
+        // examples:
+        // https://www.flex.io/oauth2/callback
+        // https://test.flex.io/oauth2/callback
+        // https://localhost/oauth2/callback
+
         return (IS_SECURE() ? 'https':'http') . '://' . $_SERVER['HTTP_HOST'] . '/oauth2/callback';
     }
 }
