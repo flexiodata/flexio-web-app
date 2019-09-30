@@ -171,7 +171,7 @@ class Connection extends ModelBase
         if (isset($params['connection_status']) && self::isValidConnectionStatus($params['connection_status']) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
-        // if we're deleting the connection, clear out the name, connection_info, and setup_config and
+        // if we're deleting connections, clear out the name, connection_info, and setup_config and
         // set the connection status to unavailable; note: name is cleared out to free up the name for
         // use by another connection; connection_info and setup_config are cleared out to remove any
         // credentials as an extra precaution
