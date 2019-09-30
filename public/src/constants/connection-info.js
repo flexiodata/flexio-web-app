@@ -101,6 +101,17 @@ const KEYRING = {
   is_email: false
 }
 
+const LINKEDIN = {
+  service_name: 'LinkedIn',
+  service_description: "",
+  connection_type: types.CONNECTION_TYPE_LINKEDIN,
+  icon: require('../assets/icon/icon-linkedin-128.png'),
+  is_oauth: true,
+  is_storage: false,
+  is_function_mount: false,
+  is_email: false
+}
+
 const MYSQL = {
   service_name: 'MySQL',
   service_description: "The world's most popular open source database",
@@ -130,6 +141,17 @@ const SFTP = {
   icon: require('../assets/icon/icon-ftp-128.png'),
   is_oauth: false,
   is_storage: true,
+  is_function_mount: false,
+  is_email: false
+}
+
+const TWITTER = {
+  service_name: 'Twitter',
+  service_description: "",
+  connection_type: types.CONNECTION_TYPE_TWITTER,
+  icon: require('../assets/icon/icon-twitter-128.png'),
+  is_oauth: true,
+  is_storage: false,
   is_function_mount: false,
   is_email: false
 }
@@ -309,8 +331,10 @@ export const CONNECTION_INFO_AMAZON_S3            = AMAZON_S3
 export const CONNECTION_INFO_BOX                  = BOX
 export const CONNECTION_INFO_DROPBOX              = DROPBOX
 export const CONNECTION_INFO_GITHUB               = GITHUB
+export const CONNECTION_INFO_TWITTER              = TWITTER
 export const CONNECTION_INFO_GOOGLEDRIVE          = GOOGLEDRIVE
 export const CONNECTION_INFO_GOOGLESHEETS         = GOOGLESHEETS
+export const CONNECTION_INFO_LINKEDIN             = LINKEDIN
 export const CONNECTION_INFO_CRUNCHBASE           = CRUNCHBASE
 export const CONNECTION_INFO_MYSQL                = MYSQL
 export const CONNECTION_INFO_POSTGRES             = POSTGRES

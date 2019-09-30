@@ -8,6 +8,7 @@ export const CONNECTION_TYPE_FLEX               = 'flex'
 export const CONNECTION_TYPE_GITHUB             = 'github'
 export const CONNECTION_TYPE_GMAIL              = 'gmail'
 export const CONNECTION_TYPE_HTTP               = 'http'
+export const CONNECTION_TYPE_LINKEDIN           = 'linkedin'
 export const CONNECTION_TYPE_KEYRING            = 'keyring'
 export const CONNECTION_TYPE_GOOGLECLOUDSTORAGE = 'googlecloudstorage'
 export const CONNECTION_TYPE_GOOGLEDRIVE        = 'googledrive'
@@ -17,6 +18,7 @@ export const CONNECTION_TYPE_POSTGRES           = 'postgres'
 export const CONNECTION_TYPE_SMTP               = 'smtp'
 export const CONNECTION_TYPE_SFTP               = 'sftp'
 export const CONNECTION_TYPE_TWILIO             = 'twilio'
+export const CONNECTION_TYPE_TWITTER            = 'twitter'
 
 /*
 // TODO: what are we going to do with these?
