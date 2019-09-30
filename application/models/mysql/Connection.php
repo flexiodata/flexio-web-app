@@ -194,7 +194,7 @@ class Connection extends ModelBase
         $db->beginTransaction();
         try
         {
-            if (isset($params['name']))
+            if (isset($params['name']) && $params['name'] !== '')
             {
                 // if an identifier is specified, make sure that it's unique within an owner and object type
                 $eid = $filter['eid'];
