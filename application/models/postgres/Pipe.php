@@ -51,16 +51,16 @@ class Pipe extends ModelBase
         if (\Model::isValidStatus($process_arr['eid_status']) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
-        if ($process_arr['deploy_mode'] != \Model::PIPE_DEPLOY_MODE_BUILD && $process_arr['deploy_mode'] != \Model::PIPE_DEPLOY_MODE_RUN)
+        if (self::isValidPipeDeployMode($process_arr['deploy_mode']) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
-        if ($process_arr['deploy_schedule'] != \Model::PIPE_DEPLOY_STATUS_ACTIVE && $process_arr['deploy_schedule'] != \Model::PIPE_DEPLOY_STATUS_INACTIVE)
+        if (self::isValidPipeDeployStatus($process_arr['deploy_schedule']) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
-        if ($process_arr['deploy_email'] != \Model::PIPE_DEPLOY_STATUS_ACTIVE && $process_arr['deploy_email'] != \Model::PIPE_DEPLOY_STATUS_INACTIVE)
+        if (self::isValidPipeDeployStatus($process_arr['deploy_email']) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
-        if ($process_arr['deploy_api'] != \Model::PIPE_DEPLOY_STATUS_ACTIVE && $process_arr['deploy_api'] != \Model::PIPE_DEPLOY_STATUS_INACTIVE)
+        if (self::isValidPipeDeployStatus($process_arr['deploy_api']) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $db = $this->getDatabase();
@@ -88,24 +88,12 @@ class Pipe extends ModelBase
 
     public function delete(string $eid) : bool
     {
-        // if the item doesn't exist, return false
         if (!\Flexio\Base\Eid::isValid($eid))
             return false;
-        if ($this->exists($eid) === false)
-            return false;
 
-        // set the status to deleted and clear out any existing name
-        $db = $this->getDatabase();
-        try
-        {
-            $process_arr = array('eid_status' => \Model::STATUS_DELETED, 'name' => '');
-            $db->update('tbl_pipe', $process_arr, 'eid = ' . $db->quote($eid));
-            return true;
-        }
-        catch (\Exception $e)
-        {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, (IS_DEBUG() ? $e->getMessage() : null));
-        }
+        $filter = array('eid' => $eid);
+        $params = array('eid_status' => \Model::STATUS_DELETED);
+        return $this->update($filter, $params);
     }
 
     public function set(string $eid, array $params) : bool
@@ -179,32 +167,26 @@ class Pipe extends ModelBase
         if (isset($process_arr['eid_status']) && \Model::isValidStatus($process_arr['eid_status']) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
+        if (isset($process_arr['deploy_mode']) && self::isValidPipeDeployMode($process_arr['deploy_mode']) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        if (isset($process_arr['deploy_schedule']) && self::isValidPipeDeployStatus($process_arr['deploy_schedule']) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        if (isset($process_arr['deploy_email']) && self::isValidPipeDeployStatus($process_arr['deploy_email']) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        if (isset($process_arr['deploy_api']) && self::isValidPipeDeployStatus($process_arr['deploy_api']) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        // if we're deleting pipes, clear out the name
+        if (isset($process_arr['eid_status']) && $process_arr['eid_status'] === \Model::STATUS_DELETED)
+        {
+            $process_arr['name'] = '';
+        }
+
         try
         {
-            // make sure the deploy mode is valid
-            if (isset($process_arr['deploy_mode']))
-            {
-                if ($process_arr['deploy_mode'] != \Model::PIPE_DEPLOY_MODE_BUILD && $process_arr['deploy_mode'] != \Model::PIPE_DEPLOY_MODE_RUN)
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-            }
-
-            // make sure the deploy status is an 'A' or an 'I'
-            if (isset($process_arr['deploy_schedule']))
-            {
-                if ($process_arr['deploy_schedule'] != \Model::PIPE_DEPLOY_STATUS_ACTIVE && $process_arr['deploy_schedule'] != \Model::PIPE_DEPLOY_STATUS_INACTIVE)
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-            }
-            if (isset($process_arr['deploy_email']))
-            {
-                if ($process_arr['deploy_email'] != \Model::PIPE_DEPLOY_STATUS_ACTIVE && $process_arr['deploy_email'] != \Model::PIPE_DEPLOY_STATUS_INACTIVE)
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-            }
-            if (isset($process_arr['deploy_api']))
-            {
-                if ($process_arr['deploy_api'] != \Model::PIPE_DEPLOY_STATUS_ACTIVE && $process_arr['deploy_api'] != \Model::PIPE_DEPLOY_STATUS_INACTIVE)
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-            }
-
             // set the properties
             $updates_made = $db->update('tbl_pipe', $process_arr, $filter_expr);
             return $updates_made;
@@ -326,5 +308,29 @@ class Pipe extends ModelBase
 
         $row = $result->fetch();
         return isset($row['dt']) ? $row['dt'] : false;
+    }
+
+    private static function isValidPipeDeployMode(string $mode) : bool
+    {
+        switch ($mode)
+        {
+            case \Model::PIPE_DEPLOY_MODE_BUILD:
+            case \Model::PIPE_DEPLOY_MODE_RUN:
+                return true;
+        }
+
+        return false;
+    }
+
+    private static function isValidPipeDeployStatus(string $status) : bool
+    {
+        switch ($status)
+        {
+            case \Model::PIPE_DEPLOY_STATUS_ACTIVE:
+            case \Model::PIPE_DEPLOY_STATUS_INACTIVE:
+                return true;
+        }
+
+        return false;
     }
 }

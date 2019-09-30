@@ -172,7 +172,6 @@ class Model
     public const CONNECTION_STATUS_ERROR       = 'E';
 
     public const CONNECTION_TYPE_UNDEFINED          = '';
-    public const CONNECTION_TYPE_FLEXIO             = 'flexio';
     public const CONNECTION_TYPE_FTP                = 'ftp';
     public const CONNECTION_TYPE_SFTP               = 'sftp';
     public const CONNECTION_TYPE_MYSQL              = 'mysql';
@@ -192,6 +191,7 @@ class Model
     public const CONNECTION_TYPE_SOCRATA            = 'socrata';
     public const CONNECTION_TYPE_LINKEDIN           = 'linkedin';
     public const CONNECTION_TYPE_TWITTER            = 'twitter';
+    public const CONNECTION_TYPE_CRUNCHBASE         = 'crunchbase';
     public const CONNECTION_TYPE_KEYRING            = 'keyring';
 
     private $objs = array();

@@ -49,7 +49,7 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $instance = new \Flexio\Services\Vfs;
+        $instance = new \Flexio\Services\Vfs($test_user_eid);
         $actual = get_class($instance);
         $expected = 'Flexio\Services\Vfs';
         \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\Vfs; basic file syntax check',  $actual, $expected, $results);

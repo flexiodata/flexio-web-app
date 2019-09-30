@@ -88,27 +88,12 @@ class Connection extends ModelBase
 
     public function delete(string $eid) : bool
     {
-        // if the item doesn't exist, return false
         if (!\Flexio\Base\Eid::isValid($eid))
             return false;
-        if ($this->exists($eid) === false)
-            return false;
 
-        // set the status to deleted and clear out any existing name
-        $db = $this->getDatabase();
-        $db->beginTransaction();
-        try
-        {
-            $process_arr = array('eid_status' => \Model::STATUS_DELETED, 'name' => '');
-            $db->update('tbl_connection', $process_arr, 'eid = ' . $db->quote($eid));
-            $db->commit();
-            return true;
-        }
-        catch (\Exception $e)
-        {
-            $db->rollback();
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, (IS_DEBUG() ? $e->getMessage() : null));
-        }
+        $filter = array('eid' => $eid);
+        $params = array('eid_status' => \Model::STATUS_DELETED);
+        return $this->update($filter, $params);
     }
 
     public function set(string $eid, array $params) : bool
@@ -186,6 +171,18 @@ class Connection extends ModelBase
         if (isset($params['connection_status']) && self::isValidConnectionStatus($params['connection_status']) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
+        // if we're deleting connections, clear out the name, connection_info, and setup_config and
+        // set the connection status to unavailable; note: name is cleared out to free up the name for
+        // use by another connection; connection_info and setup_config are cleared out to remove any
+        // credentials as an extra precaution
+        if (isset($process_arr['eid_status']) && $process_arr['eid_status'] === \Model::STATUS_DELETED)
+        {
+            $process_arr['name'] = '';
+            $process_arr['connection_status'] = \Model::CONNECTION_STATUS_UNAVAILABLE;
+            $process_arr['connection_info'] = '{}';
+            $process_arr['setup_config'] = '{}';
+        }
+
         // encrypt the connection info
         if (isset($process_arr['connection_info']))
             $process_arr['connection_info'] = \Flexio\Base\Util::encrypt($process_arr['connection_info'], $GLOBALS['g_store']->connection_enckey);
@@ -197,7 +194,7 @@ class Connection extends ModelBase
         $db->beginTransaction();
         try
         {
-            if (isset($params['name']))
+            if (isset($params['name']) && $params['name'] !== '')
             {
                 // if an identifier is specified, make sure that it's unique within an owner and object type
                 $eid = $filter['eid'];
