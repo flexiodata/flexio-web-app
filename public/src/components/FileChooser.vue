@@ -40,11 +40,7 @@
 </template>
 
 <script>
-  import {
-    CONNECTION_TYPE_FLEX,
-    CONNECTION_TYPE_HTTP,
-    CONNECTION_TYPE_RSS
-  } from '@/constants/connection-type'
+  import { CONNECTION_TYPE_FLEX } from '@/constants/connection-type'
   import { mapGetters } from 'vuex'
   import * as connections from '@/constants/connection-info'
   import FileExplorerBar from '@/components/FileExplorerBar'
