@@ -172,7 +172,6 @@ class Model
     public const CONNECTION_STATUS_ERROR       = 'E';
 
     public const CONNECTION_TYPE_UNDEFINED          = '';
-    public const CONNECTION_TYPE_FLEXIO             = 'flexio';
     public const CONNECTION_TYPE_FTP                = 'ftp';
     public const CONNECTION_TYPE_SFTP               = 'sftp';
     public const CONNECTION_TYPE_MYSQL              = 'mysql';
