@@ -4,6 +4,7 @@
       <BuilderItemForm
         :key="prompt.name"
         :item="prompt"
+        :default-values="setupConfig"
         :visible="index == active_idx"
         :cancel-button-visible="active_idx > 0"
         :cancel-button-text="'Back'"
@@ -34,6 +35,10 @@
   export default {
     props: {
       setupTemplate: {
+        type: Object,
+        default: () => {}
+      },
+      setupConfig: {
         type: Object,
         default: () => {}
       }

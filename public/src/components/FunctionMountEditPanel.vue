@@ -43,6 +43,7 @@
       <!-- step 3: setup config (optional) -->
       <FunctionMountSetupWizard
         :setup-template="setup_template"
+        :setup-config="setup_config"
         @submit="saveMountSetup"
         v-if="active_step == 'setup-config' && has_prompts"
       />
@@ -136,6 +137,7 @@
     return {
       edit_mount: {},
       setup_template: {},
+      setup_config: {},
       active_step: 'choose-source',
       error_msg: ''
     }
@@ -235,6 +237,7 @@
         // reset local objects
         this.edit_mount = _.assign({}, this.edit_mount, _.cloneDeep(this.mount))
         this.setup_template = _.get(this.edit_mount, 'setup_template', {})
+        this.setup_config = _.get(this.edit_mount, 'setup_config', {})
         this.active_step = this.activeStep
       },
       filterByFunctionMount(connection) {
