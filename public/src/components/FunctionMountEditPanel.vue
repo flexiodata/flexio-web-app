@@ -42,7 +42,7 @@
 
       <!-- step 3: setup config (optional) -->
       <FunctionMountConfigWizard
-        :manifest="manifest"
+        :setup-template="manifest"
         @submit="saveMountSetup"
         v-if="active_step == 'setup-config' && has_prompts"
       />

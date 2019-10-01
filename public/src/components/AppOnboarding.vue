@@ -109,7 +109,7 @@
         <div v-if="active_step == 'set-up-integrations' && has_active_setup_template">
           <h3 class="fw6 f3 tc">Set Up Your Integrations</h3>
           <FunctionMountConfigWizard
-            :manifest="active_setup_template"
+            :setup-template="active_setup_template"
             @submit="saveIntegration"
           >
             <div slot="no-prompts">
