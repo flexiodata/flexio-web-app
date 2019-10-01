@@ -165,7 +165,11 @@
       mountType: {
         type: String,
         default: 'integration' // 'integration' or 'mount'
-      }
+      },
+      activeStep: {
+        type: String,
+        default: 'choose-source'
+      },
     },
     mixins: [MixinConnection],
     components: {
@@ -229,6 +233,7 @@
 
         // reset local objects
         this.edit_mount = _.assign({}, this.edit_mount, _.cloneDeep(this.mount))
+        this.active_step = this.activeStep
       },
       filterByFunctionMount(connection) {
         return this.$_Connection_isFunctionMount(connection)
