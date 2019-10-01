@@ -106,10 +106,10 @@
         </div>
 
         <!-- step: set up integrations -->
-        <div v-if="active_step == 'set-up-integrations' && has_active_manifest">
+        <div v-if="active_step == 'set-up-integrations' && has_active_setup_template">
           <h3 class="fw6 f3 tc">Set Up Your Integrations</h3>
           <FunctionMountConfigWizard
-            :manifest="active_manifest"
+            :manifest="active_setup_template"
             @submit="saveIntegration"
           >
             <div slot="no-prompts">
@@ -176,7 +176,7 @@
       onboarding_method: 'technical-user', // 'spreadsheet-user' or 'technical-user'
       active_step: 'welcome',
       active_integration_idx: 0,
-      active_manifest: null,
+      active_setup_template: null,
       selected_integrations: [],
       output_mounts: [],
       email_invites: []
@@ -212,8 +212,8 @@
       active_integration() {
         return this.selected_integrations[this.active_integration_idx]
       },
-      has_active_manifest() {
-        return !_.isNil(this.active_manifest)
+      has_active_setup_template() {
+        return !_.isNil(this.active_setup_template)
       },
       submit_button_visible() {
         return this.active_step != 'set-up-integrations'
@@ -289,13 +289,16 @@
         var url = _.get(this.active_integration, 'connection.connection_info.url', '')
 
         api.fetchFunctionPackConfig(team_name, url).then(response => {
-          var setup_template = response.data
-          var prompts = _.get(setup_template, 'prompts', [])
-          this.active_manifest = _.assign({}, setup_template)
+          this.active_setup_template = response.data
+        }).catch(error => {
+          // TODO: this just skips the rest of the integration setup;
+          //       this needs to be thought through more...
+          this.active_setup_template = null
+          this.active_step == 'invite-members'
         })
       },
       saveIntegration(setup_config) {
-        var setup_template = this.active_manifest
+        var setup_template = this.active_setup_template
         var mount = _.cloneDeep(_.get(this.active_integration, 'connection', {}))
         mount = _.assign({}, mount, { setup_config, setup_template })
 
