@@ -54,7 +54,8 @@
             class="el-icon-success bg-white f2 dark-green"
             slot="icon"
           ></i>
-          <p class="tc">Your function mount was created successfully. Click <strong>"Done"</strong> to begin importing functions.</p>
+          <p class="tc" v-if="mode == 'edit'">Your function mount was updated successfully.</p>
+          <p class="tc" v-else>Your function mount was created successfully. Click <strong>"Done"</strong> to begin importing functions.</p>
         </ServiceIconWrapper>
         <ButtonBar
           class="mt4"
@@ -233,6 +234,7 @@
 
         // reset local objects
         this.edit_mount = _.assign({}, this.edit_mount, _.cloneDeep(this.mount))
+        this.setup_template = _.get(this.edit_mount, 'setup_template', {})
         this.active_step = this.activeStep
       },
       filterByFunctionMount(connection) {
