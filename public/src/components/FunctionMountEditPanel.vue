@@ -41,7 +41,7 @@
       />
 
       <!-- step 3: setup config (optional) -->
-      <FunctionMountConfigWizard
+      <FunctionMountSetupWizard
         :setup-template="setup_template"
         @submit="saveMountSetup"
         v-if="active_step == 'setup-config' && has_prompts"
@@ -104,7 +104,7 @@
   import IconList from '@/components/IconList'
   import ServiceIconWrapper from '@/components/ServiceIconWrapper'
   import ConnectionEditPanel from '@/components/ConnectionEditPanel'
-  import FunctionMountConfigWizard from '@/components/FunctionMountConfigWizard'
+  import FunctionMountSetupWizard from '@/components/FunctionMountSetupWizard'
   import MixinConnection from '@/components/mixins/connection'
 
   const CONNECTION_MODE_RESOURCE = 'R'
@@ -178,7 +178,7 @@
       IconList,
       ServiceIconWrapper,
       ConnectionEditPanel,
-      FunctionMountConfigWizard,
+      FunctionMountSetupWizard,
     },
     watch: {
       mount: {

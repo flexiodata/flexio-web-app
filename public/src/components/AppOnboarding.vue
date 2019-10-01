@@ -108,7 +108,7 @@
         <!-- step: set up integrations -->
         <div v-if="active_step == 'set-up-integrations' && has_active_setup_template">
           <h3 class="fw6 f3 tc">Set Up Your Integrations</h3>
-          <FunctionMountConfigWizard
+          <FunctionMountSetupWizard
             :setup-template="active_setup_template"
             @submit="saveIntegration"
           >
@@ -122,7 +122,7 @@
                 @submit-click="saveIntegration({})"
               />
             </div>
-          </FunctionMountConfigWizard>
+          </FunctionMountSetupWizard>
         </div>
 
         <!-- step: invite others -->
@@ -167,7 +167,7 @@
   import api from '@/api'
   import ButtonBar from '@/components/ButtonBar'
   import IconList from '@/components/IconList'
-  import FunctionMountConfigWizard from '@/components/FunctionMountConfigWizard'
+  import FunctionMountSetupWizard from '@/components/FunctionMountSetupWizard'
   import ServiceIconWrapper from '@/components/ServiceIconWrapper'
   import MemberInvitePanel from '@/components/MemberInvitePanel'
 
@@ -195,7 +195,7 @@
     components: {
       ButtonBar,
       IconList,
-      FunctionMountConfigWizard,
+      FunctionMountSetupWizard,
       ServiceIconWrapper,
       MemberInvitePanel,
     },
