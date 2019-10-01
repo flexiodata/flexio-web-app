@@ -40,8 +40,8 @@
           <div style="max-width: 20rem" v-bar>
             <div>
               <div
-                class="pt1 pb3 ph3 lh-title silver i"
-                style="font-size: 13px"
+                class="lh-title silver i"
+                style="padding: 4px 16px 16px; font-size: 13px"
                 v-if="filtered_connections.length == 0"
               >
                 <span v-if="connection_list_filter.length > 0">There are no connections that match the search criteria</span>
