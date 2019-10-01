@@ -288,7 +288,7 @@
         var team_name = this.getActiveUsername()
         var url = _.get(this.active_integration, 'connection.connection_info.url', '')
 
-        api.fetchFunctionPackConfig(team_name, url).then(response => {
+        api.fetchFunctionPackSetupTemplate(team_name, url).then(response => {
           this.active_setup_template = response.data
         }).catch(error => {
           // TODO: this just skips the rest of the integration setup;

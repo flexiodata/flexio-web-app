@@ -252,7 +252,7 @@
           var mount = _.cloneDeep(response.data)
           mount.name = this.$store.getUniqueName(slug, 'connections')
           this.omitMaskedValues(mount)
-          this.fetchFunctionPackConfig()
+          this.fetchFunctionPackSetupTemplate()
         })
       },
       createPendingFunctionMount(item) {
@@ -287,13 +287,13 @@
         var update_attrs = _.assign({}, attrs, { connection_info })
         this.edit_mount = _.assign({}, this.edit_mount, update_attrs)
       },
-      fetchFunctionPackConfig() {
+      fetchFunctionPackSetupTemplate() {
         var team_name = this.active_team_name
         var eid = this.edit_mount.eid
         var url = _.get(this.edit_mount, 'connection_info.url', '')
         var path = url.length > 0 ? url : this.edit_mount.name + ':/flexio.yml'
 
-        api.fetchFunctionPackConfig(team_name, path).then(response => {
+        api.fetchFunctionPackSetupTemplate(team_name, path).then(response => {
           var setup_template = response.data
           var prompts = _.get(setup_template, 'prompts', [])
           this.setup_template = _.assign({}, setup_template)
@@ -329,7 +329,7 @@
       },
       onUpdateConnection(connection) {
         this.edit_mount = _.cloneDeep(connection)
-        this.fetchFunctionPackConfig()
+        this.fetchFunctionPackSetupTemplate()
       },
       onClose() {
         this.initSelf()
