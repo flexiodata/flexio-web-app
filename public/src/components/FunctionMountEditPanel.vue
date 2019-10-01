@@ -48,6 +48,23 @@
         v-if="active_step == 'setup-config' && has_prompts"
       />
 
+      <!-- step 3: step config (editing setup template with no prompts) -->
+      <div v-else-if="active_step == 'setup-config' && !has_prompts && mode == 'edit'">
+        <ServiceIconWrapper :innerSpacing="10">
+          <i
+            class="el-icon-success bg-white f2 dark-green"
+            slot="icon"
+          ></i>
+          <p class="tc">There are no setup options for this function mount. Your function mount is ready to go!</p>
+        </ServiceIconWrapper>
+        <ButtonBar
+          class="mt4"
+          :cancel-button-visible="false"
+          :submit-button-text="'Done'"
+          @submit-click="onCancel"
+        />
+      </div>
+
       <!-- step 4: show result (success) -->
       <div v-else-if="active_step == 'setup-success'">
         <ServiceIconWrapper :innerSpacing="10">
