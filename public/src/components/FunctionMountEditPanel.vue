@@ -55,7 +55,7 @@
             class="el-icon-success bg-white f2 dark-green"
             slot="icon"
           ></i>
-          <p class="tc">There are no setup options for this function mount. Your function mount is ready to go!</p>
+          <p class="tc"><em>There are no configuration options for this function mount. Your function mount is ready to go!</em></p>
         </ServiceIconWrapper>
         <ButtonBar
           class="mt4"

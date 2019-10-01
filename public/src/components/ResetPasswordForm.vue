@@ -5,7 +5,7 @@
     </div>
     <h1 class="fw6 tc mb4">Reset Password</h1>
     <template v-if="is_sent">
-      <p>Your password has been successfully reset. To continue using Flex.io, you will need to sign in again.</p>
+      <p>Your password has been reset. To continue using Flex.io, you will need to sign in again.</p>
       <div class="pv2">
         <router-link
           to="/signin"
