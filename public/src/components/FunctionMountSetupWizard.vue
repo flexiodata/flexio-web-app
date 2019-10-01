@@ -1,9 +1,10 @@
 <template>
   <div>
-    <ServiceIconWrapper :url="manifest_image_url">
+    <ServiceIconWrapper :url="setup_template_image_url">
       <BuilderItemForm
         :key="prompt.name"
         :item="prompt"
+        :default-values="setupConfig"
         :visible="index == active_idx"
         :cancel-button-visible="active_idx > 0"
         :cancel-button-text="'Back'"
@@ -33,7 +34,11 @@
 
   export default {
     props: {
-      manifest: {
+      setupTemplate: {
+        type: Object,
+        default: () => {}
+      },
+      setupConfig: {
         type: Object,
         default: () => {}
       }
@@ -47,13 +52,13 @@
     },
     computed: {
       prompts() {
-        return _.get(this.manifest, 'prompts', [])
+        return _.get(this.setupTemplate, 'prompts', [])
       },
       is_last_item() {
         return this.active_idx == this.prompts.length - 1
       },
-      manifest_image_url() {
-        return _.get(this.manifest, 'image.src', '')
+      setup_template_image_url() {
+        return _.get(this.setupTemplate, 'image.src', '')
       },
     },
     methods: {

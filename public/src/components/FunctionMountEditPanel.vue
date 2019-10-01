@@ -41,8 +41,9 @@
       />
 
       <!-- step 3: setup config (optional) -->
-      <FunctionMountConfigWizard
-        :manifest="manifest"
+      <FunctionMountSetupWizard
+        :setup-template="setup_template"
+        :setup-config="setup_config"
         @submit="saveMountSetup"
         v-if="active_step == 'setup-config' && has_prompts"
       />
@@ -54,7 +55,8 @@
             class="el-icon-success bg-white f2 dark-green"
             slot="icon"
           ></i>
-          <p class="tc">Your function mount was created successfully. Click <strong>"Done"</strong> to begin importing functions.</p>
+          <p class="tc" v-if="mode == 'edit'">Your function mount was updated successfully.</p>
+          <p class="tc" v-else>Your function mount was created successfully. Click <strong>"Done"</strong> to begin importing functions.</p>
         </ServiceIconWrapper>
         <ButtonBar
           class="mt4"
@@ -71,7 +73,7 @@
             class="el-icon-warning bg-white f2 dark-red"
             slot="icon"
           ></i>
-          <p class="tc">No <strong>flexio.yml</strong> manifest file could be found at the specified location. Please try again.</p>
+          <p class="tc">No <strong>flexio.yml</strong> setup template file could be found at the specified location. Please try again.</p>
         </ServiceIconWrapper>
         <ButtonBar
           class="mt4"
@@ -104,7 +106,7 @@
   import IconList from '@/components/IconList'
   import ServiceIconWrapper from '@/components/ServiceIconWrapper'
   import ConnectionEditPanel from '@/components/ConnectionEditPanel'
-  import FunctionMountConfigWizard from '@/components/FunctionMountConfigWizard'
+  import FunctionMountSetupWizard from '@/components/FunctionMountSetupWizard'
   import MixinConnection from '@/components/mixins/connection'
 
   const CONNECTION_MODE_RESOURCE = 'R'
@@ -134,7 +136,8 @@
   const getDefaultState = () => {
     return {
       edit_mount: {},
-      manifest: {},
+      setup_template: {},
+      setup_config: {},
       active_step: 'choose-source',
       error_msg: ''
     }
@@ -178,7 +181,7 @@
       IconList,
       ServiceIconWrapper,
       ConnectionEditPanel,
-      FunctionMountConfigWizard,
+      FunctionMountSetupWizard,
     },
     watch: {
       mount: {
@@ -205,7 +208,7 @@
         return eid.length > 0
       },
       has_prompts() {
-        return _.get(this.manifest, 'prompts', []).length > 0
+        return _.get(this.setup_template, 'prompts', []).length > 0
       },
       our_title() {
         if (this.title.length > 0) {
@@ -233,6 +236,8 @@
 
         // reset local objects
         this.edit_mount = _.assign({}, this.edit_mount, _.cloneDeep(this.mount))
+        this.setup_template = _.get(this.edit_mount, 'setup_template', {})
+        this.setup_config = _.get(this.edit_mount, 'setup_config', {})
         this.active_step = this.activeStep
       },
       filterByFunctionMount(connection) {
@@ -252,7 +257,7 @@
           var mount = _.cloneDeep(response.data)
           mount.name = this.$store.getUniqueName(slug, 'connections')
           this.omitMaskedValues(mount)
-          this.fetchFunctionPackConfig()
+          this.fetchFunctionPackSetupTemplate()
         })
       },
       createPendingFunctionMount(item) {
@@ -287,16 +292,16 @@
         var update_attrs = _.assign({}, attrs, { connection_info })
         this.edit_mount = _.assign({}, this.edit_mount, update_attrs)
       },
-      fetchFunctionPackConfig() {
+      fetchFunctionPackSetupTemplate() {
         var team_name = this.active_team_name
         var eid = this.edit_mount.eid
         var url = _.get(this.edit_mount, 'connection_info.url', '')
         var path = url.length > 0 ? url : this.edit_mount.name + ':/flexio.yml'
 
-        api.fetchFunctionPackConfig(team_name, path).then(response => {
+        api.fetchFunctionPackSetupTemplate(team_name, path).then(response => {
           var setup_template = response.data
           var prompts = _.get(setup_template, 'prompts', [])
-          this.manifest = _.assign({}, setup_template)
+          this.setup_template = _.assign({}, setup_template)
           this.edit_mount = _.assign({}, this.edit_mount, { setup_template })
           this.active_step = prompts.length > 0 ? 'setup-config' : 'setup-success'
         }).catch(error => {
@@ -329,7 +334,7 @@
       },
       onUpdateConnection(connection) {
         this.edit_mount = _.cloneDeep(connection)
-        this.fetchFunctionPackConfig()
+        this.fetchFunctionPackSetupTemplate()
       },
       onClose() {
         this.initSelf()

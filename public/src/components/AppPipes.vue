@@ -88,20 +88,20 @@
                     <el-dropdown-menu style="min-width: 10rem" slot="dropdown">
                       <el-dropdown-item
                         class="flex flex-row items-center"
-                        @click.native="editFunctionMount(group.connection)"
+                        @click.native="onEditFunctionMount(group.connection)"
                       >
                         <i class="material-icons mr2">edit</i> Edit
                       </el-dropdown-item>
                       <el-dropdown-item
                         class="flex flex-row items-center"
-                        @click.native="syncFunctionMount(group.connection)"
+                        @click.native="onSyncFunctionMount(group.connection)"
                       >
                         <i class="material-icons mr2">refresh</i> Refresh
                       </el-dropdown-item>
                       <el-dropdown-item divided></el-dropdown-item>
                       <el-dropdown-item
                         class="flex flex-row items-center"
-                        @click.native="tryDeleteFunctionMount(group.connection)"
+                        @click.native="onDeleteFunctionMount(group.connection)"
                       >
                         <i class="material-icons mr2">delete</i> Remove
                       </el-dropdown-item>
@@ -202,7 +202,7 @@
       />
     </el-dialog>
 
-    <!-- connection edit dialog -->
+    <!-- function mount edit dialog -->
     <el-dialog
       custom-class="el-dialog--no-header el-dialog--no-footer"
       width="48rem"
@@ -215,9 +215,10 @@
         :mode="mount_edit_mode"
         :mount-type="mount_type"
         :mount="mount_edit_mode == 'edit' ? edit_connection : new_connection_attrs"
+        :active-step="mount_edit_mode == 'edit' ? 'setup-config' : undefined"
         @close="show_mount_dialog = false"
         @cancel="show_mount_dialog = false"
-        @submit="syncFunctionMount"
+        @submit="onSubmitFunctionMount"
         v-if="show_mount_dialog"
       />
     </el-dialog>
@@ -487,11 +488,6 @@ def flex_handler(flex):
           this.expanded_groups = this.expanded_groups.concat([eid])
         }
       },
-      editFunctionMount(connection) {
-        this.edit_connection = connection
-        this.mount_edit_mode = 'edit'
-        this.show_mount_dialog = true
-      },
       isFunctionMountSyncing(connection) {
         return _.get(connection, 'vuex_meta.is_syncing', false)
       },
@@ -565,13 +561,13 @@ def flex_handler(flex):
         this.show_pipe_dialog = false
       },
       onNewPipe(op) {
-        this.new_pipe_attrs = this.getNewPipeAttributes(op)
         this.pipe_edit_mode = 'add'
+        this.new_pipe_attrs = this.getNewPipeAttributes(op)
         this.show_pipe_dialog = true
       },
       onEditPipe(pipe) {
-        this.edit_pipe = pipe
         this.pipe_edit_mode = 'edit'
+        this.edit_pipe = pipe
         this.show_pipe_dialog = true
       },
       onNewFunctionMount(mount_type) {
@@ -579,6 +575,25 @@ def flex_handler(flex):
         this.mount_type = mount_type
         this.show_mount_dialog = true
       },
+      onEditFunctionMount(connection) {
+        this.mount_edit_mode = 'edit'
+        this.edit_connection = _.cloneDeep(connection)
+        this.show_mount_dialog = true
+      },
+      onSubmitFunctionMount(connection) {
+        if (this.mount_edit_mode == 'add') {
+          this.syncFunctionMount(connection)
+        } else {
+          // we're done; just close the dialog
+          this.show_mount_dialog = false
+        }
+      },
+      onSyncFunctionMount(connection) {
+        this.syncFunctionMount(connection)
+      },
+      onDeleteFunctionMount(connection) {
+        this.tryDeleteFunctionMount(connection)
+      }
     }
   }
 </script>
