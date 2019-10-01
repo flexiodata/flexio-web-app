@@ -42,7 +42,7 @@
 
       <!-- step 3: setup config (optional) -->
       <FunctionMountConfigWizard
-        :setup-template="manifest"
+        :setup-template="setup_template"
         @submit="saveMountSetup"
         v-if="active_step == 'setup-config' && has_prompts"
       />
@@ -71,7 +71,7 @@
             class="el-icon-warning bg-white f2 dark-red"
             slot="icon"
           ></i>
-          <p class="tc">No <strong>flexio.yml</strong> manifest file could be found at the specified location. Please try again.</p>
+          <p class="tc">No <strong>flexio.yml</strong> setup template file could be found at the specified location. Please try again.</p>
         </ServiceIconWrapper>
         <ButtonBar
           class="mt4"
@@ -134,7 +134,7 @@
   const getDefaultState = () => {
     return {
       edit_mount: {},
-      manifest: {},
+      setup_template: {},
       active_step: 'choose-source',
       error_msg: ''
     }
@@ -205,7 +205,7 @@
         return eid.length > 0
       },
       has_prompts() {
-        return _.get(this.manifest, 'prompts', []).length > 0
+        return _.get(this.setup_template, 'prompts', []).length > 0
       },
       our_title() {
         if (this.title.length > 0) {
@@ -296,7 +296,7 @@
         api.fetchFunctionPackConfig(team_name, path).then(response => {
           var setup_template = response.data
           var prompts = _.get(setup_template, 'prompts', [])
-          this.manifest = _.assign({}, setup_template)
+          this.setup_template = _.assign({}, setup_template)
           this.edit_mount = _.assign({}, this.edit_mount, { setup_template })
           this.active_step = prompts.length > 0 ? 'setup-config' : 'setup-success'
         }).catch(error => {
