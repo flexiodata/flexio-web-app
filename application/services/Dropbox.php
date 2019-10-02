@@ -118,10 +118,8 @@ class Dropbox implements \Flexio\IFace\IConnection,
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer '.$this->access_token, "Content-Type: application/json"));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-
         $result = curl_exec($ch);
         $result = @json_decode($result, true);
-
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
