@@ -23,10 +23,10 @@
       </thead>
       <tbody class="lh-copy">
         <FileChooserItem
+          :key="getKey(item)"
           :item="item"
           :index="index"
           :columns="columns"
-          :key="item.full_path"
           @click="itemClick"
           @ctrl-click="itemCtrlClick"
           @shift-click="itemShiftClick"
@@ -157,6 +157,11 @@
       },
       isFolderItem(item) {
         return _.get(item, 'type') == VFS_TYPE_DIR
+      },
+      getKey(item) {
+        var id = _.get(item, 'id', '')
+        var full_path = _.get(item, 'full_path', '')
+        return id.length > 0 ? id : full_path
       },
       itemClick(item, evt) {
         // don't allow folders to be selected
