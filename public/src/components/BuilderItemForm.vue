@@ -24,6 +24,7 @@
       @validate="onValidateItem"
       @submit.prevent.native
       v-bind="item.form_props"
+      v-if="element_type == 'form'"
     >
       <el-form-item
         :class="fi.class"
@@ -124,6 +125,12 @@
       </el-form-item>
       <slot name="form-append"></slot>
     </el-form>
+    <ConnectionEditPanel
+      :active-step="'authentication'"
+      :connection="edit_connection"
+      :show-header="false"
+      :show-footer="false"
+    />
     <ButtonBar
       class="mt4"
       :submit-button-disabled="has_errors"
@@ -137,12 +144,14 @@
 
 <script>
   import marked from 'marked'
+  import ConnectionEditPanel from '@/components/ConnectionEditPanel'
   import CodeEditor from '@/components/CodeEditor'
   import ButtonBar from '@/components/ButtonBar'
 
   const getDefaultState = () => {
     return {
       edit_values: {},
+      edit_connection: {},
       form_errors: {},
       rules: {},
     }
@@ -180,6 +189,7 @@
       }
     },
     components: {
+      ConnectionEditPanel,
       CodeEditor,
       ButtonBar
     },
@@ -211,6 +221,9 @@
         var desc = _.get(this.item, 'description', '')
         return _.isString(desc) && desc.length > 0 ? marked(desc) : ''
       },
+      element_type() {
+        return _.get(this.item, 'element', 'form')
+      },
       label_position() {
         return _.get(this.item, 'label_position', 'top')
       },
@@ -239,11 +252,17 @@
     methods: {
       initSelf() {
         // reset our local component data
-        var edit_values = _.assign({}, this.form_values, this.defaultValues)
-        var rules = _.cloneDeep(this.form_rules)
-        _.assign(this.$data, getDefaultState(), { edit_values, rules })
+        if (this.element_type == 'form') {
+          var edit_values = _.assign({}, this.form_values, this.defaultValues)
+          var rules = _.cloneDeep(this.form_rules)
+          _.assign(this.$data, getDefaultState(), { edit_values, rules })
 
-        this.autoFocus()
+          this.autoFocus()
+        } else if (this.element_type == 'auth') {
+          var connection_attrs = _.get(this.item, 'connection', {})
+          var edit_connection = _.assign({}, connection_attrs, this.defaultValues)
+          _.assign(this.$data, getDefaultState(), { edit_connection })
+        }
       },
       autoFocus() {
         this.$nextTick(() => {
