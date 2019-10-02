@@ -110,8 +110,6 @@ class Dropbox implements \Flexio\IFace\IConnection,
         if ($this->authenticated() === false)
             return $user_info;
 
-        //$postdata = json_encode({});
-
         // get the user info
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, "https://api.dropboxapi.com/2/users/get_current_account");
