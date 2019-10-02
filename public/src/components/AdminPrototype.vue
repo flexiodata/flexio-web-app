@@ -17,7 +17,8 @@
 </template>
 
 <script>
-  import hubspot_def from '../data/builder/hubspot-example.yml'
+  //import hubspot_def from '../data/builder/hubspot-example.yml'
+  import dropbox_def from '../data/builder/dropbox-example.yml'
   import BuilderItemForm from '@/components/BuilderItemForm'
 
   const getDefaultState = (def) => {
@@ -35,7 +36,7 @@
       BuilderItemForm
     },
     data() {
-      return getDefaultState(hubspot_def)
+      return getDefaultState(dropbox_def)
     },
     computed: {
       is_last_item() {
