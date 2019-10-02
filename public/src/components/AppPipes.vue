@@ -172,14 +172,24 @@
     <EmptyItem class="flex flex-column items-center justify-center h-100" v-else>
       <div class="tc f3" slot="text">
         <p>No functions to show</p>
-        <el-button
-          size="large"
-          type="primary"
-          class="ttu fw6"
-          @click="show_pipe_dialog = true"
-        >
-          New Function
-        </el-button>
+        <el-dropdown trigger="click">
+          <el-button
+            size="large"
+            type="primary"
+            class="ttu fw6"
+            v-require-rights:pipe.create
+          >
+            New<i class="el-icon-arrow-down el-icon--right fw6" style="margin-right: -2px"></i>
+          </el-button>
+            <el-dropdown-menu style="min-width: 10rem" slot="dropdown">
+            <el-dropdown-item @click.native="onNewPipe('extract')">Extract</el-dropdown-item>
+            <el-dropdown-item @click.native="onNewPipe('lookup')">Lookup</el-dropdown-item>
+            <el-dropdown-item @click.native="onNewPipe('execute')">Execute</el-dropdown-item>
+            <el-dropdown-item divided></el-dropdown-item>
+            <el-dropdown-item @click.native="onNewFunctionMount('integration')">Integration</el-dropdown-item>
+            <el-dropdown-item @click.native="onNewFunctionMount('mount')">Function Mount</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
       </div>
     </EmptyItem>
 
@@ -197,7 +207,7 @@
         :pipe="pipe_edit_mode == 'edit' ? edit_pipe : new_pipe_attrs"
         @close="show_pipe_dialog = false"
         @cancel="show_pipe_dialog = false"
-        @update-pipe="onPipeAdded"
+        @update-pipe="onPipeUpdated"
         v-if="show_pipe_dialog"
       />
     </el-dialog>
@@ -218,7 +228,7 @@
         :active-step="mount_edit_mode == 'edit' ? 'setup-config' : undefined"
         @close="show_mount_dialog = false"
         @cancel="show_mount_dialog = false"
-        @submit="onSubmitFunctionMount"
+        @submit="onFunctionMountSubmitted"
         v-if="show_mount_dialog"
       />
     </el-dialog>
@@ -504,6 +514,8 @@ def flex_handler(flex):
       },
       selectPipe(item) {
         if (this.sorted_pipes.length == 0) {
+          // remove the pipe name from the URL
+          this.updateRoute(undefined)
           return
         }
 
@@ -513,6 +525,7 @@ def flex_handler(flex):
           this.last_selected = {}
           return
         }
+
         this.pipe = _.cloneDeep(item)
         this.last_selected = _.cloneDeep(item)
 
@@ -520,15 +533,17 @@ def flex_handler(flex):
           // update the route
           var name = _.get(item, 'name', '')
           var object_name = name.length > 0 ? name : _.get(item, 'eid', '')
-          var team_name = this.active_team_name
-
-          var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
-          new_route.params = _.assign({}, new_route.params, { team_name, object_name })
-          this.$router[!this.route_object_name?'replace':'push'](new_route)
+          this.updateRoute(object_name)
 
           this.is_selecting = true
           this.$nextTick(() => { this.is_selecting = false })
         }
+      },
+      updateRoute(object_name) {
+        var team_name = this.active_team_name
+        var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
+        new_route.params = _.assign({}, new_route.params, { team_name, object_name })
+        this.$router[!this.route_object_name?'replace':'push'](new_route)
       },
       filterByFunctionMount(connection) {
         return this.$_Connection_isFunctionMount(connection)
@@ -556,7 +571,7 @@ def flex_handler(flex):
 
         return _.assign({}, getDefaultAttrs(), { name, task })
       },
-      onPipeAdded(pipe) {
+      onPipeUpdated(pipe) {
         this.selectPipe(pipe)
         this.show_pipe_dialog = false
       },
@@ -580,7 +595,7 @@ def flex_handler(flex):
         this.edit_connection = _.cloneDeep(connection)
         this.show_mount_dialog = true
       },
-      onSubmitFunctionMount(connection) {
+      onFunctionMountSubmitted(connection) {
         if (this.mount_edit_mode == 'add') {
           this.syncFunctionMount(connection)
         } else {

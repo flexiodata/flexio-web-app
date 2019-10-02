@@ -251,9 +251,9 @@
     methods: {
       tryFetchPipe() {
         var team_name = this.active_team_name
-        var name = this.pipe.name
+        var name = _.get(this.pipe, 'name', '')
 
-        if (!this.is_fetched && !this.is_fetching) {
+        if (!this.is_fetched && !this.is_fetching && name.length > 0) {
           this.is_local_fetching = true
           this.$store.dispatch('pipes/fetch', { team_name, name }).finally(() => {
             this.is_local_fetching = false
