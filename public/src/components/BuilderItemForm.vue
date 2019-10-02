@@ -130,6 +130,7 @@
       :connection="edit_connection"
       :show-header="false"
       :show-footer="false"
+      v-if="element_type == 'auth'"
     />
     <ButtonBar
       class="mt4"
