@@ -18,6 +18,8 @@ namespace Flexio\Controllers;
 
 class Oauth2Controller extends \Flexio\System\FxControllerAction
 {
+    private const OAUTH2_ENCKEY = 'bt#nXcs7VMmhc%cDS1';
+
     public function init() : void
     {
         parent::init();
@@ -37,23 +39,38 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
         $connection_type = $params['service'] ?? '';
         $connection_eid = $params['eid'] ?? '';
 
-        // TODO: if a connection is specified, make sure it exists and the requesting
-        // user has access to it
-
         try
         {
-            // STEP 1: prepare the params to pass to the remote service, including
+            // STEP 1: get the requesting user and make sure they're a valid user
+            $requesting_user_eid = \Flexio\System\System::getCurrentUserEid();
+            $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
+            if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+            // STEP 2: if a connection is specified, make sure it exists and the
+            // requesting user has access to it
+            if (strlen($connection_eid) > 0)
+            {
+                $connection = \Flexio\Object\Connection::load($connection_eid);
+                if ($connection->getStatus() === \Model::STATUS_DELETED)
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+                if ($connection->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_CONNECTION_UPDATE) === false)
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            }
+
+            // STEP 3: prepare the params to pass to the remote service, including
             // a state parameter the stores the connection eid and the redirect url
             $state = array(
+                'requesting_user_eid' => $requesting_user_eid,
                 'connection_type' => $connection_type,
                 'connection_eid' => $connection_eid
             );
             $connection_info = array(
-                'state' => base64_encode(json_encode($state)),
+                'state' => \Flexio\Base\Util::encrypt(json_encode($state), self::OAUTH2_ENCKEY), // encrypt function returns base64 string, so url safe
                 'redirect' => self::getCallbackUrl()
             );
 
-            // STEP 2: get the remote service authorization url to redirect to authenticate
+            // STEP 4: get the remote service authorization url to redirect to authenticate
             $service = \Flexio\Services\Factory::create($connection_type, $connection_info);
             if (!($service instanceof \Flexio\IFace\IOAuthConnection))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
@@ -88,10 +105,14 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
             return;
         }
 
+        // get the requesting user
+        $requesting_user_eid = \Flexio\System\System::getCurrentUserEid();
+
         // get the information from the state
-        $state = json_decode(base64_decode($state),true);
-        $connection_type = $state['connection_type'] ?? ''; // required
-        $connection_eid = $state['connection_eid'] ?? '';   // optional
+        $state = json_decode(\Flexio\Base\Util::decrypt($state, self::OAUTH2_ENCKEY),true);
+        $initial_requesting_user_eid = $state['requesting_user_eid'];
+        $connection_type = $state['connection_type'] ?? '';
+        $connection_eid = $state['connection_eid'] ?? '';
 
         // create an initial set of connection properties to save
         $connection_properties_to_save = array();
@@ -99,24 +120,28 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
 
         try
         {
-            // STEP 1: check for any errors
+            // STEP 1: make sure the user is the same user as the one who started the process
+            if ($requesting_user_eid !== $initial_requesting_user_eid)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED);
+
+            // STEP 2: check for any errors
             if ($error === true || $code === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED);
 
-            // STEP 2: finish the authentication process
+            // STEP 3: finish the authentication process
             $connection_info = array(
                 'code' => $code,
                 'redirect' => self::getCallbackUrl()
             );
             $service = \Flexio\Services\Factory::create($connection_type, $connection_info);
 
-            // STEP 3: make sure the service is authenticated
+            // STEP 4: make sure the service is authenticated
             if (!($service instanceof \Flexio\IFace\IOAuthConnection))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
             if ($service->authenticated() === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED);
 
-            // STEP 4: set the connection info to save from the service
+            // STEP 5: set the connection info to save from the service
             $connection_properties_to_save['connection_status'] = \Model::CONNECTION_STATUS_AVAILABLE;
             $connection_properties_to_save['connection_info'] = $service->get();
         }
