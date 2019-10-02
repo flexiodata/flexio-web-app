@@ -20,5 +20,6 @@ interface IOAuthConnection
 {
     public function getAuthorizationUri() : string;
     public function getTokens() : array;
+    public function getUserInfo() : array;
 }
 

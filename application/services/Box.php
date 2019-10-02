@@ -97,6 +97,16 @@ class Box implements \Flexio\IFace\IConnection,
         return $properties;
     }
 
+    public function getUserInfo() : array
+    {
+        return array(
+            'username' => '',
+            'first_name' => '',
+            'last_name' => '',
+            'email' => ''
+        );
+    }
+
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
