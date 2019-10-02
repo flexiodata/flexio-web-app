@@ -97,6 +97,51 @@ class Dropbox implements \Flexio\IFace\IConnection,
         return $properties;
     }
 
+    public function getUserInfo() : array
+    {
+        $user_info = array(
+            'username' => '',
+            'first_name' => '',
+            'last_name' => '',
+            'email' => ''
+        );
+
+        // make sure we're authenticated, or else return empty info
+        if ($this->authenticated() === false)
+            return $user_info;
+
+        // get the user info
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "https://api.dropboxapi.com/2/users/get_current_account");
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, 'null');
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer '.$this->access_token, "Content-Type: application/json"));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        $result = curl_exec($ch);
+        $result = @json_decode($result, true);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if (isset($result['error_summary']))
+        {
+            $error_summary = $result['error_summary'];
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+        }
+
+        if ($httpcode < 200 || $httpcode > 299)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        $user_info = array(
+            'username' => '',
+            'first_name' => $result['name']['familiar_name'] ?? '',
+            'last_name' => $result['name']['surname'] ?? '',
+            'email' => $result['email'] ?? ''
+        );
+
+        return $user_info;
+    }
+
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////

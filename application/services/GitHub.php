@@ -100,6 +100,86 @@ class GitHub implements \Flexio\IFace\IConnection,
         return $properties;
     }
 
+    public function getUserInfo() : array
+    {
+        $user_info = array(
+            'username' => '',
+            'first_name' => '',
+            'last_name' => '',
+            'email' => ''
+        );
+
+        // make sure we're authenticated, or else return empty info
+        if ($this->authenticated() === false)
+            return $user_info;
+
+        // build the request headers
+        $request_headers = [
+            'Accept: application/vnd.github.v3+json',
+            'User-Agent: Flex.io',
+            'Authorization: Token '.$this->access_token // user should be authenticated, so require header
+        ];
+
+        // STEP 1: get basic user info
+        $url = 'https://api.github.com/user';
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
+        curl_setopt($ch, CURLOPT_HTTPGET, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        $result = curl_exec($ch);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($httpcode < 200 || $httpcode > 299)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        $basic_info = @json_decode($result, true);
+        if (!is_array($basic_info))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        // STEP 2: get user email info; if we can't get it, don't fail, but
+        // return what we have
+        $url = "https://api.github.com/user/emails";
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
+        curl_setopt($ch, CURLOPT_HTTPGET, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        $result = curl_exec($ch);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        $email_primary = '';
+        if ($httpcode >= 200 || $httpcode <= 299)
+        {
+            $email_info = @json_decode($result, true);
+            if (is_array($email_info))
+            {
+                foreach ($email_info as $e)
+                {
+                    $is_primary = $e['primary'] ?? false;
+                    if ($is_primary === true)
+                    {
+                        $email_primary = $e['email'];
+                        break;
+                    }
+                }
+            }
+        }
+
+        $user_info = array(
+            'username' => $basic_info['login'] ?? '',
+            'first_name' => '',
+            'last_name' => $basic_info['name'] ?? '', // TODO: name is full name; parse into first/last name
+            'email' => $email_primary
+        );
+
+        return $user_info;
+    }
+
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
@@ -688,7 +768,7 @@ class GitHub implements \Flexio\IFace\IConnection,
 
         // instantiate the github service using the credentials,
         // http client and storage mechanism for the token
-        $oauth = $service_factory->createService('GitHub', $credentials, $storage, array('repo'));
+        $oauth = $service_factory->createService('GitHub', $credentials, $storage, array('repo', 'user:email'));
         if (!isset($oauth))
             return false;
 
