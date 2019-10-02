@@ -9,8 +9,8 @@ const AMAZON_S3 = {
   icon: require('../assets/icon/icon-amazon-128.png'),
   is_oauth: false,
   is_storage: true,
+  is_filesystem: true,
   is_function_mount: true,
-  is_email: false
 }
 
 const BOX = {
@@ -20,8 +20,8 @@ const BOX = {
   icon: require('../assets/icon/icon-box-128.png'),
   is_oauth: true,
   is_storage: true,
+  is_filesystem: true,
   is_function_mount: true,
-  is_email: false
 }
 
 const CRUNCHBASE = {
@@ -31,8 +31,8 @@ const CRUNCHBASE = {
   icon: require('../assets/icon/icon-crunchbase-128.png'),
   is_oauth: false,
   is_storage: false,
+  is_filesystem: false,
   is_function_mount: false,
-  is_email: false
 }
 
 const DROPBOX = {
@@ -42,8 +42,8 @@ const DROPBOX = {
   icon: require('../assets/icon/icon-dropbox-128.png'),
   is_oauth: true,
   is_storage: true,
+  is_filesystem: true,
   is_function_mount: true,
-  is_email: false
 }
 
 const FLEX = {
@@ -53,8 +53,8 @@ const FLEX = {
   icon: require('../assets/icon/icon-flexio-128.png'),
   is_oauth: false,
   is_storage: true,
+  is_filesystem: true,
   is_function_mount: false,
-  is_email: false
 }
 
 const GITHUB = {
@@ -64,8 +64,8 @@ const GITHUB = {
   icon: require('../assets/icon/icon-github-128.png'),
   is_oauth: true,
   is_storage: true,
+  is_filesystem: true,
   is_function_mount: true,
-  is_email: false
 }
 
 const GOOGLEDRIVE = {
@@ -75,8 +75,8 @@ const GOOGLEDRIVE = {
   icon: require('../assets/icon/icon-google-drive-128.png'),
   is_oauth: true,
   is_storage: true,
+  is_filesystem: true,
   is_function_mount: true,
-  is_email: false
 }
 
 const GOOGLESHEETS = {
@@ -86,8 +86,8 @@ const GOOGLESHEETS = {
   icon: require('../assets/icon/icon-google-sheets-128.png'),
   is_oauth: true,
   is_storage: true,
+  is_filesystem: false,
   is_function_mount: false,
-  is_email: false
 }
 
 const KEYRING = {
@@ -97,8 +97,8 @@ const KEYRING = {
   icon: require('../assets/icon/icon-keyring-128.png'),
   is_oauth: false,
   is_storage: false,
+  is_filesystem: false,
   is_function_mount: false,
-  is_email: false
 }
 
 const LINKEDIN = {
@@ -108,8 +108,8 @@ const LINKEDIN = {
   icon: require('../assets/icon/icon-linkedin-128.png'),
   is_oauth: true,
   is_storage: false,
+  is_filesystem: false,
   is_function_mount: false,
-  is_email: false
 }
 
 const MYSQL = {
@@ -119,8 +119,8 @@ const MYSQL = {
   icon: require('../assets/icon/icon-mysql-128.png'),
   is_oauth: false,
   is_storage: true,
+  is_filesystem: false,
   is_function_mount: false,
-  is_email: false
 }
 
 const POSTGRES = {
@@ -130,8 +130,8 @@ const POSTGRES = {
   icon: require('../assets/icon/icon-postgres-128.png'),
   is_oauth: false,
   is_storage: true,
+  is_filesystem: false,
   is_function_mount: false,
-  is_email: false
 }
 
 const SFTP = {
@@ -141,8 +141,8 @@ const SFTP = {
   icon: require('../assets/icon/icon-ftp-128.png'),
   is_oauth: false,
   is_storage: true,
+  is_filesystem: true,
   is_function_mount: false,
-  is_email: false
 }
 
 const TWITTER = {
@@ -152,8 +152,8 @@ const TWITTER = {
   icon: require('../assets/icon/icon-twitter-128.png'),
   is_oauth: true,
   is_storage: false,
+  is_filesystem: false,
   is_function_mount: false,
-  is_email: false
 }
 
 /*
@@ -164,8 +164,8 @@ const API = {
   icon: require('../assets/icon/icon-custom-api-128.png'),
   is_oauth: false,
   is_storage: false,
+  is_filesystem: false,
   is_function_mount: false,
-  is_email: false
 }
 
 const STDIN = {
@@ -175,8 +175,8 @@ const STDIN = {
   icon: require('../assets/icon/icon-console-128.png'),
   is_oauth: false,
   is_storage: false,
+  is_filesystem: false,
   is_function_mount: false,
-  is_email: false
 }
 
 const STDOUT = {
@@ -186,8 +186,8 @@ const STDOUT = {
   icon: require('../assets/icon/icon-console-128.png'),
   is_oauth: false,
   is_storage: false,
+  is_filesystem: false,
   is_function_mount: false,
-  is_email: false
 }
 
 const UPLOAD = {
@@ -197,8 +197,8 @@ const UPLOAD = {
   icon: require('../assets/icon/icon-upload-128.png'),
   is_oauth: false,
   is_storage: false,
+  is_filesystem: false,
   is_function_mount: false,
-  is_email: false
 }
 
 const DOWNLOAD = {
@@ -208,8 +208,8 @@ const DOWNLOAD = {
   icon: require('../assets/icon/icon-download-128.png'),
   is_oauth: false,
   is_storage: false,
+  is_filesystem: false,
   is_function_mount: false,
-  is_email: false
 }
 
 const ELASTICSEARCH = {
@@ -219,8 +219,8 @@ const ELASTICSEARCH = {
   icon: require('../assets/icon/icon-elasticsearch-128.png'),
   is_oauth: false,
   is_storage: true,
+  is_filesystem: false,
   is_function_mount: false,
-  is_email: false
 }
 
 const FIREBASE = {
@@ -230,8 +230,8 @@ const FIREBASE = {
   icon: require('../assets/icon/icon-firebase-128.png'),
   is_oauth: false,
   is_storage: true,
+  is_filesystem: false,
   is_function_mount: false,
-  is_email: false
 }
 
 const GOOGLECLOUDSTORAGE = {
@@ -241,8 +241,8 @@ const GOOGLECLOUDSTORAGE = {
   icon: require('../assets/icon/icon-google-cloud-storage-128.png'),
   is_oauth: true,
   is_storage: true,
+  is_filesystem: false,
   is_function_mount: false,
-  is_email: false
 }
 
 const GMAIL = {
@@ -252,8 +252,8 @@ const GMAIL = {
   icon: require('../assets/icon/icon-gmail-128.png'),
   is_oauth: true,
   is_storage: false,
+  is_filesystem: false,
   is_function_mount: false,
-  is_email: true
 }
 
 const MAILJET = {
@@ -263,8 +263,8 @@ const MAILJET = {
   icon: require('../assets/icon/icon-mailjet-128.png'),
   is_oauth: false,
   is_storage: false,
+  is_filesystem: false,
   is_function_mount: false,
-  is_email: false
 }
 
 const RSS = {
@@ -274,8 +274,8 @@ const RSS = {
   icon: require('../assets/icon/icon-rss-128.png'),
   is_oauth: false,
   is_storage: false,
+  is_filesystem: false,
   is_function_mount: false,
-  is_email: false
 }
 
 const SMTP = {
@@ -285,8 +285,8 @@ const SMTP = {
   icon: require('../assets/icon/icon-email-128.png'),
   is_oauth: false,
   is_storage: false,
+  is_filesystem: false,
   is_function_mount: false,
-  is_email: true
 }
 
 const SOCRATA = {
@@ -296,8 +296,8 @@ const SOCRATA = {
   icon: require('../assets/icon/icon-socrata-128.png'),
   is_oauth: false,
   is_storage: false,
+  is_filesystem: false,
   is_function_mount: false,
-  is_email: false
 }
 
 const PIPELINEDEALS = {
@@ -307,8 +307,8 @@ const PIPELINEDEALS = {
   icon: require('../assets/icon/icon-pipelinedeals-128.png'),
   is_oauth: false,
   is_storage: false,
+  is_filesystem: false,
   is_function_mount: false,
-  is_email: false
 }
 
 const TWILIO = {
@@ -318,8 +318,8 @@ const TWILIO = {
   icon: require('../assets/icon/icon-twilio-128.png'),
   is_oauth: false,
   is_storage: false,
+  is_filesystem: false,
   is_function_mount: false,
-  is_email: false
 }
 */
 

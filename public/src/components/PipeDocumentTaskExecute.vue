@@ -54,7 +54,7 @@
           <BrowseButton
             slot="append"
             class="ttu fw6"
-            :fileChooserOptions="{
+            :file-chooser-options="{
               filetypeFilter: ['py','js']
             }"
             @paths-selected="onPathsSelected"

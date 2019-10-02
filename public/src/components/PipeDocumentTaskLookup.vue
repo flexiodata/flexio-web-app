@@ -23,7 +23,7 @@
           <BrowseButton
             slot="append"
             class="ttu fw6"
-            :fileChooserOptions="{
+            :file-chooser-options="{
               filetypeFilter: ['csv','icsv','xls','xlsx']
             }"
             @paths-selected="onPathsSelected"

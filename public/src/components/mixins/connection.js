@@ -30,11 +30,11 @@ export default {
     $_Connection_isStorage(c) {
       return this.$_Connection_getInfo(c, 'is_storage', false)
     },
+    $_Connection_isFilesystem(c) {
+      return this.$_Connection_getInfo(c, 'is_filesystem', false)
+    },
     $_Connection_isFunctionMount(c) {
       return this.$_Connection_getInfo(c, 'is_function_mount', false)
-    },
-    $_Connection_isEmail(c) {
-      return this.$_Connection_getInfo(c, 'is_email', false)
     }
   }
 }

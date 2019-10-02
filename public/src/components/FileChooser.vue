@@ -30,9 +30,10 @@
           ref="file-chooser"
           :team-name="team_name"
           :path="connection_path"
+          :filetype-filter="filetype_filter"
           @open-folder="openFolder"
           @selection-change="updateItems"
-          v-bind="$attrs"
+          v-bind="cleaned_attrs"
         />
       </div>
     </div>
@@ -40,7 +41,6 @@
 </template>
 
 <script>
-  import { CONNECTION_TYPE_FLEX } from '@/constants/connection-type'
   import { mapGetters } from 'vuex'
   import * as connections from '@/constants/connection-info'
   import FileExplorerBar from '@/components/FileExplorerBar'
@@ -96,6 +96,15 @@
       },
       connections() {
         return _.filter(this.getAvailableConnections(), this.$_Connection_isStorage)
+      },
+      is_filesystem_connection() {
+        return this.$_Connection_isFilesystem(this.ctype)
+      },
+      filetype_filter() {
+        return this.is_filesystem_connection ? _.get(this.$attrs, 'filetypeFilter', []) : []
+      },
+      cleaned_attrs() {
+        return _.omit(this.$attrs, ['filetypeFilter'])
       },
       team_name() {
         return _.get(this.active_connection, 'owned_by.eid', 'me')
