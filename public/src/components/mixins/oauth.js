@@ -38,28 +38,19 @@ export default {
         try { wnd.close() } catch(e) {}
       }, 1200 * 1000)
 
-      //wnd = window.open(oauth_url, 'ConnectWithOAuth', wnd_options)
-      wnd = window.open(oauth_url)
-      wnd.onload = function() {
-        console.log("onload")
-        wnd.onunload = function() {
-          alert("onunload")
+      wnd = window.open(oauth_url, 'ConnectWithOAuth', wnd_options)
+
+      var timer = setInterval(function() {
+        if (wnd.closed) {
+          clearInterval(timer)
+
+          var json = localStorage.getItem('flexio:oauth-callback-info')
+          localStorage.removeItem('flexio:oauth-callback-info')
+          debugger
+
+          callback(json)
         }
-      }
-
-      /*
-        var timer = setInterval(function() {
-          if (wnd.closed) {
-            clearInterval(timer)
-
-            if (typeof wnd.getOauthParams == 'function') {
-              callback(wnd.getOauthParams())
-            } else {
-              callback()
-            }
-          }
-        }, 500)
-      */
+      }, 500)
 
       if (wnd) {
         wnd.focus()

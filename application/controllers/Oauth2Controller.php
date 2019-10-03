@@ -138,6 +138,7 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
             // fall through
         }
 
+        $this->view->flexio_oauth_info = json_encode($connection_properties_to_save);
         $this->renderPage();
     }
 
