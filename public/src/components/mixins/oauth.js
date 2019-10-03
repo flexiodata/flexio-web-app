@@ -39,16 +39,13 @@ export default {
       // open popup window
       var wnd_options = getWindowOptions()
       var wnd = window.open(oauth_url, 'ConnectWithOAuth', wnd_options)
+
       var wnd_timeout
       var wnd_timer
 
-      // close the window if it's been open for 20 minutes
-      wnd_timeout = setTimeout(function() {
-        try { wnd.close() } catch(e) {}
-      }, 1200 * 1000)
-
       // update data when event is detected
       function updateAuthInfo(evt) {
+        debugger
         clearInterval(wnd_timer)
         clearTimeout(wnd_timeout)
         window.removeEventListener('message', updateAuthInfo)
@@ -65,17 +62,21 @@ export default {
         wnd.focus()
       }
 
-/*
+      // close the window if it's been open for 20 minutes
+      wnd_timeout = setTimeout(function() {
+        try { wnd.close() } catch(e) {}
+      }, 1200 * 1000)
+
       // continue to check if the window is closed (by other means
       // than the OAuth callback) so that we can do cleanup regardless
       wnd_timer = setInterval(function() {
         if (wnd.closed) {
+          debugger
           clearInterval(wnd_timer)
           clearTimeout(wnd_timeout)
           window.removeEventListener('message', updateAuthInfo)
         }
       }, 500)
-*/
     }
   }
 }
