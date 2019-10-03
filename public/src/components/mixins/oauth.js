@@ -45,7 +45,6 @@ export default {
 
       // update data when event is detected
       function updateAuthInfo(evt) {
-        debugger
         clearInterval(wnd_timer)
         clearTimeout(wnd_timeout)
         window.removeEventListener('message', updateAuthInfo)
@@ -71,7 +70,6 @@ export default {
       // than the OAuth callback) so that we can do cleanup regardless
       wnd_timer = setInterval(function() {
         if (wnd.closed) {
-          debugger
           clearInterval(wnd_timer)
           clearTimeout(wnd_timeout)
           window.removeEventListener('message', updateAuthInfo)
