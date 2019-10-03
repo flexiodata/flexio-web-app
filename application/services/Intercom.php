@@ -148,7 +148,7 @@ class Intercom implements \Flexio\IFace\IConnection,
             $token = $oauthprovider->getAccessToken('authorization_code', [
                 'code' => $params['code']
             ]);
-            $this->access_token = $token->getAccessToken();
+            $this->access_token = $token->getToken();
             return true;
         }
 
