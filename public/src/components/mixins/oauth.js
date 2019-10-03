@@ -47,7 +47,6 @@ export default {
 
       // update data when event is detected
       function updateAuthInfo(evt) {
-        debugger
         wnd.close()
         callback(evt.data)
       }
