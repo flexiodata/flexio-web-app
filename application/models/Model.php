@@ -193,6 +193,7 @@ class Model
     public const CONNECTION_TYPE_TWITTER            = 'twitter';
     public const CONNECTION_TYPE_CRUNCHBASE         = 'crunchbase';
     public const CONNECTION_TYPE_KEYRING            = 'keyring';
+    public const CONNECTION_TYPE_INTERCOM           = 'intercom';
 
     private $objs = array();
     private $database = null;
