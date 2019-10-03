@@ -90,6 +90,17 @@ const GOOGLESHEETS = {
   is_function_mount: false,
 }
 
+const INTERCOM = {
+  service_name: 'Intercom',
+  service_description: "",
+  connection_type: types.CONNECTION_TYPE_INTERCOM,
+  icon: require('../assets/icon/icon-intercom-128.png'),
+  is_oauth: true,
+  is_storage: false,
+  is_filesystem: false,
+  is_function_mount: false,
+}
+
 const KEYRING = {
   service_name: 'Keyring',
   service_description: 'Simple Keypair Storage',
@@ -334,6 +345,7 @@ export const CONNECTION_INFO_GITHUB               = GITHUB
 export const CONNECTION_INFO_TWITTER              = TWITTER
 export const CONNECTION_INFO_GOOGLEDRIVE          = GOOGLEDRIVE
 export const CONNECTION_INFO_GOOGLESHEETS         = GOOGLESHEETS
+export const CONNECTION_INFO_INTERCOM             = INTERCOM
 export const CONNECTION_INFO_LINKEDIN             = LINKEDIN
 export const CONNECTION_INFO_CRUNCHBASE           = CRUNCHBASE
 export const CONNECTION_INFO_MYSQL                = MYSQL
