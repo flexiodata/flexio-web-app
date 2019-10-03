@@ -29,7 +29,6 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
     {
         // note: this function initiates the oauth process
 
-        $this->renderRaw();
         $params = $this->getRequest()->getParams();
 
         // note: connection_type is needed to create the appropriate oauth service;
@@ -79,7 +78,9 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
             if (strlen($service_oauth_url) === 0)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
-            $this->_redirect($service_oauth_url);
+            //$this->_redirect($service_oauth_url);
+            $this->view->service_oauth_url = $service_oauth_url;
+            $this->renderPage();
         }
         catch (\Flexio\Base\Exception $e)
         {
@@ -163,7 +164,7 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
             // fall through
         }
 
-        $this->view->flexio_oauth_info = json_encode($connection_properties_to_save);
+        $this->view->service_oauth_response = json_encode($connection_properties_to_save);
         $this->renderPage();
     }
 

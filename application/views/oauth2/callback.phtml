@@ -18,15 +18,16 @@
 
       try
       {
-        var info = JSON.stringify(<?php echo $this->flexio_oauth_info; ?>)
-        localStorage.setItem('flexio:oauth-callback-info', info)
+        var oauth_json = <?php echo $this->service_oauth_response; ?>;
+        window.opener.postMessage(oauth_json, "*")
       }
       catch(e)
       {
       }
 
+      // TODO: should we still close this window here?
       // close the oauth window
-      window.close()
+      //window.close()
     </script>
   </body>
 </html>
