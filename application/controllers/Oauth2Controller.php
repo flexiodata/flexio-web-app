@@ -58,7 +58,7 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
             }
 
             // STEP 3: prepare the params to pass to the remote service, including
-            // a state parameter the stores the connection eid and the redirect url
+            // a state parameter that stores the connection eid and the redirect url
             $state = array(
                 'requesting_user_eid' => $requesting_user_eid,
                 'connection_type' => $connection_type,
