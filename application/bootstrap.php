@@ -360,7 +360,8 @@ class Flexio
         if (false === strstr($uri, '/signin') &&
             false === strstr($uri, '/logout') &&
             false === strstr($uri, '/login') &&
-            false === strstr($uri, '/user'))
+            false === strstr($uri, '/user') &&
+            false === strstr($uri, '/oauth'))
         {
             // TODO: make sure user info is being written on
             // post; doesn't need to happen here, as long it's

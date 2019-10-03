@@ -98,6 +98,14 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
         $error = $params['error'] ?? false;
         $code = $params['code'] ?? false;
 
+        if ($code === false && isset($params['oauth_verifier']))
+        {
+            $code = $params['oauth_verifier'];
+        }
+
+
+
+
         // state should always be set since we pass it; if it isn't, there's no
         // further information we can act on
         if ($state === false)
@@ -111,7 +119,9 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
         $requesting_user_eid = \Flexio\System\System::getCurrentUserEid();
 
         // get the information from the state
-        $state = json_decode(\Flexio\Base\Util::decrypt($state, self::OAUTH2_ENCKEY),true);
+        $state_json = \Flexio\Base\Util::decrypt($state, self::OAUTH2_ENCKEY);
+        $state = json_decode($state_json, true);
+
         $initial_requesting_user_eid = $state['requesting_user_eid'];
         $connection_type = $state['connection_type'] ?? '';
         $connection_eid = $state['connection_eid'] ?? '';
@@ -135,6 +145,7 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
                 'code' => $code,
                 'redirect' => self::getCallbackUrl()
             );
+
             $service = \Flexio\Services\Factory::create($connection_type, $connection_info);
 
             // STEP 4: make sure the service is authenticated
