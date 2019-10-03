@@ -16,6 +16,10 @@ const config = merge(base, {
         target: 'https://localhost',
         secure: false
       },
+      '/oauth2/**': {
+        target: 'https://localhost',
+        secure: false
+      },
       '/def/**': {
         target: 'https://test.flex.io',
         changeOrigin: true,
