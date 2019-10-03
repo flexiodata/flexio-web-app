@@ -87,8 +87,8 @@ class Base
         self::addTests('config', $tests);
         self::addTests('base', $tests);
         self::addTests('system', $tests);
-        self::addTests('service', $tests);
-        self::addTests('model', $tests);
+        self::addTests('services', $tests);
+        self::addTests('models', $tests);
         self::addTests('object', $tests);
         self::addTests('jobs', $tests);
         self::addTests('api', $tests);
