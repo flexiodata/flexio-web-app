@@ -40,6 +40,7 @@ class Base
     public const TEST_SERVICE_GOOGLECLOUDSTORAGE = false; // disabled
     public const TEST_SERVICE_GOOGLEDRIVE = true;
     public const TEST_SERVICE_GOOGLESHEETS = true;
+    public const TEST_SERVICE_INTERCOM = true;
     public const TEST_SERVICE_LINKEDIN = true;
     public const TEST_SERVICE_MYSQL = true;
     public const TEST_SERVICE_POSTGRES = true;
@@ -86,8 +87,8 @@ class Base
         self::addTests('config', $tests);
         self::addTests('base', $tests);
         self::addTests('system', $tests);
-        self::addTests('service', $tests);
-        self::addTests('model', $tests);
+        self::addTests('services', $tests);
+        self::addTests('models', $tests);
         self::addTests('object', $tests);
         self::addTests('jobs', $tests);
         self::addTests('api', $tests);

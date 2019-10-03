@@ -494,5 +494,10 @@ class Test
         $actual = \Model::CONNECTION_TYPE_KEYRING;
         $expected = 'keyring';
         \Flexio\Tests\Check::assertString('K.22', 'Type constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Model::CONNECTION_TYPE_INTERCOM;
+        $expected = 'intercom';
+        \Flexio\Tests\Check::assertString('K.23', 'Type constant',  $actual, $expected, $results);
     }
 }
