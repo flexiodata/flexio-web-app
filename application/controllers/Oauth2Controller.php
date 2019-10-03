@@ -103,9 +103,6 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
             $code = $params['oauth_verifier'];
         }
 
-
-
-
         // state should always be set since we pass it; if it isn't, there's no
         // further information we can act on
         if ($state === false)

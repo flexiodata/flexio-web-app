@@ -110,5 +110,52 @@ class Intercom implements \Flexio\IFace\IConnection,
 
     private function initialize(array $params) : bool
     {
+        // this implementation uses oauth2-intercom
+        // see following for more information:
+        // - https://github.com/intercom/oauth2-intercom#usage
+        // - https://github.com/thephpleague/oauth2-client#usage
+        // - https://github.com/thephpleague/oauth2-client/blob/master/docs/providers/thirdparty.md
+        // - https://developers.intercom.com/building-apps/docs/setting-up-oauth
+
+        // note: refresh tokens; intercom doesn't use refresh tokens
+
+        $client_id = $GLOBALS['g_config']->intercom_client_id ?? '';
+        $client_secret = $GLOBALS['g_config']->intercom_client_secret ?? '';
+
+        if (strlen($client_id) == 0 || strlen($client_secret) == 0)
+            return false;
+
+        // STEP 1: if we have an access token, create an object
+        // from the access token and return it
+        if (isset($params['access_token']))
+        {
+            $this->access_token = $params['access_token'];
+            return true;
+        }
+
+        // STEP 2: create the service
+        $oauthprovider = new \Intercom\OAuth2\Client\Provider\Intercom([
+            'clientId'          => $client_id,
+            'clientSecret'      => $client_secret,
+            'redirectUri'       => $params['redirect'] ?? null,
+            'state'             => $params['state'] ?? null
+        ]);
+
+        // STEP 3: if we have a code parameter, we have enough information
+        // to authenticate and get the token; do so and return the object
+        if (isset($params['code']))
+        {
+            $token = $oauthprovider->getAccessToken('authorization_code', [
+                'code' => $params['code']
+            ]);
+            $this->access_token = $token;
+            return true;
+        }
+
+        // STEP 4: generate the URL to make request to authorize our application
+        $url = $oauthprovider->getAuthorizationUrl();
+        $this->authorization_uri = $url;
+
+        return false;
     }
 }
