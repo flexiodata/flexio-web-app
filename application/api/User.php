@@ -443,7 +443,7 @@ class User
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         // check the rights
-        if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_USER_WRITE) === false)
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_USER_UPDATE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $source_info = self::addCustomerPaymentSource($owner_user, $stripe_token);
@@ -472,7 +472,7 @@ class User
         // check the rights on the object
         if ($owner_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_USER_WRITE) === false)
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_USER_UPDATE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $path = $request_url;
