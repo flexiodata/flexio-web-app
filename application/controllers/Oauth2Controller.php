@@ -102,6 +102,7 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
         // further information we can act on
         if ($state === false)
         {
+            $this->view->service_oauth_response = '{}';
             $this->renderPage();
             return;
         }

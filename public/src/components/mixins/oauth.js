@@ -36,34 +36,39 @@ export default {
         return
       }
 
-      // 1. open popup window
+      // open popup window
       var wnd_options = getWindowOptions()
       var wnd = window.open(oauth_url, 'ConnectWithOAuth', wnd_options)
 
-      // 2. update data when event is detected
+      // close the window if it's been open for 20 minutes
+      var wnd_timeout = setTimeout(function() {
+        try { wnd.close() } catch(e) {}
+      }, 1200 * 1000)
+
+      // update data when event is detected
       function updateAuthInfo(evt) {
-        // 2a. fire oauth info back via the callback
-        callback(evt.data)
-
-        // 2b. close popup
+        debugger
         wnd.close()
-
-        // 2c. remove the event listener we created above
-        window.removeEventListener('message', updateAuthInfo)
+        callback(evt.data)
       }
 
-      // 3. listen for message from popup
+      // listen for message from popup
       window.addEventListener('message', updateAuthInfo)
 
-      // 4. bring the window to the front
+      // bring the window to the front
       if (wnd) {
         wnd.focus()
       }
 
-      // 5. close the window if it's been open for 20 minutes
-      var wnd_timeout = setTimeout(function() {
-        try { wnd.close() } catch(e) {}
-      }, 1200 * 1000)
+      // continue to check if the window is closed (by other means
+      // than the OAuth callback) so that we can do cleanup regardless
+      var wnd_timer = setInterval(function() {
+        if (wnd.closed) {
+          clearInterval(wnd_timer)
+          clearTimeout(wnd_timeout)
+          window.removeEventListener('message', updateAuthInfo)
+        }
+      }, 500)
     }
   }
 }
