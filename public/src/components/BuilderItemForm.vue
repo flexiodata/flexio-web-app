@@ -125,13 +125,6 @@
       </el-form-item>
       <slot name="form-append"></slot>
     </el-form>
-    <ConnectionEditPanel
-      :active-step="'authentication'"
-      :connection.sync="edit_connection"
-      :show-header="false"
-      :show-footer="false"
-      v-if="element_type == 'auth'"
-    />
     <ButtonBar
       class="mt4"
       :submit-button-disabled="has_errors"
@@ -145,7 +138,6 @@
 
 <script>
   import marked from 'marked'
-  import ConnectionEditPanel from '@/components/ConnectionEditPanel'
   import CodeEditor from '@/components/CodeEditor'
   import ButtonBar from '@/components/ButtonBar'
 
@@ -190,7 +182,6 @@
       }
     },
     components: {
-      ConnectionEditPanel,
       CodeEditor,
       ButtonBar
     },

@@ -201,9 +201,7 @@
         deep: true
       },
       edit_connection_info: {
-        handler(connection_info) {
-          this.updateEditConnection({ connection_info })
-        },
+        handler: 'syncEditConnectionInfo',
         deep: true
       },
       github_url: {
@@ -320,6 +318,11 @@
       },
       updateEditConnection(attrs) {
         this.edit_connection = _.assign({}, this.edit_connection, attrs)
+      },
+      syncEditConnectionInfo(attrs) {
+        var connection_info = _.get(this.edit_connection, 'connection_info', {})
+        connection_info = _.assign({}, connection_info, attrs)
+        this.updateEditConnection({ connection_info })
       },
       updateOwnerAndRepository() {
         var idx = this.github_url.indexOf('github.com/')
