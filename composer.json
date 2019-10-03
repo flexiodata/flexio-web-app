@@ -13,6 +13,7 @@
         "tecnickcom/tcpdf": "^6.2",
         "grpc/grpc": "^1.13",
         "symfony/yaml": "^4.3",
-        "abraham/twitteroauth": "^1.0"
+        "abraham/twitteroauth": "^1.0",
+        "intercom/oauth2-intercom": "^2.0"
     }
 }

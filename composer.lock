@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "ad03d4d4ff293a171c88fe539caed7f4",
+    "content-hash": "14c074507b494d752b68e07b8dff43a7",
     "packages": [
         {
             "name": "abraham/twitteroauth",
@@ -42,9 +42,9 @@
             "authors": [
                 {
                     "name": "Abraham Williams",
-                    "role": "Developer",
                     "email": "abraham@abrah.am",
-                    "homepage": "https://abrah.am"
+                    "homepage": "https://abrah.am",
+                    "role": "Developer"
                 }
             ],
             "description": "The most popular PHP library for use with the Twitter OAuth REST API.",
@@ -361,6 +361,56 @@
                 "url"
             ],
             "time": "2017-03-20T17:10:46+00:00"
+        },
+        {
+            "name": "intercom/oauth2-intercom",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/intercom/oauth2-intercom.git",
+                "reference": "91453e0e8a8bad037f08e38a0558a7c818a0d816"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/intercom/oauth2-intercom/zipball/91453e0e8a8bad037f08e38a0558a7c818a0d816",
+                "reference": "91453e0e8a8bad037f08e38a0558a7c818a0d816",
+                "shasum": ""
+            },
+            "require": {
+                "league/oauth2-client": "~2.3",
+                "php": "^5.6|^7.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "~0.9",
+                "phpunit/phpunit": "~4.0",
+                "squizlabs/php_codesniffer": "~2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Intercom\\OAuth2\\Client\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Intercom Platform Team",
+                    "homepage": "http://intercom.io"
+                }
+            ],
+            "description": "Intercom OAuth 2.0 Client Provider for The PHP League OAuth2-Client",
+            "keywords": [
+                "authorisation",
+                "authorization",
+                "client",
+                "intercom",
+                "oauth",
+                "oauth2"
+            ],
+            "time": "2018-10-11T12:43:45+00:00"
         },
         {
             "name": "league/oauth2-client",
