@@ -32,9 +32,6 @@ function getWindowOptions() {
 export default {
   methods: {
     $_Oauth_showPopup(oauth_url, callback) {
-      var wnd
-      var wnd_timeout
-
       if (_.isNil(oauth_url)) {
         return
       }
