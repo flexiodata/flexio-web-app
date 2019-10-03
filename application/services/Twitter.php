@@ -168,18 +168,18 @@ class Twitter implements \Flexio\IFace\IConnection,
             if($twitteroauth->getLastHttpCode() != 200) {
                 throw new \Exception('There was a problem performing this request');
             }
-            
+
             // save token of application to session
             $_SESSION['twitter_oauth_token'] = $request_token['oauth_token'];
             $_SESSION['twitter_oauth_token_secret'] = $request_token['oauth_token_secret'];
-            
+
             // generate the URL to make request to authorize our application
             $url = $twitteroauth->url(
                 'oauth/authorize', [
                     'oauth_token' => $request_token['oauth_token']
                 ]
             );
-        
+
             $this->authorization_uri = $url;
 
             return false;
