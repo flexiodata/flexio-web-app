@@ -1,3 +1,6 @@
+<p style="font-size: 13px; font-family: sans-serif">Connecting to service...</p>
 <script>
-  window.location = '<?php echo $this->service_oauth_url; ?>'
+  setTimeout(function() {
+    window.location = '<?php echo $this->service_oauth_url; ?>'
+  }, 100)
 </script>

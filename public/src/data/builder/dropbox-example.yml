@@ -1,7 +1,7 @@
 title: Dropbox Function Pack
 description: Functions for accessing your Dropbox info
 image:
-  src: https://logo.clearbit.com/intercom.com
+  src: https://logo.clearbit.com/dropbox.com
   alt: Dropbox logo
 functions:
 - path: hubspot-contacts.py
@@ -12,7 +12,7 @@ prompts:
     description: |
       Lorem ipsum dolor sit amet, consectetur adipisicing elit. Impedit fuga porro blanditiis eaque repellendus obcaecati expedita consequuntur tenetur molestiae itaque ut atque repellat dolores eveniet provident, numquam, doloremque maiores eos.
     connection:
-      connection_type: intercom
+      connection_type: dropbox
   - element: form
     name: form_api_key
     title: Dropbox API key
