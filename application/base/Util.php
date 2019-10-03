@@ -810,6 +810,16 @@ class Util
         return self::generateRandomString(20);
     }
 
+    public static function base64_url_encode($input)
+    {
+        return str_replace(['+','/','='], ['-','_',''], base64_encode($input));
+    }
+
+    public static function base64_url_decode($input)
+    {
+        return base64_decode(str_pad(str_replace(['-','_'], ['+','/'], $input), strlen($input) % 4, '=', STR_PAD_RIGHT));
+    }
+
     public static function encrypt(string $plaintext, string $key = null) : ?string
     {
         require_once dirname(dirname(__DIR__)) . '/library/sodium_compat/autoload.php';
@@ -836,19 +846,29 @@ class Util
             return null;
         }
 
-        return 'ZZXV2/'.base64_encode($enc);
+        return 'ZZXV3.' . self::base64_url_encode($enc);
     }
 
     public static function decrypt(string $ciphertext, string $key = null) : ?string
     {
         require_once dirname(dirname(__DIR__)) . '/library/sodium_compat/autoload.php';
 
-        if (substr($ciphertext,0,6) != 'ZZXV2/')
+        if (substr($ciphertext,0,6) == 'ZZXV2/')
+        {
+            $ciphertext = base64_decode(substr($ciphertext,6));
+            if ($ciphertext === false)
+                return null;
+        }
+        else if (substr($ciphertext,0,6) == 'ZZXV3.')
+        {
+            $ciphertext = self::base64_url_decode(substr($ciphertext,6));
+            if ($ciphertext === false)
+                return null;
+        }
+        else
+        {
             return null;
-
-        $ciphertext = base64_decode(substr($ciphertext,6));
-        if ($ciphertext === false)
-            return null;
+        }
 
         // if key is null or empty string, key will be all \0's
         if (is_null($key) || strlen($key) == 0)
