@@ -127,7 +127,7 @@
     </el-form>
     <ConnectionEditPanel
       :active-step="'authentication'"
-      :connection="edit_connection"
+      :connection.sync="edit_connection"
       :show-header="false"
       :show-footer="false"
       v-if="element_type == 'auth'"

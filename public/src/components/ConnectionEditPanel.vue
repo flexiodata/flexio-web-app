@@ -106,6 +106,7 @@
 
   const getDefaultState = () => {
     return {
+      is_emitting_update: false,
       edit_connection: {},
       active_step: 'choose-source'
     }
@@ -165,7 +166,7 @@
         deep: true
       },
       edit_connection: {
-        handler: 'emitChange',
+        handler: 'emitUpdate',
         deep: true
       }
     },
@@ -215,6 +216,10 @@
     },
     methods: {
       initSelf() {
+        if (this.is_emitting_update === true ) {
+          return
+        }
+
         // reset our local component data
         _.assign(this.$data, getDefaultState())
 
@@ -222,8 +227,10 @@
         this.edit_connection = _.assign({}, this.edit_connection, _.cloneDeep(this.connection))
         this.active_step = this.activeStep
       },
-      emitChange() {
-        this.$emit('connection-change', this.edit_connection)
+      emitUpdate() {
+        this.is_emitting_update = true
+        this.$emit('update:connection', this.edit_connection)
+        this.$nextTick(() => { this.is_emitting_update = false })
       },
       cinfo() {
         var ctype = _.get(this.edit_connection, 'connection_type', '')

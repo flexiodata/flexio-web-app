@@ -137,7 +137,7 @@
   import axios from 'axios'
   import { mapState } from 'vuex'
   import { HOSTNAME } from '@/constants/common'
-  import { CONNECTION_STATUS_AVAILABLE } from '@/constants/connection-status'
+  import { CONNECTION_STATUS_AVAILABLE, CONNECTION_STATUS_UNAVAILABLE } from '@/constants/connection-status'
   import * as ctypes from '@/constants/connection-type'
   import * as cinfos from '@/constants/connection-info'
   import BuilderItemForm from '@/components/BuilderItemForm'
@@ -364,48 +364,22 @@
         var team_name = this.active_team_name
         var attrs = _.pick(this.edit_connection, ['name', 'description', 'connection_info'])
 
-        // disconnect from this connection (oauth only)
-        this.$store.dispatch('connections/disconnect', { team_name, eid, attrs }).then(response => {
-          var connection_status = _.get(response.data, 'connection_status', '')
-          this.updateEditConnection({ connection_status })
-
-          this.$nextTick(() => {
-            if (!this.is_connected) {
-              this.$message({
-                message: "You've successfully disconnected from " + this.service_name + ".",
-                type: 'success'
-              })
-            } else {
-              this.$message({
-                message: "There was a problem disconnecting from " + this.service_name + ".",
-                type: 'error'
-              })
-            }
-          })
-        }).catch(error => {
-          this.$message({
-            message: _.get(error, 'response.data.error.message', ''),
-            type: 'error'
-          })
-        })
-      },
-      tryOauthConnect() {
-        var eid = _.get(this.connection, 'eid', '')
-        var team_name = this.active_team_name
-
-        this.$_Oauth_showPopup(this.oauth_url, params => {
-          // TODO: handle 'code' and 'state' and 'error' here...
-
-          // for now, re-fetch the connection to update its state
-          this.$store.dispatch('connections/fetch', { team_name, eid }).then(response => {
+        if (eid.length > 0) {
+          // disconnect from this connection (oauth only)
+          this.$store.dispatch('connections/disconnect', { team_name, eid, attrs }).then(response => {
             var connection_status = _.get(response.data, 'connection_status', '')
             this.updateEditConnection({ connection_status })
 
             this.$nextTick(() => {
-              if (this.is_connected) {
+              if (!this.is_connected) {
                 this.$message({
-                  message: "You've successfully connected to " + this.service_name + "!",
+                  message: "You've successfully disconnected from " + this.service_name + ".",
                   type: 'success'
+                })
+              } else {
+                this.$message({
+                  message: "There was a problem disconnecting from " + this.service_name + ".",
+                  type: 'error'
                 })
               }
             })
@@ -415,6 +389,40 @@
               type: 'error'
             })
           })
+        } else {
+          this.updateEditConnection({ connection_status: CONNECTION_STATUS_UNAVAILABLE })
+        }
+      },
+      tryOauthConnect() {
+        var eid = _.get(this.connection, 'eid', '')
+        var team_name = this.active_team_name
+
+        this.$_Oauth_showPopup(this.oauth_url, attrs => {
+          // TODO: handle 'code' and 'state' and 'error' here...
+
+          if (eid.length > 0) {
+            // for now, re-fetch the connection to update its state
+            this.$store.dispatch('connections/fetch', { team_name, eid }).then(response => {
+              var connection_status = _.get(response.data, 'connection_status', '')
+              this.updateEditConnection({ connection_status })
+
+              this.$nextTick(() => {
+                if (this.is_connected) {
+                  this.$message({
+                    message: "You've successfully connected to " + this.service_name + "!",
+                    type: 'success'
+                  })
+                }
+              })
+            }).catch(error => {
+              this.$message({
+                message: _.get(error, 'response.data.error.message', ''),
+                type: 'error'
+              })
+            })
+          } else {
+            this.updateEditConnection(attrs)
+          }
         })
       },
       onValuesChange(values) {
