@@ -1,6 +1,8 @@
 <p style="font-size: 13px; font-family: sans-serif">Connecting to service...</p>
 <script>
-  setTimeout(function() {
-    window.location = '<?php echo $this->service_oauth_url; ?>'
-  }, 100)
+  window.onload = function(evt) {
+    setTimeout(function() {
+      window.location = '<?php echo $this->service_oauth_url; ?>'
+    }, 100)
+  }
 </script>
