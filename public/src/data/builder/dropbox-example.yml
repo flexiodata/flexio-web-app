@@ -31,7 +31,7 @@ prompts:
     form_items:
       - element: input
         type: text
-        name: hubspot_api_key
+        name: dropbox_api_key
         label: API key
         placeholder: API key
         value: ''
