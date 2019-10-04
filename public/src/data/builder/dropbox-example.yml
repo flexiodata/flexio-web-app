@@ -13,6 +13,9 @@ prompts:
       Lorem ipsum dolor sit amet, consectetur adipisicing elit. Impedit fuga porro blanditiis eaque repellendus obcaecati expedita consequuntur tenetur molestiae itaque ut atque repellat dolores eveniet provident, numquam, doloremque maiores eos.
     connection:
       connection_type: dropbox
+    form_items:
+      - name: dropbox_connection
+        value: ''
   - element: form
     name: form_api_key
     title: Dropbox API key

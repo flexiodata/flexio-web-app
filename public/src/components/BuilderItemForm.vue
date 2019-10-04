@@ -217,11 +217,11 @@
       label_width() {
         return _.get(this.item, 'label_width', '10rem')
       },
-      form_items() {
-        return _.get(this.item, 'form_items', [])
-      },
       form_rules() {
         return _.get(this.item, 'rules', {})
+      },
+      form_items() {
+        return _.get(this.item, 'form_items', [])
       },
       form_values() {
         var obj = {}
