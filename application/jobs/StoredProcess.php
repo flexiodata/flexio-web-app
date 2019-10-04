@@ -384,8 +384,49 @@ class StoredProcess implements \Flexio\IFace\IProcess
                     $connection = \Flexio\Object\Connection::load($connection_eid);
                     $connection_info = $connection->get();
 
-                    if (isset($connection_info['setup_config']))
-                        return $connection_info['setup_config'];
+                    $setup_config = $connection_info['setup_config'];
+                    if (isset($setup_config))
+                    {
+                        $mount_info = array();
+                        foreach ($setup_config as $key => $value)
+                        {
+                            // note: setup config is a set of key/values; currently, values can
+                            // be either strings or oauth connection object; if we don't have an
+                            // oauth connection object, simply pass on the value, otherwise,
+                            // "dereference" the connection and pass on the oauth access token
+                            // from the connection
+
+                            // if we don't have an object identifier, simply pass on what's there
+                            $mount_item_eid = $value['eid'] ?? false;
+                            if ($mount_item_eid === false)
+                            {
+                                $mount_info[$key] = $value;
+                                continue;
+                            }
+
+                            // if we have an eid, try to load the appropriate oauth service and
+                            // get the access token
+                            try
+                            {
+                                $connection = \Flexio\Object\Connection::load($mount_item_eid);
+                                if ($connection->getStatus() === \Model::STATUS_DELETED)
+                                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+                                $service = $connection->getService();
+                                if (!($service instanceof \Flexio\IFace\IOAuthConnection))
+                                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+                                $tokens = $service->getTokens();
+                                $mount_info[$key] = $tokens['access_token'];
+                            }
+                            catch (\Flexio\Base\Exception $e)
+                            {
+                                // don't do anything
+                            }
+                        }
+
+                        return $mount_info;
+                    }
                 }
             }
 
