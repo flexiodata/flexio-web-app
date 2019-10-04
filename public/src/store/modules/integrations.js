@@ -1,5 +1,6 @@
 import axios from 'axios'
 import yaml from 'js-yaml'
+import { isTest, isLocalhost } from '@/utils'
 
 const getDefaultState = () => {
   return {
@@ -59,6 +60,16 @@ const getters = {
   },
 
   getProductionIntegrations (state, getters) {
+    if (isLocalhost()) {
+      return getters.getAllIntegrations
+    }
+
+    if (isTest()) {
+      return _.filter(getters.getAllIntegrations, item => {
+        return item.in_production === true || item.in_staging === true
+      })
+    }
+
     return _.filter(getters.getAllIntegrations, { in_production: true })
   },
 }

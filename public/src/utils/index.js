@@ -62,3 +62,11 @@ export const atobUnicode = str => {
 export const isProduction = () => {
   return window.location.hostname == 'www.flex.io' ? true : false
 }
+
+export const isTest = () => {
+  return window.location.hostname == 'test.flex.io' ? true : false
+}
+
+export const isLocalhost = () => {
+  return window.location.hostname == 'localhost' ? true : false
+}
