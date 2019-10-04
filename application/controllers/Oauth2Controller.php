@@ -173,6 +173,7 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
             // fall through
         }
 
+        $this->view->our_origin = 'https://' . $_SERVER['HTTP_HOST'];
         $this->view->service_oauth_response = json_encode($connection_properties_to_save);
         $this->renderPage();
     }

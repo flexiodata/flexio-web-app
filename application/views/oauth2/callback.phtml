@@ -2,7 +2,8 @@
   try
   {
     var oauth_json = <?php echo $this->service_oauth_response; ?>;
-    window.opener.postMessage(oauth_json, "*")
+    window.opener.postMessage(oauth_json, '<?php echo $this->our_origin; ?>');
+    window.opener.postMessage(oauth_json, '<?php echo $this->our_origin . ":8080"; ?>');
   }
   catch(e)
   {

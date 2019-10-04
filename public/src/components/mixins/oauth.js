@@ -36,7 +36,8 @@ export default {
         return
       }
 
-      var oauth_url = 'https://' + HOSTNAME + '/oauth2/connect' + '?service=' + connection_type + '&eid=' + eid
+      var oauth_origin = 'https://' + HOSTNAME
+      var oauth_url = oauth_origin + '/oauth2/connect' + '?service=' + connection_type + '&eid=' + eid
 
       // open popup window
       var wnd_options = getWindowOptions()
@@ -47,6 +48,11 @@ export default {
 
       // update data when event is detected
       function updateAuthInfo(evt) {
+        // do we trust the sender of this message?
+        if (evt.origin !== oauth_origin) {
+          return
+        }
+
         clearInterval(wnd_timer)
         clearTimeout(wnd_timeout)
         window.removeEventListener('message', updateAuthInfo)
