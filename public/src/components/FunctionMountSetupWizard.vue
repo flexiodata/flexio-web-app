@@ -1,7 +1,7 @@
 <template>
   <div>
     <ServiceIconWrapper :url="setup_template_image_url">
-      <BuilderItemForm
+      <BuilderItem
         :key="prompt.name"
         :item="prompt"
         :default-values="setupConfig"
@@ -22,7 +22,7 @@
 </template>
 
 <script>
-  import BuilderItemForm from '@/components/BuilderItemForm'
+  import BuilderItem from '@/components/BuilderItem'
   import ServiceIconWrapper from '@/components/ServiceIconWrapper'
 
   const getDefaultState = () => {
@@ -44,7 +44,7 @@
       }
     },
     components: {
-      BuilderItemForm,
+      BuilderItem,
       ServiceIconWrapper
     },
     data() {
