@@ -145,12 +145,12 @@
   import MixinConnection from '@/components/mixins/connection'
 
   // form definitons
-  import amazons3 from '../data/connection/amazons3.yml'
-  import mysql from '../data/connection/mysql.yml'
-  import postgres from '../data/connection/postgres.yml'
-  import sftp from '../data/connection/sftp.yml'
-  import crunchbase from '../data/connection/crunchbase.yml'
-  import keyring from '../data/connection/keyring.yml'
+  import amazons3 from '@/data/connection/amazons3.yml'
+  import mysql from '@/data/connection/mysql.yml'
+  import postgres from '@/data/connection/postgres.yml'
+  import sftp from '@/data/connection/sftp.yml'
+  import crunchbase from '@/data/connection/crunchbase.yml'
+  import keyring from '@/data/connection/keyring.yml'
 
   const getDefaultState = () => {
     return {
