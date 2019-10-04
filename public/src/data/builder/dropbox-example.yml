@@ -4,7 +4,7 @@ image:
   src: https://logo.clearbit.com/dropbox.com
   alt: Dropbox logo
 functions:
-- path: hubspot-contacts.py
+  - path: hubspot-contacts.py
 prompts:
   - element: auth
     name: auth
