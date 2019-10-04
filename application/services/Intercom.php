@@ -148,12 +148,24 @@ class Intercom implements \Flexio\IFace\IConnection,
             $token = $oauthprovider->getAccessToken('authorization_code', [
                 'code' => $params['code']
             ]);
-            $this->access_token = $token;
+            $this->access_token = $token->getToken();
             return true;
         }
 
         // STEP 4: generate the URL to make request to authorize our application
         $url = $oauthprovider->getAuthorizationUrl();
+
+        // TODO: for some reason, the state parameter isn't being set;
+        // replace it manually
+
+        $url_base = strtok($url,'?');
+        $url_query = parse_url($url, PHP_URL_QUERY);
+
+        $url_query_params = array();
+        parse_str($url_query, $url_query_params);
+        $url_query_params['state'] = $params['state'];
+        $url = $url_base . '?' . http_build_query($url_query_params);
+
         $this->authorization_uri = $url;
 
         return false;
