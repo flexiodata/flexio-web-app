@@ -163,13 +163,23 @@
 
 <script>
   import axios from 'axios'
-  import { mapGetters } from 'vuex'
+  import randomstring from 'randomstring'
+  import { mapState, mapGetters } from 'vuex'
+  import { OBJECT_TYPE_CONNECTION } from '@/constants/object-type'
   import api from '@/api'
   import ButtonBar from '@/components/ButtonBar'
   import IconList from '@/components/IconList'
   import FunctionMountSetupWizard from '@/components/FunctionMountSetupWizard'
   import ServiceIconWrapper from '@/components/ServiceIconWrapper'
   import MemberInvitePanel from '@/components/MemberInvitePanel'
+
+  const getNameSuffix = (length) => {
+    return randomstring.generate({
+      length,
+      charset: 'alphabetic',
+      capitalization: 'lowercase'
+    })
+  }
 
   const getDefaultState = () => {
     return {
@@ -203,6 +213,9 @@
       return getDefaultState()
     },
     computed: {
+      ...mapState({
+        active_team_name: state => state.teams.active_team_name,
+      }),
       integrations() {
         return this.getProductionIntegrations()
       },
@@ -228,6 +241,10 @@
 
         return ['welcome']
       },
+    },
+    mounted() {
+      var team_name = this.getActiveUsername()
+      this.$store.dispatch('teams/changeActiveTeam', { team_name })
     },
     methods: {
       ...mapGetters('users', {
@@ -285,7 +302,7 @@
         this.active_step = method == 'spreadsheet-user' ? 'install-add-ons' : 'choose-integrations'
       },
       fetchIntegrationConfig() {
-        var team_name = this.getActiveUsername()
+        var team_name = this.active_team_name
         var url = _.get(this.active_integration, 'connection.connection_info.url', '')
 
         api.fetchFunctionPackSetupTemplate(team_name, url).then(response => {
@@ -297,22 +314,62 @@
           this.active_step == 'invite-members'
         })
       },
+      processSetupConfig(setup_config, callback) {
+        var team_name = this.active_team_name
+        var setup_config = _.cloneDeep(setup_config)
+        var xhrs = []
+
+        // make sure we create/update any key values that are meant to be connections
+        _.each(setup_config, (val, key) => {
+          if (_.get(val, 'eid_type', '') == OBJECT_TYPE_CONNECTION) {
+            var xhr
+            var eid = _.get(val, 'eid', '')
+            var attrs = _.omit(val, ['eid_type'])
+            attrs.name = 'connection-' + getNameSuffix(4)
+
+            if (eid.length == 0) {
+              // create the connection
+              xhr = this.$store.dispatch('connections/create', { team_name, attrs })
+            } else {
+              // update the connection
+              xhr = this.$store.dispatch('connections/update', { team_name, eid, attrs })
+            }
+
+            xhr.then(response => {
+              // save only the minimal amount of information in the function mounth (e.g. { eid, eid_type, connection_type })
+              setup_config[key] = _.pick(response.data, ['eid', 'eid_type', 'connection_type'])
+            })
+
+            // store the promise so that we can issue our callback after all promises are resolved
+            xhrs.push(xhr)
+          }
+        })
+
+        // issue our callback when all of the above XHRs are finished
+        axios.all(xhrs).then(responses => {
+          callback(setup_config)
+        })
+      },
       saveIntegration(setup_config) {
-        var setup_template = this.active_setup_template
-        var mount = _.cloneDeep(_.get(this.active_integration, 'connection', {}))
-        mount = _.assign({}, mount, { setup_config, setup_template })
+        // if the builder item is an auth builder item, create the connection at this time
+        // and then we can move forward to the next step
+        this.processSetupConfig(setup_config, setup_config => {
+          var setup_template = this.active_setup_template
+          var mount = _.cloneDeep(_.get(this.active_integration, 'connection', {}))
+          mount = _.assign({}, mount, { setup_config, setup_template })
 
-        this.output_mounts = [].concat(this.output_mounts).concat([mount])
+          this.output_mounts = [].concat(this.output_mounts).concat([mount])
 
-        if (this.active_integration_idx == this.selected_integrations.length - 1) {
-          this.onNextStepClick()
-        } else {
-          this.active_integration_idx++
-          this.fetchIntegrationConfig()
-        }
+          if (this.active_integration_idx == this.selected_integrations.length - 1) {
+            this.onNextStepClick()
+          } else {
+            this.active_integration_idx++
+            this.fetchIntegrationConfig()
+          }
+        })
       },
       submitOnboardingConfig() {
-        var team_name = this.getActiveUsername()
+        var team_name = this.active_team_name
         var create_xhrs = []
 
         _.each(this.output_mounts, attrs => {
@@ -340,7 +397,7 @@
         })
       },
       endOnboarding() {
-        var team_name = this.getActiveUsername()
+        var team_name = this.active_team_name
 
         this.$store.dispatch('teams/changeActiveTeam', { team_name }).then(response => {
           var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path', 'query'])
