@@ -147,8 +147,8 @@ class Twitter implements \Flexio\IFace\IConnection,
         }
         else if (isset($params['access_token']) && strlen($params['access_token']) > 0 && isset($params['refresh_token']) && strlen($params['refresh_token']) > 0)
         {
-            $this->access_token = $token['access_token'];
-            $this->refresh_token = $token['refresh_token'];
+            $this->access_token = $params['access_token'];
+            $this->refresh_token = $params['refresh_token'];
             $this->expires = 2147483640; // "never"
             return true;
         }
