@@ -18,8 +18,8 @@
 </template>
 
 <script>
-  //import hubspot_setup_template from '../data/builder/hubspot-example.yml'
-  import dropbox_setup_template from '../data/builder/dropbox-example.yml'
+  //import hubspot_setup_template from '@/data/builder/hubspot-example.yml'
+  import dropbox_setup_template from '@/data/builder/dropbox-example.yml'
   import BuilderItem from '@/components/BuilderItem'
 
   const getDefaultState = (setup_template) => {
