@@ -1,6 +1,6 @@
-// allows any component to show an oauth popup window
+import { HOSTNAME } from '@/constants/common'
 
-function getWindowOptions() {
+const getWindowOptions = () => {
   // default window settings
   var wnd_dimensions = {
     width: Math.floor(window.outerWidth * 0.5),
@@ -31,10 +31,12 @@ function getWindowOptions() {
 
 export default {
   methods: {
-    $_Oauth_showPopup(oauth_url, callback) {
-      if (_.isNil(oauth_url)) {
+    $_Oauth_showPopup(connection_type, eid, callback) {
+      if (_.isNil(connection_type)) {
         return
       }
+
+      var oauth_url = 'https://' + HOSTNAME + '/oauth2/connect' + '?service=' + connection_type + '&eid=' + eid
 
       // open popup window
       var wnd_options = getWindowOptions()

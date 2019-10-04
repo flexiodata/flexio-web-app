@@ -136,7 +136,6 @@
 <script>
   import axios from 'axios'
   import { mapState } from 'vuex'
-  import { HOSTNAME } from '@/constants/common'
   import { CONNECTION_STATUS_AVAILABLE, CONNECTION_STATUS_UNAVAILABLE } from '@/constants/connection-status'
   import * as ctypes from '@/constants/connection-type'
   import * as cinfos from '@/constants/connection-info'
@@ -250,10 +249,6 @@
       },
       service_name() {
         return _.result(this.cinfo, 'service_name', '')
-      },
-      oauth_url() {
-        var eid = _.get(this.connection, 'eid', '')
-        return 'https://' + HOSTNAME + '/oauth2/connect' + '?service=' + this.ctype + '&eid=' + eid
       },
       form_json() {
         return this.forms[this.ctype] || {}
@@ -400,7 +395,7 @@
         var eid = _.get(this.connection, 'eid', '')
         var team_name = this.active_team_name
 
-        this.$_Oauth_showPopup(this.oauth_url, attrs => {
+        this.$_Oauth_showPopup(this.ctype, eid, attrs => {
           // TODO: handle 'code' and 'state' and 'error' here...
 
           if (eid.length > 0) {
