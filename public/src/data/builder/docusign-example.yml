@@ -1,0 +1,26 @@
+title: DocuSign Integration
+description: Functions for accessing your DocuSign info
+image:
+  src: https://logo.clearbit.com/docusign.com
+  alt: DocuSign logo
+functions:
+  - path: contacts.py
+prompts:
+  - element: form
+    name: form_api_key
+    title: DocuSign API key
+    description: |
+      Use your DocuSign API key to access the info in your account.
+    class: el-form--cozy el-form__label-tiny
+    rules:
+      docusign_api_key:
+        - required: true
+          message: Please enter a valid API key to continue.
+    form_items:
+      - element: input
+        type: textarea
+        name: docusign_api_key
+        label: API key
+        placeholder: API key
+        value: ''
+        rows: 10

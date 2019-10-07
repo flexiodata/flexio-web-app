@@ -1,0 +1,18 @@
+title: Twitter Function Pack
+description: Functions for accessing your Twitter info
+image:
+  src: https://logo.clearbit.com/twitter.com
+  alt: Twitter logo
+functions:
+  - path: twitter-followers.py
+prompts:
+  - element: auth
+    name: auth
+    title: Connect to Twitter
+    description: |
+      Connect to your Twitter account to connect the functions to your data
+    connection:
+      connection_type: twitter
+    form_items:
+      - name: twitter_connection
+        value: ''

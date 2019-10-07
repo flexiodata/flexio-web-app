@@ -14,19 +14,27 @@
         v-for="(prompt, index) in setup_template.prompts"
       />
     </div>
+    <template v-if="output.length > 0">
+      <div class="h1"></div>
+      <div class="w-100 center mw-doc pa4 bg-white br2 css-white-box trans-mw" style="max-width: 800px">
+        <div class="mb3">Output:</div>
+        <pre class="pa3" style="white-space: pre-wrap">{{output}}</pre>
+      </div>
+    </template>
   </div>
 </template>
 
 <script>
   //import hubspot_setup_template from '@/data/builder/hubspot-example.yml'
-  import dropbox_setup_template from '@/data/builder/dropbox-example.yml'
+  import setup_template from '@/data/builder/docusign-example.yml'
   import BuilderItem from '@/components/BuilderItem'
 
   const getDefaultState = (setup_template) => {
     return {
       setup_template,
       active_idx: 0,
-      config: {}
+      config: {},
+      output: ''
     }
   }
 
@@ -38,7 +46,7 @@
       BuilderItem
     },
     data() {
-      return getDefaultState(dropbox_setup_template)
+      return getDefaultState(setup_template)
     },
     computed: {
       is_last_item() {
@@ -56,7 +64,7 @@
       },
       onNextClick() {
         if (this.is_last_item) {
-          this.$emit('submit')
+          this.output = JSON.stringify(this.config, null, 2)
         } else {
           this.active_idx++
         }
