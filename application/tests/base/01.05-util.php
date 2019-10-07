@@ -25,7 +25,7 @@ class Test
 
         // BEGIN TEST
         $unencrypted_str = 'ENCRYPTION TEST';
-        $encrypted_str_key = 'ZZXV2/RGvUbYrs9C+KR98EAOufKZT6UuK45HYzLqLjYprI1w==';
+        $encrypted_str_key = 'ZZXV3.RGvUbYrs9C-KR98EAOufKZT6UuK45HYzLqLjYprI1w';
         $str = \Flexio\Base\Util::encrypt($unencrypted_str, 'abcdefg');
         $actual = ($str === $encrypted_str_key);
         $expected = true;
@@ -33,13 +33,11 @@ class Test
 
         // BEGIN TEST
         $unencrypted_str = 'ENCRYPTION TEST';
-        $encrypted_str_key = 'ZZXV2/NRVm93HeCeUxYV8UI7qx4k1jEWyZUr5ZezMHrDvtmw==';
+        $encrypted_str_key = 'ZZXV3.NRVm93HeCeUxYV8UI7qx4k1jEWyZUr5ZezMHrDvtmw';
         $str = \Flexio\Base\Util::encrypt($unencrypted_str, 'hijklmn');
         $actual = ($str === $encrypted_str_key);
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('A.2', '\Flexio\Base\Util::encrypt() test for string encryption',  $actual, $expected, $results);
-
-
 
         // BEGIN TEST
         $unencrypted_str = 'ENCRYPTION TEST';
@@ -75,7 +73,7 @@ class Test
 
         // BEGIN TEST
         $unencrypted_str = 'ENCRYPTION TEST';
-        $encrypted_str_key = 'ZZXV2/NRVm93HeCeUxYV8UI7qx4k1jEWyZUr5ZezMHrDvtmw=='; // encrypted with key 'hijklmn' using sodium implementation
+        $encrypted_str_key = 'ZZXV3.NRVm93HeCeUxYV8UI7qx4k1jEWyZUr5ZezMHrDvtmw'; // encrypted with key 'hijklmn' using sodium implementation
         $str = \Flexio\Base\Util::decrypt($encrypted_str_key, 'h');
         $actual = ($str === $unencrypted_str);
         $expected = false;
@@ -83,7 +81,7 @@ class Test
 
         // BEGIN TEST
         $unencrypted_str = 'ENCRYPTION TEST';
-        $encrypted_str_key = 'ZZXV2/NRVm93HeCeUxYV8UI7qx4k1jEWyZUr5ZezMHrDvtmw=='; // encrypted with key 'hijklmn' using sodium implementation
+        $encrypted_str_key = 'ZZXV3.NRVm93HeCeUxYV8UI7qx4k1jEWyZUr5ZezMHrDvtmw'; // encrypted with key 'hijklmn' using sodium implementation
         $str = \Flexio\Base\Util::decrypt($encrypted_str_key, 'hijklmn');
         $actual = ($str === $unencrypted_str);
         $expected = true;
