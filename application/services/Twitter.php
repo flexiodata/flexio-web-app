@@ -78,6 +78,9 @@ class Twitter implements \Flexio\IFace\IConnection,
     // OAuth interface
     ////////////////////////////////////////////////////////////
 
+    // note: twitter uses oauth1 three-legged authentication
+    // see here for a useful explanation: http://oauthbible.com/#oauth-10a-three-legged
+
     public function getAuthorizationUri() : string
     {
         return $this->authorization_uri;
