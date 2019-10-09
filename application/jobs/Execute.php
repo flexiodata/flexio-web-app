@@ -714,7 +714,7 @@ class ScriptHost
         {
             if (substr($k, 0, 5) == 'form.')
             {
-                $form[substr($k,5)] = $v->getReader()->read();
+                $form[substr($k,5)] = $v->getReader()->read(PHP_INT_MAX); // get all the contents; read() takes a default parameter that limits read size
             }
         }
         return (object)$form;
@@ -919,15 +919,13 @@ class ScriptHost
         }
     }
 
-
-
     public function func_getEnv() // TODO: add return type
     {
         $res = [];
         $params = $this->process->getParams();
         foreach ($params as $k => $v)
         {
-            $res[$k] = $v->getReader()->read();
+            $res[$k] = $v->getReader()->read(PHP_INT_MAX); // get all the contents; read() takes a default parameter that limits read size
         }
         return (object)$res;
     }
