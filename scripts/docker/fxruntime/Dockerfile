@@ -40,6 +40,7 @@ RUN yarn add underscore && \
 # network
 RUN pip3 install zmq && \
     pip3 install requests && \
+    pip3 install requests_oauthlib && \
     pip3 install asyncio && \
     pip3 install aiohttp && \
     pip3 install arrow && \
