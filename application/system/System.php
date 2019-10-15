@@ -164,7 +164,10 @@ class System
 
     public static function verifyTemporaryAuthToken(string $token, int $timestamp_tolerance = 60) : bool
     {
-        $pk = $GLOBALS['g_config']->private_key;
+        $pk = $GLOBALS['g_config']->private_key ?? '';
+        if (strlen($pk) === 0)
+            return false;
+
         $parts = explode(':', $token);
         if (count($parts) != 5)
             return false;
