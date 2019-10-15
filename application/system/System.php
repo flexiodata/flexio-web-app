@@ -137,9 +137,12 @@ class System
         $g_store->user_eid = $arr['user_eid'];
     }
 
-    public static function generateTemporaryAuthToken(string $user_eid) : string
+    public static function generateTemporaryAuthToken(string $user_eid) : ?string
     {
-        $pk = $GLOBALS['g_config']->private_key;
+        $pk = $GLOBALS['g_config']->private_key ?? '';
+        if (strlen($pk) === 0)
+            return null;
+
         $time = ''.time();
         $token = "autht1:sha256:$user_eid:$time";
 
