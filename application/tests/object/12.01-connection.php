@@ -208,6 +208,10 @@ class Test
             "eid" : null,
             "eid_type" : null,
             "eid_status" : null,
+            "parent" : {
+                "eid" : null,
+                "eid_type" : null
+            },
             "name" : null,
             "title" : null,
             "icon" : null,

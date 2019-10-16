@@ -112,6 +112,10 @@ class Test
         {
             "eid_type": "CTN",
             "eid_status": "A",
+            "parent": {
+                "eid": "",
+                "eid_type": "CTN"
+            },
             "name": "name1",
             "title": "Test Connection Title",
             "icon": "https://localhost/image.png",

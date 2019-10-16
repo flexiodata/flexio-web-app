@@ -94,8 +94,9 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public function delete() : \Flexio\Object\Connection
     {
-        // delete any associated pipes for a mounted connection
+        // delete any associated children (pipes/connections) for a mounted connection
         $this->deleteAssociatedPipes();
+        $this->deleteAssociatedConnections();
 
         // delete the connection
         $this->clearCache();
@@ -238,7 +239,11 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             return array();
 
         // delete the pipes that are no longer in the connection
+        // don't delete associated connections since we're only re-adding
+        // the pipes, but we want to keep the configuration information
+        // and associated connections
         $this->deleteAssociatedPipes();
+        // $this->deleteAssociatedConnections();
 
         // create pipes for new items in the connection
         $this->createAssociatedPipes();
@@ -305,6 +310,24 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $pipes_to_update = array('parent_eid' => $connection_eid);
         $process_arr = array('eid_status' => \Model::STATUS_DELETED, 'name' => '');
         $pipe_model->update($pipes_to_update, $process_arr);
+    }
+
+    private function deleteAssociatedConnections()
+    {
+        // note: deletes associated connections for a mounted connection
+
+        $connection_info = $this->get();
+        $connection_eid = $connection_info['eid'];
+        $connection_mode = $connection_info['connection_mode'];
+
+        // if the connection mode isn't a mount; there are no associated connections
+        if ($connection_mode !== \Model::CONNECTION_MODE_FUNCTION)
+            return;
+
+        $connection_model = $this->getModel()->connection;
+        $connections_to_update = array('parent_eid' => $connection_eid);
+        $process_arr = array('eid_status' => \Model::STATUS_DELETED, 'name' => '');
+        $connection_model->update($connections_to_update, $process_arr);
     }
 
     private function getConnectionItemsToImport() : array
@@ -659,6 +682,7 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "eid" => null,
                 "eid_type" => null,
                 "eid_status" => null,
+                "parent" => null,
                 "name" => null,
                 "title" => null,
                 "icon" => null,
@@ -680,6 +704,12 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         // sanity check: if the data record is missing, then eid will be null
         if (!isset($mapped_properties['eid']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        // expand the parent connection info
+        $mapped_properties['parent'] = array(
+            'eid' => $properties['parent_eid'] ?? "",
+            'eid_type' => \Model::TYPE_CONNECTION
+        );
 
         // unpack the connection info json
         $connection_info = @json_decode($mapped_properties['connection_info'],true);
