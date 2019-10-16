@@ -145,5 +145,64 @@ class Test
         }
         ';
         \Flexio\Tests\Check::assertInArray('A.3', 'POST /:teamid/connections; create a new connection',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $params = array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid1/connections",
+            'token' => $token1,
+            'content_type' => 'application/json',
+            'params' => '{
+                "name": "name2",
+                "parent_eid": "xxxxxxxxxxxx",
+                "title": "Test Connection Title",
+                "connection_type": "'.\Model::CONNECTION_TYPE_HTTP.'",
+                "connection_mode": "'.\Model::CONNECTION_MODE_RESOURCE.'",
+                "connection_info": {
+                    "host": "https://api.domain.com"
+                },
+                "setup_template": {
+                    "param1": "t1"
+                },
+                "setup_config": {
+                    "param1": "c1"
+                },
+                "expires": null
+            }'
+        );
+        $result = \Flexio\Tests\Util::callApi($params);
+        $actual = $result['response'];
+        $expected = '
+        {
+            "eid_type": "CTN",
+            "eid_status": "A",
+            "parent": {
+                "eid": "xxxxxxxxxxxx",
+                "eid_type": "CTN"
+            },
+            "name": "name2",
+            "title": "Test Connection Title",
+            "icon": "",
+            "description": "",
+            "connection_type": "http",
+            "connection_mode": "R",
+            "connection_status": "U",
+            "connection_info": {
+                "host": "https://api.domain.com"
+            },
+            "setup_template": {
+                "param1": "t1"
+            },
+            "setup_config": {
+                "param1": "c1"
+            },
+            "expires": null,
+            "owned_by": {
+                "eid": "'.$userid1.'",
+                "eid_type": "USR"
+            }
+        }
+        ';
+        \Flexio\Tests\Check::assertInArray('A.4', 'POST /:teamid/connections; create a new connection; allow connection parent to be set',  $actual, $expected, $results);
     }
 }

@@ -600,6 +600,14 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $connection_properties_current = $this->get();
         $connection_info_current = $connection_properties_current['connection_info'];
 
+        // handle special case of parent_eid (input is parent_eid, but return type
+        // in properties is an object with the key of 'parent')
+        if (isset($connection_properties_current['parent']['eid']))
+        {
+            $connection_properties_current['parent_eid'] = $connection_properties_current['parent']['eid'];
+            unset($connection_properties_current['parent']);
+        }
+
         // iterate through the connection properties, and if they are specified
         // then include them in the connection properties to update
         $connection_properties_to_update = array();

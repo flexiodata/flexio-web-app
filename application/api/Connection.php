@@ -31,6 +31,7 @@ class Connection
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
                 'eid_status'        => array('type' => 'string', 'required' => false),
+                'parent_eid'        => array('type' => 'string', 'required' => false),
                 'name'              => array('type' => 'identifier',  'required' => false),
                 'title'             => array('type' => 'string', 'required' => false),
                 'icon'              => array('type' => 'string', 'required' => false),
@@ -114,6 +115,7 @@ class Connection
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
                 'eid_status'        => array('type' => 'string', 'required' => false),
+                'parent_eid'        => array('type' => 'string', 'required' => false),
                 'name'              => array('type' => 'identifier',  'required' => false),
                 'title'             => array('type' => 'string', 'required' => false),
                 'icon'              => array('type' => 'string', 'required' => false),
