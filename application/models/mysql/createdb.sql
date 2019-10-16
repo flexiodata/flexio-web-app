@@ -212,6 +212,7 @@ CREATE TABLE tbl_connection (
   id int UNSIGNED NOT NULL auto_increment,
   eid char(12) NOT NULL default '',
   eid_status char(1) NOT NULL default '',
+  parent_eid varchar(12) NOT NULL default '',
   name text default '',
   title text default '',
   icon text default '',
@@ -231,6 +232,7 @@ CREATE TABLE tbl_connection (
   UNIQUE KEY (eid)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE INDEX idx_connection_parent_eid ON tbl_connection (parent_eid);
 CREATE INDEX idx_connection_name ON tbl_connection (name);
 CREATE INDEX idx_connection_owned_by ON tbl_connection (owned_by);
 CREATE INDEX idx_connection_created_by ON tbl_connection (created_by);

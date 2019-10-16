@@ -196,6 +196,7 @@ CREATE TABLE tbl_connection (
   id serial,
   eid varchar(12) NOT NULL default '',
   eid_status varchar(1) NOT NULL default '',
+  parent_eid varchar(12) NOT NULL default '',
   name text default '',
   title text default '',
   icon text default '',
@@ -216,6 +217,7 @@ CREATE TABLE tbl_connection (
 );
 
 CREATE UNIQUE INDEX idx_connection_owned_by_name ON tbl_connection (owned_by, name) WHERE name != '';
+CREATE INDEX idx_connection_parent_eid ON tbl_connection (parent_eid);
 CREATE INDEX idx_connection_owned_by ON tbl_connection (owned_by);
 CREATE INDEX idx_connection_created_by ON tbl_connection (created_by);
 CREATE INDEX idx_connection_created ON tbl_connection (created);
