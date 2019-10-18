@@ -8,6 +8,8 @@
       v-show="showHeader"
     />
 
+    <p class="mb4" v-if="our_desc.length > 0">{{our_desc}}</p>
+
     <!-- body -->
     <div>
       <!-- step 1: choose source -->
@@ -240,6 +242,16 @@
           case 'mount':
             return this.mode == 'edit' ? `Edit "${this.cname}" Function Mount` : 'New Function Mount'
         }
+      },
+      our_desc() {
+        if (this.mode == 'add') {
+          switch (this.mountType) {
+            case 'integration': return "Add a collection of pre-built spreadsheet functions using one of the services below."
+            case 'mount':       return "Add a spreadsheet functions you've built with own Python or Node.js code that are located in an external data location, like GitHub."
+          }
+        }
+
+        return ''
       },
       submit_label() {
         return this.mode == 'edit' ? 'Save changes' : 'Create function mount'

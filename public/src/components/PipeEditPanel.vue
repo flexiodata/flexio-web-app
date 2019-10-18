@@ -8,6 +8,8 @@
       v-show="showHeader"
     />
 
+    <p v-if="our_desc.length > 0">{{our_desc}}</p>
+
     <!-- body -->
     <el-form
       ref="form"
@@ -113,15 +115,39 @@
       ...mapState({
         active_team_name: state => state.teams.active_team_name
       }),
-      pname() {
+      fname() {
         return _.get(this.pipe, 'name', '')
+      },
+      fop() {
+        return _.get(this.pipe, 'task.items[0].op', '')
       },
       our_title() {
         if (this.title.length > 0) {
           return this.title
         }
 
-        return this.mode == 'edit' ? `Edit "${this.pname}" Function` : 'New Function'
+        if (this.mode == 'add') {
+          switch (this.fop) {
+            case 'execute': return 'New Execute Function'
+            case 'extract': return 'New Extract Function'
+            case 'lookup':  return 'New Lookup Function'
+          }
+
+          return 'New Function'
+        }
+
+        return `Edit "${this.fname}" Function`
+      },
+      our_desc() {
+        if (this.mode == 'add') {
+          switch (this.fop) {
+            case 'execute': return 'Build a spreadsheet function using your own Python or Node.js code.'
+            case 'extract': return 'Build a spreadsheet function that returns a data extract from a remote data table.'
+            case 'lookup':  return 'Build a spreadsheet function that returns information to cell(s), based on a key value lookup from a remote data table.'
+          }
+        }
+
+        return ''
       },
       submit_label() {
         return this.mode == 'edit' ? 'Save changes' : 'Create function'
