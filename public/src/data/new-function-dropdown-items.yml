@@ -1,0 +1,34 @@
+- name: Extract Function
+  description: >
+    Broadcast data from a remote table
+  type: extract
+  icon: photo_size_select_small
+
+- name: Lookup Function
+  description: >
+    Return data from a remote table using key value(s)
+  type: lookup
+  icon: search
+
+- name: Execute Function
+  description: >
+    Build a custom function with Python or Node.js
+  type: execute
+  icon: code
+
+- name: divider
+  description: ''
+  type: divider
+  icon: code
+
+- name: Integration
+  description: >
+    Add pre-built functions for common APIs and services
+  type: integration
+  icon: device_hub
+
+- name: Function Mount
+  description: >
+    Add custom functions from external repositories
+  type: mount
+  icon: cast

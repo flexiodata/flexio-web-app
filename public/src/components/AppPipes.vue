@@ -24,8 +24,13 @@
                 @keydown.esc.native="pipe_list_filter = ''"
                 v-model="pipe_list_filter"
               />
-              <el-dropdown trigger="click">
+              <NewFunctionDropdown
+                width="290"
+                @click="onNewItem"
+                v-require-rights:pipe.create
+              >
                 <el-button
+                  slot="reference"
                   size="small"
                   type="primary"
                   class="ttu fw6"
@@ -33,15 +38,7 @@
                 >
                   New<i class="el-icon-arrow-down el-icon--right fw6" style="margin-right: -2px"></i>
                 </el-button>
-                  <el-dropdown-menu style="min-width: 10rem" slot="dropdown">
-                  <el-dropdown-item @click.native="onNewPipe('extract')">Extract</el-dropdown-item>
-                  <el-dropdown-item @click.native="onNewPipe('lookup')">Lookup</el-dropdown-item>
-                  <el-dropdown-item @click.native="onNewPipe('execute')">Execute</el-dropdown-item>
-                  <el-dropdown-item divided></el-dropdown-item>
-                  <el-dropdown-item @click.native="onNewFunctionMount('integration')">Integration</el-dropdown-item>
-                  <el-dropdown-item @click.native="onNewFunctionMount('mount')">Function Mount</el-dropdown-item>
-                </el-dropdown-menu>
-              </el-dropdown>
+              </NewFunctionDropdown>
             </div>
           </div>
 
@@ -172,8 +169,13 @@
     <EmptyItem class="flex flex-column items-center justify-center h-100" v-else>
       <div class="tc f3" slot="text">
         <p>No functions to show</p>
-        <el-dropdown trigger="click">
+        <NewFunctionDropdown
+          width="290"
+          @click="onNewItem"
+          v-require-rights:pipe.create
+        >
           <el-button
+            slot="reference"
             size="large"
             type="primary"
             class="ttu fw6"
@@ -181,15 +183,7 @@
           >
             New<i class="el-icon-arrow-down el-icon--right fw6" style="margin-right: -2px"></i>
           </el-button>
-            <el-dropdown-menu style="min-width: 10rem" slot="dropdown">
-            <el-dropdown-item @click.native="onNewPipe('extract')">Extract</el-dropdown-item>
-            <el-dropdown-item @click.native="onNewPipe('lookup')">Lookup</el-dropdown-item>
-            <el-dropdown-item @click.native="onNewPipe('execute')">Execute</el-dropdown-item>
-            <el-dropdown-item divided></el-dropdown-item>
-            <el-dropdown-item @click.native="onNewFunctionMount('integration')">Integration</el-dropdown-item>
-            <el-dropdown-item @click.native="onNewFunctionMount('mount')">Function Mount</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
+        </NewFunctionDropdown>
       </div>
     </EmptyItem>
 
@@ -240,6 +234,7 @@
   import { mapState, mapGetters } from 'vuex'
   import { btoaUnicode } from '@/utils'
   import Spinner from 'vue-simple-spinner'
+  import NewFunctionDropdown from '@/components/NewFunctionDropdown'
   import PipeList from '@/components/PipeList'
   import PipeDocument from '@/components/PipeDocument'
   import PipeDocumentTestPanel from '@/components/PipeDocumentTestPanel'
@@ -315,6 +310,7 @@ def flex_handler(flex):
     mixins: [MixinConnection, MixinFilter],
     components: {
       Spinner,
+      NewFunctionDropdown,
       PipeList,
       PipeDocument,
       PipeDocumentTestPanel,
@@ -575,20 +571,29 @@ def flex_handler(flex):
         this.selectPipe(pipe)
         this.show_pipe_dialog = false
       },
-      onNewPipe(op) {
-        this.pipe_edit_mode = 'add'
-        this.new_pipe_attrs = this.getNewPipeAttributes(op)
-        this.show_pipe_dialog = true
+      onNewItem(type) {
+        switch (type) {
+          case 'extract':
+          case 'lookup':
+          case 'execute':
+            var op = type
+            this.pipe_edit_mode = 'add'
+            this.new_pipe_attrs = this.getNewPipeAttributes(op)
+            this.show_pipe_dialog = true
+            return
+
+          case 'integration':
+          case 'mount':
+            this.mount_edit_mode = 'add'
+            this.mount_type = type
+            this.show_mount_dialog = true
+            return
+        }
       },
       onEditPipe(pipe) {
         this.pipe_edit_mode = 'edit'
         this.edit_pipe = pipe
         this.show_pipe_dialog = true
-      },
-      onNewFunctionMount(mount_type) {
-        this.mount_edit_mode = 'add'
-        this.mount_type = mount_type
-        this.show_mount_dialog = true
       },
       onEditFunctionMount(connection) {
         this.mount_edit_mode = 'edit'
