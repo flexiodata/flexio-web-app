@@ -17,7 +17,7 @@
       :rules="rules"
       @submit.prevent.native
     >
-      <p class="f5">Enter the email addresses of the people you would like to invite to your team. New team members will get an email with a link to accept the invitation.</p>
+      <p class="f5">Invite co-workers to use your functions in their spreadsheet. Each person will get an email invitation to join your team.</p>
       <el-form-item
         key="our_emails"
         prop="our_emails"
