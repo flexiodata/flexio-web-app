@@ -254,6 +254,7 @@
         'getProductionIntegrations': 'getProductionIntegrations',
       }),
       onSkipSetupClick() {
+        this.$store.track('Skipped Onboarding')
         this.endOnboarding()
       },
       onPrevStepClick() {

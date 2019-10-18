@@ -572,19 +572,38 @@ def flex_handler(flex):
       },
       onNewItem(type) {
         switch (type) {
-          case 'extract':
-          case 'lookup':
           case 'execute':
-            var op = type
+            this.$store.track('Clicked New Execute')
             this.pipe_edit_mode = 'add'
-            this.new_pipe_attrs = this.getNewPipeAttributes(op)
+            this.new_pipe_attrs = this.getNewPipeAttributes('execute')
+            this.show_pipe_dialog = true
+            return
+
+          case 'extract':
+            this.$store.track('Clicked New Extract')
+            this.pipe_edit_mode = 'add'
+            this.new_pipe_attrs = this.getNewPipeAttributes('extract')
+            this.show_pipe_dialog = true
+            return
+
+          case 'lookup':
+            this.$store.track('Clicked New Lookup')
+            this.pipe_edit_mode = 'add'
+            this.new_pipe_attrs = this.getNewPipeAttributes('lookup')
             this.show_pipe_dialog = true
             return
 
           case 'integration':
-          case 'mount':
+            this.$store.track('Clicked New Integration')
             this.mount_edit_mode = 'add'
-            this.mount_type = type
+            this.mount_type = 'integration'
+            this.show_mount_dialog = true
+            return
+
+          case 'mount':
+            this.$store.track('Clicked New Function Mount')
+            this.mount_edit_mode = 'add'
+            this.mount_type = 'mount'
             this.show_mount_dialog = true
             return
         }
