@@ -20,7 +20,6 @@ RUN apt -y update && \
 # nodejs libraries
 ########################################
 
-# utility
 RUN yarn add underscore && \
     yarn add lodash && \
     yarn add async && \
@@ -37,7 +36,6 @@ RUN yarn add underscore && \
 # python libraries
 ########################################
 
-# network
 RUN pip3 install zmq && \
     pip3 install requests && \
     pip3 install requests_oauthlib && \
@@ -72,8 +70,8 @@ RUN pip3 install zmq && \
     pip3 install pysqldf && \
     pip3 install boto3 && \
     pip3 install mysql-connector && \
-    pip3 install selenium
-
+    pip3 install selenium && \
+    pip3 install newspaper3k
 
 
 RUN cd /tmp && wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
@@ -81,16 +79,6 @@ RUN cd /tmp && wget https://dl.google.com/linux/direct/google-chrome-stable_curr
     rm google-chrome-stable_current_amd64.deb
 RUN cd /usr/bin && wget https://chromedriver.storage.googleapis.com/75.0.3770.8/chromedriver_linux64.zip && unzip chromedriver_linux64.zip && chmod +x chromedriver
 
-
-# POTENTIAL: web scraping (spacy)
-# RUN apt-get install -y libffi-dev libxml2-dev libxslt-dev lib32z1-dev libssl-dev
-# RUN pip3 install scrapy
-
-# POTENTIAL: network
-# RUN pip3 install twisted
-
-# POTENTIAL: language processing
-# RUN pip3 install spacy
 
 # for matplotlib, configure with AGG backend so plots can be saved to buffers
 RUN mkdir -p /root/.config/matplotlib && echo "backend : AGG" > /root/.config/matplotlib/matplotlibrc
@@ -127,6 +115,21 @@ COPY ./start/Makefile ./start/start.cpp ./start/base64.cpp ./start/base64.h /fxr
 RUN cd /fxruntime/build/controller && make && mv /fxruntime/build/controller/fxcontroller /fxruntime && rm *.o
 RUN cd /fxruntime/build/start      && make && mv /fxruntime/build/start/fxstart /fxruntime   && rm *.o
 
+
+# POTENTIAL PYTHON:
+
+# POTENTIAL: web scraping (spacy)
+# RUN apt-get install -y libffi-dev libxml2-dev libxslt-dev lib32z1-dev libssl-dev
+# RUN pip3 install scrapy
+
+# POTENTIAL: network
+# RUN pip3 install twisted
+
+# POTENTIAL: language processing
+# RUN pip3 install spacy
+
+
+# POTENTIAL NODEJS:
 
 # POTENTIAL: csv
 # node-cvg

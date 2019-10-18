@@ -229,6 +229,7 @@ class Test
             'token' => $token1, // valid token for user
             'content_type' => 'application/json',
             'params' => '{
+                "parent_eid": "xxxxxxxxxxxx",
                 "name": "name1-updated",
                 "title": "Test Connection Updated",
                 "icon": "https://localhost/image-updated.png",
@@ -260,6 +261,10 @@ class Test
             "eid": "'.$objeid1.'",
             "eid_type": "CTN",
             "eid_status": "A",
+            "parent": {
+                "eid": "xxxxxxxxxxxx",
+                "eid_type": "CTN"
+            },
             "name": "name1-updated",
             "title": "Test Connection Updated",
             "icon": "https://localhost/image-updated.png",
