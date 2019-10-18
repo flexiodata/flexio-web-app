@@ -152,8 +152,6 @@
       },
     },
     mounted() {
-      this.$store.track('Visited Account Page')
-
       this.$nextTick(() => {
         this.setRoute(this.getSection())
       })

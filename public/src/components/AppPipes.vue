@@ -402,7 +402,6 @@ def flex_handler(flex):
     },
     mounted() {
       this.initSelf()
-      this.$store.track('Visited Functions Page')
     },
     methods: {
       ...mapGetters('teams', {

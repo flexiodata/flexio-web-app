@@ -34,9 +34,6 @@
         }
       }
     },
-    mounted() {
-      this.$store.track('Visited Forgot Password Page')
-    },
     methods: {
       onSignUpClick() {
         this.$router.push(this.signup_route)

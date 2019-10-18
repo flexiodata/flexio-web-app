@@ -179,7 +179,6 @@
     mounted() {
       this.initSticky()
       this.tryFetchProcesses()
-      this.$store.track('Visited Activity Page')
       this.force_loading = true
       setTimeout(() => { this.force_loading = false }, 10)
     },

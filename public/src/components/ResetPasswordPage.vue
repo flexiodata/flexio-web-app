@@ -15,9 +15,6 @@
     },
     components: {
       ResetPasswordForm
-    },
-    mounted() {
-      this.$store.track('Visited Reset Password Page')
     }
   }
 </script>

@@ -191,9 +191,6 @@
     created() {
       this.tryFetchConnections()
     },
-    mounted() {
-      this.$store.track('Visited Connections Page')
-    },
     methods: {
       ...mapGetters('teams', {
         'getActiveTeamLabel': 'getActiveTeamLabel'

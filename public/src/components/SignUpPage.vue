@@ -53,9 +53,6 @@
         }
       }
     },
-    mounted() {
-      this.$store.track('Visited Sign Up Page')
-    },
     methods: {
       onSignInClick() {
         this.$router.push(this.signin_route)
