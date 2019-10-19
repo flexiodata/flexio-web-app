@@ -1,5 +1,5 @@
 <template>
-  <main class="pa3 ph3-m pa5-ns bg-nearer-white overflow-y-scroll">
+  <main class="pv4 pv5-ns ph3 ph5-ns bg-nearer-white overflow-y-scroll">
     <div class="mt4">
       <div
         class="w-100 center mw-doc pt4 pb5 ph5 bg-white br2 css-white-box"

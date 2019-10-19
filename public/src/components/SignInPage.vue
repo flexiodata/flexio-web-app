@@ -1,7 +1,7 @@
 <template>
-  <main class="pa3 ph3-m pa5-ns bg-nearer-white overflow-auto">
+  <main class="pv4 pv5-ns ph3 ph5-ns bg-nearer-white overflow-auto">
     <div class="measure center mt4">
-      <div class="br2 bg-white pa3 pa4-ns css-white-box">
+      <div class="br2 bg-white pv4 ph3 ph4-ns css-white-box">
         <SignInForm
           @sign-up-click="onSignUpClick"
           @forgot-password-click="onForgotPasswordClick"

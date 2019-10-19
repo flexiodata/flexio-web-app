@@ -1,15 +1,15 @@
 <template>
-  <main class="pa3 ph3-m pa5-ns bg-nearer-white overflow-auto">
+  <main class="pv4 pv5-ns ph3 ph5-ns bg-nearer-white overflow-auto">
     <div class="measure center mt4">
       <SignUpVerifyForm
-        class="br2 bg-white pa3 pa4-ns css-white-box"
+        class="br2 bg-white pv4 ph3 ph4-ns css-white-box"
         :just-signed-up="just_signed_up"
         :user="user"
         @sign-in-click="onSignInClick"
         v-if="is_verify"
       />
       <SignUpForm
-        class="br2 bg-white pa3 pa4-ns css-white-box"
+        class="br2 bg-white pv4 ph3 ph4-ns css-white-box"
         @sign-in-click="onSignInClick"
         @signed-in="onSignedUpAndSignedIn"
         v-else
