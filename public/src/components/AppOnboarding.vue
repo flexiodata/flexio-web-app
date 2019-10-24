@@ -26,7 +26,7 @@
         </el-steps>
 
         <!-- step: choose integrations -->
-        <div v-if="active_step == 'choose-integrations'">
+        <div v-if="active_step == 'integrations'">
           <p>Let's get started with integrations. Pick one or more services below and we'll add a few out-of-the-box functions you can use in your spreadsheet.</p>
           <IconList
             class="mv4"
@@ -38,7 +38,7 @@
         </div>
 
         <!-- step: set up integrations -->
-        <div v-if="active_step == 'set-up-integrations'">
+        <div v-if="active_step == 'setup'">
           <!-- fetching config -->
           <div v-if="is_fetching_config">
             <div class="br2 ba b--black-10 pv5 ph4">
@@ -65,7 +65,7 @@
         </div>
 
         <!-- step: invite others -->
-        <div v-if="active_step == 'invite-members'">
+        <div v-if="active_step == 'members'">
           <p>If you'd like, you can also share your functions with your team. Simply add their email addresses below and they'll get an invitation to join your team and use your functions. You can also skip this step and add people later in the <strong>Members</strong> tab.</p>
           <ServiceIconWrapper class="mv4">
             <i
@@ -82,7 +82,7 @@
         </div>
 
         <!-- step: install add-ons -->
-        <div v-if="active_step == 'install-add-ons'">
+        <div v-if="active_step == 'addons'">
           <p>To use lookup functions in a spreadsheet, you just need to get the add-on for either Microsoft Excel or Google Sheets. Click on the spreadsheet you'd like to use below and then follow the instructions to install the add-on.</p>
           <p>Once you have the add-on, simply login with your Flex.io account and you can begin working with your Flex.io lookup functions.</p>
           <div class="flex flex-column flex-row-l mv3 nl3 nr3">
@@ -161,7 +161,7 @@
     return {
       is_fetching_config: false,
       onboarding_method: 'technical-user', // 'spreadsheet-user' or 'technical-user'
-      active_step: 'choose-integrations',
+      active_step: 'integrations',
       active_integration_idx: 0,
       active_setup_template: null,
       selected_integrations: [],
@@ -207,7 +207,7 @@
         return !_.isNil(this.active_setup_template)
       },
       step_order() {
-       return ['choose-integrations', 'set-up-integrations', 'invite-members', 'install-add-ons']
+       return ['integrations', 'setup', 'members', 'addons']
       },
     },
     mounted() {
@@ -226,6 +226,9 @@
           }
         })
       }
+
+      // make sure the route is in sync
+      this.setRoute(this.active_step)
     },
     methods: {
       ...mapGetters('users', {
@@ -234,13 +237,23 @@
       ...mapGetters('integrations', {
         'getProductionIntegrations': 'getProductionIntegrations',
       }),
+      setRoute(action) {
+        // update the route
+        var current_action = _.get(this.$route, 'params.action', '')
+        var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path', 'query'])
+        new_route.params = _.assign({}, new_route.params, { action })
+        this.$router[current_action.length == 0 ? 'replace' : 'push'](new_route)
+      },
       onUtilityButtonClick() {
         if (this.active_step_idx == 0) {
           this.$store.track('Skipped Onboarding')
           this.endOnboarding()
         } else {
-          this.active_step = 'choose-integrations'
+          this.active_step = 'integrations'
         }
+
+        // make sure the route is in sync
+        this.setRoute(this.active_step)
       },
       onNextStepClick() {
         // we're on the last step; commit all changes to the backend and take the user to the app
@@ -249,16 +262,19 @@
           return
         }
 
-        if (this.active_step == 'choose-integrations' && this.selected_integrations.length == 0) {
+        if (this.active_step == 'integrations' && this.selected_integrations.length == 0) {
           // skip over integration set up if none were selected
           this.active_step = this.step_order[this.active_step_idx + 2]
         } else {
           this.active_step = this.step_order[this.active_step_idx + 1]
         }
 
-        if (this.active_step == 'set-up-integrations') {
+        if (this.active_step == 'setup') {
           this.fetchIntegrationConfig()
         }
+
+        // make sure the route is in sync
+        this.setRoute(this.active_step)
       },
       onMemberInviteSubmit() {
         this.email_invites = []
@@ -270,7 +286,7 @@
       },
       chooseOnboardingMethod(method) {
         this.onboarding_method = method
-        this.active_step = method == 'spreadsheet-user' ? 'install-add-ons' : 'choose-integrations'
+        this.active_step = method == 'spreadsheet-user' ? 'addons' : 'integrations'
       },
       fetchIntegrationConfig() {
         this.is_fetching_config = true
@@ -285,7 +301,7 @@
           // TODO: this just skips the rest of the integration setup;
           //       this needs to be thought through more...
           this.active_setup_template = null
-          this.active_step == 'invite-members'
+          this.active_step == 'members'
           this.is_fetching_config = false
         })
       },
