@@ -66,7 +66,7 @@
 
         <!-- step: invite others -->
         <div v-if="active_step == 'members'">
-          <p>If you'd like, you can also share your functions with your team. Simply add their email addresses below and they'll get an invitation to join your team and use your functions. You can also skip this step and add people later in the <strong>Members</strong> tab.</p>
+          <p>It's easy to share your functions with co-workers. Simply add their emails below and they'll receive an invite to join your team. You can also skip this step and add people later in the <strong>Members</strong> tab.</p>
           <ServiceIconWrapper class="mv4">
             <i
               class="material-icons moon-gray bg-white" style="font-size: 4rem"
@@ -83,8 +83,7 @@
 
         <!-- step: install add-ons -->
         <div v-if="active_step == 'addons'">
-          <p>To use lookup functions in a spreadsheet, you just need to get the add-on for either Microsoft Excel or Google Sheets. Click on the spreadsheet you'd like to use below and then follow the instructions to install the add-on.</p>
-          <p>Once you have the add-on, simply login with your Flex.io account and you can begin working with your Flex.io lookup functions.</p>
+          <p>You're almost there! To use your new functions in a spreadsheet, you'll just need to install the Flex.io Add-on for either Excel 365 or Google Sheets.</p>
           <div class="flex flex-column flex-row-l mv3 nl3 nr3">
             <div class="flex-fill ma3 pa4 bg-nearer-white br3">
               <div class="flex flex-row items-center justify-center">
@@ -263,8 +262,20 @@
         }
 
         if (this.active_step == 'integrations' && this.selected_integrations.length == 0) {
-          // skip over integration set up if none were selected
-          this.active_step = this.step_order[this.active_step_idx + 2]
+          var msg = "Are you sure you'd like to continue without setting up an integration?"
+          var title = 'Really continue without an integration?'
+
+          this.$confirm(msg, title, {
+            type: 'warning',
+            confirmButtonClass: 'ttu fw6',
+            cancelButtonClass: 'ttu fw6',
+            confirmButtonText: 'Continue',
+            cancelButtonText: 'Cancel',
+            dangerouslyUseHTMLString: true,
+          }).then(() => {
+            // skip over integration set up if none were selected
+            this.active_step = this.step_order[this.active_step_idx + 2]
+          })
         } else {
           this.active_step = this.step_order[this.active_step_idx + 1]
         }
