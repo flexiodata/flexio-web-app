@@ -202,6 +202,15 @@
     mounted() {
       var team_name = this.getActiveUsername()
       this.$store.dispatch('teams/changeActiveTeam', { team_name })
+
+      // pre-select an integration
+      var integration_name = _.get(this.$route, 'query.integration', '')
+      if (integration_name.length > 0) {
+        var selected_integration = _.find(this.integrations, f => _.get(f, 'connection.name', '') == integration_name)
+        if (selected_integration) {
+          this.selected_integrations = [].concat([selected_integration])
+        }
+      }
     },
     methods: {
       ...mapGetters('users', {
