@@ -38,10 +38,18 @@
         </div>
 
         <!-- step: set up integrations -->
-        <div v-if="active_step == 'set-up-integrations' && has_active_setup_template">
+        <div v-if="active_step == 'set-up-integrations'">
+          <!-- fetching config -->
+          <div v-if="is_fetching_config">
+            <div class="br2 ba b--black-10 pv5 ph4">
+              <Spinner size="large" message="Loading configuration..." />
+            </div>
+          </div>
+
           <FunctionMountSetupWizard
             :setup-template="active_setup_template"
             @submit="saveIntegration"
+            v-else
           >
             <div slot="no-prompts">
               <div class="tc f6 fw4 lh-copy moon-gray"><em>No configuration is required for this integration.</em></div>
@@ -131,6 +139,7 @@
 <script>
   import axios from 'axios'
   import randomstring from 'randomstring'
+  import Spinner from 'vue-simple-spinner'
   import { mapState, mapGetters } from 'vuex'
   import { OBJECT_TYPE_CONNECTION } from '@/constants/object-type'
   import api from '@/api'
@@ -150,6 +159,7 @@
 
   const getDefaultState = () => {
     return {
+      is_fetching_config: false,
       onboarding_method: 'technical-user', // 'spreadsheet-user' or 'technical-user'
       active_step: 'choose-integrations',
       active_integration_idx: 0,
@@ -170,6 +180,7 @@
       }
     },
     components: {
+      Spinner,
       ButtonBar,
       IconList,
       FunctionMountSetupWizard,
@@ -262,16 +273,20 @@
         this.active_step = method == 'spreadsheet-user' ? 'install-add-ons' : 'choose-integrations'
       },
       fetchIntegrationConfig() {
+        this.is_fetching_config = true
+
         var team_name = this.active_team_name
         var url = _.get(this.active_integration, 'connection.connection_info.url', '')
 
         api.fetchFunctionPackSetupTemplate(team_name, url).then(response => {
           this.active_setup_template = response.data
+          this.is_fetching_config = false
         }).catch(error => {
           // TODO: this just skips the rest of the integration setup;
           //       this needs to be thought through more...
           this.active_setup_template = null
           this.active_step == 'invite-members'
+          this.is_fetching_config = false
         })
       },
       processSetupConfig(setup_config, callback) {
