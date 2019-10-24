@@ -203,13 +203,17 @@
       var team_name = this.getActiveUsername()
       this.$store.dispatch('teams/changeActiveTeam', { team_name })
 
-      // pre-select an integration
-      var integration_name = _.get(this.$route, 'query.integration', '')
-      if (integration_name.length > 0) {
-        var selected_integration = _.find(this.integrations, f => _.get(f, 'connection.name', '') == integration_name)
-        if (selected_integration) {
-          this.selected_integrations = [].concat([selected_integration])
-        }
+      // pre-select integrations
+      var integrations = _.get(this.$route, 'query.integration', '')
+      if (integrations.length > 0) {
+        integrations = integrations.split(',')
+
+        _.each(integrations, cname => {
+          var selected_integration = _.find(this.integrations, f => _.get(f, 'connection.name', '') == cname)
+          if (selected_integration) {
+            this.selected_integrations = this.selected_integrations.concat([selected_integration])
+          }
+        })
       }
     },
     methods: {
