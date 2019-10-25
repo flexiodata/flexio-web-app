@@ -1,12 +1,12 @@
 - name: Extract Function
   description: >
-    Broadcast data from a remote table
+    Return data from a table
   type: extract
   icon: photo_size_select_small
 
 - name: Lookup Function
   description: >
-    Return data from a remote table using key value(s)
+    Return data from a table using key value(s)
   type: lookup
   icon: search
 
