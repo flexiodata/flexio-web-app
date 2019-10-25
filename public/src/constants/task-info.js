@@ -13,7 +13,7 @@ const EXECUTE = {
 const EXTRACT = {
   op: ops.TASK_OP_EXTRACT,
   name: 'Extract',
-  description: 'Build a spreadsheet function that extracts a data set from a remote table, file or database.',
+  description: 'Build a spreadsheet function that extracts a data set from a table, file or database.',
   icon: 'launch',
   bg_color: 'bg-task-orange'
 }
@@ -21,7 +21,7 @@ const EXTRACT = {
 const LOOKUP = {
   op: ops.TASK_OP_LOOKUP,
   name: 'Lookup',
-  description: 'Build a spreadsheet function that creates a lookup based on a key/value pair from a remote table, file or database.',
+  description: 'Build a spreadsheet function that creates a lookup based on a key/value pair from a table, file or database.',
   icon: 'find_in_page',
   bg_color: 'bg-task-blue'
 }
