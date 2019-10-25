@@ -104,7 +104,7 @@
             <div class="flex-fill mv4 mh3 pa4 bg-nearer-white br3">
               <div class="flex flex-row items-center justify-center">
                 <img src="../assets/icon/icon-excel-128.png" alt="Microsoft Excel" style="height: 48px" />
-                <div class="ml3 fw6 f4">Microsoft Excel</div>
+                <div class="ml3 fw6 f4">Microsoft Excel 365 *</div>
               </div>
               <div class="center mw6 mt4">
                 <el-button
@@ -117,6 +117,7 @@
               </div>
             </div>
           </div>
+          <p class="center mw7 f8 nt3">* The Microsoft Excel 365 add-in will only function with an Excel for Office 365 subscription (currently on Targeted and Insider channels and soon for all Excel 365 users).</p>
         </div>
 
         <!-- button bar for the entire onboarding wizard -->
