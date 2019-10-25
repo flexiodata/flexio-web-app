@@ -296,6 +296,7 @@
         this.edit_mode = 'add'
         this.edit_active_step = 'choose-source'
         this.show_connection_dialog = true
+        this.$store.track('Clicked New Connection')
       },
       onEditConnection() {
         this.edit_mode = 'edit'
