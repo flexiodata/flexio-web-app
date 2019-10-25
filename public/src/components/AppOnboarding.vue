@@ -126,7 +126,8 @@
           :utility-button-visible="active_step_idx != step_order.length - 1"
           :utility-button-text="active_step_idx == 0 ? 'Skip setup' : '← Start over'"
           :cancel-button-visible="false"
-          :submit-button-text="active_step_idx == step_order.length - 1 ? 'Done' : 'Continue'"
+          :submit-button-visible="active_step != 'setup'"
+          :submit-button-text="active_step_idx == step_order.length - 1 ? 'Finish Setup' : 'Continue'"
           @utility-click="onUtilityButtonClick"
           @submit-click="onNextStepClick"
         />
@@ -291,7 +292,7 @@
         this.email_invites = []
 
         this.$message({
-          message: "Your team members have been sent an invitation to join your team.",
+          message: "Your co-workers have been sent an invitation to join your team.",
           type: 'success'
         })
       },
