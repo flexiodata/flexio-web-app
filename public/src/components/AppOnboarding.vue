@@ -215,17 +215,7 @@
       this.$store.dispatch('teams/changeActiveTeam', { team_name })
 
       // pre-select integrations
-      var integrations = _.get(this.$route, 'query.integration', '')
-      if (integrations.length > 0) {
-        integrations = integrations.split(',')
-
-        _.each(integrations, cname => {
-          var selected_integration = _.find(this.integrations, f => _.get(f, 'connection.name', '') == cname)
-          if (selected_integration) {
-            this.selected_integrations = this.selected_integrations.concat([selected_integration])
-          }
-        })
-      }
+      this.selectIntegrationsFromRoute()
 
       // make sure the route is in sync
       this.setRoute(this.active_step)
@@ -237,6 +227,19 @@
       ...mapGetters('integrations', {
         'getProductionIntegrations': 'getProductionIntegrations',
       }),
+      selectIntegrationsFromRoute() {
+        var integrations = _.get(this.$route, 'query.integration', '')
+        if (integrations.length > 0) {
+          integrations = integrations.split(',')
+
+          _.each(integrations, cname => {
+            var selected_integration = _.find(this.integrations, f => _.get(f, 'connection.name', '') == cname)
+            if (selected_integration) {
+              this.selected_integrations = this.selected_integrations.concat([selected_integration])
+            }
+          })
+        }
+      },
       setRoute(action) {
         // update the route
         var current_action = _.get(this.$route, 'params.action', '')
@@ -246,10 +249,35 @@
       },
       onUtilityButtonClick() {
         if (this.active_step_idx == 0) {
-          this.$store.track('Skipped Onboarding')
-          this.endOnboarding()
+          var msg = "Stepping through the welcome setup can help you get started with Flex.io simply and quickly. Are you sure you want to skip setup?"
+          var title = 'Really skip setup?'
+
+          this.$confirm(msg, title, {
+            type: 'warning',
+            confirmButtonClass: 'ttu fw6',
+            cancelButtonClass: 'ttu fw6',
+            confirmButtonText: 'Continue',
+            cancelButtonText: 'Cancel',
+            dangerouslyUseHTMLString: true,
+          }).then(() => {
+            this.$store.track('Skipped Onboarding')
+            this.endOnboarding()
+          })
         } else {
-          this.active_step = 'integrations'
+          var msg = "Looks like you want to start over; if so, you will lose any information you've entered. Would you like to continue?"
+          var title = 'Really start over?'
+
+          this.$confirm(msg, title, {
+            type: 'warning',
+            confirmButtonClass: 'ttu fw6',
+            cancelButtonClass: 'ttu fw6',
+            confirmButtonText: 'Continue',
+            cancelButtonText: 'Cancel',
+            dangerouslyUseHTMLString: true,
+          }).then(() => {
+            _.assign(this.$data, getDefaultState())
+            this.selectIntegrationsFromRoute()
+          })
         }
 
         // make sure the route is in sync
