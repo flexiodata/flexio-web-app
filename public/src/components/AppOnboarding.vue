@@ -209,6 +209,13 @@
       step_order() {
        return ['integrations', 'setup', 'addons', 'members']
       },
+      integrations_from_route() {
+        var integrations = _.get(this.$route, 'query.integration', '')
+        return integrations.length > 0 ? integrations.split(',') : []
+      },
+      is_welcome() {
+        return this.integrations_from_route.length == 0
+      }
     },
     mounted() {
       var team_name = this.getActiveUsername()
@@ -228,17 +235,12 @@
         'getProductionIntegrations': 'getProductionIntegrations',
       }),
       selectIntegrationsFromRoute() {
-        var integrations = _.get(this.$route, 'query.integration', '')
-        if (integrations.length > 0) {
-          integrations = integrations.split(',')
-
-          _.each(integrations, cname => {
-            var selected_integration = _.find(this.integrations, f => _.get(f, 'connection.name', '') == cname)
-            if (selected_integration) {
-              this.selected_integrations = this.selected_integrations.concat([selected_integration])
-            }
-          })
-        }
+        _.each(this.integrations_from_route, cname => {
+          var selected_integration = _.find(this.integrations, f => _.get(f, 'connection.name', '') == cname)
+          if (selected_integration) {
+            this.selected_integrations = this.selected_integrations.concat([selected_integration])
+          }
+        })
       },
       setRoute(action) {
         // update the route
@@ -275,13 +277,14 @@
             cancelButtonText: 'Cancel',
             dangerouslyUseHTMLString: true,
           }).then(() => {
+            // reset our local component data
             _.assign(this.$data, getDefaultState())
             this.selectIntegrationsFromRoute()
+
+            // make sure the route is in sync
+            this.setRoute(this.active_step)
           })
         }
-
-        // make sure the route is in sync
-        this.setRoute(this.active_step)
       },
       onNextStepClick() {
         // we're on the last step; commit all changes to the backend and take the user to the app
@@ -324,10 +327,6 @@
           type: 'success'
         })
       },
-      chooseOnboardingMethod(method) {
-        this.onboarding_method = method
-        this.active_step = method == 'spreadsheet-user' ? 'addons' : 'integrations'
-      },
       fetchIntegrationConfig() {
         this.is_fetching_config = true
 
@@ -341,7 +340,7 @@
           // TODO: this just skips the rest of the integration setup;
           //       this needs to be thought through more...
           this.active_setup_template = null
-          this.active_step == 'members'
+          this.active_step == 'addons'
           this.is_fetching_config = false
         })
       },
