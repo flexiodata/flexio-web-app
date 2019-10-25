@@ -61,7 +61,7 @@
           <el-button
             class="ttu fw6"
             type="primary"
-            @click="show_invite_dialog = true"
+            @click="onAddMembersClick"
             v-require-rights:teammember.update
           >
             Add Members
@@ -228,6 +228,10 @@
           //this.join_error_msg = _.get(error, 'response.data.error.message', '')
           this.join_error_msg = 'There was a problem joining the team'
         })
+      },
+      onAddMembersClick() {
+        this.$store.track('Clicked Add Members')
+        this.show_invite_dialog = true
       }
     }
   }

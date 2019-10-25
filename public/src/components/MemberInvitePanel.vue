@@ -170,6 +170,7 @@
           timeout += 50
         })
 
+        this.$store.track('Sent Invites')
         this.$emit('submit', this.our_emails)
       },
       sendInvite(member) {
