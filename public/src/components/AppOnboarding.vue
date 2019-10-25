@@ -91,13 +91,13 @@
                 <div class="ml2 fw6 f4">Google Sheets</div>
               </div>
               <div class="center mw6 mt4">
-                <a
-                  href="https://chrome.google.com/webstore/detail/flexio/cklkghdhggmiooefncfkfgchgocceddj"
-                  class="w-100 el-button el-button--default is-plain no-underline ttu fw6"
-                  target="_blank"
+                <el-button
+                  class="w-100 ttu fw6"
+                  plain
+                  @click="openGoogleSheetsAddonDownload"
                 >
                   <span class="ph2">Get the Google Sheets add-on</span>
-                </a>
+                </el-button>
               </div>
             </div>
 
@@ -107,13 +107,13 @@
                 <div class="ml3 fw6 f4">Microsoft Excel</div>
               </div>
               <div class="center mw6 mt4">
-                <a
-                  href="https://appsource.microsoft.com/en-us/product/office/WA200000394?src=office"
-                  class="w-100 el-button el-button--default is-plain no-underline ttu fw6"
-                  target="_blank"
+                <el-button
+                  class="w-100 ttu fw6"
+                  plain
+                  @click="openExcelAddonDownload"
                 >
                   <span class="ph2">Get the Excel add-in</span>
-                </a>
+                </el-button>
               </div>
             </div>
           </div>
@@ -126,6 +126,7 @@
           :utility-button-visible="active_step_idx != step_order.length - 1"
           :utility-button-text="active_step_idx == 0 ? 'Skip setup' : '← Start over'"
           :cancel-button-visible="false"
+          :submit-button-disabled="active_step == 'addons' && !has_clicked_get_addon_button"
           :submit-button-visible="active_step != 'setup'"
           :submit-button-text="active_step_idx == step_order.length - 1 ? 'Finish Setup' : 'Continue'"
           @utility-click="onUtilityButtonClick"
@@ -160,6 +161,7 @@
   const getDefaultState = () => {
     return {
       is_fetching_config: false,
+      has_clicked_get_addon_button: false,
       onboarding_method: 'technical-user', // 'spreadsheet-user' or 'technical-user'
       active_step: 'integrations',
       active_integration_idx: 0,
@@ -425,6 +427,14 @@
         .catch(error => {
 
         })
+      },
+      openGoogleSheetsAddonDownload() {
+        this.has_clicked_get_addon_button = true
+        window.open('https://chrome.google.com/webstore/detail/flexio/cklkghdhggmiooefncfkfgchgocceddj', '_blank')
+      },
+      openExcelAddonDownload() {
+        this.has_clicked_addon_button = true
+        window.open('https://appsource.microsoft.com/en-us/product/office/WA200000394?src=office', '_blank')
       },
       endOnboarding() {
         var team_name = this.active_team_name
