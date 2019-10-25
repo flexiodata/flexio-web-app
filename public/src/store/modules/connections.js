@@ -95,7 +95,10 @@ const mutations = {
 
 const actions = {
   'create' ({ commit }, { team_name, attrs }) {
-    return api.createConnection(team_name, attrs).then(response => {
+    var create_attrs = _.assign({}, attrs)
+    create_attrs.name = this.getUniqueName(create_attrs.name, 'connections')
+
+    return api.createConnection(team_name, create_attrs).then(response => {
       commit('CREATED_CONNECTION', response.data)
       return response
     }).catch(error => {
