@@ -430,10 +430,12 @@
         })
       },
       openGoogleSheetsAddonDownload() {
+        this.$store.track('Clicked Google Sheets Add-on in Onboarding')
         this.has_clicked_get_addon_button = true
         window.open('https://chrome.google.com/webstore/detail/flexio/cklkghdhggmiooefncfkfgchgocceddj', '_blank')
       },
       openExcelAddonDownload() {
+        this.$store.track('Clicked Excel Add-in in Onboarding')
         this.has_clicked_addon_button = true
         window.open('https://appsource.microsoft.com/en-us/product/office/WA200000394?src=office', '_blank')
       },
