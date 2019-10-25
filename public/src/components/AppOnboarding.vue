@@ -21,8 +21,8 @@
         >
           <el-step title="Choose Integrations" />
           <el-step title="Set Up" />
-          <el-step title="Invite Others" />
           <el-step title="Get Add-ons " />
+          <el-step title="Invite Others" />
         </el-steps>
 
         <!-- step: choose integrations -->
@@ -83,7 +83,7 @@
 
         <!-- step: install add-ons -->
         <div v-if="active_step == 'addons'">
-          <p>You're almost there! To use your new functions in a spreadsheet, you'll just need to install the Flex.io Add-on for either Excel 365 or Google Sheets.</p>
+          <p>You're almost done! The last step is to install the Flex.io Add-on for either Excel 365 or Google Sheets. Once you've installed an add-on, you'll see the functions in your spreadsheet.</p>
           <div class="flex flex-column flex-row-l mv3 nl3 nr3">
             <div class="flex-fill ma3 pa4 bg-nearer-white br3">
               <div class="flex flex-row items-center justify-center">
@@ -207,7 +207,7 @@
         return !_.isNil(this.active_setup_template)
       },
       step_order() {
-       return ['integrations', 'setup', 'members', 'addons']
+       return ['integrations', 'setup', 'addons', 'members']
       },
     },
     mounted() {
@@ -249,7 +249,7 @@
       },
       onUtilityButtonClick() {
         if (this.active_step_idx == 0) {
-          var msg = "Stepping through the welcome setup can help you get started with Flex.io simply and quickly. Are you sure you want to skip setup?"
+          var msg = "Stepping through this setup can help you quickly get started using Flex.io. Are you sure you want to skip setup?"
           var title = 'Really skip setup?'
 
           this.$confirm(msg, title, {
@@ -264,7 +264,7 @@
             this.endOnboarding()
           })
         } else {
-          var msg = "Looks like you want to start over; if so, you will lose any information you've entered. Would you like to continue?"
+          var msg = "Looks like you want to start over; if so, you will lose any configuration details you've entered. Would you like to continue?"
           var title = 'Really start over?'
 
           this.$confirm(msg, title, {
