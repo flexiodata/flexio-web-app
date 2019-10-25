@@ -22,12 +22,12 @@
           <el-step title="Choose Integrations" />
           <el-step title="Set Up" />
           <el-step title="Get Add-ons " />
-          <el-step title="Invite Others" />
+          <el-step title="Invite (optional)" />
         </el-steps>
 
         <!-- step: choose integrations -->
         <div v-if="active_step == 'integrations'">
-          <p>Let's get started with integrations. Pick one or more services below and we'll add a few out-of-the-box functions you can use in your spreadsheet.</p>
+          <p class="center mw7">Let's get started with integrations. Pick one or more services below and we'll add a few out-of-the-box functions you can use in your spreadsheet.</p>
           <IconList
             class="mv4"
             :items="integrations"
@@ -66,7 +66,7 @@
 
         <!-- step: invite others -->
         <div v-if="active_step == 'members'">
-          <p>It's easy to share your functions with co-workers. Simply add their emails below and they'll receive an invite to join your team. You can also skip this step and add people later in the <strong>Members</strong> tab.</p>
+          <p class="center mw7">It's easy to share your functions with co-workers. Simply add their emails below and they'll receive an invite to join your team. You can also skip this step and add people later.</p>
           <ServiceIconWrapper class="mv4">
             <i
               class="material-icons moon-gray bg-white" style="font-size: 4rem"
@@ -83,9 +83,9 @@
 
         <!-- step: install add-ons -->
         <div v-if="active_step == 'addons'">
-          <p>You're almost done! The last step is to install the Flex.io Add-on for either Excel 365 or Google Sheets. Once you've installed an add-on, you'll see the functions in your spreadsheet.</p>
+          <p class="center mw7">You're almost done! The last step is to install the Flex.io Add-on for either Excel 365 or Google Sheets. Once you've installed an add-on, you'll see the functions in your spreadsheet.</p>
           <div class="flex flex-column flex-row-l mv3 nl3 nr3">
-            <div class="flex-fill ma3 pa4 bg-nearer-white br3">
+            <div class="flex-fill mv4 mh3 pa4 bg-nearer-white br3">
               <div class="flex flex-row items-center justify-center">
                 <img src="../assets/icon/icon-google-sheets-128.png" alt="Google Sheets" style="height: 48px" />
                 <div class="ml2 fw6 f4">Google Sheets</div>
@@ -101,7 +101,7 @@
               </div>
             </div>
 
-            <div class="flex-fill ma3 pa4 bg-nearer-white br3">
+            <div class="flex-fill mv4 mh3 pa4 bg-nearer-white br3">
               <div class="flex flex-row items-center justify-center">
                 <img src="../assets/icon/icon-excel-128.png" alt="Microsoft Excel" style="height: 48px" />
                 <div class="ml3 fw6 f4">Microsoft Excel</div>
