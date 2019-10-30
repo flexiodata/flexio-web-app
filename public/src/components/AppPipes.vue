@@ -1,6 +1,6 @@
 <template>
   <!-- docs view -->
-  <div class="flex flex-column" v-if="route_view == 'docs'">
+  <div class="flex flex-column overflow-y-auto" v-if="route_view == 'docs'">
     <div
       class="flex flex-column justify-center bg-nearer-white h-100"
       v-if="is_fetching"
@@ -10,6 +10,7 @@
     <PipeDocumentAddonEditor
       class="pa4"
       :pipe-eid="pipe.eid"
+      :is-editing="false"
       v-else-if="is_fetched"
     />
     <!-- pipe not found -->
@@ -420,7 +421,11 @@ def flex_handler(flex):
       }
     },
     created() {
-      this.tryFetchPipes()
+      if (this.route_view == 'docs') {
+        this.tryFetchPipe()
+      } else {
+        this.tryFetchPipes()
+      }
     },
     mounted() {
       this.initSelf()
@@ -438,6 +443,12 @@ def flex_handler(flex):
       initSelf() {
         // make sure all nodes on the collapser are expanded by default
         this.expanded_groups = _.map(this.grouped_pipes, g => g.id)
+      },
+      tryFetchPipe() {
+        var team_name = this.active_team_name
+        var name = this.route_object_name
+
+        this.$store.dispatch('pipes/fetch', { team_name, name })
       },
       tryFetchPipes() {
         var team_name = this.active_team_name
