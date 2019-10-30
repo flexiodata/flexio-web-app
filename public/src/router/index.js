@@ -33,7 +33,7 @@ const meta = {
 }
 
 const routes = [
-  { path: '/', redirect: '/pipes' }, // base path redirect
+  { path: '/', redirect: '/functions' }, // base path redirect
   { path: '/signin',                                name: rn.ROUTE_SIGNIN_PAGE,         component: SignInPage                },
   { path: '/signout',                               name: rn.ROUTE_SIGNOUT_PAGE,        component: SignOutPage               },
   { path: '/signup/:action?',                       name: rn.ROUTE_SIGNUP_PAGE,         component: SignUpPage                },
@@ -45,7 +45,7 @@ const routes = [
   { path: '/account/:action?',                      name: rn.ROUTE_APP_ACCOUNT,         component: AppAccount,          meta },
   { path: '/:team_name?/members/:action?',          name: rn.ROUTE_APP_MEMBERS,         component: AppMembers,          meta },
   { path: '/:team_name?/connections/:object_name?', name: rn.ROUTE_APP_CONNECTIONS,     component: AppConnections,      meta },
-  { path: '/:team_name?/pipes/:object_name?',       name: rn.ROUTE_APP_FUNCTIONS,       component: AppPipes,            meta },
+  { path: '/:team_name?/functions/:object_name?',   name: rn.ROUTE_APP_FUNCTIONS,       component: AppPipes,            meta },
   admin_routes,
   { path: "*", component: PageNotFound } // 404
 ]

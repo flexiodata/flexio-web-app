@@ -444,7 +444,7 @@
 
         this.$store.dispatch('teams/changeActiveTeam', { team_name }).then(response => {
           var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path', 'query'])
-          this.$router.push({ path: `/${team_name}/pipes` })
+          this.$router.push({ path: `/${team_name}/functions` })
         })
       }
     }

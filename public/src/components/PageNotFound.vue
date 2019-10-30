@@ -57,11 +57,11 @@
         var team_name = this.getActiveUsername()
 
         // TODO: the user is already on a 404 page; should we just use a hard refresh here?
-        //window.location = `/app/${team_name}/pipes`
+        //window.location = `/app/${team_name}/functions`
 
         this.$store.dispatch('teams/changeActiveTeam', { team_name }).then(response => {
           var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path', 'query'])
-          this.$router.push({ path: `/${team_name}/pipes` })
+          this.$router.push({ path: `/${team_name}/functions` })
         })
       },
     }

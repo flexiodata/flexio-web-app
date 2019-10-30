@@ -72,11 +72,11 @@ export const getDeployScheduleStr = (s) => {
 }
 
 export const getDeployApiUrl = (identifier) => {
-  return 'https://api.flex.io/v1/me/pipes/' + identifier + '/run'
+  return 'https://api.flex.io/v1/me/functions/' + identifier + '/run'
 }
 
 export const getDeployRuntimeUrl = (eid) => {
-  return 'https://' + window.location.hostname + '/app/me/pipes/' + eid + '/run'
+  return 'https://' + window.location.hostname + '/app/me/functions/' + eid + '/run'
 }
 */
 
