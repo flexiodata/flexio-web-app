@@ -34,6 +34,7 @@ const meta = {
 
 const routes = [
   { path: '/', redirect: '/functions' }, // base path redirect
+  { path: '/welcome', redirect: '/start' }, // TODO: remove
   { path: '/signin',                                name: rn.ROUTE_SIGNIN_PAGE,         component: SignInPage                },
   { path: '/signout',                               name: rn.ROUTE_SIGNOUT_PAGE,        component: SignOutPage               },
   { path: '/signup/:action?',                       name: rn.ROUTE_SIGNUP_PAGE,         component: SignUpPage                },
@@ -41,7 +42,7 @@ const routes = [
   { path: '/resetpassword',                         name: rn.ROUTE_RESETPASSWORD_PAGE,  component: ResetPasswordPage         },
   { path: '/initsession',                           name: rn.ROUTE_INITSESSION_PAGE,    component: InitSessionPage           },
   { path: '/verify',                                name: rn.ROUTE_VERIFY_PAGE,         component: VerifyPage                },
-  { path: '/welcome/:action?',                      name: rn.ROUTE_APP_ONBOARDING,      component: AppOnboarding,       meta },
+  { path: '/start/:action?',                        name: rn.ROUTE_APP_ONBOARDING,      component: AppOnboarding,       meta },
   { path: '/account/:action?',                      name: rn.ROUTE_APP_ACCOUNT,         component: AppAccount,          meta },
   { path: '/:team_name?/members/:action?',          name: rn.ROUTE_APP_MEMBERS,         component: AppMembers,          meta },
   { path: '/:team_name?/connections/:object_name?', name: rn.ROUTE_APP_CONNECTIONS,     component: AppConnections,      meta },
