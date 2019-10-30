@@ -142,11 +142,17 @@
           </div>
         </div>
         <div class="pipe-section-body">
-          <PipeDocumentAddonEditor
-            :pipe-eid="pipeEid"
-            :is-editing.sync="is_addon_editing"
-            @save-click="updateAddOnSettings"
-          />
+
+          <div
+            :class="is_addon_editing ? '' : 'br2 mt2 pa4'"
+            :style="is_addon_editing ? '' : 'border: 1px solid #dcdfe6'"
+          >
+            <PipeDocumentAddonEditor
+              :pipe-eid="pipeEid"
+              :is-editing.sync="is_addon_editing"
+              @save-click="updateAddOnSettings"
+            />
+          </div>
         </div>
       </el-collapse-item>
     </el-collapse>

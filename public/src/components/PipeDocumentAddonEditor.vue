@@ -197,25 +197,17 @@
         @submit-click="onSaveClick"
       />
     </div>
-    <div v-else>
-      <div class="el-form__label-tiny cf">
-        <label class="el-form-item__label">Preview</label>
-      </div>
-      <div
-        class="markdown br2 pa4"
-        style="border: 1px solid #dcdfe6"
-      >
-        <h2>{{addon_title}}</h2>
-        <div v-html="html_description"></div>
-        <h3>Syntax</h3>
-        <p><code>{{syntax_str}}</code></p>
-        <h3>Parameters</h3>
-        <div v-html="html_params"></div>
-        <h3>Sample Usage</h3>
-        <div v-html="html_examples"></div>
-        <h3>Notes</h3>
-        <div v-html="html_notes"></div>
-      </div>
+    <div class="markdown" v-else>
+      <h2>{{addon_title}}</h2>
+      <div v-html="html_description"></div>
+      <h3>Syntax</h3>
+      <p><code>{{syntax_str}}</code></p>
+      <h3>Parameters</h3>
+      <div v-html="html_params"></div>
+      <h3>Sample Usage</h3>
+      <div v-html="html_examples"></div>
+      <h3>Notes</h3>
+      <div v-html="html_notes"></div>
     </div>
   </div>
 </template>

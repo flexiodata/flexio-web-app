@@ -14,7 +14,10 @@
         <Spinner size="large" message="Initializing..." />
       </div>
     </template>
-    <template v-else-if="requires_auth && is_signed_in && (is_404 || !is_allowed)">
+    <template v-else-if="requires_auth && is_signed_in && !is_allowed">
+      <PageNotFound class="flex-fill bg-nearer-white" />
+    </template>
+    <template v-else-if="requires_auth && is_signed_in && is_404">
       <PageNotFound class="flex-fill bg-nearer-white" />
     </template>
     <template v-else>
@@ -37,7 +40,7 @@
 <script>
   import Spinner from 'vue-simple-spinner'
   import { mapState, mapGetters } from 'vuex'
-  import { ROUTE_APP_ONBOARDING } from '@/constants/route'
+  import { ROUTE_APP_FUNCTIONS, ROUTE_APP_ONBOARDING } from '@/constants/route'
   import AppNavbar from '@/components/AppNavbar'
   import PageNotFound from '@/components/PageNotFound'
 
@@ -97,7 +100,15 @@
         return this.active_user_eid.length > 0
       },
       show_navbar() {
-        return this.requires_auth && this.$route.name != ROUTE_APP_ONBOARDING
+        var route_name = this.$route.name
+        var route_view = _.get(this.$route, 'params.view', undefined)
+
+        // don't show navbar when viewing a docs page
+        if (route_name == ROUTE_APP_FUNCTIONS && route_view == 'docs') {
+          return false
+        }
+
+        return this.requires_auth && route_name != ROUTE_APP_ONBOARDING
       },
       show_intercom_button() {
         return this.requires_auth

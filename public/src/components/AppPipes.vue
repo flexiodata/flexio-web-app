@@ -1,6 +1,23 @@
 <template>
+  <!-- docs view -->
+  <div class="flex flex-column" v-if="route_view == 'docs'">
+    <div
+      class="flex flex-column justify-center bg-nearer-white h-100"
+      v-if="is_fetching"
+    >
+      <Spinner size="large" message="Loading functions..." />
+    </div>
+    <PipeDocumentAddonEditor
+      class="pa4"
+      :pipe-eid="pipe.eid"
+      v-else-if="is_fetched"
+    />
+    <!-- pipe not found -->
+    <PageNotFound class="flex-fill" v-else />
+  </div>
+
   <!-- fetching -->
-  <div v-if="is_fetching">
+  <div v-else-if="is_fetching">
     <div class="flex flex-column justify-center bg-nearer-white h-100">
       <Spinner size="large" message="Loading functions..." />
     </div>
@@ -237,6 +254,7 @@
   import NewFunctionDropdown from '@/components/NewFunctionDropdown'
   import PipeList from '@/components/PipeList'
   import PipeDocument from '@/components/PipeDocument'
+  import PipeDocumentAddonEditor from '@/components/PipeDocumentAddonEditor'
   import PipeDocumentTestPanel from '@/components/PipeDocumentTestPanel'
   import PipeEditPanel from '@/components/PipeEditPanel'
   import FunctionMountEditPanel from '@/components/FunctionMountEditPanel'
@@ -313,6 +331,7 @@ def flex_handler(flex):
       NewFunctionDropdown,
       PipeList,
       PipeDocument,
+      PipeDocumentAddonEditor,
       PipeDocumentTestPanel,
       PipeEditPanel,
       FunctionMountEditPanel,
@@ -389,6 +408,9 @@ def flex_handler(flex):
       },
       route_object_name() {
         return _.get(this.$route, 'params.object_name', undefined)
+      },
+      route_view() {
+        return _.get(this.$route, 'params.view', undefined)
       },
       pname() {
         return _.get(this.pipe, 'name', '')
