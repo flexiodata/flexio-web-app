@@ -3,16 +3,18 @@
   <div class="flex flex-column overflow-y-auto" v-if="route_view == 'docs'">
     <div
       class="flex flex-column justify-center bg-nearer-white h-100"
-      v-if="is_fetching"
+      v-if="is_local_fetching"
     >
       <Spinner size="large" message="Loading functions..." />
     </div>
+
     <PipeDocumentAddonEditor
       class="pa4"
       :pipe-eid="pipe.eid"
       :is-editing="false"
-      v-else-if="is_fetched"
+      v-else-if="has_pipe"
     />
+
     <!-- pipe not found -->
     <PageNotFound class="flex-fill" v-else />
   </div>
@@ -295,6 +297,7 @@ def flex_handler(flex):
   const getDefaultState = () => {
     return {
       scrollbar_container_id: _.uniqueId('content-'),
+      is_local_fetching: false,
       is_selecting: false,
       show_test_panel: false,
       pipe_list_filter: '',
@@ -448,7 +451,12 @@ def flex_handler(flex):
         var team_name = this.active_team_name
         var name = this.route_object_name
 
-        this.$store.dispatch('pipes/fetch', { team_name, name })
+        this.is_local_fetching = true
+        this.$store.dispatch('pipes/fetch', { team_name, name }).then(response => {
+          this.pipe = response.data
+        }).finally(() => {
+          this.is_local_fetching = false
+        })
       },
       tryFetchPipes() {
         var team_name = this.active_team_name
@@ -541,9 +549,8 @@ def flex_handler(flex):
         this.selectPipe(pipe)
       },
       selectPipe(item) {
+        // we need to load the pipes first
         if (this.sorted_pipes.length == 0) {
-          // remove the pipe name from the URL
-          this.updateRoute(undefined)
           return
         }
 
