@@ -45,7 +45,7 @@ const routes = [
   { path: '/account/:action?',                      name: rn.ROUTE_APP_ACCOUNT,         component: AppAccount,          meta },
   { path: '/:team_name?/members/:action?',          name: rn.ROUTE_APP_MEMBERS,         component: AppMembers,          meta },
   { path: '/:team_name?/connections/:object_name?', name: rn.ROUTE_APP_CONNECTIONS,     component: AppConnections,      meta },
-  { path: '/:team_name?/pipes/:object_name?',       name: rn.ROUTE_APP_PIPES,           component: AppPipes,            meta },
+  { path: '/:team_name?/pipes/:object_name?',       name: rn.ROUTE_APP_FUNCTIONS,       component: AppPipes,            meta },
   admin_routes,
   { path: "*", component: PageNotFound } // 404
 ]

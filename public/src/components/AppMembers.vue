@@ -97,7 +97,7 @@
 </template>
 
 <script>
-  import { ROUTE_APP_PIPES } from '@/constants/route'
+  import { ROUTE_APP_FUNCTIONS } from '@/constants/route'
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
   import ButtonBar from '@/components/ButtonBar'
@@ -213,7 +213,7 @@
         }
       },
       rejectJoinTeam() {
-        this.$router.push({ name: ROUTE_APP_PIPES })
+        this.$router.push({ name: ROUTE_APP_FUNCTIONS })
       },
       joinTeam() {
         this.join_error_msg = ''
@@ -223,7 +223,7 @@
         var verify_code = _.get(this.$route.query, 'verify_code')
         var attrs = { member, verify_code }
         this.$store.dispatch('members/join', { team_name, attrs }).then(response => {
-          this.$router.replace({ name: ROUTE_APP_PIPES, params: { team_name } })
+          this.$router.replace({ name: ROUTE_APP_FUNCTIONS, params: { team_name } })
         }).catch(error => {
           //this.join_error_msg = _.get(error, 'response.data.error.message', '')
           this.join_error_msg = 'There was a problem joining the team'

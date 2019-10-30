@@ -34,7 +34,7 @@
   import { mapState, mapGetters } from 'vuex'
   import {
     ROUTE_APP_ACCOUNT,
-    ROUTE_APP_PIPES,
+    ROUTE_APP_FUNCTIONS,
     ROUTE_APP_CONNECTIONS,
     ROUTE_APP_MEMBERS
   } from '@/constants/route'
@@ -52,7 +52,7 @@
         active_team_name:  state => state.teams.active_team_name
       }),
       pipe_route() {
-        return { name: ROUTE_APP_PIPES, params: { team_name: this.active_team_name } }
+        return { name: ROUTE_APP_FUNCTIONS, params: { team_name: this.active_team_name } }
       },
       connection_route() {
         return { name: ROUTE_APP_CONNECTIONS, params: { team_name: this.active_team_name } }

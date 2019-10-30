@@ -3,7 +3,7 @@ export const ROUTE_APP_ADMIN       = 'app-admin'
 export const ROUTE_APP_CONNECTIONS = 'app-connections'
 export const ROUTE_APP_MEMBERS     = 'app-members'
 export const ROUTE_APP_ONBOARDING  = 'app-onboarding'
-export const ROUTE_APP_PIPES       = 'app-pipes'
+export const ROUTE_APP_FUNCTIONS       = 'app-pipes'
 
 export const ROUTE_FORGOTPASSWORD_PAGE  = 'forgotpassword-page'
 export const ROUTE_INITSESSION_PAGE     = 'initsession-page'

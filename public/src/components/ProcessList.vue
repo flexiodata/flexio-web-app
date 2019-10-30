@@ -117,7 +117,7 @@
 <script>
   import moment from 'moment'
   import * as ps from '@/constants/process'
-  import { ROUTE_APP_PIPES } from '@/constants/route'
+  import { ROUTE_APP_FUNCTIONS } from '@/constants/route'
   import { mapGetters } from 'vuex'
 
   export default {
@@ -237,7 +237,7 @@
         var object_name = name.length > 0 ? name : _.get(row, 'parent.eid', '')
 
         return {
-          name: ROUTE_APP_PIPES,
+          name: ROUTE_APP_FUNCTIONS,
           params: {
             team_name,
             object_name
