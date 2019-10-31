@@ -139,7 +139,7 @@ class ExecuteProxy
     public static function debugstep($fn, $s)
     {
         //return;
-        file_put_contents("/tmp/execute-$fn.txt", date("Y-m-d H:i:s") . ' - ' . $s, FILE_APPEND);
+        file_put_contents("/tmp/execute-$fn.txt", date("Y-m-d H:i:s") . ' - ' . $s . "\n", FILE_APPEND);
     }
 
     public function initialize($owner_eid, $engine, $code, $callbacks) : bool
