@@ -271,7 +271,7 @@ class ExecuteProxy
                 {
                     if (($message['response'] ?? '') != 'hello')
                     {
-                        self::debugstep($c1, "hello message returned something other than hello");
+                        self::debugstep($c1, "hello message returned something other than hello: " . json_encode($message));
     
                         $zmqsock_client = null;
                     }
