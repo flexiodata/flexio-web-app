@@ -448,7 +448,7 @@ class ExecuteProxy
                     }
                     else
                     {
-                        $this->onMessage($zmqsock_server, $message);
+                        $this->onMessage($zmqsock_server, $message, $c1);
                     }
 
                     if ($call_count == 0)
@@ -585,7 +585,7 @@ class ExecuteProxy
 
 
 
-    public function onMessage(\ZMQSocket $zmqsock_server, array $msg) : void
+    public function onMessage(\ZMQSocket $zmqsock_server, array $msg, $logfile) : void
     {
         if (!isset($msg['id']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: missing id");
@@ -641,7 +641,10 @@ class ExecuteProxy
 
         //  Send reply back to client
         $response = [ 'result' => $retval, 'id' => $msg['id'] ];
-        $zmqsock_server->send(json_encode($response));
+
+        self::debugstep($logfile, "Sending response to container: " . json_encode($response));
+
+        $zmqsock_server->send();
     }
 }
 
