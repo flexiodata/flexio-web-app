@@ -136,6 +136,12 @@ class ExecuteProxy
         return $result;
     }
 
+    public static function debugstep($fn, $s)
+    {
+        //return;
+        file_put_contents("/tmp/execute-$fn.txt", date("Y-m-d H:i:s") . ' - ' . $s, FILE_APPEND);
+    }
+
     public function initialize($owner_eid, $engine, $code, $callbacks) : bool
     {
         $this->owner_eid = $owner_eid;
@@ -150,6 +156,8 @@ class ExecuteProxy
     {
         $c1 = microtime(true);
 
+        debugstep($c1, "Started at $c1");
+
         // generate a key which will be used as a kind of password
         $access_key = \Flexio\Base\Util::generateRandomString(20);
 
@@ -158,14 +166,16 @@ class ExecuteProxy
         $exception = null;
         $exception_msg = '';
 
+        debugstep($c1, "Container name $container_name");
+        
         // get the docker binary location
         global $g_dockerbin;
         $g_dockerbin = \Flexio\System\System::getBinaryPath('docker');
         if (is_null($g_dockerbin))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
-
-
+        debugstep($c1, "Docker command '$g_dockerbin'");
+    
         // there is a directory hierarchy that is written on the host and mounted in the container
         // For example, if two processes were running in one container, it would look like this
 
@@ -192,7 +202,8 @@ class ExecuteProxy
         $zmqsock_client = null;
 
 
-
+        debugstep($c1, "ZMQ Context created");
+    
         // write out the execute job's script
 
         if (false === @mkdir($host_src_dir, 0700, true))
@@ -214,6 +225,9 @@ class ExecuteProxy
         }
 
 
+        debugstep($c1, "Script files written");
+    
+
         // at script shutdown, clean up progress directory
         register_shutdown_function(function() use ($host_process_dir) {
             \Flexio\Base\Util::rmtree($host_process_dir);
@@ -227,8 +241,12 @@ class ExecuteProxy
 
         // find out if we need to start a container
 
+        debugstep($c1, "Looking for IPC file $host_container_zmq");
+    
         if (file_exists($host_container_zmq))
         {
+            debugstep($c1, "IPC file $host_container_zmq exists");
+    
             $zmqsock_client = new \ZMQSocket($zmq_context, \ZMQ::SOCKET_REQ);
             $zmqsock_client->connect("ipc://$host_container_zmq");
             $zmqsock_client->setSockOpt(\ZMQ::SOCKOPT_SNDTIMEO, 1000);
@@ -238,17 +256,23 @@ class ExecuteProxy
             try
             {
                 //echo "Sending message to ipc://$host_container_zmq <br/>";
+                debugstep($c1, "Sending 'hello' to ZMQ");
+    
                 $zmqsock_client->send('{"cmd":"hello"}');
 
                 $message = $zmqsock_client->recv();
                 if ($message === false)
                 {
+                    debugstep($c1, "zmq_client->recv() returned false");
+    
                     $zmqsock_client = null;
                 }
                  else
                 {
                     if (($message['response'] ?? '') != 'hello')
                     {
+                        debugstep($c1, "hello message returned something other than hello");
+    
                         $zmqsock_client = null;
                     }
                 }
@@ -258,6 +282,8 @@ class ExecuteProxy
                 //echo $e->getMessage();
                 // error occurred, start a new server
                 //echo "No controller found";
+                debugstep($c1, "exception during hello command");
+    
                 $zmqsock_client = null;
             }
         }
@@ -270,6 +296,8 @@ class ExecuteProxy
 
         if (is_null($zmqsock_client))
         {
+            debugstep($c1, "ZMQ client not yet initialized - starting docker container");
+    
             $uid = posix_getuid();
             $cmd = "$g_dockerbin run -d --net=host --rm --name $container_name -v $host_base_dir:$cont_base_dir  -i fxruntime /fxruntime/fxcontroller $uid";
 
@@ -277,8 +305,14 @@ class ExecuteProxy
             //ob_end_flush();
             //flush();
 
+
+            debugstep($c1, "Executing $cmd 2>&1");
+
             exec("$cmd 2>&1", $output_lines, $exit_code);
 
+            debugstep($c1, "Ok...now waiting for host_container_zmq file to show up: Path is $host_container_zmq");
+
+    
             $count = 0;
             while (!file_exists($host_container_zmq))
             {
@@ -286,15 +320,22 @@ class ExecuteProxy
                 if (++$count == 600)
                 {
                     // 30 seconds expired; stop waiting
+
+                    debugstep($c1, "File didn't show up after waiting 30 seconds; throwing IPC timeout exception");
+
                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: IPC timeout");
                 }
             }
+
+            debugstep($c1, "Setting up ZMQSocket client after docker initialization");
 
             $zmqsock_client = new \ZMQSocket($zmq_context, \ZMQ::SOCKET_REQ);
             $zmqsock_client->connect("ipc://$host_container_zmq");
             $zmqsock_client->setSockOpt(\ZMQ::SOCKOPT_SNDTIMEO, 1000);
             $zmqsock_client->setSockOpt(\ZMQ::SOCKOPT_RCVTIMEO, 1000);
             $zmqsock_client->_is_bound = true;
+
+            debugstep($c1, "...done");
 
             //$zmqsock_client->send('{"cmd":"hello"}');
             //$message = $zmqsock_client->recv();
@@ -308,13 +349,8 @@ class ExecuteProxy
 
 
 
-
-
-
-
-
-
         // start a zeromq server with a domain socket
+        debugstep($c1, "Setting up ZMQSocket server for host process");
 
         $container_socket_path = "/fxruntime/base/fxproc-$access_key/process";
 
@@ -339,6 +375,8 @@ class ExecuteProxy
                           'FLEXIO_EXECUTE_HOME' => $cont_src_dir,
                           'PYTHONDONTWRITEBYTECODE' => '1' ]
         ];
+
+        debugstep($c1, "Sending command to container: " . json_encode($command));
 
         $zmqsock_client->send(json_encode($command));
         $message = $zmqsock_client->recv();
@@ -374,6 +412,8 @@ class ExecuteProxy
 
             if ($message !== false)
             {
+                debugstep($c1, "Received message from container: $message");
+
                 $message = @json_decode($message);
 
                 if ($message === null)
@@ -493,6 +533,7 @@ class ExecuteProxy
 
 
         //echo("Time c9 " . (microtime(true)-$c1) . ";");
+        debugstep($c1, "Total runtime " . '' . (microtime(true)-$c1));
 
     }
 
