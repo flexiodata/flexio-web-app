@@ -644,7 +644,7 @@ class ExecuteProxy
 
         self::debugstep($logfile, "Sending response to container: " . json_encode($response));
 
-        $zmqsock_server->send();
+        $zmqsock_server->send(json_encode($response));
     }
 }
 
