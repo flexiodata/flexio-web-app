@@ -269,7 +269,7 @@ class ExecuteProxy
                 }
                  else
                 {
-                    $message = @json_decode($message);
+                    $message = @json_decode($message, true);
                     if (($message['response'] ?? '') == 'hello')
                     {
                         self::debugstep($c1, "Received 'hello' response");
