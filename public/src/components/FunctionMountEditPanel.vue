@@ -281,7 +281,7 @@
 
         var attrs = _.assign({}, getDefaultAttrs(), integration_attrs, {
           eid_status: OBJECT_STATUS_PENDING,
-          name: `${slug}-` + getNameSuffix(16)
+          name: `${slug}__tmp__` + getNameSuffix(8)
         })
 
         return this.$store.dispatch('connections/create', { team_name, attrs }).then(response => {
@@ -305,7 +305,7 @@
 
         var attrs = _.assign({}, getDefaultAttrs(), mount_attrs, {
           eid_status: OBJECT_STATUS_PENDING,
-          name: `${service_slug}-` + getNameSuffix(16),
+          name: `${service_slug}__tmp__` + getNameSuffix(8),
           title: ctitle,
           connection_type: ctype
         })
@@ -353,7 +353,7 @@
             var xhr
             var eid = _.get(val, 'eid', '')
             var attrs = _.omit(val, ['eid_type'])
-            attrs.name = 'connection-' + getNameSuffix(4)
+            attrs.name = this.$store.getUniqueName('connection', 'connections')
 
             if (eid.length == 0) {
               // create the connection
@@ -419,7 +419,8 @@
           var team_name = this.active_team_name
           var eid = this.edit_mount.eid
           var eid_status = OBJECT_STATUS_AVAILABLE
-          var attrs = { eid_status }
+          var name = _.get(this.edit_mount, 'name', '')
+          var attrs = { eid_status, name }
 
           this.$store.dispatch('connections/update', { team_name, eid, attrs }).then(response => {
             this.edit_mount = _.assign({}, this.edit_mount, _.cloneDeep(response.data))
