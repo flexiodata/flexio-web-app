@@ -14,6 +14,10 @@ cp -a $DIR/../process/controller ./
 cp -a $DIR/../process/start ./
 
 docker build -t fxruntime . --no-cache
+
+# do initial docker run
+docker run --rm fxruntime /bin/ls
+
 popd
 
 

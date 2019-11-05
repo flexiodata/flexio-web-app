@@ -570,6 +570,17 @@ class GoogleDrive implements \Flexio\IFace\IConnection,
         return $info['id'];
     }
 
+
+    public function oauthConnect(array $params = null) : bool
+    {
+        
+    }
+
+    public function oauthCallback(array $params = null) : bool
+    {
+    }
+
+
     private function initialize(array $params = null) : bool
     {
         $client_id = $GLOBALS['g_config']->googledrive_client_id ?? '';
