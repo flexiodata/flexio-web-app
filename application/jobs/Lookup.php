@@ -67,24 +67,32 @@ class Lookup extends \Flexio\Jobs\Base
         if (!is_array($lookup_values))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Invalid lookup values");
 
-        // get the file content and convert it to a table
-        $raw_stream = self::getStreamFromFile($process->getOwner(), $path);
-        $converted_stream = \Flexio\Base\Stream::create();
-
-        $convert_params = [
-            "input" => [
-                "format" => "delimited",
-                "header" => true
+        // get the lookup table from the path
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "read",
+                "path" => $path
             ],
-            "output" => [
-                "format" => "table"
+            [
+                "op" => "convert",
+                "input" => [
+                    //"format" => "delimited",
+                    //"header" => true
+                ],
+                "output" => [
+                    "format" => "table"
+                ]
             ]
-        ];
-        \Flexio\Base\StreamConverter::process($convert_params, $raw_stream, $converted_stream);
+        ]);
+
+        $inner_process = \Flexio\Jobs\Process::create();
+        $inner_process->setOwner($process->getOwner());
+        $inner_process->execute($task);
+        $inner_process_output = $inner_process->getStdout();
 
         // create a lookup index from the table
         $lookup_index = array();
-        $rows = \Flexio\Base\StreamUtil::getStreamContents($converted_stream);
+        $rows = \Flexio\Base\StreamUtil::getStreamContents($inner_process_output);
 
         foreach ($rows as $r)
         {
