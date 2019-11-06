@@ -353,7 +353,7 @@
             var xhr
             var eid = _.get(val, 'eid', '')
             var attrs = _.omit(val, ['eid_type'])
-            attrs.name = this.$store.getUniqueName('connection', 'connections')
+            attrs.name = 'connection-' + getNameSuffix(4)
 
             if (eid.length == 0) {
               // create the connection
