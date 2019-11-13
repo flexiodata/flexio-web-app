@@ -36,76 +36,75 @@ class System
 
     public static function session(\Flexio\Api\Request $request) : void
     {
+        // return a token that can be used to login or in api calls
+
         $post_params = $request->getPostParams();
 
         // TODO: track?
 
+        // this function can take either a username/password or a token;
+        // put the validator here to validate they're strings, but don't
+        // require them so we can perform logic to accomodate either input
+        // combination
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
-                'username' => array('type' => 'string', 'required' => true), // allow string here to accomodate username/email
-                'password' => array('type' => 'string', 'required' => true)  // allow string here to fall through to general error message below
+                'username' => array('type' => 'string', 'required' => false, 'default' => ''),
+                'password' => array('type' => 'string', 'required' => false, 'default' => ''),
+                'token'  => array('type' => 'string', 'required' => false, 'default' => '')
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_post_params = $validator->getParams();
         $username = $validated_post_params['username'];
         $password = $validated_post_params['password'];
+        $token = $validated_post_params['token'];
 
-        // default error message
-        $error_message = _('Invalid username or password.');
+        // try to get the current user eid from either a session token
+        // or from a username/password combination
+        $current_user_eid = false;
 
-        // return a token that can be used to login or in api calls
-        try
+        if (strlen($token) > 0)
         {
-            // try to get the user eid from username
+            // POSSIBILITY 1: if we have a token, attempt to get the user eid
+            // from the token
+            $current_user_eid = \Flexio\Object\User::getUserEidFromToken($token);
+            if (!$current_user_eid)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAUTHORIZED, _('Invalid token.'));
+        }
+        else
+        {
+            // POSSIBILITY 2: we don't have a token, so attempt to get the user eid
+            // from the username and password
             $current_user_eid = \Flexio\Object\User::getEidFromIdentifier($username);
-            if ($current_user_eid === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-
-            $current_user = \Flexio\Object\User::load($current_user_eid);
+            if (!$current_user_eid)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, _('Invalid username or password.'));
 
             // make sure user isn't deleted
+            $current_user = \Flexio\Object\User::load($current_user_eid);
             if ($current_user->getStatus() === \Model::STATUS_DELETED)
-            {
-                $error_message = _('Invalid username or password.');
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-            }
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, _('Invalid username or password.'));
 
             // make sure the user is available (e.g., not deleted and properly verified,
             // if verification is being used)
             if ($current_user->getStatus() !== \Model::STATUS_AVAILABLE)
-            {
-                $error_message = _('Account not verified.  Please verify your account.');
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-            }
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, _('Account not verified. Please verify your account.'));
 
             // verify the user with their credentials
             if ($current_user->checkPassword($password) === false)
-            {
-                $error_message = _('Invalid username or password.');
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAUTHORIZED);
-            }
-
-            $token = \Flexio\Object\User::generateTokenFromUserEid($current_user_eid);
-            $result = array(
-                'token' => $token
-            );
-
-            // return the token
-            $request->setRequestingUser($current_user_eid);
-            $request->setResponseParams($result);
-            $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-            \Flexio\Api\Response::sendContent($result);
-
-            return;
-        }
-        catch (\Flexio\Base\Exception $e)
-        {
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAUTHORIZED, _('Invalid username or password.'));
         }
 
-        // return an error
-        sleep(1);
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAUTHORIZED, $error_message);
+        // generate a token from the user eid
+        $token = \Flexio\Object\User::generateTokenFromUserEid($current_user_eid);
+        $result = array(
+            'token' => $token
+        );
+
+        // return the token
+        $request->setRequestingUser($current_user_eid);
+        $request->setResponseParams($result);
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        \Flexio\Api\Response::sendContent($result);
     }
 
     public static function logintoken(\Flexio\Api\Request $request) : void

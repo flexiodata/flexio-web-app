@@ -61,13 +61,21 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public static function generateTokenFromUserEid(string $user_eid) : string
     {
-        // add a random seed and timestamp to the user info
+        // generate a random string to combine with the user info
+        $random = \Flexio\Base\Util::generateRandomString(20);
+        $random = str_split($random, 4); // user strlen of 4 to provide variation, but also avoid clash with known keys
+
+        // wrap up the user eid and a timestamp; include some extra random keys
+        // and sort to pack the information randomly
         $user_info = array();
         $user_info['eid'] = $user_eid;
         $user_info['timestamp'] = \Flexio\Base\Util::getCurrentTimestamp();
-        $user_info['random'] = \Flexio\Base\Util::generateRandomString(20);
+        foreach ($random as $r)
+            $user_info[$r] = '';
 
+        ksort($user_info);
         $user_info_str = json_encode($user_info);
+
         $token = \Flexio\Base\Util::encrypt($user_info_str, $GLOBALS['g_store']->connection_enckey);
         $token = self::base64_url_encode($token); // make sure token is url safe since it'll be passed as a query param
         return $token;
