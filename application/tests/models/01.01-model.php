@@ -504,5 +504,10 @@ class Test
         $actual = \Model::CONNECTION_TYPE_PRODUCTHUNT;
         $expected = 'producthunt';
         \Flexio\Tests\Check::assertString('K.24', 'Type constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Model::CONNECTION_TYPE_SHOPIFY;
+        $expected = 'shopify';
+        \Flexio\Tests\Check::assertString('K.25', 'Type constant',  $actual, $expected, $results);
     }
 }

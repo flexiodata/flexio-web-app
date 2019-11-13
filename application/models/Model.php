@@ -195,6 +195,7 @@ class Model
     public const CONNECTION_TYPE_KEYRING            = 'keyring';
     public const CONNECTION_TYPE_INTERCOM           = 'intercom';
     public const CONNECTION_TYPE_PRODUCTHUNT        = 'producthunt';
+    public const CONNECTION_TYPE_SHOPIFY            = 'shopify';
 
     private $objs = array();
     private $database = null;

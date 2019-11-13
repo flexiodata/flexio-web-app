@@ -42,6 +42,7 @@ class Factory
         \Model::CONNECTION_TYPE_KEYRING             => '\Flexio\Services\General',
         \Model::CONNECTION_TYPE_INTERCOM            => '\Flexio\Services\Intercom',
         \Model::CONNECTION_TYPE_PRODUCTHUNT         => '\Flexio\Services\ProductHunt',
+        \Model::CONNECTION_TYPE_SHOPIFY             => '\Flexio\Services\Shopify',
     );
 
     public static function create(string $connection_type, array $connection_info = array()) // TODO: add return type
