@@ -110,6 +110,12 @@ class ProductHunt implements \Flexio\IFace\IConnection,
 
     private function initialize(array $params) : bool
     {
+        $client_id = $GLOBALS['g_config']->producthunt_client_id ?? '';
+        $client_secret = $GLOBALS['g_config']->producthunt_client_secret ?? '';
+
+        if (strlen($client_id) == 0 || strlen($client_secret) == 0)
+            return false;
+
         return false;
     }
 }

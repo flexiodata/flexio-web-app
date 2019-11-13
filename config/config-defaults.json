@@ -70,6 +70,9 @@
     "linkedin_client_id": "",
     "linkedin_client_secret": "",
 
+    "producthunt_client_id": "",
+    "producthunt_client_secret": "",
+
     "twitter_client_id": "",
     "twitter_client_secret": ""
 }
