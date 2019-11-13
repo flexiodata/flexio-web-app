@@ -1,26 +1,43 @@
-title: DocuSign Integration
-description: Functions for accessing your DocuSign info
+title: Pipedrive Integration
+description: Functions for accessing your Pipedrive info
 image:
-  src: https://logo.clearbit.com/docusign.com
-  alt: DocuSign logo
+  src: https://logo.clearbit.com/pipedrive.com
+  alt: Pipedrive logo
 functions:
-  - path: contacts.py
+  - path: pipedrive-list-deals.py
 prompts:
   - element: form
     name: form_api_key
-    title: DocuSign API key
+    title: Pipedrive API key
     description: |
-      Use your DocuSign API key to access the info in your account.
+      Use your Pipedrive API key to access the same APIs that power all Pipedrive tools.
     class: el-form--cozy el-form__label-tiny
     rules:
-      docusign_api_key:
+      pipedrive_api_key:
         - required: true
           message: Please enter a valid API key to continue.
+      company_domain:
+        - required: true
+          message: Please enter a valid company domain.
     form_items:
       - element: input
-        type: textarea
-        name: docusign_api_key
+        type: text
+        name: pipedrive_api_key
         label: API key
         placeholder: API key
         value: ''
-        rows: 10
+        append:
+          class: f7
+          value: >
+            <a href="https://support.pipedrive.com/hc/en-us/articles/207344545-How-can-I-find-my-personal-API-key" class="blue link" target="_blank">How can I find my Pipedrive API key?</a>
+      - element: input
+        type: text
+        name: company_domain
+        label: Company domain
+        placeholder: Company domain
+        value: ''
+        append:
+          class: f7
+          value: >
+            <a href="https://pipedrive.readme.io/docs/how-to-get-the-company-domain" class="blue link" target="_blank">How can I find my Pipedrive company domain?</a>
+

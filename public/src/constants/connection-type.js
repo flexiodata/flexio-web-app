@@ -12,6 +12,8 @@ export const CONNECTION_TYPE_GOOGLEDRIVE        = 'googledrive'
 export const CONNECTION_TYPE_GOOGLESHEETS       = 'googlesheets'
 export const CONNECTION_TYPE_MYSQL              = 'mysql'
 export const CONNECTION_TYPE_POSTGRES           = 'postgres'
+export const CONNECTION_TYPE_PRODUCTHUNT        = 'producthunt'
+export const CONNECTION_TYPE_SHOPIFY            = 'shopify'
 export const CONNECTION_TYPE_SFTP               = 'sftp'
 export const CONNECTION_TYPE_TWITTER            = 'twitter'
 

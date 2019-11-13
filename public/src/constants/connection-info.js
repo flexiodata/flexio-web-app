@@ -145,6 +145,28 @@ const POSTGRES = {
   is_function_mount: false,
 }
 
+const PRODUCTHUNT = {
+  service_name: 'Product Hunt',
+  service_description: "Discover your next favorite thing",
+  connection_type: types.CONNECTION_TYPE_PRODUCTHUNT,
+  icon: require('../assets/icon/icon-producthunt-128.png'),
+  is_oauth: true,
+  is_storage: false,
+  is_filesystem: false,
+  is_function_mount: false,
+}
+
+const SHOPIFY = {
+  service_name: 'Shopify',
+  service_description: "The all-in-one commerce platform to start, run, and grow a business",
+  connection_type: types.CONNECTION_TYPE_SHOPIFY,
+  icon: require('../assets/icon/icon-shopify-128.png'),
+  is_oauth: true,
+  is_storage: false,
+  is_filesystem: false,
+  is_function_mount: false,
+}
+
 const SFTP = {
   service_name: 'SFTP',
   service_description: 'Transfer files using the SSH (secure shell) File Transfer Protocol',
@@ -166,6 +188,30 @@ const TWITTER = {
   is_filesystem: false,
   is_function_mount: false,
 }
+
+/* exports */
+
+// go out of alphabetical order here so the order is correct in the function add modal
+export const CONNECTION_INFO_FLEX                 = FLEX
+export const CONNECTION_INFO_AMAZON_S3            = AMAZON_S3
+export const CONNECTION_INFO_BOX                  = BOX
+export const CONNECTION_INFO_DROPBOX              = DROPBOX
+export const CONNECTION_INFO_GITHUB               = GITHUB
+export const CONNECTION_INFO_TWITTER              = TWITTER
+export const CONNECTION_INFO_GOOGLEDRIVE          = GOOGLEDRIVE
+export const CONNECTION_INFO_GOOGLESHEETS         = GOOGLESHEETS
+export const CONNECTION_INFO_INTERCOM             = INTERCOM
+export const CONNECTION_INFO_LINKEDIN             = LINKEDIN
+export const CONNECTION_INFO_CRUNCHBASE           = CRUNCHBASE
+export const CONNECTION_INFO_MYSQL                = MYSQL
+export const CONNECTION_INFO_POSTGRES             = POSTGRES
+export const CONNECTION_INFO_PRODUCTHUNT          = PRODUCTHUNT
+export const CONNECTION_INFO_SHOPIFY              = SHOPIFY
+export const CONNECTION_INFO_SFTP                 = SFTP
+export const CONNECTION_INFO_KEYRING              = KEYRING
+
+
+
 
 /*
 const API = {
@@ -333,25 +379,6 @@ const TWILIO = {
   is_function_mount: false,
 }
 */
-
-/* exports */
-
-// go out of alphabetical order here so the order is correct in the function add modal
-export const CONNECTION_INFO_FLEX                 = FLEX
-export const CONNECTION_INFO_AMAZON_S3            = AMAZON_S3
-export const CONNECTION_INFO_BOX                  = BOX
-export const CONNECTION_INFO_DROPBOX              = DROPBOX
-export const CONNECTION_INFO_GITHUB               = GITHUB
-export const CONNECTION_INFO_TWITTER              = TWITTER
-export const CONNECTION_INFO_GOOGLEDRIVE          = GOOGLEDRIVE
-export const CONNECTION_INFO_GOOGLESHEETS         = GOOGLESHEETS
-export const CONNECTION_INFO_INTERCOM             = INTERCOM
-export const CONNECTION_INFO_LINKEDIN             = LINKEDIN
-export const CONNECTION_INFO_CRUNCHBASE           = CRUNCHBASE
-export const CONNECTION_INFO_MYSQL                = MYSQL
-export const CONNECTION_INFO_POSTGRES             = POSTGRES
-export const CONNECTION_INFO_SFTP                 = SFTP
-export const CONNECTION_INFO_KEYRING              = KEYRING
 
 // TODO: what are we going to do with these?
 //export const CONNECTION_INFO_API                  = API
