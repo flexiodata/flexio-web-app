@@ -499,5 +499,10 @@ class Test
         $actual = \Model::CONNECTION_TYPE_INTERCOM;
         $expected = 'intercom';
         \Flexio\Tests\Check::assertString('K.23', 'Type constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Model::CONNECTION_TYPE_PRODUCTHUNT;
+        $expected = 'producthunt';
+        \Flexio\Tests\Check::assertString('K.24', 'Type constant',  $actual, $expected, $results);
     }
 }
