@@ -183,7 +183,7 @@
         try {
           this.calc_value = this.transpose == 'base64' ? atobUnicode(this.value) : this.value
         }
-        catch (e) {
+        catch(e) {
         }
       },
       updateMinMaxHeight() {

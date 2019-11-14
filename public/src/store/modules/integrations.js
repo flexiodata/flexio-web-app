@@ -40,7 +40,7 @@ const actions = {
       try {
         items = yaml.safeLoad(response.data)
       }
-      catch (e) {
+      catch(e) {
         items = []
       }
 

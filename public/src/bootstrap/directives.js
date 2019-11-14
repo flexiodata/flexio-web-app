@@ -56,7 +56,7 @@ const updateRightsElement = (el, binding) => {
       throw({ message: '`v-require-rights` directive modifier is required' })
     }
   }
-  catch (e) {
+  catch(e) {
     el.classList.add(rights_cls)
     return
   }
