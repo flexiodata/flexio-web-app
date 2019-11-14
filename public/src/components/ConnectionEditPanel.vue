@@ -23,6 +23,7 @@
 
     <!-- step 1: choose source -->
     <IconList
+      class="mb1"
       items="services"
       :filter-by="filterBy"
       @item-click="createPendingConnection"
