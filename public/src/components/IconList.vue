@@ -32,14 +32,12 @@
 </template>
 
 <script>
-  import mounts from '@/data/mount-items.yml'
   import { CONNECTION_TYPE_FLEX }  from '@/constants/connection-type'
   import * as services from '@/constants/connection-info'
   import ServiceIcon from '@/components/ServiceIcon'
 
   const getDefaultState = () => {
     return {
-      mounts,
       services
     }
   }
@@ -47,7 +45,7 @@
   export default {
     props: {
       items: {
-        type: [String, Array], // 'mounts', 'services', []
+        type: [String, Array], // 'services', []
         default: () => []
       },
       selectedItems: {
@@ -79,7 +77,6 @@
         }
 
         switch (this.items) {
-          case 'mounts': return this.mounts
           case 'services': return _.reject(this.services, { connection_type: CONNECTION_TYPE_FLEX })
         }
 
