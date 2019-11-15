@@ -1,14 +1,12 @@
-- 'Name': Developer
+- 'Name': Starter
   'Price': '29'
   'Team Members': 1
   'Executions': '500'
   'Local Storage': '1 GB'
   'Spreadsheet Add-ons': 'Excel Desktop, Google Sheets'
+  'Instant Integrations' : 'Web Services & APIs'
   'Instant Functions': 'Table Extracts & Lookups'
   'Custom Functions': 'Python, Node.js'
-  'Background Functions': 'Python, Node.js'
-  'GitHub Integration' : true
-  'Connector Library' : true
   'Role-Based Permissions' : false
   'Consolidated Billing' : false
   'Email and Chat Support': true
@@ -17,17 +15,15 @@
   'Custom Solutions': false
   'White Label Add-ons': false
 
-- 'Name': Starter
+- 'Name': Team
   'Price': '49'
   'Team Members': '1-5'
   'Executions': '2,000'
   'Local Storage': '10 GB'
   'Spreadsheet Add-ons': 'Excel Desktop, Google Sheets'
+  'Instant Integrations' : 'Web Services & APIs'
   'Instant Functions': 'Table Extracts & Lookups'
   'Custom Functions': 'Python, Node.js'
-  'Background Functions': 'Python, Node.js'
-  'GitHub Integration' : true
-  'Connector Library' : true
   'Role-Based Permissions' : true
   'Consolidated Billing' : true
   'Email and Chat Support': true
@@ -42,11 +38,9 @@
   'Executions': '5,000'
   'Local Storage': '20 GB'
   'Spreadsheet Add-ons': 'Excel Desktop, Google Sheets'
+  'Instant Integrations' : 'Web Services & APIs'
   'Instant Functions': 'Table Extracts & Lookups'
   'Custom Functions': 'Python, Node.js'
-  'Background Functions': 'Python, Node.js'
-  'GitHub Integration' : true
-  'Connector Library' : true
   'Role-Based Permissions' : true
   'Consolidated Billing' : true
   'Email and Chat Support': true
@@ -61,11 +55,9 @@
   'Executions': 'Unlimited'
   'Local Storage': 'Unlimited'
   'Spreadsheet Add-ons': 'Excel Desktop, Google Sheets'
+  'Instant Integrations' : 'Web Services & APIs'
   'Instant Functions': 'Table Extracts & Lookups'
   'Custom Functions': 'Python, Node.js'
-  'Background Functions': 'Python, Node.js'
-  'GitHub Integration' : true
-  'Connector Library' : true
   'Role-Based Permissions' : true
   'Consolidated Billing' : true
   'Email and Chat Support': true

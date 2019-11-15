@@ -13,7 +13,10 @@
     <!-- body -->
     <div>
       <!-- step 1: choose source -->
-      <div v-if="active_step == 'choose-source' && !has_mount">
+      <div
+        class="mb1"
+        v-if="active_step == 'choose-source' && !has_mount"
+      >
         <IconList
           :items="integrations"
           @item-click="onIntegrationClick"

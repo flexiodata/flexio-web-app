@@ -684,7 +684,7 @@
             if (from_format == 'delimited') json.params.input.delimiter  = delimiter;
             if (to_format   == 'delimited') json.params.output.delimiter = delimiter;
           }
-          catch (e)
+          catch(e)
           {
           }
         }
@@ -725,7 +725,7 @@
             if (from_format == 'delimited') json.params.input.qualifier  = qualifier;
             if (to_format   == 'delimited') json.params.output.qualifier = qualifier;
           }
-          catch (e)
+          catch(e)
           {
             this.errors.push({ "code":     "invalid_value",
                                "message":  "Invalid value: " + qualifier,

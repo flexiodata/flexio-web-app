@@ -9,6 +9,7 @@ import '@/bootstrap/plugins'    // Vue plugins
 import '@/bootstrap/directives' // Vue directives
 import '@/bootstrap/guards'     // VueRouter guards
 import '@/bootstrap/clipboard'  // clipboard.js access
+import '@/bootstrap/icons'      // icons and company logos
 
 // fallback css (if there's no Internet connection)
 fallbackCss('tachyons-css-test', '/dist/css/tachyons.min.css')

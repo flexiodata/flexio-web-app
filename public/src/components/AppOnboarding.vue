@@ -432,7 +432,7 @@
       openGoogleSheetsAddonDownload() {
         this.$store.track('Clicked Google Sheets Add-on in Onboarding')
         this.has_clicked_get_addon_button = true
-        window.open('https://chrome.google.com/webstore/detail/flexio/cklkghdhggmiooefncfkfgchgocceddj', '_blank')
+        window.open('https://gsuite.google.com/marketplace/app/flexio/919566304535', '_blank')
       },
       openExcelAddonDownload() {
         this.$store.track('Clicked Excel Add-in in Onboarding')

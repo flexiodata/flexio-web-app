@@ -1,5 +1,5 @@
 <template>
-  <img v-if="url.length > 0" :src="url_src" :alt="name" :title="name">
+  <img v-if="url.length > 0" :src="url" :alt="name" :title="name">
   <img v-else-if="icon" :src="icon" :alt="name" :title="name">
   <div v-else :class="emptyCls"></div>
 </template>
@@ -28,20 +28,6 @@
       },
       name() {
         return _.result(this, 'cinfo.service_name', '')
-      },
-      url_src() {
-        var url = this.url
-        if (url.indexOf('logo.clearbit.com') >= 0) {
-          return url
-        }
-
-        var idx = url.indexOf('//')
-        url = idx >= 0 ? this.url.substring(idx + 2) : this.url
-        if (url.indexOf('/') != -1) {
-          url = url.substr(0, url.indexOf('/'))
-        }
-
-        return 'https://logo.clearbit.com/' + url
       }
     },
     methods: {
