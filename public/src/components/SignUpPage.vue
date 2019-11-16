@@ -27,7 +27,7 @@
 
   export default {
     metaInfo: {
-      title: 'Sign Up for Flex.io Serverless Functions Today'
+      title: 'Sign Up for for on-demand API imports into Excel and Google Sheets'
     },
     mixins: [MixinRedirect],
     components: {
