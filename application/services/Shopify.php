@@ -116,6 +116,9 @@ class Shopify implements \Flexio\IFace\IConnection,
         if (strlen($client_id) == 0 || strlen($client_secret) == 0)
             return false;
 
+        // see following for more information:
+        // https://help.shopify.com/en/api/getting-started/authentication/oauth
+
         return false;
     }
 }
