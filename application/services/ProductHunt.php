@@ -170,7 +170,7 @@ class ProductHunt implements \Flexio\IFace\IConnection,
             // we have nothing; we need to redirect to the service's authorization URL
             $query_params = array(
                 'client_id' => $client_id,
-                'scope' => 'private',
+                'scope' => 'private public',
                 'redirect_uri' => $params['redirect'] ?? '',
                 'state' => $params['state'] ?? '',
                 'response_type' => 'code'
