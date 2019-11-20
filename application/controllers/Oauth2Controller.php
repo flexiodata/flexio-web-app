@@ -145,6 +145,12 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
                 'redirect' => self::getCallbackUrl()
             );
 
+            // TODO: Shopify required a 'shop' param as well -- we probably need
+            //       to move over to passing through all query parameters that
+            //       the service passes back to the callback URL
+            if ($connection_type == \Model::CONNECTION_TYPE_SHOPIFY)
+                $connection_info['shop'] = $params['shop'] ?? false;
+
             $service = \Flexio\Services\Factory::create($connection_type, $connection_info);
 
             // STEP 4: make sure the service is authenticated
