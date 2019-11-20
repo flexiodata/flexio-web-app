@@ -33,6 +33,12 @@ export const slugify = str => {
   return str
 }
 
+export const buildQueryString = obj => {
+  var esc = encodeURIComponent
+  var query_str = Object.keys(obj).map(k => esc(k) + '=' + esc(obj[k])).join('&')
+  return query_str
+}
+
 export const isValidEmail = str => {
   return /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(str)
 }

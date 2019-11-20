@@ -2,10 +2,43 @@
   <div v-if="is_oauth">
     <div v-if="!is_connected">
       <p class="tc">To use this connection, you must first connect {{service_name}} to Flex.io.</p>
+      <div
+        v-if="is_shopify"
+      >
+        <TextSeparator class="mt4 mb3 lh-copy ttu fw6 f6">1. Shop Name</TextSeparator>
+        <div class="center mw6">
+          <p>Enter your Shopify store name. This is required even if you use a custom domain like <span class="blue">https://www.my-store-name.com</span></p>
+          <el-form
+            ref="form"
+            class="el-form--cozy el-form__label-tiny"
+            label-position="top"
+            :model="$data"
+            :rules="rules"
+            @submit.prevent.native
+          >
+            <el-form-item
+              key="shopify_store_name"
+              prop="shopify_store_name"
+              label="Store name"
+            >
+              <el-input
+                placeholder="my-store-name"
+                spellcheck="false"
+                v-model="shopify_store_name"
+              >
+                <div slot="prepend">https://</div>
+                <div slot="append">.myshopify.com/</div>
+              </el-input>
+            </el-form-item>
+          </el-form>
+        </div>
+        <TextSeparator class="mt4 mb4 lh-copy ttu fw6 f6">2. Connect</TextSeparator>
+      </div>
       <div class="mv3 tc">
         <el-button
           class="ttu fw6"
           type="primary"
+          :disabled="is_connect_btn_disabled"
           @click="onConnectClick"
         >
           Connect to your {{service_name}} account
@@ -174,6 +207,7 @@
       edit_connection: {},
       edit_connection_info: {},
       github_url: '',
+      shopify_store_name: ''
     }
   }
 
@@ -238,6 +272,9 @@
       is_github() {
         return this.ctype == ctypes.CONNECTION_TYPE_GITHUB
       },
+      is_shopify() {
+        return this.ctype == ctypes.CONNECTION_TYPE_SHOPIFY
+      },
       is_crunchbase() {
         return this.ctype == ctypes.CONNECTION_TYPE_CRUNCHBASE
       },
@@ -252,6 +289,12 @@
       },
       form_json() {
         return this.forms[this.ctype] || {}
+      },
+      oauth_options() {
+        return this.is_shopify ? this.shopify_store_name : ''
+      },
+      is_connect_btn_disabled() {
+        return this.is_shopify ? this.shopify_store_name.length == 0 : false
       },
       test_btn_type() {
         switch (this.test_state) {
@@ -395,7 +438,7 @@
         var eid = _.get(this.connection, 'eid', '')
         var team_name = this.active_team_name
 
-        this.$_Oauth_showPopup(this.ctype, eid, attrs => {
+        this.$_Oauth_showPopup(this.ctype, eid, this.oauth_options, attrs => {
           // TODO: handle 'code' and 'state' and 'error' here...
 
           if (eid.length > 0) {

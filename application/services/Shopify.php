@@ -165,9 +165,7 @@ class Shopify implements \Flexio\IFace\IConnection,
 
             $state = $params['state'] ?? '';
             $redirect_uri = $params['redirect'] ?? '';
-            $options = $params['options'] ?? '';
-            //$shop_name = $options;
-            $shop_name = 'flex-io';
+            $shop_name = $params['options'] ?? '';
 
             $scope = '';
             $scope.= 'read_content,';
