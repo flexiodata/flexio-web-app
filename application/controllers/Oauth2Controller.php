@@ -37,6 +37,7 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
         // the callback
         $connection_type = $params['service'] ?? '';
         $connection_eid = $params['eid'] ?? '';
+        $connection_options = $params['options'] ?? '';
 
         try
         {
@@ -66,7 +67,8 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
             );
             $connection_info = array(
                 'state' => \Flexio\Base\Util::encrypt(json_encode($state), self::OAUTH2_ENCKEY), // encrypt function returns base64 string, so url safe
-                'redirect' => self::getCallbackUrl()
+                'redirect' => self::getCallbackUrl(),
+                'options' => $connection_options
             );
 
             // STEP 4: get the remote service authorization url to redirect to authenticate
