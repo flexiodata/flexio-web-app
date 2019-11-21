@@ -116,6 +116,77 @@ class Pipedrive implements \Flexio\IFace\IConnection,
         if (strlen($client_id) == 0 || strlen($client_secret) == 0)
             return false;
 
+        // see following for more information:
+        // https://pipedrive.readme.io/docs/marketplace-oauth-authorization
+
+        if (isset($params['access_token'])) {
+            // if we have an access token, create an object
+            // from the access token and return it
+            $this->access_token = $params['access_token'];
+            return true;
+        } else if (isset($params['code'])) {
+            // if we have a code parameter, we have enough information
+            // to authenticate and get the token; do so and return the object
+
+            $auth_token_url = 'https://oauth.pipedrive.com/oauth/token';
+
+            $post_data = array(
+                'grant_type' => 'authorization_code',
+                'code' => $params['code'],
+                'redirect_uri' => $params['redirect'] ?? ''
+            );
+            $post_data = http_build_query($post_data);
+
+            $headers = array();
+            $headers[] = 'Authorization: Basic ' . base64_encode($client_id . ':' . $client_secret);
+            $headers[] = 'Content-Type: application/x-www-form-urlencoded';
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $auth_token_url);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+
+            $result = curl_exec($ch);
+            curl_close($ch);
+
+            $obj = @json_decode($result, true);
+
+            /*
+              per the docs above, this call returns a JSON object with the following structure;
+              we still need to handle the `refresh_token` and `expires_in`:
+
+              {
+                  access_token,
+                  token_type,
+                  refresh_token,
+                  scope,
+                  expires_in
+              }
+            */
+
+            if ($obj === null)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, _("Could not read access token from service"));
+
+            $this->access_token = $obj['access_token'];
+            return true;
+        } else {
+            // we have nothing; we need to redirect to the service's authorization URL
+
+            $query_params = array(
+                'client_id' => $client_id,
+                'redirect_uri' => $params['redirect'] ?? '',
+                'state' => $params['state'] ?? ''
+            );
+            $query_str = http_build_query($query_params);
+
+            $this->authorization_uri = 'https://oauth.pipedrive.com/oauth/authorize?' . $query_str;
+            return false;
+        }
+
         return false;
     }
 }
