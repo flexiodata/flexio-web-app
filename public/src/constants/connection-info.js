@@ -156,6 +156,17 @@ const PRODUCTHUNT = {
   is_function_mount: false,
 }
 
+const PIPEDRIVE = {
+  service_name: 'Pipedrive',
+  service_description: "",
+  connection_type: types.CONNECTION_TYPE_PIPEDRIVE,
+  icon: require('../assets/icon/icon-missing-128.png'),
+  is_oauth: true,
+  is_storage: false,
+  is_filesystem: false,
+  is_function_mount: false,
+}
+
 const SHOPIFY = {
   service_name: 'Shopify',
   service_description: "The all-in-one commerce platform to start, run, and grow a business",
@@ -207,6 +218,7 @@ export const CONNECTION_INFO_MYSQL                = MYSQL
 export const CONNECTION_INFO_POSTGRES             = POSTGRES
 export const CONNECTION_INFO_PRODUCTHUNT          = PRODUCTHUNT
 export const CONNECTION_INFO_SHOPIFY              = SHOPIFY
+export const CONNECTION_INFO_PIPEDRIVE            = PIPEDRIVE
 export const CONNECTION_INFO_SFTP                 = SFTP
 export const CONNECTION_INFO_KEYRING              = KEYRING
 

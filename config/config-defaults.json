@@ -70,6 +70,9 @@
     "linkedin_client_id": "",
     "linkedin_client_secret": "",
 
+    "pipedrive_client_id": "",
+    "pipedrive_client_secret": "",
+
     "producthunt_client_id": "",
     "producthunt_client_secret": "",
 
