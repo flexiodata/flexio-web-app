@@ -49,6 +49,9 @@
     "box_client_id": "",
     "box_client_secret": "",
 
+    "capsulecrm_client_id": "",
+    "capsulecrm_client_secret": "",
+
     "dropbox_client_id": "",
     "dropbox_client_secret": "",
 
