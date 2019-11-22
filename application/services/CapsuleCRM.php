@@ -110,7 +110,7 @@ class CapsuleCRM implements \Flexio\IFace\IConnection,
 
     private function initialize(array $params) : bool
     {
-        // see here for more information about using producthunt oauth2:
+        // see here for more information about using capsulecrm oauth2:
         // https://developer.capsulecrm.com/v2/overview/authentication
 
         $client_id = $GLOBALS['g_config']->capsulecrm_client_id ?? '';
@@ -129,11 +129,55 @@ class CapsuleCRM implements \Flexio\IFace\IConnection,
         {
             // if we have a code parameter, we have enough information
             // to authenticate and get the token; do so and return the object
-            return false;
+            $auth_token_url = 'https://api.capsulecrm.com/oauth/token';
+
+            $post_data = array(
+                'client_id' => $client_id,
+                'client_secret' => $client_secret,
+                'redirect_uri' => $params['redirect'] ?? '',
+                'grant_type' => 'authorization_code',
+                'code' => $params['code']
+            );
+            $post_data = json_encode($post_data, JSON_UNESCAPED_SLASHES | JSON_FORCE_OBJECT);
+
+            $headers = array();
+            $headers[] = 'Accept: application/json';
+            $headers[] = 'Content-Type: application/json';
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $auth_token_url);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+
+            $result = curl_exec($ch);
+            curl_close($ch);
+
+            $obj = @json_decode($result, true);
+
+            if ($obj === null)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, _("Could not read access token from service"));
+
+            $this->access_token = $obj['access_token'];
+            $this->refresh_token = $obj['refresh_token'];
+            $this->expires = $obj['expires_in'];
+            return true;
         }
         else
         {
             // we have nothing; we need to redirect to the service's authorization URL
+            $query_params = array(
+                'client_id' => $client_id,
+                'redirect_uri' => $params['redirect'] ?? '',
+                'state' => $params['state'] ?? '',
+                'scope' => 'read',
+                'response_type' => 'code'
+            );
+            $query_str = http_build_query($query_params);
+            $this->authorization_uri = 'https://api.capsulecrm.com/oauth/authorise?' . $query_str;
             return false;
         }
 
