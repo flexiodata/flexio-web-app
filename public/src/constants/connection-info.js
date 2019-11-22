@@ -24,6 +24,17 @@ const BOX = {
   is_function_mount: true,
 }
 
+const CAPSULECRM = {
+  service_name: 'Capsule CRM',
+  service_description: 'Build stronger customer relationships, make more sales and save time',
+  connection_type: types.CONNECTION_TYPE_CAPSULECRM,
+  icon: require('../assets/icon/icon-capsulecrm-128.png'),
+  is_oauth: true,
+  is_storage: false,
+  is_filesystem: false,
+  is_function_mount: false,
+}
+
 const CRUNCHBASE = {
   service_name: 'Crunchbase',
   service_description: 'Discover innovative companies and the people behind them',
@@ -218,6 +229,7 @@ export const CONNECTION_INFO_MYSQL                = MYSQL
 export const CONNECTION_INFO_POSTGRES             = POSTGRES
 export const CONNECTION_INFO_PRODUCTHUNT          = PRODUCTHUNT
 export const CONNECTION_INFO_SHOPIFY              = SHOPIFY
+export const CONNECTION_INFO_CAPSULECRM           = CAPSULECRM
 export const CONNECTION_INFO_PIPEDRIVE            = PIPEDRIVE
 export const CONNECTION_INFO_SFTP                 = SFTP
 export const CONNECTION_INFO_KEYRING              = KEYRING
