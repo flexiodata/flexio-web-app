@@ -514,5 +514,10 @@ class Test
         $actual = \Model::CONNECTION_TYPE_PIPEDRIVE;
         $expected = 'pipedrive';
         \Flexio\Tests\Check::assertString('K.26', 'Type constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Model::CONNECTION_TYPE_CAPSULECRM;
+        $expected = 'capsulecrm';
+        \Flexio\Tests\Check::assertString('K.27', 'Type constant',  $actual, $expected, $results);
     }
 }
