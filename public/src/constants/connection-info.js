@@ -160,7 +160,7 @@ const PIPEDRIVE = {
   service_name: 'Pipedrive',
   service_description: "",
   connection_type: types.CONNECTION_TYPE_PIPEDRIVE,
-  icon: require('../assets/icon/icon-missing-128.png'),
+  icon: require('../assets/icon/icon-pipedrive-128.png'),
   is_oauth: true,
   is_storage: false,
   is_filesystem: false,
