@@ -29,6 +29,7 @@ class Base
 
     public const TEST_SERVICE_AMAZONS3 = true;
     public const TEST_SERVICE_BOX = true;
+    public const TEST_SERVICE_CAPSULECRM = true;
     public const TEST_SERVICE_DROPBOX = true;
     public const TEST_SERVICE_ELASTICSEARCH = true;
     public const TEST_SERVICE_FIREBASE = true;
@@ -43,8 +44,10 @@ class Base
     public const TEST_SERVICE_INTERCOM = true;
     public const TEST_SERVICE_LINKEDIN = true;
     public const TEST_SERVICE_MYSQL = true;
+    public const TEST_SERVICE_PIPEDRIVE = true;
     public const TEST_SERVICE_POSTGRES = true;
     public const TEST_SERVICE_SFTP = true;
+    public const TEST_SERVICE_SHOPIFY = true;
     public const TEST_SERVICE_SOCRATA = true;
     public const TEST_SERVICE_TWITTER = true;
 
