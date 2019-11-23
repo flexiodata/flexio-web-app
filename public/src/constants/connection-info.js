@@ -230,7 +230,7 @@ export const CONNECTION_INFO_POSTGRES             = POSTGRES
 export const CONNECTION_INFO_PRODUCTHUNT          = PRODUCTHUNT
 export const CONNECTION_INFO_SHOPIFY              = SHOPIFY
 export const CONNECTION_INFO_CAPSULECRM           = CAPSULECRM
-//export const CONNECTION_INFO_PIPEDRIVE            = PIPEDRIVE
+export const CONNECTION_INFO_PIPEDRIVE            = PIPEDRIVE
 export const CONNECTION_INFO_SFTP                 = SFTP
 export const CONNECTION_INFO_KEYRING              = KEYRING
 
