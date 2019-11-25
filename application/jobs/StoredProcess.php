@@ -391,10 +391,9 @@ class StoredProcess implements \Flexio\IFace\IProcess
                         foreach ($setup_config as $key => $value)
                         {
                             // note: setup config is a set of key/values; currently, values can
-                            // be either strings or oauth connection object; if we don't have an
-                            // oauth connection object, simply pass on the value, otherwise,
-                            // "dereference" the connection and pass on the oauth access token
-                            // from the connection
+                            // be either strings or oauth connection object; if we don't have a
+                            // connection object, simply pass on the value, otherwise, "dereference"
+                            // the connection and pass on the connection info
 
                             // if we don't have an object identifier, simply pass on what's there
                             $mount_item_eid = $value['eid'] ?? false;
