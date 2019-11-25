@@ -32,7 +32,7 @@ const getWindowOptions = () => {
 
 export default {
   methods: {
-    $_Oauth_showPopup(connection_type, eid, options, callback) {
+    $_Oauth_showPopup(connection_type, eid, api_base_uri, callback) {
       if (_.isNil(connection_type)) {
         return
       }
@@ -40,7 +40,7 @@ export default {
       var query_str = buildQueryString({
         service: connection_type,
         eid,
-        options
+        api_base_uri
       })
 
       var oauth_origin = 'https://' + HOSTNAME

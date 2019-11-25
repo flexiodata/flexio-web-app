@@ -37,7 +37,7 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
         // the callback
         $connection_type = $params['service'] ?? '';
         $connection_eid = $params['eid'] ?? '';
-        $connection_options = $params['options'] ?? '';
+        $api_base_uri = $params['api_base_uri'] ?? '';
 
         try
         {
@@ -63,12 +63,13 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
             $state = array(
                 'requesting_user_eid' => $requesting_user_eid,
                 'connection_type' => $connection_type,
-                'connection_eid' => $connection_eid
+                'connection_eid' => $connection_eid,
+                'api_base_uri' => $api_base_uri
             );
             $connection_info = array(
                 'state' => \Flexio\Base\Util::encrypt(json_encode($state), self::OAUTH2_ENCKEY), // encrypt function returns base64 string, so url safe
                 'redirect' => self::getCallbackUrl(),
-                'options' => $connection_options
+                'api_base_uri' => $api_base_uri
             );
 
             // STEP 4: get the remote service authorization url to redirect to authenticate
@@ -124,6 +125,7 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
         $initial_requesting_user_eid = $state['requesting_user_eid'];
         $connection_type = $state['connection_type'] ?? '';
         $connection_eid = $state['connection_eid'] ?? '';
+        $api_base_uri = $state['api_base_uri'] ?? '';
 
         // create an initial set of connection properties to save
         $connection_properties_to_save = array();
@@ -140,16 +142,15 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED);
 
             // STEP 3: finish the authentication process
-            $connection_info = array(
-                'code' => $code,
-                'redirect' => self::getCallbackUrl()
-            );
 
-            // TODO: Shopify required a 'shop' param as well -- we probably need
-            //       to move over to passing through all query parameters that
-            //       the service passes back to the callback URL
-            if ($connection_type == \Model::CONNECTION_TYPE_SHOPIFY)
-                $connection_info['shop'] = $params['shop'] ?? false;
+            // pass through the parameters we get back from the service via the OAuth callback,
+            // but make sure we have our official parameters that are necessary for services
+            // to connect
+            $connection_info = array_merge($params, array(
+                'code' => $code,
+                'redirect' => self::getCallbackUrl(),
+                'api_base_uri' => $api_base_uri
+            ));
 
             $service = \Flexio\Services\Factory::create($connection_type, $connection_info);
 

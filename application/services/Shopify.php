@@ -21,6 +21,7 @@ class Shopify implements \Flexio\IFace\IConnection,
 {
     // connection info
     private $authorization_uri = '';
+    private $api_base_uri = '';
     private $access_token = '';
     private $refresh_token = '';
     private $expires = 0;
@@ -50,6 +51,7 @@ class Shopify implements \Flexio\IFace\IConnection,
     {
         // reset oauth credential info
         $this->authorization_uri = '';
+        $this->api_base_uri = '';
         $this->access_token = '';
         $this->refresh_token = '';
         $this->expires = 0;
@@ -66,6 +68,7 @@ class Shopify implements \Flexio\IFace\IConnection,
     public function get() : array
     {
         $properties = array(
+            'api_base_uri'  => $this->api_base_uri,
             'access_token'  => $this->access_token,
             'refresh_token' => $this->refresh_token,
             'expires'       => $this->expires
@@ -123,13 +126,14 @@ class Shopify implements \Flexio\IFace\IConnection,
             // if we have an access token, create an object
             // from the access token and return it
             $this->access_token = $params['access_token'];
+            $this->api_base_uri = $params['api_base_uri'] ?? '';
             return true;
         } else if (isset($params['code'])) {
             // if we have a code parameter, we have enough information
             // to authenticate and get the token; do so and return the object
 
-            $shop = $params['shop'] ?? '';
-            $auth_token_url = 'https://' . $shop . '/admin/oauth/access_token';
+            $api_base_uri = $params['api_base_uri'] ?? '';
+            $auth_token_url = $api_base_uri . '/admin/oauth/access_token';
 
             $post_data = array(
                 'client_id' => $client_id,
@@ -159,13 +163,14 @@ class Shopify implements \Flexio\IFace\IConnection,
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, _("Could not read access token from service"));
 
             $this->access_token = $obj['access_token'];
+            $this->api_base_uri = $params['api_base_uri'] ?? '';
             return true;
         } else {
             // we have nothing; we need to redirect to the service's authorization URL
 
             $state = $params['state'] ?? '';
             $redirect_uri = $params['redirect'] ?? '';
-            $shop_name = $params['options'] ?? '';
+            $api_base_uri = $params['api_base_uri'] ?? '';
 
             $scope = '';
             $scope.= 'read_content,';
@@ -200,7 +205,9 @@ class Shopify implements \Flexio\IFace\IConnection,
             );
             $query_str = http_build_query($query_params);
 
-            $this->authorization_uri = 'https://' . $shop_name . '.myshopify.com/admin/oauth/authorize?' . $query_str;
+            $this->authorization_uri = $api_base_uri . '/admin/oauth/authorize?' . $query_str;
+            $this->api_base_uri = $api_base_uri;
+
             return false;
         }
 

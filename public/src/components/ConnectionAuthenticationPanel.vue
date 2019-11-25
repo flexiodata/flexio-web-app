@@ -290,8 +290,8 @@
       form_json() {
         return this.forms[this.ctype] || {}
       },
-      oauth_options() {
-        return this.is_shopify ? this.shopify_store_name : ''
+      api_base_uri() {
+        return this.is_shopify ? 'https://' + this.shopify_store_name + '.myshopify.com' : ''
       },
       is_connect_btn_disabled() {
         return this.is_shopify ? this.shopify_store_name.length == 0 : false
@@ -438,7 +438,7 @@
         var eid = _.get(this.connection, 'eid', '')
         var team_name = this.active_team_name
 
-        this.$_Oauth_showPopup(this.ctype, eid, this.oauth_options, attrs => {
+        this.$_Oauth_showPopup(this.ctype, eid, this.api_base_uri, attrs => {
           // TODO: handle 'code' and 'state' and 'error' here...
 
           if (eid.length > 0) {
