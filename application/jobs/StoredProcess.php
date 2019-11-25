@@ -407,9 +407,12 @@ class StoredProcess implements \Flexio\IFace\IProcess
                             // get the access token
                             try
                             {
+                                $requesting_user_eid = $this->getOwner();
                                 $connection = \Flexio\Object\Connection::load($mount_item_eid);
                                 if ($connection->getStatus() !== \Model::STATUS_AVAILABLE)
                                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+                                if ($connection->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_CONNECTION_READ) === false)
+                                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
                                 $service = $connection->getService();
                                 $mount_info[$key] = $service->get();
