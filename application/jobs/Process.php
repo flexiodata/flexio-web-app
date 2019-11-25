@@ -174,15 +174,16 @@ class Process implements \Flexio\IFace\IProcess
 
     public function setParams(array $arr) : \Flexio\Jobs\Process
     {
-        foreach ($arr as $k => &$v)
-        {
-            if (!($v instanceof \Flexio\Base\Stream))
-            {
-                $stream = \Flexio\Base\Stream::create();
-                $stream->buffer = (string)$v;     // shortcut to speed it up -- can also use getWriter()->write((string)$v)
-                $v = $stream;
-            }
-        }
+        // TODO: test to pass connection info array as a value; see StoredProcess.php Flexio\Jobs\Execute::func_getEnv()
+        // foreach ($arr as $k => &$v)
+        // {
+        //     if (!($v instanceof \Flexio\Base\Stream))
+        //     {
+        //         $stream = \Flexio\Base\Stream::create();
+        //         $stream->buffer = (string)$v;     // shortcut to speed it up -- can also use getWriter()->write((string)$v)
+        //         $v = $stream;
+        //     }
+        // }
 
         $this->params = $arr;
         return $this;

@@ -167,7 +167,7 @@ class ExecuteProxy
         $exception_msg = '';
 
         //self::debugstep($c1, "Container name $container_name");
-        
+
         // get the docker binary location
         global $g_dockerbin;
         $g_dockerbin = \Flexio\System\System::getBinaryPath('docker');
@@ -175,7 +175,7 @@ class ExecuteProxy
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         //self::debugstep($c1, "Docker command '$g_dockerbin'");
-    
+
         // there is a directory hierarchy that is written on the host and mounted in the container
         // For example, if two processes were running in one container, it would look like this
 
@@ -203,7 +203,7 @@ class ExecuteProxy
 
 
         //self::debugstep($c1, "ZMQ Context created");
-    
+
         // write out the execute job's script
 
         if (false === @mkdir($host_src_dir, 0700, true))
@@ -226,7 +226,7 @@ class ExecuteProxy
 
 
         //self::debugstep($c1, "Script files written");
-    
+
 
         // at script shutdown, clean up progress directory
         register_shutdown_function(function() use ($host_process_dir) {
@@ -242,11 +242,11 @@ class ExecuteProxy
         // find out if we need to start a container
 
         //self::debugstep($c1, "Looking for IPC file $host_container_zmq");
-    
+
         if (file_exists($host_container_zmq))
         {
             //self::debugstep($c1, "IPC file $host_container_zmq exists");
-    
+
             $zmqsock_client = new \ZMQSocket($zmq_context, \ZMQ::SOCKET_REQ);
             $zmqsock_client->connect("ipc://$host_container_zmq");
             $zmqsock_client->setSockOpt(\ZMQ::SOCKOPT_SNDTIMEO, 1000);
@@ -257,14 +257,14 @@ class ExecuteProxy
             {
                 //echo "Sending message to ipc://$host_container_zmq <br/>";
                 //self::debugstep($c1, "Sending 'hello' to ZMQ");
-    
+
                 $zmqsock_client->send('{"cmd":"hello"}');
 
                 $message = $zmqsock_client->recv();
                 if ($message === false)
                 {
                     //self::debugstep($c1, "zmq_client->recv() returned false");
-    
+
                     $zmqsock_client = null;
                 }
                  else
@@ -277,7 +277,7 @@ class ExecuteProxy
                     else
                     {
                         //self::debugstep($c1, "hello message returned something other than hello: " . json_encode($message));
-    
+
                         $zmqsock_client = null;
                     }
                 }
@@ -288,7 +288,7 @@ class ExecuteProxy
                 // error occurred, start a new server
                 //echo "No controller found";
                 //self::debugstep($c1, "exception during hello command");
-    
+
                 $zmqsock_client = null;
             }
         }
@@ -302,7 +302,7 @@ class ExecuteProxy
         if (is_null($zmqsock_client))
         {
             //self::debugstep($c1, "ZMQ client not yet initialized - starting docker container");
-    
+
             $uid = posix_getuid();
             $cmd = "$g_dockerbin run -d --net=host --rm --name $container_name -v $host_base_dir:$cont_base_dir  -i fxruntime /fxruntime/fxcontroller $uid";
 
@@ -317,7 +317,7 @@ class ExecuteProxy
 
             //self::debugstep($c1, "Ok...now waiting for host_container_zmq file to show up: Path is $host_container_zmq");
 
-    
+
             $count = 0;
             while (!file_exists($host_container_zmq))
             {
@@ -974,7 +974,9 @@ class ScriptHost
         $params = $this->process->getParams();
         foreach ($params as $k => $v)
         {
-            $res[$k] = $v->getReader()->read(PHP_INT_MAX); // get all the contents; read() takes a default parameter that limits read size
+            // TODO: test to pass connection info array as a value; see StoredProcess.php Flexio\Jobs\Process::setParams()
+            //$res[$k] = $v->getReader()->read(PHP_INT_MAX); // get all the contents; read() takes a default parameter that limits read size
+            $res[$k] = $v;
         }
         return (object)$res;
     }
