@@ -409,15 +409,11 @@ class StoredProcess implements \Flexio\IFace\IProcess
                             try
                             {
                                 $connection = \Flexio\Object\Connection::load($mount_item_eid);
-                                if ($connection->getStatus() === \Model::STATUS_DELETED)
+                                if ($connection->getStatus() !== \Model::STATUS_AVAILABLE)
                                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
                                 $service = $connection->getService();
-                                if (!($service instanceof \Flexio\IFace\IOAuthConnection))
-                                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-
-                                $tokens = $service->getTokens();
-                                $mount_info[$key] = $tokens['access_token'];
+                                $mount_info[$key] = $service->get();
                             }
                             catch (\Flexio\Base\Exception $e)
                             {
