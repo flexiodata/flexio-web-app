@@ -34,6 +34,38 @@
         </div>
         <TextSeparator class="mt4 mb4 lh-copy ttu fw6 f6">2. Connect</TextSeparator>
       </div>
+      <div
+        v-if="is_pipedrive"
+      >
+        <TextSeparator class="mt4 mb3 lh-copy ttu fw6 f6">1. Company Domain</TextSeparator>
+        <div class="center mw6">
+          <p>Enter your Pipedrive company domain.</p>
+          <el-form
+            ref="form"
+            class="el-form--cozy el-form__label-tiny"
+            label-position="top"
+            :model="$data"
+            :rules="rules"
+            @submit.prevent.native
+          >
+            <el-form-item
+              key="pipedrive_company_domain"
+              prop="pipedrive_company_domain"
+              label="Company domain"
+            >
+              <el-input
+                placeholder="mydomain"
+                spellcheck="false"
+                v-model="pipedrive_company_domain"
+              >
+                <div slot="prepend">https://</div>
+                <div slot="append">.pipedrive.com/</div>
+              </el-input>
+            </el-form-item>
+          </el-form>
+        </div>
+        <TextSeparator class="mt4 mb4 lh-copy ttu fw6 f6">2. Connect</TextSeparator>
+      </div>
       <div class="mv3 tc">
         <el-button
           class="ttu fw6"
@@ -207,7 +239,8 @@
       edit_connection: {},
       edit_connection_info: {},
       github_url: '',
-      shopify_store_name: ''
+      shopify_store_name: '',
+      pipedrive_company_domain: ''
     }
   }
 
@@ -275,6 +308,9 @@
       is_shopify() {
         return this.ctype == ctypes.CONNECTION_TYPE_SHOPIFY
       },
+      is_pipedrive() {
+        return this.ctype == ctypes.CONNECTION_TYPE_PIPEDRIVE
+      },
       is_crunchbase() {
         return this.ctype == ctypes.CONNECTION_TYPE_CRUNCHBASE
       },
@@ -291,10 +327,22 @@
         return this.forms[this.ctype] || {}
       },
       api_base_uri() {
-        return this.is_shopify ? 'https://' + this.shopify_store_name + '.myshopify.com' : ''
+        switch (this.ctype) {
+          default: return ''
+          case ctypes.CONNECTION_TYPE_SHOPIFY:   return 'https://' + this.shopify_store_name + '.myshopify.com'
+          case ctypes.CONNECTION_TYPE_PIPEDRIVE: return 'https://' + this.pipedrive_company_domain + '.pipedrive.com'
+        }
+
+        return ''
       },
       is_connect_btn_disabled() {
-        return this.is_shopify ? this.shopify_store_name.length == 0 : false
+        switch (this.ctype) {
+          default: return false
+          case ctypes.CONNECTION_TYPE_SHOPIFY:   return this.shopify_store_name.length == 0
+          case ctypes.CONNECTION_TYPE_PIPEDRIVE: return this.pipedrive_company_domain.length == 0
+        }
+
+        return false
       },
       test_btn_type() {
         switch (this.test_state) {
