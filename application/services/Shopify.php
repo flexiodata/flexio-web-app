@@ -122,6 +122,10 @@ class Shopify implements \Flexio\IFace\IConnection,
         // see following for more information:
         // https://help.shopify.com/en/api/getting-started/authentication/oauth#step-2-ask-for-permission
 
+        // see following regarding access_token expiration and refresh token (access_token doesn't expire for offline, which is default):
+        // https://community.shopify.com/c/Shopify-APIs-SDKs/Will-access-token-expired/td-p/559870
+        // https://help.shopify.com/en/api/getting-started/authentication/oauth/api-access-modes#offline-access
+
         if (isset($params['access_token'])) {
             // if we have an access token, create an object
             // from the access token and return it
