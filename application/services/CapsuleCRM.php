@@ -119,11 +119,59 @@ class CapsuleCRM implements \Flexio\IFace\IConnection,
         if (strlen($client_id) == 0 || strlen($client_secret) == 0)
             return false;
 
-        if (isset($params['access_token'])) {
-            // if we have an access token, create an object
-            // from the access token and return it
-            $this->access_token = $params['access_token'];
-            return true;
+        if (isset($params['access_token']))
+        {
+            // if we have an access token, initialize the variables
+            $curtime = time();
+            $expires = $params['expires'] ?? 0;
+            if ($curtime < $expires)
+            {
+                // access token is valid (not expired); use it
+                $this->access_token = $params['access_token'];
+                $this->refresh_token = $params['refresh_token'] ?? '';
+                $this->expires = $expires;
+
+                return true;
+            }
+             else
+            {
+                // access token is expired, get a new one
+                $auth_token_url = 'https://api.capsulecrm.com/oauth/token';
+
+                $post_data = array(
+                    'client_id' => $client_id,
+                    'client_secret' => $client_secret,
+                    'grant_type' => 'refresh_token',
+                    'refresh_token' => $params['refresh_token'] ?? ''
+                );
+                $post_data = json_encode($post_data, JSON_UNESCAPED_SLASHES | JSON_FORCE_OBJECT);
+
+                $headers = array();
+                $headers[] = 'Accept: application/json';
+                $headers[] = 'Content-Type: application/json';
+
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $auth_token_url);
+                curl_setopt($ch, CURLOPT_POST, true);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+
+                $result = curl_exec($ch);
+                curl_close($ch);
+
+                $obj = @json_decode($result, true);
+
+                if ($obj === null)
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, _("Could not read access token from service"));
+
+                $this->access_token = $obj['access_token'];
+                $this->refresh_token = $obj['refresh_token'];
+                $this->expires = $obj['expires_in'] + time(); // set end-of-life expiration in epoch/unix time
+                return true;
+            }
         }
         else if (isset($params['code']))
         {
@@ -163,7 +211,7 @@ class CapsuleCRM implements \Flexio\IFace\IConnection,
 
             $this->access_token = $obj['access_token'];
             $this->refresh_token = $obj['refresh_token'];
-            $this->expires = $obj['expires_in'];
+            $this->expires = $obj['expires_in'] + time(); // set end-of-life expiration in epoch/unix time
             return true;
         }
         else
