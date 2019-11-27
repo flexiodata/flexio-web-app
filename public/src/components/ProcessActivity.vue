@@ -1,20 +1,12 @@
 <template>
-  <!-- fetching -->
-  <div v-if="is_fetching || force_loading">
-    <div class="flex flex-column justify-center h-100">
-      <Spinner size="large" message="Loading activity..." />
-    </div>
-  </div>
-
-  <!-- fetched -->
-  <div class="flex flex-column" :id="doc_id" v-else-if="is_fetched">
+  <div class="flex flex-column" :id="doc_id">
     <!-- use `z-7` to ensure the title z-index is greater than the CodeMirror scrollbar -->
     <div class="relative z-7 bg-white sticky">
       <div class="center w-100 pb3 bb bb-0-l b--black-10 sticky" style="max-width: 1280px">
         <!-- control bar -->
         <div class="flex flex-row items-center">
           <div class="flex-fill flex flex-row items-center">
-            <slot name="title"><h1 class="mv0 f2 fw4 mr3">{{title}}</h1></slot>
+            <slot name="title"><h1 class="mv0 f2 fw4 mr3">Activity</h1></slot>
           </div>
           <SimplePager
             :current-page.sync="current_page"
@@ -91,7 +83,6 @@
 <script>
   import moment from 'moment'
   import stickybits from 'stickybits'
-  import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
   import SimplePager from '@/components/SimplePager'
   import ProcessList from '@/components/ProcessList'
@@ -102,7 +93,8 @@
     inheritAttrs: false,
     props: {
       items: {
-        type: Array
+        type: Array,
+        required: true
       },
       createdMin: {
         type: String
@@ -122,10 +114,6 @@
       ProcessDetailsPanel
     },
     watch: {
-      is_fetched: {
-        handler: 'initSticky',
-        immediate: true
-      },
       date_range(val) {
         if (val) {
           var start = val[0] ? moment(val[0]).format('YMMDD') : val[0]
@@ -159,14 +147,8 @@
       }
     },
     computed: {
-      // mix this into the outer object with the object spread operator
-      ...mapState({
-        is_fetching: state => state.processes.is_fetching,
-        is_fetched: state => state.processes.is_fetched,
-        active_team_name: state => state.teams.active_team_name
-      }),
       all_processes() {
-        return this.items ? this.items : this.getAllProcesses()
+        return this.items
       },
       filtered_processes() {
         return _.filter(this.all_processes, this.filterBy)
@@ -183,31 +165,11 @@
       end() {
         return Math.min((this.start + this.page_size - 1) + 1, this.total_count)
       },
-      title() {
-        var ru = this.active_team_name
-        return ru && ru.length > 0 ? ru + '/' + 'activity' : 'Activity'
-      }
     },
     mounted() {
       this.initSticky()
-      this.tryFetchProcesses()
-      this.force_loading = true
-      setTimeout(() => { this.force_loading = false }, 10)
     },
     methods: {
-      ...mapGetters('processes', {
-        'getAllProcesses': 'getAllProcesses'
-      }),
-      tryFetchProcesses() {
-        // if we pass an items array as a prop, we don't want to do this query here
-        if (!_.isArray(this.items)) {
-          var team_name = this.active_team_name
-
-          if (!this.is_fetched && !this.is_fetching) {
-            this.$store.dispatch('processes/fetch', { team_name })
-          }
-        }
-      },
       updatePager(page) {
         // update the route
         var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path', 'query'])

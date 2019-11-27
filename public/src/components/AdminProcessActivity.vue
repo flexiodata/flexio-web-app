@@ -1,5 +1,15 @@
 <template>
-  <div class="bg-white">
+  <!-- fetching -->
+  <div v-if="is_fetching">
+    <div class="flex flex-column justify-center bg-white h-100">
+      <Spinner size="large" message="Loading activity..." />
+    </div>
+  </div>
+
+  <div
+    class="bg-white"
+    v-else
+  >
     <ProcessActivity
       class="h-100 pb5 overflow-y-scroll"
       :items="processes"
@@ -15,6 +25,7 @@
 
 <script>
   import moment from 'moment'
+  import Spinner from 'vue-simple-spinner'
   import ProcessActivity from '@/components/ProcessActivity'
 
   export default {
@@ -22,12 +33,13 @@
       title: '[Admin] Process Activity'
     },
     components: {
+      Spinner,
       ProcessActivity
     },
     data() {
       return {
         processes: [],
-        querying: false
+        is_fetching: false
       }
     },
     computed: {
@@ -61,13 +73,15 @@
       }
     },
     mounted() {
-      this.queryAdminProcesses()
+      this.fetchAdminProcesses()
     },
     methods: {
-      queryAdminProcesses() {
-        if (this.querying === true) {
+      fetchAdminProcesses() {
+        if (this.is_fetching === true) {
           return
         }
+
+        this.is_fetching = true
 
         var attrs = {
           owned_by: this.owned_by,
@@ -78,9 +92,9 @@
         this.$store.dispatch('processes/fetch', { team_name: 'admin', attrs }).then(response => {
           this.processes = response.data
         })
-
-        this.querying = true
-        this.$nextTick(() => { this.querying = false })
+        .finally(() => {
+          this.is_fetching = false
+        })
       },
       updateRoute(query_params) {
         // update the route
@@ -88,7 +102,7 @@
         new_route.query = _.assign({}, new_route.query, query_params)
         this.$router.replace(new_route)
 
-        this.queryAdminProcesses()
+        this.fetchAdminProcesses()
       }
     }
   }
