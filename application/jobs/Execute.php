@@ -974,9 +974,7 @@ class ScriptHost
         $params = $this->process->getParams();
         foreach ($params as $k => $v)
         {
-            // TODO: test to pass connection info array as a value; see StoredProcess.php Flexio\Jobs\Process::setParams()
-            //$res[$k] = $v->getReader()->read(PHP_INT_MAX); // get all the contents; read() takes a default parameter that limits read size
-            $res[$k] = $v;
+            $res[$k] = $v->getReader()->read(PHP_INT_MAX); // get all the contents; read() takes a default parameter that limits read size
         }
         return (object)$res;
     }
