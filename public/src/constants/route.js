@@ -1,4 +1,5 @@
 export const ROUTE_APP_ACCOUNT     = 'app-account'
+export const ROUTE_APP_ACTIVITY    = 'app-activity'
 export const ROUTE_APP_ADMIN       = 'app-admin'
 export const ROUTE_APP_CONNECTIONS = 'app-connections'
 export const ROUTE_APP_MEMBERS     = 'app-members'

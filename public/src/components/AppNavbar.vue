@@ -19,6 +19,7 @@
             <router-link :to="pipe_route" class="f5 link nav-link">Functions</router-link>
             <router-link :to="connection_route" class="f5 link nav-link">Connections</router-link>
             <router-link :to="member_route" class="f5 link nav-link">Members</router-link>
+            <router-link :to="activity_route" class="f5 link nav-link">Activity</router-link>
           </template>
         </template>
       </div>
@@ -34,6 +35,7 @@
   import { mapState, mapGetters } from 'vuex'
   import {
     ROUTE_APP_ACCOUNT,
+    ROUTE_APP_ACTIVITY,
     ROUTE_APP_FUNCTIONS,
     ROUTE_APP_CONNECTIONS,
     ROUTE_APP_MEMBERS
@@ -59,6 +61,9 @@
       },
       member_route() {
         return { name: ROUTE_APP_MEMBERS, params: { team_name: this.active_team_name } }
+      },
+      activity_route() {
+        return { name: ROUTE_APP_ACTIVITY, params: { team_name: this.active_team_name } }
       },
       is_logged_in() {
         return this.active_user_eid.length > 0

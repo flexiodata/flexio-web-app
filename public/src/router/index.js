@@ -6,6 +6,7 @@ import * as rn from '@/constants/route'
 import admin_routes from './admin'
 
 import AppAccount from '@/components/AppAccount'
+import AppActivity from '@/components/AppActivity'
 import AppConnections from '@/components/AppConnections'
 import AppMembers from '@/components/AppMembers'
 import AppOnboarding from '@/components/AppOnboarding'
@@ -44,6 +45,7 @@ const routes = [
   { path: '/verify',                                     name: rn.ROUTE_VERIFY_PAGE,         component: VerifyPage                },
   { path: '/start/:action?',                             name: rn.ROUTE_APP_ONBOARDING,      component: AppOnboarding,       meta },
   { path: '/account/:action?',                           name: rn.ROUTE_APP_ACCOUNT,         component: AppAccount,          meta },
+  { path: '/:team_name?/activity/:action?',              name: rn.ROUTE_APP_ACTIVITY,        component: AppActivity,         meta },
   { path: '/:team_name?/members/:action?',               name: rn.ROUTE_APP_MEMBERS,         component: AppMembers,          meta },
   { path: '/:team_name?/connections/:object_name?',      name: rn.ROUTE_APP_CONNECTIONS,     component: AppConnections,      meta },
   { path: '/:team_name?/functions/:object_name?/:view?', name: rn.ROUTE_APP_FUNCTIONS,       component: AppPipes,            meta },

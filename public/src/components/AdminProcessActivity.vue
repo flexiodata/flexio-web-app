@@ -1,14 +1,14 @@
 <template>
   <div class="bg-white">
     <ProcessActivity
-      class="pt4 h-100"
+      class="h-100 pb5 overflow-y-scroll"
       :items="processes"
       :show-user="true"
       :created-min.sync="created_min"
       :created-max.sync="created_max"
       :owned-by.sync="owned_by"
     >
-      <h1 class="mv0 f2 fw4 mr3" slot="title">Process Activity</h1>
+      <h1 class="pt4 pb0 mv0 f2 fw4 mr3" slot="title">Process Activity</h1>
     </ProcessActivity>
   </div>
 </template>

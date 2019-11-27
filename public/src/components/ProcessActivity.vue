@@ -7,7 +7,7 @@
   </div>
 
   <!-- fetched -->
-  <div class="flex flex-column overflow-y-scroll" :id="doc_id" v-else-if="is_fetched">
+  <div class="flex flex-column" :id="doc_id" v-else-if="is_fetched">
     <!-- use `z-7` to ensure the title z-index is greater than the CodeMirror scrollbar -->
     <div class="relative z-7 bg-white sticky">
       <div class="center w-100 pb3 bb bb-0-l b--black-10 sticky" style="max-width: 1280px">
@@ -50,7 +50,7 @@
     <!-- list -->
     <ProcessList
       class="center w-100"
-      style="max-width: 1280px; padding-bottom: 8rem"
+      style="max-width: 1280px"
       :items="output_processes"
       :start="start"
       :limit="page_size"
@@ -58,6 +58,18 @@
       @details-click="openProcessDetailsDialog"
       v-bind="$attrs"
     />
+
+    <div class="center w-100 pt4" style="max-width: 1280px">
+      <!-- footer bar -->
+      <div class="flex flex-row justify-end">
+        <SimplePager
+          :current-page.sync="current_page"
+          :page-size="page_size"
+          :total-count="total_count"
+          @current-change="updatePager"
+        />
+      </div>
+    </div>
 
     <!-- process details dialog -->
     <el-dialog

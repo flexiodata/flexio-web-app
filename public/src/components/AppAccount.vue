@@ -21,15 +21,6 @@
             </div>
           </el-tab-pane>
 
-          <el-tab-pane name="activity" v-if="false">
-            <div slot="label"><div style="min-width: 5rem">Activity</div></div>
-            <ProcessActivity class="mh4 pr4" style="min-height: 20rem">
-              <div slot="title">
-                <h3 class="mv0 fw6 f3">Activity</h3>
-              </div>
-            </ProcessActivity>
-          </el-tab-pane>
-
           <el-tab-pane name="settings">
             <div slot="label"><div style="min-width: 5rem">Account</div></div>
             <div class="mh4">
@@ -103,7 +94,6 @@
   import AccountBillingForm from '@/components/AccountBillingForm'
   import AccountPasswordForm from '@/components/AccountPasswordForm'
   import AccountDeleteForm from '@/components/AccountDeleteForm'
-  import ProcessActivity from '@/components/ProcessActivity'
 
   export default {
     metaInfo() {
@@ -118,8 +108,7 @@
       AccountPlanForm,
       AccountBillingForm,
       AccountPasswordForm,
-      AccountDeleteForm,
-      ProcessActivity
+      AccountDeleteForm
     },
     watch: {
       route_action: {
