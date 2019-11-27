@@ -2,11 +2,9 @@
   <div class="bg-nearer-white overflow-y-scroll">
     <div class="ph4 pv5">
       <div
-        class="w-100 center mw-doc pa4 bg-white br2 css-white-box trans-mw"
-        style="min-height: 20rem; margin-bottom: 10rem; max-width: 960px"
+        class="w-100 center mw-doc"
+        style="min-height: 20rem; margin-bottom: 10rem"
       >
-        <!-- uncomment this to extend tab list right border all the way down -->
-        <div class="absolute top-2 bottom-2 tab-list-border" v-if="false"></div>
         <el-tabs
           tab-position="left"
           @tab-click="onTabClick"
@@ -14,54 +12,61 @@
         >
           <el-tab-pane name="profile">
             <div slot="label"><div style="min-width: 5rem">Profile</div></div>
-            <div class="mh4">
-              <h3 class="mt0 fw6 f3">Profile</h3>
-              <AccountProfileForm style="max-width: 42rem" />
-              <div class="h3"></div>
+            <div class="nt3">
+              <div class="ma3 pa4 bg-white br2 css-white-box trans-mw">
+                <h3 class="mt0 fw6 f3">Profile</h3>
+                <AccountProfileForm style="max-width: 42rem" />
+                <div class="h3"></div>
+              </div>
             </div>
           </el-tab-pane>
 
           <el-tab-pane name="settings">
             <div slot="label"><div style="min-width: 5rem">Account</div></div>
-            <div class="mh4">
-              <h3 class="mt0 fw6 f3">Change Password</h3>
-              <AccountPasswordForm style="max-width: 28rem" />
-              <div class="h3"></div>
-              <h3 class="mt0 fw6 f3">Regional Settings</h3>
-              <AccountRegionForm style="max-width: 28rem" />
-              <div class="h3"></div>
-              <h3 class="mt0 fw6 f3 dark-red">Delete Account</h3>
-              <p class="lh-copy f6">Once you delete your account, there's no going back. Please be sure you want to do this!</p>
-              <el-button
-                class="ttu fw6"
-                type="danger"
-                @click="show_account_delete_dialog = true"
-              >
-                Delete your account
-              </el-button>
-              <div class="h3"></div>
+            <div class="nt3">
+              <div class="ma3 pa4 bg-white br2 css-white-box trans-mw">
+                <h3 class="mt0 fw6 f3">Change Password</h3>
+                <AccountPasswordForm style="max-width: 28rem" />
+                <div class="h3"></div>
+                <h3 class="mt0 fw6 f3">Regional Settings</h3>
+                <AccountRegionForm style="max-width: 28rem" />
+                <div class="h3"></div>
+                <h3 class="mt0 fw6 f3 dark-red">Delete Account</h3>
+                <p class="lh-copy f6">Once you delete your account, there's no going back. Please be sure you want to do this!</p>
+                <el-button
+                  class="ttu fw6"
+                  type="danger"
+                  @click="show_account_delete_dialog = true"
+                >
+                  Delete your account
+                </el-button>
+                <div class="h3"></div>
+              </div>
             </div>
           </el-tab-pane>
 
           <el-tab-pane name="api">
             <div slot="label"><div style="min-width: 5rem">API keys</div></div>
-            <div class="mh4" v-if="has_user">
-              <h3 class="mt0 fw6 f3">API Keys</h3>
-              <p class="lh-copy f6 mb3">This is a list of API keys associated with your account. Remove any keys that you do not recognize.</p>
-              <AccountApiForm />
-              <div class="h3"></div>
+            <div class="nt3" v-if="has_user">
+              <div class="ma3 pa4 bg-white br2 css-white-box trans-mw">
+                <h3 class="mt0 fw6 f3">API Keys</h3>
+                <p class="lh-copy f6 mb3">This is a list of API keys associated with your account. Remove any keys that you do not recognize.</p>
+                <AccountApiForm />
+              </div>
             </div>
           </el-tab-pane>
 
           <el-tab-pane name="billing">
             <div slot="label"><div style="min-width: 5rem">Billing</div></div>
-            <div class="mh4">
-              <h3 class="mt0 fw6 f3">Plan</h3>
-              <AccountPlanForm />
-              <div class="h3"></div>
-              <h3 class="mt0 fw6 f3">Payment Information</h3>
-              <AccountBillingForm />
-              <div class="h3"></div>
+            <div class="nt3">
+              <div class="ma3 pa4 bg-white br2 css-white-box trans-mw">
+                <h3 class="mt0 fw6 f3">Plan</h3>
+                <AccountPlanForm />
+                <div class="h3"></div>
+                <h3 class="mt0 fw6 f3">Payment Information</h3>
+                <AccountBillingForm />
+                <div class="h3"></div>
+              </div>
             </div>
           </el-tab-pane>
         </el-tabs>
@@ -167,10 +172,6 @@
 </script>
 
 <style lang="stylus" scoped>
-  .tab-list-border
-    left: 150px
-    border-left: 2px solid #e4e7ed
-
   .trans-mw
     transition: max-width .3s ease-in-out
 </style>
