@@ -414,8 +414,15 @@ class StoredProcess implements \Flexio\IFace\IProcess
                                 if ($connection->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_CONNECTION_READ) === false)
                                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-                                $service = $connection->getService();
-                                $mount_info[$key] = $service->get();
+                                $service = $connection->getService(); // getting the service refreshes tokens
+                                $connection_info = $service->get();
+                                $connection_info = json_encode($connection_info);
+
+                                $stream = \Flexio\Base\Stream::create();
+                                $stream->setMimeType(\Flexio\Base\ContentType::FLEXIO_CONNECTION_INFO);
+                                $stream->buffer = (string)$connection_info; // shortcut to speed it up -- can also use getWriter()->write((string)$v)
+
+                                $mount_info[$key] = $stream;
                             }
                             catch (\Flexio\Base\Exception $e)
                             {
