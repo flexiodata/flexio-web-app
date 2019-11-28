@@ -1,6 +1,8 @@
-- 'Name': Starter
+- 'id': starter
+  'Name': Starter
   'Price': '29'
-  'Team Members': 1
+  'Members': '1'
+  'Teams': '1'
   'Executions': '500'
   'Local Storage': '1 GB'
   'Spreadsheet Add-ons': 'Excel Desktop, Google Sheets'
@@ -15,9 +17,11 @@
   'Custom Solutions': false
   'White Label Add-ons': false
 
-- 'Name': Team
+- 'id': team
+  'Name': Team
   'Price': '49'
-  'Team Members': '1-5'
+  'Members': '1-5'
+  'Teams': '1'
   'Executions': '2,000'
   'Local Storage': '10 GB'
   'Spreadsheet Add-ons': 'Excel Desktop, Google Sheets'
@@ -32,9 +36,11 @@
   'Custom Solutions': false
   'White Label Add-ons': false
 
-- 'Name': Pro
-  'Price': '99'
-  'Team Members': 'Unlimited'
+- 'id': business
+  'Name': Business
+  'Price': '79'
+  'Members': 'Unlimited'
+  'Teams': '10'
   'Executions': '5,000'
   'Local Storage': '20 GB'
   'Spreadsheet Add-ons': 'Excel Desktop, Google Sheets'
@@ -49,11 +55,13 @@
   'Custom Solutions': false
   'White Label Add-ons': false
 
-- 'Name': Enterprise
+- 'id': enterprise
+  'Name': Enterprise
   'Price': 'Contact Us'
-  'Team Members': 'Unlimited'
-  'Executions': 'Unlimited'
-  'Local Storage': 'Unlimited'
+  'Members': 'Unlimited'
+  'Teams': 'Unlimited'
+  'Executions': 'Custom'
+  'Local Storage': 'Custom'
   'Spreadsheet Add-ons': 'Excel Desktop, Google Sheets'
   'Instant Integrations' : 'Web Services & APIs'
   'Instant Functions': 'Table Extracts & Lookups'

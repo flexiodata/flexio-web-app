@@ -4,7 +4,7 @@
       <div class="mb3 f7 silver ttu fw6">Your Current Plan</div>
       <div
         class="mv2 f6 br2 pv2 ph3 bg-nearer-white ba b--black-05"
-        v-if="!hasPlan(current_plan_name)"
+        v-if="!hasPlan(current_usage_tier)"
       >
         <div class="flex flex-row items-center justify-between">
           <div class="flex-fill ph2 pv2 f4 fw6">No plan has been selected</div>
@@ -53,8 +53,8 @@
         <div
           class="flex-fill mh2 mb3 mb0-l ph3 tc br3 cursor-default"
           style="box-shadow: inset 0 -4px 12px rgba(0,0,0,0.075)"
-          :class="isPlanNameSame(plan['Name'], current_plan_name) ? 'bg-blue white' : 'bg-nearer-white'"
-          :key="plan['Name']"
+          :class="isUsageTierSame(plan['id'], current_usage_tier) ? 'bg-blue white' : 'bg-nearer-white'"
+          :key="plan['id']"
           v-for="plan in plans"
         >
           <div class="mv4 fw6">{{plan['Name']}}</div>
@@ -68,7 +68,7 @@
             -->
           </div>
           <div class="mv3 pt2 pb1">
-            <div v-if="isPlanNameSame(plan['Name'], current_plan_name)">
+            <div v-if="isUsageTierSame(plan['id'], current_usage_tier)">
               <i class="el-icon-success f2" style="color: #fff"></i>
             </div>
             <el-button
@@ -113,12 +113,12 @@
       FreeTrialNotice
     },
     data() {
-      var my_plans = _.filter(plans, (p) => { return p['Name'] != 'Enterprise' })
+      var my_plans = _.filter(plans, (p) => { return p['id'] != 'enterprise' })
 
       return {
         is_editing: false,
         plans: my_plans,
-        current_plan_name: ''
+        current_usage_tier: ''
       }
     },
     computed: {
@@ -127,12 +127,12 @@
       }),
       current_plan() {
         return _.find(this.plans, (p) => {
-          return p['Name'].toLowerCase() == this.current_plan_name
+          return p['id'].toLowerCase() == this.current_usage_tier
         })
       }
     },
     created() {
-      this.current_plan_name = _.get(this.getActiveUser(), 'usage_tier', '')
+      this.current_usage_tier = _.get(this.getActiveUser(), 'usage_tier', '')
     },
     methods: {
       ...mapGetters('users', {
@@ -140,12 +140,12 @@
       }),
       hasPlan(plan_name) {
         var plan_names = _.map(this.plans, (p) => {
-          return p['Name'].toLowerCase()
+          return p['id'].toLowerCase()
         })
 
         return plan_names.indexOf(plan_name.toLowerCase()) != -1
       },
-      isPlanNameSame(plan_name1, plan_name2) {
+      isUsageTierSame(plan_name1, plan_name2) {
         return plan_name1.toLowerCase() == plan_name2.toLowerCase()
       },
       isPlanGreater(plan1, plan2) {
@@ -156,14 +156,14 @@
         }
       },
       choosePlan(plan) {
-        var new_plan_name = plan['Name'].toLowerCase()
+        var new_plan_name = plan['id'].toLowerCase()
         var eid = this.active_user_eid
         var attrs = {
           usage_tier: new_plan_name
         }
 
         this.$store.dispatch('users/update', { eid, attrs }).then(response => {
-          this.current_plan_name = new_plan_name
+          this.current_usage_tier = new_plan_name
           this.is_editing = false
         })
       }
