@@ -1,8 +1,8 @@
 - 'id': starter
   'Name': Starter
   'Price': '29'
-  'Members': '1'
-  'Teams': '1'
+  'Members': '1 member'
+  'Teams': '1 team'
   'Executions': '500'
   'Local Storage': '1 GB'
   'Spreadsheet Add-ons': 'Excel Desktop, Google Sheets'
@@ -20,8 +20,8 @@
 - 'id': team
   'Name': Team
   'Price': '49'
-  'Members': '1-5'
-  'Teams': '1'
+  'Members': '1-5 members'
+  'Teams': '1 team'
   'Executions': '2,000'
   'Local Storage': '10 GB'
   'Spreadsheet Add-ons': 'Excel Desktop, Google Sheets'
@@ -39,8 +39,8 @@
 - 'id': business
   'Name': Business
   'Price': '79'
-  'Members': 'Unlimited'
-  'Teams': '10'
+  'Members': 'Unlimited members'
+  'Teams': '10 teams'
   'Executions': '5,000'
   'Local Storage': '20 GB'
   'Spreadsheet Add-ons': 'Excel Desktop, Google Sheets'

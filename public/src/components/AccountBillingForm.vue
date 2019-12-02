@@ -41,9 +41,9 @@
       <div class="mv3 f7 silver ttu fw6">Your Payment Method</div>
       <p class="f6">Plan payments will be charged to the following card:</p>
       <div>
-        <div class="f6 blankslate" v-if="cards.length == 0">
+        <div class="blankslate" v-if="cards.length == 0">
           <em>No payment method on file</em>
-          <div class="mt4">
+          <div class="mt3">
             <el-button
               type="primary"
               class="ttu fw6"
