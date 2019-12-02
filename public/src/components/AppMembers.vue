@@ -56,16 +56,23 @@
           :closable="false"
           v-show="is_already_member"
         />
-        <div class="flex flex-row items-start">
+        <div class="flex flex-row items-start mb3">
           <h3 class="flex-fill mt0 fw6 f3">Team Members</h3>
-          <el-button
-            class="ttu fw6"
-            type="primary"
-            @click="onAddMembersClick"
-            v-require-rights:teammember.update
-          >
-            Add Members
-          </el-button>
+          <div class="tr">
+            <el-button
+              class="ttu fw6"
+              type="primary"
+              @click="onAddMembersClick"
+              v-require-rights:teammember.update
+            >
+              Add Members
+            </el-button>
+            <div class="mt2 f6" v-if="is_active_user_owner">
+              2 seats left
+              &mdash;
+              <router-link class="blue no-underline underline-hover" to="/account/billing">Buy more</router-link>
+            </div>
+          </div>
         </div>
         <table class="el-table w-100 mv3">
           <tbody>
@@ -168,6 +175,10 @@
         // we don't want to show system admin. users in the list, but we *DO*
         // need them to be members of the team (but without a role)
         return _.filter(this.getAllMembers(), m => _.get(m, 'role', '').length > 0)
+      },
+      is_active_user_owner() {
+        var m = _.find(this.getAllMembers(), { eid: this.active_user_eid })
+        return _.get(m, 'role') == 'O'
       },
     },
     created() {
