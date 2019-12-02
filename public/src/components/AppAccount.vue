@@ -66,6 +66,8 @@
                 <h3 class="mt0 fw6 f3">Payment Information</h3>
                 <AccountBillingForm />
                 <div class="h3"></div>
+                <h3 class="mt0 fw6 f3">Invoice Details</h3>
+                <AccountInvoiceDetailsForm />
               </div>
             </div>
           </el-tab-pane>
@@ -97,6 +99,7 @@
   import AccountApiForm from '@/components/AccountApiForm'
   import AccountPlanForm from '@/components/AccountPlanForm'
   import AccountBillingForm from '@/components/AccountBillingForm'
+  import AccountInvoiceDetailsForm from '@/components/AccountInvoiceDetailsForm'
   import AccountPasswordForm from '@/components/AccountPasswordForm'
   import AccountDeleteForm from '@/components/AccountDeleteForm'
 
@@ -112,6 +115,7 @@
       AccountApiForm,
       AccountPlanForm,
       AccountBillingForm,
+      AccountInvoiceDetailsForm,
       AccountPasswordForm,
       AccountDeleteForm
     },

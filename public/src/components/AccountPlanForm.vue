@@ -37,7 +37,9 @@
           </div>
         </div>
       </div>
-      <FreeTrialNotice class="mt2 f7 dark-green" />
+      <div class="tr">
+        <FreeTrialNotice class="mt2 f7 dark-green" />
+      </div>
       <div class="mt4 mb3 f7 silver ttu fw6">Number of seats</div>
       <p class="f6">You have <strong>{{seat_cnt}} seat(s)</strong> on your current plan.</p>
       <el-form
