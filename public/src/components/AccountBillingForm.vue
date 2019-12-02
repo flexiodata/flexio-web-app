@@ -1,68 +1,85 @@
 <template>
   <div>
-    <div class="mb3 f7 silver ttu fw6">Your Credit Cards</div>
-    <div>
-      <el-alert
-        type="error"
-        show-icon
-        :title="card_error"
-        :closable="false"
-        v-if="card_error.length > 0"
-      />
-      <div class="f6 blankslate" v-if="cards.length == 0">
-        <em>No cards to show</em>
+    <el-alert
+      type="error"
+      show-icon
+      :title="card_error"
+      :closable="false"
+      v-if="card_error.length > 0"
+    />
+    <!-- fetching -->
+    <div v-if="is_fetching">
+      <div class="pa1 flex flex-row items-center">
+        <Spinner size="small" />
+        <span class="ml2 f6">Loading...</span>
       </div>
-      <div
-        class="mv2 f6 br2 pv2 ph3 bg-nearer-white ba b--black-05 flex flex-row items-center hide-child"
-        :key="card.card_id"
-        v-for="card in cards"
-      >
-        <div class="flex-fill flex flex-row items-center">
-          <img :src="getCardLogo(card.card_type)" class="mr3" style="width: 36px">
-          <span>{{card.card_type}} ending in {{card.card_last4}}</span>
+    </div>
+    <div v-else-if="is_editing">
+      <div class="mv3 f7 silver ttu fw6">Add a New Payment Method</div>
+      <div class="mv3">
+        <Card
+          class="stripe-card"
+          :stripe="stripe_public_key"
+          :class="{ complete }"
+          :options="stripe_opts"
+          @change="complete = $event.complete"
+          v-if="show_stripe_form"
+        />
+      </div>
+      <div class="mt3">
+        <ButtonBar
+          class="mt4"
+          :submit-button-class="'ttu fw6 pay-with-stripe'"
+          :submit-button-text="'Use this card'"
+          :submit-button-disabled="!complete"
+          @cancel-click="resetCard"
+          @submit-click="addCard"
+        />
+      </div>
+    </div>
+    <div v-else>
+      <div class="mv3 f7 silver ttu fw6">Your Payment Method</div>
+      <p class="f6">Plan payments will be charged to the following card:</p>
+      <div>
+        <div class="f6 blankslate" v-if="cards.length == 0">
+          <em>No payment method on file</em>
+          <div class="mt4">
+            <el-button
+              type="primary"
+              class="ttu fw6"
+              @click="is_editing = true"
+            >
+              Add payment method
+            </el-button>
+          </div>
         </div>
-        <div>Expires {{card.card_exp_month}}/{{card.card_exp_years}}</div>
         <div
-          class="ml3 hint--top"
-          aria-label="Remove this card"
+          class="mv2 f6 br2 pv2 ph3 bg-nearer-white ba b--black-05 flex flex-row items-center hide-child"
+          :key="card.card_id"
+          v-for="card in cards"
         >
-          <ConfirmPopover
-            class="pointer child black-30 hover-black-60"
-            placement="bottom-end"
-            title="Confirm remove card?"
-            message="You will no longer be able to use this card as a payment method. Are you sure you want to remove this card?"
-            confirmButtonText="Remove card"
-            :width="400"
-            :offset="9"
-            @confirm-click="removeCard(card)"
-          />
+          <div class="flex-fill flex flex-row items-center">
+            <img :src="getCardLogo(card.card_type)" class="mr3" style="width: 36px">
+            <span>{{card.card_type}} ending in {{card.card_last4}}</span>
+          </div>
+          <div>Expires {{card.card_exp_month}}/{{card.card_exp_years}}</div>
+          <div
+            class="ml3 hint--top"
+            aria-label="Remove this card"
+          >
+            <ConfirmPopover
+              class="pointer child black-30 hover-black-60"
+              placement="bottom-end"
+              title="Confirm remove card?"
+              message="You will no longer be able to use this card as a payment method. Are you sure you want to remove this card?"
+              confirmButtonText="Remove card"
+              :width="400"
+              :offset="9"
+              @confirm-click="removeCard(card)"
+            />
+          </div>
         </div>
       </div>
-    </div>
-    <div class="overflow-auto" v-if="false">
-      <pre class="f7 lh-title"><code class="db" style="white-space: pre-wrap" spellcheck="false">{{cards}}</code></pre>
-    </div>
-    <div class="h2"></div>
-    <div class="mb3 f7 silver ttu fw6">Add a New Payment Method</div>
-    <div class="mv3">
-      <Card
-        class="stripe-card"
-        :stripe="stripe_public_key"
-        :class="{ complete }"
-        :options="stripe_opts"
-        @change="complete = $event.complete"
-        v-if="show_stripe_form"
-      />
-    </div>
-    <div class="mt3">
-      <el-button
-        type="primary"
-        class="ttu fw6 pay-with-stripe"
-        @click="addCard"
-        :disabled="!complete"
-      >
-        Add Card
-      </el-button>
     </div>
   </div>
 </template>
@@ -71,7 +88,9 @@
   import api from '@/api'
   import { isProduction } from '@/utils'
   import { Card, createToken } from 'vue-stripe-elements-plus'
+  import Spinner from 'vue-simple-spinner'
   import ConfirmPopover from '@/components/ConfirmPopover'
+  import ButtonBar from '@/components/ButtonBar'
 
   // all cards accepted by Stripe
   import visa from 'payment-icons/min/flat/visa.svg'
@@ -92,8 +111,10 @@
 
   export default {
     components: {
+      Spinner,
       Card,
-      ConfirmPopover
+      ConfirmPopover,
+      ButtonBar
     },
     data() {
       return {
@@ -107,10 +128,12 @@
           'UnionPay': unionpay
         },
         cards: [],
-        show_stripe_form: true,
         card_error: '',
         stripe_public_key,
         complete: false,
+        show_stripe_form: true,
+        is_editing: false,
+        is_fetching: false,
         stripe_opts: {
           // see https://stripe.com/docs/stripe.js#element-options for details
           style: {
@@ -132,6 +155,11 @@
         }
       }
     },
+    computed: {
+      card_count() {
+        return this.cards.length
+      }
+    },
     mounted() {
       this.fetchCards()
     },
@@ -140,16 +168,22 @@
         return this.card_icons[card_name] || ''
       },
       fetchCards() {
+        this.is_fetching = true
+
         api.fetchCards().then(response => {
           this.cards = response.data
           this.card_error = ''
         }).catch(error => {
           this.cards = []
           this.card_error = JSON.stringify(error)
+        }).finally(() => {
+          this.is_fetching = false
         })
       },
       resetCard() {
+        this.is_editing = false
         this.show_stripe_form = false
+        this.complete = false
         this.$nextTick(() => { this.show_stripe_form = true })
       },
       addCard() {
