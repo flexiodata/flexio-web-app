@@ -18,7 +18,7 @@
       <AccountBillingEditForm
         :stripe="stripe_public_key"
         @cancel-click="is_editing = false"
-        @submit-click="is_editing = false"
+        @create-token="onCreateToken"
       />
     </div>
     <div v-else>
@@ -115,8 +115,6 @@
         cards: [],
         card_error: '',
         stripe_public_key,
-        complete: false,
-        show_stripe_form: true,
         is_editing: false,
         is_fetching: false,
         stripe_opts: {
@@ -165,34 +163,14 @@
           this.is_fetching = false
         })
       },
-      resetCard() {
-        this.is_editing = false
-        this.show_stripe_form = false
-        this.complete = false
-        this.$nextTick(() => { this.show_stripe_form = true })
-      },
-      addCard() {
-        // createToken returns a Promise which resolves in a result object with
-        // either a token or an error key.
-        // See https://stripe.com/docs/api#tokens for the token object.
-        // See https://stripe.com/docs/api#errors for the error object.
-        // More general https://stripe.com/docs/stripe.js#stripe-create-token.
-        createToken().then(data => {
-          var token_id = data.token.id
-
-          api.createCard('me', { token: token_id }).then(card_data => {
-            this.fetchCards()
-            this.resetCard()
-          })
-        })
-      },
       removeCard(card) {
         api.deleteCard('me', card.card_id).then(card_data => {
           this.fetchCards()
         })
       },
-      submitPaymentInfo() {
-
+      onCreateToken() {
+        this.is_editing = false
+        this.fetchCards()
       }
     }
   }

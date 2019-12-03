@@ -161,7 +161,10 @@
       />
     </el-form-item>
 
-    <div class="el-form-item el-form-item--small">
+    <div
+      class="el-form-item el-form-item--small w-50-ns pr1-ns"
+      style="max-width: 30rem"
+    >
       <label class="db f8 mb1" for="card-number">
         Card Number
       </label>
@@ -219,7 +222,7 @@
 <script>
   import api from '@/api'
   import { isProduction } from '@/utils'
-  import { CardNumber, CardExpiry, CardCvc } from 'vue-stripe-elements-plus'
+  import { CardNumber, CardExpiry, CardCvc, createToken } from 'vue-stripe-elements-plus'
   import CountrySelect from '@/components/CountrySelect'
   import ButtonBar from '@/components/ButtonBar'
 
@@ -307,9 +310,19 @@
         // numbers, but can also have four
       },
       onSubmit() {
-        // do stuff
-        this.$emit('submit-click')
-      }
+        // createToken returns a Promise which resolves in a result object with
+        // either a token or an error key.
+        // See https://stripe.com/docs/api#tokens for the token object.
+        // See https://stripe.com/docs/api#errors for the error object.
+        // More general https://stripe.com/docs/stripe.js#stripe-create-token.
+        createToken().then(data => {
+          var token_id = data.token.id
+
+          api.createCard('me', { token: token_id }).then(card_data => {
+            this.$emit('create-token')
+          })
+        })
+      },
     }
   }
 </script>
