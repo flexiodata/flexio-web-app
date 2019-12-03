@@ -237,6 +237,11 @@
       CountrySelect,
       ButtonBar
     },
+    watch: {
+      number() { this.update() },
+      expiry() { this.update() },
+      cvc() { this.update() }
+    },
     data() {
       return {
         billing_name: '',
@@ -280,6 +285,27 @@
       }
     },
     methods: {
+      update() {
+        this.complete = this.number && this.expiry && this.cvc
+
+        // field completed, find field to focus next
+        if (this.number) {
+          if (!this.expiry) {
+            this.$refs.cardExpiry.focus()
+          } else if (!this.cvc) {
+            this.$refs.cardCvc.focus()
+          }
+        } else if (this.expiry) {
+          if (!this.cvc) {
+            this.$refs.cardCvc.focus()
+          } else if (!this.number) {
+            this.$refs.cardNumber.focus()
+          }
+        }
+
+        // no focus magic for the CVC field as it gets complete with three
+        // numbers, but can also have four
+      },
       onSubmit() {
         // do stuff
         this.$emit('submit-click')
