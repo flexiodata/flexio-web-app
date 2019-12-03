@@ -15,7 +15,56 @@
       </div>
     </div>
     <div v-else-if="is_editing">
-      <div class="mv3 f7 silver ttu fw6">Add a New Payment Method</div>
+      <div class="mv3 f7 silver ttu fw6">Billing address</div>
+      <el-form
+        ref="billing-form"
+        class="mt3 el-form--compact el-form__label-tiny"
+        style="max-width: 28rem"
+        :model="billing_info"
+        @submit.prevent.native
+      >
+        <el-form-item
+          key="name"
+          label="Name"
+          prop="name"
+        >
+          <el-input
+            placeholder="Full Name"
+            auto-complete="off"
+            spellcheck="false"
+            :autofocus="true"
+            v-model="billing_info.name"
+          />
+        </el-form-item>
+        <el-form-item
+          key="company_name"
+          label="Company Name"
+          prop="company_name"
+        >
+          <el-input
+            placeholder="Company Name"
+            auto-complete="off"
+            spellcheck="false"
+            :autofocus="true"
+            v-model="billing_info.company_name"
+          />
+        </el-form-item>
+        <el-form-item
+          key="email"
+          label="Send invoices to"
+          prop="email"
+        >
+          <el-input
+            placeholder="Email"
+            auto-complete="off"
+            spellcheck="false"
+            :autofocus="true"
+            v-model="billing_info.email"
+          />
+        </el-form-item>
+      </el-form>
+
+      <div class="mv3 f7 silver ttu fw6">Credit card</div>
       <div class="mv3">
         <Card
           class="stripe-card"
@@ -26,30 +75,26 @@
           v-if="show_stripe_form"
         />
       </div>
-      <div class="mt3">
-        <ButtonBar
-          class="mt4"
-          :submit-button-class="'ttu fw6 pay-with-stripe'"
-          :submit-button-text="'Use this card'"
-          :submit-button-disabled="!complete"
-          @cancel-click="resetCard"
-          @submit-click="addCard"
-        />
-      </div>
+      <ButtonBar
+        class="mt4"
+        :submit-button-class="'ttu fw6 pay-with-stripe'"
+        :submit-button-text="'Use this card'"
+        :submit-button-disabled="!complete"
+        @cancel-click="resetCard"
+        @submit-click="submitPaymentInfo"
+      />
     </div>
     <div v-else>
-      <div class="mv3 f7 silver ttu fw6">Your Payment Method</div>
-      <p class="f6">Plan payments will be charged to the following card:</p>
       <div>
         <div class="blankslate" v-if="cards.length == 0">
-          <em>No payment method on file</em>
+          <em>No billing information is on file</em>
           <div class="mt3">
             <el-button
               type="primary"
               class="ttu fw6"
               @click="is_editing = true"
             >
-              Add payment method
+              Set up payment method
             </el-button>
           </div>
         </div>
@@ -118,6 +163,9 @@
     },
     data() {
       return {
+        billing_info: {
+
+        },
         card_icons: {
           'Visa': visa,
           'MasterCard': mastercard,

@@ -66,8 +66,6 @@
                 <h3 class="mt0 fw6 f3">Payment Information</h3>
                 <AccountBillingForm />
                 <div class="h3"></div>
-                <h3 class="mt0 fw6 f3">Invoice Details</h3>
-                <AccountInvoiceDetailsForm />
               </div>
             </div>
           </el-tab-pane>
