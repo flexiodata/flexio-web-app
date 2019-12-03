@@ -2,10 +2,157 @@
   <el-form
     size="small"
   >
-    <h4 class="mb4 pb1 silver ttu f7 fw6 bb b--black-10">Please enter your card information</h4>
+    <h4 class="mb4 pb1 silver ttu f7 fw6 bb b--black-10">Billing contact</h4>
 
     <div class="nt2">
-      <div class="mt3 form-item required">
+      <div class="mt3 required">
+        <label class="db fw6 f7 mb1" for="billing_name">Name</label>
+        <el-input
+          type="text"
+          name="billing_name"
+          maxlength="255"
+          required
+          style="max-width: 30rem"
+        />
+      </div>
+    </div>
+
+    <div>
+      <div class="mt3">
+        <label class="db fw6 f7 mb1" for="billing_address">Company</label>
+        <el-input
+          type="text"
+          name="billing_address"
+          maxlength="255"
+          style="max-width: 30rem"
+        />
+      </div>
+    </div>
+
+    <div>
+      <div class="mt3 required">
+        <label class="db fw6 f7 mb1" for="billing_email">Email</label>
+        <el-input
+          type="email"
+          name="billing_email"
+          maxlength="80"
+          required
+          style="max-width: 30rem"
+        />
+      </div>
+      <div class="mt1 f8 fw6 black-60">
+        We will be sending invoices to this email
+      </div>
+    </div>
+
+    <h4 class="mv4 pb1 silver ttu f7 fw6 bb b--black-10">Billing address</h4>
+
+    <div class="nt2">
+      <div class="mt3">
+        <label class="db fw6 f7 mb1" for="billing_address1">Address</label>
+        <el-input
+          type="text"
+          name="billing_address1"
+          placeholder="Street"
+          maxlength="255"
+          style="max-width: 30rem"
+        />
+      </div>
+    </div>
+
+    <div>
+      <div class="mt3">
+        <el-input
+          type="text"
+          name="billing_address2"
+          placeholder="Apt/Suite"
+          maxlength="255"
+          style="max-width: 30rem"
+        />
+      </div>
+    </div>
+
+    <div class="flex flex-column flex-row-ns flex-wrap nl1 nr1">
+      <div class="w-50-ns ph1">
+        <div class="mt3">
+          <label class="db fw6 f7 mb1" for="billing_city">City</label>
+          <el-input
+              type="text"
+            id="city"
+            name="billing_city"
+            maxlength="80"
+          />
+        </div>
+      </div>
+      <div class="w-25-ns ph1">
+        <div class="mt3">
+          <label class="db fw6 f7 mb1" for="billing_state">State</label>
+          <el-input
+              type="text"
+            id="state"
+            name="billing_state"
+            maxlength="80"
+          />
+        </div>
+      </div>
+      <div class="w-25-ns ph1">
+        <div class="mt3 required">
+          <label class="db fw6 f7 mb1" for="billing_postal_code">Zip/Postal</label>
+          <el-input
+            type="text"
+            name="billing_postal_code"
+            maxlength="20"
+            required
+          />
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="mt3">
+        <label class="db fw6 f7 mb1" for="billing_country">Country</label>
+        <CountrySelect
+          type="text"
+          name="billing_country"
+          maxlength="80"
+          style="max-width: 30rem"
+          v-model="billing_country"
+        />
+      </div>
+    </div>
+
+    <div>
+      <div class="mt3">
+        <label class="db fw6 f7 mb1" for="billing_other">Other Billing Information</label>
+          <el-input
+          type="textarea"
+          rows="4"
+          name="billing_other"
+        />
+      </div>
+      <div class="mt1 f8 fw6 black-60">
+        If you need to add a tax ID, VAT information or anything else to your invoice, you can do so here
+      </div>
+    </div>
+
+    <h4 class="mv4 pb1 silver ttu f7 fw6 bb b--black-10">Payment method</h4>
+
+    <div class="nt2">
+      <div class="mt3 required">
+        <label class="db fw6 f7 mb1" for="billing_name">Cardholder Name</label>
+        <el-input
+          type="text"
+          name="billing_name"
+          maxlength="255"
+          placeholder="Full name"
+          required
+          style="max-width: 30rem"
+        />
+      </div>
+    </div>
+
+    <div>
+      <div class="mt3 required">
         <label class="db fw6 f7 mb1" for="card-number">
           Card Number
         </label>
@@ -22,7 +169,7 @@
 
     <div class="flex flex-column flex-row-ns flex-wrap nl1 nr1">
       <div class="w-30-ns ph1" style="min-width: 150px">
-        <div class="mt3 form-item required">
+        <div class="mt3 required">
           <label class="db fw6 f7 mb1" for="card-expiry">
             Expiration Date
           </label>
@@ -37,7 +184,7 @@
         </div>
       </div>
       <div class="w-30-ns ph1" style="min-width: 150px">
-        <div class="mt3 form-item required">
+        <div class="mt3 required">
           <label class="db fw6 f7 mb1" for="card-cvc">
             CVC
           </label>
@@ -51,104 +198,6 @@
           </div>
         </div>
       </div>
-    </div>
-
-    <h4 class="mv4 pb1 silver ttu f7 fw6 bb b--black-10">Please enter your billing address</h4>
-
-    <div class="nt2">
-      <div class="mt3 form-item required">
-        <label class="db fw6 f7 mb1" for="name">Name</label>
-        <el-input
-          type="text"
-          name="name"
-          maxlength="255"
-          required
-          style="max-width: 30rem"
-        />
-      </div>
-    </div>
-
-    <div>
-      <div class="mt3 form-item">
-        <label class="db fw6 f7 mb1" for="address">Address</label>
-        <el-input
-          type="text"
-          name="address"
-          maxlength="255"
-        />
-      </div>
-    </div>
-
-    <div class="flex flex-column flex-row-ns flex-wrap nl1 nr1">
-      <div class="w-50-ns ph1">
-        <div class="mt3 form-item">
-          <label class="db fw6 f7 mb1" for="city">City</label>
-          <el-input
-              type="text"
-            id="city"
-            name="city"
-            maxlength="80"
-          />
-        </div>
-      </div>
-      <div class="w-25-ns ph1">
-        <div class="mt3 form-item">
-          <label class="db fw6 f7 mb1" for="state">State</label>
-          <el-input
-              type="text"
-            id="state"
-            name="state"
-            maxlength="80"
-          />
-        </div>
-      </div>
-      <div class="w-25-ns ph1">
-        <div class="mt3 form-item required">
-          <label class="db fw6 f7 mb1" for="postal_code">Zip</label>
-          <el-input
-            type="text"
-            name="postal_code"
-            maxlength="20"
-            required
-          />
-        </div>
-      </div>
-    </div>
-
-    <div>
-      <div class="mt3 form-item">
-        <label class="db fw6 f7 mb1" for="country">Country</label>
-        <el-input
-          type="text"
-          name="country"
-          maxlength="80"
-          style="max-width: 30rem"
-        />
-      </div>
-    </div>
-
-    <div>
-      <div class="mt3 form-item required">
-        <label class="db fw6 f7 mb1" for="email">Email</label>
-        <el-input
-          type="email"
-          name="email"
-          maxlength="80"
-          required
-          style="max-width: 30rem"
-        />
-      </div>
-    </div>
-
-    <!-- Used to display Element errors. -->
-    <div class="error mt2" role="alert">
-      <span class="message"></span>
-    </div>
-
-    <!-- Used to display Element success. -->
-    <div class="success">
-      <h3 class="title"></h3>
-      <p class="message"></p>
     </div>
 
     <ButtonBar
@@ -165,6 +214,7 @@
   import api from '@/api'
   import { isProduction } from '@/utils'
   import { CardNumber, CardExpiry, CardCvc } from 'vue-stripe-elements-plus'
+  import CountrySelect from '@/components/CountrySelect'
   import ButtonBar from '@/components/ButtonBar'
 
   export default {
@@ -178,10 +228,12 @@
       CardNumber,
       CardExpiry,
       CardCvc,
+      CountrySelect,
       ButtonBar
     },
     data() {
       return {
+        billing_country: '',
         complete: false,
         number: false,
         expiry: false,
@@ -194,7 +246,7 @@
               lineHeight: '18px',
               fontFamily: '"Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif',
               fontSmoothing: 'antialiased',
-              fontSize: '16px',
+              fontSize: '14px',
               '::placeholder': {
                 color: '#c0c4cc'
               }

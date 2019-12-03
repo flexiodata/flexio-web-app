@@ -17,6 +17,8 @@
     <div v-else-if="is_editing">
       <AccountBillingEditForm
         :stripe="stripe_public_key"
+        @cancel-click="is_editing = false"
+        @submit-click="is_editing = false"
       />
     </div>
     <div v-else>
@@ -71,7 +73,6 @@
   import Spinner from 'vue-simple-spinner'
   import AccountBillingEditForm from '@/components/AccountBillingEditForm'
   import ConfirmPopover from '@/components/ConfirmPopover'
-  import ButtonBar from '@/components/ButtonBar'
 
   // all cards accepted by Stripe
   import visa from 'payment-icons/min/flat/visa.svg'
@@ -96,7 +97,6 @@
       Card,
       AccountBillingEditForm,
       ConfirmPopover,
-      ButtonBar
     },
     data() {
       return {
