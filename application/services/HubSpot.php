@@ -219,8 +219,8 @@ class HubSpot implements \Flexio\IFace\IConnection,
                 'client_id' => $client_id,
                 'redirect_uri' => $params['redirect'] ?? '',
                 'state' => $params['state'] ?? '',
-                'scope' => 'contacts',
-                // 'optional_scope' => 'content e-commerce', // additional optional scopes are available if needed; space-delimited
+                'scope' => 'oauth contacts content reports social business-intelligence',
+                // 'optional_scope' => '', // additional optional scopes are available if needed; space-delimited
             );
             $query_str = http_build_query($query_params);
             $this->authorization_uri = 'https://app.hubspot.com/oauth/authorize?' . $query_str;
