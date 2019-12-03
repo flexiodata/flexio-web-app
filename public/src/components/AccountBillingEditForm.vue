@@ -19,10 +19,10 @@
 
     <div>
       <div class="mt3">
-        <label class="db fw6 f7 mb1" for="billing_address">Company</label>
+        <label class="db fw6 f7 mb1" for="billing_company">Company</label>
         <el-input
           type="text"
-          name="billing_address"
+          name="billing_company"
           maxlength="255"
           style="max-width: 30rem"
         />
@@ -77,8 +77,7 @@
         <div class="mt3">
           <label class="db fw6 f7 mb1" for="billing_city">City</label>
           <el-input
-              type="text"
-            id="city"
+            type="text"
             name="billing_city"
             maxlength="80"
           />
@@ -88,8 +87,7 @@
         <div class="mt3">
           <label class="db fw6 f7 mb1" for="billing_state">State</label>
           <el-input
-              type="text"
-            id="state"
+            type="text"
             name="billing_state"
             maxlength="80"
           />
@@ -139,10 +137,10 @@
 
     <div class="nt2">
       <div class="mt3 required">
-        <label class="db fw6 f7 mb1" for="billing_name">Cardholder Name</label>
+        <label class="db fw6 f7 mb1" for="card_name">Cardholder Name</label>
         <el-input
           type="text"
-          name="billing_name"
+          name="card_name"
           maxlength="255"
           placeholder="Full name"
           required
@@ -168,7 +166,7 @@
     </div>
 
     <div class="flex flex-column flex-row-ns flex-wrap nl1 nr1">
-      <div class="w-30-ns ph1" style="min-width: 150px">
+      <div class="w-30-ns ph1" style="min-width: 10rem">
         <div class="mt3 required">
           <label class="db fw6 f7 mb1" for="card-expiry">
             Expiration Date
@@ -183,7 +181,7 @@
           </div>
         </div>
       </div>
-      <div class="w-30-ns ph1" style="min-width: 150px">
+      <div class="w-30-ns ph1" style="min-width: 10rem">
         <div class="mt3 required">
           <label class="db fw6 f7 mb1" for="card-cvc">
             CVC
@@ -233,7 +231,21 @@
     },
     data() {
       return {
+        billing_name: '',
+        billing_company: '',
+        billing_email: '',
+        billing_address1: '',
+        billing_address2: '',
+        billing_city: '',
+        billing_state: '',
+        billing_postal_code: '',
         billing_country: '',
+        billing_other: '',
+        card_name: '',
+        card_number: '',
+        card_exp: '',
+        card_cvc: '',
+
         complete: false,
         number: false,
         expiry: false,
