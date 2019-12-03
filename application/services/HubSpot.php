@@ -135,8 +135,7 @@ class HubSpot implements \Flexio\IFace\IConnection,
             }
              else
             {
-                // access token is expired, get a new one;
-                // TODO: fill out
+                // access token is expired, get a new one
                 $auth_token_url = '';
 
                 $post_data = array(
@@ -145,11 +144,10 @@ class HubSpot implements \Flexio\IFace\IConnection,
                     'grant_type' => 'refresh_token',
                     'refresh_token' => $params['refresh_token'] ?? ''
                 );
-                $post_data = json_encode($post_data, JSON_UNESCAPED_SLASHES | JSON_FORCE_OBJECT);
+                $post_data = http_build_query($post_data);
 
                 $headers = array();
-                $headers[] = 'Accept: application/json';
-                $headers[] = 'Content-Type: application/json';
+                $headers[] = 'Content-Type: application/x-www-form-urlencoded';
 
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, $auth_token_url);
@@ -178,8 +176,7 @@ class HubSpot implements \Flexio\IFace\IConnection,
         {
             // if we have a code parameter, we have enough information
             // to authenticate and get the token; do so and return the object;
-            // TODO: fill out
-            $auth_token_url = '';
+            $auth_token_url = 'https://app.hubspot.com/oauth/v1/token';
 
             $post_data = array(
                 'client_id' => $client_id,
@@ -188,11 +185,10 @@ class HubSpot implements \Flexio\IFace\IConnection,
                 'grant_type' => 'authorization_code',
                 'code' => $params['code']
             );
-            $post_data = json_encode($post_data, JSON_UNESCAPED_SLASHES | JSON_FORCE_OBJECT);
+            $post_data = http_build_query($post_data);
 
             $headers = array();
-            $headers[] = 'Accept: application/json';
-            $headers[] = 'Content-Type: application/json';
+            $headers[] = 'Content-Type: application/x-www-form-urlencoded';
 
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $auth_token_url);
@@ -219,16 +215,15 @@ class HubSpot implements \Flexio\IFace\IConnection,
         else
         {
             // we have nothing; we need to redirect to the service's authorization URL
-            // TODO: fill out
             $query_params = array(
                 'client_id' => $client_id,
                 'redirect_uri' => $params['redirect'] ?? '',
                 'state' => $params['state'] ?? '',
-                'scope' => '',
-                'response_type' => 'code'
+                'scope' => 'contacts',
+                // 'optional_scope' => 'content e-commerce', // additional optional scopes are available if needed; space-delimited
             );
             $query_str = http_build_query($query_params);
-            $this->authorization_uri = '?' . $query_str;
+            $this->authorization_uri = 'https://app.hubspot.com/oauth/authorize?' . $query_str;
             return false;
         }
 
