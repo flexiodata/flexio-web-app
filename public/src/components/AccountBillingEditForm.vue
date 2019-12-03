@@ -4,19 +4,7 @@
   >
     <h4 class="mb4 pb1 silver ttu f7 fw6 bb b--black-10">Please enter your card information</h4>
 
-    <div>
-      <div class="mt3 form-item required">
-        <label class="db fw6 f7 mb1" for="name">Cardholder Name</label>
-        <el-input
-          type="text"
-          name="name"
-          maxlength="255"
-          required
-        />
-      </div>
-    </div>
-
-    <div>
+    <div class="nt2">
       <div class="mt3 form-item required">
         <label class="db fw6 f7 mb1" for="card-number">
           Card Number
@@ -65,11 +53,24 @@
       </div>
     </div>
 
-    <div class="mv4 bb b--black-10"></div>
+    <h4 class="mv4 pb1 silver ttu f7 fw6 bb b--black-10">Please enter your billing address</h4>
 
     <div class="nt2">
+      <div class="mt3 form-item required">
+        <label class="db fw6 f7 mb1" for="name">Name</label>
+        <el-input
+          type="text"
+          name="name"
+          maxlength="255"
+          required
+          style="max-width: 30rem"
+        />
+      </div>
+    </div>
+
+    <div>
       <div class="mt3 form-item">
-        <label class="db fw6 f7 mb1" for="address">Billing Address</label>
+        <label class="db fw6 f7 mb1" for="address">Address</label>
         <el-input
           type="text"
           name="address"
@@ -150,9 +151,13 @@
       <p class="message"></p>
     </div>
 
-    <div class="mt4">
-      <button class="pv2a ph4 tc b ttu white br2 ba b--blue bg-blue darken-10">Submit Payment</button>
-    </div>
+    <ButtonBar
+      class="mt4"
+      :submit-button-text="'Save changes'"
+      :submit-button-disabled="!complete"
+      @cancel-click="$emit('cancel-click')"
+      @submit-click="onSubmit"
+    />
   </el-form>
 </template>
 
@@ -160,6 +165,7 @@
   import api from '@/api'
   import { isProduction } from '@/utils'
   import { CardNumber, CardExpiry, CardCvc } from 'vue-stripe-elements-plus'
+  import ButtonBar from '@/components/ButtonBar'
 
   export default {
     props: {
@@ -171,7 +177,8 @@
     components: {
       CardNumber,
       CardExpiry,
-      CardCvc
+      CardCvc,
+      ButtonBar
     },
     data() {
       return {
@@ -200,6 +207,12 @@
         }
       }
     },
+    methods: {
+      onSubmit() {
+        // do stuff
+        this.$emit('submit-click')
+      }
+    }
   }
 </script>
 

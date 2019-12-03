@@ -18,14 +18,6 @@
       <AccountBillingEditForm
         :stripe="stripe_public_key"
       />
-      <ButtonBar
-        class="mt4"
-        :submit-button-class="'ttu fw6 pay-with-stripe'"
-        :submit-button-text="'Use this card'"
-        :submit-button-disabled="!complete"
-        @cancel-click="resetCard"
-        @submit-click="submitPaymentInfo"
-      />
     </div>
     <div v-else>
       <div>
