@@ -1234,6 +1234,9 @@ class User
 
     private static function addCustomerPaymentSource(\Flexio\Object\User $user, string $token) : array
     {
+        // see here for more information:
+        // https://stripe.com/docs/api
+
         // create/update customer with payment source
         $stripe_secret_key = $GLOBALS['g_config']->stripe_secret_key ?? false;
         if ($stripe_secret_key === false)
@@ -1248,12 +1251,16 @@ class User
         $stripe_customer_id = $user->getStripeCustomerId();
         if (strlen($stripe_customer_id) === 0)
         {
+            $stripe_api_endpoint = 'https://api.stripe.com/v1/customers';
+
+            $post_data = array(
+                'source' => $token
+            );
+            $post_data = http_build_query($post_data);
+
             $headers = array();
             $headers[] = 'Authorization: Bearer ' . $stripe_secret_key;
             $headers[] = 'Content-Type: application/x-www-form-urlencoded';
-
-            $stripe_api_endpoint = 'https://api.stripe.com/v1/customers';
-            $post_data = "source=$token";
 
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $stripe_api_endpoint);
@@ -1288,13 +1295,17 @@ class User
         }
         else
         {
+            // create the source
+            $stripe_api_endpoint = "https://api.stripe.com/v1/customers/$stripe_customer_id/sources";
+
+            $post_data = array(
+                'source' => $token
+            );
+            $post_data = http_build_query($post_data);
+
             $headers = array();
             $headers[] = 'Authorization: Bearer ' . $stripe_secret_key;
             $headers[] = 'Content-Type: application/x-www-form-urlencoded';
-
-            // create the source
-            $stripe_api_endpoint = "https://api.stripe.com/v1/customers/$stripe_customer_id/sources";
-            $post_data = "source=$token";
 
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $stripe_api_endpoint);
