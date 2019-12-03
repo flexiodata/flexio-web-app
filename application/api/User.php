@@ -112,7 +112,12 @@ class User
             {
                 try
                 {
-                    $source_info = self::addCustomerPaymentSource($user, $stripe_token);
+                    // DEPRECATED: this mechanism is here to support old notion of creating a signup with
+                    // basic CC info and was used in support of other services, such as the pdf-to-json,
+                    // without gathering billing info; adding CC on signup is no longer used, but leave
+                    // here for the time being
+                    //$billing_info = array();
+                    //$source_info = self::addCustomerPaymentSource($user, $billing_info, $stripe_token);
                 }
                 catch (\Flexio\Base\Exception $e)
                 {
@@ -372,45 +377,17 @@ class User
         if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_USER_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        // get the stripe customer id; if a key doesn't yet exist, there are no sources
+        $result = [];
+
         $stripe_customer_id = $owner_user->getStripeCustomerId();
-        if (strlen($stripe_customer_id) === 0)
+        if (strlen($stripe_customer_id) > 0)
         {
-            $result = array();
-            $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-            \Flexio\Api\Response::sendContent($result);
-            return;
-        }
-
-        // create/update customer with payment source
-        $stripe_secret_key = $GLOBALS['g_config']->stripe_secret_key ?? false;
-        if ($stripe_secret_key === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::ERROR_GENERAL);
-
-        $headers = array();
-        $headers[] = 'Authorization: Bearer ' . $stripe_secret_key;
-        $stripe_api_endpoint = "https://api.stripe.com/v1/customers/$stripe_customer_id/sources";
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_HTTPGET, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-        curl_setopt($ch, CURLOPT_URL, $stripe_api_endpoint);
-
-        $result = curl_exec($ch);
-        $source_info = @json_decode($result, true);
-        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-
-        if ($httpcode !== 200)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-
-        $result = array();
-        foreach ($source_info['data'] as $s)
-        {
-            $result[] = self::mapCardSourceInfo($s);
+            $stripe_customer_info = self::getStripeCustomer($stripe_customer_id);
+            $stripe_source_info = self::getStripePaymentSources($stripe_customer_id);
+            foreach ($stripe_source_info as $s)
+            {
+                $result[] = array_merge($stripe_customer_info, $s);
+            }
         }
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
@@ -430,12 +407,23 @@ class User
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
-                'token' => array('type' => 'string', 'required' => true)
+                'token'               => array('type' => 'string', 'required' => true),
+                'billing_name'        => array('type' => 'string', 'required' => false),
+                'billing_company'     => array('type' => 'string', 'required' => false),
+                'billing_email'       => array('type' => 'string', 'required' => false),
+                'billing_address1'    => array('type' => 'string', 'required' => false),
+                'billing_address2'    => array('type' => 'string', 'required' => false),
+                'billing_city'        => array('type' => 'string', 'required' => false),
+                'billing_state'       => array('type' => 'string', 'required' => false),
+                'billing_postal_code' => array('type' => 'string', 'required' => false),
+                'billing_country'     => array('type' => 'string', 'required' => false),
+                'billing_other'       => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_post_params = $validator->getParams();
         $stripe_token = $validated_post_params['token'];
+        $billing_info = $validated_post_params;
 
         // load the user
         $owner_user = \Flexio\Object\User::load($owner_user_eid);
@@ -446,10 +434,29 @@ class User
         if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_USER_UPDATE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        $source_info = self::addCustomerPaymentSource($owner_user, $stripe_token);
+        // STEP 1: create/update the customer with the billing info and save
+        // the customer id to the user
+        $stripe_customer_info = array();
+        $stripe_customer_id = $owner_user->getStripeCustomerId();
 
-        // return the list of cards
-        $result = $source_info;
+        if (strlen($stripe_customer_id) === 0)
+            $stripe_customer_info = self::createStripeCustomer($billing_info);
+             else
+            $stripe_customer_info = self::updateStripeCustomer($stripe_customer_id, $billing_info);
+
+        $stripe_customer_id = $stripe_customer_info['customer_id'];
+        $user_info = array(
+            'stripe_customer_id' => $stripe_customer_id
+        );
+        $owner_user->set($user_info);
+
+        // STEP 2: add the payment source to the customer
+        $stripe_source_info = self::addStripePaymentSource($stripe_customer_id, $stripe_token);
+
+        // TODO: merge in billing information
+
+        // return the card info
+        $result = array_merge($stripe_customer_info, $stripe_source_info);
         $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
@@ -486,16 +493,10 @@ class User
         if ($stripe_source_id === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
 
-        $source_info = self::deleteCustomerPaymentSource($owner_user, $stripe_source_id);
+        $source_info = self::deleteStripePaymentSource($owner_user, $stripe_source_id);
 
-        $result = array(
-            'card_id' => $source_info['id'],
-            'card_type' => $source_info['brand'],
-            'card_last4' => $source_info['last4'],
-            'card_exp_month' => $source_info['exp_month'],
-            'card_exp_years' => $source_info['exp_year']
-        );
-
+        // return the card info
+        $result = $source_info;
         $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
@@ -1232,110 +1233,196 @@ class User
         return true;
     }
 
-    private static function addCustomerPaymentSource(\Flexio\Object\User $user, string $token) : array
+    private static function createStripeCustomer(array $billing_info) : array
     {
         // see here for more information:
         // https://stripe.com/docs/api
 
-        // create/update customer with payment source
         $stripe_secret_key = $GLOBALS['g_config']->stripe_secret_key ?? false;
         if ($stripe_secret_key === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::ERROR_GENERAL);
 
-        // two possibilities:
-        // 1. no stripe customer id (default); create new customer and update the customer id
-        // 2. existing customer id; create a source manually on the existing customer
+        $stripe_api_endpoint = 'https://api.stripe.com/v1/customers';
 
-        $source_info = array();
+        $post_data = array(
+            'name' => $billing_info['billing_name'] ?? '',
+            'email' => $billing_info['billing_email'] ?? '',
+            'address' => array(
+                'line1'       => $billing_info['billing_address1'] ?? '',
+                'line2'       => $billing_info['billing_address2'] ?? '',
+                'city'        => $billing_info['billing_city'] ?? '',
+                'state'       => $billing_info['billing_state'] ?? '',
+                'postal_code' => $billing_info['billing_postal_code'] ?? '',
+                'country'     => $billing_info['billing_country'] ?? ''
+            ),
+            'metadata' => array(
+                'billing_company' => $billing_info['billing_company'] ?? '',
+                'billing_other'   => $billing_info['billing_other'] ?? ''
+            )
+        );
+        $post_data = http_build_query($post_data);
 
-        $stripe_customer_id = $user->getStripeCustomerId();
-        if (strlen($stripe_customer_id) === 0)
-        {
-            $stripe_api_endpoint = 'https://api.stripe.com/v1/customers';
+        $headers = array();
+        $headers[] = 'Authorization: Bearer ' . $stripe_secret_key;
+        $headers[] = 'Content-Type: application/x-www-form-urlencoded';
 
-            $post_data = array(
-                'source' => $token
-            );
-            $post_data = http_build_query($post_data);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($ch, CURLOPT_URL, $stripe_api_endpoint);
+        $httpresult = curl_exec($ch);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
 
-            $headers = array();
-            $headers[] = 'Authorization: Bearer ' . $stripe_secret_key;
-            $headers[] = 'Content-Type: application/x-www-form-urlencoded';
+        if ($httpcode !== 200)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $stripe_api_endpoint);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        $customer_info = @json_decode($httpresult, true);
+        $customer_info = self::mapStripeCustomerInfo($customer_info);
+        return $customer_info;
+    }
 
-            $result = curl_exec($ch);
-            $customer_info = @json_decode($result, true);
-            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
+    private static function updateStripeCustomer(string $stripe_customer_id, array $billing_info) : array
+    {
+        // see here for more information:
+        // https://stripe.com/docs/api
 
-            if ($httpcode !== 200)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+        $stripe_secret_key = $GLOBALS['g_config']->stripe_secret_key ?? false;
+        if ($stripe_secret_key === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::ERROR_GENERAL);
 
-            // update the customer id
-            $new_stripe_customer_id = $customer_info['id'];
-            $new_params = array(
-                'stripe_customer_id' => $new_stripe_customer_id
-            );
-            $user->set($new_params);
+        $stripe_api_endpoint = "https://api.stripe.com/v1/customers/$stripe_customer_id";
 
-            // get the newly created card (should only have one since the customer was just created)
-            $sources = $customer_info['sources']['data'];
-            if (count($sources) < 1)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+        $post_data = array(
+            'name' => $billing_info['billing_name'] ?? '',
+            'email' => $billing_info['billing_email'] ?? '',
+            'address' => array(
+                'line1'       => $billing_info['billing_address1'] ?? '',
+                'line2'       => $billing_info['billing_address2'] ?? '',
+                'city'        => $billing_info['billing_city'] ?? '',
+                'state'       => $billing_info['billing_state'] ?? '',
+                'postal_code' => $billing_info['billing_postal_code'] ?? '',
+                'country'     => $billing_info['billing_country'] ?? ''
+            ),
+            'metadata' => array(
+                'billing_company' => $billing_info['billing_company'] ?? '',
+                'billing_other'   => $billing_info['billing_other'] ?? ''
+            )
+        );
+        $post_data = http_build_query($post_data);
 
-            $source_info = self::mapCardSourceInfo($sources[0]);
-        }
-        else
-        {
-            // create the source
-            $stripe_api_endpoint = "https://api.stripe.com/v1/customers/$stripe_customer_id/sources";
+        $headers = array();
+        $headers[] = 'Authorization: Bearer ' . $stripe_secret_key;
+        $headers[] = 'Content-Type: application/x-www-form-urlencoded';
 
-            $post_data = array(
-                'source' => $token
-            );
-            $post_data = http_build_query($post_data);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($ch, CURLOPT_URL, $stripe_api_endpoint);
+        $httpresult = curl_exec($ch);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
 
-            $headers = array();
-            $headers[] = 'Authorization: Bearer ' . $stripe_secret_key;
-            $headers[] = 'Content-Type: application/x-www-form-urlencoded';
+        if ($httpcode !== 200)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $stripe_api_endpoint);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        $customer_info = @json_decode($httpresult, true);
+        $customer_info = self::mapStripeCustomerInfo($customer_info);
+        return $customer_info;
+    }
 
-            $result = curl_exec($ch);
-            $source_info = @json_decode($result, true);
-            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
+    private static function getStripeCustomer(string $string_customer_id) : array
+    {
+        // see here for more information:
+        // https://stripe.com/docs/api
 
-            if ($httpcode !== 200)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+        $stripe_secret_key = $GLOBALS['g_config']->stripe_secret_key ?? false;
+        if ($stripe_secret_key === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::ERROR_GENERAL);
 
-            $source_info = self::mapCardSourceInfo($source_info);
-        }
+        $stripe_api_endpoint = "https://api.stripe.com/v1/customers/$string_customer_id";
 
+        $headers = array();
+        $headers[] = 'Authorization: Bearer ' . $stripe_secret_key;
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_HTTPGET, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($ch, CURLOPT_URL, $stripe_api_endpoint);
+        $httpresult = curl_exec($ch);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($httpcode !== 200)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        $customer_info = @json_decode($httpresult, true);
+        $customer_info = self::mapStripeCustomerInfo($customer_info);
+        return $customer_info;
+    }
+
+    private static function addStripePaymentSource(string $stripe_customer_id, string $stripe_token) : array
+    {
+        // see here for more information:
+        // https://stripe.com/docs/api
+
+        $stripe_secret_key = $GLOBALS['g_config']->stripe_secret_key ?? false;
+        if ($stripe_secret_key === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::ERROR_GENERAL);
+
+        $stripe_api_endpoint = "https://api.stripe.com/v1/customers/$stripe_customer_id/sources";
+
+        $post_data = array(
+            'source' => $stripe_token
+        );
+        $post_data = http_build_query($post_data);
+
+        $headers = array();
+        $headers[] = 'Authorization: Bearer ' . $stripe_secret_key;
+        $headers[] = 'Content-Type: application/x-www-form-urlencoded';
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($ch, CURLOPT_URL, $stripe_api_endpoint);
+        $httpresult = curl_exec($ch);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($httpcode !== 200)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+
+        $source_info = @json_decode($httpresult, true);
+        $source_info = self::mapStripeSourceInfo($source_info);
         return $source_info;
     }
 
-    private static function deleteCustomerPaymentSource(\Flexio\Object\User $user, string $source_id) : array
+    private static function deleteStripePaymentSource(\Flexio\Object\User $user, string $stripe_source_id) : array
     {
-        // delete the payment source
+        // see here for more information:
+        // https://stripe.com/docs/api
+
         $stripe_secret_key = $GLOBALS['g_config']->stripe_secret_key ?? false;
         if ($stripe_secret_key === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::ERROR_GENERAL);
+
+        $stripe_customer_id = $user->getStripeCustomerId();
+        $stripe_api_endpoint = "https://api.stripe.com/v1/customers/$stripe_customer_id/sources/$stripe_source_id";
 
         $headers = array();
         $headers[] = 'Authorization: Bearer ' . $stripe_secret_key;
@@ -1347,25 +1434,28 @@ class User
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-
-        $stripe_customer_id = $user->getStripeCustomerId();
-        $stripe_source_id = $source_id;
-        $stripe_api_endpoint = "https://api.stripe.com/v1/customers/$stripe_customer_id/sources/$stripe_source_id";
         curl_setopt($ch, CURLOPT_URL, $stripe_api_endpoint);
-
-        $result = curl_exec($ch);
-        $source_info = @json_decode($result, true);
+        $httpresult = curl_exec($ch);
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
         if ($httpcode !== 200)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
 
+        $source_info = @json_decode($httpresult, true);
+        $source_info = self::mapStripeSourceInfo($source_info);
         return $source_info;
     }
 
-    private static function getCustomerPaymentSources(string $stripe_secret_key, string $stripe_customer_id) :? array
+    private static function getStripePaymentSources(string $stripe_customer_id) : array
     {
+        // see here for more information:
+        // https://stripe.com/docs/api
+
+        $stripe_secret_key = $GLOBALS['g_config']->stripe_secret_key ?? false;
+        if ($stripe_secret_key === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::ERROR_GENERAL);
+
         $headers = array();
         $headers[] = 'Authorization: Bearer ' . $stripe_secret_key;
         $stripe_api_endpoint = "https://api.stripe.com/v1/customers/$stripe_customer_id/sources";
@@ -1377,38 +1467,51 @@ class User
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
         curl_setopt($ch, CURLOPT_URL, $stripe_api_endpoint);
-
-        $result = curl_exec($ch);
-        $source_info = @json_decode($result, true);
+        $httpresult = curl_exec($ch);
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
         if ($httpcode !== 200)
-            return null;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        $source_info = @json_decode($httpresult, true);
 
         $result = array();
         foreach ($source_info['data'] as $s)
         {
-            $result[] = array(
-                'card_id' => $s['id'],
-                'card_type' => $s['brand'],
-                'card_last4' => $s['last4'],
-                'card_exp_month' => $s['exp_month'],
-                'card_exp_years' => $s['exp_year']
-            );
+            $result[] = self::mapStripeSourceInfo($s);
         }
 
         return $result;
     }
 
-    private static function mapCardSourceInfo(array $source) : array
+    private static function mapStripeCustomerInfo(array $customer_info) : array
     {
         $result = array(
-            'card_id' => $source['id'],
-            'card_type' => $source['brand'],
-            'card_last4' => $source['last4'],
-            'card_exp_month' => $source['exp_month'],
-            'card_exp_years' => $source['exp_year']
+            'customer_id' => $customer_info['id'],
+            'billing_name' => $customer_info['name'],
+            'billing_email' => $customer_info['email'],
+            'billing_address1' => $customer_info['address']['line1'] ?? '',
+            'billing_address2' => $customer_info['address']['line2'] ?? '',
+            'billing_city' => $customer_info['address']['city'] ?? '',
+            'billing_state' => $customer_info['address']['state'] ?? '',
+            'billing_postal_code' => $customer_info['address']['postal_code'] ?? '',
+            'billing_country' => $customer_info['address']['country'] ?? '',
+            'billing_company' => $customer_info['metadata']['billing_company'] ?? '',
+            'billing_other' => $customer_info['metadata']['billing_other'] ?? ''
+        );
+
+        return $result;
+    }
+
+    private static function mapStripeSourceInfo(array $source_info) : array
+    {
+        $result = array(
+            'card_id' => $source_info['id'],
+            'card_type' => $source_info['brand'],
+            'card_last4' => $source_info['last4'],
+            'card_exp_month' => $source_info['exp_month'],
+            'card_exp_years' => $source_info['exp_year']
         );
 
         return $result;
