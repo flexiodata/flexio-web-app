@@ -15,66 +15,9 @@
       </div>
     </div>
     <div v-else-if="is_editing">
-      <div class="mv3 f7 silver ttu fw6">Billing address</div>
-      <el-form
-        ref="billing-form"
-        class="mt3 el-form--compact el-form__label-tiny"
-        style="max-width: 28rem"
-        :model="billing_info"
-        @submit.prevent.native
-      >
-        <el-form-item
-          key="name"
-          label="Name"
-          prop="name"
-        >
-          <el-input
-            placeholder="Full Name"
-            auto-complete="off"
-            spellcheck="false"
-            :autofocus="true"
-            v-model="billing_info.name"
-          />
-        </el-form-item>
-        <el-form-item
-          key="company_name"
-          label="Company Name"
-          prop="company_name"
-        >
-          <el-input
-            placeholder="Company Name"
-            auto-complete="off"
-            spellcheck="false"
-            :autofocus="true"
-            v-model="billing_info.company_name"
-          />
-        </el-form-item>
-        <el-form-item
-          key="email"
-          label="Send invoices to"
-          prop="email"
-        >
-          <el-input
-            placeholder="Email"
-            auto-complete="off"
-            spellcheck="false"
-            :autofocus="true"
-            v-model="billing_info.email"
-          />
-        </el-form-item>
-      </el-form>
-
-      <div class="mv3 f7 silver ttu fw6">Credit card</div>
-      <div class="mv3">
-        <Card
-          class="stripe-card"
-          :stripe="stripe_public_key"
-          :class="{ complete }"
-          :options="stripe_opts"
-          @change="complete = $event.complete"
-          v-if="show_stripe_form"
-        />
-      </div>
+      <AccountBillingEditForm
+        :stripe="stripe_public_key"
+      />
       <ButtonBar
         class="mt4"
         :submit-button-class="'ttu fw6 pay-with-stripe'"
@@ -134,6 +77,7 @@
   import { isProduction } from '@/utils'
   import { Card, createToken } from 'vue-stripe-elements-plus'
   import Spinner from 'vue-simple-spinner'
+  import AccountBillingEditForm from '@/components/AccountBillingEditForm'
   import ConfirmPopover from '@/components/ConfirmPopover'
   import ButtonBar from '@/components/ButtonBar'
 
@@ -158,6 +102,7 @@
     components: {
       Spinner,
       Card,
+      AccountBillingEditForm,
       ConfirmPopover,
       ButtonBar
     },
@@ -253,6 +198,9 @@
         api.deleteCard('me', card.card_id).then(card_data => {
           this.fetchCards()
         })
+      },
+      submitPaymentInfo() {
+
       }
     }
   }
