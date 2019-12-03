@@ -136,7 +136,7 @@ class HubSpot implements \Flexio\IFace\IConnection,
              else
             {
                 // access token is expired, get a new one
-                $auth_token_url = '';
+                $auth_token_url = 'https://api.hubapi.com/oauth/v1/token';
 
                 $post_data = array(
                     'client_id' => $client_id,
@@ -176,7 +176,7 @@ class HubSpot implements \Flexio\IFace\IConnection,
         {
             // if we have a code parameter, we have enough information
             // to authenticate and get the token; do so and return the object;
-            $auth_token_url = 'https://app.hubspot.com/oauth/v1/token';
+            $auth_token_url = 'https://api.hubapi.com/oauth/v1/token';
 
             $post_data = array(
                 'client_id' => $client_id,
