@@ -14,13 +14,13 @@
         <span class="ml2 f6">Loading...</span>
       </div>
     </div>
-    <div v-else-if="is_editing">
-      <AccountBillingEditForm
-        :stripe="stripe_public_key"
-        @cancel-click="is_editing = false"
-        @create-token="onCreateToken"
-      />
-    </div>
+    <AccountBillingEditForm
+      :edit-mode="edit_mode"
+      :stripe="stripe_public_key"
+      @cancel-click="onCancelEditBilling"
+      @create-card="onCreateCard"
+      v-else-if="is_editing"
+    />
     <div v-else>
       <div>
         <div class="blankslate" v-if="cards.length == 0">
@@ -29,36 +29,41 @@
             <el-button
               type="primary"
               class="ttu fw6"
-              @click="is_editing = true"
+              @click="setupBilling"
             >
               Set up payment method
             </el-button>
           </div>
         </div>
-        <div
-          class="mv2 f6 br2 pv2 ph3 bg-nearer-white ba b--black-05 flex flex-row items-center hide-child"
-          :key="card.card_id"
-          v-for="card in cards"
-        >
-          <div class="flex-fill flex flex-row items-center">
-            <img :src="getCardLogo(card.card_type)" class="mr3" style="width: 36px">
-            <span>{{card.card_type}} ending in {{card.card_last4}}</span>
-          </div>
-          <div>Expires {{card.card_exp_month}}/{{card.card_exp_years}}</div>
+        <div v-else>
+          <div class="mt4 mb3 f7 silver ttu fw6">Payment method</div>
           <div
-            class="ml3 hint--top"
-            aria-label="Remove this card"
+            class="mv2 f6 br2 pv2 ph3 bg-nearer-white ba b--black-05 flex flex-row items-center hide-child"
+            :key="card.card_id"
+            v-for="card in cards"
           >
-            <ConfirmPopover
-              class="pointer child black-30 hover-black-60"
-              placement="bottom-end"
-              title="Confirm remove card?"
-              message="You will no longer be able to use this card as a payment method. Are you sure you want to remove this card?"
-              confirmButtonText="Remove card"
-              :width="400"
-              :offset="9"
-              @confirm-click="removeCard(card)"
-            />
+            <div class="flex-fill flex flex-row items-center">
+              <img :src="getCardLogo(card.card_type)" class="mr3" style="width: 36px">
+              <span>{{card.card_type}} ending in {{card.card_last4}}</span>
+            </div>
+            <div>Expires {{card.card_exp_month}}/{{card.card_exp_years}}</div>
+            <div class="ml4 blue pointer" @click="updateCard(card)">Update...</div>
+            <div
+              class="ml3 hint--top"
+              aria-label="Remove this card"
+              v-if="false"
+            >
+              <ConfirmPopover
+                class="pointer child black-30 hover-black-60"
+                placement="bottom-end"
+                title="Confirm remove card?"
+                message="You will no longer be able to use this card as a payment method. Are you sure you want to remove this card?"
+                confirmButtonText="Remove card"
+                :width="400"
+                :offset="9"
+                @confirm-click="removeCard(card)"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -115,8 +120,10 @@
         cards: [],
         card_error: '',
         stripe_public_key,
-        is_editing: false,
         is_fetching: false,
+        is_editing: false,
+        edit_mode: '',
+        edit_card: null,
         stripe_opts: {
           // see https://stripe.com/docs/stripe.js#element-options for details
           style: {
@@ -161,16 +168,47 @@
           this.card_error = JSON.stringify(error)
         }).finally(() => {
           this.is_fetching = false
+          this.edit_card = null
         })
+      },
+      setupBilling() {
+        this.edit_mode = 'all'
+        this.is_editing = true
+      },
+      updateBillingContact() {
+        this.edit_mode = 'contact'
+        this.is_editing = true
+      },
+      updateBillingAddress() {
+        this.edit_mode = 'address'
+        this.is_editing = true
+      },
+      updateCard(card) {
+        this.edit_card = card
+        this.edit_mode = 'card'
+        this.is_editing = true
       },
       removeCard(card) {
         api.deleteCard('me', card.card_id).then(card_data => {
           this.fetchCards()
+        }).finally(() => {
+          this.edit_card = null
         })
       },
-      onCreateToken() {
+      onCancelEditBilling() {
         this.is_editing = false
-        this.fetchCards()
+        this.edit_card = null
+      },
+      onCreateCard() {
+        this.is_editing = false
+
+        if (!_.isNil(this.edit_card)) {
+          this.removeCard(this.edit_card)
+        } else {
+          this.fetchCards()
+        }
+
+        this.edit_card = null
       }
     }
   }
