@@ -45,6 +45,7 @@ class Factory
         \Model::CONNECTION_TYPE_SHOPIFY             => '\Flexio\Services\Shopify',
         \Model::CONNECTION_TYPE_PIPEDRIVE           => '\Flexio\Services\Pipedrive',
         \Model::CONNECTION_TYPE_CAPSULECRM          => '\Flexio\Services\CapsuleCRM',
+        \Model::CONNECTION_TYPE_HUBSPOT             => '\Flexio\Services\HubSpot',
     );
 
     public static function create(string $connection_type, array $connection_info = array()) // TODO: add return type

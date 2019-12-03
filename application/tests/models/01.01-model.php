@@ -519,5 +519,10 @@ class Test
         $actual = \Model::CONNECTION_TYPE_CAPSULECRM;
         $expected = 'capsulecrm';
         \Flexio\Tests\Check::assertString('K.27', 'Type constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Model::CONNECTION_TYPE_HUBSPOT;
+        $expected = 'hubspot';
+        \Flexio\Tests\Check::assertString('K.28', 'Type constant',  $actual, $expected, $results);
     }
 }

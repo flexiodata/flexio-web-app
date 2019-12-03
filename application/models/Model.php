@@ -198,6 +198,7 @@ class Model
     public const CONNECTION_TYPE_SHOPIFY            = 'shopify';
     public const CONNECTION_TYPE_PIPEDRIVE          = 'pipedrive';
     public const CONNECTION_TYPE_CAPSULECRM         = 'capsulecrm';
+    public const CONNECTION_TYPE_HUBSPOT            = 'hubspot';
 
     private $objs = array();
     private $database = null;
