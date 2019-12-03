@@ -101,6 +101,17 @@ const GOOGLESHEETS = {
   is_function_mount: false,
 }
 
+const HUBSPOT = {
+    service_name: 'HubSpot',
+    service_description: 'There’s a better way to grow',
+    connection_type: types.CONNECTION_TYPE_HUBSPOT,
+    icon: require('../assets/icon/icon-hubspot-128.png'),
+    is_oauth: true,
+    is_storage: false,
+    is_filesystem: false,
+    is_function_mount: false,
+  }
+
 const INTERCOM = {
   service_name: 'Intercom',
   service_description: "",
@@ -222,6 +233,7 @@ export const CONNECTION_INFO_GITHUB               = GITHUB
 //export const CONNECTION_INFO_TWITTER              = TWITTER
 export const CONNECTION_INFO_GOOGLEDRIVE          = GOOGLEDRIVE
 export const CONNECTION_INFO_GOOGLESHEETS         = GOOGLESHEETS
+export const CONNECTION_INFO_HUBSPOT              = HUBSPOT
 export const CONNECTION_INFO_INTERCOM             = INTERCOM
 //export const CONNECTION_INFO_LINKEDIN             = LINKEDIN
 export const CONNECTION_INFO_CRUNCHBASE           = CRUNCHBASE

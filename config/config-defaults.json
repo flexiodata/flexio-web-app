@@ -67,6 +67,9 @@
     "googlecloudstorage_client_id": "",
     "googlecloudstorage_client_secret": "",
 
+    "hubspot_client_id": "",
+    "hubspot_client_secret": "",
+
     "intercom_client_id": "",
     "intercom_client_secret": "",
 
