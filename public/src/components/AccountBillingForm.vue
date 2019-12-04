@@ -111,8 +111,6 @@
       billing_country: '',
       billing_other: '',
 
-      cardholder_name: '',
-
       card_exp_month: '',
       card_exp_years: '',
       card_id: '',

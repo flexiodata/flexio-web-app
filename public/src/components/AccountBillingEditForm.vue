@@ -10,7 +10,7 @@
       @submit.prevent.native
       v-if="editMode == 'all' || editMode == 'contact'"
     >
-      <h4 class="mb3 pb1 silver ttu f7 fw6 bb b--black-10">Billing contact</h4>
+      <h4 class="mb3 pt1 pb1 ttu f7 fw6 bb b--black-10">Billing contact</h4>
 
       <el-form-item
         class="w-50-l pr1-l"
@@ -67,7 +67,7 @@
       @submit.prevent.native
       v-if="editMode == 'all' || editMode == 'address'"
     >
-      <h4 class="mt4 mb3 pb1 silver ttu f7 fw6 bb b--black-10">Billing address</h4>
+      <h4 class="mt4 mb3 pt1 pb1 ttu f7 fw6 bb b--black-10">Billing address</h4>
 
       <el-form-item
         class="w-50-l pr1-l"
@@ -172,22 +172,7 @@
       @submit.prevent.native
       v-if="editMode == 'all' || editMode == 'card'"
     >
-      <h4 class="mt4 mb3 pb1 silver ttu f7 fw6 bb b--black-10">Payment method</h4>
-
-      <el-form-item
-        class="w-50-l pr1-l"
-        style="max-width: 30rem"
-        label="Cardholder Name"
-        key="cardholder_name"
-        prop="cardholder_name"
-      >
-        <el-input
-          type="text"
-          placeholder="Full name"
-          ref="billingCardNameInput"
-          v-model.trim="billing_info.cardholder_name"
-        />
-      </el-form-item>
+      <h4 class="mt4 mb3 pt1 pb1 ttu f7 fw6 bb b--black-10">Payment method</h4>
 
       <div
         class="el-form-item el-form-item--small w-50-l pr1-l"
@@ -270,8 +255,6 @@
       billing_postal_code: '',
       billing_country: '',
       billing_other: '',
-
-      cardholder_name: '',
 
       card_exp_month: '',
       card_exp_years: '',
@@ -424,7 +407,7 @@
             break
           case 'card':
             // we'll add the token (created below) to this
-            payload = _.pick(payload, ['cardholder_name'])
+            payload = {}
             break
         }
 
