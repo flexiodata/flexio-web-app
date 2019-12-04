@@ -443,7 +443,8 @@ class User
             );
             $owner_user->set($user_info);
         }
-         else
+
+        if (strlen($stripe_customer_id) > 0)
         {
             // merge newly specified information with existing information (updateStripeCustomer()
             // function currently does a complete replace on billing address i, so merge here)
