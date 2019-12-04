@@ -376,8 +376,6 @@
         // numbers, but can also have four
       },
       onSubmit() {
-        debugger
-
         var payload = _.omit(this.billing_info, ['card_exp_month', 'card_exp_years', 'card_id', 'card_last4', 'card_type', 'customer_id'])
 
         switch (this.editMode) {
@@ -400,19 +398,14 @@
           // See https://stripe.com/docs/api#errors for the error object.
           // More general https://stripe.com/docs/stripe.js#stripe-create-token.
           createToken().then(data => {
-        debugger
             payload.token = data.token.id
 
             api.updateBilling('me', payload).then(response => {
-        debugger
               this.$emit('billing-updated', response.data)
             })
           })
         } else {
-        debugger
-
           api.updateBilling('me', payload).then(response => {
-        debugger
             this.$emit('billing-updated', response.data)
           })
         }
