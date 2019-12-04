@@ -4,7 +4,7 @@
       class="el-form--cozy el-form__label-tiny"
       ref="form"
       size="small"
-      :model="$data"
+      :model="billing_info"
       @submit.prevent.native
       v-if="editMode == 'all' || editMode == 'contact'"
     >
@@ -19,7 +19,8 @@
       >
         <el-input
           type="text"
-          v-model="billing_name"
+          ref="billingNameInput"
+          v-model="billing_info.billing_name"
         />
       </el-form-item>
 
@@ -32,7 +33,7 @@
       >
         <el-input
           type="text"
-          v-model="billing_company"
+          v-model="billing_info.billing_company"
         />
       </el-form-item>
 
@@ -45,7 +46,7 @@
       >
         <el-input
           type="email"
-          v-model="billing_email"
+          v-model="billing_info.billing_email"
         />
         <div class="nt1 f8 i light-silver">
           We will send invoices to this email
@@ -57,7 +58,7 @@
       class="el-form--cozy el-form__label-tiny"
       ref="form"
       size="small"
-      :model="$data"
+      :model="billing_info"
       @submit.prevent.native
       v-if="editMode == 'all' || editMode == 'address'"
     >
@@ -73,7 +74,8 @@
         <el-input
           type="text"
           placeholder="Street"
-          v-model="billing_address1"
+          ref="billingAddress1Input"
+          v-model="billing_info.billing_address1"
         />
       </el-form-item>
 
@@ -86,7 +88,7 @@
         <el-input
           type="text"
           placeholder="Apt/Suite"
-          v-model="billing_address2"
+          v-model="billing_info.billing_address2"
         />
       </el-form-item>
 
@@ -98,7 +100,7 @@
         prop="billing_country"
       >
         <CountrySelect
-          v-model="billing_country"
+          v-model="billing_info.billing_country"
         />
       </el-form-item>
 
@@ -111,7 +113,7 @@
           >
             <el-input
               type="text"
-              v-model="billing_city"
+              v-model="billing_info.billing_city"
             />
           </el-form-item>
         </div>
@@ -123,7 +125,7 @@
           >
             <el-input
               type="text"
-              v-model="billing_state"
+              v-model="billing_info.billing_state"
             />
           </el-form-item>
         </div>
@@ -135,7 +137,7 @@
           >
             <el-input
               type="text"
-              v-model="billing_postal_code"
+              v-model="billing_info.billing_postal_code"
             />
           </el-form-item>
         </div>
@@ -149,7 +151,7 @@
         <el-input
           type="textarea"
           rows="4"
-          v-model="billing_other"
+          v-model="billing_info.billing_other"
         />
         <div class="nt1 f8 i light-silver">
           If you need to add a tax ID, VAT information or anything else to your invoice, you can do so here
@@ -161,7 +163,7 @@
       class="el-form--cozy el-form__label-tiny"
       ref="form"
       size="small"
-      :model="$data"
+      :model="billing_info"
       @submit.prevent.native
       v-if="editMode == 'all' || editMode == 'card'"
     >
@@ -177,7 +179,8 @@
         <el-input
           type="text"
           placeholder="Full name"
-          v-model="card_name"
+          ref="billingCardNameInput"
+          v-model="billing_info.card_name"
         />
       </el-form-item>
 
@@ -247,11 +250,68 @@
   import CountrySelect from '@/components/CountrySelect'
   import ButtonBar from '@/components/ButtonBar'
 
+  const getDefaultBillingInfo = () => {
+    return {
+      billing_name: '',
+      billing_company: '',
+      billing_email: '',
+
+      billing_address1: '',
+      billing_address2: '',
+      billing_city: '',
+      billing_state: '',
+      billing_postal_code: '',
+      billing_country: '',
+      billing_other: '',
+
+      card_exp_month: '',
+      card_exp_years: '',
+      card_id: '',
+      card_last4: '',
+      card_type: '',
+
+      customer_id: '',
+    }
+  }
+
+  const getDefaultState = () => {
+    return {
+      billing_info: getDefaultBillingInfo(),
+      complete: false,
+      number: false,
+      expiry: false,
+      cvc: false,
+      stripe_opts: {
+        // see https://stripe.com/docs/stripe.js#element-options for details
+        style: {
+          base: {
+            color: '#606266',
+            lineHeight: '18px',
+            fontFamily: '"Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif',
+            fontSmoothing: 'antialiased',
+            fontSize: '13px',
+            '::placeholder': {
+              color: '#c0c4cc'
+            }
+          },
+          invalid: {
+            color: '#f56c6c',
+            iconColor: '#f56c6c'
+          }
+        }
+      }
+    }
+  }
+
   export default {
     props: {
       editMode: {
         type: String,
         default: 'all' // 'all', 'contact', 'address' or 'card'
+      },
+      billingInfo: {
+        type: Object,
+        default: () => {}
       },
       stripe: {
         type: String,
@@ -271,46 +331,7 @@
       cvc() { this.update() }
     },
     data() {
-      return {
-        billing_name: '',
-        billing_company: '',
-        billing_email: '',
-        billing_address1: '',
-        billing_address2: '',
-        billing_city: '',
-        billing_state: '',
-        billing_postal_code: '',
-        billing_country: '',
-        billing_other: '',
-        card_name: '',
-        card_number: '',
-        card_exp: '',
-        card_cvc: '',
-
-        complete: false,
-        number: false,
-        expiry: false,
-        cvc: false,
-        stripe_opts: {
-          // see https://stripe.com/docs/stripe.js#element-options for details
-          style: {
-            base: {
-              color: '#606266',
-              lineHeight: '18px',
-              fontFamily: '"Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif',
-              fontSmoothing: 'antialiased',
-              fontSize: '13px',
-              '::placeholder': {
-                color: '#c0c4cc'
-              }
-            },
-            invalid: {
-              color: '#f56c6c',
-              iconColor: '#f56c6c'
-            }
-          }
-        }
-      }
+      return getDefaultState()
     },
     computed: {
       is_submit_button_enabled() {
@@ -323,6 +344,9 @@
 
         return true
       }
+    },
+    mounted() {
+      this.billing_info = _.assign({}, this.billing_info, this.billingInfo)
     },
     methods: {
       update() {
@@ -347,12 +371,21 @@
         // numbers, but can also have four
       },
       onSubmit() {
-        if (this.editMode == 'all' || this.editMode == 'contact') {
-          // do billing contact API call
-        }
+        debugger
 
-        if (this.editMode == 'all' || this.editMode == 'address') {
-          // do billing address API call
+        var payload = _.omit(this.billing_info, ['card_exp_month', 'card_exp_years', 'card_id', 'card_last4', 'card_type', 'customer_id'])
+
+        switch (this.editMode) {
+          case 'contact':
+            payload = _.pick(payload, ['billing_name', 'billing_company', 'billing_email'])
+            break
+          case 'address':
+            payload = _.pick(payload, ['billing_address1', 'billing_address2', 'billing_city', 'billing_state', 'billing_postal_code', 'billing_country', 'billing_other'])
+            break
+          case 'card':
+            // we only need to POST the token (created below)
+            payload = {}
+            break
         }
 
         if (this.editMode == 'all' || this.editMode == 'card') {
@@ -362,11 +395,20 @@
           // See https://stripe.com/docs/api#errors for the error object.
           // More general https://stripe.com/docs/stripe.js#stripe-create-token.
           createToken().then(data => {
-            var token_id = data.token.id
+        debugger
+            payload.token = data.token.id
 
-            api.createCard('me', { token: token_id }).then(card_data => {
-              this.$emit('create-card', card_data)
+            api.updateBilling('me', payload).then(response => {
+        debugger
+              this.$emit('billing-updated', response.data)
             })
+          })
+        } else {
+        debugger
+
+          api.updateBilling('me', payload).then(response => {
+        debugger
+            this.$emit('billing-updated', response.data)
           })
         }
       },

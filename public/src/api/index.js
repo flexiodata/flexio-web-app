@@ -19,16 +19,15 @@ export default {
 
   // AUTHENTICATED API CALLS:
 
-  // users
+  // account
   fetchUser:                      (team_name)                     => AxiosResource(team_name)[GET] (`/account`),
   updateUser:                     (team_name, attrs)              => AxiosResource(team_name)[POS] (`/account`, attrs),
   deleteUser:                     (team_name, attrs)              => AxiosResource(team_name)[DEL] (`/account`, attrs),
   changePassword:                 (team_name, attrs)              => AxiosResource(team_name)[POS] (`/account/credentials`, attrs),
 
-  // cards
-  fetchCards:                     (team_name)                     => AxiosResource(team_name)[GET] (`/account/cards`),
-  createCard:                     (team_name, attrs)              => AxiosResource(team_name)[POS] (`/account/cards`, attrs),
-  deleteCard:                     (team_name, object_name)        => AxiosResource(team_name)[DEL] (`/account/cards/${object_name}`),
+  // billing
+  fetchBilling:                   (team_name)                     => AxiosResource(team_name)[GET] (`/account/billing`),
+  updateBilling:                  (team_name, attrs)              => AxiosResource(team_name)[POS] (`/account/billing`, attrs),
 
   // tokens
   fetchTokens:                    (team_name)                     => AxiosResource(team_name)[GET] (`/auth/keys`),

@@ -3,9 +3,9 @@
     <el-alert
       type="error"
       show-icon
-      :title="card_error"
+      :title="billing_error"
       :closable="false"
-      v-if="card_error.length > 0"
+      v-if="billing_error.length > 0"
     />
     <!-- fetching -->
     <div v-if="is_fetching">
@@ -17,79 +17,56 @@
     <AccountBillingEditForm
       :edit-mode="edit_mode"
       :stripe="stripe_public_key"
+      :billing-info="billing_info"
       @cancel-click="onCancelEditBilling"
-      @create-card="onCreateCard"
+      @billing-updated="onBillingUpdated"
       v-else-if="is_editing"
     />
+    <div
+      class="blankslate"
+      v-else-if="billing_info.card_id.length == 0"
+    >
+      <em>No billing information is on file</em>
+      <div class="mt3">
+        <el-button
+          type="primary"
+          class="ttu fw6"
+          @click="setupBilling"
+        >
+          Set up payment method
+        </el-button>
+      </div>
+    </div>
     <div v-else>
-      <div>
-        <div class="blankslate" v-if="cards.length == 0">
-          <em>No billing information is on file</em>
-          <div class="mt3">
-            <el-button
-              type="primary"
-              class="ttu fw6"
-              @click="setupBilling"
-            >
-              Set up payment method
-            </el-button>
+      <div class="flex flex-column flex-row-l flex-wrap-l">
+        <div class="w-third-l">
+          <div class="mb3 f7 silver ttu fw6">Billing contact</div>
+          <div class="f6 lh-copy">
+            {{billing_info.billing_name}}<br>
+            {{billing_info.billing_company}}<br>
+            {{billing_info.billing_email}}
           </div>
+          <div class="mt2 f6 blue pointer" @click="editBillingContact()">Update...</div>
         </div>
-        <div v-else>
-          <div class="flex flex-row flex-wrap">
-            <div class="flex-fill">
-              <div class="mb3 f7 silver ttu fw6">Billing contact</div>
-              <div class="f6 lh-copy">
-                John Smith<br>
-                Example Parts, Inc.<br>
-                jsmith@example.com
-              </div>
-              <div class="mt2 f6 blue pointer" @click="updateBillingContact()">Update...</div>
-            </div>
-            <div class="flex-fill ml5">
-              <div class="mb3 f7 silver ttu fw6">Billing address</div>
-              <address class="f6 lh-copy">
-              123 Wildwold Dr.<br>
-              Suite 104<br>
-              Chicago, IL 60606<br>
-              USA
-              </address>
-              <div class="mt2 pt2 bt b--black-10 f6 lh-copy">
-                Tax ID: 123456789
-              </div>
-              <div class="mt2 f6 blue pointer" @click="updateBillingAddress()">Update...</div>
-            </div>
-          </div>
-          <div class="mt4 mb3 f7 silver ttu fw6">Payment method</div>
-          <div
-            class="mv2 f6 br2 pv2 ph3 bg-nearer-white ba b--black-05 flex flex-row items-center hide-child"
-            :key="card.card_id"
-            v-for="card in cards"
-          >
-            <div class="flex-fill flex flex-row items-center">
-              <img :src="getCardLogo(card.card_type)" class="mr3" style="width: 36px">
-              <span>{{card.card_type}} ending in {{card.card_last4}}</span>
-            </div>
-            <div>Expires {{card.card_exp_month}}/{{card.card_exp_years}}</div>
-            <div class="ml4 blue pointer" @click="updateCard(card)">Update...</div>
-            <div
-              class="ml3 hint--top"
-              aria-label="Remove this card"
-              v-if="false"
-            >
-              <ConfirmPopover
-                class="pointer child black-30 hover-black-60"
-                placement="bottom-end"
-                title="Confirm remove card?"
-                message="You will no longer be able to use this card as a payment method. Are you sure you want to remove this card?"
-                confirmButtonText="Remove card"
-                :width="400"
-                :offset="9"
-                @confirm-click="removeCard(card)"
-              />
-            </div>
-          </div>
+        <div class="flex-fill-l mt4 mt0-l ml5-l">
+          <div class="mb3 f7 silver ttu fw6">Billing address</div>
+          <address class="f6 lh-copy">
+            {{billing_info.billing_address1}}<br>
+            {{billing_info.billing_address2}}<br>
+            {{billing_info.billing_city}}, {{billing_info.billing_state}} {{billing_info.billing_postal_code}}<br>
+            {{billing_info.billing_country}}
+          </address>
+          <div class="mt2 pt2 bt b--black-10 f6 lh-copy pre overflow-y-visible overflow-x-auto">{{billing_info.billing_other}}</div>
+          <div class="mt2 f6 blue pointer" @click="editBillingAddress()">Update...</div>
         </div>
+      </div>
+      <div class="mt4 mb3 f7 silver ttu fw6">Payment method</div>
+      <div class="f6 br2 pv3 pv2-l ph3 bg-nearer-white ba b--black-05 dib flex-l flex-row-l items-center-l">
+        <img :src="getCardLogo(billing_info.card_type)" class="center db dn-l mb3" style="width: 64px">
+        <img :src="getCardLogo(billing_info.card_type)" class="dn db-l mr3" style="width: 36px">
+        <div class="fw6 mt2 mt0-l mr5-l flex-fill">{{billing_info.card_type}} ending in {{billing_info.card_last4}}</div>
+        <div class="fw6 mt2 mt0-l mr5-l">Expires: {{billing_info.card_exp_month}}/{{billing_info.card_exp_years}}</div>
+        <div class="mt2 mt0-l blue pointer" @click="editCard">Update...</div>
       </div>
     </div>
   </div>
@@ -98,10 +75,8 @@
 <script>
   import api from '@/api'
   import { isProduction } from '@/utils'
-  import { Card, createToken } from 'vue-stripe-elements-plus'
   import Spinner from 'vue-simple-spinner'
   import AccountBillingEditForm from '@/components/AccountBillingEditForm'
-  import ConfirmPopover from '@/components/ConfirmPopover'
 
   // all cards accepted by Stripe
   import visa from 'payment-icons/min/flat/visa.svg'
@@ -120,119 +95,100 @@
   // whichever key is specified here will be the key that is used
   const stripe_public_key = isProduction() ? flexio_prod_key : flexio_test_key
 
+  const getDefaultBillingInfo = () => {
+    return {
+      billing_name: '',
+      billing_company: '',
+      billing_email: '',
+
+      billing_address1: '',
+      billing_address2: '',
+      billing_city: '',
+      billing_state: '',
+      billing_postal_code: '',
+      billing_country: '',
+      billing_other: '',
+
+      card_exp_month: '',
+      card_exp_years: '',
+      card_id: '',
+      card_last4: '',
+      card_type: '',
+
+      customer_id: '',
+    }
+  }
+
+  const getDefaultState = () => {
+    return {
+      card_icons: {
+        'Visa': visa,
+        'MasterCard': mastercard,
+        'American Express': amex,
+        'JCB': jcb,
+        'Discover': discover,
+        'Diners Club': diners,
+        'UnionPay': unionpay
+      },
+      billing_info: getDefaultBillingInfo(),
+      billing_error: '',
+      stripe_public_key,
+      is_fetching: false,
+      is_editing: false,
+      edit_mode: '',
+    }
+  }
+
   export default {
     components: {
       Spinner,
-      Card,
-      AccountBillingEditForm,
-      ConfirmPopover,
+      AccountBillingEditForm
     },
     data() {
-      return {
-        billing_info: {
-
-        },
-        card_icons: {
-          'Visa': visa,
-          'MasterCard': mastercard,
-          'American Express': amex,
-          'JCB': jcb,
-          'Discover': discover,
-          'Diners Club': diners,
-          'UnionPay': unionpay
-        },
-        cards: [],
-        card_error: '',
-        stripe_public_key,
-        is_fetching: false,
-        is_editing: false,
-        edit_mode: '',
-        edit_card: null,
-        stripe_opts: {
-          // see https://stripe.com/docs/stripe.js#element-options for details
-          style: {
-            base: {
-              color: '#32325d',
-              lineHeight: '18px',
-              fontFamily: '"Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif',
-              fontSmoothing: 'antialiased',
-              fontSize: '16px',
-              '::placeholder': {
-                color: '#aab7c4'
-              }
-            },
-            invalid: {
-              color: '#fa755a',
-              iconColor: '#fa755a'
-            }
-          }
-        }
-      }
-    },
-    computed: {
-      card_count() {
-        return this.cards.length
-      }
+      return getDefaultState()
     },
     mounted() {
-      this.fetchCards()
+      this.fetchBilling()
     },
     methods: {
       getCardLogo(card_name) {
         return this.card_icons[card_name] || ''
       },
-      fetchCards() {
+      fetchBilling() {
         this.is_fetching = true
 
-        api.fetchCards().then(response => {
-          this.cards = response.data
-          this.card_error = ''
+        api.fetchBilling().then(response => {
+          this.billing_info = _.assign({}, response.data)
+          this.billing_error = ''
         }).catch(error => {
-          this.cards = []
-          this.card_error = JSON.stringify(error)
+          this.billing_info = {}
+          this.billing_error = JSON.stringify(error)
         }).finally(() => {
           this.is_fetching = false
-          this.edit_card = null
         })
       },
       setupBilling() {
         this.edit_mode = 'all'
         this.is_editing = true
       },
-      updateBillingContact() {
+      editBillingContact() {
         this.edit_mode = 'contact'
         this.is_editing = true
       },
-      updateBillingAddress() {
+      editBillingAddress() {
         this.edit_mode = 'address'
         this.is_editing = true
       },
-      updateCard(card) {
-        this.edit_card = card
+      editCard() {
         this.edit_mode = 'card'
         this.is_editing = true
       },
-      removeCard(card) {
-        api.deleteCard('me', card.card_id).then(card_data => {
-          this.fetchCards()
-        }).finally(() => {
-          this.edit_card = null
-        })
-      },
       onCancelEditBilling() {
         this.is_editing = false
-        this.edit_card = null
       },
-      onCreateCard() {
+      onBillingUpdated(info) {
+        this.billing_info = _.assign({}, this.billing_info, info)
         this.is_editing = false
-
-        if (!_.isNil(this.edit_card)) {
-          this.removeCard(this.edit_card)
-        } else {
-          this.fetchCards()
-        }
-
-        this.edit_card = null
       }
     }
   }
