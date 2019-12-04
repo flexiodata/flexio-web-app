@@ -355,7 +355,9 @@
       has_errors() {
         // Stripe card form is not complete; bail out
         if (this.editMode == 'all' || this.editMode == 'card') {
-          return !this.complete
+          if (!this.complete) {
+            return true
+          }
         }
 
         return _.keys(this.form_errors).length > 0
