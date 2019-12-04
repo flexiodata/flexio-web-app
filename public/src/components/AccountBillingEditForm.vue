@@ -20,7 +20,7 @@
         <el-input
           type="text"
           ref="billingNameInput"
-          v-model="billing_info.billing_name"
+          v-model.trim="billing_info.billing_name"
         />
       </el-form-item>
 
@@ -33,7 +33,7 @@
       >
         <el-input
           type="text"
-          v-model="billing_info.billing_company"
+          v-model.trim="billing_info.billing_company"
         />
       </el-form-item>
 
@@ -46,10 +46,11 @@
       >
         <el-input
           type="email"
-          v-model="billing_info.billing_email"
+          placeholder="accounting@example.com"
+          v-model.trim="billing_info.billing_email"
         />
         <div class="nt1 f8 i light-silver">
-          We will send invoices to this email
+          All future invoices will be sent to this email address
         </div>
       </el-form-item>
     </el-form>
@@ -75,7 +76,7 @@
           type="text"
           placeholder="Street"
           ref="billingAddress1Input"
-          v-model="billing_info.billing_address1"
+          v-model.trim="billing_info.billing_address1"
         />
       </el-form-item>
 
@@ -88,7 +89,7 @@
         <el-input
           type="text"
           placeholder="Apt/Suite"
-          v-model="billing_info.billing_address2"
+          v-model.trim="billing_info.billing_address2"
         />
       </el-form-item>
 
@@ -100,7 +101,7 @@
         prop="billing_country"
       >
         <CountrySelect
-          v-model="billing_info.billing_country"
+          v-model.trim="billing_info.billing_country"
         />
       </el-form-item>
 
@@ -113,7 +114,7 @@
           >
             <el-input
               type="text"
-              v-model="billing_info.billing_city"
+              v-model.trim="billing_info.billing_city"
             />
           </el-form-item>
         </div>
@@ -125,7 +126,7 @@
           >
             <el-input
               type="text"
-              v-model="billing_info.billing_state"
+              v-model.trim="billing_info.billing_state"
             />
           </el-form-item>
         </div>
@@ -137,7 +138,7 @@
           >
             <el-input
               type="text"
-              v-model="billing_info.billing_postal_code"
+              v-model.trim="billing_info.billing_postal_code"
             />
           </el-form-item>
         </div>
@@ -151,7 +152,7 @@
         <el-input
           type="textarea"
           rows="4"
-          v-model="billing_info.billing_other"
+          v-model.trim="billing_info.billing_other"
         />
         <div class="nt1 f8 i light-silver">
           If you need to add a tax ID, VAT information or anything else to your invoice, you can do so here
@@ -173,14 +174,14 @@
         class="w-50-l pr1-l"
         style="max-width: 30rem"
         label="Cardholder Name"
-        key="card_name"
-        prop="card_name"
+        key="cardholder_name"
+        prop="cardholder_name"
       >
         <el-input
           type="text"
           placeholder="Full name"
           ref="billingCardNameInput"
-          v-model="billing_info.card_name"
+          v-model.trim="billing_info.cardholder_name"
         />
       </el-form-item>
 
@@ -265,6 +266,8 @@
       billing_postal_code: '',
       billing_country: '',
       billing_other: '',
+
+      cardholder_name: '',
 
       card_exp_month: '',
       card_exp_years: '',
