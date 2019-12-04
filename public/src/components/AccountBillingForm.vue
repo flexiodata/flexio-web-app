@@ -36,6 +36,30 @@
           </div>
         </div>
         <div v-else>
+          <div class="flex flex-row flex-wrap">
+            <div class="flex-fill">
+              <div class="mb3 f7 silver ttu fw6">Billing contact</div>
+              <div class="f6 lh-copy">
+                John Smith<br>
+                Example Parts, Inc.<br>
+                jsmith@example.com
+              </div>
+              <div class="mt2 f6 blue pointer" @click="updateBillingContact()">Update...</div>
+            </div>
+            <div class="flex-fill ml5">
+              <div class="mb3 f7 silver ttu fw6">Billing address</div>
+              <address class="f6 lh-copy">
+              123 Wildwold Dr.<br>
+              Suite 104<br>
+              Chicago, IL 60606<br>
+              USA
+              </address>
+              <div class="mt2 pt2 bt b--black-10 f6 lh-copy">
+                Tax ID: 123456789
+              </div>
+              <div class="mt2 f6 blue pointer" @click="updateBillingAddress()">Update...</div>
+            </div>
+          </div>
           <div class="mt4 mb3 f7 silver ttu fw6">Payment method</div>
           <div
             class="mv2 f6 br2 pv2 ph3 bg-nearer-white ba b--black-05 flex flex-row items-center hide-child"

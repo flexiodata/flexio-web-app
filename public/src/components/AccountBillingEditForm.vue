@@ -233,7 +233,7 @@
     <ButtonBar
       class="mt4"
       :submit-button-text="'Save changes'"
-      :submit-button-disabled="!complete"
+      :submit-button-disabled="!is_submit_button_enabled"
       @cancel-click="$emit('cancel-click')"
       @submit-click="onSubmit"
     />
@@ -312,6 +312,18 @@
         }
       }
     },
+    computed: {
+      is_submit_button_enabled() {
+        // Stripe card form is not complete; bail out
+        if (this.editMode == 'all' || this.editMode == 'card') {
+          if (!this.complete) {
+            return false
+          }
+        }
+
+        return true
+      }
+    },
     methods: {
       update() {
         this.complete = this.number && this.expiry && this.cvc
@@ -335,18 +347,28 @@
         // numbers, but can also have four
       },
       onSubmit() {
-        // createToken returns a Promise which resolves in a result object with
-        // either a token or an error key.
-        // See https://stripe.com/docs/api#tokens for the token object.
-        // See https://stripe.com/docs/api#errors for the error object.
-        // More general https://stripe.com/docs/stripe.js#stripe-create-token.
-        createToken().then(data => {
-          var token_id = data.token.id
+        if (this.editMode == 'all' || this.editMode == 'contact') {
+          // do billing contact API call
+        }
 
-          api.createCard('me', { token: token_id }).then(card_data => {
-            this.$emit('create-card', card_data)
+        if (this.editMode == 'all' || this.editMode == 'address') {
+          // do billing address API call
+        }
+
+        if (this.editMode == 'all' || this.editMode == 'card') {
+          // createToken returns a Promise which resolves in a result object with
+          // either a token or an error key.
+          // See https://stripe.com/docs/api#tokens for the token object.
+          // See https://stripe.com/docs/api#errors for the error object.
+          // More general https://stripe.com/docs/stripe.js#stripe-create-token.
+          createToken().then(data => {
+            var token_id = data.token.id
+
+            api.createCard('me', { token: token_id }).then(card_data => {
+              this.$emit('create-card', card_data)
+            })
           })
-        })
+        }
       },
     }
   }
