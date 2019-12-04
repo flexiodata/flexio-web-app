@@ -29,7 +29,7 @@
         v-for="(token, index) in tokens"
       >
         <div class="flex-fill">
-          <pre class="ma0"><code>{{token.access_code}}</code></pre>
+          <pre class="ma0"><code class="pa0">{{token.access_code}}</code></pre>
         </div>
         <el-button
           type="plain"
