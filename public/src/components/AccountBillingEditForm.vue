@@ -11,7 +11,7 @@
       <h4 class="mb3 pb1 silver ttu f7 fw6 bb b--black-10">Billing contact</h4>
 
       <el-form-item
-        class="w-50-ns pr1-ns"
+        class="w-50-l pr1-l"
         style="max-width: 30rem"
         label="Name"
         key="billing_name"
@@ -25,7 +25,7 @@
       </el-form-item>
 
       <el-form-item
-        class="w-50-ns pr1-ns"
+        class="w-50-l pr1-l"
         style="max-width: 30rem"
         label="Company"
         key="billing_company"
@@ -38,7 +38,7 @@
       </el-form-item>
 
       <el-form-item
-        class="w-50-ns pr1-ns"
+        class="w-50-l pr1-l"
         style="max-width: 30rem"
         label="Email"
         key="billing_email"
@@ -65,7 +65,7 @@
       <h4 class="mt4 mb3 pb1 silver ttu f7 fw6 bb b--black-10">Billing address</h4>
 
       <el-form-item
-        class="w-50-ns pr1-ns"
+        class="w-50-l pr1-l"
         style="max-width: 30rem"
         label="Address"
         key="billing_address1"
@@ -80,7 +80,7 @@
       </el-form-item>
 
       <el-form-item
-        class="w-50-ns pr1-ns"
+        class="w-50-l pr1-l"
         style="max-width: 30rem"
         key="billing_address2"
         prop="billing_address2"
@@ -93,7 +93,7 @@
       </el-form-item>
 
       <el-form-item
-        class="w-50-ns el-form-item__label-clear"
+        class="w-50-l el-form-item__label-clear"
         style="max-width: 30rem"
         label="Country"
         key="billing_country"
@@ -104,8 +104,8 @@
         />
       </el-form-item>
 
-      <div class="flex flex-column flex-row-ns flex-wrap-ns nl1 nr1">
-        <div class="w-50-ns ph1">
+      <div class="flex flex-column flex-row-l flex-wrap-l nl1 nr1">
+        <div class="w-50-l ph1">
           <el-form-item
             label="City"
             key="billing_city"
@@ -117,7 +117,7 @@
             />
           </el-form-item>
         </div>
-        <div class="w-25-ns ph1">
+        <div class="w-25-l ph1">
           <el-form-item
             label="State"
             key="billing_state"
@@ -129,7 +129,7 @@
             />
           </el-form-item>
         </div>
-        <div class="w-25-ns ph1">
+        <div class="w-25-l ph1">
           <el-form-item
             label="Zip/Postal"
             key="billing_postal_code"
@@ -170,7 +170,7 @@
       <h4 class="mt4 mb3 pb1 silver ttu f7 fw6 bb b--black-10">Payment method</h4>
 
       <el-form-item
-        class="w-50-ns pr1-ns"
+        class="w-50-l pr1-l"
         style="max-width: 30rem"
         label="Cardholder Name"
         key="card_name"
@@ -185,7 +185,7 @@
       </el-form-item>
 
       <div
-        class="el-form-item el-form-item--small w-50-ns pr1-ns"
+        class="el-form-item el-form-item--small w-50-l pr1-l"
         style="max-width: 30rem"
       >
         <label class="db f8 mb1" for="card-number">
@@ -201,9 +201,9 @@
         </div>
       </div>
 
-      <div class="el-form-item el-form-item--small">
-        <div class="flex flex-column flex-row-ns flex-wrap-ns nl1 nr1">
-          <div class="w-20-ns ph1" style="min-width: 10rem">
+      <div class="flex flex-column flex-row-l flex-wrap-l nl1 nr1">
+        <div class="w-20-l ph1" style="min-width: 10rem">
+          <div class="el-form-item el-form-item--small">
             <label class="db f8 mb1" for="card-expiry">
               Expiration Date
             </label>
@@ -216,7 +216,9 @@
               />
             </div>
           </div>
-          <div class="w-20-ns ph1" style="min-width: 10rem">
+        </div>
+        <div class="w-20-l ph1" style="min-width: 10rem">
+          <div class="el-form-item el-form-item--small">
             <label class="db f8 mb1" for="card-cvc">
               CVC
             </label>
