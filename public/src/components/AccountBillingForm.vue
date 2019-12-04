@@ -42,21 +42,22 @@
         <div class="w-third-l">
           <div class="mb3 f7 silver ttu fw6">Billing contact</div>
           <div class="f6 lh-copy">
-            {{billing_info.billing_name}}<br>
-            {{billing_info.billing_company}}<br>
-            {{billing_info.billing_email}}
+            <div class="break-item">{{billing_info.billing_name}}</div>
+            <div class="break-item">{{billing_info.billing_company}}</div>
+            <div class="break-item">{{billing_info.billing_email}}</div>
           </div>
           <div class="mt2 f6 blue pointer" @click="editBillingContact()">Update...</div>
         </div>
         <div class="flex-fill-l mt4 mt0-l ml5-l">
           <div class="mb3 f7 silver ttu fw6">Billing address</div>
           <address class="f6 lh-copy">
-            {{billing_info.billing_address1}}<br>
-            {{billing_info.billing_address2}}<br>
-            {{billing_info.billing_city}}, {{billing_info.billing_state}} {{billing_info.billing_postal_code}}<br>
-            {{billing_info.billing_country}}
+            <div class="break-item">{{billing_info.billing_name}}</div>
+            <div class="break-item">{{billing_info.billing_address1}}</div>
+            <div class="break-item">{{billing_info.billing_address2}}</div>
+            <div class="break-item">{{billing_info.billing_city}}, {{billing_info.billing_state}} {{billing_info.billing_postal_code}}</div>
+            <div class="break-item">{{billing_country_name}}</div>
           </address>
-          <div class="mt2 pt2 bt b--black-10 f6 lh-copy pre overflow-y-visible overflow-x-auto">{{billing_info.billing_other}}</div>
+          <div class="break-item mt2 pt2 bt b--black-10 f6 lh-copy pre overflow-y-visible overflow-x-auto">{{billing_info.billing_other}}</div>
           <div class="mt2 f6 blue pointer" @click="editBillingAddress()">Update...</div>
         </div>
       </div>
@@ -73,6 +74,7 @@
 </template>
 
 <script>
+  import countries from '@/data/countries.yml'
   import api from '@/api'
   import { isProduction } from '@/utils'
   import Spinner from 'vue-simple-spinner'
@@ -108,6 +110,8 @@
       billing_postal_code: '',
       billing_country: '',
       billing_other: '',
+
+      cardholder_name: '',
 
       card_exp_month: '',
       card_exp_years: '',
@@ -146,6 +150,11 @@
     },
     data() {
       return getDefaultState()
+    },
+    computed: {
+      billing_country_name() {
+        return _.get(countries, this.billing_info.billing_country, '')
+      }
     },
     mounted() {
       this.fetchBilling()
@@ -221,4 +230,8 @@
   .StripeElement--webkit-autofill {
     background-color: #fefde5 !important
   }
+
+  .break-item:empty
+    display: none
+
 </style>
