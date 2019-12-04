@@ -2,9 +2,11 @@
   <div>
     <el-form
       class="el-form--cozy el-form__label-tiny"
-      ref="form"
+      ref="billingContactForm"
       size="small"
       :model="billing_info"
+      :rules="billing_contact_form_rules"
+      @validate="onValidateItem"
       @submit.prevent.native
       v-if="editMode == 'all' || editMode == 'contact'"
     >
@@ -49,7 +51,7 @@
           placeholder="accounting@example.com"
           v-model.trim="billing_info.billing_email"
         />
-        <div class="nt1 f8 i light-silver">
+        <div class="f8 i light-silver lh-copy" style="margin-top: 2px">
           All future invoices will be sent to this email address
         </div>
       </el-form-item>
@@ -57,9 +59,11 @@
 
     <el-form
       class="el-form--cozy el-form__label-tiny"
-      ref="form"
+      ref="billingAddressForm"
       size="small"
       :model="billing_info"
+      :rules="billing_address_form_rules"
+      @validate="onValidateItem"
       @submit.prevent.native
       v-if="editMode == 'all' || editMode == 'address'"
     >
@@ -154,7 +158,7 @@
           rows="4"
           v-model.trim="billing_info.billing_other"
         />
-        <div class="nt1 f8 i light-silver">
+        <div class="f8 i light-silver lh-copy" style="margin-top: 2px">
           If you need to add a tax ID, VAT information or anything else to your invoice, you can do so here
         </div>
       </el-form-item>
@@ -162,7 +166,7 @@
 
     <el-form
       class="el-form--cozy el-form__label-tiny"
-      ref="form"
+      ref="billingPaymentMethodForm"
       size="small"
       :model="billing_info"
       @submit.prevent.native
@@ -239,7 +243,7 @@
     <ButtonBar
       class="mt4"
       :submit-button-text="'Save changes'"
-      :submit-button-disabled="!is_submit_button_enabled"
+      :submit-button-disabled="has_errors"
       @cancel-click="$emit('cancel-click')"
       @submit-click="onSubmit"
     />
@@ -282,6 +286,32 @@
   const getDefaultState = () => {
     return {
       billing_info: getDefaultBillingInfo(),
+      billing_contact_form_rules: {
+        billing_name: [
+          { required: true, message: 'Please enter your name', trigger: 'blur' }
+        ],
+        billing_email: [
+          { required: true, message: 'Please enter your email address', trigger: 'blur' }
+        ]
+      },
+      billing_address_form_rules: {
+        billing_address1: [
+          { required: true, message: 'Please enter an address', trigger: 'blur' }
+        ],
+        billing_city: [
+          { required: true, message: 'Please enter a city', trigger: 'blur' }
+        ],
+        billing_state: [
+          { required: true, message: 'Please enter a state', trigger: 'blur' }
+        ],
+        billing_postal_code: [
+          { required: true, message: 'Please enter a postal code', trigger: 'blur' }
+        ],
+        billing_country: [
+          { required: true, message: 'Please select a country', trigger: 'blur' }
+        ],
+      },
+      form_errors: {},
       complete: false,
       number: false,
       expiry: false,
@@ -339,15 +369,13 @@
       return getDefaultState()
     },
     computed: {
-      is_submit_button_enabled() {
+      has_errors() {
         // Stripe card form is not complete; bail out
         if (this.editMode == 'all' || this.editMode == 'card') {
-          if (!this.complete) {
-            return false
-          }
+          return !this.complete
         }
 
-        return true
+        return _.keys(this.form_errors).length > 0
       }
     },
     mounted() {
@@ -375,6 +403,15 @@
         // no focus magic for the CVC field as it gets complete with three
         // numbers, but can also have four
       },
+      onValidateItem(key, valid) {
+        var errors = _.assign({}, this.form_errors)
+        if (valid) {
+          errors = _.omit(errors, [key])
+        } else {
+          errors[key] = true
+        }
+        this.form_errors = _.assign({}, errors)
+      },
       onSubmit() {
         var payload = _.omit(this.billing_info, ['card_exp_month', 'card_exp_years', 'card_id', 'card_last4', 'card_type', 'customer_id'])
 
@@ -389,6 +426,25 @@
             // we'll add the token (created below) to this
             payload = _.pick(payload, ['cardholder_name'])
             break
+        }
+
+        this.form_errors = {}
+
+        if (this.$refs.billingContactForm) {
+          this.$refs.billingContactForm.validate((valid, errors) => {
+            this.form_errors = _.assign({}, this.form_errors, errors)
+          })
+        }
+
+        if (this.$refs.billingAddressForm) {
+          this.$refs.billingAddressForm.validate((valid, errors) => {
+            this.form_errors = _.assign({}, this.form_errors, errors)
+          })
+        }
+
+        // we've got some issues to resolve; bail out
+        if (this.has_errors) {
+          return
         }
 
         if (this.editMode == 'all' || this.editMode == 'card') {
