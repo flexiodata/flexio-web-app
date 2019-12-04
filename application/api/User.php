@@ -363,7 +363,7 @@ class User
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function listcards(\Flexio\Api\Request $request) : void
+    public static function billing(\Flexio\Api\Request $request) : void
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -394,7 +394,7 @@ class User
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function addcard(\Flexio\Api\Request $request) : void
+    public static function changebilling(\Flexio\Api\Request $request) : void
     {
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -465,6 +465,10 @@ class User
 
     public static function deletecard(\Flexio\Api\Request $request) : void
     {
+        // TODO: currently here for reference; delete when it's clear there's
+        // nothing to reuse elsewhere
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::DEPRECATED);
+
         $request_url = $request->getUrl();
         $url_params = $request->getUrlParams();
         $requesting_user_eid = $request->getRequestingUser();

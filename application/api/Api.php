@@ -63,8 +63,8 @@ class Api
         'GET /:teamid/account'                        => '\Flexio\Api\User::get',
         'DEL /:teamid/account'                        => '\Flexio\Api\User::purge',
         'POS /:teamid/account/credentials'            => '\Flexio\Api\User::changepassword',
-        'GET /:teamid/account/billing'                => '\Flexio\Api\User::listcards',
-        'POS /:teamid/account/billing'                => '\Flexio\Api\User::addcard',
+        'GET /:teamid/account/billing'                => '\Flexio\Api\User::billing',
+        'POS /:teamid/account/billing'                => '\Flexio\Api\User::changebilling',
 
         // teams
         'GET /:teamid/teams'                          => '\Flexio\Api\Team::list',
