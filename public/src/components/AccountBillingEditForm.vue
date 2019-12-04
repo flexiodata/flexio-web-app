@@ -291,7 +291,7 @@
           { required: true, message: 'Please enter a postal code', trigger: 'blur' }
         ],
         billing_country: [
-          { required: true, message: 'Please select a country', trigger: 'blur' }
+          { required: true, message: 'Please select a country' }
         ],
       },
       form_errors: {},
