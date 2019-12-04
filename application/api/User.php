@@ -380,15 +380,9 @@ class User
         $result = [];
 
         $stripe_customer_id = $owner_user->getStripeCustomerId();
-        if (strlen($stripe_customer_id) > 0)
-        {
-            $stripe_customer_info = self::getStripeCustomer($stripe_customer_id);
-            $stripe_source_info = self::getStripePaymentSources($stripe_customer_id);
-            foreach ($stripe_source_info as $s)
-            {
-                $result[] = array_merge($stripe_customer_info, $s);
-            }
-        }
+        $stripe_customer_info = self::getStripeCustomer($stripe_customer_id);
+        $stripe_source_info = self::getStripePaymentSource($stripe_customer_id);
+        $result = array_merge($stripe_customer_info, $stripe_source_info);
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api\Response::sendContent($result);
@@ -407,7 +401,7 @@ class User
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
-                'token'               => array('type' => 'string', 'required' => true),
+                'token'               => array('type' => 'string', 'required' => false),
                 'billing_name'        => array('type' => 'string', 'required' => false),
                 'billing_company'     => array('type' => 'string', 'required' => false),
                 'billing_email'       => array('type' => 'string', 'required' => false),
@@ -422,7 +416,6 @@ class User
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_post_params = $validator->getParams();
-        $stripe_token = $validated_post_params['token'];
         $billing_info = $validated_post_params;
 
         // load the user
@@ -434,28 +427,35 @@ class User
         if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_USER_UPDATE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        // STEP 1: create/update the customer with the billing info and save
-        // the customer id to the user
         $stripe_customer_info = array();
+        $stripe_source_info = array();
+
+        // create/update the customer with the billing info and save
+        // the customer id to the user
         $stripe_customer_id = $owner_user->getStripeCustomerId();
-
         if (strlen($stripe_customer_id) === 0)
+        {
+            // if we don't have a customer, create one and save the customer id
             $stripe_customer_info = self::createStripeCustomer($billing_info);
-             else
+            $stripe_customer_id = $stripe_customer_info['customer_id'];
+            $user_info = array(
+                'stripe_customer_id' => $stripe_customer_id
+            );
+            $owner_user->set($user_info);
+        }
+         else
+        {
+            // merge newly specified information with existing information (updateStripeCustomer()
+            // function currently does a complete replace on billing address i, so merge here)
+            $existing_stripe_customer_info = self::getStripeCustomer($stripe_customer_id);
+            $billing_info = array_merge($existing_stripe_customer_info, $billing_info);
             $stripe_customer_info = self::updateStripeCustomer($stripe_customer_id, $billing_info);
+        }
 
-        $stripe_customer_id = $stripe_customer_info['customer_id'];
-        $user_info = array(
-            'stripe_customer_id' => $stripe_customer_id
-        );
-        $owner_user->set($user_info);
+        // get the updated payment source info; TODO: can get this from the customer object
+        $stripe_source_info = self::getStripePaymentSource($stripe_customer_id);
 
-        // STEP 2: add the payment source to the customer
-        $stripe_source_info = self::addStripePaymentSource($stripe_customer_id, $stripe_token);
-
-        // TODO: merge in billing information
-
-        // return the card info
+        // return the billing info
         $result = array_merge($stripe_customer_info, $stripe_source_info);
         $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
@@ -497,7 +497,8 @@ class User
         if ($stripe_source_id === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
 
-        $source_info = self::deleteStripePaymentSource($owner_user, $stripe_source_id);
+        $stripe_customer_id = $owner_user->getStripeCustomerId();
+        $source_info = self::deleteStripePaymentSource($stripe_customer_id, $stripe_source_id);
 
         // return the card info
         $result = $source_info;
@@ -1317,6 +1318,9 @@ class User
                 'billing_other'   => $billing_info['billing_other'] ?? ''
             )
         );
+        if (isset($billing_info['token']))
+            $post_data['source'] = $billing_info['token'];
+
         $post_data = http_build_query($post_data);
 
         $headers = array();
@@ -1343,16 +1347,21 @@ class User
         return $customer_info;
     }
 
-    private static function getStripeCustomer(string $string_customer_id) : array
+    private static function getStripeCustomer(string $stripe_customer_id) : array
     {
         // see here for more information:
         // https://stripe.com/docs/api
+
+        // if we don't have a customer id, return the properties with empty values
+        $customer_info = array();
+        if (strlen($stripe_customer_id) === 0)
+            return self::mapStripeCustomerInfo($customer_info);
 
         $stripe_secret_key = $GLOBALS['g_config']->stripe_secret_key ?? false;
         if ($stripe_secret_key === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::ERROR_GENERAL);
 
-        $stripe_api_endpoint = "https://api.stripe.com/v1/customers/$string_customer_id";
+        $stripe_api_endpoint = "https://api.stripe.com/v1/customers/$stripe_customer_id";
 
         $headers = array();
         $headers[] = 'Authorization: Bearer ' . $stripe_secret_key;
@@ -1416,7 +1425,7 @@ class User
         return $source_info;
     }
 
-    private static function deleteStripePaymentSource(\Flexio\Object\User $user, string $stripe_source_id) : array
+    private static function deleteStripePaymentSource($stripe_customer_id, string $stripe_source_id) : array
     {
         // see here for more information:
         // https://stripe.com/docs/api
@@ -1425,7 +1434,6 @@ class User
         if ($stripe_secret_key === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::ERROR_GENERAL);
 
-        $stripe_customer_id = $user->getStripeCustomerId();
         $stripe_api_endpoint = "https://api.stripe.com/v1/customers/$stripe_customer_id/sources/$stripe_source_id";
 
         $headers = array();
@@ -1451,10 +1459,14 @@ class User
         return $source_info;
     }
 
-    private static function getStripePaymentSources(string $stripe_customer_id) : array
+    private static function getStripePaymentSource(string $stripe_customer_id) : array
     {
         // see here for more information:
         // https://stripe.com/docs/api
+
+        // if we don't have a customer id, return the properties with empty values
+        if (strlen($stripe_customer_id) === 0)
+            return self::mapStripeSourceInfo(array());
 
         $stripe_secret_key = $GLOBALS['g_config']->stripe_secret_key ?? false;
         if ($stripe_secret_key === false)
@@ -1478,23 +1490,23 @@ class User
         if ($httpcode !== 200)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-        $source_info = @json_decode($httpresult, true);
+        // stripe supports more than one source per customer, but we only
+        // expose one card in the billing info; get the first source item
+        $sources = @json_decode($httpresult, true);
+        $source_info = $sources['data'];
 
-        $result = array();
-        foreach ($source_info['data'] as $s)
-        {
-            $result[] = self::mapStripeSourceInfo($s);
-        }
+        if (count($source_info) < 1)
+            return self::mapStripeSourceInfo(array());
 
-        return $result;
+        return self::mapStripeSourceInfo($source_info[0]);
     }
 
     private static function mapStripeCustomerInfo(array $customer_info) : array
     {
         $result = array(
-            'customer_id' => $customer_info['id'],
-            'billing_name' => $customer_info['name'],
-            'billing_email' => $customer_info['email'],
+            'customer_id' => $customer_info['id'] ?? '',
+            'billing_name' => $customer_info['name'] ?? '',
+            'billing_email' => $customer_info['email'] ?? '',
             'billing_address1' => $customer_info['address']['line1'] ?? '',
             'billing_address2' => $customer_info['address']['line2'] ?? '',
             'billing_city' => $customer_info['address']['city'] ?? '',
@@ -1511,11 +1523,11 @@ class User
     private static function mapStripeSourceInfo(array $source_info) : array
     {
         $result = array(
-            'card_id' => $source_info['id'],
-            'card_type' => $source_info['brand'],
-            'card_last4' => $source_info['last4'],
-            'card_exp_month' => $source_info['exp_month'],
-            'card_exp_years' => $source_info['exp_year']
+            'card_id' => $source_info['id'] ?? '',
+            'card_type' => $source_info['brand'] ?? '',
+            'card_last4' => $source_info['last4'] ?? '',
+            'card_exp_month' => $source_info['exp_month'] ?? '',
+            'card_exp_years' => $source_info['exp_year'] ?? ''
         );
 
         return $result;
