@@ -411,7 +411,8 @@ class User
                 'billing_state'       => array('type' => 'string', 'required' => false),
                 'billing_postal_code' => array('type' => 'string', 'required' => false),
                 'billing_country'     => array('type' => 'string', 'required' => false),
-                'billing_other'       => array('type' => 'string', 'required' => false)
+                'billing_other'       => array('type' => 'string', 'required' => false),
+                'cardholder_name'     => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
@@ -1263,7 +1264,8 @@ class User
             ),
             'metadata' => array(
                 'billing_company' => $billing_info['billing_company'] ?? '',
-                'billing_other'   => $billing_info['billing_other'] ?? ''
+                'billing_other'   => $billing_info['billing_other'] ?? '',
+                'cardholder_name' => $billing_info['cardholder_name'] ?? ''
             )
         );
         $post_data = http_build_query($post_data);
@@ -1316,7 +1318,8 @@ class User
             ),
             'metadata' => array(
                 'billing_company' => $billing_info['billing_company'] ?? '',
-                'billing_other'   => $billing_info['billing_other'] ?? ''
+                'billing_other'   => $billing_info['billing_other'] ?? '',
+                'cardholder_name' => $billing_info['cardholder_name'] ?? ''
             )
         );
         if (isset($billing_info['token']))
@@ -1515,7 +1518,8 @@ class User
             'billing_postal_code' => $customer_info['address']['postal_code'] ?? '',
             'billing_country' => $customer_info['address']['country'] ?? '',
             'billing_company' => $customer_info['metadata']['billing_company'] ?? '',
-            'billing_other' => $customer_info['metadata']['billing_other'] ?? ''
+            'billing_other' => $customer_info['metadata']['billing_other'] ?? '',
+            'cardholder_name' => $customer_info['metadata']['cardholder_name'] ?? ''
         );
 
         return $result;

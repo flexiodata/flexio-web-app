@@ -386,8 +386,8 @@
             payload = _.pick(payload, ['billing_address1', 'billing_address2', 'billing_city', 'billing_state', 'billing_postal_code', 'billing_country', 'billing_other'])
             break
           case 'card':
-            // we only need to POST the token (created below)
-            payload = {}
+            // we'll add the token (created below) to this
+            payload = _.pick(payload, ['cardholder_name'])
             break
         }
 
