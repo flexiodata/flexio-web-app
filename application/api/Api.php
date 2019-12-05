@@ -65,6 +65,8 @@ class Api
         'POS /:teamid/account/credentials'            => '\Flexio\Api\User::changepassword',
         'GET /:teamid/account/billing'                => '\Flexio\Api\User::billing',
         'POS /:teamid/account/billing'                => '\Flexio\Api\User::changebilling',
+        'GET /:teamid/account/plan'                   => '\Flexio\Api\User::plan',
+        'POS /:teamid/account/plan'                   => '\Flexio\Api\User::changeplan',
 
         // teams
         'GET /:teamid/teams'                          => '\Flexio\Api\Team::list',

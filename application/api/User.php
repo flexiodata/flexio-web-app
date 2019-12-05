@@ -447,7 +447,7 @@ class User
         if (strlen($stripe_customer_id) > 0)
         {
             // merge newly specified information with existing information (updateStripeCustomer()
-            // function currently does a complete replace on billing address i, so merge here)
+            // function currently does a complete replace on billing address info, so merge here)
             $existing_stripe_customer_info = self::getStripeCustomer($stripe_customer_id);
             $billing_info = array_merge($existing_stripe_customer_info, $billing_info);
             $stripe_customer_info = self::updateStripeCustomer($stripe_customer_id, $billing_info);
@@ -458,6 +458,89 @@ class User
 
         // return the billing info
         $result = array_merge($stripe_customer_info, $stripe_source_info);
+        $request->setResponseParams($result);
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        $request->track();
+        \Flexio\Api\Response::sendContent($result);
+    }
+
+    public static function plan(\Flexio\Api\Request $request) : void
+    {
+        $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+
+        // load the object
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+
+        // check the rights on the object
+        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_USER_READ) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        $result = [];
+
+        $stripe_customer_id = $owner_user->getStripeCustomerId();
+        $stripe_subscription_info = self::getStripeSubscription($stripe_customer_id);
+        $result = array_merge(array(), $stripe_subscription_info);
+
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        \Flexio\Api\Response::sendContent($result);
+    }
+
+    public static function changeplan(\Flexio\Api\Request $request) : void
+    {
+        $post_params = $request->getPostParams();
+        $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+
+        // TODO: user update action or something else?
+        $request->track(\Flexio\Api\Action::TYPE_USER_UPDATE);
+        $cleaned_post_params = self::cleanProperties($post_params); // don't store sensitive info
+        $request->setRequestParams($cleaned_post_params);
+
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($post_params, array(
+                'plan_id'     => array('type' => 'string', 'required' => false),
+                'seat_cnt'    => array('type' => 'integer', 'required' => false)
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        $validated_post_params = $validator->getParams();
+        $plan_info = $validated_post_params;
+
+        // load the user
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+        // check the rights
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_USER_UPDATE) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        $stripe_plan_info = array();
+
+        // create/update the customer with the billing info and save
+        // the customer id to the user
+        $stripe_customer_id = $owner_user->getStripeCustomerId();
+        if (strlen($stripe_customer_id) === 0)
+        {
+            // if we don't have a customer, create one and save the customer id
+            $stripe_customer_info = self::createStripeCustomer(array());
+            $stripe_customer_id = $stripe_customer_info['customer_id'];
+            $user_info = array(
+                'stripe_customer_id' => $stripe_customer_id
+            );
+            $owner_user->set($user_info);
+        }
+
+        if (strlen($stripe_customer_id) > 0)
+        {
+            $stripe_plan_info = self::createStripeSubscription($stripe_customer_id, $plan_info);
+        }
+
+        // return the plan info
+        $result = $stripe_plan_info;
         $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
@@ -1502,6 +1585,105 @@ class User
         return self::mapStripeSourceInfo($source_info[0]);
     }
 
+    private static function createStripeSubscription(string $stripe_customer_id, array $plan_info) : array
+    {
+        // see here for more information:
+        // https://stripe.com/docs/api/subscriptions/create
+
+        $stripe_secret_key = $GLOBALS['g_config']->stripe_secret_key ?? false;
+        if ($stripe_secret_key === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::ERROR_GENERAL);
+
+        $stripe_api_endpoint = 'https://api.stripe.com/v1/subscriptions';
+
+        $post_data = array(
+            'customer' => $stripe_customer_id ?? '',
+            'items' => array(
+                array(
+                    'plan' => $plan_info['plan_id'] ?? '',
+                    'quantity' => $plan_info['seat_cnt'] ?? 1
+                )
+            )
+        );
+        $post_data = http_build_query($post_data);
+
+        $headers = array();
+        $headers[] = 'Authorization: Bearer ' . $stripe_secret_key;
+        $headers[] = 'Content-Type: application/x-www-form-urlencoded';
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($ch, CURLOPT_URL, $stripe_api_endpoint);
+        $httpresult = curl_exec($ch);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($httpcode !== 200)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+
+        $plan_info = @json_decode($httpresult, true);
+
+        if (count($plan_info['items']) < 1)
+            return self::mapStripeSubscriptionInfo(array());
+
+        return self::mapStripeSubscriptionInfo($plan_info);
+
+        return mapStripeSubscriptionInfo($plan_info);
+    }
+
+    private static function getStripeSubscription(string $stripe_customer_id) : array
+    {
+        // see here for more information:
+        // https://stripe.com/docs/api/subscriptions/list
+
+        // if we don't have a customer id, return the properties with empty values
+        if (strlen($stripe_customer_id) === 0)
+            return self::mapStripeSubscriptionInfo(array());
+
+        $stripe_secret_key = $GLOBALS['g_config']->stripe_secret_key ?? false;
+        if ($stripe_secret_key === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::ERROR_GENERAL);
+
+        $get_data = array(
+            'customer' => $stripe_customer_id ?? ''
+        );
+        $query_str = http_build_query($get_data);
+
+        $headers = array();
+        $headers[] = 'Authorization: Bearer ' . $stripe_secret_key;
+        $stripe_api_endpoint = "https://api.stripe.com/v1/subscriptions";
+        $url = $stripe_api_endpoint . '?' . $query_str;
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_HTTPGET, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        $httpresult = curl_exec($ch);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($httpcode !== 200)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        // stripe supports more than one source per customer, but we only
+        // expose one card in the billing info; get the first source item
+        $subscriptions = @json_decode($httpresult, true);
+        $subscription_info = $subscriptions['data'];
+
+        if (count($subscription_info) < 1)
+            return self::mapStripeSubscriptionInfo(array());
+
+        return self::mapStripeSubscriptionInfo($subscription_info[0]);
+    }
+
     private static function mapStripeCustomerInfo(array $customer_info) : array
     {
         $result = array(
@@ -1529,6 +1711,17 @@ class User
             'card_last4' => $source_info['last4'] ?? '',
             'card_exp_month' => $source_info['exp_month'] ?? '',
             'card_exp_years' => $source_info['exp_year'] ?? ''
+        );
+
+        return $result;
+    }
+
+    private static function mapStripeSubscriptionInfo(array $subscription_info) : array
+    {
+        $result = array(
+            'subscription_id' => $subscription_info['id'] ?? '',
+            'plan_id' => $subscription_info['items']['data'][0]['plan']['id'] ?? '',
+            'seat_cnt' => $subscription_info['items']['data'][0]['quantity'] ?? 1
         );
 
         return $result;

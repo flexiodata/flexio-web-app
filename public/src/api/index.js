@@ -25,6 +25,10 @@ export default {
   deleteUser:                     (team_name, attrs)              => AxiosResource(team_name)[DEL] (`/account`, attrs),
   changePassword:                 (team_name, attrs)              => AxiosResource(team_name)[POS] (`/account/credentials`, attrs),
 
+  // plan
+  fetchPlan:                      (team_name)                     => AxiosResource(team_name)[GET] (`/account/plan`),
+  updatePlan:                     (team_name, attrs)              => AxiosResource(team_name)[POS] (`/account/plan`, attrs),
+
   // billing
   fetchBilling:                   (team_name)                     => AxiosResource(team_name)[GET] (`/account/billing`),
   updateBilling:                  (team_name, attrs)              => AxiosResource(team_name)[POS] (`/account/billing`, attrs),

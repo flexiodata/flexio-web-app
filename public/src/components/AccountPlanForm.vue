@@ -138,9 +138,35 @@
 
 <script>
   import { mapState, mapGetters } from 'vuex'
+  import api from '@/api'
   import plans from '@/data/usage-plans.yml'
+  import { isProduction } from '@/utils'
   import FreeTrialNotice from '@/components/FreeTrialNotice'
   import ButtonBar from '@/components/ButtonBar'
+
+  const getDefaultPlanInfo = () => {
+    return {
+      subscription_id: '',
+      plan_id: '',
+      seat_cnt: 1
+    }
+  }
+
+  const getDefaultState = () => {
+    var my_plans = _.filter(plans, (p) => { return p['id'] != 'enterprise' })
+
+    return {
+      is_fetching: false,
+      is_editing_plan: false,
+      is_editing_seats: false,
+      seat_options,
+      seat_cnt: 1,
+      plans: my_plans,
+      current_usage_tier: '',
+      plan_info: getDefaultPlanInfo(),
+      plan_error: '',
+    }
+  }
 
   var seat_options = []
   for (var i = 1; i < 100; ++i) {
@@ -153,16 +179,7 @@
       ButtonBar
     },
     data() {
-      var my_plans = _.filter(plans, (p) => { return p['id'] != 'enterprise' })
-
-      return {
-        is_editing_plan: false,
-        is_editing_seats: false,
-        seat_options,
-        seat_cnt: 1,
-        plans: my_plans,
-        current_usage_tier: ''
-      }
+      return getDefaultState()
     },
     computed: {
       ...mapState({
@@ -174,13 +191,26 @@
         })
       }
     },
-    created() {
-      this.current_usage_tier = _.get(this.getActiveUser(), 'usage_tier', '')
+    mounted() {
+      this.fetchPlan()
     },
     methods: {
       ...mapGetters('users', {
         'getActiveUser': 'getActiveUser'
       }),
+      fetchPlan() {
+        this.is_fetching = true
+
+        api.fetchPlan().then(response => {
+          this.plan_info = _.assign({}, response.data)
+          this.plan_error = ''
+        }).catch(error => {
+          this.plan_info = {}
+          this.plan_error = JSON.stringify(error)
+        }).finally(() => {
+          this.is_fetching = false
+        })
+      },
       hasPlan(plan_name) {
         var plan_names = _.map(this.plans, (p) => {
           return p['id'].toLowerCase()
@@ -200,14 +230,14 @@
       },
       choosePlan(plan) {
         var new_plan_name = plan['id'].toLowerCase()
-        var eid = this.active_user_eid
-        var attrs = {
-          usage_tier: new_plan_name
+
+        var payload = {
+          plan_id: 'plan_GIqQ76bHR18EGL',
+          seat_cnt: 2
         }
 
-        this.$store.dispatch('users/update', { eid, attrs }).then(response => {
-          this.current_usage_tier = new_plan_name
-          this.is_editing_plan = false
+        api.updatePlan('me', payload).then(response => {
+          this.plan_info = _.assign({}, response.data)
         })
       },
       updateSeats() {

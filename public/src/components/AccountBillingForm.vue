@@ -73,8 +73,8 @@
 </template>
 
 <script>
-  import countries from '@/data/countries.yml'
   import api from '@/api'
+  import countries from '@/data/countries.yml'
   import { isProduction } from '@/utils'
   import Spinner from 'vue-simple-spinner'
   import AccountBillingEditForm from '@/components/AccountBillingEditForm'
