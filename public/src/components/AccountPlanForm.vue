@@ -41,7 +41,7 @@
         <FreeTrialNotice class="mt2 f7 dark-green" />
       </div>
       <div class="mt4 mb3 f7 silver ttu fw6">Number of seats</div>
-      <p class="f6">You have <strong>{{seat_cnt}} seat(s)</strong> on your current plan.</p>
+      <p class="f6">You have <strong>{{plan_info.seat_cnt}} seat(s)</strong> on your current plan.</p>
       <el-form
         class="mt3 el-form--cozy el-form__label-tiny"
         :model="$data"
@@ -54,7 +54,7 @@
         >
           <el-select
             placeholder="Choose the number of seats"
-            v-model="seat_cnt"
+            v-model="plan_info.seat_cnt"
           >
             <el-option
               :label="option.label"
@@ -147,6 +147,7 @@
   const getDefaultPlanInfo = () => {
     return {
       subscription_id: '',
+      subscription_item_id: '',
       plan_id: '',
       seat_cnt: 1
     }
@@ -160,7 +161,6 @@
       is_editing_plan: false,
       is_editing_seats: false,
       seat_options,
-      seat_cnt: 1,
       plans: my_plans,
       current_usage_tier: '',
       plan_info: getDefaultPlanInfo(),
@@ -231,17 +231,21 @@
       choosePlan(plan) {
         var new_plan_name = plan['id'].toLowerCase()
 
-        var payload = {
-          plan_id: 'plan_GIqQ76bHR18EGL',
-          seat_cnt: 2
-        }
+        var payload = _.omit(this.plan_info, ['subscription_id'])
+        payload = _.assign({}, payload, {
+          plan_id: 'plan_GIqQ76bHR18EGL'
+        })
 
         api.updatePlan('me', payload).then(response => {
           this.plan_info = _.assign({}, response.data)
         })
       },
       updateSeats() {
-        alert(this.seat_cnt + ' seat(s) were chosen.')
+        var payload = _.omit(this.plan_info, ['subscription_id'])
+
+        api.updatePlan('me', payload).then(response => {
+          this.plan_info = _.assign({}, response.data)
+        })
       }
     }
   }

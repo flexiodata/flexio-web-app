@@ -376,6 +376,20 @@ class User extends ModelBase
         return $stripe_customer_id;
     }
 
+    // TODO: rename 'usage_tier' => 'stripe_subscription_id'
+    public function getStripeSubscriptionIdFromEid(string $eid) // TODO: add return type
+    {
+        if (!\Flexio\Base\Eid::isValid($eid))
+            return false;
+
+        $db = $this->getDatabase();
+        $stripe_subscription_id = $db->fetchOne('select usage_tier from tbl_user where eid = ?', $eid);
+        if ($stripe_subscription_id === false)
+            return false;
+
+        return $stripe_subscription_id;
+    }
+
     public function getUsernameFromEid(string $eid) // TODO: add return type
     {
         if (!\Flexio\Base\Eid::isValid($eid))

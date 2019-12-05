@@ -298,6 +298,17 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $stripe_customer_id;
     }
 
+    public function getStripeSubscriptionId() : string
+    {
+        $user_model = $this->getModel()->user;
+        $stripe_subscription_id = $user_model->getStripeSubscriptionIdFromEid($this->getEid());
+
+        if ($stripe_subscription_id === false)
+            return '';
+
+        return $stripe_subscription_id;
+    }
+
     public function checkPassword(string $password) : bool
     {
         return $this->getModel()->user->checkUserPasswordByEid($this->getEid(), $password);
