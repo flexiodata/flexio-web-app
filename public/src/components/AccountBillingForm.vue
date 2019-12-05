@@ -46,7 +46,15 @@
             <div class="break-item">{{billing_info.billing_company}}</div>
             <div class="break-item">{{billing_info.billing_email}}</div>
           </div>
-          <div class="mt2 f6 blue pointer" @click="editBillingContact()">Update...</div>
+          <div class="mt2 f6">
+            <el-button
+              type="text"
+              style="border: none; padding: 0"
+              @click="editBillingContact()"
+            >
+              Update...
+            </el-button>
+          </div>
         </div>
         <div class="flex-fill-l mt4 mt0-l ml5-l">
           <div class="mb3 f7 silver ttu fw6">Billing address</div>
@@ -57,7 +65,15 @@
             <div class="break-item">{{billing_country_name}}</div>
           </address>
           <div class="break-item mt2 pt2 bt b--black-10 f6 lh-copy pre overflow-y-visible overflow-x-auto">{{billing_info.billing_other}}</div>
-          <div class="mt2 f6 blue pointer" @click="editBillingAddress()">Update...</div>
+          <div class="mt2 f6">
+            <el-button
+              type="text"
+              style="border: none; padding: 0"
+              @click="editBillingAddress()"
+            >
+              Update...
+            </el-button>
+          </div>
         </div>
       </div>
       <div class="mt4 mb3 f7 silver ttu fw6">Payment method</div>
