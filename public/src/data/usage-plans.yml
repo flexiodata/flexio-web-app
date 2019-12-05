@@ -1,5 +1,5 @@
 - 'id': starter
-  'stripe_plan_id': plan_GDp6LlxCt84IhQ
+  'stripe_plan_id': 20191205_starter_monthly
   'stripe_test_plan_id': plan_GIqQ76bHR18EGL
   'Name': Starter
   'Price': 29
@@ -20,7 +20,7 @@
   'White Label Add-ons': false
 
 - 'id': team
-  'stripe_plan_id': plan_GDp9ZombcTxpUK
+  'stripe_plan_id': 20191205_team_monthly
   'stripe_test_plan_id': plan_GIqQAxGASJoOxm
   'Name': Team
   'Price': 49
@@ -41,7 +41,7 @@
   'White Label Add-ons': false
 
 - 'id': business
-  'stripe_plan_id': plan_GDp9Sz9BhA4cEm
+  'stripe_plan_id': 20191205_business_monthly
   'stripe_test_plan_id': plan_GIqPTkelufclGY
   'Name': Business
   'Price': 79
