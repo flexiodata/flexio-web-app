@@ -2,7 +2,7 @@
   'stripe_plan_id': plan_GDp6LlxCt84IhQ
   'stripe_test_plan_id': plan_GIqQ76bHR18EGL
   'Name': Starter
-  'Price': '29'
+  'Price': 29
   'Members': '1 member'
   'Teams': '1 team'
   'Executions': '500'
@@ -23,7 +23,7 @@
   'stripe_plan_id': plan_GDp9ZombcTxpUK
   'stripe_test_plan_id': plan_GIqQAxGASJoOxm
   'Name': Team
-  'Price': '49'
+  'Price': 49
   'Members': '1-5 members'
   'Teams': '1 team'
   'Executions': '2,000'
@@ -44,7 +44,7 @@
   'stripe_plan_id': plan_GDp9Sz9BhA4cEm
   'stripe_test_plan_id': plan_GIqPTkelufclGY
   'Name': Business
-  'Price': '79'
+  'Price': 79
   'Members': 'Unlimited members'
   'Teams': '10 teams'
   'Executions': '5,000'
