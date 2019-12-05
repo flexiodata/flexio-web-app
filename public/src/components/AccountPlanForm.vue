@@ -143,13 +143,59 @@
                 <td class="bb b--black-10 tl w-60">{{current_plan['Name']}} Plan</td>
                 <td class="bb b--black-10 tr">{{edit_plan_info.seat_cnt}}</td>
                 <td class="bb b--black-10 tr">${{unit_price}}</td>
-                <td class="bb b--black-10 tr">${{total_amount}}</td>
+                <td class="bb b--black-10 tr">${{item_total_amount}}</td>
+              </tr>
+              <tr class="coupon" v-if="false">
+                <td class="tr" colspan="4">
+                  <div
+                    class="flex flex-row items-center justify-end"
+                    v-if="is_editing_coupon"
+                  >
+                    <el-input
+                      type="text"
+                      placeholder="Add coupon"
+                      style="width: 200px; margin-right: 10px"
+                      size="mini"
+                      v-model="coupon_code"
+                    />
+                    <el-button
+                      class="ttu fw6"
+                      type="primary"
+                      size="mini"
+                      @click="applyCoupon"
+                    >
+                      Apply
+                    </el-button>
+                    <el-button
+                      type="text"
+                      style="border: none; padding: 0"
+                      @click="cancelEditCoupon"
+                    >
+                      <i class="material-icons md-18">close</i>
+                    </el-button>
+                  </div>
+                  <div v-else>
+                    <el-button
+                      type="text"
+                      style="border: none; padding: 0"
+                      @click="is_editing_coupon = true"
+                    >
+                      Have a coupon?
+                    </el-button>
+                  </div>
+                </td>
               </tr>
               <tr class="subtotal">
                 <td class="tl w-60"></td>
                 <td class="tr"></td>
                 <td class="tr">Subtotal</td>
-                <td class="tr">${{total_amount}}</td>
+                <td class="tr">${{subtotal_amount}}</td>
+              </tr>
+              <tr class="discount red" v-show="discount > 0">
+                <td class="tl w-60"></td>
+                <td class="tr"></td>
+                <td class="tr">Discount(s)</td>
+                <td class="tr">-${{discount}}</td>
               </tr>
               <tr class="total">
                 <td class="tl w-60"></td>
@@ -184,7 +230,8 @@
       subscription_id: '',
       subscription_item_id: '',
       plan_id: '',
-      seat_cnt: 1
+      seat_cnt: 1,
+      coupon: ''
     }
   }
 
@@ -195,6 +242,8 @@
       is_fetching: false,
       is_editing_plan: false,
       is_editing_seats: false,
+      is_editing_coupon: false,
+      coupon_code: '',
       seat_options,
       plans: my_plans,
       plan_info: getDefaultPlanInfo(),
@@ -233,11 +282,25 @@
         var price = this.current_plan['Price']
         return price.toFixed(2)
       },
+      discount() {
+        var price = 0
+        return price.toFixed(2)
+      },
+      item_total_amount() {
+        var qty = this.edit_plan_info.seat_cnt
+        var price = (this.unit_price * qty)
+        return price.toFixed(2)
+      },
+      subtotal_amount() {
+        var qty = this.edit_plan_info.seat_cnt
+        var price = (this.unit_price * qty)
+        return price.toFixed(2)
+      },
       total_amount() {
         var qty = this.edit_plan_info.seat_cnt
-        var price = this.unit_price * qty
+        var price = (this.unit_price * qty) - this.discount
         return price.toFixed(2)
-      }
+      },
     },
     mounted() {
       this.fetchPlan()
@@ -274,6 +337,16 @@
         } else {
           return true
         }
+      },
+      applyCoupon() {
+        var coupon = this.coupon_code
+        this.edit_plan_info = _.assign({}, this.edit_plan_info, { coupon })
+        this.coupon_code = ''
+        this.is_editing_coupon = false
+      },
+      cancelEditCoupon() {
+        this.coupon_code = ''
+        this.is_editing_coupon = false
       },
       cancelEdit() {
         this.edit_plan_info = _.assign({}, this.plan_info)
