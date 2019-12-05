@@ -1,12 +1,5 @@
 <template>
   <div>
-    <el-alert
-      type="error"
-      show-icon
-      :title="billing_error"
-      :closable="false"
-      v-if="billing_error.length > 0"
-    />
     <!-- fetching -->
     <div v-if="is_fetching">
       <div class="pa1 flex flex-row items-center">
@@ -14,75 +7,84 @@
         <span class="ml2 f6">Loading...</span>
       </div>
     </div>
-    <AccountBillingEditForm
-      :edit-mode="edit_mode"
-      :stripe="stripe_public_key"
-      :billing-info="billing_info"
-      @cancel-click="onCancelEditBilling"
-      @billing-updated="onBillingUpdated"
-      v-else-if="is_editing"
-    />
-    <div
-      class="blankslate"
-      v-else-if="billing_info.card_id.length == 0"
-    >
-      <em>No billing information is on file</em>
-      <div class="mt3">
-        <el-button
-          type="primary"
-          class="ttu fw6"
-          @click="setupBilling"
-        >
-          Set up payment method
-        </el-button>
-      </div>
-    </div>
     <div v-else>
-      <div class="flex flex-column flex-row-l flex-wrap-l">
-        <div class="w-third-l">
-          <div class="mb3 f7 silver ttu fw6">Billing contact</div>
-          <div class="f6 lh-copy">
-            <div class="break-item">{{billing_info.billing_name}}</div>
-            <div class="break-item">{{billing_info.billing_company}}</div>
-            <div class="break-item">{{billing_info.billing_email}}</div>
-          </div>
-          <div class="mt2 f6">
-            <el-button
-              type="text"
-              style="border: none; padding: 0"
-              @click="editBillingContact()"
-            >
-              Update...
-            </el-button>
-          </div>
-        </div>
-        <div class="flex-fill-l mt4 mt0-l ml5-l">
-          <div class="mb3 f7 silver ttu fw6">Billing address</div>
-          <address class="f6 lh-copy">
-            <div class="break-item">{{billing_info.billing_address1}}</div>
-            <div class="break-item">{{billing_info.billing_address2}}</div>
-            <div class="break-item">{{billing_info.billing_city}}, {{billing_info.billing_state}} {{billing_info.billing_postal_code}}</div>
-            <div class="break-item">{{billing_country_name}}</div>
-          </address>
-          <div class="break-item mt2 pt2 bt b--black-10 f6 lh-copy pre overflow-y-visible overflow-x-auto">{{billing_info.billing_other}}</div>
-          <div class="mt2 f6">
-            <el-button
-              type="text"
-              style="border: none; padding: 0"
-              @click="editBillingAddress()"
-            >
-              Update...
-            </el-button>
-          </div>
+      <el-alert
+        type="error"
+        show-icon
+        :title="billing_error"
+        :closable="false"
+        v-if="billing_error.length > 0"
+      />
+      <AccountBillingEditForm
+        :edit-mode="edit_mode"
+        :stripe="stripe_public_key"
+        :billing-info="billing_info"
+        @cancel-click="onCancelEditBilling"
+        @billing-updated="onBillingUpdated"
+        v-if="is_editing"
+      />
+      <div
+        class="blankslate"
+        v-else-if="billing_info.card_id.length == 0"
+      >
+        <em>No billing information is on file</em>
+        <div class="mt3">
+          <el-button
+            type="primary"
+            class="ttu fw6"
+            @click="setupBilling"
+          >
+            Set up payment method
+          </el-button>
         </div>
       </div>
-      <div class="mt4 mb3 f7 silver ttu fw6">Payment method</div>
-      <div class="f6 br2 pv3 pv2-l ph3 bg-nearer-white ba b--black-05 dib flex-l flex-row-l items-center-l">
-        <img :src="getCardLogo(billing_info.card_type)" class="center db dn-l mb3" style="width: 64px">
-        <img :src="getCardLogo(billing_info.card_type)" class="dn db-l mr3" style="width: 36px">
-        <div class="fw6 mt2 mt0-l mr5-l flex-fill">{{billing_info.card_type}} ending in {{billing_info.card_last4}}</div>
-        <div class="fw6 mt2 mt0-l mr5-l">Expires: {{billing_info.card_exp_month}}/{{billing_info.card_exp_years}}</div>
-        <div class="mt2 mt0-l blue pointer" @click="editCard">Update...</div>
+      <div v-else>
+        <div class="flex flex-column flex-row-l flex-wrap-l">
+          <div class="w-third-l">
+            <div class="mb3 f7 silver ttu fw6">Billing contact</div>
+            <div class="f6 lh-copy">
+              <div class="break-item">{{billing_info.billing_name}}</div>
+              <div class="break-item">{{billing_info.billing_company}}</div>
+              <div class="break-item">{{billing_info.billing_email}}</div>
+            </div>
+            <div class="mt2 f6">
+              <el-button
+                type="text"
+                style="border: none; padding: 0"
+                @click="editBillingContact()"
+              >
+                Update...
+              </el-button>
+            </div>
+          </div>
+          <div class="flex-fill-l mt4 mt0-l ml5-l">
+            <div class="mb3 f7 silver ttu fw6">Billing address</div>
+            <address class="f6 lh-copy">
+              <div class="break-item">{{billing_info.billing_address1}}</div>
+              <div class="break-item">{{billing_info.billing_address2}}</div>
+              <div class="break-item">{{billing_info.billing_city}}, {{billing_info.billing_state}} {{billing_info.billing_postal_code}}</div>
+              <div class="break-item">{{billing_country_name}}</div>
+            </address>
+            <div class="break-item mt2 pt2 bt b--black-10 f6 lh-copy pre overflow-y-visible overflow-x-auto">{{billing_info.billing_other}}</div>
+            <div class="mt2 f6">
+              <el-button
+                type="text"
+                style="border: none; padding: 0"
+                @click="editBillingAddress()"
+              >
+                Update...
+              </el-button>
+            </div>
+          </div>
+        </div>
+        <div class="mt4 mb3 f7 silver ttu fw6">Payment method</div>
+        <div class="f6 br2 pv3 pv2-l ph3 bg-nearer-white ba b--black-05 dib flex-l flex-row-l items-center-l">
+          <img :src="getCardLogo(billing_info.card_type)" class="center db dn-l mb3" style="width: 64px">
+          <img :src="getCardLogo(billing_info.card_type)" class="dn db-l mr3" style="width: 36px">
+          <div class="fw6 mt2 mt0-l mr5-l flex-fill">{{billing_info.card_type}} ending in {{billing_info.card_last4}}</div>
+          <div class="fw6 mt2 mt0-l mr5-l">Expires: {{billing_info.card_exp_month}}/{{billing_info.card_exp_years}}</div>
+          <div class="mt2 mt0-l blue pointer" @click="editCard">Update...</div>
+        </div>
       </div>
     </div>
   </div>

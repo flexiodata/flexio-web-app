@@ -1,163 +1,173 @@
 <template>
   <div>
-    <div v-if="is_editing_plan">
-      <div class="mb3 f7 silver ttu fw6">Choose a plan</div>
-      <div class="flex flex-column flex-row-l items-stretch justify-between nl2 nr2">
-        <div
-          class="flex-fill mh2 mb3 mb0-l ph3 tc br3 cursor-default"
-          style="box-shadow: inset 0 -4px 12px rgba(0,0,0,0.075)"
-          :class="isCurrentPlan(plan, current_plan_id) ? 'bg-blue white' : 'bg-nearer-white'"
-          :key="plan['id']"
-          v-for="plan in plans"
-        >
-          <div class="mv4 fw6">{{plan['Name']}}</div>
-          <div class="mv4">
-            <span class="f1">${{plan['Price']}}</span><span class="f6">/user/mo</span>
-          </div>
-          <div class="mv4 mb3">
-            <div>{{plan['Executions']}} executions</div>
-            <div class="mt2">{{plan['Members']}} </div>
-            <div class="mt2">{{plan['Teams']}} </div>
-          </div>
-          <div class="mv3 pt2 pb1">
-            <div v-if="isCurrentPlan(plan, current_plan_id)">
-              <i class="el-icon-success f2" style="color: #fff"></i>
-            </div>
-            <el-button
-              type="primary"
-              class="w-100 mw5 ttu fw6"
-              @click="selectPlan(plan)"
-              v-else-if="isPlanGreater(plan, current_plan)"
-            >
-              Select Plan
-            </el-button>
-            <el-button
-              plain
-              class="w-100 ttu fw6"
-              @click="selectPlan(plan)"
-              v-else
-            >
-              Select Plan
-            </el-button>
-          </div>
-        </div>
+    <!-- fetching -->
+    <div v-if="is_fetching">
+      <div class="pa1 flex flex-row items-center">
+        <Spinner size="small" />
+        <span class="ml2 f6">Loading...</span>
       </div>
     </div>
+    <!-- fetched -->
     <div v-else>
-      <div class="mb3 f7 silver ttu fw6">Your Current Plan</div>
-      <div class="blankslate" v-if="!hasPlan(current_plan_id)">
-        <em>No plan has been selected</em>
-        <div class="mt3">
-          <el-button
-            type="primary"
-            class="ttu fw6"
-            @click="is_editing_plan = true"
+      <div v-if="is_editing_plan">
+        <div class="mb3 f7 silver ttu fw6">Choose a plan</div>
+        <div class="flex flex-column flex-row-l items-stretch justify-between nl2 nr2">
+          <div
+            class="flex-fill mh2 mb3 mb0-l ph3 tc br3 cursor-default"
+            style="box-shadow: inset 0 -4px 12px rgba(0,0,0,0.075)"
+            :class="isCurrentPlan(plan, current_plan_id) ? 'bg-blue white' : 'bg-nearer-white'"
+            :key="plan['id']"
+            v-for="plan in plans"
           >
-            Choose a plan
-          </el-button>
+            <div class="mv4 fw6">{{plan['Name']}}</div>
+            <div class="mv4">
+              <span class="f1">${{plan['Price']}}</span><span class="f6">/user/mo</span>
+            </div>
+            <div class="mv4 mb3">
+              <div>{{plan['Executions']}} executions</div>
+              <div class="mt2">{{plan['Members']}} </div>
+              <div class="mt2">{{plan['Teams']}} </div>
+            </div>
+            <div class="mv3 pt2 pb1">
+              <div v-if="isCurrentPlan(plan, current_plan_id)">
+                <i class="el-icon-success f2" style="color: #fff"></i>
+              </div>
+              <el-button
+                type="primary"
+                class="w-100 mw5 ttu fw6"
+                @click="selectPlan(plan)"
+                v-else-if="isPlanGreater(plan, current_plan)"
+              >
+                Select Plan
+              </el-button>
+              <el-button
+                plain
+                class="w-100 ttu fw6"
+                @click="selectPlan(plan)"
+                v-else
+              >
+                Select Plan
+              </el-button>
+            </div>
+          </div>
         </div>
       </div>
-      <div
-        class="mv2 f6 br2 pv2 ph3 bg-nearer-white ba b--black-05"
-        v-else
-      >
-        <div class="flex flex-column flex-row-l items-center justify-between">
-          <div class="ph2 pv2 f4 fw6 tc">{{current_plan['Name']}}</div>
-          <div class="ph2 pv2 tc">
-            <div>{{current_plan['Executions']}} executions</div>
-          </div>
-          <div class="ph2 pv2">
-            <span class="f1">${{current_plan['Price']}}</span><span class="f6">/user/mo</span>
-          </div>
-          <div class="ph2 pv2">
+      <div v-else>
+        <div class="mb3 f7 silver ttu fw6">Your Current Plan</div>
+        <div class="blankslate" v-if="!hasPlan(current_plan_id)">
+          <em>No plan has been selected</em>
+          <div class="mt3">
             <el-button
               type="primary"
               class="ttu fw6"
               @click="is_editing_plan = true"
             >
-              Change Plan
+              Choose a plan
             </el-button>
           </div>
         </div>
-      </div>
-      <div class="tr">
-        <FreeTrialNotice class="mt2 f7 dark-green" />
-      </div>
-    </div>
-    <div class="mt4 mb3 f7 silver ttu fw6" v-if="is_editing_plan || is_editing_seats">Choose the number of seats</div>
-    <div class="mt4 mb3 f7 silver ttu fw6" v-else>Number of seats</div>
-    <p class="f6">
-      You have <strong>{{plan_info.seat_cnt}} seat(s)</strong> on your current plan.
-      <el-button
-        type="text"
-        style="border: none; padding: 0"
-        @click="is_editing_seats = true"
-        v-show="!is_editing_plan && !is_editing_seats"
-      >
-        Manage seats...
-      </el-button>
-    </p>
-    <el-form
-      class="mt3 el-form--cozy el-form__label-tiny"
-      :model="$data"
-      @submit.prevent.native
-      v-if="is_editing_plan || is_editing_seats"
-    >
-      <el-form-item
-        key="seat_options"
-        prop="seat_options"
-      >
-        <el-select
-          placeholder="Choose the number of seats"
-          v-model="edit_plan_info.seat_cnt"
+        <div
+          class="mv2 f6 br2 pv2 ph3 bg-nearer-white ba b--black-05"
+          v-else
         >
-          <el-option
-            :label="option.label"
-            :value="option.val"
-            :key="option.val"
-            v-for="option in seat_options"
-          />
-        </el-select>
-      </el-form-item>
-      <div class="mt4" v-show="is_editing_plan || is_editing_seats">
-        <table class="f6 w-100">
-          <thead class="ttu">
-            <tr>
-              <th class="bb b--black-10 tl w-60">Description</th>
-              <th class="bb b--black-10 tr">Qty</th>
-              <th class="bb b--black-10 tr">Unit Price</th>
-              <th class="bb b--black-10 tr">Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="bb b--black-10 tl w-60">{{current_plan['Name']}} Plan</td>
-              <td class="bb b--black-10 tr">{{edit_plan_info.seat_cnt}}</td>
-              <td class="bb b--black-10 tr">${{unit_price}}</td>
-              <td class="bb b--black-10 tr">${{total_amount}}</td>
-            </tr>
-            <tr class="subtotal">
-              <td class="tl w-60"></td>
-              <td class="tr"></td>
-              <td class="tr">Subtotal</td>
-              <td class="tr">${{total_amount}}</td>
-            </tr>
-            <tr class="total">
-              <td class="tl w-60"></td>
-              <td class="tr"></td>
-              <td class="tr b">Total</td>
-              <td class="tr b">${{total_amount}}</td>
-            </tr>
-          </tbody>
-        </table>
-        <ButtonBar
-          class="mt4"
-          :submit-button-text="'Save Changes'"
-          @cancel-click="cancelEdit"
-          @submit-click="updatePlan"
-        />
+          <div class="flex flex-column flex-row-l items-center justify-between">
+            <div class="ph2 pv2 f4 fw6 tc">{{current_plan['Name']}}</div>
+            <div class="ph2 pv2 tc">
+              <div>{{current_plan['Executions']}} executions</div>
+            </div>
+            <div class="ph2 pv2">
+              <span class="f1">${{current_plan['Price']}}</span><span class="f6">/user/mo</span>
+            </div>
+            <div class="ph2 pv2">
+              <el-button
+                type="primary"
+                class="ttu fw6"
+                @click="is_editing_plan = true"
+              >
+                Change Plan
+              </el-button>
+            </div>
+          </div>
+        </div>
+        <div class="tr">
+          <FreeTrialNotice class="mt2 f7 dark-green" />
+        </div>
       </div>
-    </el-form>
+      <div class="mt4 mb3 f7 silver ttu fw6" v-if="is_editing_plan || is_editing_seats">Choose the number of seats</div>
+      <div class="mt4 mb3 f7 silver ttu fw6" v-else>Number of seats</div>
+      <p class="f6">
+        You have <strong>{{plan_info.seat_cnt}} seat(s)</strong> on your current plan.
+        <el-button
+          type="text"
+          style="border: none; padding: 0"
+          @click="is_editing_seats = true"
+          v-show="!is_editing_plan && !is_editing_seats"
+        >
+          Manage seats...
+        </el-button>
+      </p>
+      <el-form
+        class="mt3 el-form--cozy el-form__label-tiny"
+        :model="$data"
+        @submit.prevent.native
+        v-if="is_editing_plan || is_editing_seats"
+      >
+        <el-form-item
+          key="seat_options"
+          prop="seat_options"
+        >
+          <el-select
+            placeholder="Choose the number of seats"
+            v-model="edit_plan_info.seat_cnt"
+          >
+            <el-option
+              :label="option.label"
+              :value="option.val"
+              :key="option.val"
+              v-for="option in seat_options"
+            />
+          </el-select>
+        </el-form-item>
+        <div class="mt4" v-show="is_editing_plan || is_editing_seats">
+          <table class="f6 w-100">
+            <thead class="ttu">
+              <tr>
+                <th class="bb b--black-10 tl w-60">Description</th>
+                <th class="bb b--black-10 tr">Qty</th>
+                <th class="bb b--black-10 tr">Unit Price</th>
+                <th class="bb b--black-10 tr">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="bb b--black-10 tl w-60">{{current_plan['Name']}} Plan</td>
+                <td class="bb b--black-10 tr">{{edit_plan_info.seat_cnt}}</td>
+                <td class="bb b--black-10 tr">${{unit_price}}</td>
+                <td class="bb b--black-10 tr">${{total_amount}}</td>
+              </tr>
+              <tr class="subtotal">
+                <td class="tl w-60"></td>
+                <td class="tr"></td>
+                <td class="tr">Subtotal</td>
+                <td class="tr">${{total_amount}}</td>
+              </tr>
+              <tr class="total">
+                <td class="tl w-60"></td>
+                <td class="tr"></td>
+                <td class="tr b">Total</td>
+                <td class="tr b">${{total_amount}}</td>
+              </tr>
+            </tbody>
+          </table>
+          <ButtonBar
+            class="mt4"
+            :submit-button-text="'Save Changes'"
+            @cancel-click="cancelEdit"
+            @submit-click="updatePlan"
+          />
+        </div>
+      </el-form>
+    </div>
   </div>
 </template>
 
@@ -165,6 +175,7 @@
   import api from '@/api'
   import plans from '@/data/usage-plans.yml'
   import { isProduction } from '@/utils'
+  import Spinner from 'vue-simple-spinner'
   import FreeTrialNotice from '@/components/FreeTrialNotice'
   import ButtonBar from '@/components/ButtonBar'
 
@@ -199,6 +210,7 @@
 
   export default {
     components: {
+      Spinner,
       FreeTrialNotice,
       ButtonBar
     },
