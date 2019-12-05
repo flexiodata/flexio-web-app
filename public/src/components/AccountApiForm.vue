@@ -59,7 +59,7 @@
           />
         </div>
       </div>
-      <div class="mt3 mb2">
+      <div class="mt3">
         <el-button
           type="primary"
           class="ttu fw6"

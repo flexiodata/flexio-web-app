@@ -16,7 +16,7 @@
               <div class="ma3 pa4 bg-white br2 css-white-box trans-mw">
                 <h3 class="mt0 fw6 f3">Profile</h3>
                 <AccountProfileForm style="max-width: 42rem" />
-                <div class="h3"></div>
+                <div class="h1"></div>
               </div>
             </div>
           </el-tab-pane>
@@ -52,6 +52,7 @@
                 <h3 class="mt0 fw6 f3">API Keys</h3>
                 <p class="lh-copy f6 mb3">This is a list of API keys associated with your account. Remove any keys that you do not recognize.</p>
                 <AccountApiForm />
+                <div class="h1"></div>
               </div>
             </div>
           </el-tab-pane>
