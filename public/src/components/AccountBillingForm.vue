@@ -51,7 +51,6 @@
         <div class="flex-fill-l mt4 mt0-l ml5-l">
           <div class="mb3 f7 silver ttu fw6">Billing address</div>
           <address class="f6 lh-copy">
-            <div class="break-item">{{billing_info.billing_name}}</div>
             <div class="break-item">{{billing_info.billing_address1}}</div>
             <div class="break-item">{{billing_info.billing_address2}}</div>
             <div class="break-item">{{billing_info.billing_city}}, {{billing_info.billing_state}} {{billing_info.billing_postal_code}}</div>
