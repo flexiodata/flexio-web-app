@@ -54,7 +54,10 @@
       </div>
       <div v-else>
         <div class="mb3 f7 silver ttu fw6">Your Current Plan</div>
-        <div class="blankslate" v-if="!hasPlan(current_plan_id)">
+        <div
+          class="blankslate"
+          v-if="!hasPlan(current_plan_id)"
+        >
           <em>No plan has been selected</em>
           <div class="mt3">
             <el-button
@@ -279,7 +282,7 @@
         return _.defaultTo(plan, {})
       },
       unit_price() {
-        var price = this.current_plan['Price']
+        var price = _.get(this.current_plan, 'Price', 0)
         return price.toFixed(2)
       },
       discount() {
