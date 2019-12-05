@@ -7,6 +7,7 @@
         <span class="ml2 f6">Loading...</span>
       </div>
     </div>
+    <!-- fetched -->
     <div v-else>
       <el-alert
         type="error"
