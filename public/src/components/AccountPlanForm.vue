@@ -2,7 +2,7 @@
   <div>
     <div v-if="!is_editing_plan">
       <div class="mb3 f7 silver ttu fw6">Your Current Plan</div>
-      <div class="blankslate" v-if="!hasPlan(current_usage_tier)">
+      <div class="blankslate" v-if="!hasPlan(current_plan_id)">
         <em>No plan has been selected</em>
         <div class="mt3">
           <el-button
@@ -87,7 +87,7 @@
         <div
           class="flex-fill mh2 mb3 mb0-l ph3 tc br3 cursor-default"
           style="box-shadow: inset 0 -4px 12px rgba(0,0,0,0.075)"
-          :class="isUsageTierSame(plan['id'], current_usage_tier) ? 'bg-blue white' : 'bg-nearer-white'"
+          :class="isCurrentPlan(plan, current_plan_id) ? 'bg-blue white' : 'bg-nearer-white'"
           :key="plan['id']"
           v-for="plan in plans"
         >
@@ -101,7 +101,7 @@
             <div class="mt2">{{plan['Teams']}} </div>
           </div>
           <div class="mv3 pt2 pb1">
-            <div v-if="isUsageTierSame(plan['id'], current_usage_tier)">
+            <div v-if="isCurrentPlan(plan, current_plan_id)">
               <i class="el-icon-success f2" style="color: #fff"></i>
             </div>
             <el-button
@@ -137,7 +137,6 @@
 </template>
 
 <script>
-  import { mapState, mapGetters } from 'vuex'
   import api from '@/api'
   import plans from '@/data/usage-plans.yml'
   import { isProduction } from '@/utils'
@@ -162,7 +161,6 @@
       is_editing_seats: false,
       seat_options,
       plans: my_plans,
-      current_usage_tier: '',
       plan_info: getDefaultPlanInfo(),
       plan_error: '',
     }
@@ -182,22 +180,22 @@
       return getDefaultState()
     },
     computed: {
-      ...mapState({
-        active_user_eid: state => state.users.active_user_eid,
-      }),
+      current_plan_id() {
+        return _.get(this.plan_info, 'plan_id', '')
+      },
       current_plan() {
-        return _.find(this.plans, (p) => {
-          return p['id'].toLowerCase() == this.current_usage_tier
+        var plan_key = isProduction() ? 'stripe_plan_id' : 'stripe_test_plan_id'
+        var plan = _.find(this.plans, (p) => {
+          return p[plan_key] == this.current_plan_id
         })
+
+        return _.defaultTo(plan, {})
       }
     },
     mounted() {
       this.fetchPlan()
     },
     methods: {
-      ...mapGetters('users', {
-        'getActiveUser': 'getActiveUser'
-      }),
       fetchPlan() {
         this.is_fetching = true
 
@@ -211,15 +209,15 @@
           this.is_fetching = false
         })
       },
-      hasPlan(plan_name) {
-        var plan_names = _.map(this.plans, (p) => {
-          return p['id'].toLowerCase()
-        })
+      hasPlan(plan_id) {
+        var plan_key = isProduction() ? 'stripe_plan_id' : 'stripe_test_plan_id'
+        var plan_ids = _.map(this.plans, p => p[plan_key])
 
-        return plan_names.indexOf(plan_name.toLowerCase()) != -1
+        return plan_ids.indexOf(plan_id) != -1
       },
-      isUsageTierSame(plan_name1, plan_name2) {
-        return plan_name1.toLowerCase() == plan_name2.toLowerCase()
+      isCurrentPlan(plan, plan_id) {
+        var plan_key = isProduction() ? 'stripe_plan_id' : 'stripe_test_plan_id'
+        return plan[plan_key] == plan_id
       },
       isPlanGreater(plan1, plan2) {
         if (plan1 && plan2) {
@@ -229,15 +227,15 @@
         }
       },
       choosePlan(plan) {
-        var new_plan_name = plan['id'].toLowerCase()
+        var plan_key = isProduction() ? 'stripe_plan_id' : 'stripe_test_plan_id'
+        var plan_id = plan[plan_key]
+        this.plan_info = _.assign({}, this.plan_info, { plan_id })
 
         var payload = _.omit(this.plan_info, ['subscription_id'])
-        payload = _.assign({}, payload, {
-          plan_id: 'plan_GIqQ76bHR18EGL'
-        })
 
         api.updatePlan('me', payload).then(response => {
           this.plan_info = _.assign({}, response.data)
+          this.is_editing_plan = false
         })
       },
       updateSeats() {
@@ -245,6 +243,7 @@
 
         api.updatePlan('me', payload).then(response => {
           this.plan_info = _.assign({}, response.data)
+          this.is_editing_seats = false
         })
       }
     }
