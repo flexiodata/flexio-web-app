@@ -51,7 +51,7 @@ class User extends ModelBase
                 'password'           => array('type' => 'password',   'required' => false),
                 'verify_code'        => array('type' => 'string',     'required' => false, 'default' => ''),
                 'stripe_customer_id' => array('type' => 'string',     'required' => false, 'default' => ''),
-                'usage_tier'         => array('type' => 'string',     'required' => false, 'default' => ''),
+                'stripe_subscription_id' => array('type' => 'string',     'required' => false, 'default' => ''),
                 'referrer'           => array('type' => 'string',     'required' => false, 'default' => ''),
                 'config'             => array('type' => 'string',     'required' => false, 'default' => '{}')
             ))->hasErrors()) === true)
@@ -202,7 +202,7 @@ class User extends ModelBase
                 'password'           => array('type' => 'password',   'required' => false),
                 'verify_code'        => array('type' => 'string',     'required' => false),
                 'stripe_customer_id' => array('type' => 'string',     'required' => false),
-                'usage_tier'         => array('type' => 'string',     'required' => false),
+                'stripe_subscription_id' => array('type' => 'string',     'required' => false),
                 'referrer'           => array('type' => 'string',     'required' => false),
                 'config'             => array('type' => 'string',     'required' => false)
             ))->hasErrors()) === true)
@@ -276,7 +276,7 @@ class User extends ModelBase
                               'timezone'               => $row['timezone'],
                               'verify_code'            => $row['verify_code'],
                               'stripe_customer_id'     => $row['stripe_customer_id'],
-                              'usage_tier'             => $row['usage_tier'],
+                              'stripe_subscription_id' => $row['stripe_subscription_id'],
                               'referrer'               => $row['referrer'],
                               'config'                 => $row['config'],
                               'owned_by'               => $row['owned_by'],
@@ -351,14 +351,13 @@ class User extends ModelBase
         return $stripe_customer_id;
     }
 
-    // TODO: rename 'usage_tier' => 'stripe_subscription_id'
     public function getStripeSubscriptionIdFromEid(string $eid) // TODO: add return type
     {
         if (!\Flexio\Base\Eid::isValid($eid))
             return false;
 
         $db = $this->getDatabase();
-        $stripe_subscription_id = $db->fetchOne('select usage_tier from tbl_user where eid = ?', $eid);
+        $stripe_subscription_id = $db->fetchOne('select stripe_subscription_id from tbl_user where eid = ?', $eid);
         if ($stripe_subscription_id === false)
             return false;
 

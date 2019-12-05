@@ -48,9 +48,9 @@ class User
                 'locale_dateformat'    => array('type' => 'string',     'required' => false, 'default' => 'm/d/Y'),
                 'timezone'             => array('type' => 'string',     'required' => false, 'default' => 'UTC'),
                 'verify_code'          => array('type' => 'string',     'required' => false, 'default' => ''),
-                'usage_tier'           => array('type' => 'string',     'required' => false, 'default' => ''),
                 'referrer'             => array('type' => 'string',     'required' => false, 'default' => ''),
                 'token'                => array('type' => 'string',     'required' => false), // stripe payment token if it's included; TODO: more specific name?
+                'stripe_subscription_id' => array('type' => 'string',     'required' => false, 'default' => ''),
                 'config'               => array('type' => 'object',     'required' => false, 'default' => [])
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
@@ -307,7 +307,7 @@ class User
                 'locale_thousands'  => array('type' => 'string',     'required' => false),
                 'locale_dateformat' => array('type' => 'string',     'required' => false),
                 'timezone'          => array('type' => 'string',     'required' => false),
-                'usage_tier'        => array('type' => 'string',     'required' => false),
+                'stripe_subscription_id' => array('type' => 'string',     'required' => false),
                 'referrer'          => array('type' => 'string',     'required' => false),
                 'config'            => array('type' => 'object',     'required' => false)
             ))->hasErrors()) === true)
@@ -547,7 +547,7 @@ class User
                 $stripe_subscription_info = self::createStripeSubscription($stripe_customer_id, $subscription_info);
                 $stripe_subscription_id = $stripe_subscription_info['subscription_id'];
                 $user_info = array(
-                    'usage_tier' => $stripe_subscription_id
+                    'stripe_subscription_id' => $stripe_subscription_id
                 );
                 $owner_user->set($user_info);
             } else {

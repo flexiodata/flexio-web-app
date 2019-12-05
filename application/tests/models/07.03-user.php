@@ -137,6 +137,9 @@ class Test
             'locale_dateformat' => 'm/d/Y',
             'timezone' => 'UTC',
             'verify_code' => '',
+            'stripe_customer_id' => '',
+            'stripe_subscription_id' => '',
+            'referrer' => '',
             'config' => '{}',
             'owned_by' => $eid,
             'created_by' => $eid
