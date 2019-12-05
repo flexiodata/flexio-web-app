@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-form
-      class="el-form--cozy el-form__label-tiny"
+      class="mb3 pb1 el-form--cozy el-form__label-tiny"
       ref="billingContactForm"
       size="small"
       :model="billing_info"
@@ -10,7 +10,7 @@
       @submit.prevent.native
       v-if="editMode == 'all' || editMode == 'contact'"
     >
-      <h4 class="mb3 pt1 pb1 ttu f7 fw6 bb b--black-10">Billing contact</h4>
+      <h4 class="mb3 pb1 f7 ttu fw6 bb b--black-10">Billing contact</h4>
 
       <el-form-item
         class="w-50-l pr1-l"
@@ -58,7 +58,7 @@
     </el-form>
 
     <el-form
-      class="el-form--cozy el-form__label-tiny"
+      class="mb3 pb1 el-form--cozy el-form__label-tiny"
       ref="billingAddressForm"
       size="small"
       :model="billing_info"
@@ -67,7 +67,7 @@
       @submit.prevent.native
       v-if="editMode == 'all' || editMode == 'address'"
     >
-      <h4 class="mt4 mb3 pt1 pb1 ttu f7 fw6 bb b--black-10">Billing address</h4>
+      <h4 class="mb3 pb1 f7 ttu fw6 bb b--black-10">Billing address</h4>
 
       <el-form-item
         class="w-50-l pr1-l"
@@ -165,14 +165,14 @@
     </el-form>
 
     <el-form
-      class="el-form--cozy el-form__label-tiny"
+      class="mb3 pb1 el-form--cozy el-form__label-tiny"
       ref="billingPaymentMethodForm"
       size="small"
       :model="billing_info"
       @submit.prevent.native
       v-if="editMode == 'all' || editMode == 'card'"
     >
-      <h4 class="mt4 mb3 pt1 pb1 ttu f7 fw6 bb b--black-10">Payment method</h4>
+      <h4 class="mb3 pb1 f7 ttu fw6 bb b--black-10">Payment method</h4>
 
       <div
         class="el-form-item el-form-item--small w-50-l pr1-l"
