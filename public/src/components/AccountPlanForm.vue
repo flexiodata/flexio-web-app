@@ -174,14 +174,16 @@
           @close="error_msg = ''"
           v-if="error_msg.length > 0"
         />
-        <ButtonBar
-          class="bt b--black-10 mt3 pt3"
-          :submit-button-text="'Save Changes'"
-          :submit-button-disabled="has_plan_errors"
-          @cancel-click="cancelEdit"
-          @submit-click="updatePlan"
-          v-if="has_plan"
-        />
+        <div v-show="is_editing_plan || is_editing_seats">
+          <ButtonBar
+            class="bt b--black-10 mt3 pt3"
+            :submit-button-text="'Save Changes'"
+            :submit-button-disabled="has_plan_errors"
+            @cancel-click="cancelEdit"
+            @submit-click="updatePlan"
+            v-if="has_plan || (subscription_id.length > 0 && !has_plan)"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -190,7 +192,7 @@
 <script>
   import api from '@/api'
   import usage_plans from '@/data/usage-plans.yml'
-  import { mapState } from 'vuex'
+  import { mapState, mapGetters } from 'vuex'
   import { isProduction } from '@/utils'
   import Spinner from 'vue-simple-spinner'
   import FreeTrialNotice from '@/components/FreeTrialNotice'
@@ -266,6 +268,9 @@
 
         return _.defaultTo(plan, {})
       },
+      subscription_id() {
+        return _.get(this.getActiveUser(), 'stripe_subscription_id', '')
+      }
       has_plan() {
         var plan_id = _.get(this.plan_info, 'plan_id', '')
         return this.hasPlan(plan_id)
@@ -304,6 +309,9 @@
       this.fetchPlan()
     },
     methods: {
+      ...mapGetters('users', {
+        'getActiveUser': 'getActiveUser'
+      }),
       fetchPlan() {
         this.is_fetching = true
 
@@ -345,13 +353,10 @@
       },
       cancelEdit() {
         this.edit_plan_info = _.assign({}, this.plan_info)
-
-        var plan_id = _.get(this.plan_info, 'plan_id', '')
-        if (this.hasPlan(plan_id)) {
-          this.is_editing_seats = false
-          this.is_editing_plan = false
-          this.is_editing_coupon = false
-        }
+        this.is_editing_seats = false
+        this.is_editing_plan = false
+        this.is_editing_coupon = false
+        this.error_msg = ''
       },
       selectPlan(plan) {
         var plan_key = isProduction() ? 'stripe_plan_id' : 'stripe_test_plan_id'
