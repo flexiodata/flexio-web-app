@@ -103,8 +103,8 @@
           v-if="!has_plan || is_editing_plan || is_editing_seats"
         >
           <el-form-item
-            key="seat_options"
-            prop="seat_options"
+            key="seat_cnt"
+            prop="seat_cnt"
           >
             <el-select
               placeholder="Choose the number of seats"
@@ -119,10 +119,59 @@
               />
             </el-select>
           </el-form-item>
+          <div
+            class="flex flex-row items-center"
+            v-if="is_editing_coupon"
+          >
+            <el-input
+              type="text"
+              placeholder="Add coupon"
+              style="width: 200px; margin-right: 10px"
+              v-model="coupon_code"
+            />
+            <el-button
+              class="ttu fw6"
+              type="primary"
+              @click="applyCoupon"
+            >
+              Apply
+            </el-button>
+            <el-button
+              type="text"
+              style="border: none; padding: 0"
+              @click="cancelEditCoupon"
+            >
+              <i class="material-icons md-18">close</i>
+            </el-button>
+          </div>
+          <div class="flex flex-row items-center" v-else-if="edit_plan_info.coupon_id.length > 0">
+            <p class="f6">
+              Coupon code <strong>{{edit_plan_info.coupon_id}}</strong> will be applied!
+              <el-button
+                type="text"
+                style="border: none; padding: 0"
+                @click="is_editing_coupon = true"
+              >
+                Change coupon...
+              </el-button>
+            </p>
+          </div>
+          <div v-else>
+            <el-button
+              type="text"
+              style="border: none; padding: 0"
+              @click="is_editing_coupon = true"
+            >
+              Have a coupon?
+            </el-button>
+          </div>
         </el-form>
 
-        <div class="mt4" v-show="!has_plan || is_editing_plan || is_editing_seats">
-          <table class="f6 w-100">
+        <div
+          class="mt4"
+          v-show="!has_plan || is_editing_plan || is_editing_seats"
+        >
+          <table class="f6 w-100" v-if="false">
             <thead class="ttu">
               <tr>
                 <th class="bb b--black-10 tl w-60">Description</th>
@@ -138,7 +187,13 @@
                 <td class="bb b--black-10 tr">${{unit_price}}</td>
                 <td class="bb b--black-10 tr">${{item_total_amount}}</td>
               </tr>
-              <tr class="coupon" v-if="false">
+              <tr class="subtotal">
+                <td class="tl w-60"></td>
+                <td class="tr"></td>
+                <td class="tr">Subtotal</td>
+                <td class="tr">${{subtotal_amount}}</td>
+              </tr>
+              <tr class="coupon">
                 <td class="tr" colspan="4">
                   <div
                     class="flex flex-row items-center justify-end"
@@ -178,12 +233,6 @@
                   </div>
                 </td>
               </tr>
-              <tr class="subtotal">
-                <td class="tl w-60"></td>
-                <td class="tr"></td>
-                <td class="tr">Subtotal</td>
-                <td class="tr">${{subtotal_amount}}</td>
-              </tr>
               <tr class="discount red" v-show="discount > 0">
                 <td class="tl w-60"></td>
                 <td class="tr"></td>
@@ -199,7 +248,7 @@
             </tbody>
           </table>
           <ButtonBar
-            class="mt4"
+            class="bt b--black-10 mt3 pt3"
             :submit-button-text="'Save Changes'"
             :submit-button-disabled="has_plan_errors"
             @cancel-click="cancelEdit"
@@ -227,7 +276,7 @@
       subscription_item_id: '',
       plan_id: '',
       seat_cnt: 1,
-      coupon: ''
+      coupon_id: ''
     }
   }
 
@@ -333,8 +382,8 @@
         this.is_fetching = true
 
         api.fetchPlan().then(response => {
-          this.plan_info = _.assign({}, response.data)
-          this.edit_plan_info = _.assign({}, response.data)
+          this.plan_info = _.assign({}, getDefaultPlanInfo(), response.data)
+          this.edit_plan_info = _.assign({}, getDefaultPlanInfo(), response.data)
           this.plan_error = ''
         }).catch(error => {
           this.plan_info = getDefaultPlanInfo()
@@ -361,13 +410,11 @@
         }
       },
       applyCoupon() {
-        var coupon = this.coupon_code
-        this.edit_plan_info = _.assign({}, this.edit_plan_info, { coupon })
-        this.coupon_code = ''
+        var coupon_id = this.coupon_code
+        this.edit_plan_info = _.assign({}, this.edit_plan_info, { coupon_id })
         this.is_editing_coupon = false
       },
       cancelEditCoupon() {
-        this.coupon_code = ''
         this.is_editing_coupon = false
       },
       cancelEdit() {
@@ -377,6 +424,7 @@
         if (this.hasPlan(plan_id)) {
           this.is_editing_seats = false
           this.is_editing_plan = false
+          this.is_editing_coupon = false
         }
       },
       selectPlan(plan) {
@@ -385,13 +433,14 @@
         this.edit_plan_info = _.assign({}, this.edit_plan_info, { plan_id })
       },
       updatePlan() {
-        var payload = _.omit(this.edit_plan_info, ['subscription_id'])
+        var payload = _.omit(this.edit_plan_info, ['subscription_id', 'discount'])
 
         api.updatePlan('me', payload).then(response => {
-          this.plan_info = _.assign({}, response.data)
-          this.edit_plan_info = _.assign({}, response.data)
+          this.plan_info = _.assign({}, getDefaultPlanInfo(), response.data)
+          this.edit_plan_info = _.assign({}, getDefaultPlanInfo(), response.data)
           this.is_editing_seats = false
           this.is_editing_plan = false
+          this.is_editing_coupon = false
         })
       },
       onPlanInfoChanged(info) {

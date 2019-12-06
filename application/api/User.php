@@ -503,6 +503,7 @@ class User
         if (($validator->check($post_params, array(
                 'subscription_item_id' => array('type' => 'string', 'required' => false),
                 'plan_id'              => array('type' => 'string', 'required' => false),
+                'coupon_id'            => array('type' => 'string', 'required' => false),
                 'seat_cnt'             => array('type' => 'integer', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
@@ -1622,6 +1623,13 @@ class User
                 )
             )
         );
+
+        // only post a coupon code if the length is greater than zero
+        // (this will avoid removing existing coupons in Stripe)
+        $coupon_id = $subscription_info['coupon_id'] ?? '';
+        if (strlen($coupon_id) > 0)
+            $post_data['coupon'] = $coupon_id;
+
         $post_data = http_build_query($post_data);
 
         $headers = array();
@@ -1671,6 +1679,13 @@ class User
                 )
             )
         );
+
+        // only post a coupon code if the length is greater than zero
+        // (this will avoid removing existing coupons in Stripe)
+        $coupon_id = $subscription_info['coupon_id'] ?? '';
+        if (strlen($coupon_id) > 0)
+            $post_data['coupon'] = $coupon_id;
+
         $post_data = http_build_query($post_data);
 
         $headers = array();
@@ -1786,7 +1801,13 @@ class User
             'subscription_id' => $subscription_info['id'] ?? '',
             'subscription_item_id' => $subscription_info['items']['data'][0]['id'] ?? '',
             'plan_id' => $subscription_info['items']['data'][0]['plan']['id'] ?? '',
-            'seat_cnt' => $subscription_info['items']['data'][0]['quantity'] ?? 1
+            'seat_cnt' => $subscription_info['items']['data'][0]['quantity'] ?? 1,
+            'discount' => array(
+                'id' => $subscription_info['discount']['coupon']['id'] ?? '',
+                'name' => $subscription_info['discount']['coupon']['name'] ?? '',
+                'amount_off' => $subscription_info['discount']['coupon']['amount_off'] ?? 0,
+                'percent_off' => $subscription_info['discount']['coupon']['percent_off'] ?? 0
+            )
         );
 
         return $result;
