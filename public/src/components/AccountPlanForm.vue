@@ -167,6 +167,13 @@
             </el-button>
           </div>
         </el-form>
+        <div
+          class="mt4 mb3 f6"
+          v-if="has_plan && !is_editing_plan && !is_editing_seats"
+        >
+          <div class="mt4 mb3 f7 silver ttu fw6">Next amount due</div>
+          Your next payment amount due will be <strong>${{next_amount_due}}</strong>.
+        </div>
         <el-alert
           type="error"
           show-icon
@@ -281,28 +288,9 @@
 
         return false
       },
-      unit_price() {
-        var price = _.get(this.current_usage_plan, 'Price', 0)
-        return price.toFixed(2)
-      },
-      discount() {
-        var price = 0
-        return price.toFixed(2)
-      },
-      item_total_amount() {
-        var qty = this.edit_plan_info.seat_cnt
-        var price = (this.unit_price * qty)
-        return price.toFixed(2)
-      },
-      subtotal_amount() {
-        var qty = this.edit_plan_info.seat_cnt
-        var price = (this.unit_price * qty)
-        return price.toFixed(2)
-      },
-      total_amount() {
-        var qty = this.edit_plan_info.seat_cnt
-        var price = (this.unit_price * qty) - this.discount
-        return price.toFixed(2)
+      next_amount_due() {
+        var amt = _.get(this.plan_info, 'next_amount_due', 0)
+        return (amt/100).toFixed(2)
       },
     },
     mounted() {
