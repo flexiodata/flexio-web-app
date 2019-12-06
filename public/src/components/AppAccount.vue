@@ -61,12 +61,8 @@
             <div slot="label"><div style="min-width: 5rem">Billing</div></div>
             <div class="nt3">
               <div class="ma3 pa4 bg-white br2 css-white-box trans-mw">
-                <h3 class="mt0 fw6 f3">Plan</h3>
-                <AccountPlanForm />
-                <div class="h3"></div>
-                <h3 class="mt0 fw6 f3">Payment Information</h3>
-                <AccountBillingForm />
-                <div class="h3"></div>
+                <BillingEditPanel />
+                <div class="h1"></div>
               </div>
             </div>
           </el-tab-pane>
@@ -96,11 +92,10 @@
   import AccountProfileForm from '@/components/AccountProfileForm'
   import AccountRegionForm from '@/components/AccountRegionForm'
   import AccountApiForm from '@/components/AccountApiForm'
-  import AccountPlanForm from '@/components/AccountPlanForm'
-  import AccountBillingForm from '@/components/AccountBillingForm'
   import AccountInvoiceDetailsForm from '@/components/AccountInvoiceDetailsForm'
   import AccountPasswordForm from '@/components/AccountPasswordForm'
   import AccountDeleteForm from '@/components/AccountDeleteForm'
+  import BillingEditPanel from '@/components/BillingEditPanel'
 
   export default {
     metaInfo() {
@@ -112,11 +107,10 @@
       AccountProfileForm,
       AccountRegionForm,
       AccountApiForm,
-      AccountPlanForm,
-      AccountBillingForm,
       AccountInvoiceDetailsForm,
       AccountPasswordForm,
-      AccountDeleteForm
+      AccountDeleteForm,
+      BillingEditPanel,
     },
     watch: {
       route_action: {

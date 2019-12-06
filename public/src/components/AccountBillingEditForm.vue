@@ -227,7 +227,8 @@
 
     <ButtonBar
       class="mt4"
-      :submit-button-text="'Save changes'"
+      :cancel-button-visible="has_payment_method"
+      :submit-button-text="!has_payment_method ? 'Set up billing' : 'Save changes'"
       :submit-button-disabled="has_errors"
       @cancel-click="$emit('cancel-click')"
       @submit-click="onSubmit"
@@ -334,7 +335,7 @@
       stripe: {
         type: String,
         required: true
-      }
+      },
     },
     components: {
       CardNumber,
@@ -346,12 +347,15 @@
     watch: {
       number() { this.update() },
       expiry() { this.update() },
-      cvc() { this.update() }
+      cvc() { this.update() },
     },
     data() {
       return getDefaultState()
     },
     computed: {
+      has_payment_method() {
+        return _.get(this.billingInfo, 'card_id', '').length > 0
+      },
       has_errors() {
         // Stripe card form is not complete; bail out
         if (this.editMode == 'all' || this.editMode == 'card') {

@@ -7,72 +7,60 @@
         <span class="ml2 f6">Loading...</span>
       </div>
     </div>
+
     <!-- fetched -->
     <div v-else>
-      <div v-if="is_editing_plan">
-        <div class="mb3 f7 silver ttu fw6">Choose a plan</div>
-        <div class="flex flex-column flex-row-l items-stretch justify-between nl2 nr2">
-          <div
-            class="flex-fill mh2 mb3 mb0-l ph3 tc br3 cursor-default"
-            style="box-shadow: inset 0 -4px 12px rgba(0,0,0,0.075)"
-            :class="isCurrentPlan(usage_plan, edit_plan_id) ? 'bg-blue white' : 'bg-nearer-white'"
-            :key="usage_plan['id']"
-            v-for="usage_plan in usage_plans"
-          >
-            <div class="mv4 fw6">{{usage_plan['Name']}}</div>
-            <div class="mv4">
-              <span class="f1">${{usage_plan['Price']}}</span><span class="f6">/user/mo</span>
+      <div class="flex flex-row items-center mb3">
+        <div class="flex-fill f7 silver ttu fw6" v-if="!has_plan || is_editing_plan">Choose a plan</div>
+        <div class="flex-fill f7 silver ttu fw6" v-else>Your Current Plan</div>
+        <FreeTrialNotice class="f7 dark-green" />
+      </div>
+
+      <div
+        class="flex flex-column flex-row-l items-stretch justify-between nl2 nr2"
+        v-if="!has_plan || is_editing_plan"
+      >
+        <div
+          class="flex-fill mh2 mb3 mb0-l ph3 tc br3 cursor-default"
+          style="box-shadow: inset 0 -4px 12px rgba(0,0,0,0.075)"
+          :class="isCurrentPlan(usage_plan, edit_plan_id) ? 'bg-blue white' : 'bg-nearer-white'"
+          :key="usage_plan['id']"
+          v-for="usage_plan in usage_plans"
+        >
+          <div class="mv4 fw6">{{usage_plan['Name']}}</div>
+          <div class="mv4">
+            <span class="f1">${{usage_plan['Price']}}</span><span class="f6">/user/mo</span>
+          </div>
+          <div class="mv4 mb3">
+            <div>{{usage_plan['Executions']}} executions</div>
+            <div class="mt2">{{usage_plan['Members']}} </div>
+            <div class="mt2">{{usage_plan['Teams']}} </div>
+          </div>
+          <div class="mv3 pt2 pb1">
+            <div v-if="isCurrentPlan(usage_plan, edit_plan_id)">
+              <i class="el-icon-success f2" style="color: #fff"></i>
             </div>
-            <div class="mv4 mb3">
-              <div>{{usage_plan['Executions']}} executions</div>
-              <div class="mt2">{{usage_plan['Members']}} </div>
-              <div class="mt2">{{usage_plan['Teams']}} </div>
-            </div>
-            <div class="mv3 pt2 pb1">
-              <div v-if="isCurrentPlan(usage_plan, edit_plan_id)">
-                <i class="el-icon-success f2" style="color: #fff"></i>
-              </div>
-              <el-button
-                type="primary"
-                class="w-100 mw5 ttu fw6"
-                @click="selectPlan(usage_plan)"
-                v-else-if="isPlanGreater(usage_plan, current_usage_plan)"
-              >
-                Select Plan
-              </el-button>
-              <el-button
-                plain
-                class="w-100 ttu fw6"
-                @click="selectPlan(usage_plan)"
-                v-else
-              >
-                Select Plan
-              </el-button>
-            </div>
+            <el-button
+              type="primary"
+              class="w-100 mw5 ttu fw6"
+              @click="selectPlan(usage_plan)"
+              v-else-if="isPlanGreater(usage_plan, current_usage_plan)"
+            >
+              Select Plan
+            </el-button>
+            <el-button
+              plain
+              class="w-100 ttu fw6"
+              @click="selectPlan(usage_plan)"
+              v-else
+            >
+              Select Plan
+            </el-button>
           </div>
         </div>
       </div>
       <div v-else>
-        <div class="mb3 f7 silver ttu fw6">Your Current Plan</div>
-        <div
-          class="blankslate"
-          v-if="!hasPlan(edit_plan_id)"
-        >
-          <em>No plan has been selected</em>
-          <div class="mt3">
-            <el-button
-              type="primary"
-              class="ttu fw6"
-              @click="is_editing_plan = true"
-            >
-              Choose a plan
-            </el-button>
-          </div>
-        </div>
-        <div
-          class="mv2 f6 br2 pv2 ph3 bg-nearer-white ba b--black-05"
-          v-else
-        >
+        <div class="mv2 f6 br2 pv2 ph3 bg-nearer-white ba b--black-05">
           <div class="flex flex-column flex-row-l items-center justify-between">
             <div class="ph2 pv2 f4 fw6 tc">{{current_usage_plan['Name']}}</div>
             <div class="ph2 pv2 tc">
@@ -92,13 +80,10 @@
             </div>
           </div>
         </div>
-        <div class="tr">
-          <FreeTrialNotice class="mt2 f7 dark-green" />
-        </div>
       </div>
 
       <div v-if="edit_plan_id.length > 0">
-        <div class="mt4 mb3 f7 silver ttu fw6" v-if="is_editing_plan || is_editing_seats">Choose the number of seats</div>
+        <div class="mt4 mb3 f7 silver ttu fw6" v-if="!has_plan || is_editing_plan || is_editing_seats">Choose the number of seats</div>
         <div class="mt4 mb3 f7 silver ttu fw6" v-else>Number of seats</div>
         <p class="f6">
           You have <strong>{{plan_info.seat_cnt}} seat(s)</strong> on your current plan.
@@ -106,7 +91,7 @@
             type="text"
             style="border: none; padding: 0"
             @click="is_editing_seats = true"
-            v-show="!is_editing_plan && !is_editing_seats"
+            v-show="has_plan && !is_editing_plan && !is_editing_seats"
           >
             Manage seats...
           </el-button>
@@ -115,7 +100,7 @@
           class="mt3 el-form--cozy el-form__label-tiny"
           :model="$data"
           @submit.prevent.native
-          v-if="is_editing_plan || is_editing_seats"
+          v-if="!has_plan || is_editing_plan || is_editing_seats"
         >
           <el-form-item
             key="seat_options"
@@ -123,6 +108,7 @@
           >
             <el-select
               placeholder="Choose the number of seats"
+              style="max-width: 100px"
               v-model="edit_plan_info.seat_cnt"
             >
               <el-option
@@ -135,7 +121,7 @@
           </el-form-item>
         </el-form>
 
-        <div class="mt4" v-show="is_editing_plan || is_editing_seats">
+        <div class="mt4" v-show="!has_plan || is_editing_plan || is_editing_seats">
           <table class="f6 w-100">
             <thead class="ttu">
               <tr>
@@ -218,6 +204,7 @@
             :submit-button-disabled="has_plan_errors"
             @cancel-click="cancelEdit"
             @submit-click="updatePlan"
+            v-if="has_plan"
           />
         </div>
       </div>
@@ -266,10 +253,23 @@
   }
 
   export default {
+    props: {
+      planInfo: {
+        type: Object,
+        default: () => {}
+      }
+    },
     components: {
       Spinner,
       FreeTrialNotice,
       ButtonBar
+    },
+    watch: {
+      edit_plan_info: {
+        handler: 'onPlanInfoChanged',
+        immediate: true,
+        deep: true
+      }
     },
     data() {
       return getDefaultState()
@@ -286,6 +286,10 @@
         })
 
         return _.defaultTo(plan, {})
+      },
+      has_plan() {
+        var plan_id = _.get(this.plan_info, 'plan_id', '')
+        return this.hasPlan(plan_id)
       },
       has_plan_errors() {
         if (this.edit_plan_id.length == 0)
@@ -339,7 +343,6 @@
       hasPlan(plan_id) {
         var plan_key = isProduction() ? 'stripe_plan_id' : 'stripe_test_plan_id'
         var plan_ids = _.map(this.usage_plans, p => p[plan_key])
-
         return plan_ids.indexOf(plan_id) != -1
       },
       isCurrentPlan(plan, plan_id) {
@@ -365,8 +368,12 @@
       },
       cancelEdit() {
         this.edit_plan_info = _.assign({}, this.plan_info)
-        this.is_editing_seats = false
-        this.is_editing_plan = false
+
+        var plan_id = _.get(this.plan_info, 'plan_id', '')
+        if (this.hasPlan(plan_id)) {
+          this.is_editing_seats = false
+          this.is_editing_plan = false
+        }
       },
       selectPlan(plan) {
         var plan_key = isProduction() ? 'stripe_plan_id' : 'stripe_test_plan_id'
@@ -382,6 +389,9 @@
           this.is_editing_seats = false
           this.is_editing_plan = false
         })
+      },
+      onPlanInfoChanged(info) {
+        this.$emit('update:planInfo', info)
       }
     }
   }

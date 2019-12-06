@@ -7,6 +7,7 @@
         <span class="ml2 f6">Loading...</span>
       </div>
     </div>
+
     <!-- fetched -->
     <div v-else>
       <el-alert
@@ -22,23 +23,8 @@
         :billing-info="billing_info"
         @cancel-click="onCancelEditBilling"
         @billing-updated="onBillingUpdated"
-        v-if="is_editing"
+        v-if="!has_payment_method || is_editing"
       />
-      <div
-        class="blankslate"
-        v-else-if="billing_info.card_id.length == 0"
-      >
-        <em>No billing information is on file</em>
-        <div class="mt3">
-          <el-button
-            type="primary"
-            class="ttu fw6"
-            @click="setupBilling"
-          >
-            Set up payment method
-          </el-button>
-        </div>
-      </div>
       <div v-else>
         <div class="flex flex-column flex-row-l flex-wrap-l">
           <div class="w-third-l">
@@ -155,7 +141,7 @@
       stripe_public_key,
       is_fetching: false,
       is_editing: false,
-      edit_mode: '',
+      edit_mode: 'all',
     }
   }
 
@@ -168,6 +154,9 @@
       return getDefaultState()
     },
     computed: {
+      has_payment_method() {
+        return _.get(this.billing_info, 'card_id', '').length > 0
+      },
       billing_country_name() {
         return _.get(countries, this.billing_info.billing_country, '')
       }
@@ -212,8 +201,13 @@
         this.is_editing = false
       },
       onBillingUpdated(info) {
+        if (!this.has_payment_method) {
+          this.$emit('payment-method-set-up', info)
+        }
+
         this.billing_info = _.assign({}, this.billing_info, info)
         this.is_editing = false
+        this.$emit('billing-updated', info)
       }
     }
   }

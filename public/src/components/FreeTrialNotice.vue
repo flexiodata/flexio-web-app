@@ -1,9 +1,9 @@
 <template>
-  <div v-if="is_fetched && (days_left > 0 || current_plan_id.length == 0)">
+  <div v-if="days_left > 0 || subscription_id.length == 0">
     <div>{{msg}}</div>
     <div
       class="mt2"
-      v-if="showUpgrade && current_plan_id.length == 0"
+      v-if="showUpgrade && subscription_id.length == 0"
     >
       <router-link
         class="el-button el-button--primary el-button--tiny no-underline fw6"
@@ -35,14 +35,6 @@
         default: false
       }
     },
-    data() {
-      return {
-        is_fetching: false,
-        is_fetched: false,
-        plan_info: {},
-        plan_error: ''
-      }
-    },
     computed: {
       today() {
         return moment()
@@ -63,32 +55,14 @@
         var days = pluralize(days_left, 'days', 'day', 'days')
         return `You have ${days_left} ${days} left in your free trial`
       },
-      current_plan_id() {
-        return _.get(this.plan_info, 'plan_id', '')
+      subscription_id() {
+        return _.get(this.getActiveUser(), 'stripe_subscription_id', '')
       }
-    },
-    created() {
-      this.fetchPlan()
     },
     methods: {
       ...mapGetters('users', {
         'getActiveUser': 'getActiveUser'
-      }),
-      fetchPlan() {
-        this.is_fetching = true
-        this.is_fetched = false
-
-        api.fetchPlan().then(response => {
-          this.plan_info = _.assign({}, response.data)
-          this.plan_error = ''
-          this.is_fetched = true
-        }).catch(error => {
-          this.plan_info = getDefaultPlanInfo()
-          this.plan_error = JSON.stringify(error)
-        }).finally(() => {
-          this.is_fetching = false
-        })
-      },
+      })
     }
   }
 </script>
