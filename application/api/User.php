@@ -1386,7 +1386,11 @@ class User
         curl_close($ch);
 
         if ($httpcode !== 200)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+        {
+            $error = @json_decode($httpresult, true);
+            $message = $error['error']['message'] ?? '';
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, $message);
+        }
 
         $customer_info = @json_decode($httpresult, true);
         $customer_info = self::mapStripeCustomerInfo($customer_info);
@@ -1442,7 +1446,11 @@ class User
         curl_close($ch);
 
         if ($httpcode !== 200)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+        {
+            $error = @json_decode($httpresult, true);
+            $message = $error['error']['message'] ?? '';
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, $message);
+        }
 
         $customer_info = @json_decode($httpresult, true);
         $customer_info = self::mapStripeCustomerInfo($customer_info);
@@ -1480,7 +1488,11 @@ class User
         curl_close($ch);
 
         if ($httpcode !== 200)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+        {
+            $error = @json_decode($httpresult, true);
+            $message = $error['error']['message'] ?? '';
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED, $message);
+        }
 
         $customer_info = @json_decode($httpresult, true);
         $customer_info = self::mapStripeCustomerInfo($customer_info);
@@ -1520,7 +1532,11 @@ class User
         curl_close($ch);
 
         if ($httpcode !== 200)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+        {
+            $error = @json_decode($httpresult, true);
+            $message = $error['error']['message'] ?? '';
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, $message);
+        }
 
         $source_info = @json_decode($httpresult, true);
         $source_info = self::mapStripeSourceInfo($source_info);
@@ -1554,7 +1570,11 @@ class User
         curl_close($ch);
 
         if ($httpcode !== 200)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
+        {
+            $error = @json_decode($httpresult, true);
+            $message = $error['error']['message'] ?? '';
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED, $message);
+        }
 
         $source_info = @json_decode($httpresult, true);
         $source_info = self::mapStripeSourceInfo($source_info);
@@ -1590,7 +1610,11 @@ class User
         curl_close($ch);
 
         if ($httpcode !== 200)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+        {
+            $error = @json_decode($httpresult, true);
+            $message = $error['error']['message'] ?? '';
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED, $message);
+        }
 
         // stripe supports more than one source per customer, but we only
         // expose one card in the billing info; get the first source item
@@ -1649,7 +1673,11 @@ class User
         curl_close($ch);
 
         if ($httpcode !== 200)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+        {
+            $error = @json_decode($httpresult, true);
+            $message = $error['error']['message'] ?? '';
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, $message);
+        }
 
         $subscription_info = @json_decode($httpresult, true);
 
@@ -1705,7 +1733,11 @@ class User
         curl_close($ch);
 
         if ($httpcode !== 200)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+        {
+            $error = @json_decode($httpresult, true);
+            $message = $error['error']['message'] ?? '';
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, $message);
+        }
 
         $subscription_info = @json_decode($httpresult, true);
 
@@ -1750,7 +1782,11 @@ class User
         curl_close($ch);
 
         if ($httpcode !== 200)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+        {
+            $error = @json_decode($httpresult, true);
+            $message = $error['error']['message'] ?? '';
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED, $message);
+        }
 
         // stripe supports more than one source per customer, but we only
         // expose one card in the billing info; get the first source item
