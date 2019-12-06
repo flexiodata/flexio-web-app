@@ -215,6 +215,7 @@
 <script>
   import api from '@/api'
   import usage_plans from '@/data/usage-plans.yml'
+  import { mapState } from 'vuex'
   import { isProduction } from '@/utils'
   import Spinner from 'vue-simple-spinner'
   import FreeTrialNotice from '@/components/FreeTrialNotice'
@@ -275,6 +276,9 @@
       return getDefaultState()
     },
     computed: {
+      ...mapState({
+        active_user_eid: state => state.users.active_user_eid,
+      }),
       edit_plan_id() {
         return _.get(this.edit_plan_info, 'plan_id', '')
       },
@@ -391,6 +395,9 @@
         })
       },
       onPlanInfoChanged(info) {
+        var eid = this.active_user_eid
+        var stripe_subscription_id = _.get(info, 'subscription_id', '')
+        this.$store.commit('users/UPDATED_USER', { eid, item: { stripe_subscription_id } })
         this.$emit('update:planInfo', info)
       }
     }

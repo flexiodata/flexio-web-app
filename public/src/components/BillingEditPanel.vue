@@ -37,8 +37,6 @@
     },
     methods: {
       onPaymentMethodSetUp(info) {
-        debugger
-
         this.billing_info = _.assign({}, this.billing_info, info)
 
         // use imperitive Javascript for now
