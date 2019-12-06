@@ -167,12 +167,9 @@
             </el-button>
           </div>
         </el-form>
-        <div
-          class="mt4 mb3 f6"
-          v-if="has_plan && !is_editing_plan && !is_editing_seats"
-        >
+        <div v-if="has_plan && !is_editing_plan && !is_editing_seats">
           <div class="mt4 mb3 f7 silver ttu fw6">Next amount due</div>
-          Your next payment amount due will be <strong>${{next_amount_due}}</strong>.
+          <div class="f6">Your next payment amount will be <strong>${{next_amount_due}}</strong>.</div>
         </div>
         <el-alert
           type="error"
