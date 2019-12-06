@@ -106,6 +106,7 @@
       >
         <CountrySelect
           v-model.trim="billing_info.billing_country"
+          @change="onCountryChange"
         />
       </el-form-item>
 
@@ -124,7 +125,7 @@
         </div>
         <div class="mw5 w-30-l ph1">
           <el-form-item
-            label="State"
+            label="State/Province"
             key="billing_state"
             prop="billing_state"
           >
@@ -135,7 +136,7 @@
             />
             <el-input
               type="text"
-              v-model.trim="billing_info.billing_state"
+              v-model="billing_info.billing_state"
               v-else
             />
           </el-form-item>
@@ -358,17 +359,6 @@
       number() { this.update() },
       expiry() { this.update() },
       cvc() { this.update() },
-      'billing_info.billing_country'(val) {
-        // if we set the country to United States, make the state input a dropdown
-        if (val == 'US') {
-          var state_codes = _.keys(states)
-          var state_val = this.billing_info.billing_state
-
-          if (!_.indexOf(state_codes, state_val) == -1) {
-            this.billing_info = _.assign({}, this.billing_info, { billing_state: '' })
-          }
-        }
-      }
     },
     data() {
       return getDefaultState()
@@ -412,6 +402,10 @@
 
         // no focus magic for the CVC field as it gets complete with three
         // numbers, but can also have four
+      },
+      // clear out the selected state when changing countries
+      onCountryChange() {
+        this.billing_info = _.assign({}, this.billing_info, { billing_state: '' })
       },
       onValidateItem(key, valid) {
         var errors = _.assign({}, this.form_errors)

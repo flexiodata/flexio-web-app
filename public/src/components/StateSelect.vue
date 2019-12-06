@@ -4,6 +4,8 @@
     filterable
     :value="value"
     @input="handleInput"
+    v-bind="$attrs"
+    v-on="$listeners"
   >
     <el-option
       :label="val"
