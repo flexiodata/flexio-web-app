@@ -181,7 +181,7 @@
             :submit-button-disabled="has_plan_errors"
             @cancel-click="cancelEdit"
             @submit-click="updatePlan"
-            v-if="has_plan || (subscription_id.length > 0 && !has_plan)"
+            v-if="has_plan || (has_payment_method && !has_plan)"
           />
         </div>
       </div>
@@ -268,9 +268,9 @@
 
         return _.defaultTo(plan, {})
       },
-      subscription_id() {
-        return _.get(this.getActiveUser(), 'stripe_subscription_id', '')
-      }
+      has_payment_method() {
+        return _.get(this.getActiveUser(), 'stripe_billing_info.card_id', '').length > 0
+      },
       has_plan() {
         var plan_id = _.get(this.plan_info, 'plan_id', '')
         return this.hasPlan(plan_id)
@@ -362,6 +362,8 @@
         var plan_key = isProduction() ? 'stripe_plan_id' : 'stripe_test_plan_id'
         var plan_id = plan[plan_key]
         this.edit_plan_info = _.assign({}, this.edit_plan_info, { plan_id })
+        this.is_editing_seats = true
+        this.is_editing_plan = true
       },
       updatePlan() {
         var payload = _.omit(this.edit_plan_info, ['subscription_id', 'discount'])

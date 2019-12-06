@@ -80,6 +80,7 @@
 <script>
   import api from '@/api'
   import countries from '@/data/countries.yml'
+  import { mapState } from 'vuex'
   import { isProduction } from '@/utils'
   import Spinner from 'vue-simple-spinner'
   import AccountBillingEditForm from '@/components/AccountBillingEditForm'
@@ -154,6 +155,9 @@
       return getDefaultState()
     },
     computed: {
+      ...mapState({
+        active_user_eid: state => state.users.active_user_eid,
+      }),
       has_payment_method() {
         return _.get(this.billing_info, 'card_id', '').length > 0
       },
@@ -174,6 +178,7 @@
         api.fetchBilling().then(response => {
           this.billing_info = _.assign({}, response.data)
           this.billing_error = ''
+          this.updateStoreUser(this.billing_info)
         }).catch(error => {
           this.billing_info = {}
           this.billing_error = JSON.stringify(error)
@@ -197,6 +202,10 @@
         this.edit_mode = 'card'
         this.is_editing = true
       },
+      updateStoreUser(stripe_billing_info) {
+        var eid = this.active_user_eid
+        this.$store.commit('users/UPDATED_USER', { eid, item: { stripe_billing_info } })
+      },
       onCancelEditBilling() {
         this.is_editing = false
       },
@@ -207,6 +216,7 @@
 
         this.billing_info = _.assign({}, this.billing_info, info)
         this.is_editing = false
+        this.updateStoreUser(this.billing_info)
         this.$emit('billing-updated', info)
       }
     }
