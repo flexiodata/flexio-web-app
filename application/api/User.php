@@ -482,7 +482,8 @@ class User
 
         $stripe_customer_id = $owner_user->getStripeCustomerId();
         $stripe_subscription_info = self::getStripeSubscription($stripe_customer_id);
-        $result = array_merge(array(), $stripe_subscription_info);
+        $stripe_pending_invoice_info = self::getStripePendingInvoice($stripe_customer_id);
+        $result = array_merge($stripe_subscription_info, $stripe_pending_invoice_info);
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api\Response::sendContent($result);
@@ -538,6 +539,7 @@ class User
         $stripe_subscription_id = $owner_user->getStripeSubscriptionId();
 
         $stripe_subscription_info = array();
+        $stripe_pending_invoice_info = array();
 
         if (strlen($stripe_customer_id) > 0)
         {
@@ -555,10 +557,12 @@ class User
                 // if we have a subscription for this customer, update it now
                 $stripe_subscription_info = self::updateStripeSubscription($stripe_subscription_id, $subscription_info);
             }
+
+            $stripe_pending_invoice_info = self::getStripePendingInvoice($stripe_customer_id);
         }
 
-        // return the subscription info
-        $result = $stripe_subscription_info;
+        // return the subscription info along with pending invoice info
+        $result = array_merge($stripe_subscription_info, $stripe_pending_invoice_info);
         $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
@@ -1799,6 +1803,53 @@ class User
         return self::mapStripeSubscriptionInfo($subscription_info[0]);
     }
 
+    private static function getStripePendingInvoice(string $stripe_customer_id) : array
+    {
+        // see here for more information:
+        // https://stripe.com/docs/api/subscriptions/list
+
+        // if we don't have a customer id, return the properties with empty values
+        if (strlen($stripe_customer_id) === 0)
+            return self::mapStripePendingInvoiceInfo(array());
+
+        $stripe_secret_key = $GLOBALS['g_config']->stripe_secret_key ?? false;
+        if ($stripe_secret_key === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::ERROR_GENERAL);
+
+        $get_data = array(
+            'customer' => $stripe_customer_id ?? ''
+        );
+        $query_str = http_build_query($get_data);
+
+        $headers = array();
+        $headers[] = 'Authorization: Bearer ' . $stripe_secret_key;
+        $stripe_api_endpoint = "https://api.stripe.com/v1/invoices/upcoming";
+        $url = $stripe_api_endpoint . '?' . $query_str;
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_HTTPGET, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        $httpresult = curl_exec($ch);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($httpcode !== 200)
+        {
+            $error = @json_decode($httpresult, true);
+            $message = $error['error']['message'] ?? '';
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED, $message);
+        }
+
+        // stripe supports more than one source per customer, but we only
+        // expose one card in the billing info; get the first source item
+        $pending_invoice_info = @json_decode($httpresult, true);
+        return self::mapStripePendingInvoiceInfo($pending_invoice_info);
+    }
+
     private static function mapStripeCustomerInfo(array $customer_info) : array
     {
         $result = array(
@@ -1844,6 +1895,17 @@ class User
                 'amount_off' => $subscription_info['discount']['coupon']['amount_off'] ?? 0,
                 'percent_off' => $subscription_info['discount']['coupon']['percent_off'] ?? 0
             )
+        );
+
+        return $result;
+    }
+
+    private static function mapStripePendingInvoiceInfo(array $pending_invoice_info) : array
+    {
+        $result = array(
+            'next_amount_due' => $pending_invoice_info['amount_due'],
+            'next_amount_paid' => $pending_invoice_info['amount_paid'],
+            'next_amount_remaining' => $pending_invoice_info['amount_remaining']
         );
 
         return $result;
