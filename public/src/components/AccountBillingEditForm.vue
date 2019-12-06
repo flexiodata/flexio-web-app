@@ -245,6 +245,7 @@
 <script>
   import api from '@/api'
   import { isProduction } from '@/utils'
+  import states from '@/data/us-states.yml'
   import { CardNumber, CardExpiry, CardCvc, createToken } from 'vue-stripe-elements-plus'
   import CountrySelect from '@/components/CountrySelect'
   import StateSelect from '@/components/StateSelect'
@@ -360,7 +361,12 @@
       'billing_info.billing_country'(val) {
         // if we set the country to United States, make the state input a dropdown
         if (val == 'US') {
-          this.billing_info = _.assign({}, this.billing_info, { billing_state: '' })
+          var state_codes = _.keys(states)
+          var state_val = this.billing_info.billing_state
+
+          if (!_.indexOf(state_codes, state_val) == -1) {
+            this.billing_info = _.assign({}, this.billing_info, { billing_state: '' })
+          }
         }
       }
     },
