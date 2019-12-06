@@ -238,7 +238,7 @@
 
 <script>
   import api from '@/api'
-  import { isProduction, isValidEmail } from '@/utils'
+  import { isProduction } from '@/utils'
   import { CardNumber, CardExpiry, CardCvc, createToken } from 'vue-stripe-elements-plus'
   import CountrySelect from '@/components/CountrySelect'
   import ButtonBar from '@/components/ButtonBar'
