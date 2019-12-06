@@ -127,6 +127,7 @@
               type="text"
               placeholder="Add coupon"
               style="width: 200px; margin-right: 10px"
+              clearable
               v-model="coupon_code"
             />
             <el-button
@@ -152,7 +153,7 @@
                 style="border: none; padding: 0"
                 @click="is_editing_coupon = true"
               >
-                Change coupon...
+                Change coupon code...
               </el-button>
             </p>
           </div>
@@ -166,96 +167,21 @@
             </el-button>
           </div>
         </el-form>
-
-        <div
-          class="mt4"
-          v-show="!has_plan || is_editing_plan || is_editing_seats"
-        >
-          <table class="f6 w-100" v-if="false">
-            <thead class="ttu">
-              <tr>
-                <th class="bb b--black-10 tl w-60">Description</th>
-                <th class="bb b--black-10 tr">Qty</th>
-                <th class="bb b--black-10 tr">Unit Price</th>
-                <th class="bb b--black-10 tr">Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="bb b--black-10 tl w-60">{{current_usage_plan['Name']}} Plan</td>
-                <td class="bb b--black-10 tr">{{edit_plan_info.seat_cnt}}</td>
-                <td class="bb b--black-10 tr">${{unit_price}}</td>
-                <td class="bb b--black-10 tr">${{item_total_amount}}</td>
-              </tr>
-              <tr class="subtotal">
-                <td class="tl w-60"></td>
-                <td class="tr"></td>
-                <td class="tr">Subtotal</td>
-                <td class="tr">${{subtotal_amount}}</td>
-              </tr>
-              <tr class="coupon">
-                <td class="tr" colspan="4">
-                  <div
-                    class="flex flex-row items-center justify-end"
-                    v-if="is_editing_coupon"
-                  >
-                    <el-input
-                      type="text"
-                      placeholder="Add coupon"
-                      style="width: 200px; margin-right: 10px"
-                      size="mini"
-                      v-model="coupon_code"
-                    />
-                    <el-button
-                      class="ttu fw6"
-                      type="primary"
-                      size="mini"
-                      @click="applyCoupon"
-                    >
-                      Apply
-                    </el-button>
-                    <el-button
-                      type="text"
-                      style="border: none; padding: 0"
-                      @click="cancelEditCoupon"
-                    >
-                      <i class="material-icons md-18">close</i>
-                    </el-button>
-                  </div>
-                  <div v-else>
-                    <el-button
-                      type="text"
-                      style="border: none; padding: 0"
-                      @click="is_editing_coupon = true"
-                    >
-                      Have a coupon?
-                    </el-button>
-                  </div>
-                </td>
-              </tr>
-              <tr class="discount red" v-show="discount > 0">
-                <td class="tl w-60"></td>
-                <td class="tr"></td>
-                <td class="tr">Discount(s)</td>
-                <td class="tr">-${{discount}}</td>
-              </tr>
-              <tr class="total">
-                <td class="tl w-60"></td>
-                <td class="tr"></td>
-                <td class="tr b">Total</td>
-                <td class="tr b">${{total_amount}}</td>
-              </tr>
-            </tbody>
-          </table>
-          <ButtonBar
-            class="bt b--black-10 mt3 pt3"
-            :submit-button-text="'Save Changes'"
-            :submit-button-disabled="has_plan_errors"
-            @cancel-click="cancelEdit"
-            @submit-click="updatePlan"
-            v-if="has_plan"
-          />
-        </div>
+        <el-alert
+          type="error"
+          show-icon
+          :title="error_msg"
+          @close="error_msg = ''"
+          v-if="error_msg.length > 0"
+        />
+        <ButtonBar
+          class="bt b--black-10 mt3 pt3"
+          :submit-button-text="'Save Changes'"
+          :submit-button-disabled="has_plan_errors"
+          @cancel-click="cancelEdit"
+          @submit-click="updatePlan"
+          v-if="has_plan"
+        />
       </div>
     </div>
   </div>
@@ -293,7 +219,7 @@
       usage_plans: my_plans,
       plan_info: getDefaultPlanInfo(),
       edit_plan_info: getDefaultPlanInfo(),
-      plan_error: '',
+      error_msg: '',
     }
   }
 
@@ -441,6 +367,8 @@
           this.is_editing_seats = false
           this.is_editing_plan = false
           this.is_editing_coupon = false
+        }).catch(error => {
+          this.error_msg = _.get(error, 'response.data.error.message', '')
         })
       },
       onPlanInfoChanged(info) {
