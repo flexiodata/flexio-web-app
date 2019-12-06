@@ -6,8 +6,8 @@
         <span class="ml2 f6">Loading...</span>
       </div>
     </div>
-    <div class="pa1 f7 silver i" v-else-if="error_message.length > 0">
-      {{error_message}}
+    <div class="pa1 f7 silver i" v-else-if="error_msg.length > 0">
+      {{error_msg}}
     </div>
     <div class="pa1 f7 silver i" v-else-if="items.length == 0">
       {{empty_message}}
@@ -104,7 +104,7 @@
         is_inited: false,
         last_selected_item: {},
         items: [],
-        error_message: ''
+        error_msg: ''
       }
     },
     watch: {
@@ -275,7 +275,7 @@
 
           this.is_fetching = false
           this.items = [].concat(items)
-          this.error_message = ''
+          this.error_msg = ''
 
           if (this.is_inited || this.fireSelectionChangeOnInit) {
             this.fireSelectionChangeEvent(path)
@@ -285,7 +285,7 @@
         }).catch(error => {
           this.is_fetching = false
           this.items = []
-          this.error_message = _.get(error, 'response.data.error.message', '')
+          this.error_msg = _.get(error, 'response.data.error.message', '')
         })
       }
     }
