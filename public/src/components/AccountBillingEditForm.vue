@@ -238,7 +238,7 @@
 
 <script>
   import api from '@/api'
-  import { isProduction } from '@/utils'
+  import { isProduction, isValidEmail } from '@/utils'
   import { CardNumber, CardExpiry, CardCvc, createToken } from 'vue-stripe-elements-plus'
   import CountrySelect from '@/components/CountrySelect'
   import ButtonBar from '@/components/ButtonBar'
@@ -275,7 +275,8 @@
           { required: true, message: 'Please enter your name', trigger: 'blur' }
         ],
         billing_email: [
-          { required: true, message: 'Please enter your email address', trigger: 'blur' }
+          { required: true, message: 'Please enter your email address', trigger: 'blur' },
+          { type: 'email', message: 'Please enter a valid email address', trigger: 'blur' }
         ]
       },
       billing_address_form_rules: {
