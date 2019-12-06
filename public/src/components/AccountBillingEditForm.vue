@@ -122,19 +122,25 @@
             />
           </el-form-item>
         </div>
-        <div class="w-25-l ph1">
+        <div class="mw5 w-30-l ph1">
           <el-form-item
             label="State"
             key="billing_state"
             prop="billing_state"
           >
+            <StateSelect
+              class="w-100"
+              v-model.trim="billing_info.billing_state"
+              v-if="billing_info.billing_country == 'US'"
+            />
             <el-input
               type="text"
               v-model.trim="billing_info.billing_state"
+              v-else
             />
           </el-form-item>
         </div>
-        <div class="w-25-l ph1">
+        <div class="mw5 w-20-l ph1">
           <el-form-item
             label="Zip/Postal"
             key="billing_postal_code"
@@ -241,6 +247,7 @@
   import { isProduction } from '@/utils'
   import { CardNumber, CardExpiry, CardCvc, createToken } from 'vue-stripe-elements-plus'
   import CountrySelect from '@/components/CountrySelect'
+  import StateSelect from '@/components/StateSelect'
   import ButtonBar from '@/components/ButtonBar'
 
   const getDefaultBillingInfo = () => {
@@ -287,7 +294,7 @@
           { required: true, message: 'Please enter a city', trigger: 'blur' }
         ],
         billing_state: [
-          { required: true, message: 'Please enter a state', trigger: 'blur' }
+          { required: true, message: 'Please enter a state' }
         ],
         billing_postal_code: [
           { required: true, message: 'Please enter a postal code', trigger: 'blur' }
@@ -343,12 +350,19 @@
       CardExpiry,
       CardCvc,
       CountrySelect,
+      StateSelect,
       ButtonBar
     },
     watch: {
       number() { this.update() },
       expiry() { this.update() },
       cvc() { this.update() },
+      'billing_info.billing_country'(val) {
+        // if we set the country to United States, make the state input a dropdown
+        if (val == 'US') {
+          this.billing_info = _.assign({}, this.billing_info, { billing_state: '' })
+        }
+      }
     },
     data() {
       return getDefaultState()
