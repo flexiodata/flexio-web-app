@@ -273,6 +273,7 @@ class Test
             "locale_dateformat" : null,
             "timezone" : null,
             "stripe_subscription_id" : null,
+            "trial_end_date" : null,
             "referrer" : null,
             "config" : {
             },

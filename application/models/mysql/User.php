@@ -206,7 +206,7 @@ class User extends ModelBase
                 'password'           => array('type' => 'password',   'required' => false),
                 'verify_code'        => array('type' => 'string',     'required' => false),
                 'stripe_customer_id' => array('type' => 'string',     'required' => false),
-                'stripe_subscription_id' => array('type' => 'string',     'required' => false),
+                'stripe_subscription_id' => array('type' => 'string', 'required' => false),
                 'referrer'           => array('type' => 'string',     'required' => false),
                 'config'             => array('type' => 'string',     'required' => false)
             ))->hasErrors()) === true)
@@ -302,6 +302,7 @@ class User extends ModelBase
                               'verify_code'            => $row['verify_code'],
                               'stripe_customer_id'     => $row['stripe_customer_id'],
                               'stripe_subscription_id' => $row['stripe_subscription_id'],
+                              'trial_end_date'         => \Flexio\Base\Util::formatDate('2019-12-01'), // TODO: get date from database
                               'referrer'               => $row['referrer'],
                               'config'                 => $row['config'],
                               'owned_by'               => $row['owned_by'],

@@ -277,6 +277,7 @@ class User extends ModelBase
                               'verify_code'            => $row['verify_code'],
                               'stripe_customer_id'     => $row['stripe_customer_id'],
                               'stripe_subscription_id' => $row['stripe_subscription_id'],
+                              'trial_end_date'         => \Flexio\Base\Util::formatDate('2019-12-01'), // TODO: get date from database
                               'referrer'               => $row['referrer'],
                               'config'                 => $row['config'],
                               'owned_by'               => $row['owned_by'],
