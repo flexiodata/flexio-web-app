@@ -10,12 +10,12 @@
 
     <!-- fetched -->
     <div v-else>
+      <!-- plan selector and display -->
       <div class="flex flex-row items-center mb3">
         <div class="flex-fill f7 silver ttu fw6" v-if="!has_plan || is_editing_plan">Choose a plan</div>
         <div class="flex-fill f7 silver ttu fw6" v-else>Your Current Plan</div>
         <FreeTrialNotice class="f7 dark-green" />
       </div>
-
       <div
         class="flex flex-column flex-row-l items-stretch justify-between nl2 nr2"
         v-if="!has_plan || is_editing_plan"
@@ -83,6 +83,7 @@
       </div>
 
       <div v-if="edit_plan_id.length > 0">
+        <!-- seat selector and display -->
         <div class="mt4 mb3 f7 silver ttu fw6" v-if="!has_plan || is_editing_plan || is_editing_seats">Choose the number of seats</div>
         <div class="mt4 mb3 f7 silver ttu fw6" v-else>Number of seats</div>
         <p class="f6">
@@ -119,33 +120,34 @@
               />
             </el-select>
           </el-form-item>
-          <div
-            class="flex flex-row items-center"
-            v-if="is_editing_coupon"
-          >
-            <el-input
-              type="text"
-              placeholder="Add coupon"
-              style="width: 200px; margin-right: 10px"
-              clearable
-              v-model="coupon_code"
-            />
-            <el-button
-              class="ttu fw6"
-              type="primary"
-              @click="applyCoupon"
-            >
-              Apply
-            </el-button>
-            <el-button
-              type="text"
-              style="border: none; padding: 0"
-              @click="cancelEditCoupon"
-            >
-              <i class="material-icons md-18">close</i>
-            </el-button>
+          <div v-if="is_editing_coupon">
+            <div class="mt3 mb3 f7 silver ttu fw6">Enter a coupon code</div>
+            <div class="flex flex-row items-center">
+              <el-input
+                type="text"
+                placeholder="Add coupon"
+                style="width: 200px; margin-right: 10px"
+                clearable
+                v-model="coupon_code"
+              />
+              <el-button
+                class="ttu fw6"
+                type="primary"
+                @click="applyCoupon"
+              >
+                Apply
+              </el-button>
+              <el-button
+                type="text"
+                style="border: none; padding: 0"
+                @click="cancelEditCoupon"
+              >
+                <i class="material-icons md-18">close</i>
+              </el-button>
+            </div>
           </div>
-          <div class="flex flex-row items-center" v-else-if="edit_plan_info.coupon_id.length > 0">
+          <div v-else-if="edit_plan_info.coupon_id.length > 0">
+            <div class="mt3 mb3 f7 silver ttu fw6">Coupon code</div>
             <p class="f6">
               Coupon code <strong>{{edit_plan_info.coupon_id}}</strong> will be applied!
               <el-button
@@ -153,7 +155,7 @@
                 style="border: none; padding: 0"
                 @click="is_editing_coupon = true"
               >
-                Change coupon code...
+                Change code...
               </el-button>
             </p>
           </div>
@@ -167,13 +169,14 @@
             </el-button>
           </div>
         </el-form>
-        <div
-          class="mt4 mb3 f6"
-          v-if="has_plan && !is_editing_plan && !is_editing_seats"
-        >
+
+        <!-- next amount due -->
+        <div v-if="has_plan && !is_editing_plan && !is_editing_seats">
           <div class="mt4 mb3 f7 silver ttu fw6">Next amount due</div>
-          Your next payment amount due will be <strong>${{next_amount_due}}</strong>.
+          <p class="f6">Your next payment amount will be <strong>${{next_amount_due}}</strong>.</p>
         </div>
+
+        <!-- form submission error -->
         <el-alert
           type="error"
           show-icon
@@ -181,6 +184,8 @@
           @close="error_msg = ''"
           v-if="error_msg.length > 0"
         />
+
+        <!-- form buttons -->
         <div v-show="is_editing_plan || is_editing_seats">
           <ButtonBar
             class="bt b--black-10 mt3 pt3"
