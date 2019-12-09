@@ -51,7 +51,7 @@ class User extends ModelBase
                 'password'           => array('type' => 'password',   'required' => false),
                 'verify_code'        => array('type' => 'string',     'required' => false, 'default' => ''),
                 'stripe_customer_id' => array('type' => 'string',     'required' => false, 'default' => ''),
-                'stripe_subscription_id' => array('type' => 'string',     'required' => false, 'default' => ''),
+                'stripe_subscription_id' => array('type' => 'string', 'required' => false, 'default' => ''),
                 'referrer'           => array('type' => 'string',     'required' => false, 'default' => ''),
                 'config'             => array('type' => 'string',     'required' => false, 'default' => '{}')
             ))->hasErrors()) === true)
@@ -82,6 +82,7 @@ class User extends ModelBase
             // own owner and that their account from them signing up (even if they're
             // invited)
             $user_arr['eid'] = $eid;
+            $user_arr['trial_end_date'] = strtotime($timestamp . ' + 14 days'); // trial ends 14 days from signup by default
             $user_arr['created'] = $timestamp;
             $user_arr['updated'] = $timestamp;
             $user_arr['owned_by'] = $eid;
@@ -277,7 +278,7 @@ class User extends ModelBase
                               'verify_code'            => $row['verify_code'],
                               'stripe_customer_id'     => $row['stripe_customer_id'],
                               'stripe_subscription_id' => $row['stripe_subscription_id'],
-                              'trial_end_date'         => \Flexio\Base\Util::formatDate('2019-12-01'), // TODO: get date from database
+                              'trial_end_date'         => $row['trial_end_date'],
                               'referrer'               => $row['referrer'],
                               'config'                 => $row['config'],
                               'owned_by'               => $row['owned_by'],

@@ -5,7 +5,7 @@
  *
  * Project:  Flex.io App
  * Author:   Aaron L. Williams
- * Created:  2019-10-16
+ * Created:  2019-12-09
  *
  * @package flexio
  * @subpackage Database_Update
@@ -48,11 +48,11 @@ if (is_null($db))
 
 try
 {
-    // STEP 1: add the parent_eid column
-    $db->exec("alter table tbl_connection add column parent_eid varchar(12) NOT NULL default '';");
+    // STEP 1: add the column
+    $db->exec("alter table tbl_user add column trial_end_date timestamp NULL default NULL;");
 
-    // STEP 2: add the connection parent index
-    $db->exec("create index idx_connection_parent_eid on tbl_connection (parent_eid);");
+    // STEP 2: populate the column with an initial value
+    $db->exec("update tbl_user set updated=updated, trial_end_date='2019-12-18 23:59:59'");
 }
 catch(\Exception $e)
 {

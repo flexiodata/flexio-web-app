@@ -80,6 +80,7 @@ CREATE TABLE tbl_user (
   verify_code char(40) NOT NULL default '',
   stripe_customer_id char(20) NOT NULL default '',
   stripe_subscription_id char(20) NOT NULL default '',
+  trial_end_date timestamp NULL default NULL,
   referrer text default '',
   role char(1) NOT NULL default '',
   config text default '',
