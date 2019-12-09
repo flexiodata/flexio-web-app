@@ -80,9 +80,10 @@ class User extends ModelBase
 
             // create the base user info to add; for users, consider them to be their
             // own owner and that their account from them signing up (even if they're
-            // invited)
+            // invited); trial ends 14 days from signup by default
+            $trial_end_date = date('Y-m-d H:i:s.u', strtotime($timestamp . ' + 14 days'));
             $user_arr['eid'] = $eid;
-            $user_arr['trial_end_date'] = strtotime($timestamp . ' + 14 days'); // trial ends 14 days from signup by default
+            $user_arr['trial_end_date'] = $trial_end_date;
             $user_arr['created'] = $timestamp;
             $user_arr['updated'] = $timestamp;
             $user_arr['owned_by'] = $eid;
@@ -303,7 +304,7 @@ class User extends ModelBase
                               'verify_code'            => $row['verify_code'],
                               'stripe_customer_id'     => $row['stripe_customer_id'],
                               'stripe_subscription_id' => $row['stripe_subscription_id'],
-                              'trial_end_date'         => $row['trial_end_date'],
+                              'trial_end_date'         => \Flexio\Base\Util::formatDate($row['trial_end_date']),
                               'referrer'               => $row['referrer'],
                               'config'                 => $row['config'],
                               'owned_by'               => $row['owned_by'],
