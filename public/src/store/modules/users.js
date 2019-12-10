@@ -1,3 +1,4 @@
+import moment from 'moment'
 import api from '@/api'
 import {
   addItem,
@@ -300,6 +301,19 @@ const getters = {
 
   getActiveUsername (state, getters) {
     return _.get(getters.getActiveUser, 'username', state.active_user_eid)
+  },
+
+  getActiveUserStripeSubscriptionId (state, getters) {
+    return _.get(getters.getActiveUser, 'stripe_subscription_id', '')
+  },
+
+  getActiveUserTrialDaysLeft (state, getters) {
+    var today = moment()
+    var trial_end_date = moment(_.get(getters.getActiveUser, 'trial_end_date'))
+    var duration = moment.duration(trial_end_date.diff(today))
+    var days_until_trial_end = duration.as('days')
+    var days = Math.ceil(days_until_trial_end)
+    return Math.max(days, 0)
   },
 }
 
