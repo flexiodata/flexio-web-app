@@ -46,10 +46,11 @@
       this.$store.dispatch('users/signOut', { silent: true }).then(response => {
         api.verifyAccount(this.$route.query).then(response => {
           this.is_verified = true
+          var query = _.omit(this.$route.query, ['ref', 'verify_code'])
           setTimeout(() => {
             this.$router.replace({
               name: ROUTE_APP_ONBOARDING,
-              query: this.$route.query
+              query
             })
           }, 3000)
         }).catch(error => {
