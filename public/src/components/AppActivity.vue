@@ -51,7 +51,7 @@
       return {
         title: 'Activity',
         titleTemplate: (chunk) => {
-          return chunk ? `${chunk} | ${this.getActiveTeamLabel()}` : 'Flex.io'
+          return chunk ? `${chunk} | ${this.getActiveTeamLabel()} | Flex.io` : 'Activity | Flex.io'
         }
       }
     },

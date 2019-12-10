@@ -336,7 +336,7 @@ def flex_handler(flex):
       return {
         title: _.get(this.pipe, 'name', 'Functions'),
         titleTemplate: (chunk) => {
-          return chunk ? `${chunk} | ${this.getActiveTeamLabel()}` : 'Flex.io'
+          return chunk ? `${chunk} | ${this.getActiveTeamLabel()} | Flex.io` : 'Functions | Flex.io'
         }
       }
     },

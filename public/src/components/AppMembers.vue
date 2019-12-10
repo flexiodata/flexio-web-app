@@ -121,7 +121,7 @@
             return `${this.join_title} | Flex.io`
           }
 
-          return chunk ? `${chunk} | ${this.getActiveTeamLabel()}` : 'Flex.io'
+          return chunk ? `${chunk} | ${this.getActiveTeamLabel()} | Flex.io` : 'Members | Flex.io'
         }
       }
     },

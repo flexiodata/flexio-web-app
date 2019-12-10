@@ -140,7 +140,7 @@
       return {
         title: _.get(this.connection, 'name', 'Connections'),
         titleTemplate: (chunk) => {
-          return chunk ? `${chunk} | ${this.getActiveTeamLabel()}` : 'Flex.io'
+          return chunk ? `${chunk} | ${this.getActiveTeamLabel()} | Flex.io` : 'Connections | Flex.io'
         }
       }
     },
