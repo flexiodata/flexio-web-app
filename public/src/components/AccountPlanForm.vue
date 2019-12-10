@@ -47,7 +47,7 @@
                 type="primary"
                 class="w-100 mw5 ttu fw6"
                 @click="selectPlan(usage_plan)"
-                v-else-if="isPlanGreater(usage_plan, current_usage_plan)"
+                v-else-if="isPlanGreater(usage_plan, selected_edit_plan)"
               >
                 Select Plan
               </el-button>
@@ -66,12 +66,12 @@
         <div v-else>
           <div class="mv2 f6 br2 pv2 ph3 bg-nearer-white ba b--black-05">
             <div class="flex flex-column flex-row-l items-center justify-between">
-              <div class="ph2 pv2 f4 fw6 tc">{{current_usage_plan['Name']}}</div>
+              <div class="ph2 pv2 f4 fw6 tc">{{selected_edit_plan['Name']}}</div>
               <div class="ph2 pv2 tc">
-                <div>{{current_usage_plan['Executions']}} executions</div>
+                <div>{{selected_edit_plan['Executions']}} executions</div>
               </div>
               <div class="ph2 pv2">
-                <span class="f1">${{current_usage_plan['Price']}}</span><span class="f6">/user/mo</span>
+                <span class="f1">${{selected_edit_plan['Price']}}</span><span class="f6">/user/mo</span>
               </div>
               <div class="ph2 pv2">
                 <el-button
@@ -155,7 +155,7 @@
               </el-button>
             </div>
           </div>
-          <div v-else-if="edit_plan_info.coupon_id.length > 0">
+          <div class="mb3" v-else-if="edit_plan_info.coupon_id.length > 0">
             <div class="mt3 mb3 f7 silver ttu fw6">Coupon code</div>
             <p class="f6">
               Coupon code <strong>{{edit_plan_info.coupon_id}}</strong> will be applied!
@@ -168,7 +168,7 @@
               </el-button>
             </p>
           </div>
-          <div v-else>
+          <div class="mb3" v-else>
             <el-button
               type="text"
               style="border: none; padding: 0"
@@ -282,21 +282,16 @@
       edit_plan_id() {
         return _.get(this.edit_plan_info, 'plan_id', '')
       },
-      // from YAML
-      current_usage_plan() {
-        var plan_key = isProduction() ? 'stripe_plan_id' : 'stripe_test_plan_id'
-        var plan = _.find(this.usage_plans, (p) => {
-          return p[plan_key] == this.edit_plan_id
-        })
-
+      selected_edit_plan() {
+        var plan = this.findPlan(this.edit_plan_id)
         return _.defaultTo(plan, {})
-      },
-      has_payment_method() {
-        return _.get(this.getActiveUser(), 'stripe_billing_info.card_id', '').length > 0
       },
       has_plan() {
         var plan_id = _.get(this.plan_info, 'plan_id', '')
         return this.hasPlan(plan_id)
+      },
+      has_payment_method() {
+        return _.get(this.getActiveUser(), 'stripe_billing_info.card_id', '').length > 0
       },
       has_errors() {
         if (this.edit_plan_id.length == 0)
@@ -331,10 +326,13 @@
           this.is_fetching = false
         })
       },
-      hasPlan(plan_id) {
+      findPlan(plan_id) {
         var plan_key = isProduction() ? 'stripe_plan_id' : 'stripe_test_plan_id'
-        var plan_ids = _.map(this.usage_plans, p => p[plan_key])
-        return plan_ids.indexOf(plan_id) != -1
+        return _.find(this.usage_plans, p => p[plan_key] == plan_id)
+      },
+      hasPlan(plan_id) {
+        var plan = this.findPlan(plan_id)
+        return !_.isNil(plan)
       },
       isCurrentPlan(plan, plan_id) {
         var plan_key = isProduction() ? 'stripe_plan_id' : 'stripe_test_plan_id'
@@ -371,7 +369,21 @@
       },
       updatePlan() {
         var payload = _.omit(this.edit_plan_info, ['subscription_id', 'discount'])
+        var seat_cnt = _.get(payload, 'seat_cnt', 1)
 
+        // -- basic seat count lockdown --
+
+        if (seat_cnt > 1 && this.selected_edit_plan['id'] == 'starter') {
+          this.error_msg = 'Only one seat can be added to the Starter plan.'
+          return
+        }
+
+        if (seat_cnt > 5 && this.selected_edit_plan['id'] == 'team') {
+          this.error_msg = 'Only five seats can be added to the Team plan.'
+          return
+        }
+
+        this.error_msg = ''
         this.is_submitting = true
 
         api.updatePlan('me', payload).then(response => {
