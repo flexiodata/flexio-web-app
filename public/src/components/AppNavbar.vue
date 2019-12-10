@@ -1,5 +1,11 @@
 <template>
   <nav>
+    <FreeTrialNotice
+      class="flex flex-row items-center justify-center f8"
+      style="padding: 4px; color: #66b1ff; background-color: #ecf5ff"
+      :show-upgrade="true"
+      v-if="false"
+    />
     <div class="flex flex-row items-center bg-white pv1 ph2 ph3-ns" style="height: 60px">
       <div class="flex-fill flex flex-row items-center" style="letter-spacing: 0.03em">
         <router-link to="/" class="mr3 link hint--bottom" aria-label="Home">
@@ -40,11 +46,13 @@
     ROUTE_APP_CONNECTIONS,
     ROUTE_APP_MEMBERS
   } from '@/constants/route'
+  import FreeTrialNotice from '@/components/FreeTrialNotice'
   import TeamDropdown from '@/components/TeamDropdown'
   import UserDropdown from '@/components/UserDropdown'
 
   export default {
     components: {
+      FreeTrialNotice,
       TeamDropdown,
       UserDropdown
     },

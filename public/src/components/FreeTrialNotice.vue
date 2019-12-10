@@ -2,10 +2,8 @@
   <div v-if="days_left >= 0 && subscription_id.length == 0">
     <div v-if="days_left == 0">Your free trial period has ended.</div>
     <div v-else>{{msg}}</div>
-    <div
-      class="mt2"
-      v-if="showUpgrade"
-    >
+    <div class="mr2 mt2" v-if="showUpgrade"></div>
+    <div v-if="showUpgrade">
       <router-link
         class="el-button el-button--primary el-button--tiny no-underline fw6"
         size="tiny"
