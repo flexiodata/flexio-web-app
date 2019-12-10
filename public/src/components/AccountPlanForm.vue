@@ -392,6 +392,11 @@
           this.is_editing_seats = false
           this.is_editing_plan = false
           this.is_editing_coupon = false
+
+          // update the Vuex store
+          var eid = this.active_user_eid
+          var stripe_subscription_id = _.get(response.data, 'subscription_id', '')
+          this.$store.commit('users/UPDATED_USER', { eid, item: { stripe_subscription_id } })
         }).catch(error => {
           this.error_msg = _.get(error, 'response.data.error.message', '')
         }).finally(() => {
@@ -399,9 +404,6 @@
         })
       },
       onPlanInfoChanged(info) {
-        var eid = this.active_user_eid
-        var stripe_subscription_id = _.get(info, 'subscription_id', '')
-        this.$store.commit('users/UPDATED_USER', { eid, item: { stripe_subscription_id } })
         this.$emit('update:planInfo', info)
       }
     }
