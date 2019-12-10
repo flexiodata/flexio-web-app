@@ -19,6 +19,16 @@
     <PageNotFound class="flex-fill" v-else />
   </div>
 
+  <!-- if the user's free trial has expired, show them this message -->
+  <div class="flex flex-column bg-nearer-white " v-else-if="hasFreeTrialExpired()">
+    <div class="flex-fill ph4 pv5 overflow-y-scroll">
+      <div class="w-100 center mw-doc ">
+        <h1 class="mt0 mb4 tc f3">Your free trial period has ended. Please choose your plan.</h1>
+        <BillingEditPanel class="pa4 bg-white br2 css-white-box" />
+      </div>
+    </div>
+  </div>
+
   <!-- fetching -->
   <div v-else-if="is_fetching">
     <div class="flex flex-column justify-center bg-nearer-white h-100">
@@ -263,6 +273,7 @@
   import FunctionMountEditPanel from '@/components/FunctionMountEditPanel'
   import ServiceIcon from '@/components/ServiceIcon'
   import EmptyItem from '@/components/EmptyItem'
+  import BillingEditPanel from '@/components/BillingEditPanel'
   import PageNotFound from '@/components/PageNotFound'
   import MixinConnection from '@/components/mixins/connection'
   import MixinFilter from '@/components/mixins/filter'
@@ -341,6 +352,7 @@ def flex_handler(flex):
       FunctionMountEditPanel,
       ServiceIcon,
       EmptyItem,
+      BillingEditPanel,
       PageNotFound
     },
     watch: {
@@ -421,7 +433,7 @@ def flex_handler(flex):
       },
       has_pipe() {
         return this.pname.length > 0
-      }
+      },
     },
     created() {
       if (this.route_view == 'docs') {
@@ -442,6 +454,9 @@ def flex_handler(flex):
       }),
       ...mapGetters('connections', {
         'getAvailableFunctionMounts': 'getAvailableFunctionMounts'
+      }),
+      ...mapGetters('users', {
+        'hasFreeTrialExpired': 'hasFreeTrialExpired'
       }),
       initSelf() {
         // make sure all nodes on the collapser are expanded by default
