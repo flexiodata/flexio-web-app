@@ -1,6 +1,16 @@
 <template>
+  <!-- if the user's free trial has expired, show them this message -->
+  <div class="flex flex-column bg-nearer-white " v-if="hasFreeTrialExpired()">
+    <div class="flex-fill ph4 pv5 overflow-y-scroll">
+      <div class="w-100 center mw-doc ">
+        <h1 class="mt0 mb4 tc f3">Your free trial period has ended. Please choose your plan.</h1>
+        <BillingEditPanel class="pa4 bg-white br2 css-white-box" />
+      </div>
+    </div>
+  </div>
+
   <!-- fetching -->
-  <div v-if="is_fetching">
+  <div v-else-if="is_fetching">
     <div class="flex flex-column justify-center bg-nearer-white h-100">
       <Spinner size="large" message="Loading connections..." />
     </div>
@@ -121,6 +131,7 @@
   import ConnectionEditPanel from '@/components/ConnectionEditPanel'
   import ConnectionDocument from '@/components/ConnectionDocument'
   import EmptyItem from '@/components/EmptyItem'
+  import BillingEditPanel from '@/components/BillingEditPanel'
   import PageNotFound from '@/components/PageNotFound'
   import MixinFilter from '@/components/mixins/filter'
 
@@ -140,6 +151,7 @@
       ConnectionEditPanel,
       ConnectionDocument,
       EmptyItem,
+      BillingEditPanel,
       PageNotFound
     },
     watch: {
@@ -197,6 +209,9 @@
       }),
       ...mapGetters('connections', {
         'getAvailableConnections': 'getAvailableConnections'
+      }),
+      ...mapGetters('users', {
+        'hasFreeTrialExpired': 'hasFreeTrialExpired'
       }),
       tryFetchConnections() {
         var team_name = this.active_team_name
