@@ -9,8 +9,9 @@
     "connection_info": {
         "region": "us-east-1",
         "bucket": "flexio-public-s3",
-        "accesskey": "",
-        "secretkey": ""
+        "aws_key": "",
+        "aws_secret": "",
+        "base_path": ""
     },
     "expires": null
 }
