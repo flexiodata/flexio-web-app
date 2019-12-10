@@ -315,6 +315,12 @@ const getters = {
     var days = Math.ceil(days_until_trial_end)
     return Math.max(days, 0)
   },
+
+  hasFreeTrialExpired (state, getters) {
+    var days_left = getters.getActiveUserTrialDaysLeft
+    var subscription_id = getters.getActiveUserStripeSubscriptionId
+    return days_left == 0 && subscription_id.length == 0
+  },
 }
 
 export default {
