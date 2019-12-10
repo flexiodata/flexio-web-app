@@ -67,7 +67,7 @@
             >
               Add Members
             </el-button>
-            <div class="mt2 f6" v-if="is_active_user_owner">
+            <div class="mt2 f6" v-if="is_active_user_owner && false">
               2 seats left
               &mdash;
               <router-link class="blue no-underline underline-hover" to="/account/billing">Buy more</router-link>
