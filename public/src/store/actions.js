@@ -25,6 +25,8 @@ export default {
         // clear out these modules so we can start over
         commit('appconnections/RESET_STATE')
         commit('apppipes/RESET_STATE')
+        commit('billingpayment/RESET_STATE')
+        commit('billingplan/RESET_STATE')
         commit('connections/RESET_STATE')
         commit('integrations/RESET_STATE')
         commit('members/RESET_STATE')

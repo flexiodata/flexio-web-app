@@ -14,7 +14,7 @@
         type="error"
         show-icon
         :title="billing_error"
-        :closable="false"
+        @close="billing_error = ''"
         v-if="billing_error.length > 0"
       />
       <AccountBillingEditForm
@@ -23,7 +23,7 @@
         :billing-info="billing_info"
         @cancel-click="onCancelEditBilling"
         @billing-updated="onBillingUpdated"
-        v-if="!has_payment_method || is_editing"
+        v-if="is_editing || !has_payment_method"
       />
       <div v-else>
         <div class="flex flex-column flex-row-l flex-wrap-l">
