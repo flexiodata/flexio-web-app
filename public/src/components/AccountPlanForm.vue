@@ -11,78 +11,87 @@
     <!-- fetched -->
     <div v-else>
       <!-- plan selector and display -->
-      <div class="flex flex-row items-center mb3">
-        <div class="flex-fill f7 silver ttu fw6" v-if="!has_plan || is_editing_plan">Choose a plan</div>
-        <div class="flex-fill f7 silver ttu fw6" v-else>Your Current Plan</div>
-        <FreeTrialNotice class="f7 dark-green" />
-      </div>
-      <div
-        class="flex flex-column flex-row-l items-stretch justify-between nl2 nr2"
-        v-if="!has_plan || is_editing_plan"
-      >
-        <div
-          class="flex-fill mh2 mb3 mb0-l ph3 tc br3 cursor-default"
-          style="box-shadow: inset 0 -4px 12px rgba(0,0,0,0.075)"
-          :class="isCurrentPlan(usage_plan, edit_plan_id) ? 'bg-blue white' : 'bg-nearer-white'"
-          :key="usage_plan['id']"
-          v-for="usage_plan in usage_plans"
-        >
-          <div class="mv4 fw6">{{usage_plan['Name']}}</div>
-          <div class="mv4">
-            <span class="f1">${{usage_plan['Price']}}</span><span class="f6">/user/mo</span>
-          </div>
-          <div class="mv4 mb3">
-            <div>{{usage_plan['Executions']}} executions</div>
-            <div class="mt2">{{usage_plan['Members']}} </div>
-            <div class="mt2">{{usage_plan['Teams']}} </div>
-          </div>
-          <div class="mv3 pt2 pb1">
-            <div v-if="isCurrentPlan(usage_plan, edit_plan_id)">
-              <i class="el-icon-success f2" style="color: #fff"></i>
-            </div>
-            <el-button
-              type="primary"
-              class="w-100 mw5 ttu fw6"
-              @click="selectPlan(usage_plan)"
-              v-else-if="isPlanGreater(usage_plan, current_usage_plan)"
-            >
-              Select Plan
-            </el-button>
-            <el-button
-              plain
-              class="w-100 ttu fw6"
-              @click="selectPlan(usage_plan)"
-              v-else
-            >
-              Select Plan
-            </el-button>
-          </div>
+      <div :class="is_submitting ? 'o-40 no-pointer-events': ''">
+        <!-- plan title -->
+        <div class="flex flex-row items-center mb3">
+          <div class="flex-fill f7 silver ttu fw6" v-if="!has_plan || is_editing_plan">Choose a plan</div>
+          <div class="flex-fill f7 silver ttu fw6" v-else>Your Current Plan</div>
+          <FreeTrialNotice class="f7 dark-green" />
         </div>
-      </div>
-      <div v-else>
-        <div class="mv2 f6 br2 pv2 ph3 bg-nearer-white ba b--black-05">
-          <div class="flex flex-column flex-row-l items-center justify-between">
-            <div class="ph2 pv2 f4 fw6 tc">{{current_usage_plan['Name']}}</div>
-            <div class="ph2 pv2 tc">
-              <div>{{current_usage_plan['Executions']}} executions</div>
+        <!-- plan selector -->
+        <div
+          class="flex flex-column flex-row-l items-stretch justify-between nl2 nr2"
+          v-if="is_editing_plan || !has_plan"
+        >
+          <div
+            class="flex-fill mh2 mb3 mb0-l ph3 tc br3 cursor-default"
+            style="box-shadow: inset 0 -4px 12px rgba(0,0,0,0.075)"
+            :class="isCurrentPlan(usage_plan, edit_plan_id) ? 'bg-blue white' : 'bg-nearer-white'"
+            :key="usage_plan['id']"
+            v-for="usage_plan in usage_plans"
+          >
+            <div class="mv4 fw6">{{usage_plan['Name']}}</div>
+            <div class="mv4">
+              <span class="f1">${{usage_plan['Price']}}</span><span class="f6">/user/mo</span>
             </div>
-            <div class="ph2 pv2">
-              <span class="f1">${{current_usage_plan['Price']}}</span><span class="f6">/user/mo</span>
+            <div class="mv4 mb3">
+              <div>{{usage_plan['Executions']}} executions</div>
+              <div class="mt2">{{usage_plan['Members']}} </div>
+              <div class="mt2">{{usage_plan['Teams']}} </div>
             </div>
-            <div class="ph2 pv2">
+            <div class="mv3 pt2 pb1">
+              <div v-if="isCurrentPlan(usage_plan, edit_plan_id)">
+                <i class="el-icon-success f2" style="color: #fff"></i>
+              </div>
               <el-button
                 type="primary"
-                class="ttu fw6"
-                @click="is_editing_plan = true"
+                class="w-100 mw5 ttu fw6"
+                @click="selectPlan(usage_plan)"
+                v-else-if="isPlanGreater(usage_plan, current_usage_plan)"
               >
-                Change Plan
+                Select Plan
               </el-button>
+              <el-button
+                plain
+                class="w-100 ttu fw6"
+                @click="selectPlan(usage_plan)"
+                v-else
+              >
+                Select Plan
+              </el-button>
+            </div>
+          </div>
+        </div>
+        <!-- display current plan -->
+        <div v-else>
+          <div class="mv2 f6 br2 pv2 ph3 bg-nearer-white ba b--black-05">
+            <div class="flex flex-column flex-row-l items-center justify-between">
+              <div class="ph2 pv2 f4 fw6 tc">{{current_usage_plan['Name']}}</div>
+              <div class="ph2 pv2 tc">
+                <div>{{current_usage_plan['Executions']}} executions</div>
+              </div>
+              <div class="ph2 pv2">
+                <span class="f1">${{current_usage_plan['Price']}}</span><span class="f6">/user/mo</span>
+              </div>
+              <div class="ph2 pv2">
+                <el-button
+                  type="primary"
+                  class="ttu fw6"
+                  @click="is_editing_plan = true"
+                >
+                  Change Plan
+                </el-button>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div v-if="edit_plan_id.length > 0">
+      <!-- seats and coupons -->
+      <div
+        :class="is_submitting ? 'o-40 no-pointer-events': ''"
+        v-if="edit_plan_id.length > 0"
+      >
         <!-- seat selector and display -->
         <div class="mt4 mb3 f7 silver ttu fw6" v-if="!has_plan || is_editing_plan || is_editing_seats">Choose the number of seats</div>
         <div class="mt4 mb3 f7 silver ttu fw6" v-else>Number of seats</div>
@@ -120,7 +129,7 @@
               />
             </el-select>
           </el-form-item>
-          <div v-if="is_editing_coupon">
+          <div class="mb3" v-if="is_editing_coupon">
             <div class="mt3 mb3 f7 silver ttu fw6">Enter a coupon code</div>
             <div class="flex flex-row items-center">
               <el-input
@@ -184,18 +193,19 @@
           @close="error_msg = ''"
           v-if="error_msg.length > 0"
         />
+      </div>
 
-        <!-- form buttons -->
-        <div v-show="is_editing_plan || is_editing_seats">
-          <ButtonBar
-            class="bt b--black-10 mt3 pt3"
-            :submit-button-text="'Save Changes'"
-            :submit-button-disabled="has_plan_errors"
-            @cancel-click="cancelEdit"
-            @submit-click="updatePlan"
-            v-if="has_plan || (has_payment_method && !has_plan)"
-          />
-        </div>
+      <!-- form buttons -->
+      <div v-show="is_editing_plan || is_editing_seats">
+        <ButtonBar
+          class="bt b--black-10 mt3 pt3"
+          :cancel-button-disabled="is_submitting"
+          :submit-button-text="is_submitting ? 'Submitting...' : 'Save Changes'"
+          :submit-button-disabled="is_submitting || is_editing_coupon || has_errors"
+          @cancel-click="cancelEdit"
+          @submit-click="updatePlan"
+          v-if="has_plan || (has_payment_method && !has_plan)"
+        />
       </div>
     </div>
   </div>
@@ -225,6 +235,7 @@
 
     return {
       is_fetching: false,
+      is_submitting: false,
       is_editing_plan: false,
       is_editing_seats: false,
       is_editing_coupon: false,
@@ -287,7 +298,7 @@
         var plan_id = _.get(this.plan_info, 'plan_id', '')
         return this.hasPlan(plan_id)
       },
-      has_plan_errors() {
+      has_errors() {
         if (this.edit_plan_id.length == 0)
           return true
 
@@ -361,6 +372,8 @@
       updatePlan() {
         var payload = _.omit(this.edit_plan_info, ['subscription_id', 'discount'])
 
+        this.is_submitting = true
+
         api.updatePlan('me', payload).then(response => {
           this.plan_info = _.assign({}, getDefaultPlanInfo(), response.data)
           this.edit_plan_info = _.assign({}, getDefaultPlanInfo(), response.data)
@@ -369,6 +382,8 @@
           this.is_editing_coupon = false
         }).catch(error => {
           this.error_msg = _.get(error, 'response.data.error.message', '')
+        }).finally(() => {
+          this.is_submitting = false
         })
       },
       onPlanInfoChanged(info) {
