@@ -17,12 +17,10 @@
           align-center
           finish-status="success"
           :active="active_step_idx"
-          v-show="active_step_idx > 0"
         >
           <el-step title="Choose Integrations" />
-          <el-step title="Set Up" />
+          <el-step title="Set Up Integrations" />
           <el-step title="Get Add-ons " />
-          <el-step title="Invite (optional)" />
         </el-steps>
 
         <!-- step: choose integrations -->
@@ -127,7 +125,6 @@
           :utility-button-visible="active_step_idx != step_order.length - 1"
           :utility-button-text="active_step_idx == 0 ? 'Skip setup' : '← Start over'"
           :cancel-button-visible="false"
-          :submit-button-disabled="active_step == 'addons' && !has_clicked_get_addon_button"
           :submit-button-visible="active_step != 'setup'"
           :submit-button-text="active_step_idx == step_order.length - 1 ? 'Finish Setup' : 'Continue'"
           @utility-click="onUtilityButtonClick"
@@ -162,7 +159,6 @@
   const getDefaultState = () => {
     return {
       is_fetching_config: false,
-      has_clicked_get_addon_button: false,
       onboarding_method: 'technical-user', // 'spreadsheet-user' or 'technical-user'
       active_step: 'integrations',
       active_integration_idx: 0,
@@ -210,7 +206,7 @@
         return !_.isNil(this.active_setup_template)
       },
       step_order() {
-       return ['integrations', 'setup', 'addons', 'members']
+       return ['integrations', 'setup', 'addons']
       },
       integrations_from_route() {
         var integrations = _.get(this.$route, 'query.integration', '')
@@ -431,13 +427,11 @@
       },
       openGoogleSheetsAddonDownload() {
         this.$store.track('Clicked Google Sheets Add-on in Onboarding')
-        this.has_clicked_get_addon_button = true
         window.open('https://gsuite.google.com/marketplace/app/flexio/919566304535', '_blank')
       },
       openExcelAddonDownload() {
         this.$store.track('Clicked Excel Add-in in Onboarding')
-        this.has_clicked_get_addon_button = true
-        window.open('https://appsource.microsoft.com/en-us/product/office/WA200000394?src=office', '_blank')
+        window.open('https://appsource.microsoft.com/en-us/product/office/WA200000394', '_blank')
       },
       endOnboarding() {
         var team_name = this.active_team_name
