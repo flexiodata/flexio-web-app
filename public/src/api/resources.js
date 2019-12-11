@@ -6,11 +6,11 @@ export const API_ROOT = '/api/v2'
 export const AxiosResource = (team_name) => {
   var base_cfg = {
     method: 'get',
-    withCredentials: true
+    withCredentials: true,
+    headers: { 'X-Flexio-Source': 'app' },
     /*
     url: '',
-    headers: {},
-    data: {}
+    data: {},
     */
   }
 
