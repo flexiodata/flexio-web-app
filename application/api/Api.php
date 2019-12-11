@@ -207,7 +207,7 @@ class Api
             header('Access-Control-Allow-Origin: ' . $request_http_origin);
             header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, PATCH, HEAD');
             header('Access-Control-Max-Age: 1000');
-            header('Access-Control-Allow-Headers: authorization, origin, x-csrftoken, content-type, accept'); // note that '*' is not valid for Access-Control-Allow-Headers
+            header('Access-Control-Allow-Headers: authorization, origin, x-csrftoken, content-type, accept, x-flexio-source'); // note that '*' is not valid for Access-Control-Allow-Headers
         }
         else
         {
@@ -215,7 +215,7 @@ class Api
             {
                 header('Access-Control-Allow-Origin: *');
                 header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, PATCH, HEAD');
-                header('Access-Control-Allow-Headers: authorization, content-type');
+                header('Access-Control-Allow-Headers: authorization, content-type, x-flexio-source');
             }
 
             // TODO: remove this; this is a hack to allow the Google Sheets
@@ -227,7 +227,7 @@ class Api
             {
                 header('Access-Control-Allow-Origin: *');
                 header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, PATCH, HEAD');
-                header('Access-Control-Allow-Headers: authorization, content-type');
+                header('Access-Control-Allow-Headers: authorization, content-type, x-flexio-source');
             }
         }
 
