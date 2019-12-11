@@ -81,7 +81,7 @@
 
         <!-- step: install add-ons -->
         <div v-if="active_step == 'addons'">
-          <p class="center mw7">You're almost done! The last step is to install the Flex.io Add-on for either Excel 365 or Google Sheets. Once you've installed an add-on, you'll see the functions in your spreadsheet.</p>
+          <p class="center mw7">You're almost done! If you haven't done so already, please install the Flex.io Add-on for either <span class="nowrap">Google Sheets</span> or <span class="nowrap">Microsoft Excel 365</span>. Once you've installed an add-on, you'll see the functions in your spreadsheet.</p>
           <div class="flex flex-column flex-row-l mv3 nl3 nr3">
             <div class="flex-fill mv4 mh3 pa4 bg-nearer-white br3">
               <div class="flex flex-row items-center justify-center">
@@ -306,17 +306,20 @@
           }).then(() => {
             // skip over integration set up if none were selected
             this.active_step = this.step_order[this.active_step_idx + 2]
+
+            // make sure the route is in sync
+            this.setRoute(this.active_step)
           })
         } else {
           this.active_step = this.step_order[this.active_step_idx + 1]
-        }
 
-        if (this.active_step == 'setup') {
-          this.fetchIntegrationConfig()
-        }
+          if (this.active_step == 'setup') {
+            this.fetchIntegrationConfig()
+          }
 
-        // make sure the route is in sync
-        this.setRoute(this.active_step)
+          // make sure the route is in sync
+          this.setRoute(this.active_step)
+        }
       },
       onMemberInviteSubmit() {
         this.email_invites = []
