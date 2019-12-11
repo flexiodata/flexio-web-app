@@ -189,9 +189,12 @@ class Registry extends ModelBase
         return true;
     }
 
-    public function purge($object_eid) : bool
+    public function purge(string $object_eid) : bool
     {
-        // this function deletes rows associated with a given object
+        // this function deletes rows associated for a given object
+        if (!\Flexio\Base\Eid::isValid($object_eid))
+            return false;
+
         $db = $this->getDatabase();
         try
         {
