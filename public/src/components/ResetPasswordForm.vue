@@ -132,13 +132,15 @@
 
           this.is_submitting = true
 
-          api.resetPassword(attrs).then(response => {
-            this.is_submitting = false
-            this.is_sent = true
-            this.error_msg = ''
-          }).catch(error => {
-            this.is_submitting = false
-            this.error_msg = _.get(error, 'response.data.error.message', '')
+          this.$store.dispatch('users/signOut', { silent: true }).then(response => {
+            api.resetPassword(attrs).then(response => {
+              this.is_submitting = false
+              this.is_sent = true
+              this.error_msg = ''
+            }).catch(error => {
+              this.is_submitting = false
+              this.error_msg = _.get(error, 'response.data.error.message', '')
+            })
           })
         })
       }
