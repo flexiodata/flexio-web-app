@@ -75,6 +75,7 @@
 
 <script>
   import api from '@/api'
+  import { ROUTE_APP_ONBOARDING } from '@/constants/route'
 
   export default {
     props: {
