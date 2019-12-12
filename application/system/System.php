@@ -312,7 +312,7 @@ class System
 
     public static function getUserVerificationLink(string $email_to, string $verify_code) : string
     {
-        return self::getBaseUrl() . '/app/verify?ref=verification_email&email='.urlencode($email_to).'&verify_code='.$verify_code;
+        return self::getBaseUrl() . '/app/signup/verify?ref=verification_email&email='.urlencode($email_to).'&verify_code='.$verify_code;
     }
 
     public static function getPasswordResetLink(string $email_to, string $verify_code) : string

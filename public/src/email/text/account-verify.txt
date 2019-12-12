@@ -2,7 +2,11 @@ Welcome to Flex.io,
 
 Thank you for creating your Flex.io account!
 
-Please click on the following link to activate your account:
+Please enter the verification code below into the account verification form to activate your account:
+
+Verification code: ${verify_code}
+
+You may also click on the following link to activate your account:
 
 ${activation_link}
 

@@ -34,8 +34,8 @@ class Message
         $activation_link = \Flexio\System\System::getUserVerificationLink($to_email, $verify_code);
 
         // get templates from the application res directory
-        $msg_text = self::getTextEmail('account-verify', [ 'activation_link' => $activation_link ]);
-        $msg_html = self::getHtmlEmail('account-verify', [ 'activation_link' => $activation_link ]);
+        $msg_text = self::getTextEmail('account-verify', [ 'verify_code' => $verify_code, 'activation_link' => $activation_link ]);
+        $msg_html = self::getHtmlEmail('account-verify', [ 'verify_code' => $verify_code, 'activation_link' => $activation_link ]);
 
         // if a test email address is specified, override the test email
         // note: test email override only available in debug mode

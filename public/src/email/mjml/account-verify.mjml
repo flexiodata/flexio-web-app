@@ -4,14 +4,17 @@
     <mj-include path="./partials/head.mjml" />
   </mj-head>
   <mj-body>
- 		<mj-include path="./partials/spacer.mjml" />
+    <mj-include path="./partials/spacer.mjml" />
     <mj-section background-color="#edeff2" padding="1px" border-radius="4px">
       <mj-column border-radius="4px" background-color="#ffffff">
         <mj-spacer height="40px" />
         <mj-include path="./partials/logo.mjml" />
         <mj-spacer height="12px" />
         <mj-text align="center" font-size="34px">Welcome to Flex.io</mj-text>
-        <mj-text>Thank you for creating your Flex.io account! Please click on the following link to activate your account:</mj-text>
+        <mj-text>Thank you for creating your Flex.io account!</mj-text>
+        <mj-text>Please enter the verification code below into the account verification form to activate your account:</mj-text>
+        <mj-text align="center" font-size="22px" font-weight="bold">${verify_code}</mj-text>
+        <mj-text>You may also click on the following link to activate your account:</mj-text>
         <mj-button href="${activation_link}">Activate My Account</mj-button>
         <mj-text>Enjoy!</mj-text>
         <mj-text>- The Flex.io Team</mj-text>
@@ -19,6 +22,6 @@
       </mj-column>
     </mj-section>
     <mj-include path="./partials/copyright.mjml" />
- 		<mj-include path="./partials/spacer.mjml" />
+    <mj-include path="./partials/spacer.mjml" />
   </mj-body>
 </mjml>
