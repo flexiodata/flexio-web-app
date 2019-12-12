@@ -137,6 +137,28 @@ CREATE INDEX idx_token_created_by ON tbl_token (created_by);
 CREATE INDEX idx_token_created ON tbl_token (created);
 
 
+
+--
+-- Table structure for table tbl_verifycode
+--
+
+DROP TABLE IF EXISTS tbl_verifycode;
+CREATE TABLE tbl_verifycode (
+  id serial,
+  verify_code varchar(20) NOT NULL default '',
+  expires timestamp NULL default NULL,
+  owned_by varchar(12) NOT NULL default '',
+  created_by varchar(12) NOT NULL default '',
+  created timestamp NULL default NULL,
+  updated timestamp NULL default NULL,
+  PRIMARY KEY (id)
+);
+
+CREATE UNIQUE INDEX idx_verifycode_owned_by_verify_code ON tbl_verifycode (owned_by, verify_code) WHERE verify_code != '';
+CREATE INDEX idx_verifycode_expires ON tbl_verifycode (expires);
+
+
+
 --
 -- Table structure for table tbl_pipe
 --
