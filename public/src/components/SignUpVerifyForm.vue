@@ -3,22 +3,19 @@
     <div class="tc" style="margin-top: -76px">
       <img src="../assets/logo-square-80x80.png" alt="Flex.io" class="br-100 ba bw1 b--white" style="width: 84px; box-shadow: 0 0 3px rgba(0,0,0,0.4)">
     </div>
-    <h1 class="fw6 tc mb4">Thanks for signing up!</h1>
-    <p>To finish signing up, you just need to confirm that we got your email address right.</p>
-    <p>We've sent a verification email to the address you provided. Clicking the confirmation link in that email lets us know the email address is both valid and yours.</p>
-    <p v-show="!justSignedUp">If you no longer have this email, you may enter your email address again and we'll send it to you.</p>
+    <h1 class="fw6 tc mb4">Send verification email</h1>
+    <p>We sent a verification email to the address you provided when you signed up.</p>
+    <p>If you no longer have this email, you may enter your email address below and we'll send it to you again.</p>
     <div class="pt2">
       <div class="mb3">
         <input
-          ref="input-email"
           type="email"
           placeholder="Email address"
           auto-complete="off"
           spellcheck="false"
           class="input-reset ba b--black-10 br2 focus-b--blue lh-title ph3 pv2a w-100"
-          :disabled="justSignedUp ? true : false"
           @keyup.enter="resendVerification"
-          v-model="user.email"
+          v-model="email"
         >
       </div>
       <div class="mt3">
@@ -48,10 +45,6 @@
 
   export default {
     props: {
-      justSignedUp: {
-        type: Boolean,
-        default: false
-      },
       user: {
         type: Object,
         default: () => {
@@ -59,10 +52,18 @@
         }
       }
     },
+    watch: {
+      user: {
+        handler: 'initSelf',
+        immediate: true,
+        deep: true
+      }
+    },
     data() {
       return {
         is_sending: false,
-        is_sent: false
+        is_sent: false,
+        email: ''
       }
     },
     computed: {
@@ -72,14 +73,17 @@
         } else if (this.is_sending) {
           return 'Sending email...'
         } else {
-          return 'Resend verification email'
+          return 'Send verification email'
         }
       }
     },
     methods: {
+      initSelf() {
+        this.email = _.get(this.user, 'email', '')
+      },
       resendVerification() {
         this.is_sending = true
-        api.requestVerification({ email: this.user.email }).then(response => {
+        api.requestVerification({ email: this.email }).then(response => {
           this.is_sent = true
           setTimeout(() => { this.is_sent = false }, 6000)
         }).finally(() => {
