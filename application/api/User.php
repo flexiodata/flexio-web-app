@@ -47,6 +47,7 @@ class User
                 'locale_thousands'     => array('type' => 'string',     'required' => false, 'default' => ','),
                 'locale_dateformat'    => array('type' => 'string',     'required' => false, 'default' => 'm/d/Y'),
                 'timezone'             => array('type' => 'string',     'required' => false, 'default' => 'UTC'),
+                'verify_code'          => array('type' => 'string',     'required' => false, 'default' => ''),
                 'referrer'             => array('type' => 'string',     'required' => false, 'default' => ''),
                 'token'                => array('type' => 'string',     'required' => false), // stripe payment token if it's included; TODO: more specific name?
                 'stripe_subscription_id' => array('type' => 'string',     'required' => false, 'default' => ''),
