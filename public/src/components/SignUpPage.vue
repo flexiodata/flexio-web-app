@@ -1,12 +1,18 @@
 <template>
   <main class="pv4 pv5-ns ph3 ph5-ns bg-nearer-white overflow-auto">
     <div class="measure center mt4">
-      <SignUpVerifyForm
+      <ResendVerificationForm
         class="br2 bg-white pv4 ph3 ph4-ns css-white-box"
         :just-signed-up="just_signed_up"
         :user="user"
         @sign-in-click="onSignInClick"
-        v-if="is_verify"
+        v-if="is_resend_verify"
+      />
+      <SignUpVerifyForm
+        class="br2 bg-white pv4 ph3 ph4-ns css-white-box"
+        :just-signed-up="just_signed_up"
+        :user="user"
+        v-else-if="is_verify"
       />
       <SignUpForm
         class="br2 bg-white pv4 ph3 ph4-ns css-white-box"
@@ -23,6 +29,7 @@
   import { OBJECT_STATUS_AVAILABLE } from '@/constants/object-status'
   import SignUpForm from '@/components/SignUpForm'
   import SignUpVerifyForm from '@/components/SignUpVerifyForm'
+  import ResendVerificationForm from '@/components/ResendVerificationForm'
   import MixinRedirect from '@/components/mixins/redirect'
 
   export default {
@@ -32,7 +39,8 @@
     mixins: [MixinRedirect],
     components: {
       SignUpForm,
-      SignUpVerifyForm
+      SignUpVerifyForm,
+      ResendVerificationForm
     },
     data() {
       return {
@@ -45,6 +53,9 @@
     computed: {
       is_verify() {
         return _.get(this.$route, 'params.action') == 'verify'
+      },
+      is_resend_verify() {
+        return _.get(this.$route, 'params.action') == 'resendverify'
       },
       signin_route() {
         return {
