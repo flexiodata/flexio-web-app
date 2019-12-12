@@ -240,8 +240,7 @@ EOD;
                                'email' => $email,
                                'full_name' => $username,
                                'eid_status' => \Model::STATUS_AVAILABLE,
-                               'password' => $password,
-                               'verify_code' => '');
+                               'password' => $password);
 
         $user = \Flexio\Object\User::create($new_user_info);
         $user_eid = $user->getEid();

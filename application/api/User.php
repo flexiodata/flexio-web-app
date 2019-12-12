@@ -47,7 +47,6 @@ class User
                 'locale_thousands'     => array('type' => 'string',     'required' => false, 'default' => ','),
                 'locale_dateformat'    => array('type' => 'string',     'required' => false, 'default' => 'm/d/Y'),
                 'timezone'             => array('type' => 'string',     'required' => false, 'default' => 'UTC'),
-                'verify_code'          => array('type' => 'string',     'required' => false, 'default' => ''),
                 'referrer'             => array('type' => 'string',     'required' => false, 'default' => ''),
                 'token'                => array('type' => 'string',     'required' => false), // stripe payment token if it's included; TODO: more specific name?
                 'stripe_subscription_id' => array('type' => 'string',     'required' => false, 'default' => ''),
@@ -90,7 +89,6 @@ class User
             $new_user_info = $validated_post_params;
             $new_user_info['email'] = $email;
             $new_user_info['eid_status'] = (\Flexio\Api\User::REQUIRE_VERIFICATION === true ? \Model::STATUS_PENDING : \Model::STATUS_AVAILABLE);
-            $new_user_info['verify_code'] = (\Flexio\Api\User::REQUIRE_VERIFICATION === true ? \Flexio\Base\Util::generateHandle() : '');
             $user = \Flexio\Object\User::create($new_user_info);
 
             // if appropriate, create an a default api token
@@ -127,19 +125,17 @@ class User
             // if appropriate, send an email
             if (\Flexio\Api\User::SEND_WELCOME_EMAIL === true)
             {
-                $email_params = array('email' => $email, 'verify_code' => $user->getVerifyCode());
+                // generate verification code that's good for 24 hours
+                $verify_code_expires_in = 3600*24;
+                $user_verify_code = $user->createVerifyCode($verify_code_expires_in);
+
+                // send the email
+                $email_params = array('email' => $email, 'verify_code' => $user_verify_code);
                 \Flexio\Api\Message::sendWelcomeEmail($email_params);
             }
 
             // return the user info
             $result = $user->get();
-
-            // TODO: for testing purposes only:
-            if (IS_DEBUG())
-            {
-                $verification_link = \Flexio\System\System::getUserVerificationLink($email, $user->getVerifyCode());
-                $result['verification_link'] = $verification_link;
-            }
 
             $request->setRequestingUser($user->getEid());
             $request->setResponseParams($result);
@@ -157,10 +153,8 @@ class User
 
         // POSSIBILITY 3: user already exists and has the correct verification code;
         // set the rest of the information, and activate the user
-        $existing_verification_code = $user->getVerifyCode();
         $provided_verification_code = $validated_post_params['verify_code'];
-
-        if (strlen($existing_verification_code) > 0 && $existing_verification_code === $provided_verification_code)
+        if ($user->checkVerifyCode($provided_verification_code) === true)
         {
             // start with the info provided
             $new_user_info = $validated_post_params;
@@ -173,7 +167,6 @@ class User
 
             // link was clicked in notification email and verify code checks out;
             // so automatically promote user to verified/active status
-            $new_user_info['verify_code'] = '';
             $new_user_info['eid_status'] = \Model::STATUS_AVAILABLE;
 
             $result = $user->set($new_user_info);
@@ -208,8 +201,6 @@ class User
         // require the user to be verified; user status should already be pending,
         // but set it to pending as a sanity check
         $new_user_info['eid_status'] = \Model::STATUS_PENDING;
-        $new_user_info['verify_code'] = \Flexio\Base\Util::generateHandle();
-
         $result = $user->set($new_user_info);
         if ($result === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, _('Operation failed'));
@@ -217,7 +208,12 @@ class User
         // if appropriate, send an email
         if (\Flexio\Api\User::SEND_WELCOME_EMAIL === true)
         {
-            $email_params = array('email' => $email, 'verify_code' => $user->getVerifyCode());
+            // generate verification code that's good for 24 hours
+            $verify_code_expires_in = 3600*24;
+            $user_verify_code = $user->createVerifyCode($verify_code_expires_in);
+
+            // send the email
+            $email_params = array('email' => $email, 'verify_code' => $user_verify_code);
             \Flexio\Api\Message::sendWelcomeEmail($email_params);
         }
 
@@ -698,14 +694,12 @@ class User
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, _('This user is unavailable'));
         }
 
-        // TODO: if the verify code is set, but blank, should we regenerate
-        // the verification code?
+        // generate verification code that's good for 24 hours
+        $verify_code_expires_in = 3600*24;
+        $user_verify_code = $user->createVerifyCode($verify_code_expires_in);
 
-        $verify_code = $user->getVerifyCode();
-        if (!isset($verify_code))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, _('Missing verification code'));
-
-        $email_params = array('email' => $email, 'verify_code' => $verify_code);
+        // send the email
+        $email_params = array('email' => $email, 'verify_code' => $user_verify_code);
         \Flexio\Api\Message::sendWelcomeEmail($email_params);
 
         $result = array();
@@ -737,7 +731,7 @@ class User
 
         $validated_post_params = $validator->getParams();
         $email = $validated_post_params['email'];
-        $code = $validated_post_params['verify_code'];
+        $verify_code = $validated_post_params['verify_code'];
 
         $user = false;
         try
@@ -759,10 +753,10 @@ class User
         //if ($user->getStatus() != \Model::STATUS_PENDING)
         //    throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, _('This user is already activated'));
 
-        if ($user->getVerifyCode() != $code)
+        if ($user->checkVerifyCode($verify_code) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, _('The activation credentials do not match'));
 
-        if ($user->set(array('eid_status' => \Model::STATUS_AVAILABLE, 'verify_code' => '')) === false)
+        if ($user->set(array('eid_status' => \Model::STATUS_AVAILABLE)) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, _('Could not activate the user at this time'));
 
         $result = array();
@@ -803,10 +797,12 @@ class User
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, _('This user is unavailable'));
         }
 
-        if ($user->set(array('verify_code' => \Flexio\Base\Util::generateHandle())) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, _('Could not send password reset email at this time'));
+        // generate verification code that's good for 24 hours
+        $verify_code_expires_in = 3600*24;
+        $user_verify_code = $user->createVerifyCode($verify_code_expires_in);
 
-        $email_params = array('email' => $email, 'verify_code' => $user->getVerifyCode());
+        // send the email
+        $email_params = array('email' => $email, 'verify_code' => $user_verify_code);
         \Flexio\Api\Message::sendResetPasswordEmail($email_params);
 
         $result = array();
@@ -837,7 +833,7 @@ class User
         $validated_post_params = $validator->getParams();
         $email = $validated_post_params['email'];
         $password = $validated_post_params['password'];
-        $code = $validated_post_params['verify_code'];
+        $verify_code = $validated_post_params['verify_code'];
 
         $user = false;
         try
@@ -854,10 +850,10 @@ class User
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, _('This user is unavailable'));
         }
 
-        if ($user->getVerifyCode() !== $code)
+        if ($user->checkVerifyCode($verify_code) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS, _('The credentials do not match'));
 
-        if ($user->set(array('password' => $password, 'eid_status' => \Model::STATUS_AVAILABLE, 'verify_code' => '')) === false)
+        if ($user->set(array('password' => $password, 'eid_status' => \Model::STATUS_AVAILABLE)) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, _('Could not update user at this time'));
 
         // make sure the user is logged out so they have to resign in
@@ -1921,9 +1917,6 @@ class User
 
         if (isset($properties['new_password']))
             $properties['new_password'] = "*****";
-
-        if (isset($properties['verify_code']))
-            $properties['verify_code'] = "*****";
 
         if (isset($properties['token']))
             $properties['token'] = "*****";

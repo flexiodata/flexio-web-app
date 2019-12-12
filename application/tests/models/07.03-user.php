@@ -136,7 +136,6 @@ class Test
             'locale_thousands' => ',',
             'locale_dateformat' => 'm/d/Y',
             'timezone' => 'UTC',
-            'verify_code' => '',
             'stripe_customer_id' => '',
             'stripe_subscription_id' => '',
             'referrer' => '',

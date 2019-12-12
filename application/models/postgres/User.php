@@ -49,7 +49,6 @@ class User extends ModelBase
                 'locale_dateformat'  => array('type' => 'string',     'required' => false, 'default' => 'm/d/Y'),
                 'timezone'           => array('type' => 'string',     'required' => false, 'default' => 'UTC'),
                 'password'           => array('type' => 'password',   'required' => false),
-                'verify_code'        => array('type' => 'string',     'required' => false, 'default' => ''),
                 'stripe_customer_id' => array('type' => 'string',     'required' => false, 'default' => ''),
                 'stripe_subscription_id' => array('type' => 'string', 'required' => false, 'default' => ''),
                 'referrer'           => array('type' => 'string',     'required' => false, 'default' => ''),
@@ -202,7 +201,6 @@ class User extends ModelBase
                 'locale_dateformat'  => array('type' => 'string',     'required' => false),
                 'timezone'           => array('type' => 'string',     'required' => false),
                 'password'           => array('type' => 'password',   'required' => false),
-                'verify_code'        => array('type' => 'string',     'required' => false),
                 'stripe_customer_id' => array('type' => 'string',     'required' => false),
                 'stripe_subscription_id' => array('type' => 'string',     'required' => false),
                 'referrer'           => array('type' => 'string',     'required' => false),
@@ -276,7 +274,6 @@ class User extends ModelBase
                               'locale_thousands'       => $row['locale_thousands'],
                               'locale_dateformat'      => $row['locale_dateformat'],
                               'timezone'               => $row['timezone'],
-                              'verify_code'            => $row['verify_code'],
                               'stripe_customer_id'     => $row['stripe_customer_id'],
                               'stripe_subscription_id' => $row['stripe_subscription_id'],
                               'trial_end_date'         => \Flexio\Base\Util::formatDate($row['trial_end_date']),
@@ -325,19 +322,6 @@ class User extends ModelBase
             return \Model::STATUS_UNDEFINED;;
 
         return $result;
-    }
-
-    public function getVerifyCodeFromEid(string $eid) // TODO: add return type
-    {
-        if (!\Flexio\Base\Eid::isValid($eid))
-            return false;
-
-        $db = $this->getDatabase();
-        $verify_code = $db->fetchOne('select verify_code from tbl_user where eid = ?', $eid);
-        if ($verify_code === false)
-            return false;
-
-        return $verify_code;
     }
 
     public function getStripeCustomerIdFromEid(string $eid) // TODO: add return type
@@ -504,6 +488,85 @@ class User extends ModelBase
         {
             return false;
         }
+    }
+
+    public function createVerifyCode(string $owner_eid, int $expires_in) : string
+    {
+        if (!\Flexio\Base\Eid::isValid($owner_eid))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+        if ($expires_in < 0)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+
+        $db = $this->getDatabase();
+
+        // create the expiration date
+        $current_timestamp = \Flexio\System\System::getTimestamp();
+        $expires_timestamp = date('Y-m-d H:i:s.u', strtotime($current_timestamp . " + $expires_in seconds"));
+
+        // find a unique code; uniqueness is enforced by the database,
+        // so if the code isn't unique, catch the exception and try again
+        for ($idx = 0; $idx < 10; $idx++)
+        {
+            // create a six-digit code of numbers with padding; e.g. 000123, 123456
+            $verify_code = \Flexio\Base\Util::generateRandomString(6,'0123456789');
+            $process_arr = array(
+                'verify_code' => $verify_code,
+                'owned_by'   => $owner_eid,
+                'created_by' => $owner_eid,
+                'expires' => $expires_timestamp,
+                'created' => $current_timestamp,
+                'updated' => $current_timestamp
+            );
+
+            try
+            {
+                $result = $db->insert('tbl_verifycode', $process_arr);
+                if ($result === false)
+                    throw new \Exception;
+
+                return $verify_code;
+            }
+            catch (\Exception $e)
+            {
+                continue;
+            }
+        }
+
+        // we couldn't find a unique verification code for a particular user
+        // in a certain number of attemps, so throw an exception
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+    }
+
+    public function checkVerifyCode(string $owner_eid, string $verify_code) : bool
+    {
+        if (!\Flexio\Base\Eid::isValid($owner_eid))
+            return false;
+
+        $db = $this->getDatabase();
+        $qownedby = $db->quote($owner_eid);
+        $qverify_code = $db->quote($verify_code);
+        $expires_timestamp = $db->fetchOne("select expires from tbl_verifycode where owned_by = $qownedby and verify_code = $qverify_code");
+
+        // if we couldn't find an expiratation, the verify code doesn't exist
+        if ($expires_timestamp === false)
+            return false;
+
+        // TODO: getTimestamp returns results in one format, formatDate() in
+        // another and formatDateDiff only works with one format; fix inconsistencies
+        // and also make formatDateDiff work with more than one format; for now
+        // convert the expires_timestamp into a format that will work
+        $expires_timestamp = new \DateTime($expires_timestamp);
+        $verify_code_timestamp = $expires_timestamp->format("Y-m-d H:i:s.u");
+        //$verify_code_timestamp = \Flexio\Base\Util::formatDate($expires_timestamp);
+        $current_timestamp = \Flexio\System\System::getTimestamp();
+
+        // we have an expiration code; make sure that the current date is less than that
+        $date_diff_seconds = \Flexio\Base\Util::formatDateDiff($current_timestamp, $verify_code_timestamp);
+        if ($date_diff_seconds <= 0)
+            return false;
+
+        // we have a valid code for the owner and it isn't expired
+        return true;
     }
 
     public function isAdministrator(string $eid) : bool

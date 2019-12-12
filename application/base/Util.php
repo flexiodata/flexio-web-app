@@ -790,16 +790,18 @@ class Util
         return $name;
     }
 
-    public static function generateRandomString(int $length) : string
+    public static function generateRandomString(int $length, string $allowed_chars = null) : string
     {
         $result = '';
-        $chars = 'bcdfghjkmnpqrstvwxyz';  // characters to draw from
-        $charcount = strlen($chars);
 
+        if (!isset($allowed_chars))
+            $allowed_chars = 'bcdfghjkmnpqrstvwxyz';  // characters to draw from
+
+        $charcount = strlen($allowed_chars);
         for ($i = 0; $i < $length; ++$i)
         {
             $ch = random_int(0,$charcount-1);
-            $result .= $chars[$ch];
+            $result .= $allowed_chars[$ch];
         }
 
         return $result;

@@ -77,7 +77,6 @@ class TeamMember
             $new_user_info = array();
             $new_user_info['email'] = $email;
             $new_user_info['eid_status'] = (\Flexio\Api\User::REQUIRE_VERIFICATION === true ? \Model::STATUS_PENDING : \Model::STATUS_AVAILABLE);
-            $new_user_info['verify_code'] = (\Flexio\Api\User::REQUIRE_VERIFICATION === true ? \Flexio\Base\Util::generateHandle() : '');
             $user = \Flexio\Object\User::create($new_user_info);
 
             // if appropriate, create an a default api token
@@ -122,9 +121,13 @@ class TeamMember
             $requesting_user_info = $requesting_user->get();
             $member_user_info = $member_user->get();
 
+            // generate verification code that's good for 24 hours
+            $verify_code_expires_in = 3600*24;
+            $member_verify_code = $member_user->createVerifyCode($verify_code_expires_in);
+
             $email_params = array(
                 'email'       => $member_user_info['email'],
-                'verify_code' => $member_user->getVerifyCode(),
+                'verify_code' => $member_verify_code,
                 'from_name'   => $requesting_user_info['first_name'],
                 'from_email'  => $requesting_user_info['email'],
                 'object_name' => $owner_user_info['username']
@@ -345,10 +348,14 @@ class TeamMember
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
         $member_user_info = $member_user->get();
 
+        // generate verification code that's good for 24 hours
+        $verify_code_expires_in = 3600*24;
+        $member_verify_code = $member_user->createVerifyCode($verify_code_expires_in);
+
         // send the email
         $email_params = array(
             'email'       => $member_user_info['email'] ?? '',
-            'verify_code' => $member_user->getVerifyCode(),
+            'verify_code' => $member_verify_code,
             'from_name'   => $requesting_user_info['first_name'],
             'from_email'  => $requesting_user_info['email'],
             'object_name' => $owner_user_info['username'] ?? ''

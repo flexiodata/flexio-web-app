@@ -60,22 +60,16 @@ class Test
 
         // BEGIN TEST
         $object = \Flexio\Object\User::create();
-        $actual = $object->getVerifyCode();
-        $expected = '';
-        \Flexio\Tests\Check::assertString('A.6', 'User::create(); objects are created with no verification code by default',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $object = \Flexio\Object\User::create();
         $actual = $object->getOwner();
         $expected = $object->getEid();
-        \Flexio\Tests\Check::assertString('A.7', 'User::create(); objects are created with the user as the owner',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.6', 'User::create(); objects are created with the user as the owner',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object1 = \Flexio\Object\User::create();
         $object2 = \Flexio\Object\User::create(array('owned_by' => $object1->getEid()));
         $actual = $object2->getOwner();
         $expected = $object2->getEid();
-        \Flexio\Tests\Check::assertString('A.8', 'User::create(); don\'t allow the user owner to be set to something else',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.7', 'User::create(); don\'t allow the user owner to be set to something else',  $actual, $expected, $results);
 
 
 

@@ -276,17 +276,6 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $stream;
     }
 
-    public function getVerifyCode() : string
-    {
-        $user_model = $this->getModel()->user;
-        $verify_code = $user_model->getVerifyCodeFromEid($this->getEid());
-
-        if ($verify_code === false)
-            return '';
-
-        return $verify_code;
-    }
-
     public function getStripeCustomerId() : string
     {
         $user_model = $this->getModel()->user;
@@ -312,6 +301,16 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
     public function checkPassword(string $password) : bool
     {
         return $this->getModel()->user->checkUserPasswordByEid($this->getEid(), $password);
+    }
+
+    public function createVerifyCode(int $expires_in) : string
+    {
+        return $this->getModel()->user->createVerifyCode($this->getEid(), $expires_in);
+    }
+
+    public function checkVerifyCode(string $verify_code) : bool
+    {
+        return $this->getModel()->user->checkVerifyCode($this->getEid(), $verify_code);
     }
 
     public function isAdministrator() : bool
