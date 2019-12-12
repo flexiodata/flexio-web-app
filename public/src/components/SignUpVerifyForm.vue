@@ -54,7 +54,7 @@
             }"
             @click="verifyUser"
           >
-            {{button_label}}
+            {{verify_button_label}}
           </button>
         </div>
       </div>
@@ -62,11 +62,15 @@
         Can't find the email?
         <button
           type="button"
-          class="blue"
           style="padding: 0 2px"
+          :class="{
+            'blue': !is_sent,
+            'dark-green': is_sent,
+            'no-pointer-events': is_sending || is_sent
+          }"
           @click="resendVerification"
         >
-          Resend verification email
+          {{resend_button_label}}
         </button>
       </div>
     </div>
@@ -110,7 +114,7 @@
       }
     },
     computed: {
-      button_label() {
+      verify_button_label() {
         if (this.is_verified) {
           return 'Account verified!'
         } else if (this.is_verifying) {
@@ -118,7 +122,16 @@
         } else {
           return 'Verify my account'
         }
-      }
+      },
+      resend_button_label() {
+        if (this.is_sent) {
+          return 'Verification email sent!'
+        } else if (this.is_sending) {
+          return 'Sending email...'
+        } else {
+          return 'Resend verification email'
+        }
+      },
     },
     mounted() {
       var query_params = this.$route.query
