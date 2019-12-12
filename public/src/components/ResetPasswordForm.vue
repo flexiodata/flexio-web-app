@@ -29,12 +29,13 @@
 
       <el-form
         ref="form"
-        class="mt3"
+        class="mt3 el-form--cozy el-form__label-tiny"
         :model="$data"
         :rules="rules"
         @submit.prevent.native
       >
         <el-form-item
+          label="Password"
           key="password"
           prop="password"
         >
@@ -49,6 +50,7 @@
         </el-form-item>
 
         <el-form-item
+          label="Retype Password"
           key="password2"
           prop="password2"
         >
@@ -57,11 +59,12 @@
             placeholder="Retype Password"
             auto-complete="off"
             spellcheck="false"
+            @keyup.enter="tryChangePassword"
             v-model="password2"
           />
         </el-form-item>
       </el-form>
-      <div class="pb2 mt3">
+      <div class="pb2 mt4">
         <el-button type="primary" class="ttu fw6 w-100" @click="tryChangePassword">
           <span v-if="is_submitting">Submitting...</span>
           <span v-else>Change password</span>
