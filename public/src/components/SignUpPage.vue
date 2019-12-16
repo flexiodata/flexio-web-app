@@ -55,7 +55,7 @@
         return _.get(this.$route, 'params.action') == 'verify'
       },
       is_resend_verify() {
-        return _.get(this.$route, 'params.action') == 'resendverify'
+        return _.get(this.$route, 'params.action') == 'resendverification'
       },
       signin_route() {
         return {
