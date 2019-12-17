@@ -368,7 +368,7 @@
             }
 
             xhr.then(response => {
-              // save only the minimal amount of information in the function mounth (e.g. { eid, eid_type, connection_type })
+              // save only the minimal amount of information in the function mount (e.g. { eid, eid_type, connection_type })
               setup_config[key] = _.pick(response.data, ['eid', 'eid_type', 'connection_type'])
             })
 
