@@ -219,10 +219,11 @@ const actions = {
       var user = response.data
       commit('SIGNING_UP', false)
       commit('SIGNED_UP', user)
-      dispatch('identify', user)
-      setTimeout(() => {
-        dispatch('track', _.assign({}, user, { event_name: 'Signed Up' }))
-      }, 100)
+      // Segment User Sign Up Call (dispatch just cals the functions below -- 'identify' and and 'track')
+      //dispatch('identify', user)
+      //setTimeout(() => {
+      //  dispatch('track', _.assign({}, user, { event_name: 'Signed Up' }))
+      //}, 100)
       return response
     }).catch(error => {
       commit('SIGNING_UP', false)
@@ -243,6 +244,7 @@ const actions = {
     })
   },
 
+  // Segment Identify Call
   'identify' ({}, attrs) {
     var analytics_payload = _.pick(attrs, ['first_name', 'last_name', 'email'])
 
@@ -263,6 +265,7 @@ const actions = {
     analytics.identify(_.get(attrs, 'eid'), analytics_payload)
   },
 
+  // Segment Track Call
   'track' ({}, attrs) {
     var event_name = _.get(attrs, 'event_name', 'Event')
     var analytics_payload = _.assign({}, _.omit(attrs, ['event_name']))
