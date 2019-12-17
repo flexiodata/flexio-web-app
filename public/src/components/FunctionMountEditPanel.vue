@@ -345,7 +345,7 @@
           })
         })
       },
-      processSetupConfig(setup_config, callback) {
+      processSetupConfig(setup_config, parent_eid, callback) {
         var team_name = this.active_team_name
         var setup_config = _.cloneDeep(setup_config)
         var xhrs = []
@@ -357,6 +357,7 @@
             var eid = _.get(val, 'eid', '')
             var attrs = _.omit(val, ['eid_type'])
             attrs.name = 'connection-' + getNameSuffix(4)
+            attrs.parent_eid = parent_eid
 
             if (eid.length == 0) {
               // create the connection
@@ -388,7 +389,7 @@
         var name = this.edit_mount.name
         var setup_template = this.edit_mount.setup_template
 
-        this.processSetupConfig(setup_config, setup_config => {
+        this.processSetupConfig(setup_config, eid, setup_config => {
           var attrs = { eid_status, name, setup_template, setup_config }
 
           this.$store.dispatch('connections/update', { team_name, eid, attrs }).then(response => {
