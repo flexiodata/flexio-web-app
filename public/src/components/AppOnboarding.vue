@@ -346,7 +346,7 @@
           this.is_fetching_config = false
         })
       },
-      processSetupConfig(setup_config, callback) {
+      processSetupConfig(setup_config, parent_eid, callback) {
         var team_name = this.active_team_name
         var setup_config = _.cloneDeep(setup_config)
         var xhrs = []
@@ -358,6 +358,7 @@
             var eid = _.get(val, 'eid', '')
             var attrs = _.omit(val, ['eid_type'])
             attrs.name = 'connection-' + getNameSuffix(4)
+            attrs.parent_eid = parent_eid
 
             if (eid.length == 0) {
               // create the connection
@@ -385,7 +386,7 @@
       saveIntegration(setup_config) {
         // if the builder item is an auth builder item, create the connection at this time
         // and then we can move forward to the next step
-        this.processSetupConfig(setup_config, setup_config => {
+        this.processSetupConfig(setup_config, undefined, setup_config => {
           var setup_template = this.active_setup_template
           var mount = _.cloneDeep(_.get(this.active_integration, 'connection', {}))
           mount = _.assign({}, mount, { setup_config, setup_template })
@@ -416,8 +417,12 @@
           // start syncing all of the function mounts
           _.each(responses, response => {
             var eid = _.get(response.data, 'eid', '')
+            var setup_config = _.get(response.data, 'setup_config', {})
             var xhr = this.$store.dispatch('connections/sync', { team_name, eid })
             sync_xhrs.push(xhr)
+
+            // make sure we add parent eids to all child connections if we need to
+            this.processSetupConfig(setup_config, eid)
           })
 
           // syncing can take a long time; end the onboarding
