@@ -57,10 +57,6 @@ class Segment
 
     public static function track_request(string $action, string $user_eid, array $params) : void
     {
-        // TODO: once we add back server-side analytics, we'll remove
-        //       this and begin bringing things back online
-        return;
-
         // only track valid actions
         if (self::isValidAction($action) === false)
             return;
@@ -93,10 +89,6 @@ class Segment
 
     private static function identify_internal(string $user_eid, array $params) : void
     {
-        // TODO: once we add back server-side analytics, we'll remove
-        //       this and begin bringing things back online
-        return;
-
         $segment_key = $GLOBALS['g_config']->segment_key?? false;
         if ($segment_key === false)
             return;
