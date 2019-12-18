@@ -74,11 +74,11 @@ class Segment
 
             case self::TYPE_SIGNED_UP:
                 $traits = array(
-                    "firstName" => $params['first_name'] ?? '',
-                    "lastName" => $params['last_name'] ?? '',
-                    "email" => $params['email'] ?? '',
-                    "username" => $params['username'] ?? '',
-                    "createdAt" => $params['created'] ?? ''
+                    'firstName' => $params['first_name'] ?? '',
+                    'lastName' => $params['last_name'] ?? '',
+                    'email' => $params['email'] ?? '',
+                    'username' => $params['username'] ?? '',
+                    'createdAt' => $params['created'] ?? ''
                 );
 
                 self::identify_internal($user_eid, $traits);
@@ -95,10 +95,10 @@ class Segment
 
         // see here: https://segment.com/docs/connections/sources/catalog/libraries/server/http-api/#identify
         $post_data = array(
-            "userId" => $user_eid,
-            "traits" => $params,
-            "context" => array(),
-            "timestamp" => \Flexio\System\System::getTimestamp()
+            'userId' => $user_eid,
+            'traits' => $params,
+            'context' => array(),
+            'timestamp' => \Flexio\System\System::getTimestamp()
         );
         $post_data = json_encode($post_data, JSON_UNESCAPED_SLASHES | JSON_FORCE_OBJECT);
 
@@ -128,11 +128,11 @@ class Segment
         // see here: https://segment.com/docs/connections/sources/catalog/libraries/server/http-api/#track
         $action_description = self::getActionDescription($action);
         $post_data = array(
-            "userId" => $user_eid,
-            "event" => $action_description,
-            "properties" => $params,
-            "context" => array(),
-            "timestamp" => \Flexio\System\System::getTimestamp()
+            'userId' => $user_eid,
+            'event' => $action_description,
+            'properties' => $params,
+            'context' => array(),
+            'timestamp' => \Flexio\System\System::getTimestamp()
         );
         $post_data = json_encode($post_data, JSON_UNESCAPED_SLASHES | JSON_FORCE_OBJECT);
 
