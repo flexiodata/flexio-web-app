@@ -123,6 +123,9 @@ class User
                 }
             }
 
+            // track the user signup
+            \Flexio\Api\Segment::track(\Flexio\Api\Segment::TYPE_SIGNED_UP, $user->getEid(), $new_user_info);
+
             // if appropriate, send an email
             if (\Flexio\Api\User::SEND_WELCOME_EMAIL === true)
             {
@@ -192,6 +195,19 @@ class User
 
         // start with the info provided
         $new_user_info = $validated_post_params;
+
+        // TODO: we want to track users that are signing up who have been invited into
+        // a team; in this case, the user record is created when the user is invited
+        // in \Flexio\Api\TeamMember::create() (look for \Flexio\Object\User::create)
+        // but the user doesn't sign up until they supply the additional information,
+        // which is at this point in the logic flow, and also where we want to track
+        // the signup; however, this logic flow is also triggered by users that have
+        // already signed up but have supplied an invalid/expired verification code;
+        // so, to track signups for invited teammembers, we need a way to distinguish
+        // them from simple invalid verifications; this should suffice for the time
+        // being since the worst that happens are duplicate signup trackings in the
+        // rare case of verification failures
+        \Flexio\Api\Segment::track(\Flexio\Api\Segment::TYPE_SIGNED_UP, $user->getEid(), $new_user_info);
 
         // invited users already exist, but need to have the rest of their
         // info set; as an sanity check, don't allow the email address to be,
