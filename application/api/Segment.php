@@ -73,15 +73,19 @@ class Segment
                 break;
 
             case self::TYPE_SIGNED_UP:
-                $traits = array(
+                $identifier_properties = array(
+                    'createdAt' => $params['created'] ?? '',
                     'firstName' => $params['first_name'] ?? '',
                     'lastName' => $params['last_name'] ?? '',
                     'email' => $params['email'] ?? '',
                     'username' => $params['username'] ?? '',
                     'createdAt' => $params['created'] ?? ''
                 );
-                self::identify_internal($user_eid, $traits);
-                self::track_internal($action, $user_eid, $traits);
+                $track_properties = $identifier_properties;
+                $track_properties['eid_status'] = $params['eid_status'] ?? '';
+                $track_properties['eid_type'] = $params['eid_type'] ?? '';
+                self::identify_internal($user_eid, $identifier_properties);
+                self::track_internal($action, $user_eid, $track_properties);
                 break;
         }
     }
