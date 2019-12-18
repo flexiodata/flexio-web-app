@@ -1,0 +1,27 @@
+<mjml>
+  <mj-head>
+    <mj-title>Your free trial ends tomorrow</mj-title>
+    <mj-include path="./partials/head.mjml" />
+  </mj-head>
+  <mj-body>
+ 		<mj-include path="./partials/spacer.mjml" />
+    <mj-section background-color="#edeff2" padding="1px" border-radius="4px">
+      <mj-column border-radius="4px" background-color="#ffffff">
+        <mj-spacer height="40px" />
+        <mj-include path="./partials/logo.mjml" />
+        <mj-spacer height="12px" />
+        <mj-text>Hi ${first_name},</mj-text>
+        <mj-text>We hope you have enjoyed using Flex.io!</mj-text>
+        <mj-text>Unfortunately, your free trial is almost over. If you don't select a monthly plan, you'll no longer be able to use Flex.io functions in your spreadsheet.</mj-text>
+        <mj-text>Act now to keep your functions running without interruption.</mj-text>
+        <mj-button href="${billing_link}">Choose a plan</mj-button>
+        <mj-text>Please let us know if you have any questions at <a href="mailto:support@flex.io" style="color: #2196f3">support@flex.io</a> and we'll be happy to help!</mj-text>
+        <mj-text>Thank you.</mj-text>
+        <mj-text>- The Flex.io Team</mj-text>
+        <mj-spacer height="40px" />
+      </mj-column>
+    </mj-section>
+    <mj-include path="./partials/copyright.mjml" />
+ 		<mj-include path="./partials/spacer.mjml" />
+  </mj-body>
+</mjml>

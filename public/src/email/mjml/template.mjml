@@ -30,7 +30,7 @@
     </mj-style>
   </mj-head>
   <mj-body>
-    <mj-section vertical-align="middle">
+    <mj-section>
       <mj-column>
         <mj-spacer height="50px" />
       </mj-column>
@@ -52,7 +52,7 @@
         <mj-text align="center" color="#999" font-size="11px">&copy;${year} All Rights Reserved. Flex.io&trade; is a trademark of Gold Prairie LLC.</mj-text>
       </mj-column>
     </mj-section>
-    <mj-section vertical-align="middle">
+    <mj-section>
       <mj-column>
         <mj-spacer height="50px" />
       </mj-column>
