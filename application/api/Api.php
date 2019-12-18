@@ -188,6 +188,7 @@ class Api
         'GET /admin/info/pipes'                       => '\Flexio\Api\Admin::pipes',
         'GET /admin/info/processes'                   => '\Flexio\Api\Admin::processes',
         'GET /admin/info/processes/summary/user'      => '\Flexio\Api\Admin::process_summary_byuser',
+        'GET /admin/info/stats'                       => '\Flexio\Api\Admin::stats',
 
         // tests
         'GET /admin/tests/configure'                  => '\Flexio\Tests\Base::configure',
