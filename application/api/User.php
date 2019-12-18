@@ -143,10 +143,10 @@ class User
 
             // return the user info
             $request->setRequestingUser($user->getEid());
-            $request->setResponseParams($result);
+            $request->setResponseParams($result_user_info);
             $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
             $request->track();
-            \Flexio\Api\Response::sendContent($result);
+            \Flexio\Api\Response::sendContent($result_user_info);
             return;
         }
 
