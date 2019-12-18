@@ -80,7 +80,6 @@ class Segment
                     'username' => $params['username'] ?? '',
                     'createdAt' => $params['created'] ?? ''
                 );
-
                 self::identify_internal($user_eid, $traits);
                 self::track_internal($action, $user_eid, $traits);
                 break;
