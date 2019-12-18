@@ -101,6 +101,7 @@ class Segment
         if ($segment_key === false)
             return;
 
+        // see here: https://segment.com/docs/connections/sources/catalog/libraries/server/http-api/#identify
         $post_data = array(
             "userId" => $user_eid,
             "traits" => $params,
@@ -132,6 +133,7 @@ class Segment
         if ($segment_key === false)
             return;
 
+        // see here: https://segment.com/docs/connections/sources/catalog/libraries/server/http-api/#track
         $action_description = self::getActionDescription($action);
         $post_data = array(
             "userId" => $user_eid,
