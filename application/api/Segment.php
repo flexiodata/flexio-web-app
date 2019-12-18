@@ -21,17 +21,9 @@ class Segment
     // TODO: update list of actions; these are some of the actions currently
     // tracked through the UI (using the action description names for the event)
     public const TYPE_UNDEFINED          = '';
-    public const TYPE_TEST               = 'action.test';
-    public const TYPE_SIGNED_UP          = 'action.signed-up';
-    public const TYPE_SIGNED_IN          = 'action.signed-in';
-    public const TYPE_SIGNED_OUT         = 'action.signed-out';
-    public const TYPE_PASSWORD_CHANGED   = 'action.password.changed';
-    public const TYPE_APIKEY_CREATED     = 'action.apikey.created';
-    public const TYPE_CONNECTION_CREATED = 'action.connection.created';
-    public const TYPE_PIPE_CREATED       = 'action.pipe.created';
-    public const TYPE_PIPE_SCHEDULED     = 'action.pipe.scheduled';
-    public const TYPE_PIPE_RUN           = 'action.pipe.run';
-    public const TYPE_PROCESS_CREATED    = 'action.process.created';
+    public const TYPE_TEST               = 'test';
+    public const TYPE_SIGNED_UP          = 'signed-up';
+    public const TYPE_SIGNED_IN          = 'signed-in';
 
     public static function trackTest(\Flexio\Api\Request $request) : void
     {
@@ -177,14 +169,6 @@ class Segment
             case self::TYPE_TEST:
             case self::TYPE_SIGNED_UP:
             case self::TYPE_SIGNED_IN:
-            case self::TYPE_SIGNED_OUT:
-            case self::TYPE_PASSWORD_CHANGED:
-            case self::TYPE_APIKEY_CREATED:
-            case self::TYPE_CONNECTION_CREATED:
-            case self::TYPE_PIPE_CREATED:
-            case self::TYPE_PIPE_SCHEDULED:
-            case self::TYPE_PIPE_RUN:
-            case self::TYPE_PROCESS_CREATED:
                 return true;
         }
     }
@@ -199,14 +183,6 @@ class Segment
             case self::TYPE_TEST:               return 'Test';
             case self::TYPE_SIGNED_UP:          return 'Signed Up';
             case self::TYPE_SIGNED_IN:          return 'Signed In';
-            case self::TYPE_SIGNED_OUT:         return 'Signed Out';
-            case self::TYPE_PASSWORD_CHANGED:   return 'Changed Password';
-            case self::TYPE_APIKEY_CREATED:     return 'Created API Key';
-            case self::TYPE_CONNECTION_CREATED: return 'Created Connection';
-            case self::TYPE_PIPE_CREATED:       return 'Created Pipe';
-            case self::TYPE_PIPE_SCHEDULED:     return 'Scheduled Pipe';
-            case self::TYPE_PIPE_RUN:           return 'Ran Pipe';
-            case self::TYPE_PROCESS_CREATED:    return 'Created Process';
         }
     }
 }
