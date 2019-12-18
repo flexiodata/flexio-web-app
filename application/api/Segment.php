@@ -55,7 +55,7 @@ class Segment
         self::track_request($action, $user_eid, $params);
     }
 
-    public static function track_request(string $action, string $user_eid, array $params) : void
+    private static function track_request(string $action, string $user_eid, array $params) : void
     {
         // only track valid actions
         if (self::isValidAction($action) === false)
