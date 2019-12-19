@@ -28,7 +28,7 @@ class Segment
     public static function trackTest(\Flexio\Api\Request $request) : void
     {
         // only allow test tracking on non-production systems
-        if (IS_PRODSITE())
+        if (!IS_TESTING())
             return;
 
         $query_params = $request->getQueryParams();
@@ -49,7 +49,7 @@ class Segment
     public static function track(string $action, string $user_eid, array $params) : void
     {
         // only allow actual tracking on production
-        if (!IS_PRODSITE())
+        if (IS_TESTING())
             return;
 
         self::track_request($action, $user_eid, $params);

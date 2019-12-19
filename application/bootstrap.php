@@ -72,16 +72,6 @@ function IS_LOCALHOST()
     return (GET_HTTP_HOST() == 'localhost');
 }
 
-function IS_TESTSITE()
-{
-    return ($_SERVER['SERVER_NAME'] == "test.flex.io");
-}
-
-function IS_PRODSITE()
-{
-    return ($_SERVER['SERVER_NAME'] == "www.flex.io");
-}
-
 function IS_CLI()   // determines if this is a command line environment
 {
     return isset($_GLOBALS['argv']);
