@@ -76,14 +76,9 @@ class Base
     public const STORAGE_GITHUB_OWNER = 'flexiotesting';
     public const STORAGE_GITHUB_REPO = 'testsuite';
 
-    public static function testsAllowed()
-    {
-        return (isset($GLOBALS['g_config']->tests_allowed) ? $GLOBALS['g_config']->tests_allowed : false);
-    }
-
     public static function configure(\Flexio\Api\Request $request)
     {
-        if (!self::testsAllowed())
+        if (!IS_TESTING())
             return array();
 
         $tests = array();
@@ -105,7 +100,7 @@ class Base
     {
         $params = $request->getQueryParams();
 
-        if (!self::testsAllowed())
+        if (!IS_TESTING())
         {
             $r = array();
             $r['name'] = "Error: tests aren't allowed";
