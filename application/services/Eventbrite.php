@@ -129,7 +129,7 @@ class Eventbrite implements \Flexio\IFace\IConnection,
         {
             // if we have a code parameter, we have enough information
             // to authenticate and get the token; do so and return the object
-            $auth_token_url = '';  // TODO: fill out url
+            $auth_token_url = 'https://www.eventbrite.com/oauth/token';
 
             $post_data = array(
                 'client_id' => $client_id,
@@ -138,10 +138,10 @@ class Eventbrite implements \Flexio\IFace\IConnection,
                 'grant_type' => 'authorization_code',
                 'code' => $params['code']
             );
-            $post_data = json_encode($post_data, JSON_UNESCAPED_SLASHES | JSON_FORCE_OBJECT);
+            $post_data = http_build_query($post_data);
 
             $headers = array();
-            $headers[] = 'Content-Type: application/json';
+            $headers[] = 'Content-Type: application/x-www-form-urlencoded';
 
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $auth_token_url);
@@ -173,7 +173,7 @@ class Eventbrite implements \Flexio\IFace\IConnection,
                 'response_type' => 'code'
             );
             $query_str = http_build_query($query_params);
-            $this->authorization_uri = '' . $query_str; // TODO: fill out url
+            $this->authorization_uri = 'https://www.eventbrite.com/oauth/authorize?' . $query_str;
             return false;
         }
 
