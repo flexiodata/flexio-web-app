@@ -199,6 +199,7 @@ class Model
     public const CONNECTION_TYPE_PIPEDRIVE          = 'pipedrive';
     public const CONNECTION_TYPE_CAPSULECRM         = 'capsulecrm';
     public const CONNECTION_TYPE_HUBSPOT            = 'hubspot';
+    public const CONNECTION_TYPE_EVENTBRITE         = 'eventbrite';
 
     private $objs = array();
     private $database = null;
