@@ -68,6 +68,17 @@ const FLEX = {
   is_function_mount: false,
 }
 
+const EVENTBRITE = {
+    service_name: 'Eventbrite',
+    service_description: '',
+    connection_type: types.CONNECTION_TYPE_EVENTBRITE,
+    icon: require('../assets/icon/icon-eventbrite-128.png'),
+    is_oauth: true,
+    is_storage: false,
+    is_filesystem: false,
+    is_function_mount: false,
+}
+
 const GITHUB = {
   service_name: 'GitHub',
   service_description: 'Source control and code management',
@@ -229,6 +240,7 @@ export const CONNECTION_INFO_FLEX                 = FLEX
 export const CONNECTION_INFO_AMAZON_S3            = AMAZON_S3
 export const CONNECTION_INFO_BOX                  = BOX
 export const CONNECTION_INFO_DROPBOX              = DROPBOX
+export const CONNECTION_INFO_EVENTBRITE           = EVENTBRITE
 export const CONNECTION_INFO_GITHUB               = GITHUB
 //export const CONNECTION_INFO_TWITTER              = TWITTER
 export const CONNECTION_INFO_GOOGLEDRIVE          = GOOGLEDRIVE
