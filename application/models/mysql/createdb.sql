@@ -172,6 +172,27 @@ CREATE TABLE tbl_verifycode (
 CREATE INDEX idx_verifycode_expires ON tbl_verifycode (expires);
 
 
+--
+-- Table structure for table tbl_notice
+--
+
+DROP TABLE IF EXISTS tbl_notice;
+CREATE TABLE tbl_notice (
+  id serial,
+  to_eid varchar(12) NOT NULL default '',
+  notice_type varchar(40) NOT NULL default '',
+  owned_by varchar(12) NOT NULL default '',
+  created_by varchar(12) NOT NULL default '',
+  created timestamp NULL default NULL,
+  updated timestamp NULL default NULL,
+  PRIMARY KEY (id)
+);
+
+CREATE INDEX idx_notice_to_eid ON tbl_notice (to_eid);
+CREATE INDEX idx_notice_owned_by ON tbl_notice (owned_by);
+CREATE INDEX idx_notice_created_by ON tbl_notice (created_by);
+
+
 
 --
 -- Table structure for table tbl_pipe
