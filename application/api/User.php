@@ -138,8 +138,9 @@ class User
             // get the user info
             $result_user_info = $user->get();
 
-            // track the user signup
-            \Flexio\Api\Segment::track(\Flexio\Api\Segment::TYPE_SIGNED_UP, $user->getEid(), $result_user_info);
+            // track the user signup;
+            // DISABLE: re-enabled on front end
+            //\Flexio\Api\Segment::track(\Flexio\Api\Segment::TYPE_SIGNED_UP, $user->getEid(), $result_user_info);
 
             // return the user info
             $request->setRequestingUser($user->getEid());
@@ -234,7 +235,8 @@ class User
         // them from simple invalid verifications; this should suffice for the time
         // being since the worst that happens are duplicate signup trackings in the
         // rare case of verification failures
-        \Flexio\Api\Segment::track(\Flexio\Api\Segment::TYPE_SIGNED_UP, $user->getEid(), $result_user_info);
+        // DISABLE: re-enabled on front end
+        //\Flexio\Api\Segment::track(\Flexio\Api\Segment::TYPE_SIGNED_UP, $user->getEid(), $result_user_info);
 
         // return the user info
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
