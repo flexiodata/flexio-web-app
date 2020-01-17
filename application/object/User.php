@@ -182,6 +182,7 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $this->getModel()->action->purge($owner_eid);
         $this->getModel()->comment->purge($owner_eid);
         $this->getModel()->connection->purge($owner_eid);
+        $this->getModel()->notice->purge($owner_eid);
         $this->getModel()->pipe->purge($owner_eid);
         $this->getModel()->process->purge($owner_eid);
         $this->getModel()->registry->purge($owner_eid);
