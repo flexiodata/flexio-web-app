@@ -219,11 +219,10 @@ const actions = {
       var user = response.data
       commit('SIGNING_UP', false)
       commit('SIGNED_UP', user)
-      // Segment User Sign Up Call (dispatch just cals the functions below -- 'identify' and and 'track')
-      //dispatch('identify', user)
-      //setTimeout(() => {
-      //  dispatch('track', _.assign({}, user, { event_name: 'Signed Up' }))
-      //}, 100)
+      dispatch('identify', user)
+      setTimeout(() => {
+        dispatch('track', _.assign({}, user, { event_name: 'Signed Up' }))
+      }, 10)
       return response
     }).catch(error => {
       commit('SIGNING_UP', false)
