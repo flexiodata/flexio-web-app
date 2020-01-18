@@ -156,6 +156,7 @@
 
         this.$store.dispatch('users/signOut', { silent: true }).then(response => {
           api.verifyAccount(verify_params).then(response => {
+            this.$store.track('Verified Account')
             this.is_verified = true
             var query = _.omit(verify_params, ['ref', 'verify_code'])
             setTimeout(() => {

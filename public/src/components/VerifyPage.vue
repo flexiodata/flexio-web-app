@@ -45,6 +45,7 @@
     mounted() {
       this.$store.dispatch('users/signOut', { silent: true }).then(response => {
         api.verifyAccount(this.$route.query).then(response => {
+          this.$store.track('Verified Account')
           this.is_verified = true
           var query = _.omit(this.$route.query, ['ref', 'verify_code'])
           setTimeout(() => {
