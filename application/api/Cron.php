@@ -28,20 +28,6 @@ class Cron
         // the scheduler script uses UTC as its timezone
         date_default_timezone_set('UTC');
 
-        // send any scheduled notice emails
-        sendScheduledNotifications();
-
-        // run any scheduled pipes
-        runScheduledPipes();
-    }
-
-    public function sendScheduledNotifications() : void
-    {
-        // TODO: fill out
-    }
-
-    public function runScheduledPipes() : void
-    {
         // run the loop once
         $scheduler = new static();
         $scheduler->loop(1);
