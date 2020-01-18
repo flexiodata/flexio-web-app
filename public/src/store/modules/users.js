@@ -222,7 +222,7 @@ const actions = {
       dispatch('identify', user)
       setTimeout(() => {
         dispatch('track', _.assign({}, user, { event_name: 'Signed Up' }))
-      }, 10)
+      }, 100)
       return response
     }).catch(error => {
       commit('SIGNING_UP', false)
