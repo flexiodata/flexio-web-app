@@ -97,6 +97,7 @@ CREATE TABLE tbl_user (
 CREATE INDEX idx_user_owned_by ON tbl_user (owned_by);
 CREATE INDEX idx_user_created_by ON tbl_user (created_by);
 CREATE INDEX idx_user_created ON tbl_user (created);
+CREATE INDEX idx_user_trial_end_date ON tbl_user (trial_end_date);
 
 
 
