@@ -17,7 +17,7 @@
       <SignUpForm
         class="br2 bg-white pv4 ph3 ph4-ns css-white-box"
         @sign-in-click="onSignInClick"
-        @signed-in="onSignedUpAndSignedIn"
+        @signed-up="onSignedUp"
         v-else
       />
     </div>
@@ -68,7 +68,7 @@
       onSignInClick() {
         this.$router.push(this.signin_route)
       },
-      onSignedUpAndSignedIn(user) {
+      onSignedUp(user) {
         this.just_signed_up = true
         this.user = user
 
