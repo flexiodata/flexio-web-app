@@ -18,6 +18,9 @@ namespace Flexio\Api;
 
 class Message
 {
+    public const NOTICE_TRIAL_HALFWAY = 'notice-trial-halfway';
+    public const NOTICE_TRIAL_ENDING = 'notice-trial-ending';
+
     public static function sendWelcomeEmail(array $params) : bool
     {
         $validator = \Flexio\Base\Validator::create();
