@@ -29,8 +29,10 @@ class Filter
         // add on allowed items from the list of filter items
         foreach ($filter_items as $key => $value)
         {
-            // handle date range separately
+            // handle date ranges separately
             if ($key === 'created_min' || $key === 'created_max')
+                continue;
+            if ($key === 'trialend_min' || $key === 'trialend_max')
                 continue;
 
             // all other keys, build up a equality comparison using the column name
@@ -38,7 +40,7 @@ class Filter
                 $filter_expr .= (" and ($key = " . $db->quote($value) . ")");
         }
 
-        // handle the date range
+        // handle the date ranges
         if (isset($filter_items['created_min']) && array_key_exists('created_min', $allowed_item_keys))
         {
             $date = $filter_items['created_min'];
@@ -49,7 +51,6 @@ class Filter
                 $filter_expr .= (' and (created >= ' . $db->quote($date_clean) . ')');
             }
         }
-
         if (isset($filter_items['created_max']) && array_key_exists('created_max', $allowed_item_keys))
         {
             $date = $filter_items['created_max'];
@@ -58,6 +59,26 @@ class Filter
             {
                 $date_clean = date('Y-m-d', $date);
                 $filter_expr .= (' and (created < ' . $db->quote($date_clean) . ')'); // created is a timestamp, so use < on the next day
+            }
+        }
+        if (isset($filter_items['trialend_min']) && array_key_exists('trialend_min', $allowed_item_keys))
+        {
+            $date = $filter_items['trialend_min'];
+            $date = strtotime($date);
+            if ($date !== false)
+            {
+                $date_clean = date('Y-m-d', $date);
+                $filter_expr .= (' and (trial_end_date >= ' . $db->quote($date_clean) . ')');
+            }
+        }
+        if (isset($filter_items['trialend_max']) && array_key_exists('trialend_max', $allowed_item_keys))
+        {
+            $date = $filter_items['trialend_max'];
+            $date = strtotime($date . ' + 1 days');
+            if ($date !== false)
+            {
+                $date_clean = date('Y-m-d', $date);
+                $filter_expr .= (' and (trial_end_date < ' . $db->quote($date_clean) . ')'); // created is a timestamp, so use < on the next day
             }
         }
 

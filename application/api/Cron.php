@@ -19,6 +19,7 @@ namespace Flexio\Api;
 class Cron
 {
     public const JOB_SCHEDULE_CHECK_INTERVAL = 5; // check for jobs every 5 seconds
+    private const JOB_NOTIFICATION_LASTRUN_KEY = 'job.notification.lastrun';
 
     private $table = array();
     private $last_update = '';
@@ -28,12 +29,61 @@ class Cron
         // the scheduler script uses UTC as its timezone
         date_default_timezone_set('UTC');
 
-        // run the loop once
-        $scheduler = new static();
-        $scheduler->loop(1);
+        $cron = new static();
+        $cron->sendTrialNotificationEmails();
+        $cron->runScheduledPipes(1); // loop once; this function is called by an api endpoint at regular intervals, so don't need to loop
     }
 
-    public function loop(int $count = null) : void
+    public function sendTrialNotificationEmails() : void
+    {
+        // only allow trial-ending-notifications when tests are deactivated to
+        // prevent possibility of a flood of emails attempting to be sent for
+        // users created by the test suite when cron is activated
+        if (IS_TESTING())
+            return;
+
+        // run the notification job only if it's near 12pm UTC and we haven't yet run the notification job
+        // on that day yet (> 23 hours since it last ran instead of >= 24 for an easy comparison that allows
+        // a little time for the job to run); when we run the job, we have an extra check to make sure a notice
+        // only goes out once for a user, but we want to make sure that if the notice job takes time, it can't be
+        // invoked by multiple calls to the cron admin api endpoint that would cause the job to run independently
+        // twice and potentially allow a notice to be sent out multiple times depending on database read/write timing
+
+        $registry_model = \Flexio\System\System::getModel()->registry;
+
+        // get the current time and the last time the notification job ran
+        $current_timestamp = \Flexio\Base\Util::getCurrentTimestamp();
+        $current_time = strtotime($current_timestamp);
+
+        $notification_job_lastrun_timestamp = $registry_model->getString('', self::JOB_NOTIFICATION_LASTRUN_KEY, '1900-01-01 00:00:00');
+        $notification_job_lastrun_time = strtotime($notification_job_lastrun_timestamp);
+        $notification_job_todayrun_time = strtotime(date('Y-m-d 12:00:00', $current_time));
+
+        if ($current_time - $notification_job_lastrun_time < 23*60*60) // it's been less than 23 hours since we ran the job
+            return;
+        if ($current_time < $notification_job_todayrun_time) // it isn't time to run the job yet
+            return;
+
+        // set the new job runtime
+        $registry_model->setString('', self::JOB_NOTIFICATION_LASTRUN_KEY, $current_timestamp);
+
+        // get a list of active users that are going to expire in 1 day
+        $trial_expires_one_day_date = strtotime($current_timestamp . ' + 1 days');
+        $trial_expires_one_day_date = date('Y-m-d', $trial_expires_one_day_date);
+        $filter = array('eid_status' => \Model::STATUS_AVAILABLE, 'trialend_min' => $trial_expires_one_day_date, 'trialend_max' => $trial_expires_one_day_date);
+        $users_expires_one_day_list = \Flexio\Object\User::list($filter);
+
+        // get a list of active users that are going to expire in 7 days
+        $trial_expires_one_week_date = strtotime($current_timestamp . ' + 7 days');
+        $trial_expires_one_week_date = date('Y-m-d', $trial_expires_one_week_date);
+        $filter = array('eid_status' => \Model::STATUS_AVAILABLE, 'trialend_min' => $trial_expires_one_week_date, 'trialend_max' => $trial_expires_one_week_date);
+        $users_expires_one_week_list = \Flexio\Object\User::list($filter);
+
+        self::sendTrialEndingNotice($users_expires_one_day_list);
+        self::sendTrialHalfwayNotice($users_expires_one_week_list);
+    }
+
+    public function runScheduledPipes(int $count = null /*use null to loop continuously*/) : void
     {
         $lastkey = '';
 
@@ -291,5 +341,70 @@ class Cron
         // STEP 3: run the process
         $engine = \Flexio\Jobs\StoredProcess::create($process);
         $engine->run();
+    }
+
+    private static function sendTrialEndingNotice(array $user_object_list)
+    {
+        foreach ($user_object_list as $user)
+        {
+            try
+            {
+                // if we haven't already sent a notice, send it and log it
+                if (self::isNoticeSent($user->getEid(), \Flexio\Api\Message::NOTICE_TRIAL_ENDING))
+                    continue;
+
+                // send the notice and log it
+                $user_info = $user->get();
+                $success = \Flexio\Api\Message::sendTrialEndingEmail($user_info);
+                self::logNotice($user->getEid(), \Flexio\Api\Message::NOTICE_TRIAL_ENDING);
+            }
+            catch (\Exception $e)
+            {
+            }
+        }
+    }
+
+    private static function sendTrialHalfwayNotice(array $user_object_list)
+    {
+        foreach ($user_object_list as $user)
+        {
+            try
+            {
+                // if we haven't already sent a notice, send it and log it
+                if (self::isNoticeSent($user->getEid(), \Flexio\Api\Message::NOTICE_TRIAL_HALFWAY))
+                    continue;
+
+                // send the notice and log it
+                $user_info = $user->get();
+                $success = \Flexio\Api\Message::sendTrialHalfwayEmail($user_info);
+                self::logNotice($user->getEid(), \Flexio\Api\Message::NOTICE_TRIAL_HALFWAY);
+            }
+            catch (\Exception $e)
+            {
+            }
+        }
+    }
+
+    private static function logNotice(string $owner, string $notice_type) : void
+    {
+        $params = array(
+            'owned_by' => $owner,
+            'notice_type' => $notice_type
+        );
+
+        $notice_model = \Flexio\System\System::getModel()->notice;
+        $notice_model->create($params);
+    }
+
+    private static function isNoticeSent(string $owner, string $notice_type) : bool
+    {
+        $filter = array('owned_by' => $owner, 'notice_type' => $notice_type);
+        $notice_model = \Flexio\System\System::getModel()->notice;
+        $notices = $notice_model->list($filter);
+
+        if (count($notices) > 0)
+            return true;
+
+        return false;
     }
 }
