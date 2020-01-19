@@ -21,8 +21,10 @@
     </div>
     <div v-else>
       <h1 class="fw6 tc mb4">Please verify your email</h1>
-      <p>You're almost there! We sent an email to <strong class="nowrap">{{email}}</strong>.</p>
-      <p>Please click on the link in that email or enter the verification code from the email below to complete your sign up.</p>
+      <p v-if="is_email_provided">You're almost there! We sent an email to <strong class="nowrap">{{email}}</strong>.</p>
+      <p v-else>You're almost there! We sent an email to you with a verification code.</p>
+      <p v-if="is_email_provided">Please click on the link in that email or enter the verification code from the email below to complete your sign up.</p>
+      <p v-else>Please click on the link in that email or enter your email address and the verification code from the email below to complete your sign up.</p>
       <p>If you don't see the email in your inbox, you may need to check your spam folder.</p>
       <div class="pt2">
         <el-alert
@@ -32,6 +34,16 @@
           @close="error_msg = ''"
           v-if="error_msg"
         />
+        <div class="mb3" :class="error_msg.length > 0 ? 'mt3' : ''" v-if="!is_email_provided">
+          <input
+            type="email"
+            placeholder="Email"
+            auto-complete="off"
+            spellcheck="false"
+            class="input-reset ba b--black-10 br2 focus-b--blue lh-title ph3 pv2a w-100"
+            v-model="email"
+          >
+        </div>
         <div class="mb3" :class="error_msg.length > 0 ? 'mt3' : ''">
           <input
             type="text"
@@ -114,6 +126,11 @@
       }
     },
     computed: {
+      is_email_provided() {
+        var query_email = _.get(this.$route, 'query.email', '')
+        var prop_email = _.get(this.user, 'email', '')
+        return query_email.length > 0 || prop_email.length > 0
+      },
       verify_button_label() {
         if (this.is_verified) {
           return 'Account verified!'
