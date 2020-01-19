@@ -40,7 +40,7 @@ class Notice extends ModelBase
             if ($db->insert('tbl_notice', $process_arr) === false)
                 throw new \Exception();
 
-            return $eid;
+            return ''; // TODO: return something?
         }
         catch (\Exception $e)
         {
