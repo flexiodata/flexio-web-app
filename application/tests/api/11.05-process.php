@@ -40,13 +40,13 @@ class Test
         $script = <<<EOD
 import time
 def flexio_handler(context):
-    time.sleep(5) # assure overlap
+    time.sleep(2) # assure overlap
     context.output.content_type = "text/plain"
     context.output.write("+")
 EOD;
         // launch 500 background jobs
         $process_eids = array();
-        for ($i = 0; $i < 500; $i++)
+        for ($i = 0; $i < 250; $i++)
         {
             $process_eids[] = self::runBackgroundExecuteJob($apibase, $userid1, $token1, $script);
         }
@@ -64,7 +64,7 @@ EOD;
         \Flexio\Tests\Check::assertNumber('A.1', 'POST /:teamid/processes/:objeid; verify the number of processes that were launched',  $actual, $expected, $results);
 
         $actual = $result;
-        $expected = '++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++';
+        $expected = '++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++';
         \Flexio\Tests\Check::assertString('A.2', 'POST /:teamid/processes/:objeid; check the results of running 25 background jobs at the same time',  $actual, $expected, $results);
     }
 
