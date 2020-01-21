@@ -51,7 +51,6 @@ class Test
         \Flexio\Tests\Check::assertString('A.4', 'Process::cancel(); if a job has already finished, don\'t allow it to be cancelled',  $actual, $expected, $results);
 
 
-
         // TEST: check status on process success or failure
 
         // BEGIN TEST

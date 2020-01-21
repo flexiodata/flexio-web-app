@@ -278,24 +278,61 @@ class StoredProcess implements \Flexio\IFace\IProcess
 
     private function run_internal() : \Flexio\Jobs\StoredProcess
     {
-        // STEP 1: add the environment variables in
+        // STEP 1: if we have a valid owner, try to increment the active process count;
+        // if we're unable to, then the user is as the maximum number of processes, so
+        // a little and then try again
+
+        // if we have a valid owner, attempt to increment the user count
+        $owner_eid = $this->getOwner();
+        if (\Flexio\Base\Eid::isValid($owner_eid))
+        {
+            $current_attempt = 0;
+            $max_attempts = 10*60*5; // allow 5-minutes-worth of attempts (at 10 per second)
+
+            while (true)
+            {
+                $success = $this->procobj->incrementActiveProcessCount();
+                if ($success == true)
+                    break;
+
+                usleep(100000); // sleep 100ms
+
+                $current_attempt++;
+                if ($current_attempt < $max_attempts)
+                    continue;
+
+                // fail if job doesn't finish within a certain number of attempts
+                $process_info = array('error' => $this->getError());
+                $process_info_str = json_encode($process_info, JSON_PARTIAL_OUTPUT_ON_ERROR); // don't allow bad characters that may exist in debugging info to cause encoding to cause another failure
+
+                $process_params = array();
+                $process_params['finished'] = \Flexio\Base\Util::getCurrentTimestamp();
+                $process_params['process_status'] = \Flexio\Jobs\Process::STATUS_FAILED;
+                $process_params['process_info'] = $process_info_str;
+                $this->procobj->set($process_params);
+
+                return $this;
+            }
+        }
+
+        // STEP 2: add the environment variables in
         $environment_variables = $this->getEnvironmentParams();
         $mount_variables = $this->getMountParams();
 
         $user_variables = $this->getParams();
         $this->setParams(array_merge($user_variables, $mount_variables, $environment_variables));
 
-        // STEP 2: get events for logging, if necessary
+        // STEP 3: get events for logging, if necessary
         $this->addEventHandler([$this, 'handleEvent']);
 
-        // STEP 3: if we have an associative array, we have a top-level task, so simply
+        // STEP 4: if we have an associative array, we have a top-level task, so simply
         // execute it; otherwise we have an array of tasks, so package them in a sequence job
         $task = $this->procobj->getTask();
         if (\Flexio\Base\Util::isAssociativeArray($task) === false)
             $task = array('op' => 'sequence', 'params' => array('items' => $task));
         $this->execute($task);
 
-        // STEP 4: save final job output and status; only save the status if the status if it hasn't already been set
+        // STEP 5: save final job output and status; only save the status if the status if it hasn't already been set
         $process_params = array();
         $process_params['finished'] = \Flexio\Base\Util::getCurrentTimestamp();
         if ($this->isStopped() === false)
@@ -321,6 +358,10 @@ class StoredProcess implements \Flexio\IFace\IProcess
             }
         }
         $this->procobj->set($process_params);
+
+        // STEP 6: if we have an active owner, decrement the active process count
+        if (\Flexio\Base\Eid::isValid($owner_eid))
+            $this->procobj->decrementActiveProcessCount();
 
         return $this;
     }

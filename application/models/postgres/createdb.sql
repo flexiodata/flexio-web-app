@@ -65,6 +65,7 @@ CREATE TABLE tbl_user (
   stripe_customer_id varchar(20) NOT NULL default '',
   stripe_subscription_id varchar(20) NOT NULL default '',
   trial_end_date timestamp NULL default NULL,
+  process_active_count int default 0,
   referrer text default '',
   config json,
   role varchar(1) NOT NULL default '',
