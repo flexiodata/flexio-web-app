@@ -71,13 +71,18 @@ class Admin
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
-                'owned_by'    => array('type' => 'string',  'required' => false),
-                'created_by'  => array('type' => 'string',  'required' => false),
-                'start'       => array('type' => 'integer', 'required' => false),
-                'tail'        => array('type' => 'integer', 'required' => false),
-                'limit'       => array('type' => 'integer', 'required' => false),
-                'created_min' => array('type' => 'date',    'required' => false),
-                'created_max' => array('type' => 'date',    'required' => false)
+                'username'     => array('type' => 'string',  'required' => false),
+                'email'        => array('type' => 'string',  'required' => false),
+                'owned_by'     => array('type' => 'string',  'required' => false),
+                'created_by'   => array('type' => 'string',  'required' => false),
+                'start'        => array('type' => 'integer', 'required' => false),
+                'tail'         => array('type' => 'integer', 'required' => false),
+                'limit'        => array('type' => 'integer', 'required' => false),
+                'created_min'  => array('type' => 'date',    'required' => false),
+                'created_max'  => array('type' => 'date',    'required' => false),
+                'trialend_min' => array('type' => 'date',    'required' => false),
+                'trialend_max' => array('type' => 'date',    'required' => false),
+                'is_customer'  => array('type' => 'string',  'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
