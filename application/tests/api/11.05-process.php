@@ -60,7 +60,7 @@ EOD;
         }
 
         $actual = count($process_eids);
-        $expected = 500;
+        $expected = 250;
         \Flexio\Tests\Check::assertNumber('A.1', 'POST /:teamid/processes/:objeid; verify the number of processes that were launched',  $actual, $expected, $results);
 
         $actual = $result;
