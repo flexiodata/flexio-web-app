@@ -263,7 +263,7 @@ class User extends ModelBase
         $limit_expr = \Limit::build($db, $filter);
 
         // allow addition non-standard filter items
-        if (isset($filter_items['is_customer']))
+        if (isset($filter['is_customer']))
         {
             $is_customer = $filter['is_customer'];
             if ($is_customer === 'true')
@@ -271,9 +271,9 @@ class User extends ModelBase
             if ($is_customer === 'false')
                 $filter_expr .= (" and (stripe_subscription_id = '')");
         }
-        if (isset($filter_items['trialend_min']))
+        if (isset($filter['trialend_min']))
         {
-            $date = $filter_items['trialend_min'];
+            $date = $filter['trialend_min'];
             $date = strtotime($date);
             if ($date !== false)
             {
@@ -281,9 +281,9 @@ class User extends ModelBase
                 $filter_expr .= (' and (trial_end_date >= ' . $db->quote($date_clean) . ')');
             }
         }
-        if (isset($filter_items['trialend_max']))
+        if (isset($filter['trialend_max']))
         {
-            $date = $filter_items['trialend_max'];
+            $date = $filter['trialend_max'];
             $date = strtotime($date . ' + 1 days');
             if ($date !== false)
             {
