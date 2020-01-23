@@ -282,7 +282,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
         // if we're unable to, then the user is as the maximum number of processes, so
         // a little and then try again
 
-        // if we have a valid owner, attempt to increment the user count
+        // if we have a valid owner, attempt to increment the process count
         $owner_eid = $this->getOwner();
         if (\Flexio\Base\Eid::isValid($owner_eid))
         {
@@ -332,7 +332,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
             $task = array('op' => 'sequence', 'params' => array('items' => $task));
         $this->execute($task);
 
-        // STEP 5: save final job output and status; only save the status if the status if it hasn't already been set
+        // STEP 5: save final job output and status; only save the status if it hasn't already been set
         $process_params = array();
         $process_params['finished'] = \Flexio\Base\Util::getCurrentTimestamp();
         if ($this->isStopped() === false)
