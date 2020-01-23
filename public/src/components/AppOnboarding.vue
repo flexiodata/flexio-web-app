@@ -9,7 +9,7 @@
           <img src="../assets/logo-square-80x80.png" alt="Flex.io" class="br-100 ba bw1 b--white" style="width: 84px; box-shadow: 0 0 3px rgba(0,0,0,0.4)">
         </div>
 
-        <h1 class="fw6 f2 tc pb2">Welcome to Flex.io!</h1>
+        <h1 class="fw6 f2 tc pb2">{{title}}</h1>
 
         <!-- step heading -->
         <el-steps
@@ -17,6 +17,7 @@
           align-center
           finish-status="success"
           :active="active_step_idx"
+          v-if="is_welcome"
         >
           <el-step title="Choose Integrations" />
           <el-step title="Set Up Integrations" />
@@ -159,8 +160,8 @@
   const getDefaultState = () => {
     return {
       is_fetching_config: false,
-      onboarding_method: 'technical-user', // 'spreadsheet-user' or 'technical-user'
-      active_step: 'integrations',
+      route_title: '',
+      active_step: 'integrations', // 'integrations', 'setup', 'addons', 'members'
       active_integration_idx: 0,
       active_setup_template: null,
       selected_integrations: [],
@@ -214,6 +215,15 @@
       },
       is_welcome() {
         return this.integrations_from_route.length == 0
+      },
+      title() {
+        if (this.route_title.length > 0) {
+          return this.route_title
+        } else if (this.is_welcome) {
+          return 'Welcome to Flex.io!'
+        } else {
+          return 'Integration Setup'
+        }
       }
     },
     mounted() {
@@ -223,7 +233,16 @@
       // pre-select integrations
       this.selectIntegrationsFromRoute()
 
-      // make sure the route is in sync
+      // update the active step from the route
+      this.active_step = _.get(this.$route, 'params.action', 'integrations')
+
+      if (this.active_step == 'setup') {
+        this.fetchIntegrationConfig()
+      }
+
+      // update title from route
+      this.route_title = _.get(this.$route, 'query.title', '')
+
       this.setRoute(this.active_step)
     },
     methods: {

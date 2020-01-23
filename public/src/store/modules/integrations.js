@@ -60,11 +60,7 @@ const getters = {
   },
 
   getProductionIntegrations (state, getters) {
-    if (isLocalhost()) {
-      return getters.getAllIntegrations
-    }
-
-    if (isTest()) {
+    if (isLocalhost() || isTest()) {
       return _.filter(getters.getAllIntegrations, item => {
         return item.in_production === true || item.in_staging === true
       })
