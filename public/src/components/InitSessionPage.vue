@@ -22,7 +22,7 @@
 
       if (token.length > 0) {
         // initialize session
-        api.signIn({ params: { token } }).then(response => {
+        api.signInWithToken({ token }).then(response => {
           this.fetchUserAndRedirect(redirect)
         }).catch(error => {
           this.fetchUserAndRedirect(redirect)
