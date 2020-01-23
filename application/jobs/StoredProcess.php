@@ -332,7 +332,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
             $task = array('op' => 'sequence', 'params' => array('items' => $task));
         $this->execute($task);
 
-        // STEP 5: save final job output and status; only save the status if the status if it hasn't already been set
+        // STEP 5: save final job output and status; only save the status if it hasn't already been set
         $process_params = array();
         $process_params['finished'] = \Flexio\Base\Util::getCurrentTimestamp();
         if ($this->isStopped() === false)
