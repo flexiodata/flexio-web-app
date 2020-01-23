@@ -282,7 +282,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
         // if we're unable to, then the user is as the maximum number of processes, so
         // a little and then try again
 
-        // if we have a valid owner, attempt to increment the user count
+        // if we have a valid owner, attempt to increment the process count
         $owner_eid = $this->getOwner();
         if (\Flexio\Base\Eid::isValid($owner_eid))
         {
