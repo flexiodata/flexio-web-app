@@ -340,7 +340,7 @@ class Cron
 
         // STEP 3: run the process
         $engine = \Flexio\Jobs\StoredProcess::create($process);
-        $engine->run();
+        $engine->run(true /*true: run in background*/);
     }
 
     private static function sendTrialEndingNotice(array $user_object_list)
