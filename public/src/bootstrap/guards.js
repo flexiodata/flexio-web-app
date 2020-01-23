@@ -1,7 +1,7 @@
 import router from '@/router' // VueRouter
 import store from '@/store' // Vuex store
 import { OBJECT_STATUS_AVAILABLE } from '@/constants/object-status'
-import { ROUTE_SIGNIN_PAGE, ROUTE_SIGNUP_PAGE } from '@/constants/route'
+import { ROUTE_SIGNIN_PAGE, ROUTE_SIGNUP_PAGE, ROUTE_INITSESSION_PAGE } from '@/constants/route'
 
 const isLocalhost = () => {
   return location.hostname === 'localhost' || location.hostname === '127.0.0.1'
@@ -95,6 +95,12 @@ router.beforeEach((to, from, next) => {
       })
     } else {
       debugRoute('public:', to)
+
+      // the 'init session' route already attempts to fetch the current user; we're done
+      if (to.name == ROUTE_INITSESSION_PAGE) {
+        next()
+        return
+      }
 
       // this route does not require authentication; try to sign in just to make
       // sure we know who the active user is and move to the next route
