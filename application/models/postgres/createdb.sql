@@ -65,6 +65,7 @@ CREATE TABLE tbl_user (
   stripe_customer_id varchar(20) NOT NULL default '',
   stripe_subscription_id varchar(20) NOT NULL default '',
   trial_end_date timestamp NULL default NULL,
+  process_active_count int default 0,
   referrer text default '',
   config json,
   role varchar(1) NOT NULL default '',
@@ -83,6 +84,8 @@ CREATE INDEX idx_user_owned_by ON tbl_user (owned_by);
 CREATE INDEX idx_user_created_by ON tbl_user (created_by);
 CREATE INDEX idx_user_created ON tbl_user (created);
 CREATE INDEX idx_user_trial_end_date ON tbl_user (trial_end_date);
+CREATE INDEX idx_user_stripe_customer_id ON tbl_user (stripe_customer_id);
+CREATE INDEX idx_user_stripe_subscription_id ON tbl_user (stripe_subscription_id);
 
 
 

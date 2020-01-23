@@ -333,6 +333,18 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $this->properties['process_mode'];
     }
 
+    public function incrementActiveProcessCount() : bool
+    {
+        $owner = $this->getOwner();
+        return $this->getModel()->process->incrementActiveProcessCount($owner);
+    }
+
+    public function decrementActiveProcessCount() : bool
+    {
+        $owner = $this->getOwner();
+        return $this->getModel()->process->decrementActiveProcessCount($owner);
+    }
+
     private function isCached() : bool
     {
         // a process may be run in the background and update values

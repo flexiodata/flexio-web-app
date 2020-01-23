@@ -104,10 +104,11 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         // compare the timestamp to the current time; if the timestamp is more than
         // a certain period time after the one in the token, then the token is
         // no longer valid, so return null
-        // TODO: current time token period is set to 7 days; should make smaller
+        // TODO: current time token period is set to 365 days; should we use a smaller
+        // time period with refresh tokens?
         $current_timestamp = \Flexio\Base\Util::getCurrentTimestamp();
         $date_diff_seconds = \Flexio\Base\Util::formatDateDiff($token_timestamp, $current_timestamp);
-        if ($date_diff_seconds < 0 || $date_diff_seconds > 60*60*24*7)
+        if ($date_diff_seconds < 0 || $date_diff_seconds > 60*60*24*365)
             return null;
 
         // return the user info

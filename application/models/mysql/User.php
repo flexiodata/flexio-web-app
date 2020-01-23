@@ -258,9 +258,39 @@ class User extends ModelBase
     public function list(array $filter) : array
     {
         $db = $this->getDatabase();
-        $allowed_items = array('eid', 'eid_status', 'owned_by', 'created_by', 'created_min', 'created_max', 'trialend_min', 'trialend_max', 'username', 'email');
+        $allowed_items = array('eid', 'eid_status', 'owned_by', 'created_by', 'created_min', 'created_max', 'username', 'email');
         $filter_expr = \Filter::build($db, $filter, $allowed_items);
         $limit_expr = \Limit::build($db, $filter);
+
+        // allow addition non-standard filter items
+        if (isset($filter['is_customer']))
+        {
+            $is_customer = $filter['is_customer'];
+            if ($is_customer === 'true')
+                $filter_expr .= (" and (stripe_subscription_id != '')");
+            if ($is_customer === 'false')
+                $filter_expr .= (" and (stripe_subscription_id = '')");
+        }
+        if (isset($filter['trialend_min']))
+        {
+            $date = $filter['trialend_min'];
+            $date = strtotime($date);
+            if ($date !== false)
+            {
+                $date_clean = date('Y-m-d', $date);
+                $filter_expr .= (' and (trial_end_date >= ' . $db->quote($date_clean) . ')');
+            }
+        }
+        if (isset($filter['trialend_max']))
+        {
+            $date = $filter['trialend_max'];
+            $date = strtotime($date . ' + 1 days');
+            if ($date !== false)
+            {
+                $date_clean = date('Y-m-d', $date);
+                $filter_expr .= (' and (trial_end_date < ' . $db->quote($date_clean) . ')'); // created is a timestamp, so use < on the next day
+            }
+        }
 
         $rows = array();
         try

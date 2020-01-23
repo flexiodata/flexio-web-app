@@ -17,15 +17,6 @@ declare(strict_types=1);
 
 class Registry extends ModelBase
 {
-    /**
-     * gets a variable; if the setting doesn't exist,
-     * the function returns null
-     *
-     * @param {string} $name; The name of the variable for which
-     *                  to get the value
-     *
-     * @return {string}; The value of the variable
-     */
     public function getString(string $object_eid, string $name, string $default_value = null) : ?string
     {
         $res = $this->getVariable($object_eid, $name);
@@ -129,15 +120,6 @@ class Registry extends ModelBase
         return $this->setVariable($object_eid, $name, $value, 'BINARY', $expire, $mime_type);
     }
 
-    /**
-     * returns true if a registry entry exists, and false otherwise
-     *
-     * @param {string} $name; The name of the registry entry for
-     *                  which to check for existence
-     *
-     * @return {boolean}; True if the registry entry with the given
-     *                     name exists, and false otherwise
-     */
     public function entryExists(string $object_eid, string $name) : bool
     {
         if (!self::checkInput($object_eid, $name))
@@ -204,16 +186,6 @@ class Registry extends ModelBase
         }
     }
 
-   /**
-     * sets a variable; if the variable doesn't exist, it is
-     * added; if it already exists, the value is set to the
-     * new value
-     *
-     * @param {string} $name; The name of the variable
-     * @param {string} $value; The value of the variable
-     *
-     * @return {void}
-     */
     public function setVariable(string $object_eid, string $name, /* variable */ $value, string $type = 'STRING', int $expires = null, string $mime_type = '', $db = null) : bool
     {
         if (!self::checkInput($object_eid, $name))
@@ -306,15 +278,6 @@ class Registry extends ModelBase
         return true;
     }
 
-    /**
-     * gets a variable; if the variable doesn't exist,
-     * the function returns null
-     *
-     * @param {string} $name; The name of the variable for which
-     *                  to get the value
-     *
-     * @return {string}; The value of the variable
-     */
     public function getVariable(string $object_eid, string $name, $db = null, bool $for_update = false) : ?string
     {
         if (!self::checkInput($object_eid, $name))
