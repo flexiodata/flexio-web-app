@@ -40,6 +40,7 @@ class Api
         'GET /about'                                  => '\Flexio\Api\System::about',
         'POS /login'                                  => '\Flexio\Api\System::login',
         'POS /logout'                                 => '\Flexio\Api\System::logout',
+        'POS /support'                                => '\Flexio\Api\System::support',
         'POS /validate'                               => '\Flexio\Api\User::validateCredentials',
         'POS /signup'                                 => '\Flexio\Api\User::create',
         'POS /requestverification'                    => '\Flexio\Api\User::requestverification',

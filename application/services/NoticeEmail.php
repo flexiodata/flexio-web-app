@@ -19,6 +19,7 @@ namespace Flexio\Services;
 class NoticeEmail
 {
     public const EMAIL_ADDRESS_NO_REPLY = 'Flex.io <no-reply@flex.io>';
+    public const EMAIL_ADDRESS_SUPPORT = 'Flex.io <support@flex.io>';
 
     private $email; // email properties (e.g. from, to, subject, etc)
     private $_ses;

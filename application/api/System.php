@@ -267,4 +267,32 @@ class System
         $request->track();
         \Flexio\Api\Response::sendContent($result);
     }
+
+    public static function support(\Flexio\Api\Request $request) : void
+    {
+        $post_params = $request->getPostParams();
+
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($post_params, array(
+                'from_email' => array('type' => 'email', 'required' => true),
+                'subject' => array('type' => 'string', 'required' => true),
+                'message' => array('type' => 'string', 'required' => true)
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        $validated_params = $validator->getParams();
+        $from_email = $validated_params['from_email'];
+        $subject = $validated_params['subject'];
+        $message = $validated_params['message'] ?? '';
+
+        // send an email that the user's account was created
+        $email = \Flexio\Services\NoticeEmail::create(array(
+            'from' => $from_email,
+            'to' => \Flexio\Services\NoticeEmail::EMAIL_ADDRESS_SUPPORT,
+            'subject' => $subject,
+            'msg_text' => $message,
+            'msg_html' => '' // TODO: add HTML
+        ));
+        $email->send();
+    }
 }
