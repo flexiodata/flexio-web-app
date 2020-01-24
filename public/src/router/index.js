@@ -8,6 +8,7 @@ import admin_routes from './admin'
 import AppAccount from '@/components/AppAccount'
 import AppActivity from '@/components/AppActivity'
 import AppConnections from '@/components/AppConnections'
+import AppIntegrations from '@/components/AppIntegrations'
 import AppMembers from '@/components/AppMembers'
 import AppOnboarding from '@/components/AppOnboarding'
 import AppPipes from '@/components/AppPipes'
@@ -44,7 +45,7 @@ const routes = [
   { path: '/initsession',                                name: rn.ROUTE_INITSESSION_PAGE,    component: InitSessionPage           },
   { path: '/verify',                                     name: rn.ROUTE_VERIFY_PAGE,         component: VerifyPage                },
   { path: '/start/:action?',                             name: rn.ROUTE_APP_ONBOARDING,      component: AppOnboarding,       meta },
-  { path: '/integrations/:action?',                      name: rn.ROUTE_APP_INTEGRATIONS,    component: AppOnboarding,       meta },
+  { path: '/integrations/:action?',                      name: rn.ROUTE_APP_INTEGRATIONS,    component: AppIntegrations,     meta },
   { path: '/account/:action?',                           name: rn.ROUTE_APP_ACCOUNT,         component: AppAccount,          meta },
   { path: '/:team_name?/activity/:action?',              name: rn.ROUTE_APP_ACTIVITY,        component: AppActivity,         meta },
   { path: '/:team_name?/members/:action?',               name: rn.ROUTE_APP_MEMBERS,         component: AppMembers,          meta },
