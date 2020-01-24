@@ -22,6 +22,7 @@ class Action
 
     public const TYPE_UNDEFINED              = '';
     public const TYPE_TEST                   = 'action.test';
+    public const TYPE_GENERAL                = 'action.general';
 
     public const TYPE_USER_LOGIN             = 'action.user.login';
     public const TYPE_USER_LOGOUT            = 'action.user.logout';
@@ -90,6 +91,25 @@ class Action
 
         $result = $action->get();
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        \Flexio\Api\Response::sendContent($result);
+    }
+
+    public static function create(\Flexio\Api\Request $request) : void
+    {
+        $post_params = $request->getPostParams();
+        $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+
+        $request->track(\Flexio\Api\Action::TYPE_GENERAL);
+        $request->setRequestParams($post_params);
+
+        // track the request
+        //$request->setResponseParams($result);
+        $action = $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        $request->track();
+
+        // echo back the post params
+        $result = $post_params;
         \Flexio\Api\Response::sendContent($result);
     }
 

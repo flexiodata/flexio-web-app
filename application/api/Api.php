@@ -131,6 +131,7 @@ class Api
         'PUT /:teamid/vfs/*'                          => '\Flexio\Api\Vfs::put',
 
         // actions
+        'POS /:teamid/actions'                        => '\Flexio\Api\Action::create',
         'GET /:teamid/actions'                        => '\Flexio\Api\Action::list',
 
 
