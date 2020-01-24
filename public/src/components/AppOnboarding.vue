@@ -173,9 +173,9 @@
   export default {
     metaInfo() {
       return {
-        title: 'Welcome to Flex.io',
+        title: this.title,
         titleTemplate: (chunk) => {
-          return chunk
+          return this.is_welcome ? chunk : `${chunk} | Flex.io`
         }
       }
     },
