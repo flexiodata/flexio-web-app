@@ -57,6 +57,10 @@ class Process
         if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PROCESS_CREATE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
+        // TODO: check that user is within usage limits; should this be factored out into a separate object along with rights?
+        if ($owner_user->processUsageWithinLimit() === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::RATE_LIMIT_EXCEEDED);
+
         // check additional rights
         $pipe = false;
         if ($pipe_eid !== false)
@@ -361,6 +365,10 @@ class Process
         if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PROCESS_CREATE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
+        // TODO: check that user is within usage limits; should this be factored out into a separate object along with rights?
+        if ($owner_user->processUsageWithinLimit() === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::RATE_LIMIT_EXCEEDED);
+
         // only allow a process to be run once
         $process_status = $process->getProcessStatus();
         if ($process_status !== \Flexio\Jobs\Process::STATUS_PENDING)
@@ -449,6 +457,10 @@ class Process
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
         if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PROCESS_CREATE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        // TODO: check that user is within usage limits; should this be factored out into a separate object along with rights?
+        if ($owner_user->processUsageWithinLimit() === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::RATE_LIMIT_EXCEEDED);
 
         // set the owner based on the owner being posted to
         $process_params = array();

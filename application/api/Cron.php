@@ -310,6 +310,7 @@ class Cron
         // adds on the parent and owner
 
         // TODO: check permissions based on the owner of the pipe
+        // TODO: check usage based on $owner_user->processUsageWithinLimit()
 
         // STEP 1: load the pipe
         $pipe = false;

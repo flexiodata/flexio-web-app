@@ -376,6 +376,11 @@ class Pipe
         if ($pipe->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PROCESS_CREATE) === false)
              throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
+        // TODO: check that user is within usage limits; should this be factored out into a separate object along with rights?
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+        if ($owner_user->processUsageWithinLimit() === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::RATE_LIMIT_EXCEEDED);
+
         // if the process is created with a request from an api token, it's
         // triggered with an api; if there's no api token, it's triggered
         // from a web session, in which case it's triggered by the UI;

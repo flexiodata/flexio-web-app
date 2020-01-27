@@ -267,6 +267,10 @@ class Vfs
         if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_STREAM_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
+        // TODO: check that user is within usage limits; should this be factored out into a separate object along with rights?
+        if ($owner_user->processUsageWithinLimit() === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::RATE_LIMIT_EXCEEDED);
+
         // get the file to excecute from the vfs path
         $path = parse_url($request_url, PHP_URL_PATH);
 

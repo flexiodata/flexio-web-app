@@ -300,6 +300,34 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $stripe_subscription_id;
     }
 
+    public function processUsageWithinLimit() : bool
+    {
+        // for now, rate limits are determined by the trial period and subscription plan;
+        // if the user has a subscription or they're within the trial period, they're
+        // allowed to run functions; otherwise the usage is exceeded
+
+        // TODO: impose cap based on plan and process count per period
+
+        $properties = $this->get();
+        $stripe_subscription_id = $properties['stripe_subscription_id'];
+        $trial_end_date = $properties['trial_end_date'];
+
+        // if the user has a valid subscription, they're within the limit
+        if (strlen($stripe_subscription_id) > 0)
+            return true;
+
+        // if the user is in the trial period, they're within the limit
+        $current_timestamp = \Flexio\Base\Util::getCurrentTimestamp();
+        $current_time = strtotime($current_timestamp);
+        $trial_end_time = strtotime($trial_end_date);
+
+        if ($current_time !== false && $trial_end_time !== false && $current_time <= $trial_end_time)
+            return true;
+
+        // limit exceeded
+        return false;
+    }
+
     public function checkPassword(string $password) : bool
     {
         return $this->getModel()->user->checkUserPasswordByEid($this->getEid(), $password);
