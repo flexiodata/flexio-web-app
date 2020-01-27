@@ -38,6 +38,7 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
         $connection_type = $params['service'] ?? '';
         $connection_eid = $params['eid'] ?? '';
         $api_base_uri = $params['api_base_uri'] ?? '';
+        $page_redirect_uri = $params['page_redirect_uri'] ?? '';
 
         try
         {
@@ -59,12 +60,17 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
             }
 
             // STEP 3: prepare the params to pass to the remote service, including
-            // a state parameter that stores the connection eid and the redirect url
+            // a state parameter that stores the connection eid and the redirect url;
+            // note: 'redirect' is the formal appplication callback that the oauth service
+            // calls; 'page_redirect_uri' is an additional optional redirect that can
+            // be passed in the state variable to further redirect at the end of the
+            // official callback called by 'redirect'
             $state = array(
                 'requesting_user_eid' => $requesting_user_eid,
                 'connection_type' => $connection_type,
                 'connection_eid' => $connection_eid,
-                'api_base_uri' => $api_base_uri
+                'api_base_uri' => $api_base_uri,
+                'page_redirect_uri' => $page_redirect_uri
             );
             $connection_info = array(
                 'state' => \Flexio\Base\Util::encrypt(json_encode($state), self::OAUTH2_ENCKEY), // encrypt function returns base64 string, so url safe
@@ -126,6 +132,7 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
         $connection_type = $state['connection_type'] ?? '';
         $connection_eid = $state['connection_eid'] ?? '';
         $api_base_uri = $state['api_base_uri'] ?? '';
+        $page_redirect_uri = $state['page_redirect_uri'] ?? '';
 
         // create an initial set of connection properties to save
         $connection_properties_to_save = array();
@@ -184,6 +191,10 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
 
         $this->view->our_origin = 'https://' . $_SERVER['HTTP_HOST'];
         $this->view->service_oauth_response = json_encode($connection_properties_to_save);
+
+        if (strlen($page_redirect_uri) > 0)
+            $this->_redirect($page_redirect_uri);
+
         $this->renderPage();
     }
 
