@@ -2,7 +2,7 @@ Hi ${first_name},
 
 Thank you for trying Flex.io!
 
-Your free trial will be ending tomorrow. To keep using your Flex.io functions, you'll need to choose a plan.
+Your free trial will be ending tomorrow. To keep using your Flex.io functions, you'll need to select a plan. We hope you enjoy using Flex.io and choose a plan today!
 
 ${billing_link}
 
