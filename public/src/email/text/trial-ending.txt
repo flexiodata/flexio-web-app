@@ -1,10 +1,8 @@
 Hi ${first_name},
 
-We hope you have enjoyed using Flex.io!
+Thank you for trying Flex.io!
 
-Unfortunately, your free trial is almost over. If you don't select a monthly plan, you'll no longer be able to use Flex.io functions in your spreadsheet.
-
-Act now to keep your functions running without interruption.
+Your free trial will be ending tomorrow. To keep using your Flex.io functions, you'll need to choose a plan.
 
 ${billing_link}
 
