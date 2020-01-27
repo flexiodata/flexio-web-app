@@ -40,7 +40,7 @@
 <script>
   import Spinner from 'vue-simple-spinner'
   import { mapState, mapGetters } from 'vuex'
-  import { ROUTE_APP_FUNCTIONS, ROUTE_APP_ONBOARDING } from '@/constants/route'
+  import { ROUTE_APP_FUNCTIONS, ROUTE_APP_ONBOARDING, ROUTE_APP_INTEGRATIONS } from '@/constants/route'
   import AppNavbar from '@/components/AppNavbar'
   import PageNotFound from '@/components/PageNotFound'
 
@@ -108,7 +108,7 @@
           return false
         }
 
-        return this.requires_auth && route_name != ROUTE_APP_ONBOARDING
+        return this.requires_auth && route_name != ROUTE_APP_ONBOARDING && route_name != ROUTE_APP_INTEGRATIONS
       },
       show_intercom_button() {
         return this.requires_auth
