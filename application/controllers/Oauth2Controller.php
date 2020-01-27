@@ -193,7 +193,11 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
         $this->view->service_oauth_response = json_encode($connection_properties_to_save);
 
         if (strlen($page_redirect_uri) > 0)
+        {
+            // if redirecting, return the connection properties to save as a parameter as query parameter
+            $page_redirect_uri = $page_redirect_uri . '?oauth_params=' . base64_encode(json_encode($connection_properties_to_save));
             $this->_redirect($page_redirect_uri);
+        }
 
         $this->renderPage();
     }
