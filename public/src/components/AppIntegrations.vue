@@ -20,8 +20,10 @@
         </div>
 
         <FunctionMountSetupWizard
-          :setup-template="active_setup_template"
+          :connection="active_connection"
+          :setup-template="setup_template"
           @submit="saveIntegration"
+          @oauth-connect="oauthConnect"
           v-else
         >
           <div slot="no-prompts">
@@ -49,7 +51,8 @@
         <ButtonBar
           class="mt4"
           :cancel-button-visible="false"
-          :submit-button-text="'Done'"
+          :submit-button-text="is_submitting ? 'Submitting...' : 'Done'"
+          :submit-button-disabled="is_submitting"
           @submit-click="submitIntegrationConfig"
         />
       </div>
@@ -65,6 +68,7 @@
   import { mapState, mapGetters } from 'vuex'
   import { OBJECT_TYPE_CONNECTION } from '@/constants/object-type'
   import api from '@/api'
+  import { atobUnicode } from '@/utils'
   import ButtonBar from '@/components/ButtonBar'
   import IconList from '@/components/IconList'
   import FunctionMountSetupWizard from '@/components/FunctionMountSetupWizard'
@@ -81,14 +85,14 @@
 
   const getDefaultState = () => {
     return {
+      post_message_to_opener: true,
+      is_submitting: false,
       is_fetching_config: false,
       route_title: '',
-      active_step: 'integrations', // 'integrations', 'setup', 'addons', 'members'
-      active_integration_idx: 0,
-      active_setup_template: null,
-      selected_integrations: [],
-      output_mounts: [],
-      email_invites: []
+      active_step: 'setup', // 'setup' or 'setup-success'
+      active_integration: {},
+      setup_template: null,
+      output_mount: {}
     }
   }
 
@@ -122,18 +126,17 @@
       active_step_idx() {
         return _.indexOf(this.step_order, this.active_step)
       },
-      active_integration() {
-        return this.selected_integrations[this.active_integration_idx]
+      active_connection() {
+        return _.get(this.active_integration, 'connection', {})
       },
-      has_active_setup_template() {
-        return !_.isNil(this.active_setup_template)
+      has_setup_template() {
+        return !_.isNil(this.setup_template)
       },
       step_order() {
        return ['setup', 'setup-success']
       },
-      integrations_from_route() {
-        var integrations = _.get(this.$route, 'query.integration', '')
-        return integrations.length > 0 ? integrations.split(',') : []
+      integration_from_route() {
+        return _.get(this.$route, 'query.integration', '')
       },
       title() {
         if (this.route_title.length > 0) {
@@ -148,7 +151,7 @@
       this.$store.dispatch('teams/changeActiveTeam', { team_name })
 
       // pre-select integrations
-      this.selectIntegrationsFromRoute()
+      this.selectIntegrationFromRoute()
 
       // update the active step from the route
       this.active_step = _.get(this.$route, 'params.action', 'integrations')
@@ -169,13 +172,12 @@
       ...mapGetters('integrations', {
         'getProductionIntegrations': 'getProductionIntegrations',
       }),
-      selectIntegrationsFromRoute() {
-        _.each(this.integrations_from_route, cname => {
-          var selected_integration = _.find(this.integrations, f => _.get(f, 'connection.name', '') == cname)
-          if (selected_integration) {
-            this.selected_integrations = this.selected_integrations.concat([selected_integration])
-          }
-        })
+      selectIntegrationFromRoute() {
+        var cname = this.integration_from_route
+        var route_integration = _.find(this.integrations, f => _.get(f, 'connection.name', '') == cname)
+        if (route_integration) {
+          this.active_integration = Object.assign({}, route_integration)
+        }
       },
       setRoute(action) {
         // update the route
@@ -187,38 +189,15 @@
       onNextStepClick() {
         // we're on the last step; commit all changes to the backend and take the user to the app
         if (this.active_step_idx == this.step_order.length - 1) {
+          debugger
           this.submitIntegrationConfig()
           return
         }
 
-        if (this.active_step == 'integrations' && this.selected_integrations.length == 0) {
-          var msg = "Are you sure you'd like to continue without setting up an integration?"
-          var title = 'Really continue without an integration?'
+        this.active_step = this.step_order[this.active_step_idx + 1]
 
-          this.$confirm(msg, title, {
-            type: 'warning',
-            confirmButtonClass: 'ttu fw6',
-            cancelButtonClass: 'ttu fw6',
-            confirmButtonText: 'Continue',
-            cancelButtonText: 'Cancel',
-            dangerouslyUseHTMLString: true,
-          }).then(() => {
-            // skip over integration set up if none were selected
-            this.active_step = this.step_order[this.active_step_idx + 2]
-
-            // make sure the route is in sync
-            this.setRoute(this.active_step)
-          })
-        } else {
-          this.active_step = this.step_order[this.active_step_idx + 1]
-
-          if (this.active_step == 'setup') {
-            this.fetchIntegrationConfig()
-          }
-
-          // make sure the route is in sync
-          this.setRoute(this.active_step)
-        }
+        // make sure the route is in sync
+        this.setRoute(this.active_step)
       },
       fetchIntegrationConfig() {
         this.is_fetching_config = true
@@ -227,15 +206,38 @@
         var url = _.get(this.active_integration, 'connection.connection_info.url', '')
 
         api.fetchFunctionPackSetupTemplate(team_name, url).then(response => {
-          this.active_setup_template = response.data
+          this.setup_template = response.data
+          this.tryFillOauthParams()
           this.is_fetching_config = false
         }).catch(error => {
           // TODO: this just skips the rest of the integration setup;
           //       this needs to be thought through more...
-          this.active_setup_template = null
-          this.active_step == 'addons'
+          this.setup_template = null
           this.is_fetching_config = false
         })
+      },
+      tryFillOauthParams() {
+        var oauth_params = _.get(this.$route, 'query.oauth_params', '')
+        if (oauth_params.length > 0) {
+          try {
+            var connection = JSON.parse(atobUnicode(oauth_params))
+
+            // hard-code the connection info in the setup template since
+            // it has been made that way by the OAuth callback
+            var conn =_.get(this.setup_template, 'prompts[' + this.active_step_idx + '].connection', {})
+            conn = Object.assign({ eid_type: 'CTN' }, conn, connection)
+            var setup_template = _.cloneDeep(this.setup_template)
+            _.set(setup_template, 'prompts[' + this.active_step_idx + '].connection', conn)
+            this.setup_template = Object.assign({}, setup_template)
+          }
+          catch (e) {
+          }
+
+          // update the route
+          var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path', 'query'])
+          new_route.query = _.omit(new_route.query, ['oauth_params'])
+          this.$router.replace(new_route)
+        }
       },
       processSetupConfig(setup_config, parent_eid, callback) {
         var team_name = this.active_team_name
@@ -274,32 +276,29 @@
           callback(setup_config)
         })
       },
+      oauthConnect(redirectTo) {
+        redirectTo(window.location.href)
+      },
       saveIntegration(setup_config) {
         // if the builder item is an auth builder item, create the connection at this time
         // and then we can move forward to the next step
         this.processSetupConfig(setup_config, undefined, setup_config => {
-          var setup_template = this.active_setup_template
+          var setup_template = this.setup_template
           var mount = _.cloneDeep(_.get(this.active_integration, 'connection', {}))
           mount = _.assign({}, mount, { setup_config, setup_template })
 
-          this.output_mounts = [].concat(this.output_mounts).concat([mount])
-
-          if (this.active_integration_idx == this.selected_integrations.length - 1) {
-            this.onNextStepClick()
-          } else {
-            this.active_integration_idx++
-            this.fetchIntegrationConfig()
-          }
+          this.output_mount = Object.assign({}, mount)
+          this.onNextStepClick()
         })
       },
       submitIntegrationConfig() {
+        this.is_submitting = true
+
         var team_name = this.active_team_name
         var create_xhrs = []
 
-        _.each(this.output_mounts, attrs => {
-          var xhr = this.$store.dispatch('connections/create', { team_name, attrs })
-          create_xhrs.push(xhr)
-        })
+        var xhr = this.$store.dispatch('connections/create', { team_name, attrs: this.output_mount })
+        create_xhrs.push(xhr)
 
         // create all of the integrations
         axios.all(create_xhrs).then(responses => {
@@ -313,10 +312,14 @@
             sync_xhrs.push(xhr)
 
             // make sure we add parent eids to all child connections if we need to
-            this.processSetupConfig(setup_config, eid)
+            this.processSetupConfig(setup_config, eid, () => {
+              if (this.post_message_to_opener) {
+                window.opener.postMessage('done', '*')
+              }
+              this.is_submitting = false
+              this.$emit('done')
+            })
           })
-
-          window.close()
         })
         .catch(error => {
 
