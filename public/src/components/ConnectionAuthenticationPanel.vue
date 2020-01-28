@@ -201,6 +201,7 @@
 <script>
   import axios from 'axios'
   import { mapState } from 'vuex'
+  import { buildQueryString } from '@/utils'
   import { CONNECTION_STATUS_AVAILABLE, CONNECTION_STATUS_UNAVAILABLE } from '@/constants/connection-status'
   import * as ctypes from '@/constants/connection-type'
   import * as cinfos from '@/constants/connection-info'
@@ -486,33 +487,45 @@
         var eid = _.get(this.connection, 'eid', '')
         var team_name = this.active_team_name
 
-        this.$_Oauth_showPopup(this.ctype, eid, this.api_base_uri, attrs => {
-          // TODO: handle 'code' and 'state' and 'error' here...
+        // this is a pretty hack-ish way of doing this, but it handles things properly:
+        // namely, show the OAuth popup window unless this event is handled somewhere else;
+        // perhaps a better way to handle this would be passing the value down as a prop through `v-bind`
+        var is_handled = false
 
-          if (eid.length > 0) {
-            // for now, re-fetch the connection to update its state
-            this.$store.dispatch('connections/fetch', { team_name, eid }).then(response => {
-              var connection_status = _.get(response.data, 'connection_status', '')
-              this.updateEditConnection({ connection_status })
-
-              this.$nextTick(() => {
-                if (this.is_connected) {
-                  this.$message({
-                    message: "You've successfully connected to " + this.service_name + "!",
-                    type: 'success'
-                  })
-                }
-              })
-            }).catch(error => {
-              this.$message({
-                message: _.get(error, 'response.data.error.message', ''),
-                type: 'error'
-              })
-            })
-          } else {
-            this.updateEditConnection(attrs)
-          }
+        this.$emit('oauth-connect', (page_redirect_uri) => {
+          is_handled = true
+          this.$_Oauth_pageRedirect(this.ctype, eid, this.api_base_uri, page_redirect_uri)
         })
+
+        if (!is_handled) {
+          this.$_Oauth_showPopup(this.ctype, eid, this.api_base_uri, attrs => {
+            // TODO: handle 'code' and 'state' and 'error' here...
+
+            if (eid.length > 0) {
+              // for now, re-fetch the connection to update its state
+              this.$store.dispatch('connections/fetch', { team_name, eid }).then(response => {
+                var connection_status = _.get(response.data, 'connection_status', '')
+                this.updateEditConnection({ connection_status })
+
+                this.$nextTick(() => {
+                  if (this.is_connected) {
+                    this.$message({
+                      message: "You've successfully connected to " + this.service_name + "!",
+                      type: 'success'
+                    })
+                  }
+                })
+              }).catch(error => {
+                this.$message({
+                  message: _.get(error, 'response.data.error.message', ''),
+                  type: 'error'
+                })
+              })
+            } else {
+              this.updateEditConnection(attrs)
+            }
+          })
+        }
       },
       onValuesChange(values) {
         this.edit_connection_info = _.assign({}, this.edit_connection_info, values)
