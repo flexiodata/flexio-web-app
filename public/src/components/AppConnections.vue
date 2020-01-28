@@ -18,7 +18,7 @@
 
   <!-- fetched -->
   <div class="flex flex-column bg-nearer-white" v-else-if="is_fetched">
-    <div class="flex-fill flex flex-row" v-if="connections.length > 0">
+    <div class="flex-fill flex flex-row" v-if="sorted_connections.length > 0">
       <template v-if="has_connection">
         <!-- sidebar -->
         <div class="flex flex-column min-w5 bg-white br b--black-05">
@@ -187,8 +187,11 @@
       connections() {
         return this.getAvailableConnections()
       },
+      non_child_connections() {
+        return _.filter(this.connections, c => _.get(c, 'parent.eid', '') == '')
+      },
       sorted_connections() {
-        return _.sortBy(this.connections, ['name'])
+        return _.sortBy(this.non_child_connections, ['name'])
       },
       filtered_connections() {
         return this.$_Filter_filter(this.sorted_connections, this.connection_list_filter, ['name'])
