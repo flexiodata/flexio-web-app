@@ -32,6 +32,23 @@ const getWindowOptions = () => {
 
 export default {
   methods: {
+    $_Oauth_pageRedirect(connection_type, eid, api_base_uri, page_redirect_uri, callback) {
+      if (_.isNil(connection_type)) {
+        return
+      }
+
+      var query_str = buildQueryString({
+        service: connection_type,
+        eid,
+        api_base_uri,
+        page_redirect_uri
+      })
+
+      var oauth_origin = 'https://' + HOSTNAME
+      var oauth_url = oauth_origin + '/oauth2/connect' + '?' + query_str
+      var wnd = window.location = oauth_url
+    },
+
     $_Oauth_showPopup(connection_type, eid, api_base_uri, callback) {
       if (_.isNil(connection_type)) {
         return
