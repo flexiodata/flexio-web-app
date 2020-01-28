@@ -20,6 +20,7 @@
       :connection.sync="edit_connection"
       :show-header="false"
       :show-footer="false"
+      v-on="$listeners"
     />
     <ButtonBar
       class="mt4"

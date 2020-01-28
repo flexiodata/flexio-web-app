@@ -12,6 +12,7 @@
         @values-change="onValuesChange"
         @cancel-click="onBackClick"
         @submit-click="onNextClick"
+        v-on="$listeners"
         v-for="(prompt, index) in prompts"
       />
       <slot name="no-prompts" v-if="prompts.length == 0">

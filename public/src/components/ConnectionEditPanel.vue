@@ -38,6 +38,7 @@
       <div class="tc ttu fw6 f4 form-title">Authentication</div>
       <ConnectionAuthenticationPanel
         :connection.sync="edit_connection"
+        v-on="$listeners"
       />
     </ServiceIconWrapper>
 
