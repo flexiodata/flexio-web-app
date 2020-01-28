@@ -66,6 +66,7 @@
   import randomstring from 'randomstring'
   import Spinner from 'vue-simple-spinner'
   import { mapState, mapGetters } from 'vuex'
+  import { HOSTNAME } from '@/constants/common'
   import { OBJECT_TYPE_CONNECTION } from '@/constants/object-type'
   import api from '@/api'
   import { atobUnicode } from '@/utils'
@@ -314,7 +315,7 @@
             // make sure we add parent eids to all child connections if we need to
             this.processSetupConfig(setup_config, eid, () => {
               if (this.post_message_to_opener) {
-                window.opener.postMessage('done', '*')
+                window.opener.postMessage('done', 'https://' + HOSTNAME)
               }
               this.is_submitting = false
               this.$emit('done')
