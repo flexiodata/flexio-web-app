@@ -86,7 +86,6 @@
 
   const getDefaultState = () => {
     return {
-      post_message_to_opener: true,
       is_submitting: false,
       is_fetching_config: false,
       route_title: '',
@@ -314,9 +313,10 @@
 
             // make sure we add parent eids to all child connections if we need to
             this.processSetupConfig(setup_config, eid, () => {
-              if (this.post_message_to_opener) {
-                window.opener.postMessage('done', 'https://' + HOSTNAME)
-              }
+              var msg_json = { type: 'flexio-integration-setup-complete' }
+              window.opener.postMessage(msg_json, 'https://' + HOSTNAME)
+              window.opener.postMessage(msg_json, 'https://' + HOSTNAME + ':8080')
+
               this.is_submitting = false
               this.$emit('done')
             })
