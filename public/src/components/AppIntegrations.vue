@@ -66,7 +66,6 @@
   import randomstring from 'randomstring'
   import Spinner from 'vue-simple-spinner'
   import { mapState, mapGetters } from 'vuex'
-  import { HOSTNAME } from '@/constants/common'
   import { OBJECT_TYPE_CONNECTION } from '@/constants/object-type'
   import api from '@/api'
   import { atobUnicode } from '@/utils'
@@ -314,9 +313,7 @@
             // make sure we add parent eids to all child connections if we need to
             this.processSetupConfig(setup_config, eid, () => {
               var msg_json = { type: 'flexio-integration-setup-complete' }
-              window.opener.postMessage(msg_json, 'https://' + HOSTNAME)
-              window.opener.postMessage(msg_json, 'https://' + HOSTNAME + ':8080')
-              window.opener.postMessage(msg_json, 'https://docs.google.com')
+              window.opener.postMessage(msg_json, "*")
 
               this.is_submitting = false
               this.$emit('done')
