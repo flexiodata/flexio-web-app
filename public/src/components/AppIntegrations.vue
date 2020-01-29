@@ -316,6 +316,7 @@
               var msg_json = { type: 'flexio-integration-setup-complete' }
               window.opener.postMessage(msg_json, 'https://' + HOSTNAME)
               window.opener.postMessage(msg_json, 'https://' + HOSTNAME + ':8080')
+              window.opener.postMessage(msg_json, 'https://docs.google.com')
 
               this.is_submitting = false
               this.$emit('done')
