@@ -20,7 +20,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
 {
     private $engine;            // instance of \Flexio\Jobs\Process
     private $procobj;           // instance of \Flexio\Object\Process -- used only during execution phase
-    private $procmode;
 
     public function __construct()
     {
@@ -31,7 +30,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
         $object = new static();
         $object->procobj = $procobj;
         $object->engine = \Flexio\Jobs\Process::create();
-        $object->procmode = $procobj->getMode();
         $object->setOwner($procobj->getOwner());
         return $object;
     }
@@ -320,7 +318,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
             }
 
             // if we're in build mode, create a storable stream to store the output
-            if ($this->procmode === \Flexio\Jobs\Process::MODE_BUILD)
+            if ($this->procobj->getMode() === \Flexio\Jobs\Process::MODE_BUILD)
             {
                 $owned_by = $this->getOwner();
                 $storable_stdout = self::createStorableStream($this->getStdout(), $owned_by);
