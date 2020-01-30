@@ -62,7 +62,7 @@ EOD;
         $expected = '{
             "code": 200,
             "content_type": "text/plain;charset=UTF-8",
-            "response": "process.time.started;process.time.unix;process.user.email;process.user.firstname;process.user.lastname;"
+            "response": ""
         }';
         \Flexio\Tests\Check::assertInArray('A.1', 'Process Execute; (python) execute task default variable keys',  $actual, $expected, $results);
 
@@ -100,7 +100,7 @@ EOD;
         $expected = '{
             "code": 200,
             "content_type": "text/plain;charset=UTF-8",
-            "response": "process.time.started;process.time.unix;process.user.email;process.user.firstname;process.user.lastname;"
+            "response": ""
         }';
         \Flexio\Tests\Check::assertInArray('A.2', 'Process Execute; (nodejs) execute task default variable keys',  $actual, $expected, $results);
 

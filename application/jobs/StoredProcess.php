@@ -260,11 +260,10 @@ class StoredProcess implements \Flexio\IFace\IProcess
             }
         }
 
-        // STEP 3: add the environment variables
-        $environment_variables = $this->getEnvironmentParams();
+        // STEP 3: add the variables
         $mount_variables = $this->getMountParams();
         $user_variables = $this->getParams();
-        $this->setParams(array_merge($user_variables, $mount_variables, $environment_variables));
+        $this->setParams(array_merge($user_variables, $mount_variables));
 
         // STEP 4: if we have an associative array, we have a top-level task, so simply
         // execute it; otherwise we have an array of tasks, so package them in a sequence job
@@ -411,35 +410,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
         }
 
         return array();
-    }
-
-    private function getEnvironmentParams() : array
-    {
-        // return a list of environment parameters;
-        // TODO: determine list; for now, include current user information and time
-        // TODO: do we want to "namespace" the variables? right now, variables are
-        // limited to alphanumeric, but maybe we want to do something like:
-        // "flexio.user_firstname", "flexio.user_lastname", etc
-
-        $process_user_info = array();
-        try
-        {
-            $process_user_eid = $this->getOwner();
-            $process_user = \Flexio\Object\User::load($process_user_eid);
-            $process_user_eid = $process_user->get();
-        }
-        catch (\Flexio\Base\Exception $e)
-        {
-        }
-
-        $environment_params = array();
-        $environment_params['process.user.firstname'] = $process_user_info['first_name'] ?? '';
-        $environment_params['process.user.lastname'] = $process_user_info['last_name'] ?? '';
-        $environment_params['process.user.email'] = $process_user_info['email'] ?? '';
-        $environment_params['process.time.started'] = \Flexio\System\System::getTimestamp();
-        $environment_params['process.time.unix'] = (string)time();
-
-        return $environment_params;
     }
 }
 
