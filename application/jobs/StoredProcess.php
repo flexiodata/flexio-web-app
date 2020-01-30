@@ -253,29 +253,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $proc->run_internal();
     }
 
-    public function handleEvent(string $event, array $process_info)
-    {
-        // if we're not in build mode, don't do anything with events;
-        if ($this->procmode !== \Flexio\Jobs\Process::MODE_BUILD)
-            return;
-
-        switch ($event)
-        {
-            // don't do anything if it's an event we don't care about
-            default:
-            case \Flexio\Jobs\Process::EVENT_STARTING:
-            case \Flexio\Jobs\Process::EVENT_FINISHED:
-                return;
-
-            case \Flexio\Jobs\Process::EVENT_STARTING_TASK:
-                break;
-
-            case \Flexio\Jobs\Process::EVENT_FINISHED_TASK:
-                $this->updateProcessInfo($process_info);
-                break;
-        }
-    }
-
     private function run_internal() : \Flexio\Jobs\StoredProcess
     {
         // STEP 1: if we have a valid owner, try to increment the active process count;
@@ -322,17 +299,14 @@ class StoredProcess implements \Flexio\IFace\IProcess
         $user_variables = $this->getParams();
         $this->setParams(array_merge($user_variables, $mount_variables, $environment_variables));
 
-        // STEP 3: get events for logging, if necessary
-        $this->addEventHandler([$this, 'handleEvent']);
-
-        // STEP 4: if we have an associative array, we have a top-level task, so simply
+        // STEP 3: if we have an associative array, we have a top-level task, so simply
         // execute it; otherwise we have an array of tasks, so package them in a sequence job
         $task = $this->procobj->getTask();
         if (\Flexio\Base\Util::isAssociativeArray($task) === false)
             $task = array('op' => 'sequence', 'params' => array('items' => $task));
         $this->execute($task);
 
-        // STEP 5: save final job output and status; only save the status if it hasn't already been set
+        // STEP 4: save final job output and status; only save the status if it hasn't already been set
         $process_params = array();
         $process_params['finished'] = \Flexio\Base\Util::getCurrentTimestamp();
         if ($this->isStopped() === false)
@@ -359,22 +333,11 @@ class StoredProcess implements \Flexio\IFace\IProcess
         }
         $this->procobj->set($process_params);
 
-        // STEP 6: if we have an active owner, decrement the active process count
+        // STEP 5: if we have an active owner, decrement the active process count
         if (\Flexio\Base\Eid::isValid($owner_eid))
             $this->procobj->decrementActiveProcessCount();
 
         return $this;
-    }
-
-    private function updateProcessInfo(array $process_info) : void
-    {
-        // read the process object record and proxy information to the
-        // process engine
-
-        if ($this->procobj->getStatus() === \Flexio\Jobs\Process::STATUS_CANCELLED)
-            $this->cancel();
-
-        // TODO: proxy other information
     }
 
     private static function createStorableStream(\Flexio\IFace\IStream $stream, string $owned_by) : \Flexio\Object\Stream
