@@ -37,13 +37,6 @@ class Process implements \Flexio\IFace\IProcess
     public const RESPONSE_NONE = 0;
     public const RESPONSE_NORMAL = 200;
 
-    // events are passed in a callback function along with info
-    // to track info about the process
-    public const EVENT_STARTING       = 'process.starting';
-    public const EVENT_STARTING_TASK  = 'process.starting.task';
-    public const EVENT_FINISHED       = 'process.finished';
-    public const EVENT_FINISHED_TASK  = 'process.finished.task';
-
     private static $manifest = array(
         'archive'   => '\Flexio\Jobs\Archive',
         'calc'      => '\Flexio\Jobs\CalcField',
@@ -372,9 +365,6 @@ class Process implements \Flexio\IFace\IProcess
         if ($this->hasError())
             return $this;
 
-        // signal the start of the task
-        $this->signal(self::EVENT_STARTING_TASK, $this->getProcessState($task));
-
         // if a task on the process has already been executed, move the previous stdout
         // to the current stdin; this allows chaining of execute() on the process with
         // a separate task in each execute:  $process->execute($task1)->execute($task2);
@@ -388,9 +378,6 @@ class Process implements \Flexio\IFace\IProcess
         // execute the task
         $this->executeTask($task);
         $this->first_execute = false;
-
-        // signal the end of the task
-        $this->signal(self::EVENT_FINISHED_TASK, $this->getProcessState($task));
 
         return $this;
     }
