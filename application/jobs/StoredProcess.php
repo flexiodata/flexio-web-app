@@ -184,6 +184,11 @@ class StoredProcess implements \Flexio\IFace\IProcess
         }
          else
         {
+            // TODO: following serialization used to be uncommented, but it wasn't
+            // unpacked anywhere, so was only added overhead on background calls;
+            // if need to pass params, can do something like this, but can change
+            // the format if needed
+
             // job will run in background across process boundry; we'll serialize the
             // variables and streams here; they will be unserialized in the background
             // process in the static background_entry() function
@@ -192,13 +197,13 @@ class StoredProcess implements \Flexio\IFace\IProcess
             // filelist
             // params
 
-            $owned_by = $this->getOwner();
-            $storable_stdin = self::createStorableStream($this->engine->getStdin(), $owned_by);
-            $input = [
-                'params' => $this->engine->getParams(),
-                'stream' => $storable_stdin->getEid()
-            ];
-            $this->procobj->set(['input' => $input]);
+            // $owned_by = $this->getOwner();
+            // $storable_stdin = self::createStorableStream($this->engine->getStdin(), $owned_by);
+            // $input = [
+            //     'params' => $this->engine->getParams(),
+            //     'stream' => $storable_stdin->getEid()
+            // ];
+            // $this->procobj->set(['input' => $input]);
 
             $process_eid = $this->procobj->getEid();
             \Flexio\System\Program::runInBackground("\Flexio\Jobs\StoredProcess::background_entry('$process_eid')");
