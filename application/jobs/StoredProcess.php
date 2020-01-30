@@ -183,7 +183,11 @@ class StoredProcess implements \Flexio\IFace\IProcess
         ]);
 
         // run the job
-        if ($background === true)
+        if ($background === false)
+        {
+            return $this->run_internal();
+        }
+         else
         {
             // job will run in background across process boundry; we'll serialize the
             // variables and streams here; they will be unserialized in the background
@@ -209,15 +213,9 @@ class StoredProcess implements \Flexio\IFace\IProcess
             //$this->procobj->set(['output' => $output]);
 
             $process_eid = $this->procobj->getEid();
-
             \Flexio\System\Program::runInBackground("\Flexio\Jobs\StoredProcess::background_entry('$process_eid')");
+            return $this;
         }
-         else
-        {
-            return $this->run_internal();
-        }
-
-        return $this;
     }
 
     public static function background_entry($process_eid) : \Flexio\Jobs\StoredProcess
