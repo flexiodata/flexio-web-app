@@ -175,17 +175,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $this;
     }
 
-    public function stop() : \Flexio\Jobs\StoredProcess
-    {
-        $this->engine->cancel();
-        return $this;
-    }
-
-    public function isStopped() : bool
-    {
-        return $this->engine->isStopped();
-    }
-
     public function run(bool $background = true) : \Flexio\Jobs\StoredProcess
     {
         $this->procobj->set([
@@ -293,28 +282,27 @@ class StoredProcess implements \Flexio\IFace\IProcess
         // STEP 4: save final job output and status; only save the status if it hasn't already been set
         $process_params = array();
         $process_params['finished'] = \Flexio\Base\Util::getCurrentTimestamp();
-        if ($this->isStopped() === false)
+
+        $process_params['process_status'] = \Flexio\Jobs\Process::STATUS_COMPLETED;
+        if ($this->hasError())
         {
-            $process_params['process_status'] = \Flexio\Jobs\Process::STATUS_COMPLETED;
-            if ($this->hasError())
-            {
-                $process_info = array('error' => $this->getError());
-                $process_info_str = json_encode($process_info, JSON_PARTIAL_OUTPUT_ON_ERROR); // don't allow bad characters that may exist in debugging info to cause encoding to cause another failure
+            $process_info = array('error' => $this->getError());
+            $process_info_str = json_encode($process_info, JSON_PARTIAL_OUTPUT_ON_ERROR); // don't allow bad characters that may exist in debugging info to cause encoding to cause another failure
 
-                $process_params['process_status'] = \Flexio\Jobs\Process::STATUS_FAILED;
-                $process_params['process_info'] = $process_info_str;
-            }
-
-            // if we're in build mode, create a storable stream to store the output
-            if ($this->procobj->getMode() === \Flexio\Jobs\Process::MODE_BUILD)
-            {
-                $owned_by = $this->getOwner();
-                $storable_stdout = self::createStorableStream($this->getStdout(), $owned_by);
-
-                $storable_stream_info = array();
-                $process_params['output'] = array('stream' => $storable_stdout->getEid());
-            }
+            $process_params['process_status'] = \Flexio\Jobs\Process::STATUS_FAILED;
+            $process_params['process_info'] = $process_info_str;
         }
+
+        // if we're in build mode, create a storable stream to store the output
+        if ($this->procobj->getMode() === \Flexio\Jobs\Process::MODE_BUILD)
+        {
+            $owned_by = $this->getOwner();
+            $storable_stdout = self::createStorableStream($this->getStdout(), $owned_by);
+
+            $storable_stream_info = array();
+            $process_params['output'] = array('stream' => $storable_stdout->getEid());
+        }
+
         $this->procobj->set($process_params);
 
         // STEP 5: if we have an active owner, decrement the active process count

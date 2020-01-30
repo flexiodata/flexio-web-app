@@ -84,7 +84,6 @@ class Process implements \Flexio\IFace\IProcess
     private $stdout;
     private $response_code;
     private $error;
-    private $stop;
     private $files;        // array of streams of files (similar to php's $_FILES)
     private $first_execute;
     private $local_connections = [];   // map from connection identifier to connection_properties...e.g. [ 'connection_type' => ''. 'connection_properties' => [...]]
@@ -100,7 +99,6 @@ class Process implements \Flexio\IFace\IProcess
         $this->response_code = self::RESPONSE_NONE;
         $this->error = array();
         $this->files = array();
-        $this->stop = false;
         $this->first_execute = true;
     }
 
@@ -344,10 +342,6 @@ class Process implements \Flexio\IFace\IProcess
 
     public function execute(array $task) : \Flexio\Jobs\Process
     {
-        // if the process was cancelled, stop the process
-        if ($this->isStopped() === true)
-            return $this;
-
         // if the process was exited intentionally, stop the process
         $response_code = $this->getResponseCode();
         if ($response_code !== self::RESPONSE_NONE)
@@ -372,17 +366,6 @@ class Process implements \Flexio\IFace\IProcess
         $this->first_execute = false;
 
         return $this;
-    }
-
-    public function stop() : \Flexio\Jobs\Process
-    {
-        $this->stop = true;
-        return $this;
-    }
-
-    public function isStopped() : bool
-    {
-        return $this->stop;
     }
 
     private function getProcessState(array $task = null) : array

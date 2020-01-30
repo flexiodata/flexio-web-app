@@ -42,7 +42,5 @@ interface IProcess
     public function hasError();
     public function validate(array $task);
     public function execute(array $task);
-    public function stop();
-    public function isStopped();
 }
 
