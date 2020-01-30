@@ -44,6 +44,5 @@ interface IProcess
     public function execute(array $task);
     public function stop();
     public function isStopped();
-    public function signal(string $event, array $properties);
 }
 

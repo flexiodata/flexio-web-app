@@ -40,12 +40,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return self::create($procobj);
     }
 
-    public function addEventHandler($handler) : \Flexio\Jobs\StoredProcess
-    {
-        $this->engine->addEventHandler($handler);
-        return $this;
-    }
-
     public function setOwner(string $owner_eid) : \Flexio\Jobs\StoredProcess
     {
         $this->engine->setOwner($owner_eid);
@@ -190,12 +184,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
     public function isStopped() : bool
     {
         return $this->engine->isStopped();
-    }
-
-    public function signal(string $event, array $properties) : \Flexio\Jobs\StoredProcess
-    {
-        $this->engine->signal($event, $properties);
-        return $this;
     }
 
     public function run(bool $background = true) : \Flexio\Jobs\StoredProcess

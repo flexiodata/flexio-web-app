@@ -85,7 +85,6 @@ class Process implements \Flexio\IFace\IProcess
     private $response_code;
     private $error;
     private $stop;
-    private $handlers;     // array of callbacks invoked for each event
     private $files;        // array of streams of files (similar to php's $_FILES)
     private $first_execute;
     private $local_connections = [];   // map from connection identifier to connection_properties...e.g. [ 'connection_type' => ''. 'connection_properties' => [...]]
@@ -100,7 +99,6 @@ class Process implements \Flexio\IFace\IProcess
 
         $this->response_code = self::RESPONSE_NONE;
         $this->error = array();
-        $this->handlers = array();
         $this->files = array();
         $this->stop = false;
         $this->first_execute = true;
@@ -146,12 +144,6 @@ class Process implements \Flexio\IFace\IProcess
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         return $job;
-    }
-
-    public function addEventHandler($handler) : \Flexio\Jobs\Process
-    {
-        $this->handlers[] = $handler;
-        return $this;
     }
 
     public function setOwner(string $owner_eid) : \Flexio\Jobs\Process
@@ -391,16 +383,6 @@ class Process implements \Flexio\IFace\IProcess
     public function isStopped() : bool
     {
         return $this->stop;
-    }
-
-    public function signal(string $event, array $properties) : \Flexio\Jobs\Process
-    {
-        foreach ($this->handlers as $handler)
-        {
-            call_user_func($handler, $event, $properties);
-        }
-
-        return $this;
     }
 
     private function getProcessState(array $task = null) : array
