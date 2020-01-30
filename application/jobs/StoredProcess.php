@@ -21,7 +21,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
     private $engine;            // instance of \Flexio\Jobs\Process
     private $procobj;           // instance of \Flexio\Object\Process -- used only during execution phase
     private $procmode;
-    private $current_log_eid;
 
     public function __construct()
     {
@@ -33,7 +32,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
         $object->procobj = $procobj;
         $object->engine = \Flexio\Jobs\Process::create();
         $object->procmode = $procobj->getMode();
-        $object->current_log_eid = null;
         $object->setOwner($procobj->getOwner());
         return $object;
     }
