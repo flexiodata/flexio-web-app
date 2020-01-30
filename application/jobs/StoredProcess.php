@@ -200,13 +200,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
             ];
             $this->procobj->set(['input' => $input]);
 
-            // TODO: no need to set the output in background mode; if we're in the build mode
-            //$storable_stdout = self::createStorableStream($this->engine->getStdout(), $owned_by);
-            //$output = [
-            //    'stream' => $storable_stdout->getEid()
-            //];
-            //$this->procobj->set(['output' => $output]);
-
             $process_eid = $this->procobj->getEid();
             \Flexio\System\Program::runInBackground("\Flexio\Jobs\StoredProcess::background_entry('$process_eid')");
             return $this;
