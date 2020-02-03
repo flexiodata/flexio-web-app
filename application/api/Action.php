@@ -76,6 +76,11 @@ class Action
 
     public const TYPE_SYSTEM_READ            = 'action.system.read';
 
+    // user interface actions
+    public const TYPE_UI_SEARCH              = 'action.ui.search';
+    public const TYPE_UI_BUTTONCLICK         = 'action.ui.buttonclick';
+
+
 
     // TODO: add actions for following API endpoints:
 
