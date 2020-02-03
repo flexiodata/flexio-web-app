@@ -197,6 +197,7 @@ class Action extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "action_type" => null,
                 "request_ip" => null,
                 "request_user_agent" => null,
+                "request_source" => null,
                 "request_type" => null,
                 "request_method" => null,
                 "request_route" => null,

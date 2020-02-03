@@ -108,9 +108,15 @@ class FrameworkRequest
             return $default;
     }
 
-    public function getHeaders() : array
+    public function getHeaders(int $case) : array
     {
-        return \getallheaders();
+        // headers are case-insensitive; return ours in the designated case,
+        // so we can do easy key-value lookups; note: per the documentation,
+        // of array_change_key_case(), if an array has two keys that are the
+        // same when case-insentive, then the value of the second will override
+        // previous values
+        $headers = \getallheaders();
+        return array_change_key_case($headers,$case);
     }
 
     public function getParams() : array

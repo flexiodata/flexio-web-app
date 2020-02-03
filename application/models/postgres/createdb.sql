@@ -385,6 +385,7 @@ CREATE TABLE tbl_action (
   action_type varchar(40) NOT NULL default '',          -- logical name for the action (e.g. "create", helps map mutiple routes to similar action, such as creating an object)
   request_ip varchar(40) NOT NULL default '',           -- ip address of the request if available
   request_user_agent text default '',                   -- user agent for the request
+  request_source varchar(12) NOT NULL default '',       -- request source (application or add-on identifier if appropriate)
   request_type varchar(12) NOT NULL default '',         -- request type (e.g. "HTTP")
   request_method varchar(12) NOT NULL default '',       -- specific method for the request type (e.g. "PUT", "POST", "DELETE", etc)
   request_route text default '',                        -- the specific route used to request the action (e.g. the url path of the request)

@@ -235,14 +235,15 @@ class Api
         }
 
         // STEP 2: get basic, cleaned-up, request info
+        $request_header_params = $server_request->getHeaders(CASE_LOWER);
+        $request_query_params = $server_request->getQueryParams();
+        $request_post_params = $server_request->getPostParams();
         $request_user_agent = $server_request->getUserAgent();
+        $request_source = $request_header_params['x-flexio-source'] ?? '';
         $request_ip_address = strtolower($server_request->getIpAddress());
         $request_url = $server_request->getUri(); // leave URL as-is to match param handling
         $request_method = strtoupper($server_request->getMethod());
         $request_timestamp = \Flexio\System\System::getTimestamp();
-        $request_header_params = $server_request->getHeaders();
-        $request_query_params = $server_request->getQueryParams();
-        $request_post_params = $server_request->getPostParams();
 
         // STEP 3: if we have an options request, we're done
         if ($request_method == 'OPTIONS')
@@ -251,14 +252,15 @@ class Api
         // STEP 4: create a request object and set basic api request info
         $api_request = \Flexio\Api\Request::create();
 
+        $api_request->setHeaderParams($request_header_params);
+        $api_request->setQueryParams($request_query_params);
+        $api_request->setPostParams($request_post_params);
         $api_request->setUserAgent($request_user_agent);
+        $api_request->setSource($request_source);
         $api_request->setIpAddress($request_ip_address);
         $api_request->setUrl($request_url);
         $api_request->setMethod($request_method);
         $api_request->setRequestCreated($request_timestamp);
-        $api_request->setHeaderParams($request_header_params);
-        $api_request->setQueryParams($request_query_params);
-        $api_request->setPostParams($request_post_params);
 
         try
         {
