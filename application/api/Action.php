@@ -105,8 +105,26 @@ class Action
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
 
-        $request->track(\Flexio\Api\Action::TYPE_GENERAL);
-        $request->setRequestParams($post_params);
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($post_params, array(
+                'action_type'        => array('type' => 'string', 'required' => false)
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        $validated_post_params = $validator->getParams();
+
+        // extract out the action type and save the original post params without
+        // the action type; note: actions types should be the ones in the ones
+        // specified at the top of this file; however, to allow new action types
+        // to be easily added in the UI without requiring a system update, pass
+        // through anything action_type that's passed without any other validation
+        // other than requiring it to be a string
+        $action_type = $validated_post_params['action_type'] ?? \Flexio\Api\Action::TYPE_GENERAL;
+        $action_params = $post_params;
+        unset($action_params['action_type']);
+
+        $request->track($action_type);
+        $request->setRequestParams($action_params);
 
         // track the request
         //$request->setResponseParams($result);
