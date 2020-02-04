@@ -377,15 +377,6 @@ class Process implements \Flexio\IFace\IProcess
     // additional functions
     ////////////////////////////////////////////////////////////
 
-    private function getProcessState(array $task = null) : array
-    {
-        $state = array();
-        $state['stdin'] = $this->getStdin();
-        $state['stdout'] = $this->getStdout();
-        $state['task'] = $task ?? array();
-        return $state;
-    }
-
     private function executeTask(array $task) : void
     {
         if (!IS_PROCESSTRYCATCH())
