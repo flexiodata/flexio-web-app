@@ -32,14 +32,12 @@ class Process
         if (($validator->check($post_params, array(
                 'parent_eid'   => array('type' => 'eid',     'required' => false),
                 'process_mode' => array('type' => 'string',  'required' => false, 'default' => \Flexio\Jobs\Process::MODE_RUN),
-                'task'         => array('type' => 'object',  'required' => false),
-                'run'          => array('type' => 'boolean', 'required' => false, 'default' => false)
+                'task'         => array('type' => 'object',  'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_post_params = $validator->getParams();
         $process_params = $validated_post_params;
-        $autorun = toBoolean($validated_post_params['run']);
         $pipe_eid = $validated_post_params['parent_eid'] ?? false;
 
         // note: in pipes and connections, the ability to create is governed by
@@ -124,13 +122,6 @@ class Process
 
         $process_params['triggered_by'] = $triggered_by;
         $process = \Flexio\Object\Process::create($process_params);
-
-        // run the process and return the process info
-        if ($autorun === true)
-        {
-            $engine = \Flexio\Jobs\StoredProcess::create($process);
-            $engine->run(true);
-        }
 
         $result = $process->get();
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
