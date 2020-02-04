@@ -40,6 +40,10 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return self::create($procobj);
     }
 
+    ////////////////////////////////////////////////////////////
+    // IProcess interface
+    ////////////////////////////////////////////////////////////
+
     public function setOwner(string $owner_eid) : \Flexio\Jobs\StoredProcess
     {
         $this->engine->setOwner($owner_eid);
@@ -62,6 +66,17 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $this->engine->getParams();
     }
 
+    public function addFile(string $name, \Flexio\IFace\IStream $stream) : \Flexio\Jobs\StoredProcess
+    {
+        $this->engine->addFile($name, $stream);
+        return $this;
+    }
+
+    public function getFiles() : array
+    {
+        return $this->engine->getFiles();
+    }
+
     public function setLocalFile(int $fileno, \Flexio\IFace\IStream $stream)
     {
         return $this->engine->setLocalFile($fileno, $stream);
@@ -80,17 +95,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
     public function setLocalFiles($files)
     {
         return $this->engine->setLocalFiles($files);
-    }
-
-    public function addFile(string $name, \Flexio\IFace\IStream $stream) : \Flexio\Jobs\StoredProcess
-    {
-        $this->engine->addFile($name, $stream);
-        return $this;
-    }
-
-    public function getFiles() : array
-    {
-        return $this->engine->getFiles();
     }
 
     public function addLocalConnection(string $identifier, array $connection_properties) : void
@@ -174,6 +178,10 @@ class StoredProcess implements \Flexio\IFace\IProcess
         $this->engine->execute($task);
         return $this;
     }
+
+    ////////////////////////////////////////////////////////////
+    // additional functions
+    ////////////////////////////////////////////////////////////
 
     public function run(bool $background = true) : \Flexio\Jobs\StoredProcess
     {

@@ -23,6 +23,7 @@ interface IProcess
     public function setParams(array $arr);
     public function getParams();
     public function addFile(string $name, \Flexio\IFace\IStream $stream);
+    // TODO: add public function getFiles() : array
     public function setLocalFile(int $fileno, \Flexio\IFace\IStream $stream);
     public function getLocalFile(int $fileno);
     public function getLocalFiles();

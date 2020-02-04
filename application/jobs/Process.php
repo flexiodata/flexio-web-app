@@ -144,6 +144,10 @@ class Process implements \Flexio\IFace\IProcess
         return $job;
     }
 
+    ////////////////////////////////////////////////////////////
+    // IProcess interface
+    ////////////////////////////////////////////////////////////
+
     public function setOwner(string $owner_eid) : \Flexio\Jobs\Process
     {
         $this->owner_eid = $owner_eid;
@@ -176,9 +180,23 @@ class Process implements \Flexio\IFace\IProcess
         return $this->params;
     }
 
-    // for local files (using file number handle)
+    public function addFile(string $name, \Flexio\IFace\IStream $stream) : \Flexio\Jobs\Process
+    {
+        // note: for post files
+
+        $this->files[$name] = $stream;
+        return $this;
+    }
+
+    public function getFiles() : array
+    {
+        return $this->files;
+    }
+
     public function setLocalFile(int $fileno, \Flexio\IFace\IStream $stream)
     {
+        // note: for local files (using file number handle)
+
         $this->local_files[$fileno] = $stream;
         return $this;
     }
@@ -197,19 +215,6 @@ class Process implements \Flexio\IFace\IProcess
     {
         $this->local_files = $files;
     }
-
-    // for post files
-    public function addFile(string $name, \Flexio\IFace\IStream $stream) : \Flexio\Jobs\Process
-    {
-        $this->files[$name] = $stream;
-        return $this;
-    }
-
-    public function getFiles() : array
-    {
-        return $this->files;
-    }
-
 
     public function addLocalConnection(string $identifier, array $connection_properties) : void
     {
@@ -367,6 +372,10 @@ class Process implements \Flexio\IFace\IProcess
 
         return $this;
     }
+
+    ////////////////////////////////////////////////////////////
+    // additional functions
+    ////////////////////////////////////////////////////////////
 
     private function getProcessState(array $task = null) : array
     {
