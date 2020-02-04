@@ -34,7 +34,6 @@ class Process
                 'process_mode' => array('type' => 'string',  'required' => false, 'default' => \Flexio\Jobs\Process::MODE_RUN),
                 'task'         => array('type' => 'object',  'required' => false),
                 'background'   => array('type' => 'boolean', 'required' => false, 'default' => true),
-                'debug'        => array('type' => 'boolean', 'required' => false, 'default' => false),
                 'run'          => array('type' => 'boolean', 'required' => false, 'default' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
@@ -42,7 +41,6 @@ class Process
         $validated_post_params = $validator->getParams();
         $process_params = $validated_post_params;
         $background = toBoolean($validated_post_params['background']);
-        $debug = toBoolean($validated_post_params['debug']);
         $autorun = toBoolean($validated_post_params['run']);
         $pipe_eid = $validated_post_params['parent_eid'] ?? false;
 
