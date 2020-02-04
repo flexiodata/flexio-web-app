@@ -26,8 +26,8 @@ interface IProcess
     public function getFiles();
     public function setLocalFile(int $fileno, \Flexio\IFace\IStream $stream);
     public function getLocalFile(int $fileno);
-    public function getLocalFiles();
     public function setLocalFiles($files);
+    public function getLocalFiles();
     public function addLocalConnection(string $identifier, array $connection_properties);
     public function getLocalConnection(string $identifier);
     public function getLocalConnections();

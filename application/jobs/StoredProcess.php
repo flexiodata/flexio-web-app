@@ -87,14 +87,14 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $this->engine->getLocalFile($fileno);
     }
 
-    public function getLocalFiles()
-    {
-        return $this->engine->getLocalFiles();
-    }
-
     public function setLocalFiles($files)
     {
         return $this->engine->setLocalFiles($files);
+    }
+
+    public function getLocalFiles()
+    {
+        return $this->engine->getLocalFiles();
     }
 
     public function addLocalConnection(string $identifier, array $connection_properties) : void

@@ -206,14 +206,14 @@ class Process implements \Flexio\IFace\IProcess
         return $this->local_files[$fileno] ?? null;
     }
 
-    public function getLocalFiles()
-    {
-        return $this->local_files;
-    }
-
     public function setLocalFiles($files)
     {
         $this->local_files = $files;
+    }
+
+    public function getLocalFiles()
+    {
+        return $this->local_files;
     }
 
     public function addLocalConnection(string $identifier, array $connection_properties) : void
