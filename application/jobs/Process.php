@@ -119,42 +119,6 @@ class Process implements \Flexio\IFace\IProcess
         return $object;
     }
 
-    public static function createTask(array $task) : \Flexio\IFace\IJob
-    {
-        if (!isset($task['op']))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, _('Missing operation \'op\' task parameter'));
-
-        $operation = $task['op'];
-
-        if (!is_string($operation))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, _('Invalid operation \'op\' task parameter'));
-
-        // make sure the job is registered; note: this isn't strictly necessary,
-        // but gives us a convenient way of limiting what jobs are available for
-        // processing
-        $job_class_name = self::$manifest[$operation] ?? false;
-        if ($job_class_name === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, _('Invalid operation \'op\' task parameter'));
-
-        // try to find the job file
-        $class_name_parts = explode("\\", $job_class_name);
-        if (!isset($class_name_parts[3]))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-
-        $job_class_file = \Flexio\System\System::getApplicationDirectory() . DIRECTORY_SEPARATOR . 'jobs' . DIRECTORY_SEPARATOR . $class_name_parts[3] . '.php';
-        if (!@file_exists($job_class_file))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-
-        // load the job's php file and instantiate the job object
-        include_once $job_class_file;
-        $job = $job_class_name::create($task);
-
-        if ($job === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-
-        return $job;
-    }
-
     public function addEventHandler($handler) : \Flexio\Jobs\Process
     {
         $this->handlers[] = $handler;
@@ -478,6 +442,42 @@ class Process implements \Flexio\IFace\IProcess
                  else
                 $this->setError(\Flexio\Base\Error::GENERAL); // don't patch through sensitive info in non-debug
         }
+    }
+
+    private static function createTask(array $task) : \Flexio\IFace\IJob
+    {
+        if (!isset($task['op']))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, _('Missing operation \'op\' task parameter'));
+
+        $operation = $task['op'];
+
+        if (!is_string($operation))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, _('Invalid operation \'op\' task parameter'));
+
+        // make sure the job is registered; note: this isn't strictly necessary,
+        // but gives us a convenient way of limiting what jobs are available for
+        // processing
+        $job_class_name = self::$manifest[$operation] ?? false;
+        if ($job_class_name === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, _('Invalid operation \'op\' task parameter'));
+
+        // try to find the job file
+        $class_name_parts = explode("\\", $job_class_name);
+        if (!isset($class_name_parts[3]))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+
+        $job_class_file = \Flexio\System\System::getApplicationDirectory() . DIRECTORY_SEPARATOR . 'jobs' . DIRECTORY_SEPARATOR . $class_name_parts[3] . '.php';
+        if (!@file_exists($job_class_file))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+
+        // load the job's php file and instantiate the job object
+        include_once $job_class_file;
+        $job = $job_class_name::create($task);
+
+        if ($job === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+
+        return $job;
     }
 
     private static function createStream() : \Flexio\IFace\IStream
