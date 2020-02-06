@@ -125,6 +125,10 @@ class Process implements \Flexio\IFace\IProcess
         return $this;
     }
 
+    ////////////////////////////////////////////////////////////
+    // IProcess interface
+    ////////////////////////////////////////////////////////////
+
     public function setOwner(string $owner_eid) : \Flexio\Jobs\Process
     {
         $this->owner_eid = $owner_eid;
@@ -358,6 +362,10 @@ class Process implements \Flexio\IFace\IProcess
 
         return $this;
     }
+
+    ////////////////////////////////////////////////////////////
+    // additional functions
+    ////////////////////////////////////////////////////////////
 
     public function stop() : \Flexio\Jobs\Process
     {
