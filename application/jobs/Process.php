@@ -316,15 +316,7 @@ class Process implements \Flexio\IFace\IProcess
 
     public function execute(array $task) : \Flexio\Jobs\Process
     {
-        // signal the start of the task
         $this->signal(self::EVENT_STARTING, $this);
-
-        // if the process was cancelled, stop the process
-        if ($this->isStopped() === true)
-        {
-            $this->signal(self::EVENT_FINISHED, $this);
-            return $this;
-        }
 
         // if the process was exited intentionally, stop the process
         $response_code = $this->getResponseCode();
@@ -341,10 +333,15 @@ class Process implements \Flexio\IFace\IProcess
             return $this;
         }
 
-        // execute the task
-        $this->executeTask($task);
+        // if the process was cancelled, stop the process
+        if ($this->isStopped() === true)
+        {
+            $this->signal(self::EVENT_FINISHED, $this);
+            return $this;
+        }
 
-        // signal the end of the task
+        // execute the process
+        $this->executeTask($task);
         $this->signal(self::EVENT_FINISHED, $this);
 
         return $this;
