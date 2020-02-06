@@ -37,6 +37,13 @@ class Process implements \Flexio\IFace\IProcess
     public const RESPONSE_NONE = 0;
     public const RESPONSE_NORMAL = 200;
 
+    // events are passed in a callback function along with info
+    // to track info about the process
+    public const EVENT_STARTING       = 'process.starting';
+    public const EVENT_STARTING_TASK  = 'process.starting.task';
+    public const EVENT_FINISHED       = 'process.finished';
+    public const EVENT_FINISHED_TASK  = 'process.finished.task';
+
     private static $manifest = array(
         'archive'   => '\Flexio\Jobs\Archive',
         'calc'      => '\Flexio\Jobs\CalcField',
@@ -84,6 +91,8 @@ class Process implements \Flexio\IFace\IProcess
     private $stdout;
     private $response_code;
     private $error;
+    private $stop;
+    private $handlers;     // array of callbacks invoked for each event
     private $files;        // array of streams of files (similar to php's $_FILES)
     private $first_execute;
     private $local_connections = [];   // map from connection identifier to connection_properties...e.g. [ 'connection_type' => ''. 'connection_properties' => [...]]
@@ -98,7 +107,9 @@ class Process implements \Flexio\IFace\IProcess
 
         $this->response_code = self::RESPONSE_NONE;
         $this->error = array();
+        $this->handlers = array();
         $this->files = array();
+        $this->stop = false;
         $this->first_execute = true;
     }
 
@@ -144,9 +155,11 @@ class Process implements \Flexio\IFace\IProcess
         return $job;
     }
 
-    ////////////////////////////////////////////////////////////
-    // IProcess interface
-    ////////////////////////////////////////////////////////////
+    public function addEventHandler($handler) : \Flexio\Jobs\Process
+    {
+        $this->handlers[] = $handler;
+        return $this;
+    }
 
     public function setOwner(string $owner_eid) : \Flexio\Jobs\Process
     {
@@ -180,23 +193,9 @@ class Process implements \Flexio\IFace\IProcess
         return $this->params;
     }
 
-    public function addFile(string $name, \Flexio\IFace\IStream $stream) : \Flexio\Jobs\Process
-    {
-        // note: for post files
-
-        $this->files[$name] = $stream;
-        return $this;
-    }
-
-    public function getFiles() : array
-    {
-        return $this->files;
-    }
-
+    // for local files (using file number handle)
     public function setLocalFile(int $fileno, \Flexio\IFace\IStream $stream)
     {
-        // note: for local files (using file number handle)
-
         $this->local_files[$fileno] = $stream;
         return $this;
     }
@@ -206,15 +205,28 @@ class Process implements \Flexio\IFace\IProcess
         return $this->local_files[$fileno] ?? null;
     }
 
+    public function getLocalFiles()
+    {
+        return $this->local_files;
+    }
+
     public function setLocalFiles($files)
     {
         $this->local_files = $files;
     }
 
-    public function getLocalFiles()
+    // for post files
+    public function addFile(string $name, \Flexio\IFace\IStream $stream) : \Flexio\Jobs\Process
     {
-        return $this->local_files;
+        $this->files[$name] = $stream;
+        return $this;
     }
+
+    public function getFiles() : array
+    {
+        return $this->files;
+    }
+
 
     public function addLocalConnection(string $identifier, array $connection_properties) : void
     {
@@ -347,6 +359,10 @@ class Process implements \Flexio\IFace\IProcess
 
     public function execute(array $task) : \Flexio\Jobs\Process
     {
+        // if the process was cancelled, stop the process
+        if ($this->isStopped() === true)
+            return $this;
+
         // if the process was exited intentionally, stop the process
         $response_code = $this->getResponseCode();
         if ($response_code !== self::RESPONSE_NONE)
@@ -355,6 +371,9 @@ class Process implements \Flexio\IFace\IProcess
         // if there's an error, stop the process
         if ($this->hasError())
             return $this;
+
+        // signal the start of the task
+        $this->signal(self::EVENT_STARTING_TASK, $this->getProcessState($task));
 
         // if a task on the process has already been executed, move the previous stdout
         // to the current stdin; this allows chaining of execute() on the process with
@@ -370,12 +389,41 @@ class Process implements \Flexio\IFace\IProcess
         $this->executeTask($task);
         $this->first_execute = false;
 
+        // signal the end of the task
+        $this->signal(self::EVENT_FINISHED_TASK, $this->getProcessState($task));
+
         return $this;
     }
 
-    ////////////////////////////////////////////////////////////
-    // additional functions
-    ////////////////////////////////////////////////////////////
+    public function stop() : \Flexio\Jobs\Process
+    {
+        $this->stop = true;
+        return $this;
+    }
+
+    public function isStopped() : bool
+    {
+        return $this->stop;
+    }
+
+    public function signal(string $event, array $properties) : \Flexio\Jobs\Process
+    {
+        foreach ($this->handlers as $handler)
+        {
+            call_user_func($handler, $event, $properties);
+        }
+
+        return $this;
+    }
+
+    private function getProcessState(array $task = null) : array
+    {
+        $state = array();
+        $state['stdin'] = $this->getStdin();
+        $state['stdout'] = $this->getStdout();
+        $state['task'] = $task ?? array();
+        return $state;
+    }
 
     private function executeTask(array $task) : void
     {
