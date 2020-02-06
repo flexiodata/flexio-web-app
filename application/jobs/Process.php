@@ -193,9 +193,9 @@ class Process implements \Flexio\IFace\IProcess
         return $this->params;
     }
 
-    // for local files (using file number handle)
     public function setLocalFile(int $fileno, \Flexio\IFace\IStream $stream)
     {
+        // for local files (using file number handle)
         $this->local_files[$fileno] = $stream;
         return $this;
     }
@@ -205,19 +205,19 @@ class Process implements \Flexio\IFace\IProcess
         return $this->local_files[$fileno] ?? null;
     }
 
-    public function getLocalFiles()
-    {
-        return $this->local_files;
-    }
-
     public function setLocalFiles($files)
     {
         $this->local_files = $files;
     }
 
-    // for post files
+    public function getLocalFiles()
+    {
+        return $this->local_files;
+    }
+
     public function addFile(string $name, \Flexio\IFace\IStream $stream) : \Flexio\Jobs\Process
     {
+        // for post files
         $this->files[$name] = $stream;
         return $this;
     }
@@ -373,7 +373,7 @@ class Process implements \Flexio\IFace\IProcess
             return $this;
 
         // signal the start of the task
-        $this->signal(self::EVENT_STARTING_TASK, $this->getProcessState($task));
+        $this->signal(self::EVENT_STARTING_TASK, $this);
 
         // if a task on the process has already been executed, move the previous stdout
         // to the current stdin; this allows chaining of execute() on the process with
@@ -390,7 +390,7 @@ class Process implements \Flexio\IFace\IProcess
         $this->first_execute = false;
 
         // signal the end of the task
-        $this->signal(self::EVENT_FINISHED_TASK, $this->getProcessState($task));
+        $this->signal(self::EVENT_FINISHED_TASK, $this);
 
         return $this;
     }
@@ -406,23 +406,14 @@ class Process implements \Flexio\IFace\IProcess
         return $this->stop;
     }
 
-    public function signal(string $event, array $properties) : \Flexio\Jobs\Process
+    public function signal(string $event, \Flexio\IFace\Process $process) : \Flexio\Jobs\Process
     {
         foreach ($this->handlers as $handler)
         {
-            call_user_func($handler, $event, $properties);
+            call_user_func($handler, $event, $process);
         }
 
         return $this;
-    }
-
-    private function getProcessState(array $task = null) : array
-    {
-        $state = array();
-        $state['stdin'] = $this->getStdin();
-        $state['stdout'] = $this->getStdout();
-        $state['task'] = $task ?? array();
-        return $state;
     }
 
     private function executeTask(array $task) : void
