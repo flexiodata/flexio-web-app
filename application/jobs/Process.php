@@ -26,19 +26,17 @@ class Process implements \Flexio\IFace\IProcess
     public const MODE_RUN        = 'R';
 
     public const STATUS_UNDEFINED = '';
-    public const STATUS_PENDING   = 'S'; // 'S' for 'Starting'
+    public const STATUS_PENDING   = 'S'; // 'S' for 'Starting' ('P' used to be used for STATUS_PAUSED, which is no longer used)
     public const STATUS_WAITING   = 'W';
     public const STATUS_RUNNING   = 'R';
     public const STATUS_CANCELLED = 'X';
-    public const STATUS_PAUSED    = 'P';
     public const STATUS_FAILED    = 'F';
     public const STATUS_COMPLETED = 'C';
 
     public const RESPONSE_NONE = 0;
     public const RESPONSE_NORMAL = 200;
 
-    // events are passed in a callback function along with info
-    // to track info about the process
+    // events are passed in a callback function along along with a reference to the process
     public const EVENT_STARTING       = 'process.starting';
     public const EVENT_FINISHED       = 'process.finished';
 
@@ -83,30 +81,31 @@ class Process implements \Flexio\IFace\IProcess
         'write'     => '\Flexio\Jobs\Write'
     );
 
-    private $owner_eid;     // user eid of the owner of the process
-    private $params;        // variables that are used in the processing (array of \Flexio\Base\Stream objects)
+    private $owner_eid;                 // user eid of the owner of the process
+    private $response_code;
+    private $process_status;
+    private $error;
+    private $handlers;                  // array of callbacks invoked for each event
+    private $params;                    // variables that are used in the processing (array of \Flexio\Base\Stream objects)
+    private $files;                     // array of streams of files (similar to php's $_FILES)
+    private $local_connections = [];    // map from connection identifier to connection_properties...e.g. [ 'connection_type' => ''. 'connection_properties' => [...]]
+    private $local_files = [];          // map from file number to Stream object
     private $stdin;
     private $stdout;
-    private $response_code;
-    private $error;
-    private $stop;
-    private $handlers;     // array of callbacks invoked for each event
-    private $files;        // array of streams of files (similar to php's $_FILES)
-    private $local_connections = [];   // map from connection identifier to connection_properties...e.g. [ 'connection_type' => ''. 'connection_properties' => [...]]
-    private $local_files = [];         // map from file number to Stream object
 
     public function __construct()
     {
         $this->owner_eid = '';
-        $this->params = array();
-        $this->stdin = self::createStream();
-        $this->stdout =  self::createStream();
-
         $this->response_code = self::RESPONSE_NONE;
+        $this->process_status = self::STATUS_UNDEFINED;
         $this->error = array();
         $this->handlers = array();
+        $this->params = array();
         $this->files = array();
-        $this->stop = false;
+        $this->local_connections = array();
+        $this->local_files = array();
+        $this->stdin = self::createStream();
+        $this->stdout =  self::createStream();
     }
 
     public static function create() : \Flexio\Jobs\Process
@@ -326,7 +325,7 @@ class Process implements \Flexio\IFace\IProcess
         if ($this->hasError())
             return $this->signal(self::EVENT_FINISHED, $this);
 
-        // if the process was cancelled, stop the process
+        // if the process is stopped, we're done
         if ($this->isStopped() === true)
             return $this->signal(self::EVENT_FINISHED, $this);
 
@@ -357,15 +356,30 @@ class Process implements \Flexio\IFace\IProcess
         return $this;
     }
 
-    public function stop() : \Flexio\Jobs\Process
+    public function setProcessStatus(string $status)  : \Flexio\Jobs\Process
     {
-        $this->stop = true;
+        $this->process_status = $status;
         return $this;
     }
 
-    public function isStopped() : bool
+    public function getProcessStatus() : string
     {
-        return $this->stop;
+        return $this->process_status;
+    }
+
+    private function isStopped() : bool
+    {
+        $status = $this->getProcessStatus();
+        switch ($status)
+        {
+            default:
+                return false;
+
+            case self::STATUS_CANCELLED:
+            case self::STATUS_FAILED:
+            case self::STATUS_COMPLETED:
+                return true;
+        }
     }
 
     private function executeTask(array $task) : void

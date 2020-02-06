@@ -67,19 +67,14 @@ class Test
         \Flexio\Tests\Check::assertString('B.5', 'Process status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Jobs\Process::STATUS_PAUSED;
-        $expected = 'P';
-        \Flexio\Tests\Check::assertString('B.6', 'Process status constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
         $actual = \Flexio\Jobs\Process::STATUS_FAILED;
         $expected = 'F';
-        \Flexio\Tests\Check::assertString('B.7', 'Process status constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.6', 'Process status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Jobs\Process::STATUS_COMPLETED;
         $expected = 'C';
-        \Flexio\Tests\Check::assertString('B.8', 'Process status constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.7', 'Process status constant',  $actual, $expected, $results);
 
 
 

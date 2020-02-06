@@ -45,7 +45,7 @@ class Test
 
         // BEGIN TEST
         $object = \Flexio\Object\Process::create();
-        \Flexio\Tests\Util::getModel()->process->setProcessStatus($object->getEid(), \Flexio\Jobs\Process::STATUS_PAUSED);
+        \Flexio\Tests\Util::getModel()->process->setProcessStatus($object->getEid(), \Flexio\Jobs\Process::STATUS_COMPLETED);
         $actual = $object->cancel()->getProcessStatus();
         $expected = \Flexio\Jobs\Process::STATUS_CANCELLED;
         \Flexio\Tests\Check::assertString('A.4', 'Process::cancel(); if a job has already finished, don\'t allow it to be cancelled',  $actual, $expected, $results);
