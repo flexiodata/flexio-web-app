@@ -94,7 +94,6 @@ class Process implements \Flexio\IFace\IProcess
     private $stop;
     private $handlers;     // array of callbacks invoked for each event
     private $files;        // array of streams of files (similar to php's $_FILES)
-    private $first_execute;
     private $local_connections = [];   // map from connection identifier to connection_properties...e.g. [ 'connection_type' => ''. 'connection_properties' => [...]]
     private $local_files = [];         // map from file number to Stream object
 
@@ -110,7 +109,6 @@ class Process implements \Flexio\IFace\IProcess
         $this->handlers = array();
         $this->files = array();
         $this->stop = false;
-        $this->first_execute = true;
     }
 
     public static function create() : \Flexio\Jobs\Process
@@ -336,19 +334,8 @@ class Process implements \Flexio\IFace\IProcess
         // signal the start of the task
         $this->signal(self::EVENT_STARTING_TASK, $this);
 
-        // if a task on the process has already been executed, move the previous stdout
-        // to the current stdin; this allows chaining of execute() on the process with
-        // a separate task in each execute:  $process->execute($task1)->execute($task2);
-        if ($this->first_execute === false)
-        {
-            // copy the stdout of the last task to the stdin; make a new stdout
-            $this->stdin = $this->stdout;
-            $this->stdout = self::createStream();
-        }
-
         // execute the task
         $this->executeTask($task);
-        $this->first_execute = false;
 
         // signal the end of the task
         $this->signal(self::EVENT_FINISHED_TASK, $this);
