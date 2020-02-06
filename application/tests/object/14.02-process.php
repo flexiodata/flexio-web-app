@@ -43,13 +43,6 @@ class Test
         $expected = \Flexio\Jobs\Process::STATUS_COMPLETED;
         \Flexio\Tests\Check::assertString('A.3', 'Process::cancel(); if a job has already finished, don\'t allow it to be cancelled',  $actual, $expected, $results);
 
-        // BEGIN TEST
-        $object = \Flexio\Object\Process::create();
-        \Flexio\Tests\Util::getModel()->process->setProcessStatus($object->getEid(), \Flexio\Jobs\Process::STATUS_COMPLETED);
-        $actual = $object->cancel()->getProcessStatus();
-        $expected = \Flexio\Jobs\Process::STATUS_CANCELLED;
-        \Flexio\Tests\Check::assertString('A.4', 'Process::cancel(); if a job has already finished, don\'t allow it to be cancelled',  $actual, $expected, $results);
-
 
         // TEST: check status on process success or failure
 

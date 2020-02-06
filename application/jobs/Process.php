@@ -346,7 +346,7 @@ class Process implements \Flexio\IFace\IProcess
         return $this;
     }
 
-    public function signal(string $event, \Flexio\IFace\Process $process) : \Flexio\Jobs\Process
+    public function signal(string $event, \Flexio\Jobs\Process $process) : \Flexio\Jobs\Process
     {
         foreach ($this->handlers as $handler)
         {
