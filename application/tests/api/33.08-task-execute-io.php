@@ -96,7 +96,7 @@ EOD;
             "content_type": "text/plain;charset=UTF-8",
             "response": "Hello, World!"
         }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'Process Execute; (python) execute task chaining with input/output',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', 'Process Execute; (python) execute task chaining with input/output',  $actual, $expected, $results);
     }
 }
 
