@@ -319,31 +319,21 @@ class Process implements \Flexio\IFace\IProcess
         $this->signal(self::EVENT_STARTING, $this);
 
         // if the process was exited intentionally, stop the process
-        $response_code = $this->getResponseCode();
-        if ($response_code !== self::RESPONSE_NONE)
-        {
-            $this->signal(self::EVENT_FINISHED, $this);
-            return $this;
-        }
+        if ($this->getResponseCode() !== self::RESPONSE_NONE)
+            return $this->signal(self::EVENT_FINISHED, $this);
 
         // if there's an error, stop the process
         if ($this->hasError())
-        {
-            $this->signal(self::EVENT_FINISHED, $this);
-            return $this;
-        }
+            return $this->signal(self::EVENT_FINISHED, $this);
 
         // if the process was cancelled, stop the process
         if ($this->isStopped() === true)
-        {
-            $this->signal(self::EVENT_FINISHED, $this);
-            return $this;
-        }
+            return $this->signal(self::EVENT_FINISHED, $this);
 
         // execute the process
         $this->executeTask($task);
-        $this->signal(self::EVENT_FINISHED, $this);
 
+        $this->signal(self::EVENT_FINISHED, $this);
         return $this;
     }
 
