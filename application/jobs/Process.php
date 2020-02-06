@@ -119,12 +119,6 @@ class Process implements \Flexio\IFace\IProcess
         return $object;
     }
 
-    public function addEventHandler($handler) : \Flexio\Jobs\Process
-    {
-        $this->handlers[] = $handler;
-        return $this;
-    }
-
     ////////////////////////////////////////////////////////////
     // IProcess interface
     ////////////////////////////////////////////////////////////
@@ -161,6 +155,18 @@ class Process implements \Flexio\IFace\IProcess
         return $this->params;
     }
 
+    public function addFile(string $name, \Flexio\IFace\IStream $stream) : \Flexio\Jobs\Process
+    {
+        // for post files
+        $this->files[$name] = $stream;
+        return $this;
+    }
+
+    public function getFiles() : array
+    {
+        return $this->files;
+    }
+
     public function setLocalFile(int $fileno, \Flexio\IFace\IStream $stream)
     {
         // for local files (using file number handle)
@@ -182,19 +188,6 @@ class Process implements \Flexio\IFace\IProcess
     {
         return $this->local_files;
     }
-
-    public function addFile(string $name, \Flexio\IFace\IStream $stream) : \Flexio\Jobs\Process
-    {
-        // for post files
-        $this->files[$name] = $stream;
-        return $this;
-    }
-
-    public function getFiles() : array
-    {
-        return $this->files;
-    }
-
 
     public function addLocalConnection(string $identifier, array $connection_properties) : void
     {
@@ -367,15 +360,10 @@ class Process implements \Flexio\IFace\IProcess
     // additional functions
     ////////////////////////////////////////////////////////////
 
-    public function stop() : \Flexio\Jobs\Process
+    public function addEventHandler($handler) : \Flexio\Jobs\Process
     {
-        $this->stop = true;
+        $this->handlers[] = $handler;
         return $this;
-    }
-
-    public function isStopped() : bool
-    {
-        return $this->stop;
     }
 
     public function signal(string $event, \Flexio\IFace\Process $process) : \Flexio\Jobs\Process
@@ -386,6 +374,17 @@ class Process implements \Flexio\IFace\IProcess
         }
 
         return $this;
+    }
+
+    public function stop() : \Flexio\Jobs\Process
+    {
+        $this->stop = true;
+        return $this;
+    }
+
+    public function isStopped() : bool
+    {
+        return $this->stop;
     }
 
     private function executeTask(array $task) : void
