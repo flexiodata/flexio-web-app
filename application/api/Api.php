@@ -164,6 +164,9 @@ class Api
         // experimental pipes endpoint for bulk delete of pipes
         'DEL /:teamid/pipes'                          => '\Flexio\Api\Pipe::bulkdelete',
 
+        // experimental/test pipe endpoint for running jobs in background to test that capability
+        'POS /:teamid/pipes/:objid/runbackground'     => '\Flexio\Api\Pipe::runbackground',
+
         // experimental processes endpoint for running code (creates and runs a process from code)
         'GET /:teamid/processes/exec'                 => '\Flexio\Api\Process::exec',
         'POS /:teamid/processes/exec'                 => '\Flexio\Api\Process::exec',

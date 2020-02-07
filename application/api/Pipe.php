@@ -453,6 +453,124 @@ class Pipe
         \Flexio\Api\Response::sendRaw($content);
     }
 
+    public static function runbackground(\Flexio\Api\Request $request) : void
+    {
+        // TODO: experimental/test function for testing background processing and callbacks
+
+        $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+        $pipe_eid = $request->getObjectFromUrl();
+
+/*
+        $request->track(\Flexio\Api\Action::TYPE_PROCESS_CREATE);
+        $request->setRequestParams($post_params);
+*/
+
+        // load the object; make sure the eid is associated with the owner
+        // as an additional check
+        $pipe = \Flexio\Object\Pipe::load($pipe_eid);
+        if ($owner_user_eid !== $pipe->getOwner())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+        // check the rights on the pipe object
+        if ($pipe->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        if ($pipe->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PROCESS_CREATE) === false)
+             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        // TODO: check that user is within usage limits; should this be factored out into a separate object along with rights?
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+        if ($owner_user->processUsageWithinLimit() === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::RATE_LIMIT_EXCEEDED);
+
+        // if the process is created with a request from an api token, it's
+        // triggered with an api; if there's no api token, it's triggered
+        // from a web session, in which case it's triggered by the UI;
+        // TODO: this will work until we allow processes to be created from
+        // public pipes that don't require a token
+        $triggered_by = strlen($request->getToken()) > 0 ? \Model::PROCESS_TRIGGERED_API : \Model::PROCESS_TRIGGERED_INTERFACE;
+
+        // get the pipe properties
+        $pipe_properties = $pipe->get();
+
+        // only allow pipes to be triggered from an API call if the pipe is deployed
+        // and the api deployment option is activated
+        $api_trigger_active = ($pipe_properties['deploy_mode'] === \Model::PIPE_DEPLOY_MODE_RUN &&
+                               $pipe_properties['deploy_api'] === \Model::PIPE_DEPLOY_STATUS_ACTIVE);
+        if ($triggered_by === \Model::PROCESS_TRIGGERED_API && $api_trigger_active === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+        // create an output stream to store the results
+        $stream_properties['path'] = \Flexio\Base\Util::generateHandle();
+        $stream_properties['owned_by'] = $owner_user_eid;
+        $storable_stream = \Flexio\Object\Stream::create($stream_properties);
+        $storable_stream_info = $storable_stream->get();
+
+        // create a new process
+        $process_properties = array(
+            'parent_eid' => $pipe_properties['eid'],
+            'pipe_info' => $pipe_properties,
+            'task' => $pipe_properties['task'],
+            'triggered_by' => $triggered_by,
+            'owned_by' => $pipe_properties['owned_by']['eid'], // same as $owner_user_eid
+            'created_by' => $requesting_user_eid
+        );
+        $process = \Flexio\Object\Process::create($process_properties);
+
+        // create a job engine, attach it to the process object; add callback handlers
+        // to capture the output since we're running in background mode
+        $engine = \Flexio\Jobs\StoredProcess::create($process);
+        $engine->addEventHandler(\Flexio\Jobs\StoredProcess::EVENT_FINISHING, '\Flexio\Api\Pipe::callbackProcessFinished', $storable_stream_info);
+
+        // parse the request content and set the stream info
+        $php_stream_handle = \Flexio\System\System::openPhpInputStream();
+        $post_content_type = \Flexio\System\System::getPhpInputStreamContentType();
+         \Flexio\Base\StreamUtil::addProcessInputFromStream($php_stream_handle, $post_content_type, $engine);
+
+        // run the process in the background
+        $engine->run(true /*true: run in background*/);
+
+        if ($engine->hasError())
+        {
+            $error = $engine->getError();
+            \Flexio\Api\Response::sendError($error);
+            exit(0);
+        }
+
+        // return the storable stream where the output will be written
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        \Flexio\Api\Response::sendContent($storable_stream_info);
+    }
+
+    public static function callbackProcessFinished(\Flexio\Jobs\StoredProcess $process, $storable_stream_info)
+    {
+        // get the stream output
+        $stdout_stream = $process->getStdout();
+        $stdout_stream_info = $stdout_stream->get();
+
+        // copy the stdout stream info to the storable_stream
+        $storable_stream = \Flexio\Object\Stream::load($storable_stream_info['eid']);
+        $storable_stream_info_updated = array(
+            'mime_type' => $stdout_stream_info['mime_type'],
+            'structure' => $stdout_stream_info['structure']
+        );
+        $storable_stream->set($storable_stream_info_updated);
+
+        // copy from the input stream to the storable stream
+        $streamreader = $stdout_stream->getReader();
+        $streamwriter = $storable_stream->getWriter();
+
+        if ($stdout_stream->getMimeType() === \Flexio\Base\ContentType::FLEXIO_TABLE)
+        {
+            while (($row = $streamreader->readRow()) !== false)
+                $streamwriter->write($row);
+        }
+            else
+        {
+            while (($data = $streamreader->read(32768)) !== false)
+                $streamwriter->write($data);
+        }
+    }
 
     // using json_encode/decode() on arrays leads to ambiguities
     // in the case of empty arrays, which should actually be objects,
