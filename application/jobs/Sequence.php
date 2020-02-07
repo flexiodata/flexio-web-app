@@ -45,9 +45,20 @@ class Sequence extends \Flexio\Jobs\Base
         if ($job_sequence_tasks === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
+        $first_execute = true;
         foreach ($job_sequence_tasks as $task)
         {
-            $process->execute($task);
+            if ($first_execute === false)
+            {
+                // copy the stdout of the last task to the stdin; make a new stdout
+                $new_stdout_stream = \Flexio\Base\Stream::create()->setMimeType(\Flexio\Base\ContentType::TEXT);
+                $process->setStdin($process->getStdout());
+                $process->setStdout($new_stdout_stream);
+            }
+
+            // execute the task
+            $process->executeTask($task);
+            $first_execute = false;
         }
     }
 }

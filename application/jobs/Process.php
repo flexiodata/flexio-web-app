@@ -340,50 +340,12 @@ class Process implements \Flexio\IFace\IProcess
     // additional functions
     ////////////////////////////////////////////////////////////
 
-    public function addEventHandler($handler) : \Flexio\Jobs\Process
+    public function executeTask(array $task) : void
     {
-        $this->handlers[] = $handler;
-        return $this;
-    }
+        // public function for running a task without any of the callbacks;
+        // used by the sequence job to chain tasks and their input/output;
+        // see test A.2 in 33.08-task-execute-io
 
-    public function signal(string $event, \Flexio\Jobs\Process $process) : \Flexio\Jobs\Process
-    {
-        foreach ($this->handlers as $handler)
-        {
-            call_user_func($handler, $event, $process);
-        }
-
-        return $this;
-    }
-
-    public function setProcessStatus(string $status)  : \Flexio\Jobs\Process
-    {
-        $this->process_status = $status;
-        return $this;
-    }
-
-    public function getProcessStatus() : string
-    {
-        return $this->process_status;
-    }
-
-    private function isStopped() : bool
-    {
-        $status = $this->getProcessStatus();
-        switch ($status)
-        {
-            default:
-                return false;
-
-            case self::STATUS_CANCELLED:
-            case self::STATUS_FAILED:
-            case self::STATUS_COMPLETED:
-                return true;
-        }
-    }
-
-    private function executeTask(array $task) : void
-    {
         if (!IS_PROCESSTRYCATCH())
         {
             // during debugging, sometimes try/catch needs to be turned
@@ -443,6 +405,48 @@ class Process implements \Flexio\IFace\IProcess
                 $this->setError(\Flexio\Base\Error::GENERAL, $message, $module, $line, $type, $trace);
                  else
                 $this->setError(\Flexio\Base\Error::GENERAL); // don't patch through sensitive info in non-debug
+        }
+    }
+
+    public function addEventHandler($handler) : \Flexio\Jobs\Process
+    {
+        $this->handlers[] = $handler;
+        return $this;
+    }
+
+    public function signal(string $event, \Flexio\Jobs\Process $process) : \Flexio\Jobs\Process
+    {
+        foreach ($this->handlers as $handler)
+        {
+            call_user_func($handler, $event, $process);
+        }
+
+        return $this;
+    }
+
+    public function setProcessStatus(string $status)  : \Flexio\Jobs\Process
+    {
+        $this->process_status = $status;
+        return $this;
+    }
+
+    public function getProcessStatus() : string
+    {
+        return $this->process_status;
+    }
+
+    private function isStopped() : bool
+    {
+        $status = $this->getProcessStatus();
+        switch ($status)
+        {
+            default:
+                return false;
+
+            case self::STATUS_CANCELLED:
+            case self::STATUS_FAILED:
+            case self::STATUS_COMPLETED:
+                return true;
         }
     }
 
