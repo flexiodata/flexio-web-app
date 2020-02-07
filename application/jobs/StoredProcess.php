@@ -24,7 +24,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
 
     private $engine;            // instance of \Flexio\Jobs\Process
     private $procobj;           // instance of \Flexio\Object\Process -- used only during execution phase
-    private $handlers = [];          // array of callbacks invoked for each event
+    private $handlers = [];     // array of callbacks invoked for each event
 
     public function __construct()
     {
@@ -191,16 +191,41 @@ class StoredProcess implements \Flexio\IFace\IProcess
         }
          else
         {
+            // TODO: add serialization checks
+
+            // pack up the info for this object and store it temporarily in the
+            // registry so we can get it in the background process
+            $process_owner = $this->getOwner();
             $process_eid = $this->procobj->getEid();
-            \Flexio\System\Program::runInBackground("\Flexio\Jobs\StoredProcess::background_entry('$process_eid')");
+            $process_info = json_encode(array(
+                "engine" => serialize($this->engine),
+                "procobj" => serialize($this->procobj),
+                "handlers" => serialize($this->handlers)
+            ));
+            \Flexio\System\System::getModel()->registry->setString($process_owner, $process_eid, $process_info);
+            \Flexio\System\Program::runInBackground("\Flexio\Jobs\StoredProcess::background_entry('$process_owner','$process_eid')");
             return $this;
         }
     }
 
-    public static function background_entry($process_eid) : \Flexio\Jobs\StoredProcess
+    public static function background_entry($process_owner, $process_eid) : \Flexio\Jobs\StoredProcess
     {
-        $proc = \Flexio\Jobs\StoredProcess::load($process_eid);
-        return $proc->run_internal();
+        // TODO: add unserialization checks
+
+        // create an empty process object
+        $stored_process_object = new static();
+
+        // get the process info from the registry and delete the registry entry
+        $process_info = \Flexio\System\System::getModel()->registry->getString($process_owner, $process_eid);
+        \Flexio\System\System::getModel()->registry->deleteEntryByName($process_owner, $process_eid);
+
+        // reserialize the object info
+        $process_info = @json_decode($process_info, true);
+        $stored_process_object->engine = unserialize($process_info['engine']);
+        $stored_process_object->procobj = unserialize($process_info['procobj']);
+        $stored_process_object->handlers = unserialize($process_info['handlers']);
+
+        return $stored_process_object->run_internal();
     }
 
     private function run_internal() : \Flexio\Jobs\StoredProcess
