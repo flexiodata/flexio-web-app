@@ -39,12 +39,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $object;
     }
 
-    public static function load(string $process_eid) : \Flexio\Jobs\StoredProcess
-    {
-        $procobj = \Flexio\Object\Process::load($process_eid);
-        return self::create($procobj);
-    }
-
     ////////////////////////////////////////////////////////////
     // IProcess interface
     ////////////////////////////////////////////////////////////
