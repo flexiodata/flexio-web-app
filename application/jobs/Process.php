@@ -36,10 +36,6 @@ class Process implements \Flexio\IFace\IProcess
     public const RESPONSE_NONE = 0;
     public const RESPONSE_NORMAL = 200;
 
-    // events are passed in a callback function along along with a reference to the process
-    public const EVENT_STARTING       = 'process.starting';
-    public const EVENT_FINISHED       = 'process.finished';
-
     private static $manifest = array(
         'archive'   => '\Flexio\Jobs\Archive',
         'calc'      => '\Flexio\Jobs\CalcField',
@@ -85,7 +81,6 @@ class Process implements \Flexio\IFace\IProcess
     private $response_code;
     private $process_status;
     private $error;
-    private $handlers;                  // array of callbacks invoked for each event
     private $params;                    // variables that are used in the processing (array of \Flexio\Base\Stream objects)
     private $files;                     // array of streams of files (similar to php's $_FILES)
     private $local_connections = [];    // map from connection identifier to connection_properties...e.g. [ 'connection_type' => ''. 'connection_properties' => [...]]
@@ -99,7 +94,6 @@ class Process implements \Flexio\IFace\IProcess
         $this->response_code = self::RESPONSE_NONE;
         $this->process_status = self::STATUS_UNDEFINED;
         $this->error = array();
-        $this->handlers = array();
         $this->params = array();
         $this->files = array();
         $this->local_connections = array();
@@ -315,44 +309,13 @@ class Process implements \Flexio\IFace\IProcess
 
     public function execute(array $task) : \Flexio\Jobs\Process
     {
-        $this->signal(self::EVENT_STARTING, $this);
-
-        // if the process was exited intentionally, stop the process
-        if ($this->getResponseCode() !== self::RESPONSE_NONE)
-            return $this->signal(self::EVENT_FINISHED, $this);
-
-        // if there's an error, stop the process
-        if ($this->hasError())
-            return $this->signal(self::EVENT_FINISHED, $this);
-
-        // if the process is stopped, we're done
-        if ($this->isStopped() === true)
-            return $this->signal(self::EVENT_FINISHED, $this);
-
-        // execute the process
-        $this->executeTask($task);
-
-        $this->signal(self::EVENT_FINISHED, $this);
-        return $this;
-    }
-
-    ////////////////////////////////////////////////////////////
-    // additional functions
-    ////////////////////////////////////////////////////////////
-
-    public function executeTask(array $task) : void
-    {
-        // public function for running a task without any of the callbacks;
-        // used by the sequence job to chain tasks and their input/output;
-        // see test A.2 in 33.08-task-execute-io
-
         if (!IS_PROCESSTRYCATCH())
         {
             // during debugging, sometimes try/catch needs to be turned
             // of completely; this switch is implemented here and in Api.php
             $job = self::createTask($task);
             $job->run($this);
-            return;
+            return $this;
         }
 
         try
@@ -406,49 +369,13 @@ class Process implements \Flexio\IFace\IProcess
                  else
                 $this->setError(\Flexio\Base\Error::GENERAL); // don't patch through sensitive info in non-debug
         }
-    }
-
-    public function addEventHandler($handler) : \Flexio\Jobs\Process
-    {
-        $this->handlers[] = $handler;
-        return $this;
-    }
-
-    public function signal(string $event, \Flexio\Jobs\Process $process) : \Flexio\Jobs\Process
-    {
-        foreach ($this->handlers as $handler)
-        {
-            call_user_func($handler, $event, $process);
-        }
 
         return $this;
     }
 
-    public function setProcessStatus(string $status)  : \Flexio\Jobs\Process
-    {
-        $this->process_status = $status;
-        return $this;
-    }
-
-    public function getProcessStatus() : string
-    {
-        return $this->process_status;
-    }
-
-    private function isStopped() : bool
-    {
-        $status = $this->getProcessStatus();
-        switch ($status)
-        {
-            default:
-                return false;
-
-            case self::STATUS_CANCELLED:
-            case self::STATUS_FAILED:
-            case self::STATUS_COMPLETED:
-                return true;
-        }
-    }
+    ////////////////////////////////////////////////////////////
+    // additional functions
+    ////////////////////////////////////////////////////////////
 
     private static function createTask(array $task) : \Flexio\IFace\IJob
     {
@@ -491,32 +418,5 @@ class Process implements \Flexio\IFace\IProcess
         $stream = \Flexio\Base\Stream::create();
         $stream->setMimeType(\Flexio\Base\ContentType::TEXT); // default mime type
         return $stream;
-    }
-
-    private static function generateTaskHash(string $implementation_version, array $task) : string
-    {
-        // note: currently, this isn't used, but it's here for reference in case we
-        // need a way of referencing looking up tasks from a string
-
-        // task hash should uniquely identify the result; use
-        // a hash of:
-        //     1. implementation version (git version)
-        //     2. task type
-        //     3. task parameters
-        // leave out the job name or other identifiers, such as the
-        // the task eid
-
-        // if we dont' have an implementation version or an invalid implementation
-        // version (git revision), don't cache anything
-        if (strlen($implementation_version) < 40)
-            return '';
-
-        $encoded_task = json_encode($task);
-        $hash = md5(
-            $implementation_version .
-            $encoded_task
-        );
-
-        return $hash;
     }
 }

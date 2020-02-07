@@ -18,8 +18,13 @@ namespace Flexio\Jobs;
 
 class StoredProcess implements \Flexio\IFace\IProcess
 {
+    // events are passed in a callback function along along with a reference to the process
+    public const EVENT_STARTING       = 'process.starting';
+    public const EVENT_FINISHING      = 'process.finishing';
+
     private $engine;            // instance of \Flexio\Jobs\Process
     private $procobj;           // instance of \Flexio\Object\Process -- used only during execution phase
+    private $handlers = [];          // array of callbacks invoked for each event
 
     public function __construct()
     {
@@ -237,7 +242,11 @@ class StoredProcess implements \Flexio\IFace\IProcess
         // if we're unable to, then the user is as the maximum number of processes, so
         // a little and then try again
         $owner_eid = $this->getOwner();
-        if (\Flexio\Base\Eid::isValid($owner_eid))
+        if (\Flexio\Base\Eid::isValid($owner_eid) == false)
+        {
+            $this->signal(self::EVENT_STARTING, $this);
+        }
+         else
         {
             $current_attempt = 0;
             $max_attempts = 10*60*5; // allow 5-minutes-worth of attempts (at 10 per second)
@@ -246,7 +255,10 @@ class StoredProcess implements \Flexio\IFace\IProcess
             {
                 $success = $this->procobj->incrementActiveProcessCount();
                 if ($success == true)
+                {
+                    $this->signal(self::EVENT_STARTING, $this);
                     break;
+                }
 
                 usleep(100000); // sleep 100ms
 
@@ -263,6 +275,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
                 $process_params['process_status'] = \Flexio\Jobs\Process::STATUS_FAILED;
                 $process_params['process_info'] = $process_info_str;
                 $this->procobj->set($process_params);
+                $this->signal(self::EVENT_FINISHED, $this);
 
                 return $this;
             }
@@ -304,38 +317,28 @@ class StoredProcess implements \Flexio\IFace\IProcess
             $process_params['output'] = array('stream' => $storable_stdout->getEid());
         }
 
+        // save the process info and signal the end of the process
         $this->procobj->set($process_params);
+        $this->signal(self::EVENT_FINISHING, $this);
 
-        // STEP 6: if we have an active owner, decrement the active process count
+        // STEP 6: decrement the active process count
         if (\Flexio\Base\Eid::isValid($owner_eid))
             $this->procobj->decrementActiveProcessCount();
 
         return $this;
     }
 
-    private static function createStorableStream(\Flexio\IFace\IStream $stream, string $owned_by) : \Flexio\Object\Stream
+    public function addEventHandler($handler) : void
     {
-        $properties['path'] = \Flexio\Base\Util::generateHandle();
-        $properties['owned_by'] = $owned_by;
-        $properties = array_merge($stream->get(), $properties);
-        $storable_stream = \Flexio\Object\Stream::create($properties);
+        $this->handlers[] = $handler;
+    }
 
-        // copy from the input stream to the storable stream
-        $streamreader = $stream->getReader();
-        $streamwriter = $storable_stream->getWriter();
-
-        if ($stream->getMimeType() === \Flexio\Base\ContentType::FLEXIO_TABLE)
+    private function signal(string $event, \Flexio\Jobs\StoredProcess $process) : void
+    {
+        foreach ($this->handlers as $handler)
         {
-            while (($row = $streamreader->readRow()) !== false)
-                $streamwriter->write($row);
+            call_user_func($handler, $event, $process);
         }
-         else
-        {
-            while (($data = $streamreader->read(32768)) !== false)
-                $streamwriter->write($data);
-        }
-
-        return $storable_stream;
     }
 
     private function getMountParams() : array
@@ -418,6 +421,58 @@ class StoredProcess implements \Flexio\IFace\IProcess
         }
 
         return array();
+    }
+
+    private static function createStorableStream(\Flexio\IFace\IStream $stream, string $owned_by) : \Flexio\Object\Stream
+    {
+        $properties['path'] = \Flexio\Base\Util::generateHandle();
+        $properties['owned_by'] = $owned_by;
+        $properties = array_merge($stream->get(), $properties);
+        $storable_stream = \Flexio\Object\Stream::create($properties);
+
+        // copy from the input stream to the storable stream
+        $streamreader = $stream->getReader();
+        $streamwriter = $storable_stream->getWriter();
+
+        if ($stream->getMimeType() === \Flexio\Base\ContentType::FLEXIO_TABLE)
+        {
+            while (($row = $streamreader->readRow()) !== false)
+                $streamwriter->write($row);
+        }
+         else
+        {
+            while (($data = $streamreader->read(32768)) !== false)
+                $streamwriter->write($data);
+        }
+
+        return $storable_stream;
+    }
+
+    private static function generateTaskHash(string $implementation_version, array $task) : string
+    {
+        // note: currently, this isn't used, but it's here for reference in case we
+        // need a way of referencing looking up tasks from a string
+
+        // task hash should uniquely identify the result; use
+        // a hash of:
+        //     1. implementation version (git version)
+        //     2. task type
+        //     3. task parameters
+        // leave out the job name or other identifiers, such as the
+        // the task eid
+
+        // if we dont' have an implementation version or an invalid implementation
+        // version (git revision), don't cache anything
+        if (strlen($implementation_version) < 40)
+            return '';
+
+        $encoded_task = json_encode($task);
+        $hash = md5(
+            $implementation_version .
+            $encoded_task
+        );
+
+        return $hash;
     }
 }
 

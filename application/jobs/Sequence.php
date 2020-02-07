@@ -57,7 +57,7 @@ class Sequence extends \Flexio\Jobs\Base
             }
 
             // execute the task
-            $process->executeTask($task);
+            $process->execute($task);
             $first_execute = false;
         }
     }
