@@ -326,16 +326,30 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $this;
     }
 
-    public function addEventHandler($handler) : void
+    public function addEventHandler(string $event, string $handler, array $metadata = array()) : void
     {
-        $this->handlers[] = $handler;
+        // if needed, initialize the array of handlers for a particular event
+        if (!isset($this->handlers[$event]))
+            $this->handlers[$event] = array();
+
+        // add the event handler to the list
+        $this->handlers[$event][] = array(
+            'function' => $handler,
+            'metadata' => $metadata
+        );
     }
 
     private function signal(string $event, \Flexio\Jobs\StoredProcess $process) : void
     {
-        foreach ($this->handlers as $handler)
+        // get the handlers for this particular event
+        $handlers = $this->handlers[$event] ?? array();
+
+        // call the event handlers for the given event
+        foreach ($handlers as $h)
         {
-            call_user_func($handler, $event, $process);
+            $function = $h['function'];
+            $metadata = $h['metadata'];
+            call_user_func($function, $process, $metadata);
         }
     }
 
