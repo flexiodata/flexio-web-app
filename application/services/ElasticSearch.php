@@ -257,7 +257,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         return $indexes;
     }
 
-    public function deleteIndex(array $index) : bool
+    public function deleteIndex(string $index) : bool
     {
         try
         {
