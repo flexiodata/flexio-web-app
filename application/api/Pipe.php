@@ -500,12 +500,6 @@ class Pipe
         if ($triggered_by === \Model::PROCESS_TRIGGERED_API && $api_trigger_active === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
-        // create an output stream to store the results
-        $stream_properties['path'] = \Flexio\Base\Util::generateHandle();
-        $stream_properties['owned_by'] = $owner_user_eid;
-        $storable_stream = \Flexio\Object\Stream::create($stream_properties);
-        $storable_stream_info = $storable_stream->get();
-
         // create a new process
         $process_properties = array(
             'parent_eid' => $pipe_properties['eid'],
@@ -517,10 +511,18 @@ class Pipe
         );
         $process = \Flexio\Object\Process::create($process_properties);
 
+
+        // EXPERIMENTAL for elasticsearch load: get the structure from the notes
+        $structure = $pipe_properties['notes'];
+        $structure = json_decode($structure, true);
+        $structure = \Flexio\Base\Structure::create($structure);
+        $callback_params = array('structure' => $structure);
+
         // create a job engine, attach it to the process object; add callback handlers
         // to capture the output since we're running in background mode
         $engine = \Flexio\Jobs\StoredProcess::create($process);
-        $engine->addEventHandler(\Flexio\Jobs\StoredProcess::EVENT_FINISHING, '\Flexio\Api\Pipe::callbackProcessFinished', $storable_stream_info);
+        //$engine->addEventHandler(\Flexio\Jobs\StoredProcess::EVENT_FINISHING, '\Flexio\Api\Pipe::callbackStreamLoad', array());
+        $engine->addEventHandler(\Flexio\Jobs\StoredProcess::EVENT_FINISHING, '\Flexio\Api\Pipe::callbackElasticSearchLoad', $callback_params);
 
         // parse the request content and set the stream info
         $php_stream_handle = \Flexio\System\System::openPhpInputStream();
@@ -528,7 +530,7 @@ class Pipe
          \Flexio\Base\StreamUtil::addProcessInputFromStream($php_stream_handle, $post_content_type, $engine);
 
         // run the process in the background
-        $engine->run(true /*true: run in background*/);
+        $engine->run(false /*true: run in background*/);
 
         if ($engine->hasError())
         {
@@ -539,17 +541,17 @@ class Pipe
 
         // return the storable stream where the output will be written
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api\Response::sendContent($storable_stream_info);
+        \Flexio\Api\Response::sendContent(array('done'));
     }
 
-    public static function callbackProcessFinished(\Flexio\Jobs\StoredProcess $process, $storable_stream_info)
+    public static function callbackStreamLoad(\Flexio\Jobs\StoredProcess $process, $callback_params)
     {
         // get the stream output
         $stdout_stream = $process->getStdout();
         $stdout_stream_info = $stdout_stream->get();
 
         // copy the stdout stream info to the storable_stream
-        $storable_stream = \Flexio\Object\Stream::load($storable_stream_info['eid']);
+        $storable_stream = \Flexio\Object\Stream::load($callback_params['eid']);
         $storable_stream_info_updated = array(
             'mime_type' => $stdout_stream_info['mime_type'],
             'structure' => $stdout_stream_info['structure']
@@ -570,6 +572,39 @@ class Pipe
             while (($data = $streamreader->read(32768)) !== false)
                 $streamwriter->write($data);
         }
+    }
+
+    public static function callbackElasticSearchLoad(\Flexio\Jobs\StoredProcess $process, $callback_params)
+    {
+        // get the stream output
+        $stdout_stream = $process->getStdout();
+        $stdout_stream_info = $stdout_stream->get();
+
+        // connect to elasticsearch
+        $elasticsearch_connection_info = array(
+            'host'     => $GLOBALS['g_config']->experimental_cache_host ?? '',
+            'port'     => $GLOBALS['g_config']->experimental_cache_port ?? '',
+            'username' => $GLOBALS['g_config']->experimental_cache_username ?? '',
+            'password' => $GLOBALS['g_config']->experimental_cache_password ?? ''
+        );
+        $elasticsearch = \Flexio\Services\ElasticSearch::create($elasticsearch_connection_info);
+        $structure = $callback_params['structure'];
+        $field_names = $structure = $structure->getNames();
+
+        $stdout_reader= $process->getStdout()->getReader();
+        $data = $stdout_reader->read(32768);
+        $data = json_decode($data, true);
+
+        $data_to_write = array();
+        foreach ($data as $d)
+        {
+            $row = array_combine($field_names, $d);
+            $data_to_write[] = $row;
+        }
+
+        $index = \Flexio\Base\Util::generateHandle();
+        $type = 'row';
+        $elasticsearch->writeRows($index, $type, $data_to_write);
     }
 
     // using json_encode/decode() on arrays leads to ambiguities
