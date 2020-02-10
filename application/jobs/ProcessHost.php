@@ -159,12 +159,19 @@ class ProcessHost
         // get the handlers for this particular event
         $handlers = $this->handlers[$event] ?? array();
 
-        // call the event handlers for the given event
-        foreach ($handlers as $h)
+        try
         {
-            $function = $h['function'];
-            $metadata = $h['metadata'];
-            call_user_func($function, $process, $metadata);
+            // call the event handlers for the given event
+            foreach ($handlers as $h)
+            {
+                $function = $h['function'];
+                $metadata = $h['metadata'];
+                call_user_func($function, $process, $metadata);
+            }
+        }
+        catch (\Flexio\Base\Exception | \Exception | \Error $e)
+        {
+            self::setErrorFromException($process, $e);
         }
     }
 

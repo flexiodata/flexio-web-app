@@ -324,7 +324,22 @@ class Process implements \Flexio\IFace\IProcess
             $job = self::createTask($task);
             $job->run($this);
         }
-        catch (\Flexio\Base\Exception $e)
+        catch (\Flexio\Base\Exception | \Exception | \Error $e)
+        {
+            self::setErrorFromException($this, $e);
+        }
+
+        return $this;
+    }
+
+    ////////////////////////////////////////////////////////////
+    // additional functions
+    ////////////////////////////////////////////////////////////
+
+    public static function setErrorFromException(\Flexio\Job\Process $process, $exception) : void
+    {
+        // TODO: compare \Flexio\Api\Api::createError
+        if ($exception instanceof \Flexio\Base\Exception)
         {
             $debug = IS_DEBUG();
             $info = $e->getMessage(); // exception info is packaged up in message
@@ -337,11 +352,11 @@ class Process implements \Flexio\IFace\IProcess
             $type = 'flexio exception';
 
             if ($debug)
-                $this->setError($code, $message, $module, $line, $type, $trace);
+                $process->setError($code, $message, $module, $line, $type, $trace);
                  else
-                $this->setError($code, $message);
+                $process->setError($code, $message);
         }
-        catch (\Exception $e)
+         elseif ($exception instanceof \Exception)
         {
             $debug = IS_DEBUG();
             $module = $debug ? $e->getFile() : \Flexio\Base\Util::safePrintCodeFilename($e->getFile());
@@ -351,11 +366,11 @@ class Process implements \Flexio\IFace\IProcess
             $type = 'system exception';
 
             if ($debug)
-                $this->setError(\Flexio\Base\Error::GENERAL, $message, $module, $line, $type, $trace);
+                $process->setError(\Flexio\Base\Error::GENERAL, $message, $module, $line, $type, $trace);
                  else
-                $this->setError(\Flexio\Base\Error::GENERAL); // don't patch through sensitive info in non-debug
+                $process->setError(\Flexio\Base\Error::GENERAL); // don't patch through sensitive info in non-debug
         }
-        catch (\Error $e)
+         elseif ($exception instanceof \Error)
         {
             $debug = IS_DEBUG();
             $module = $debug ? $e->getFile() : \Flexio\Base\Util::safePrintCodeFilename($e->getFile());
@@ -365,17 +380,15 @@ class Process implements \Flexio\IFace\IProcess
             $type = 'system error';
 
             if ($debug)
-                $this->setError(\Flexio\Base\Error::GENERAL, $message, $module, $line, $type, $trace);
+                $process->setError(\Flexio\Base\Error::GENERAL, $message, $module, $line, $type, $trace);
                  else
-                $this->setError(\Flexio\Base\Error::GENERAL); // don't patch through sensitive info in non-debug
+                $process->setError(\Flexio\Base\Error::GENERAL); // don't patch through sensitive info in non-debug
         }
-
-        return $this;
+         else
+        {
+            // fall through
+        }
     }
-
-    ////////////////////////////////////////////////////////////
-    // additional functions
-    ////////////////////////////////////////////////////////////
 
     private static function createTask(array $task) : \Flexio\IFace\IJob
     {
