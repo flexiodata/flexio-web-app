@@ -255,7 +255,7 @@ class Process
         $process_store = \Flexio\Object\Process::load($process_eid);
         if ($owner_user_eid !== $process_store->getOwner())
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($process->getStatus() === \Model::STATUS_DELETED)
+        if ($process_store->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         // check the rights
