@@ -133,7 +133,7 @@ class Api
         'GET /:teamid/actions'                        => '\Flexio\Api\Action::list',
 
 
-        // INTERNAL ENDPOINTS
+        // ADMINISTRATOR ENDPOINTS
 
         // email/cron triggers
         'POS /admin/email/run'                        => '\Flexio\Api\Admin::email',
