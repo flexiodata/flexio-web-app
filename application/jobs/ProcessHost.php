@@ -103,49 +103,6 @@ class ProcessHost
             'started' => \Flexio\Base\Util::getCurrentTimestamp()
         ]);
 
-        // STEP 2: if we have a valid owner, try to increment the active process count;
-        // if we're unable to, then the user is as the maximum number of processes, so
-        // a little and then try again
-        $owner_eid = $this->engine->getOwner();
-        if (\Flexio\Base\Eid::isValid($owner_eid) == false)
-        {
-            $this->signal(self::EVENT_STARTING, $this);
-        }
-         else
-        {
-            $current_attempt = 0;
-            $max_attempts = 10*60*5; // allow 5-minutes-worth of attempts (at 10 per second)
-
-            while (true)
-            {
-                $success = $this->procobj->incrementActiveProcessCount();
-                if ($success == true)
-                {
-                    $this->signal(self::EVENT_STARTING, $this);
-                    break;
-                }
-
-                usleep(100000); // sleep 100ms
-
-                $current_attempt++;
-                if ($current_attempt < $max_attempts)
-                    continue;
-
-                // fail if job doesn't finish within a certain number of attempts
-                $process_info = array('error' => $this->engine->getError());
-                $process_info_str = json_encode($process_info, JSON_PARTIAL_OUTPUT_ON_ERROR); // don't allow bad characters that may exist in debugging info to cause encoding to cause another failure
-
-                $process_params = array();
-                $process_params['finished'] = \Flexio\Base\Util::getCurrentTimestamp();
-                $process_params['process_status'] = \Flexio\Jobs\Process::STATUS_FAILED;
-                $process_params['process_info'] = $process_info_str;
-                $this->procobj->set($process_params);
-                $this->signal(self::EVENT_FINISHED, $this);
-
-                return $this;
-            }
-        }
-
         // STEP 3: if we have an associative array, we have a top-level task, so simply
         // execute it; otherwise we have an array of tasks, so package them in a sequence job
         $task = $this->procobj->getTask();
@@ -180,10 +137,6 @@ class ProcessHost
         // save the process info and signal the end of the process
         $this->procobj->set($process_params);
         $this->signal(self::EVENT_FINISHING, $this);
-
-        // STEP 5: decrement the active process count
-        if (\Flexio\Base\Eid::isValid($owner_eid))
-            $this->procobj->decrementActiveProcessCount();
 
         return $this;
     }

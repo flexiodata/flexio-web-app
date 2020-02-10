@@ -18,6 +18,37 @@ namespace Flexio\Api;
 
 class ProcessHandler
 {
+    public static function callbackIncrementProcessCount(\Flexio\Jobs\ProcessHost $process_host, array $callback_params) : void
+    {
+        // try to increment the active process count; if we're unable to, then the user is as the
+        // maximum number of processes, so a little and then try again
+
+        $current_attempt = 0;
+        $max_attempts = 10*60*5; // allow 5-minutes-worth of attempts (at 10 per second)
+
+        while (true)
+        {
+            $success = $process_host->getStore()->incrementActiveProcessCount();
+            if ($success == true)
+                break;
+
+            usleep(100000); // sleep 100ms
+
+            $current_attempt++;
+            if ($current_attempt < $max_attempts)
+                continue;
+
+            // if we can't increment the process count after a certain amount of time
+            // throw an error
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::RATE_LIMIT_EXCEEDED);
+        }
+    }
+
+    public static function callbackDecrementProcessCount(\Flexio\Jobs\ProcessHost $process_host, array $callback_params) : void
+    {
+        $process_host->getStore()->decrementActiveProcessCount();
+    }
+
     public static function callbackAddMountParams(\Flexio\Jobs\ProcessHost $process_host, array $callback_params) : void
     {
         // callback function to add parameters from mounts for functions that
@@ -67,7 +98,7 @@ class ProcessHandler
                 // get the access token
                 try
                 {
-                    $requesting_user_eid = $this->engine->getOwner();
+                    $requesting_user_eid = $process_host->getEngine()->getOwner();
                     $connection = \Flexio\Object\Connection::load($mount_item_eid);
                     if ($connection->getStatus() !== \Model::STATUS_AVAILABLE)
                         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
@@ -106,8 +137,9 @@ class ProcessHandler
                 'stream_eid'  => array('type' => 'eid',     'required' => true)
             ))->hasErrors()) === true)
         {
-            // TODO: set process error
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+            // note: parameters are internal, so proper error is write failing
+            // as opposed to invalid parameters
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
 
         $validated_params = $validator->getParams();
@@ -148,8 +180,9 @@ class ProcessHandler
                 'structure'  => array('type' => 'object',     'required' => true)
             ))->hasErrors()) === true)
         {
-            // TODO: set process error
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+            // note: parameters are internal, so proper error is write failing
+            // as opposed to invalid parameters
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
 
         $validated_params = $validator->getParams();
