@@ -22,6 +22,10 @@ class Test
     {
         // ENDPOINT: POST /:teamid/processes/:objeid
 
+/*
+        // DEPRECATED: removed \Flexio\Api\Process::set() and associated endpoint; not used
+        // and processes shouldn't be able to have their information changed from the api once
+        // they're running
 
         // SETUP
         $apibase = \Flexio\Tests\Util::getTestHost() . '/v1';
@@ -168,5 +172,6 @@ class Test
             }
         }';
         \Flexio\Tests\Check::assertInArray('A.4', 'POST /:teamid/processes/:objeid; return updated process info',  $actual, $expected, $results);
+*/
     }
 }
