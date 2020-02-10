@@ -180,6 +180,7 @@ class Process
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_query_params = $validator->getParams();
+        $milliseconds_to_wait_for_change = $validated_query_params['wait'] ?? 0;
         $process_info_only = toBoolean($validated_query_params['status']);
 
         // load the object; make sure the eid is associated with the owner
@@ -194,33 +195,8 @@ class Process
         if ($process->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PROCESS_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        // if no wait period is specified, return the information immediately
-        if (!isset($validated_query_params['wait']))
-        {
-            $process_info = $process->get();
-
-            if ($process_info_only === true)
-            {
-                $result = array();
-                $result['eid'] = $process_info['eid'];
-                $result['process_status'] = $process_info['process_status'];
-                $result['process_info'] = $process_info['process_info'];
-
-                $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-                \Flexio\Api\Response::sendContent($result);
-
-                return;
-            }
-
-            $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-            \Flexio\Api\Response::sendContent($process_info);
-            return;
-        }
-
-        // wait for any changes, then reload process to refresh the data
-        $wait_for_change = $validated_query_params['wait'];
-        self::waitforchangewhilerunning($process_eid, $wait_for_change);
-        $process = \Flexio\Object\Process::load($process_eid);
+        // wait for any changes, then return the information
+        $process->blockUntilStatusChanges($milliseconds_to_wait_for_change);
         if ($process->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
@@ -235,7 +211,6 @@ class Process
 
             $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
             \Flexio\Api\Response::sendContent($result);
-
             return;
         }
 
@@ -483,70 +458,5 @@ class Process
         }
 
         \Flexio\Api\Response::sendRaw($content);
-    }
-
-    private static function waitforchangewhilerunning(string $eid, int $time_to_wait_for_change) : void
-    {
-        // TODO: move part of implemention to some type of function
-        // on the object?  e.g. $object->hasChanged() so we can cache
-        // non-changed portions of the object in the object layer (right
-        // now, we don't cache the process status so that we always have
-        // a fresh status since it's being updated by another process;
-        // but as a consequence, we don't cache any of the other process
-        // values either, many of which won't change (e.g. list of tasks))
-
-        // $wait_for_change is how long to wait for a change (milliseconds)
-        // before returning what we have
-
-        $minimum_wait = 0;
-        $maximum_wait = 10000; // wait 10 seconds before returning
-        $wait_interval = 100;  // check for changes every 100 milliseconds
-        $time_to_wait_for_change = $time_to_wait_for_change;
-
-        if ($time_to_wait_for_change <= $minimum_wait)
-            $time_to_wait_for_change = $minimum_wait;
-        if ($time_to_wait_for_change > $maximum_wait)
-            $time_to_wait_for_change = $maximum_wait;
-
-        $process = false;
-        try
-        {
-            $process = \Flexio\Object\Process::load($eid);
-            if ($process->getStatus() === \Model::STATUS_DELETED)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        }
-        catch (\Flexio\Base\Exception $e)
-        {
-        }
-
-        if ($process === false)
-            return;
-
-        $status_initial = $process->getProcessStatus();
-
-        // if the job is cancelled, failed, or completed, then it's in
-        // the final state, so there's nothing to wait for
-        if ($status_initial === \Flexio\Jobs\Process::STATUS_CANCELLED ||
-            $status_initial === \Flexio\Jobs\Process::STATUS_FAILED ||
-            $status_initial === \Flexio\Jobs\Process::STATUS_COMPLETED)
-            return;
-
-        $time_waited = 0;
-        while (true)
-        {
-            usleep($wait_interval*1000);
-            $time_waited += $wait_interval;
-
-            // if the time is up, return what we have
-            if ($time_waited > $time_to_wait_for_change)
-                return;
-
-            $status_current = $process->getProcessStatus();
-
-            // compare the states of the two proces instances; use !=
-            // for value comparison rather than instance comparison
-            if ($status_current != $status_initial)
-                return;
-        }
     }
 }

@@ -266,6 +266,62 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $this->getModel()->process->decrementActiveProcessCount($owner);
     }
 
+    public function blockUntilStatusChanges(int $timeout) : void
+    {
+        // blocks until the process status changes or a timeout (in milliseconds)
+        // up to 10 seconds is exceeded, whichever is first
+
+        // if there's not timeout, return right away
+        if ($timeout <= 0)
+            return;
+
+        $minimum_wait = 0;
+        $maximum_wait = 10000; // wait 10 seconds maximum before returning
+        $wait_interval = 100;  // check for changes every 100 milliseconds
+        $time_to_wait_for_change = $timeout;
+
+        if ($time_to_wait_for_change <= $minimum_wait)
+            $time_to_wait_for_change = $minimum_wait;
+        if ($time_to_wait_for_change > $maximum_wait)
+            $time_to_wait_for_change = $maximum_wait;
+
+        try
+        {
+            if ($this->getStatus() === \Model::STATUS_DELETED)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+        }
+
+        $status_initial = $this->getProcessStatus();
+
+        // if the job is cancelled, failed, or completed, then it's in
+        // the final state, so there's nothing to wait for
+        if ($status_initial === \Flexio\Jobs\Process::STATUS_CANCELLED ||
+            $status_initial === \Flexio\Jobs\Process::STATUS_FAILED ||
+            $status_initial === \Flexio\Jobs\Process::STATUS_COMPLETED)
+            return;
+
+        $time_waited = 0;
+        while (true)
+        {
+            usleep($wait_interval*1000);
+            $time_waited += $wait_interval;
+
+            // if the time is up, return what we have
+            if ($time_waited > $time_to_wait_for_change)
+                return;
+
+            $status_current = $this->getProcessStatus();
+
+            // compare the states of the two proces instances; use !=
+            // for value comparison rather than instance comparison
+            if ($status_current != $status_initial)
+                return;
+        }
+    }
+
     private function isCached() : bool
     {
         // a process may be run in the background and update values
