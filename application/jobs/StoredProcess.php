@@ -39,6 +39,16 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $object;
     }
 
+    public function getProcessObject() : \Flexio\Object\Process
+    {
+        return $this->procobj;
+    }
+
+    public function getProcessEngine() : \Flexio\Jobs\Process
+    {
+        return $this->engine;
+    }
+
     ////////////////////////////////////////////////////////////
     // IProcess interface
     ////////////////////////////////////////////////////////////
