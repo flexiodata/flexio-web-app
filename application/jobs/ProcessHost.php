@@ -166,7 +166,7 @@ class ProcessHost
         }
         catch (\Flexio\Base\Exception | \Exception | \Error $e)
         {
-            self::setErrorFromException($process, $e);
+            \Flexio\Jobs\Process::setErrorFromException($process, $e);
         }
     }
 }
