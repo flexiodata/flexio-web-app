@@ -336,17 +336,17 @@ class Process implements \Flexio\IFace\IProcess
     // additional functions
     ////////////////////////////////////////////////////////////
 
-    public static function setErrorFromException(\Flexio\Job\Process $process, $exception) : void
+    public static function setErrorFromException(\Flexio\Jobs\Process $process, $exception) : void
     {
         // TODO: compare \Flexio\Api\Api::createError
         if ($exception instanceof \Flexio\Base\Exception)
         {
             $debug = IS_DEBUG();
-            $info = $e->getMessage(); // exception info is packaged up in message
+            $info = $exception->getMessage(); // exception info is packaged up in message
             $info = json_decode($info,true);
-            $module = $debug ? $e->getFile() : \Flexio\Base\Util::safePrintCodeFilename($e->getFile());
-            $line = $e->getLine();
-            $trace = $debug ? $e->getTraceAsString() : null;
+            $module = $debug ? $exception->getFile() : \Flexio\Base\Util::safePrintCodeFilename($exception->getFile());
+            $line = $exception->getLine();
+            $trace = $debug ? $exception->getTraceAsString() : null;
             $code = $info['code'];
             $message = $info['message'];
             $type = 'flexio exception';
@@ -359,10 +359,10 @@ class Process implements \Flexio\IFace\IProcess
          elseif ($exception instanceof \Exception)
         {
             $debug = IS_DEBUG();
-            $module = $debug ? $e->getFile() : \Flexio\Base\Util::safePrintCodeFilename($e->getFile());
-            $line = $e->getLine();
-            $trace = $debug ? $e->getTraceAsString() : null;
-            $message = $e->getMessage();
+            $module = $debug ? $exception->getFile() : \Flexio\Base\Util::safePrintCodeFilename($exception->getFile());
+            $line = $exception->getLine();
+            $trace = $debug ? $exception->getTraceAsString() : null;
+            $message = $exception->getMessage();
             $type = 'system exception';
 
             if ($debug)
@@ -373,10 +373,10 @@ class Process implements \Flexio\IFace\IProcess
          elseif ($exception instanceof \Error)
         {
             $debug = IS_DEBUG();
-            $module = $debug ? $e->getFile() : \Flexio\Base\Util::safePrintCodeFilename($e->getFile());
-            $line = $e->getLine();
-            $trace = $debug ? $e->getTraceAsString() : null;
-            $message = $e->getMessage();
+            $module = $debug ? $exception->getFile() : \Flexio\Base\Util::safePrintCodeFilename($exception->getFile());
+            $line = $exception->getLine();
+            $trace = $debug ? $exception->getTraceAsString() : null;
+            $message = $exception->getMessage();
             $type = 'system error';
 
             if ($debug)
