@@ -105,6 +105,7 @@ class Api
         // pipes
         'POS /:teamid/pipes'                          => '\Flexio\Api\Pipe::create',
         'GET /:teamid/pipes'                          => '\Flexio\Api\Pipe::list',
+        'DEL /:teamid/pipes'                          => '\Flexio\Api\Pipe::bulkdelete',
         'POS /:teamid/pipes/:objid'                   => '\Flexio\Api\Pipe::set',
         'GET /:teamid/pipes/:objid'                   => '\Flexio\Api\Pipe::get',
         'DEL /:teamid/pipes/:objid'                   => '\Flexio\Api\Pipe::delete',
@@ -157,9 +158,6 @@ class Api
 
 
         // EXPERIMENTAL ENDPOINTS
-
-        // experimental pipes endpoint for bulk delete of pipes
-        'DEL /:teamid/pipes'                          => '\Flexio\Api\Pipe::bulkdelete',
 
         // experimental/test pipe endpoint for running jobs in background to test that capability
         'POS /:teamid/pipes/:objid/runbackground'     => '\Flexio\Api\Pipe::runbackground',
