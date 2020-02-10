@@ -130,18 +130,20 @@ class ProcessHandler
         if ($process_host->getStore()->getMode() !== \Flexio\Jobs\Process::MODE_BUILD)
             return;
 
+        // get the stdout stream
+        $stdout_stream = $process_host->getEngine()->getStdout();
+
         // create a stream to store the stdout
         $properties['path'] = \Flexio\Base\Util::generateHandle();
         $properties['owned_by'] = $process_host->getStore()->getOwner();
-        $properties = array_merge($stream->get(), $properties);
+        $properties = array_merge($stdout_stream->get(), $properties);
         $storable_stream = \Flexio\Object\Stream::create($properties);
 
         // copy from the input stream to the storable stream
-        $stdout_stream = $process_host->getEngine()->getStdout();
         $streamreader = $stdout_stream->getReader();
         $streamwriter = $storable_stream->getWriter();
 
-        if ($stream->getMimeType() === \Flexio\Base\ContentType::FLEXIO_TABLE)
+        if ($storable_stream->getMimeType() === \Flexio\Base\ContentType::FLEXIO_TABLE)
         {
             while (($row = $streamreader->readRow()) !== false)
                 $streamwriter->write($row);
