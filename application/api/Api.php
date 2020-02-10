@@ -133,6 +133,45 @@ class Api
         'GET /:teamid/actions'                        => '\Flexio\Api\Action::list',
 
 
+        // INTERNAL ENDPOINTS
+
+        // email/cron triggers
+        'POS /admin/email/run'                        => '\Flexio\Api\Admin::email',
+        'POS /admin/cron/run'                         => '\Flexio\Api\Admin::cron',
+
+        // diagnostic/system info
+        'GET /admin/info/settings'                    => '\Flexio\Api\Admin::settings',
+        'GET /admin/info/system'                      => '\Flexio\Api\Admin::system',
+        'GET /admin/info/users'                       => '\Flexio\Api\Admin::users',
+        'GET /admin/info/actions'                     => '\Flexio\Api\Admin::actions',
+        'GET /admin/info/connections'                 => '\Flexio\Api\Admin::connections',
+        'GET /admin/info/pipes'                       => '\Flexio\Api\Admin::pipes',
+        'GET /admin/info/processes'                   => '\Flexio\Api\Admin::processes',
+        'GET /admin/info/processes/summary/user'      => '\Flexio\Api\Admin::process_summary_byuser',
+        'GET /admin/info/stats'                       => '\Flexio\Api\Admin::stats',
+
+        // tests
+        'GET /admin/tests/configure'                  => '\Flexio\Tests\Base::configure',
+        'GET /admin/tests/run'                        => '\Flexio\Tests\Base::run',
+        'GET /admin/action/test'                      => '\Flexio\Api\Action::test',
+
+
+        // EXPERIMENTAL ENDPOINTS
+
+        // experimental/test pipe endpoint for running jobs in background to test that capability
+        'POS /:teamid/pipes/:objid/runbackground'     => '\Flexio\Api\Pipe::runbackground',
+
+        // experimental processes endpoint for running code (creates and runs a process from code)
+        'GET /:teamid/processes/exec'                 => '\Flexio\Api\Process::exec',
+        'POS /:teamid/processes/exec'                 => '\Flexio\Api\Process::exec',
+
+        // experimental vfs-style endpoint for running code (creates and runs a process based on a path)
+        'GET /:teamid/run/*'                          => '\Flexio\Api\Vfs::exec',
+        'POS /:teamid/run/*'                          => '\Flexio\Api\Vfs::exec',
+        'PUT /:teamid/run/*'                          => '\Flexio\Api\Vfs::exec',
+        'DEL /:teamid/run/*'                          => '\Flexio\Api\Vfs::exec',
+
+
         // EXPERIMENTAL ENDPOINTS FOR MOUNTED FUNCTIONS
 
         // connections; works almost the same, except for connect/disconnect; here for reference
@@ -155,45 +194,6 @@ class Api
         // 'GET /:teamid/content/*'                      => '\Flexio\Api\Content::read',
         // 'PUT /:teamid/content/*'                      => '\Flexio\Api\Content::update',
         // 'DEL /:teamid/content/*'                      => '\Flexio\Api\Content::delete',
-
-
-        // EXPERIMENTAL ENDPOINTS
-
-        // experimental/test pipe endpoint for running jobs in background to test that capability
-        'POS /:teamid/pipes/:objid/runbackground'     => '\Flexio\Api\Pipe::runbackground',
-
-        // experimental processes endpoint for running code (creates and runs a process from code)
-        'GET /:teamid/processes/exec'                 => '\Flexio\Api\Process::exec',
-        'POS /:teamid/processes/exec'                 => '\Flexio\Api\Process::exec',
-
-        // experimental vfs-style endpoint for running code (creates and runs a process based on a path)
-        'GET /:teamid/run/*'                          => '\Flexio\Api\Vfs::exec',
-        'POS /:teamid/run/*'                          => '\Flexio\Api\Vfs::exec',
-        'PUT /:teamid/run/*'                          => '\Flexio\Api\Vfs::exec',
-        'DEL /:teamid/run/*'                          => '\Flexio\Api\Vfs::exec',
-
-
-        // INTERNAL ENDPOINTS
-
-        // email/cron triggers
-        'POS /admin/email/run'                        => '\Flexio\Api\Admin::email',
-        'POS /admin/cron/run'                         => '\Flexio\Api\Admin::cron',
-
-        // diagnostic/system info
-        'GET /admin/info/settings'                    => '\Flexio\Api\Admin::settings',
-        'GET /admin/info/system'                      => '\Flexio\Api\Admin::system',
-        'GET /admin/info/users'                       => '\Flexio\Api\Admin::users',
-        'GET /admin/info/actions'                     => '\Flexio\Api\Admin::actions',
-        'GET /admin/info/connections'                 => '\Flexio\Api\Admin::connections',
-        'GET /admin/info/pipes'                       => '\Flexio\Api\Admin::pipes',
-        'GET /admin/info/processes'                   => '\Flexio\Api\Admin::processes',
-        'GET /admin/info/processes/summary/user'      => '\Flexio\Api\Admin::process_summary_byuser',
-        'GET /admin/info/stats'                       => '\Flexio\Api\Admin::stats',
-
-        // tests
-        'GET /admin/tests/configure'                  => '\Flexio\Tests\Base::configure',
-        'GET /admin/tests/run'                        => '\Flexio\Tests\Base::run',
-        'GET /admin/action/test'                      => '\Flexio\Api\Action::test'
     );
 
     public static function request(\Flexio\System\FrameworkRequest $server_request) : void
