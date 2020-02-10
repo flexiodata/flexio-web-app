@@ -22,6 +22,9 @@ class Test
     {
         // ENDPOINT: DEL /:teamid/processes/:objeid
 
+/*
+        // DEPRECATED: removed \Flexio\Api\Process::delete() and associated endpoint; not used
+        // and behavior with running processes is ambiguous
 
         // SETUP
         $apibase = \Flexio\Tests\Util::getTestHost() . '/v1';
@@ -149,6 +152,7 @@ class Test
             }
         }';
         \Flexio\Tests\Check::assertInArray('A.5', 'DELETE /:teamid/processes/:objeid; make sure a process is deleted',  $actual, $expected, $results);
+*/
     }
 }
 
