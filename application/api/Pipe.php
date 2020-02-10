@@ -83,63 +83,6 @@ class Pipe
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function copy(\Flexio\Api\Request $request) : void
-    {
-        $post_params = $request->getPostParams();
-        $requesting_user_eid = $request->getRequestingUser();
-        $owner_user_eid = $request->getOwnerFromUrl();
-
-        $request->track(\Flexio\Api\Action::TYPE_PIPE_CREATE);
-        $request->setRequestParams($post_params);
-
-        // note: the copy_eid parameter needs to be an eid because we
-        // don't know if it's coming outside the owner namespace; we
-        // may need to convert this over to a full URL path that includes
-        // owner info
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($post_params, array(
-                'copy_eid' => array('type' => 'eid', 'required' => true)
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-
-        $validated_post_params = $validator->getParams();
-        $original_pipe_eid = $validated_post_params['copy_eid'];
-
-        // check the rights on the owner
-        $owner_user = \Flexio\Object\User::load($owner_user_eid);
-        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PIPE_CREATE) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
-        // load the pipe
-        $original_pipe = \Flexio\Object\Pipe::load($original_pipe_eid);
-
-        // check the rights on the pipe being read from
-        if ($original_pipe->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($original_pipe->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PIPE_READ) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
-        // create a new pipe; copy the logic, but not the status, scheduling, etc
-        $original_pipe_properties = $original_pipe->get();
-
-        $new_pipe_properties = array();
-        $new_pipe_properties['name'] = $original_pipe_properties['name'] . ' copy';
-        $new_pipe_properties['description'] = $original_pipe_properties['description'];
-        $new_pipe_properties['task'] = $original_pipe_properties['task'];
-        $new_pipe_properties['owned_by'] = $owner_user_eid;
-        $new_pipe_properties['created_by'] = $requesting_user_eid;
-        $new_pipe = \Flexio\Object\Pipe::create($new_pipe_properties);
-
-        $properties = $new_pipe->get();
-        $result = self::cleanProperties($properties);
-        $request->setResponseParams($result);
-        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        $request->track();
-        \Flexio\Api\Response::sendContent($result);
-    }
-
     public static function delete(\Flexio\Api\Request $request) : void
     {
         $requesting_user_eid = $request->getRequestingUser();
