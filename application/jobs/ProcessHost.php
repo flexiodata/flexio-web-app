@@ -113,6 +113,9 @@ class ProcessHost
             $task = array('op' => 'sequence', 'params' => array('items' => $task));
         $this->engine->execute($task);
 
+        // STEP 4: signal the end of the process
+        $this->signal(self::EVENT_FINISHING, $this);
+
         // STEP 4: save final job output and status; only save the status if it hasn't already been set
         $process_params = array();
         $process_params['finished'] = \Flexio\Base\Util::getCurrentTimestamp();
@@ -139,7 +142,7 @@ class ProcessHost
 
         // save the process info and signal the end of the process
         $this->procobj->set($process_params);
-        $this->signal(self::EVENT_FINISHING, $this);
+
 
         return $this;
     }
