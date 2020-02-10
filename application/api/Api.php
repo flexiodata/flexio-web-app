@@ -114,7 +114,6 @@ class Api
         // processes
         'POS /:teamid/processes'                      => '\Flexio\Api\Process::create',
         'GET /:teamid/processes'                      => '\Flexio\Api\Process::list',
-        'POS /:teamid/processes/:objid'               => '\Flexio\Api\Process::set',
         'GET /:teamid/processes/:objid'               => '\Flexio\Api\Process::get',
         'POS /:teamid/processes/:objid/run'           => '\Flexio\Api\Process::run',
 
