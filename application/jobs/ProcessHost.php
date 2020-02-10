@@ -103,6 +103,9 @@ class ProcessHost
             'started' => \Flexio\Base\Util::getCurrentTimestamp()
         ]);
 
+        // STEP 2: signal the start of the process
+        $this->signal(self::EVENT_STARTING, $this);
+
         // STEP 3: if we have an associative array, we have a top-level task, so simply
         // execute it; otherwise we have an array of tasks, so package them in a sequence job
         $task = $this->procobj->getTask();
