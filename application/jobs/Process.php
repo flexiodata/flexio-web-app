@@ -432,4 +432,31 @@ class Process implements \Flexio\IFace\IProcess
         $stream->setMimeType(\Flexio\Base\ContentType::TEXT); // default mime type
         return $stream;
     }
+
+    private static function generateTaskHash(string $implementation_version, array $task) : string
+    {
+        // note: currently, this isn't used, but it's here for reference in case we
+        // need a way of referencing looking up tasks from a string
+
+        // task hash should uniquely identify the result; use
+        // a hash of:
+        //     1. implementation version (git version)
+        //     2. task type
+        //     3. task parameters
+        // leave out the job name or other identifiers, such as the
+        // the task eid
+
+        // if we dont' have an implementation version or an invalid implementation
+        // version (git revision), don't cache anything
+        if (strlen($implementation_version) < 40)
+            return '';
+
+        $encoded_task = json_encode($task);
+        $hash = md5(
+            $implementation_version .
+            $encoded_task
+        );
+
+        return $hash;
+    }
 }
