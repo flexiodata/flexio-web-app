@@ -340,9 +340,12 @@ class Cron
         $process_store = \Flexio\Object\Process::create($process_properties);
         $process_engine = \Flexio\Jobs\Process::create();
 
-        // STEP 3: run the process
+        // STEP 3: run the process; don't increment/decrement process counts; we want
+        // scheduling to succeed and not be clamped
         $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
+        //$process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::callbackIncrementProcessCount', array());
         $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::callbackAddMountParams', array());
+        //$process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_FINISHING, '\Flexio\Api\ProcessHandler::callbackDecrementProcessCount', array());
         $process_host->run(true /*true: run in background*/);
     }
 
