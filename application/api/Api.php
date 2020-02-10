@@ -118,7 +118,6 @@ class Api
         'GET /:teamid/processes/:objid'               => '\Flexio\Api\Process::get',
         'DEL /:teamid/processes/:objid'               => '\Flexio\Api\Process::delete',
         'POS /:teamid/processes/:objid/run'           => '\Flexio\Api\Process::run',
-        'POS /:teamid/processes/:objid/cancel'        => '\Flexio\Api\Process::cancel',
 
         // streams
         'GET /:teamid/streams/:objid'                 => '\Flexio\Api\Stream::get',

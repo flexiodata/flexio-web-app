@@ -510,40 +510,6 @@ class Process
         \Flexio\Api\Response::sendRaw($content);
     }
 
-    public static function cancel(\Flexio\Api\Request $request) : void
-    {
-        $requesting_user_eid = $request->getRequestingUser();
-        $owner_user_eid = $request->getOwnerFromUrl();
-        $process_eid = $request->getObjectFromUrl();
-
-        // load the object; make sure the eid is associated with the owner
-        // as an additional check
-        $process = \Flexio\Object\Process::load($process_eid);
-        if ($owner_user_eid !== $process->getOwner())
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-
-        // check the rights on the object
-        if ($process->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($process->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PROCESS_UPDATE) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
-        $process->cancel();
-
-        // return a subset of the info (cancel is paired with running, so uses execute
-        // privileges and we don't want to leak process info if only execute privileges
-        // are given)
-        $process_info = $process->get();
-
-        $result = array();
-        $result['eid'] = $process_info['eid'];
-        $result['process_status'] = $process_info['process_status'];
-        $result['process_info'] = $process_info['process_info'];
-
-        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api\Response::sendContent($result);
-    }
-
     private static function waitforchangewhilerunning(string $eid, int $time_to_wait_for_change) : void
     {
         // TODO: move part of implemention to some type of function
