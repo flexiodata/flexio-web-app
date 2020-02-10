@@ -466,7 +466,7 @@ class Pipe
         $callback_params = array('structure' => $structure);
 
         // add callback handlers to capture the output since we're running in background mode
-        $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_FINISHING, '\Flexio\Api\Pipe::callbackElasticSearchLoad', $callback_params);
+        $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_FINISHING, '\Flexio\Api\ProcessHandler::callbackElasticSearchLoad', $callback_params);
 
         // parse the request content and set the stream info
         $php_stream_handle = \Flexio\System\System::openPhpInputStream();
@@ -486,69 +486,6 @@ class Pipe
         // return the storable stream where the output will be written
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api\Response::sendContent(array('done'));
-    }
-
-    public static function callbackStreamLoad(\Flexio\Jobs\ProcessHost $process_host, $callback_params)
-    {
-        // get the stream output
-        $stdout_stream = $process_host->getEngine()->getStdout();
-        $stdout_stream_info = $stdout_stream->get();
-
-        // copy the stdout stream info to the storable_stream
-        $storable_stream = \Flexio\Object\Stream::load($callback_params['eid']);
-        $storable_stream_info_updated = array(
-            'mime_type' => $stdout_stream_info['mime_type'],
-            'structure' => $stdout_stream_info['structure']
-        );
-        $storable_stream->set($storable_stream_info_updated);
-
-        // copy from the input stream to the storable stream
-        $streamreader = $stdout_stream->getReader();
-        $streamwriter = $storable_stream->getWriter();
-
-        if ($stdout_stream->getMimeType() === \Flexio\Base\ContentType::FLEXIO_TABLE)
-        {
-            while (($row = $streamreader->readRow()) !== false)
-                $streamwriter->write($row);
-        }
-            else
-        {
-            while (($data = $streamreader->read(32768)) !== false)
-                $streamwriter->write($data);
-        }
-    }
-
-    public static function callbackElasticSearchLoad(\Flexio\Jobs\ProcessHost $process_host, $callback_params)
-    {
-        // get the stream output
-        $stdout_stream = $process_host->getEngine()->getStdout();
-        $stdout_stream_info = $stdout_stream->get();
-
-        // connect to elasticsearch
-        $elasticsearch_connection_info = array(
-            'host'     => $GLOBALS['g_config']->experimental_cache_host ?? '',
-            'port'     => $GLOBALS['g_config']->experimental_cache_port ?? '',
-            'username' => $GLOBALS['g_config']->experimental_cache_username ?? '',
-            'password' => $GLOBALS['g_config']->experimental_cache_password ?? ''
-        );
-        $elasticsearch = \Flexio\Services\ElasticSearch::create($elasticsearch_connection_info);
-        $structure = $callback_params['structure'];
-        $field_names = $structure = $structure->getNames();
-
-        $stdout_reader= $process_host->getEngine()->getStdout()->getReader();
-        $data = $stdout_reader->read(32768);
-        $data = json_decode($data, true);
-
-        $data_to_write = array();
-        foreach ($data as $d)
-        {
-            $row = array_combine($field_names, $d);
-            $data_to_write[] = $row;
-        }
-
-        $index = \Flexio\Base\Util::generateHandle();
-        $type = 'row';
-        $elasticsearch->writeRows($index, $type, $data_to_write);
     }
 
     // using json_encode/decode() on arrays leads to ambiguities
