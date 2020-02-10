@@ -345,11 +345,12 @@ class Vfs
         $process_store = \Flexio\Object\Process::create($process_params);
         $process_engine = \Flexio\Jobs\Process::create();
 
-        // create a process host to connect the store/engine and run the process
+        // create a process host to connect the store/engine and run the process;
+        // don't include any standard event handlers; items run in vfs don't need
+        // to gather mount info, increment/decrement process counts (running from
+        // vfs is for internal development) or save the stream to stdout (run from
+        // an api endpoint, not the interface)
         $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
-        $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::callbackIncrementProcessCount', array());
-        $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::callbackAddMountParams', array());
-        $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_FINISHING, '\Flexio\Api\ProcessHandler::callbackDecrementProcessCount', array());
 
         // parse the request content and set the stream info
         $php_stream_handle = \Flexio\System\System::openPhpInputStream();

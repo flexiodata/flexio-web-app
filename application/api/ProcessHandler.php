@@ -124,6 +124,35 @@ class ProcessHandler
         $process_host->getEngine()->setParams(array_merge($user_variables, $mount_variables));
     }
 
+    public static function callbackBuildModeSaveOutputToStream(\Flexio\Jobs\ProcessHost $process_host, array $callback_params) : void
+    {
+        // if we're not in build mode, don't do anything
+        if ($process_host->getStore()->getMode() !== \Flexio\Jobs\Process::MODE_BUILD)
+            return;
+
+        // create a stream to store the stdout
+        $properties['path'] = \Flexio\Base\Util::generateHandle();
+        $properties['owned_by'] = $process_host->getStore()->getOwner();
+        $properties = array_merge($stream->get(), $properties);
+        $storable_stream = \Flexio\Object\Stream::create($properties);
+
+        // copy from the input stream to the storable stream
+        $stdout_stream = $process_host->getEngine()->getStdout();
+        $streamreader = $stdout_stream->getReader();
+        $streamwriter = $storable_stream->getWriter();
+
+        if ($stream->getMimeType() === \Flexio\Base\ContentType::FLEXIO_TABLE)
+        {
+            while (($row = $streamreader->readRow()) !== false)
+                $streamwriter->write($row);
+        }
+        else
+        {
+            while (($data = $streamreader->read(32768)) !== false)
+                $streamwriter->write($data);
+        }
+    }
+
     public static function callbackStreamLoad(\Flexio\Jobs\ProcessHost $process_host, array $callback_params) : void
     {
         $validator = \Flexio\Base\Validator::create();

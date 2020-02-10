@@ -116,7 +116,7 @@ class ProcessHost
         // STEP 4: signal the end of the process
         $this->signal(self::EVENT_FINISHING, $this);
 
-        // STEP 4: save final job output and status; only save the status if it hasn't already been set
+        // STEP 5: save final job output and status; only save the status if it hasn't already been set
         $process_params = array();
         $process_params['finished'] = \Flexio\Base\Util::getCurrentTimestamp();
 
@@ -130,19 +130,8 @@ class ProcessHost
             $process_params['process_info'] = $process_info_str;
         }
 
-        // if we're in build mode, create a storable stream to store the output
-        if ($this->procobj->getMode() === \Flexio\Jobs\Process::MODE_BUILD)
-        {
-            $owned_by = $this->engine->getOwner();
-            $storable_stdout = self::createStorableStream($this->engine->getStdout(), $owned_by);
-
-            $storable_stream_info = array();
-            $process_params['output'] = array('stream' => $storable_stdout->getEid());
-        }
-
         // save the process info and signal the end of the process
         $this->procobj->set($process_params);
-
 
         return $this;
     }
@@ -179,31 +168,6 @@ class ProcessHost
         {
             self::setErrorFromException($process, $e);
         }
-    }
-
-    private static function createStorableStream(\Flexio\IFace\IStream $stream, string $owned_by) : \Flexio\Object\Stream
-    {
-        $properties['path'] = \Flexio\Base\Util::generateHandle();
-        $properties['owned_by'] = $owned_by;
-        $properties = array_merge($stream->get(), $properties);
-        $storable_stream = \Flexio\Object\Stream::create($properties);
-
-        // copy from the input stream to the storable stream
-        $streamreader = $stream->getReader();
-        $streamwriter = $storable_stream->getWriter();
-
-        if ($stream->getMimeType() === \Flexio\Base\ContentType::FLEXIO_TABLE)
-        {
-            while (($row = $streamreader->readRow()) !== false)
-                $streamwriter->write($row);
-        }
-         else
-        {
-            while (($data = $streamreader->read(32768)) !== false)
-                $streamwriter->write($data);
-        }
-
-        return $storable_stream;
     }
 
     private static function generateTaskHash(string $implementation_version, array $task) : string
