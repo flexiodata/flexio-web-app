@@ -337,11 +337,12 @@ class Cron
         );
 
         // STEP 2: create the process
-        $process = \Flexio\Object\Process::create($process_properties);
+        $process_store = \Flexio\Object\Process::create($process_properties);
+        $process_engine = \Flexio\Jobs\Process::create();
 
         // STEP 3: run the process
-        $engine = \Flexio\Jobs\StoredProcess::create($process);
-        $engine->run(true /*true: run in background*/);
+        $process_host = \Flexio\Jobs\StoredProcess::create($process_store, $process_engine);
+        $process_host->run(true /*true: run in background*/);
     }
 
     private static function sendTrialEndingNotice(array $user_object_list)

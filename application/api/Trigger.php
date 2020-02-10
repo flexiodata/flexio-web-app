@@ -77,6 +77,7 @@ class Trigger
         if ($email_trigger_active === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
+        // create a new process
         $process_properties = array(
             'parent_eid' => $pipe_properties['eid'],
             'pipe_info' => $pipe_properties,
@@ -85,10 +86,11 @@ class Trigger
             'owned_by' => $pipe_properties['owned_by']['eid'],
             'created_by' => $pipe_properties['owned_by']['eid'] // TODO: we need to determine user based on email (e.g. owner, or public)
         );
-        $process = \Flexio\Object\Process::create($process_properties);
+        $process_store = \Flexio\Object\Process::create($process_properties);
+        $process_engine = \Flexio\Jobs\Process::create();
 
-        // create the process
-        $engine = \Flexio\Jobs\StoredProcess::create($process);
+        // create a process host to connect the store/engine and run the process
+        $process_host = \Flexio\Jobs\StoredProcess::create($process_store, $process_engine);
 
         // set an environment variable (parameter) with the "from" email address
         $process_email_params = array();
@@ -102,34 +104,34 @@ class Trigger
                                           'email-from' => $from_addresses[0]['email'],            // deprecated, please remove
                                           'email-from-display' => $from_addresses[0]['display']); // deprecated, please remove
         }
-        $engine->setParams($process_email_params);
+        $process_engine->setParams($process_email_params);
 
         // set the process stdin with the email message body
         $message = $parser->getMessageText();
         $message_stream = self::createStreamFromMessage($message);
-        $engine->setStdin($message_stream); // set the body of the
+        $process_engine->setStdin($message_stream); // set the body of the
 
         // add any attachments to the process files array
         $streams = self::saveAttachmentsToStreams($parser);
         foreach ($streams as $s)
         {
-            $engine->addFile($s->getName(), $s);
+            $process_engine->addFile($s->getName(), $s);
         }
 
         // run the process
-        $engine->run(false);
+        $process_host->run(false);
 
         // if the echo result flag is set, then return the result of the process
         if ($echo_result === true)
         {
-            if ($engine->hasError())
+            if ($process_engine->hasError())
             {
-                $error = $engine->getError();
+                $error = $process_engine->getError();
                 \Flexio\Api\Response::sendError($error);
                 return; // TODO: exit(0) in equivalent pipe run code; return here so we can call function directly in test suite
             }
 
-            $stream = $engine->getStdout();
+            $stream = $process_engine->getStdout();
             $stream_info = $stream->get();
             if ($stream_info === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
@@ -138,7 +140,7 @@ class Trigger
             $start = 0;
             $limit = PHP_INT_MAX;
             $content = \Flexio\Base\StreamUtil::getStreamContents($stream, $start, $limit);
-            $response_code = $engine->getResponseCode();
+            $response_code = $process_engine->getResponseCode();
 
             if ($mime_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
             {

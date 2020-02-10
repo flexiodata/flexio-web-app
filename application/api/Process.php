@@ -252,8 +252,8 @@ class Process
 
         // load the object; make sure the eid is associated with the owner
         // as an additional check
-        $process = \Flexio\Object\Process::load($process_eid);
-        if ($owner_user_eid !== $process->getOwner())
+        $process_store = \Flexio\Object\Process::load($process_eid);
+        if ($owner_user_eid !== $process_store->getOwner())
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
         if ($process->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
@@ -270,29 +270,30 @@ class Process
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::RATE_LIMIT_EXCEEDED);
 
         // only allow a process to be run once
-        $process_status = $process->getProcessStatus();
+        $process_status = $process_store->getProcessStatus();
         if ($process_status !== \Flexio\Jobs\Process::STATUS_PENDING)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::EXECUTE_FAILED);
 
-        // create a job engine, attach it to the process object
-        $engine = \Flexio\Jobs\StoredProcess::create($process);
+        // create a process host to connect the store/engine and run the process
+        $process_engine = \Flexio\Jobs\Process::create();
+        $process_host = \Flexio\Jobs\StoredProcess::create($process_store, $process_engine);
 
         // parse the request content and set the stream info
         $php_stream_handle = \Flexio\System\System::openPhpInputStream();
         $post_content_type = \Flexio\System\System::getPhpInputStreamContentType();
-        \Flexio\Base\StreamUtil::addProcessInputFromStream($php_stream_handle, $post_content_type, $engine);
+        \Flexio\Base\StreamUtil::addProcessInputFromStream($php_stream_handle, $post_content_type, $process_engine);
 
         // run the process
-        $engine->run(false  /*true: run in background*/);
+        $process_host->run(false  /*true: run in background*/);
 
-        if ($engine->hasError())
+        if ($process_engine->hasError())
         {
-            $error = $engine->getError();
+            $error = $process_engine->getError();
             \Flexio\Api\Response::sendError($error);
             exit(0);
         }
 
-        $stream = $engine->getStdout();
+        $stream = $process_engine->getStdout();
         $stream_info = $stream->get();
         if ($stream_info === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
@@ -301,7 +302,7 @@ class Process
         $start = 0;
         $limit = PHP_INT_MAX;
         $content = \Flexio\Base\StreamUtil::getStreamContents($stream, $start, $limit);
-        $response_code = $engine->getResponseCode();
+        $response_code = $process_engine->getResponseCode();
 
         if ($mime_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
         {
@@ -374,10 +375,11 @@ class Process
                 $execute_job_params
             ]
         ];
-        $process = \Flexio\Object\Process::create($process_params);
+        $process_store = \Flexio\Object\Process::create($process_params);
+        $process_engine = \Flexio\Jobs\Process::create($process);
 
-        // create a job engine, attach it to the process object
-        $engine = \Flexio\Jobs\StoredProcess::create($process);
+        // create a process host to connect the store/engine and run the process
+        $process_host = \Flexio\Jobs\StoredProcess::create($process_store, $process_engine);
 
         // NOTE: disabled, because posted parameters contain the logic, not the
         // parameters to run against; re-enable if posted info changes to
@@ -385,19 +387,19 @@ class Process
         // parse the request content and set the stream info
         //$php_stream_handle = \Flexio\System\System::openPhpInputStream();
         //$post_content_type = \Flexio\System\System::getPhpInputStreamContentType();
-        //\Flexio\Base\StreamUtil::addProcessInputFromStream($php_stream_handle, $post_content_type, $engine);
+        //\Flexio\Base\StreamUtil::addProcessInputFromStream($php_stream_handle, $post_content_type, $process_engine);
 
         // run the process
-        $engine->run(false  /*true: run in background*/);
+        $process_host->run(false  /*true: run in background*/);
 
-        if ($engine->hasError())
+        if ($process_engine->hasError())
         {
-            $error = $engine->getError();
+            $error = $process_engine->getError();
             \Flexio\Api\Response::sendError($error);
             exit(0);
         }
 
-        $stream = $engine->getStdout();
+        $stream = $process_engine->getStdout();
         $stream_info = $stream->get();
         if ($stream_info === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
@@ -406,7 +408,7 @@ class Process
         $start = 0;
         $limit = PHP_INT_MAX;
         $content = \Flexio\Base\StreamUtil::getStreamContents($stream, $start, $limit);
-        $response_code = $engine->getResponseCode();
+        $response_code = $process_engine->getResponseCode();
 
         if ($mime_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
         {

@@ -343,12 +343,13 @@ $task = array(
             'task' => $task
         );
 
-        // STEP 1: create the process
-        $process = \Flexio\Object\Process::create($process_properties);
+        // STEP 1: create a new process
+        $process_store = \Flexio\Object\Process::create($process_properties);
+        $process_engine = \Flexio\Jobs\Process::create();
 
-        // STEP 2: run the process
-        $engine = \Flexio\Jobs\StoredProcess::create($process);
-        $engine->run($background);
+        // STEP 2: create a process host to connect the store/engine and run the process
+        $process_host = \Flexio\Jobs\StoredProcess::create($process_store, $process_engine);
+        $process_host->run($background);
 
         /*
 
@@ -357,14 +358,14 @@ $task = array(
 
 
         // STEP 3: return the result
-        if ($engine->hasError())
+        if ($process_engine->hasError())
         {
-            $error = $engine->getError();
+            $error = $process_engine->getError();
             \Flexio\Api\Response::sendError($error);
             exit(0);
         }
 
-        $stream = $engine->getStdout();
+        $stream = $process_engine->getStdout();
         $stream_info = $stream->get();
         if ($stream_info === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
@@ -373,7 +374,7 @@ $task = array(
         $start = 0;
         $limit = PHP_INT_MAX;
         $content = \Flexio\Base\StreamUtil::getStreamContents($stream, $start, $limit);
-        $response_code = $engine->getResponseCode();
+        $response_code = $process_engine->getResponseCode();
 
         if ($mime_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
         {

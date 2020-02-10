@@ -350,27 +350,28 @@ class Pipe
             'owned_by' => $pipe_properties['owned_by']['eid'], // same as $owner_user_eid
             'created_by' => $requesting_user_eid
         );
-        $process = \Flexio\Object\Process::create($process_properties);
+        $process_store = \Flexio\Object\Process::create($process_properties);
+        $process_engine = \Flexio\Jobs\Process::create();
 
-        // create a job engine, attach it to the process object
-        $engine = \Flexio\Jobs\StoredProcess::create($process);
+        // create a process host to connect the store/engine and run the process
+        $process_host = \Flexio\Jobs\StoredProcess::create($process_store, $process_engine);
 
         // parse the request content and set the stream info
         $php_stream_handle = \Flexio\System\System::openPhpInputStream();
         $post_content_type = \Flexio\System\System::getPhpInputStreamContentType();
-         \Flexio\Base\StreamUtil::addProcessInputFromStream($php_stream_handle, $post_content_type, $engine);
+         \Flexio\Base\StreamUtil::addProcessInputFromStream($php_stream_handle, $post_content_type, $process_engine);
 
         // run the process
-        $engine->run(false /*true: run in background*/);
+        $process_host->run(false /*true: run in background*/);
 
-        if ($engine->hasError())
+        if ($process_engine->hasError())
         {
-            $error = $engine->getError();
+            $error = $process_engine->getError();
             \Flexio\Api\Response::sendError($error);
             exit(0);
         }
 
-        $stream = $engine->getStdout();
+        $stream = $process_engine->getStdout();
         $stream_info = $stream->get();
         if ($stream_info === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
@@ -379,7 +380,7 @@ class Pipe
         $start = 0;
         $limit = PHP_INT_MAX;
         $content = \Flexio\Base\StreamUtil::getStreamContents($stream, $start, $limit);
-        $response_code = $engine->getResponseCode();
+        $response_code = $process_engine->getResponseCode();
 
         if ($mime_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
         {
@@ -452,8 +453,11 @@ class Pipe
             'owned_by' => $pipe_properties['owned_by']['eid'], // same as $owner_user_eid
             'created_by' => $requesting_user_eid
         );
-        $process = \Flexio\Object\Process::create($process_properties);
+        $process_store = \Flexio\Object\Process::create($process_properties);
+        $process_engine = \Flexio\Jobs\Process::create();
 
+        // create a process host to connect the store/engine and run the process
+        $process_host = \Flexio\Jobs\StoredProcess::create($process_store, $process_engine);
 
         // EXPERIMENTAL for elasticsearch load: get the structure from the notes
         $structure = $pipe_properties['notes'];
@@ -461,23 +465,20 @@ class Pipe
         $structure = \Flexio\Base\Structure::create($structure);
         $callback_params = array('structure' => $structure);
 
-        // create a job engine, attach it to the process object; add callback handlers
-        // to capture the output since we're running in background mode
-        $engine = \Flexio\Jobs\StoredProcess::create($process);
-        //$engine->addEventHandler(\Flexio\Jobs\StoredProcess::EVENT_FINISHING, '\Flexio\Api\Pipe::callbackStreamLoad', array());
-        $engine->addEventHandler(\Flexio\Jobs\StoredProcess::EVENT_FINISHING, '\Flexio\Api\Pipe::callbackElasticSearchLoad', $callback_params);
+        // add callback handlers to capture the output since we're running in background mode
+        $process_host->addEventHandler(\Flexio\Jobs\StoredProcess::EVENT_FINISHING, '\Flexio\Api\Pipe::callbackElasticSearchLoad', $callback_params);
 
         // parse the request content and set the stream info
         $php_stream_handle = \Flexio\System\System::openPhpInputStream();
         $post_content_type = \Flexio\System\System::getPhpInputStreamContentType();
-         \Flexio\Base\StreamUtil::addProcessInputFromStream($php_stream_handle, $post_content_type, $engine);
+         \Flexio\Base\StreamUtil::addProcessInputFromStream($php_stream_handle, $post_content_type, $process_engine);
 
         // run the process in the background
-        $engine->run(false /*true: run in background*/);
+        $process_host->run(false /*true: run in background*/);
 
-        if ($engine->hasError())
+        if ($process_engine->hasError())
         {
-            $error = $engine->getError();
+            $error = $process_engine->getError();
             \Flexio\Api\Response::sendError($error);
             exit(0);
         }
@@ -487,10 +488,10 @@ class Pipe
         \Flexio\Api\Response::sendContent(array('done'));
     }
 
-    public static function callbackStreamLoad(\Flexio\Jobs\StoredProcess $process, $callback_params)
+    public static function callbackStreamLoad(\Flexio\Jobs\StoredProcess $process_host, $callback_params)
     {
         // get the stream output
-        $stdout_stream = $process->getStdout();
+        $stdout_stream = $process_host->getEngine()->getStdout();
         $stdout_stream_info = $stdout_stream->get();
 
         // copy the stdout stream info to the storable_stream
@@ -517,10 +518,10 @@ class Pipe
         }
     }
 
-    public static function callbackElasticSearchLoad(\Flexio\Jobs\StoredProcess $process, $callback_params)
+    public static function callbackElasticSearchLoad(\Flexio\Jobs\StoredProcess $process_host, $callback_params)
     {
         // get the stream output
-        $stdout_stream = $process->getStdout();
+        $stdout_stream = $process_host->getEngine()->getStdout();
         $stdout_stream_info = $stdout_stream->get();
 
         // connect to elasticsearch
@@ -534,7 +535,7 @@ class Pipe
         $structure = $callback_params['structure'];
         $field_names = $structure = $structure->getNames();
 
-        $stdout_reader= $process->getStdout()->getReader();
+        $stdout_reader= $process_host->getEngine()->getStdout()->getReader();
         $data = $stdout_reader->read(32768);
         $data = json_decode($data, true);
 

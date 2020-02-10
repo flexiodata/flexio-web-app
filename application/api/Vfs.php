@@ -340,27 +340,30 @@ class Vfs
                 ]
             ];
         }
-        $process = \Flexio\Object\Process::create($process_params);
 
-        // create a job engine, attach it to the process object
-        $engine = \Flexio\Jobs\StoredProcess::create($process);
+        // create a new process
+        $process_store = \Flexio\Object\Process::create($process_params);
+        $process_engine = \Flexio\Jobs\Process::create();
+
+        // create a process host to connect the store/engine and run the process
+        $process_host = \Flexio\Jobs\StoredProcess::create($process_store, $process_engine);
 
         // parse the request content and set the stream info
         $php_stream_handle = \Flexio\System\System::openPhpInputStream();
         $post_content_type = \Flexio\System\System::getPhpInputStreamContentType();
-        \Flexio\Base\StreamUtil::addProcessInputFromStream($php_stream_handle, $post_content_type, $engine);
+        \Flexio\Base\StreamUtil::addProcessInputFromStream($php_stream_handle, $post_content_type, $process_engine);
 
         // run the process
-        $engine->run(false  /*true: run in background*/);
+        $process_host->run(false  /*true: run in background*/);
 
-        if ($engine->hasError())
+        if ($process_engine->hasError())
         {
-            $error = $engine->getError();
+            $error = $process_engine->getError();
             \Flexio\Api\Response::sendError($error);
             exit(0);
         }
 
-        $stream = $engine->getStdout();
+        $stream = $process_engine->getStdout();
         $stream_info = $stream->get();
         if ($stream_info === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
@@ -369,7 +372,7 @@ class Vfs
         $start = 0;
         $limit = PHP_INT_MAX;
         $content = \Flexio\Base\StreamUtil::getStreamContents($stream, $start, $limit);
-        $response_code = $engine->getResponseCode();
+        $response_code = $process_engine->getResponseCode();
 
         if ($mime_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
         {

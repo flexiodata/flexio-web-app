@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 
-class StoredProcess implements \Flexio\IFace\IProcess
+class StoredProcess
 {
     // events are passed in a callback function along along with a reference to the process
     public const EVENT_STARTING       = 'process.starting';
@@ -30,167 +30,24 @@ class StoredProcess implements \Flexio\IFace\IProcess
     {
     }
 
-    public static function create(\Flexio\Object\Process $procobj) : \Flexio\Jobs\StoredProcess
+    public static function create(\Flexio\Object\Process $procobj, \Flexio\Jobs\Process $engine) : \Flexio\Jobs\StoredProcess
     {
         $object = new static();
         $object->procobj = $procobj;
-        $object->engine = \Flexio\Jobs\Process::create();
-        $object->setOwner($procobj->getOwner());
+        $object->engine = $engine;
+        $object->engine->setOwner($procobj->getOwner());
         return $object;
     }
 
-    public function getProcessObject() : \Flexio\Object\Process
+    public function getStore() : \Flexio\Object\Process
     {
         return $this->procobj;
     }
 
-    public function getProcessEngine() : \Flexio\Jobs\Process
+    public function getEngine() : \Flexio\Jobs\Process
     {
         return $this->engine;
     }
-
-    ////////////////////////////////////////////////////////////
-    // IProcess interface
-    ////////////////////////////////////////////////////////////
-
-    public function setOwner(string $owner_eid) : \Flexio\Jobs\StoredProcess
-    {
-        $this->engine->setOwner($owner_eid);
-        return $this;
-    }
-
-    public function getOwner() : string
-    {
-        return $this->engine->getOwner();
-    }
-
-    public function setParams(array $arr) : \Flexio\Jobs\StoredProcess
-    {
-        $this->engine->setParams($arr);
-        return $this;
-    }
-
-    public function getParams() : array
-    {
-        return $this->engine->getParams();
-    }
-
-    public function addFile(string $name, \Flexio\IFace\IStream $stream) : \Flexio\Jobs\StoredProcess
-    {
-        $this->engine->addFile($name, $stream);
-        return $this;
-    }
-
-    public function getFiles() : array
-    {
-        return $this->engine->getFiles();
-    }
-
-    public function setLocalFile(int $fileno, \Flexio\IFace\IStream $stream)
-    {
-        return $this->engine->setLocalFile($fileno, $stream);
-    }
-
-    public function getLocalFile(int $fileno)
-    {
-        return $this->engine->getLocalFile($fileno);
-    }
-
-    public function setLocalFiles($files)
-    {
-        return $this->engine->setLocalFiles($files);
-    }
-
-    public function getLocalFiles()
-    {
-        return $this->engine->getLocalFiles();
-    }
-
-    public function addLocalConnection(string $identifier, array $connection_properties) : void
-    {
-        $this->engine->addLocalConnection($identifier, $connection_properties);
-    }
-
-    public function getLocalConnection(string $identifier) : ?array
-    {
-        return $this->engine->getLocalConnection($identifier);
-    }
-
-    public function getLocalConnections() : array
-    {
-        return $this->engine->getLocalConnections();
-    }
-
-    public function getConnection(string $identifier) : ?array
-    {
-        return $this->engine->getConnection($identifier);
-    }
-
-    public function setStdin(\Flexio\IFace\IStream $stream) : \Flexio\Jobs\StoredProcess
-    {
-        $this->engine->setStdin($stream);
-        return $this;
-    }
-
-    public function getStdin() : \Flexio\IFace\IStream
-    {
-        return $this->engine->getStdin();
-    }
-
-    public function setStdout(\Flexio\IFace\IStream $stream) : \Flexio\Jobs\StoredProcess
-    {
-        $this->engine->setStdout($stream);
-        return $this;
-    }
-
-    public function getStdout() : \Flexio\IFace\IStream
-    {
-        return $this->engine->getStdout();
-    }
-
-    public function setResponseCode(int $code) : \Flexio\Jobs\StoredProcess
-    {
-        $this->engine->setResponseCode($code);
-        return $this;
-    }
-
-    public function getResponseCode() : int
-    {
-        return $this->engine->getResponseCode();
-    }
-
-    public function setError(string $code = '', string $message = null, string $file = null, int $line = null, string $type = null, string $trace = null) : \Flexio\IFace\IProcess
-    {
-        $this->engine->setError($code, $message, $file, $line, $type, $trace);
-        return $this;
-    }
-
-    public function getError() : array
-    {
-        return $this->engine->getError();
-    }
-
-    public function hasError() : bool
-    {
-        return $this->engine->hasError();
-    }
-
-    public function validate(array $task) : array
-    {
-        return $this->engine->validate($task);
-    }
-
-    public function execute(array $task) : \Flexio\Jobs\StoredProcess
-    {
-        // calling this function will execute the job locally without creating a
-        // database process record, so no statistics will be serialized
-        $this->engine->execute($task);
-        return $this;
-    }
-
-    ////////////////////////////////////////////////////////////
-    // additional functions
-    ////////////////////////////////////////////////////////////
 
     public function run(bool $background = true) : \Flexio\Jobs\StoredProcess
     {
@@ -205,7 +62,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
 
             // pack up the info for this object and store it temporarily in the
             // registry so we can get it in the background process
-            $process_owner = $this->getOwner();
+            $process_owner = $this->engine->getOwner();
             $process_eid = $this->procobj->getEid();
             $process_info = json_encode(array(
                 "engine" => serialize($this->engine),
@@ -249,7 +106,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
         // STEP 2: if we have a valid owner, try to increment the active process count;
         // if we're unable to, then the user is as the maximum number of processes, so
         // a little and then try again
-        $owner_eid = $this->getOwner();
+        $owner_eid = $this->engine->getOwner();
         if (\Flexio\Base\Eid::isValid($owner_eid) == false)
         {
             $this->signal(self::EVENT_STARTING, $this);
@@ -275,7 +132,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
                     continue;
 
                 // fail if job doesn't finish within a certain number of attempts
-                $process_info = array('error' => $this->getError());
+                $process_info = array('error' => $this->engine->getError());
                 $process_info_str = json_encode($process_info, JSON_PARTIAL_OUTPUT_ON_ERROR); // don't allow bad characters that may exist in debugging info to cause encoding to cause another failure
 
                 $process_params = array();
@@ -291,24 +148,24 @@ class StoredProcess implements \Flexio\IFace\IProcess
 
         // STEP 3: add the variables
         $mount_variables = $this->getMountParams();
-        $user_variables = $this->getParams();
-        $this->setParams(array_merge($user_variables, $mount_variables));
+        $user_variables = $this->engine->getParams();
+        $this->engine->setParams(array_merge($user_variables, $mount_variables));
 
         // STEP 4: if we have an associative array, we have a top-level task, so simply
         // execute it; otherwise we have an array of tasks, so package them in a sequence job
         $task = $this->procobj->getTask();
         if (\Flexio\Base\Util::isAssociativeArray($task) === false)
             $task = array('op' => 'sequence', 'params' => array('items' => $task));
-        $this->execute($task);
+        $this->engine->execute($task);
 
         // STEP 5: save final job output and status; only save the status if it hasn't already been set
         $process_params = array();
         $process_params['finished'] = \Flexio\Base\Util::getCurrentTimestamp();
 
         $process_params['process_status'] = \Flexio\Jobs\Process::STATUS_COMPLETED;
-        if ($this->hasError())
+        if ($this->engine->hasError())
         {
-            $process_info = array('error' => $this->getError());
+            $process_info = array('error' => $this->engine->getError());
             $process_info_str = json_encode($process_info, JSON_PARTIAL_OUTPUT_ON_ERROR); // don't allow bad characters that may exist in debugging info to cause encoding to cause another failure
 
             $process_params['process_status'] = \Flexio\Jobs\Process::STATUS_FAILED;
@@ -318,8 +175,8 @@ class StoredProcess implements \Flexio\IFace\IProcess
         // if we're in build mode, create a storable stream to store the output
         if ($this->procobj->getMode() === \Flexio\Jobs\Process::MODE_BUILD)
         {
-            $owned_by = $this->getOwner();
-            $storable_stdout = self::createStorableStream($this->getStdout(), $owned_by);
+            $owned_by = $this->engine->getOwner();
+            $storable_stdout = self::createStorableStream($this->engine->getStdout(), $owned_by);
 
             $storable_stream_info = array();
             $process_params['output'] = array('stream' => $storable_stdout->getEid());
@@ -409,7 +266,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
                             // get the access token
                             try
                             {
-                                $requesting_user_eid = $this->getOwner();
+                                $requesting_user_eid = $this->engine->getOwner();
                                 $connection = \Flexio\Object\Connection::load($mount_item_eid);
                                 if ($connection->getStatus() !== \Model::STATUS_AVAILABLE)
                                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
