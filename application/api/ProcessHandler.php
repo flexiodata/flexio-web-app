@@ -224,7 +224,6 @@ class ProcessHandler
             'password' => $GLOBALS['g_config']->experimental_cache_password ?? ''
         );
         $elasticsearch = \Flexio\Services\ElasticSearch::create($elasticsearch_connection_info);
-        $structure = $callback_params['structure'];
         $field_names = $structure = $structure->getNames();
 
         $stdout_reader= $process_host->getEngine()->getStdout()->getReader();
