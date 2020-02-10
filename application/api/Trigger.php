@@ -91,6 +91,7 @@ class Trigger
 
         // create a process host to connect the store/engine and run the process
         $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
+        $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::callbackAddMountParams', array());
 
         // set an environment variable (parameter) with the "from" email address
         $process_email_params = array();

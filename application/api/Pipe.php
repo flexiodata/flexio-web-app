@@ -355,6 +355,7 @@ class Pipe
 
         // create a process host to connect the store/engine and run the process
         $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
+        $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::callbackAddMountParams', array());
 
         // parse the request content and set the stream info
         $php_stream_handle = \Flexio\System\System::openPhpInputStream();
@@ -456,16 +457,15 @@ class Pipe
         $process_store = \Flexio\Object\Process::create($process_properties);
         $process_engine = \Flexio\Jobs\Process::create();
 
-        // create a process host to connect the store/engine and run the process
-        $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
-
         // EXPERIMENTAL for elasticsearch load: get the structure from the notes
         $structure = $pipe_properties['notes'];
         $structure = json_decode($structure, true);
-        $callback_params = array('structure' => $structure);
+        $elastic_search_params = array('structure' => $structure);
 
-        // add callback handlers to capture the output since we're running in background mode
-        $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_FINISHING, '\Flexio\Api\ProcessHandler::callbackElasticSearchLoad', $callback_params);
+        // create a process host to connect the store/engine and run the process
+        $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
+        $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::callbackAddMountParams', array());
+        $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_FINISHING, '\Flexio\Api\ProcessHandler::callbackElasticSearchLoad', $elastic_search_params);
 
         // parse the request content and set the stream info
         $php_stream_handle = \Flexio\System\System::openPhpInputStream();

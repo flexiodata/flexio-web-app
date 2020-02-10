@@ -18,9 +18,88 @@ namespace Flexio\Api;
 
 class ProcessHandler
 {
-    // TODO: add callback handlers to configure processes
+    public static function callbackAddMountParams(\Flexio\Jobs\ProcessHost $process_host, array $callback_params) : void
+    {
+        // callback function to add parameters from mounts for functions that
+        // are mounted;
 
-    public static function callbackStreamLoad(\Flexio\Jobs\ProcessHost $process_host, array $callback_params)
+        try
+        {
+            // get the process info from the process object; if the process doesn't
+            // have a pipe parent, there's no mount info to add
+            $process_obj_info = $process_host->getStore()->get();
+            if (!isset($process_obj_info['parent']['eid']))
+                return;
+
+            // load the pipe parent, which is the mount connection
+            $pipe_eid = $process_obj_info['parent']['eid'];
+            $pipe = \Flexio\Object\Pipe::load($pipe_eid);
+            $pipe_info = $pipe->get();
+
+            if (!isset($pipe_info['parent']['eid']))
+                return;
+
+            $connection_eid = $pipe_info['parent']['eid'];
+            $connection = \Flexio\Object\Connection::load($connection_eid);
+            $connection_info = $connection->get();
+
+            $setup_config = $connection_info['setup_config'];
+            if (!$setup_config)
+                return;
+
+            $mount_variables = array();
+            foreach ($setup_config as $key => $value)
+            {
+                // note: setup config is a set of key/values; currently, values can
+                // be either strings or oauth connection object; if we don't have a
+                // connection object, simply pass on the value, otherwise, "dereference"
+                // the connection and pass on the connection info
+
+                // if we don't have an object identifier, simply pass on what's there
+                $mount_item_eid = $value['eid'] ?? false;
+                if ($mount_item_eid === false)
+                {
+                    $mount_variables[$key] = $value;
+                    continue;
+                }
+
+                // if we have an eid, try to load the appropriate oauth service and
+                // get the access token
+                try
+                {
+                    $requesting_user_eid = $this->engine->getOwner();
+                    $connection = \Flexio\Object\Connection::load($mount_item_eid);
+                    if ($connection->getStatus() !== \Model::STATUS_AVAILABLE)
+                        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+                    if ($connection->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_CONNECTION_READ) === false)
+                        throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+                    $service = $connection->getService(); // getting the service refreshes tokens
+                    $connection_info = $service->get();
+                    $connection_info = json_encode($connection_info);
+
+                    $stream = \Flexio\Base\Stream::create();
+                    $stream->setMimeType(\Flexio\Base\ContentType::FLEXIO_CONNECTION_INFO);
+                    $stream->buffer = (string)$connection_info; // shortcut to speed it up -- can also use getWriter()->write((string)$v)
+
+                    $mount_variables[$key] = $stream;
+                }
+                catch (\Flexio\Base\Exception $e)
+                {
+                    // don't do anything
+                }
+            }
+
+            // merge the mount variables into the existing parameters
+            $user_variables = $process_host->getEngine()->getParams();
+            $process_host->getEngine()->setParams(array_merge($user_variables, $mount_variables));
+        }
+        catch (\Exception $e)
+        {
+        }
+    }
+
+    public static function callbackStreamLoad(\Flexio\Jobs\ProcessHost $process_host, array $callback_params) : void
     {
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($callback_params, array(
@@ -62,7 +141,7 @@ class ProcessHandler
         }
     }
 
-    public static function callbackElasticSearchLoad(\Flexio\Jobs\ProcessHost $process_host, array $callback_params)
+    public static function callbackElasticSearchLoad(\Flexio\Jobs\ProcessHost $process_host, array $callback_params) : void
     {
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($callback_params, array(

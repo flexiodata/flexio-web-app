@@ -342,6 +342,7 @@ class Cron
 
         // STEP 3: run the process
         $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
+        $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::callbackAddMountParams', array());
         $process_host->run(true /*true: run in background*/);
     }
 
