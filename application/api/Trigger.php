@@ -119,7 +119,7 @@ class Trigger
         // run the process
         $engine->run(false);
 
-        // if the echo result flag is set, then return the result of hte process
+        // if the echo result flag is set, then return the result of the process
         if ($echo_result === true)
         {
             if ($engine->hasError())
