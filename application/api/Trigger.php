@@ -94,7 +94,7 @@ class Trigger
         // triggers to succeed and not be clamped; don't save any output, regardless of
         // mode since build mode is associated with interactively running a pipe
         $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
-        $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::callbackAddMountParams', array());
+        $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::addMountParams', array());
 
         // set an environment variable (parameter) with the "from" email address
         $process_email_params = array();

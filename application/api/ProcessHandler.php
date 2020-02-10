@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class ProcessHandler
 {
-    public static function callbackIncrementProcessCount(\Flexio\Jobs\ProcessHost $process_host, array $callback_params) : void
+    public static function incrementProcessCount(\Flexio\Jobs\ProcessHost $process_host, array $callback_params) : void
     {
         // try to increment the active process count; if we're unable to, then the user is as the
         // maximum number of processes, so a little and then try again
@@ -44,12 +44,12 @@ class ProcessHandler
         }
     }
 
-    public static function callbackDecrementProcessCount(\Flexio\Jobs\ProcessHost $process_host, array $callback_params) : void
+    public static function decrementProcessCount(\Flexio\Jobs\ProcessHost $process_host, array $callback_params) : void
     {
         $process_host->getStore()->decrementActiveProcessCount();
     }
 
-    public static function callbackAddMountParams(\Flexio\Jobs\ProcessHost $process_host, array $callback_params) : void
+    public static function addMountParams(\Flexio\Jobs\ProcessHost $process_host, array $callback_params) : void
     {
         // callback function to add parameters from mounts for functions that
         // are mounted
@@ -124,7 +124,7 @@ class ProcessHandler
         $process_host->getEngine()->setParams(array_merge($user_variables, $mount_variables));
     }
 
-    public static function callbackBuildModeSaveOutputToStream(\Flexio\Jobs\ProcessHost $process_host, array $callback_params) : void
+    public static function saveStdoutToStreamInBuildMode(\Flexio\Jobs\ProcessHost $process_host, array $callback_params) : void
     {
         // if we're not in build mode, don't do anything
         if ($process_host->getStore()->getMode() !== \Flexio\Jobs\Process::MODE_BUILD)
@@ -153,7 +153,7 @@ class ProcessHandler
         }
     }
 
-    public static function callbackStreamLoad(\Flexio\Jobs\ProcessHost $process_host, array $callback_params) : void
+    public static function saveStdoutToStream(\Flexio\Jobs\ProcessHost $process_host, array $callback_params) : void
     {
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($callback_params, array(
@@ -196,7 +196,7 @@ class ProcessHandler
         }
     }
 
-    public static function callbackElasticSearchLoad(\Flexio\Jobs\ProcessHost $process_host, array $callback_params) : void
+    public static function saveStdoutToElasticSearch(\Flexio\Jobs\ProcessHost $process_host, array $callback_params) : void
     {
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($callback_params, array(

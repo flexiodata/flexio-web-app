@@ -344,7 +344,7 @@ class Cron
         // scheduling to succeed and not be clamped; don't save any output, regardless of
         // mode since build mode is associated with interactively running a pipe
         $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
-        $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::callbackAddMountParams', array());
+        $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::addMountParams', array());
         $process_host->run(true /*true: run in background*/);
     }
 
