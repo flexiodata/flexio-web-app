@@ -143,7 +143,7 @@ class ProcessHandler
         $streamreader = $stdout_stream->getReader();
         $streamwriter = $storable_stream->getWriter();
 
-        if ($storable_stream->getMimeType() === \Flexio\Base\ContentType::FLEXIO_TABLE)
+        if ($stdout_stream->getMimeType() === \Flexio\Base\ContentType::FLEXIO_TABLE)
         {
             while (($row = $streamreader->readRow()) !== false)
                 $streamwriter->write($row);
@@ -153,6 +153,10 @@ class ProcessHandler
             while (($data = $streamreader->read(32768)) !== false)
                 $streamwriter->write($data);
         }
+
+        $process_params = array();
+        $process_params['output'] = array('stream' => $storable_stream->getEid());
+        $process_host->getStore()->set($process_params);
     }
 
     public static function saveStdoutToStream(\Flexio\Jobs\ProcessHost $process_host, array $callback_params) : void
