@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 
-class StoredProcess
+class ProcessHost
 {
     // events are passed in a callback function along along with a reference to the process
     public const EVENT_STARTING       = 'process.starting';
@@ -30,7 +30,7 @@ class StoredProcess
     {
     }
 
-    public static function create(\Flexio\Object\Process $procobj, \Flexio\Jobs\Process $engine) : \Flexio\Jobs\StoredProcess
+    public static function create(\Flexio\Object\Process $procobj, \Flexio\Jobs\Process $engine) : \Flexio\Jobs\ProcessHost
     {
         $object = new static();
         $object->procobj = $procobj;
@@ -49,7 +49,7 @@ class StoredProcess
         return $this->engine;
     }
 
-    public function run(bool $background = true) : \Flexio\Jobs\StoredProcess
+    public function run(bool $background = true) : \Flexio\Jobs\ProcessHost
     {
         // run the job
         if ($background === false)
@@ -70,12 +70,12 @@ class StoredProcess
                 "handlers" => serialize($this->handlers)
             ));
             \Flexio\System\System::getModel()->registry->setString($process_owner, $process_eid, $process_info);
-            \Flexio\System\Program::runInBackground("\Flexio\Jobs\StoredProcess::background_entry('$process_owner','$process_eid')");
+            \Flexio\System\Program::runInBackground("\Flexio\Jobs\ProcessHost::background_entry('$process_owner','$process_eid')");
             return $this;
         }
     }
 
-    public static function background_entry($process_owner, $process_eid) : \Flexio\Jobs\StoredProcess
+    public static function background_entry($process_owner, $process_eid) : \Flexio\Jobs\ProcessHost
     {
         // TODO: add unserialization checks
 
@@ -95,7 +95,7 @@ class StoredProcess
         return $stored_process_object->run_internal();
     }
 
-    private function run_internal() : \Flexio\Jobs\StoredProcess
+    private function run_internal() : \Flexio\Jobs\ProcessHost
     {
         // STEP 1: set the job status
         $this->procobj->set([
@@ -206,7 +206,7 @@ class StoredProcess
         );
     }
 
-    private function signal(string $event, \Flexio\Jobs\StoredProcess $process) : void
+    private function signal(string $event, \Flexio\Jobs\ProcessHost $process) : void
     {
         // get the handlers for this particular event
         $handlers = $this->handlers[$event] ?? array();

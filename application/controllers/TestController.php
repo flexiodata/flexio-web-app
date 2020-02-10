@@ -348,7 +348,7 @@ $task = array(
         $process_engine = \Flexio\Jobs\Process::create();
 
         // STEP 2: create a process host to connect the store/engine and run the process
-        $process_host = \Flexio\Jobs\StoredProcess::create($process_store, $process_engine);
+        $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
         $process_host->run($background);
 
         /*

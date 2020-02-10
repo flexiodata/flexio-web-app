@@ -354,7 +354,7 @@ class Pipe
         $process_engine = \Flexio\Jobs\Process::create();
 
         // create a process host to connect the store/engine and run the process
-        $process_host = \Flexio\Jobs\StoredProcess::create($process_store, $process_engine);
+        $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
 
         // parse the request content and set the stream info
         $php_stream_handle = \Flexio\System\System::openPhpInputStream();
@@ -457,7 +457,7 @@ class Pipe
         $process_engine = \Flexio\Jobs\Process::create();
 
         // create a process host to connect the store/engine and run the process
-        $process_host = \Flexio\Jobs\StoredProcess::create($process_store, $process_engine);
+        $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
 
         // EXPERIMENTAL for elasticsearch load: get the structure from the notes
         $structure = $pipe_properties['notes'];
@@ -466,7 +466,7 @@ class Pipe
         $callback_params = array('structure' => $structure);
 
         // add callback handlers to capture the output since we're running in background mode
-        $process_host->addEventHandler(\Flexio\Jobs\StoredProcess::EVENT_FINISHING, '\Flexio\Api\Pipe::callbackElasticSearchLoad', $callback_params);
+        $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_FINISHING, '\Flexio\Api\Pipe::callbackElasticSearchLoad', $callback_params);
 
         // parse the request content and set the stream info
         $php_stream_handle = \Flexio\System\System::openPhpInputStream();
@@ -488,7 +488,7 @@ class Pipe
         \Flexio\Api\Response::sendContent(array('done'));
     }
 
-    public static function callbackStreamLoad(\Flexio\Jobs\StoredProcess $process_host, $callback_params)
+    public static function callbackStreamLoad(\Flexio\Jobs\ProcessHost $process_host, $callback_params)
     {
         // get the stream output
         $stdout_stream = $process_host->getEngine()->getStdout();
@@ -518,7 +518,7 @@ class Pipe
         }
     }
 
-    public static function callbackElasticSearchLoad(\Flexio\Jobs\StoredProcess $process_host, $callback_params)
+    public static function callbackElasticSearchLoad(\Flexio\Jobs\ProcessHost $process_host, $callback_params)
     {
         // get the stream output
         $stdout_stream = $process_host->getEngine()->getStdout();

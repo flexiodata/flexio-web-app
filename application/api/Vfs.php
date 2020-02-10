@@ -346,7 +346,7 @@ class Vfs
         $process_engine = \Flexio\Jobs\Process::create();
 
         // create a process host to connect the store/engine and run the process
-        $process_host = \Flexio\Jobs\StoredProcess::create($process_store, $process_engine);
+        $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
 
         // parse the request content and set the stream info
         $php_stream_handle = \Flexio\System\System::openPhpInputStream();

@@ -341,7 +341,7 @@ class Cron
         $process_engine = \Flexio\Jobs\Process::create();
 
         // STEP 3: run the process
-        $process_host = \Flexio\Jobs\StoredProcess::create($process_store, $process_engine);
+        $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
         $process_host->run(true /*true: run in background*/);
     }
 
