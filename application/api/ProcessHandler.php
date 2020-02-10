@@ -20,14 +20,26 @@ class ProcessHandler
 {
     // TODO: add callback handlers to configure processes
 
-    public static function callbackStreamLoad(\Flexio\Jobs\ProcessHost $process_host, $callback_params)
+    public static function callbackStreamLoad(\Flexio\Jobs\ProcessHost $process_host, array $callback_params)
     {
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($callback_params, array(
+                'stream_eid'  => array('type' => 'eid',     'required' => true)
+            ))->hasErrors()) === true)
+        {
+            // TODO: set process error
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+        }
+
+        $validated_params = $validator->getParams();
+        $stream_eid = $validated_params['stream_eid'];
+
         // get the stream output
         $stdout_stream = $process_host->getEngine()->getStdout();
         $stdout_stream_info = $stdout_stream->get();
 
         // copy the stdout stream info to the storable_stream
-        $storable_stream = \Flexio\Object\Stream::load($callback_params['eid']);
+        $storable_stream = \Flexio\Object\Stream::load($stream_eid);
         $storable_stream_info_updated = array(
             'mime_type' => $stdout_stream_info['mime_type'],
             'structure' => $stdout_stream_info['structure']
@@ -50,8 +62,21 @@ class ProcessHandler
         }
     }
 
-    public static function callbackElasticSearchLoad(\Flexio\Jobs\ProcessHost $process_host, $callback_params)
+    public static function callbackElasticSearchLoad(\Flexio\Jobs\ProcessHost $process_host, array $callback_params)
     {
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($callback_params, array(
+                'structure'  => array('type' => 'object',     'required' => true)
+            ))->hasErrors()) === true)
+        {
+            // TODO: set process error
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+        }
+
+        $validated_params = $validator->getParams();
+        $structure = $validated_params['structure'];
+        $structure = \Flexio\Base\Structure::create($structure);
+
         // get the stream output
         $stdout_stream = $process_host->getEngine()->getStdout();
         $stdout_stream_info = $stdout_stream->get();

@@ -462,7 +462,6 @@ class Pipe
         // EXPERIMENTAL for elasticsearch load: get the structure from the notes
         $structure = $pipe_properties['notes'];
         $structure = json_decode($structure, true);
-        $structure = \Flexio\Base\Structure::create($structure);
         $callback_params = array('structure' => $structure);
 
         // add callback handlers to capture the output since we're running in background mode
