@@ -105,4 +105,46 @@ class Error
             case self::NO_SERVICE:             return 'Service not available';
         }
     }
+
+    public static function getInfo($e) : array
+    {
+        $type = '';
+        $code = '';
+        $message = '';
+
+        if ($e instanceof \Flexio\Base\Exception)
+        {
+            $info = $e->getMessage(); // exception info is packaged up in message
+            $info = json_decode($info,true);
+
+            $type = 'flexio exception';
+            $code = $info['code'];
+            $message = $info['message'];
+        }
+        elseif ($e instanceof \Exception)
+        {
+            $type = 'system exception';
+            $code = \Flexio\Base\Error::GENERAL;
+        }
+        elseif ($e instanceof \Error)
+        {
+            $type = 'system error';
+            $code = \Flexio\Base\Error::GENERAL;
+        }
+
+        $error = array();
+        $error['code'] = $code;
+        $error['message'] = $message;
+
+        if (IS_DEBUG())
+        {
+            $error['type'] = $type;
+            $error['module'] = $e->getFile();
+            $error['line'] = $e->getLine();
+            $error['debug_message'] = $e->getMessage();
+            $error['trace'] = $e->getTraceAsString();
+        }
+
+        return $error;
+    }
 }

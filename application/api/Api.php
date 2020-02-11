@@ -315,7 +315,7 @@ class Api
         }
         catch (\Flexio\Base\Exception | \Exception | \Error $e)
         {
-            $error = self::createError($e);
+            $error = \Flexio\Base\Error::getInfo($e);
             \Flexio\Api\Response::sendError($error);
             return;
         }
@@ -354,7 +354,7 @@ class Api
         }
         catch (\Flexio\Base\Exception | \Exception | \Error $e)
         {
-            $error = self::createError($e);
+            $error = \Flexio\Base\Error::getInfo($e);
 
             // we have an error; if an action has been set, set the response type and info
             if ($api_request->getActionType() !== \Flexio\Api\Action::TYPE_UNDEFINED)
@@ -735,47 +735,5 @@ class Api
         }
 
         return $url_params;
-    }
-
-    private static function createError($e) : array
-    {
-        $type = '';
-        $code = '';
-        $message = '';
-
-        if ($e instanceof \Flexio\Base\Exception)
-        {
-            $info = $e->getMessage(); // exception info is packaged up in message
-            $info = json_decode($info,true);
-
-            $type = 'flexio exception';
-            $code = $info['code'];
-            $message = $info['message'];
-        }
-        elseif ($e instanceof \Exception)
-        {
-            $type = 'system exception';
-            $code = \Flexio\Base\Error::GENERAL;
-        }
-        elseif ($e instanceof \Error)
-        {
-            $type = 'system error';
-            $code = \Flexio\Base\Error::GENERAL;
-        }
-
-        $error = array();
-        $error['code'] = $code;
-        $error['message'] = $message;
-
-        if (IS_DEBUG())
-        {
-            $error['type'] = $type;
-            $error['module'] = $e->getFile();
-            $error['line'] = $e->getLine();
-            $error['debug_message'] = $e->getMessage();
-            $error['trace'] = $e->getTraceAsString();
-        }
-
-        return $error;
     }
 }

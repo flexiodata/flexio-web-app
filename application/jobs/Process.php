@@ -326,7 +326,14 @@ class Process implements \Flexio\IFace\IProcess
         }
         catch (\Flexio\Base\Exception | \Exception | \Error $e)
         {
-            self::setErrorFromException($this, $e);
+            $error_info = \Flexio\Base\Error::getInfo($e);
+            $code = $error_info['code'] ?? '';
+            $message = $error_info['message'] ?? '';
+            $module = $error_info['module'] ?? null;
+            $line = $error_info['line'] ?? null;
+            $type = $error_info['type'] ?? null;
+            $trace = $error_info['trace'] ?? null;
+            $this->setError($code, $message, $module, $line, $type, $trace);
         }
 
         return $this;
@@ -335,60 +342,6 @@ class Process implements \Flexio\IFace\IProcess
     ////////////////////////////////////////////////////////////
     // additional functions
     ////////////////////////////////////////////////////////////
-
-    public static function setErrorFromException(\Flexio\Jobs\Process $process, $exception) : void
-    {
-        // TODO: compare \Flexio\Api\Api::createError
-        if ($exception instanceof \Flexio\Base\Exception)
-        {
-            $debug = IS_DEBUG();
-            $info = $exception->getMessage(); // exception info is packaged up in message
-            $info = json_decode($info,true);
-            $module = $debug ? $exception->getFile() : \Flexio\Base\Util::safePrintCodeFilename($exception->getFile());
-            $line = $exception->getLine();
-            $trace = $debug ? $exception->getTraceAsString() : null;
-            $code = $info['code'];
-            $message = $info['message'];
-            $type = 'flexio exception';
-
-            if ($debug)
-                $process->setError($code, $message, $module, $line, $type, $trace);
-                 else
-                $process->setError($code, $message);
-        }
-         elseif ($exception instanceof \Exception)
-        {
-            $debug = IS_DEBUG();
-            $module = $debug ? $exception->getFile() : \Flexio\Base\Util::safePrintCodeFilename($exception->getFile());
-            $line = $exception->getLine();
-            $trace = $debug ? $exception->getTraceAsString() : null;
-            $message = $exception->getMessage();
-            $type = 'system exception';
-
-            if ($debug)
-                $process->setError(\Flexio\Base\Error::GENERAL, $message, $module, $line, $type, $trace);
-                 else
-                $process->setError(\Flexio\Base\Error::GENERAL); // don't patch through sensitive info in non-debug
-        }
-         elseif ($exception instanceof \Error)
-        {
-            $debug = IS_DEBUG();
-            $module = $debug ? $exception->getFile() : \Flexio\Base\Util::safePrintCodeFilename($exception->getFile());
-            $line = $exception->getLine();
-            $trace = $debug ? $exception->getTraceAsString() : null;
-            $message = $exception->getMessage();
-            $type = 'system error';
-
-            if ($debug)
-                $process->setError(\Flexio\Base\Error::GENERAL, $message, $module, $line, $type, $trace);
-                 else
-                $process->setError(\Flexio\Base\Error::GENERAL); // don't patch through sensitive info in non-debug
-        }
-         else
-        {
-            // fall through
-        }
-    }
 
     private static function createTask(array $task) : \Flexio\IFace\IJob
     {

@@ -166,7 +166,14 @@ class ProcessHost
         }
         catch (\Flexio\Base\Exception | \Exception | \Error $e)
         {
-            \Flexio\Jobs\Process::setErrorFromException($process->getEngine(), $e);
+            $error_info = \Flexio\Base\Error::getInfo($e);
+            $code = $error_info['code'] ?? '';
+            $message = $error_info['message'] ?? '';
+            $module = $error_info['module'] ?? null;
+            $line = $error_info['line'] ?? null;
+            $type = $error_info['type'] ?? null;
+            $trace = $error_info['trace'] ?? null;
+            $process->setError($code, $message, $module, $line, $type, $trace);
         }
     }
 }
