@@ -125,11 +125,13 @@ class Error
         {
             $type = 'system exception';
             $code = \Flexio\Base\Error::GENERAL;
+            $message = IS_DEBUG() ? $e->getMessage() : '';
         }
         elseif ($e instanceof \Error)
         {
             $type = 'system error';
             $code = \Flexio\Base\Error::GENERAL;
+            $message = IS_DEBUG() ? $e->getMessage() : '';
         }
 
         $error = array();
@@ -141,7 +143,6 @@ class Error
             $error['type'] = $type;
             $error['module'] = $e->getFile();
             $error['line'] = $e->getLine();
-            $error['debug_message'] = $e->getMessage();
             $error['trace'] = $e->getTraceAsString();
         }
 
