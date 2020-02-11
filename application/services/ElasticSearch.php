@@ -166,7 +166,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
         while (true)
         {
-            $row = $callback($buffer_size);
+            $row = $callback();
             if ($row === false)
                 break;
 
