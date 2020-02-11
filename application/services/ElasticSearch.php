@@ -156,25 +156,10 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
     public function write(array $params, callable $callback) // TODO: add return type
     {
-        // in elasticsearch, index endpoints follow form:  <host>:port/index/type
-        // TODO: for now, set default type to 'rows'; should be based on path somehow
-
-        // TODO: for now, only allow output to tables
-        //$content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
-        //if ($content_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
-        //    return false;
-
-        // make sure the index and type are valid
+        // get the index name (path) and structure
         $index = $params['path'] ?? '';
         $index = self::convertToValid($index);
-
-        // get the structure if specified
         $structure = $params['structure'] ?? null;
-
-        // delete the index if it's there and create a new index
-        $this->deleteIndex($index);
-        if ($this->createIndex($index, $structure) === false)
-            return false;
 
         // output the rows
         $buffer_size = 1000; // max rows to write at a time
@@ -198,7 +183,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             $rows_to_write = array();
         }
 
-        // write out whatever's left over
+        // write out whatever is left over
         $result = $this->writeRows($index, $rows_to_write);
         if ($result === false)
             return false;  // error occurred; TODO: throw exception?

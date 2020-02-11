@@ -246,6 +246,11 @@ class ProcessHandler
             $data_to_write[] = $row;
         }
 
+        // delete the index if it's there and create a new index
+        //$elasticsearch->deleteIndex($index);
+        //if ($elasticsearch->createIndex($index, $structure) === false)
+        //    return false;
+
         $index = \Flexio\Base\Util::generateHandle();
         $elasticsearch->writeRows($index, $data_to_write);
     }
