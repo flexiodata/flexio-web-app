@@ -173,7 +173,7 @@ class ProcessHost
             $line = $error_info['line'] ?? null;
             $type = $error_info['type'] ?? null;
             $trace = $error_info['trace'] ?? null;
-            $process->setError($code, $message, $module, $line, $type, $trace);
+            $process->getEngine()->setError($code, $message, $module, $line, $type, $trace);
         }
     }
 }
