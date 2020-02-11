@@ -156,10 +156,9 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
     public function write(array $params, callable $callback) // TODO: add return type
     {
-        // get the index name (path) and structure
+        // get the index name (path)
         $index = $params['path'] ?? '';
         $index = self::convertToValid($index);
-        $structure = $params['structure'] ?? null;
 
         // output the rows
         $buffer_size = 1000; // max rows to write at a time
