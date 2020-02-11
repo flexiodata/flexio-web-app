@@ -489,7 +489,7 @@ class Pipe
 
         // return the storable stream where the output will be written
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api\Response::sendContent(array('done'));
+        \Flexio\Api\Response::sendContent($pipe_properties);
     }
 
     // using json_encode/decode() on arrays leads to ambiguities
