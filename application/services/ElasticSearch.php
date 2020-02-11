@@ -166,17 +166,14 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
         // make sure the index and type are valid
         $index = $params['path'] ?? '';
-        $type = self::getDefaultTypeName();
-
         $index = self::convertToValid($index);
-        $type = self::convertToValid($type);
 
         // get the structure if specified
         $structure = $params['structure'] ?? null;
 
         // delete the index if it's there and create a new index
         $this->deleteIndex($index);
-        if ($this->createIndex($index, $type, $structure) === false)
+        if ($this->createIndex($index, $structure) === false)
             return false;
 
         // output the rows
@@ -194,7 +191,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             if (count($rows_to_write) <= $buffer_size)
                 continue;
 
-            $result = $this->writeRows($index, $type, $rows_to_write);
+            $result = $this->writeRows($index, $rows_to_write);
             if ($result === false)
                 return false;  // error occurred; TODO: throw exception?
 
@@ -202,7 +199,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         }
 
         // write out whatever's left over
-        $result = $this->writeRows($index, $type, $rows_to_write);
+        $result = $this->writeRows($index, $rows_to_write);
         if ($result === false)
             return false;  // error occurred; TODO: throw exception?
 
@@ -292,13 +289,30 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         }
     }
 
-    public function createIndex(string $index, string $type, array $structure = null) : bool
+    public function createIndex(string $index, array $structure = null) : bool
     {
         // create an index with the specified mapping
 
-        // build the api json payload; payload has the following form
+        // note: elasticsearch indexes can store different types of documents,
+        // which are called a type; so separate indexes can be created for
+        // individual document types, one index with multiple types, or some
+        // combination; which configuration is used depends on factors such
+        // as number of indexes and types; search can span multiple indexes
+        // and types within an index; the type simply allows a handle to filter
+        // a particular document type within an index if one index is used
+        // with multiple document types; each type has a mapping (like a
+        // structure) associated with the type that determines how the information
+        // within the document type is indexed (e.g. string vs. numeric vs.
+        // date); in our particular usage, we're working with small volumes of
+        // data (<100k rows) where we're rebuilding the index each time we
+        // load data into it and where we have one type of data within an index;
+        // for our purposes, then we only need to expose the index name and
+        // structure and create a placeholder document type to associate with
+        // the single type of data being inserted
+
+        // creating an index with a mapping has the following form:
         /*
-        PUT <table>
+        PUT <index>
         {
             "mappings": {
                 "<type>": {
@@ -317,28 +331,33 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         }
         */
 
-        $type_info = array();
+        // see here for info indexes, types, and mappings:
+        // https://www.elastic.co/blog/found-elasticsearch-mapping-introduction
+
+        // get a default document type name and create a mapping from the structure
+        // to associate with the rows of data being inserted into this index
+        $doc_type = self::getDefaultDocTypeName();
+        $index_mapping_info = array();
         if (isset($structure))
         {
-            $type_info = array('mappings' => array($type => array('properties' => null)));
-            $type_property_list = array();
+            $index_mapping_info = array('mappings' => array($doc_type => array('properties' => null)));
+            $doc_type_properties = array();
 
             foreach ($structure as $field)
             {
                 $fieldname = $field['name'];
                 $fieldtype = $field['type'];
-                $type_property_list[$fieldname] = self::getIndexTypeInfo($fieldtype);
+                $doc_type_properties[$fieldname] = self::getMappingInfoFromStructureType($fieldtype);
             }
 
-            $type_info['mappings'][$type]['_all'] = array('enabled' => false);
-            $type_info['mappings'][$type]['properties'] = $type_property_list;
+            $index_mapping_info['mappings'][$doc_type]['_all'] = array('enabled' => false);
+            $index_mapping_info['mappings'][$doc_type]['properties'] = $doc_type_properties;
         }
-        $buf = json_encode($type_info);
+        $index_mapping_info_string = json_encode($index_mapping_info);
 
-        // set the index info
         try
         {
-            // write the content
+            // create the index with the specified mapping
             $url = $this->getHostUrlString() . '/' . urlencode($index);
             $auth = $this->getBasicAuthString();
             $content_type = 'application/json';
@@ -349,7 +368,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             //curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Basic '. $auth, 'Content-Type: '. $content_type ]); // disable authorization header for public test
             curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: '. $content_type ]);
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $buf);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $index_mapping_info_string);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
             $result = curl_exec($ch);
@@ -370,20 +389,21 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         }
     }
 
-    public function writeRows(string $index, string $type, array $rows) : bool
+    public function writeRows(string $index, array $rows) : bool
     {
         try
         {
             // create the post buffer for the bulk api endpoint
-            $buf = '';
+            $doc_type = self::getDefaultDocTypeName();
+            $index_write_string = '';
             foreach ($rows as $r)
             {
-                $buf .= '{"index": {"_index": "' . $index . '", "_type": "' . $type . '"}}';
-                $buf .= "\n";
-                $buf .= json_encode($r, 0); // encode json without returns (each row must be on one line)
-                $buf .= "\n";
+                $index_write_string .= '{"index": {"_index": "' . $index . '", "_type": "' . $doc_type . '"}}';
+                $index_write_string .= "\n";
+                $index_write_string .= json_encode($r, 0); // encode json without returns (each row must be on one line)
+                $index_write_string .= "\n";
             }
-            $buf .= "\n"; // payload must end with newline
+            $index_write_string .= "\n"; // payload must end with newline
 
             // write the content
             $url = $this->getHostUrlString() . '/_bulk';
@@ -396,7 +416,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             //curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Basic '. $auth, 'Content-Type: '. $content_type ]); // disable authorization header for public test
             curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: '. $content_type ]);
             curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $buf);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $index_write_string);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
             $result = curl_exec($ch);
@@ -414,67 +434,6 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         catch (\Exception $e)
         {
             return false;
-        }
-    }
-
-    private static function getIndexTypeInfo(string $type) : array
-    {
-        switch ($type)
-        {
-            default:
-            case \Flexio\Base\Structure::TYPE_TEXT:
-            case \Flexio\Base\Structure::TYPE_CHARACTER:
-            case \Flexio\Base\Structure::TYPE_WIDECHARACTER:
-                $info = array(
-                    'type' => 'text',
-                    'index' => true,
-                    'store' => false
-                );
-                return $info;
-
-            case \Flexio\Base\Structure::TYPE_NUMERIC:
-            case \Flexio\Base\Structure::TYPE_DOUBLE:
-                $info = array(
-                    'type' => 'double',
-                    'coerce' => true,
-                    'doc_values' => true,
-                    'ignore_malformed' => false,
-                    'index' => true,
-                    'store' => false
-                );
-                return $info;
-
-            case \Flexio\Base\Structure::TYPE_INTEGER:
-                $info = array(
-                    'type' => 'integer',
-                    'coerce' => true,
-                    'doc_values' => true,
-                    'ignore_malformed' => false,
-                    'index' => true,
-                    'store' => false
-                );
-                return $info;
-
-            case \Flexio\Base\Structure::TYPE_DATE:
-            case \Flexio\Base\Structure::TYPE_DATETIME:
-                $info = array(
-                    'type' => 'date',
-                    'doc_values' => true,
-                    'format' => 'strict_date_optional_time||epoch_millis',
-                    'ignore_malformed' => false,
-                    'index' => true,
-                    'store' => false
-                );
-                return $info;
-
-            case \Flexio\Base\Structure::TYPE_BOOLEAN:
-                $info = array(
-                    'type' => 'boolean',
-                    'doc_values' => true,
-                    'index' => true,
-                    'store' => false
-                );
-                return $info;
         }
     }
 
@@ -542,14 +501,75 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         return base64_encode($this->username . ':' . $this->password);
     }
 
-    private function convertToValid(string $name) : string
+    private static function getMappingInfoFromStructureType(string $structure_type) : array
+    {
+        switch ($structure_type)
+        {
+            default:
+            case \Flexio\Base\Structure::TYPE_TEXT:
+            case \Flexio\Base\Structure::TYPE_CHARACTER:
+            case \Flexio\Base\Structure::TYPE_WIDECHARACTER:
+                $info = array(
+                    'type' => 'text',
+                    'index' => true,
+                    'store' => false
+                );
+                return $info;
+
+            case \Flexio\Base\Structure::TYPE_NUMERIC:
+            case \Flexio\Base\Structure::TYPE_DOUBLE:
+                $info = array(
+                    'type' => 'double',
+                    'coerce' => true,
+                    'doc_values' => true,
+                    'ignore_malformed' => false,
+                    'index' => true,
+                    'store' => false
+                );
+                return $info;
+
+            case \Flexio\Base\Structure::TYPE_INTEGER:
+                $info = array(
+                    'type' => 'integer',
+                    'coerce' => true,
+                    'doc_values' => true,
+                    'ignore_malformed' => false,
+                    'index' => true,
+                    'store' => false
+                );
+                return $info;
+
+            case \Flexio\Base\Structure::TYPE_DATE:
+            case \Flexio\Base\Structure::TYPE_DATETIME:
+                $info = array(
+                    'type' => 'date',
+                    'doc_values' => true,
+                    'format' => 'strict_date_optional_time||epoch_millis',
+                    'ignore_malformed' => false,
+                    'index' => true,
+                    'store' => false
+                );
+                return $info;
+
+            case \Flexio\Base\Structure::TYPE_BOOLEAN:
+                $info = array(
+                    'type' => 'boolean',
+                    'doc_values' => true,
+                    'index' => true,
+                    'store' => false
+                );
+                return $info;
+        }
+    }
+
+    private static function getDefaultDocTypeName() : string
+    {
+        return 'row';
+    }
+
+    private static function convertToValid(string $name) : string
     {
         $name = ltrim($name,'/');
         return strtolower($name);
-    }
-
-    private function getDefaultTypeName() : string
-    {
-        return 'rows';
     }
 }

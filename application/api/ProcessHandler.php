@@ -206,7 +206,8 @@ class ProcessHandler
     {
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($callback_params, array(
-                'structure'  => array('type' => 'object',     'required' => true)
+                'parent_eid' => array('type' => 'eid',    'required' => true), // the parent object (pipe) that the cahce is associated with
+                'structure'  => array('type' => 'object', 'required' => true)  // structure of the data for the index
             ))->hasErrors()) === true)
         {
             // note: parameters are internal, so proper error is write failing
@@ -215,12 +216,9 @@ class ProcessHandler
         }
 
         $validated_params = $validator->getParams();
+        $parent_eid = $validated_params['parent_eid'];
         $structure = $validated_params['structure'];
         $structure = \Flexio\Base\Structure::create($structure);
-
-        // get the stream output
-        $stdout_stream = $process_host->getEngine()->getStdout();
-        $stdout_stream_info = $stdout_stream->get();
 
         // connect to elasticsearch
         $elasticsearch_connection_info = array(
@@ -230,7 +228,12 @@ class ProcessHandler
             'password' => $GLOBALS['g_config']->experimental_cache_password ?? ''
         );
         $elasticsearch = \Flexio\Services\ElasticSearch::create($elasticsearch_connection_info);
-        $field_names = $structure = $structure->getNames();
+
+        // get the stream output
+        $stdout_stream = $process_host->getEngine()->getStdout();
+        $stdout_stream_info = $stdout_stream->get();
+
+        $field_names = $structure->getNames();
 
         $stdout_reader= $process_host->getEngine()->getStdout()->getReader();
         $data = $stdout_reader->read(32768);
@@ -244,7 +247,6 @@ class ProcessHandler
         }
 
         $index = \Flexio\Base\Util::generateHandle();
-        $type = 'row';
-        $elasticsearch->writeRows($index, $type, $data_to_write);
+        $elasticsearch->writeRows($index, $data_to_write);
     }
 }
