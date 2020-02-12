@@ -253,7 +253,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
             if (!is_array($result))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
-            if (isset($result['error']) && $result['error'] !== false)
+            if (isset($result['error']) || isset($result['errors']))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
         }
         catch (\Exception $e)
@@ -351,7 +351,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
             if (!is_array($result))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-            if (isset($result['error']) && $result['error'] !== false)
+            if (isset($result['error']) || isset($result['errors']))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
         }
         catch (\Exception $e)
@@ -397,7 +397,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
             if (!is_array($result))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
-            if (isset($result['error']) && $result['error'] !== false)
+            if (isset($result['error']) || isset($result['errors']))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
         catch (\Exception $e)
