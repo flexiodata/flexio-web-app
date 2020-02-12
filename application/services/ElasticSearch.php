@@ -341,7 +341,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             //curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Basic '. $auth, 'Content-Type: '. $content_type ]); // disable authorization header for public test
             curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: '. $content_type ]);
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $index_mapping_info_string);
+            //curl_setopt($ch, CURLOPT_POSTFIELDS, $index_mapping_info_string);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
             $result = curl_exec($ch);
