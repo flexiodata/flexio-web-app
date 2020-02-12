@@ -175,20 +175,11 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             if (count($rows_to_write) <= $buffer_size)
                 continue;
 
-            $result = $this->writeRows($index, $rows_to_write);
-            if ($result === false)
-                return false;  // error occurred; TODO: throw exception?
-
-            $rows_to_write = array();
+            $this->writeRows($index, $rows_to_write);
         }
 
         // write out whatever is left over
-        $result = $this->writeRows($index, $rows_to_write);
-        if ($result === false)
-            return false;  // error occurred; TODO: throw exception?
-
-        $rows_to_write = array();
-        return true;
+        $this->writeRows($index, $rows_to_write);
     }
 
     ////////////////////////////////////////////////////////////
@@ -238,7 +229,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         return $indexes;
     }
 
-    public function deleteIndex(string $index) : bool
+    public function deleteIndex(string $index) : void
     {
         try
         {
@@ -261,19 +252,17 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             $result = json_decode($result,true);
 
             if (!is_array($result))
-                return false;
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
             if (isset($result['errors']) && $result['errors'] !== false)
-                return false;
-
-            return true;
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
         }
         catch (\Exception $e)
         {
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
         }
     }
 
-    public function createIndex(string $index, array $structure = null) : bool
+    public function createIndex(string $index, array $structure = null) : void
     {
         // create an index with the specified mapping
 
@@ -361,19 +350,17 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             $result = json_decode($result,true);
 
             if (!is_array($result))
-                return false;
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
             if (isset($result['errors']) && $result['errors'] !== false)
-                return false;
-
-            return true;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
         }
         catch (\Exception $e)
         {
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
         }
     }
 
-    public function writeRows(string $index, array $rows) : bool
+    public function writeRows(string $index, array $rows) : void
     {
         try
         {
@@ -409,15 +396,13 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             $result = json_decode($result,true);
 
             if (!is_array($result))
-                return false;
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
             if (isset($result['errors']) && $result['errors'] !== false)
-                return false;
-
-            return true;
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
         catch (\Exception $e)
         {
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
     }
 
