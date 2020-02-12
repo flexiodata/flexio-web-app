@@ -156,6 +156,9 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
     public function write(array $params, callable $callback) // TODO: add return type
     {
+        if (!isset($params['path']))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+
         // get the index name (path)
         $index = $params['path'] ?? '';
         $index = self::convertToValid($index);
