@@ -463,7 +463,10 @@ class Pipe
         // EXPERIMENTAL for elasticsearch load: get the structure from the notes
         $structure = $pipe_properties['notes'];
         $structure = json_decode($structure, true);
-        $elastic_search_params = array('structure' => $structure);
+        $elastic_search_params = array(
+            'parent_eid' => $pipe_properties['eid'],
+            'structure' => $structure
+        );
 
         // create a process host to connect the store/engine and run the process
         $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
