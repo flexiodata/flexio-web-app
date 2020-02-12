@@ -352,7 +352,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             if (!is_array($result))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
             if (isset($result['errors']) && $result['errors'] !== false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
         }
         catch (\Exception $e)
         {
