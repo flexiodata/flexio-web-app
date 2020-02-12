@@ -229,29 +229,34 @@ class ProcessHandler
         );
         $elasticsearch = \Flexio\Services\ElasticSearch::create($elasticsearch_connection_info);
 
-        // get the stream output
-        $stdout_stream = $process_host->getEngine()->getStdout();
-        $stdout_stream_info = $stdout_stream->get();
+        // create a new index; delete any index that's already there
+        $elasticsearch->deleteIndex($parent_eid);
+        $elasticsearch->createIndex($parent_eid, $structure->get());
 
-        $field_names = $structure->getNames();
-
+        // get the data from stdout; TODO: make this more efficient with memory
+        $data_to_write = '';
         $stdout_reader= $process_host->getEngine()->getStdout()->getReader();
-        $data = $stdout_reader->read(32768);
-        $data = json_decode($data, true);
-
-        $data_to_write = array();
-        foreach ($data as $d)
+        while (($chunk = $stdout_reader->read(32768)) !== false)
         {
-            $row = array_combine($field_names, $d);
-            $data_to_write[] = $row;
+            $data_to_write .= $chunk;
         }
+        $data_to_write = json_decode($data_to_write, true);
 
-        // delete the index if it's there and create a new index
-        //$elasticsearch->deleteIndex($index);
-        //if ($elasticsearch->createIndex($index, $structure) === false)
-        //    return false;
+        if (!is_array($data_to_write))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
-        $index = \Flexio\Base\Util::generateHandle();
-        $elasticsearch->writeRows($index, $data_to_write);
+        // write the output to elasticsearch
+        $params = array(
+            'parent_eid' => $parent_eid,
+            'structure' => $structure
+        );
+        $field_names = $structure->getNames();
+        $elasticsearch->write($params, function() use (&$data_to_write, &$field_names) {
+            $row = array_shift($data_to_write);
+            if (!$row)
+                return false;
+            $row = array_combine($field_names, $row); // return key/value
+            return $row;
+        });
     }
 }
