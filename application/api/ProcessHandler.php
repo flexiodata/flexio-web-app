@@ -247,7 +247,7 @@ class ProcessHandler
 
         // write the output to elasticsearch
         $params = array(
-            'parent_eid' => $parent_eid,
+            'path' => $parent_eid, // service uses path for consistency with other services
             'structure' => $structure
         );
         $field_names = $structure->getNames();

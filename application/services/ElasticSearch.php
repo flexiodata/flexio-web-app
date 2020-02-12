@@ -160,7 +160,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
         // get the index name (path)
-        $index = $params['path'] ?? '';
+        $index = $params['path'];
         $index = self::convertToValid($index);
 
         // output the rows
@@ -256,8 +256,10 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
             if (!is_array($result))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
-            if (isset($result['error']) || isset($result['errors']))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
+            if (isset($result['error']) && $result['error'] === true)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+            if (isset($result['errors']) && $result['errors'] === true)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
         catch (\Exception $e)
         {
@@ -354,8 +356,10 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
             if (!is_array($result))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-            if (isset($result['error']) || isset($result['errors']))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+            if (isset($result['error']) && $result['error'] === true)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+            if (isset($result['errors']) && $result['errors'] === true)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
         catch (\Exception $e)
         {
@@ -400,7 +404,9 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
             if (!is_array($result))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
-            if (isset($result['error']) || isset($result['errors']))
+            if (isset($result['error']) && $result['error'] === true)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+            if (isset($result['errors']) && $result['errors'] === true)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
         catch (\Exception $e)
