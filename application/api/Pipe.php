@@ -490,9 +490,29 @@ class Pipe
             exit(0);
         }
 
+        // connect to elasticsearch
+        $elasticsearch_connection_info = array(
+            'host'     => $GLOBALS['g_config']->experimental_cache_host ?? '',
+            'port'     => $GLOBALS['g_config']->experimental_cache_port ?? '',
+            'username' => $GLOBALS['g_config']->experimental_cache_username ?? '',
+            'password' => $GLOBALS['g_config']->experimental_cache_password ?? ''
+        );
+        $elasticsearch = \Flexio\Services\ElasticSearch::create($elasticsearch_connection_info);
+
+        // create a new index; delete any index that's already there
+$query = <<<EOT
+{
+    "query": {
+        "match_all": {}
+    }
+}
+EOT;
+        $query = json_decode($query, true);
+        $result = $elasticsearch->query($pipe_properties['eid'], $query);
+
         // return the storable stream where the output will be written
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api\Response::sendContent($pipe_properties);
+        \Flexio\Api\Response::sendContent($result);
     }
 
     // using json_encode/decode() on arrays leads to ambiguities

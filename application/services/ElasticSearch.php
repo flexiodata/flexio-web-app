@@ -384,7 +384,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             $index_write_string .= "\n"; // payload must end with newline
 
             // write the content
-            $url = $this->getHostUrlString() . '/_bulk';
+            $url = $this->getHostUrlString() . '/_bulk?refresh=true'; // TODO: temporarily refresh immediately
             $auth = $this->getBasicAuthString();
             $content_type = 'application/x-ndjson'; // use ndjson for bulk operations
 
@@ -412,6 +412,57 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         catch (\Exception $e)
         {
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+        }
+    }
+
+    public function query(string $index, array $query) : array
+    {
+        try
+        {
+            $index_write_string = json_encode($query, JSON_UNESCAPED_SLASHES | JSON_FORCE_OBJECT);
+
+            // create the index with the specified mapping
+            $url = $this->getHostUrlString() . '/' . urlencode($index) . '/_search?size=1000';
+            $auth = $this->getBasicAuthString();
+            $content_type = 'application/json';
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, $url);
+            //curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Basic '. $auth, 'Content-Type: '. $content_type ]); // disable authorization header for public test
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: '. $content_type ]);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $index_write_string);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+
+            $result = curl_exec($ch);
+            curl_close($ch);
+
+            $result = json_decode($result,true);
+
+            if (!is_array($result))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+            if (isset($result['error']) && $result['error'] === true)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+            if (isset($result['errors']) && $result['errors'] === true)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+            $rows = $result['hits']['hits'] ?? false;
+            if (!is_array($rows))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+            $output = array();
+            foreach ($rows as $r)
+            {
+                $output[] = $r['_source'];
+            }
+
+            return $output;
+        }
+        catch (\Exception $e)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
         }
     }
 
