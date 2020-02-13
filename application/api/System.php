@@ -284,16 +284,25 @@ class System
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_params = $validator->getParams();
-        $from_email = $validated_params['from_email'];
-        $subject = $validated_params['subject'];
-        $message = $validated_params['message'] ?? '';
+        $api_from_email = $validated_params['from_email'];
+        $api_subject = $validated_params['subject'];
+        $api_message = $validated_params['message'] ?? '';
+
+        $actual_from_email = \Flexio\Services\NoticeEmail::EMAIL_ADDRESS_NO_REPLY;
+        $actual_to_email = \Flexio\Services\NoticeEmail::EMAIL_ADDRESS_SUPPORT;
+        $actual_subject = "Integration Request";
+        $actual_message = <<<EOT
+From: $api_from_email
+Subject: $api_subject
+Message: $api_message
+EOT;
 
         // send an email that the user's account was created
         $email = \Flexio\Services\NoticeEmail::create(array(
-            'from' => $from_email,
-            'to' => \Flexio\Services\NoticeEmail::EMAIL_ADDRESS_SUPPORT,
-            'subject' => $subject,
-            'msg_text' => $message,
+            'from' => $actual_from_email,
+            'to' => $actual_to_email,
+            'subject' => $actual_subject,
+            'msg_text' => $actual_message,
             'msg_html' => '' // TODO: add HTML
         ));
         $email->send();
