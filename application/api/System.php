@@ -226,8 +226,11 @@ class System
             // }
 
             // if a verification code is provide, attempt to verify the user
-            if ($current_user->getStatus() === \Model::STATUS_PENDING && $current_user->checkVerifyCode($verify_code) === true)
-                $current_user->set(array('eid_status' => \Model::STATUS_AVAILABLE));
+            if ($verify_code)
+            {
+                if ($current_user->getStatus() === \Model::STATUS_PENDING && $current_user->checkVerifyCode($verify_code) === true)
+                    $current_user->set(array('eid_status' => \Model::STATUS_AVAILABLE));
+            }
 
             // set the user session
             \Flexio\System\System::createUserSession($current_user_eid);
