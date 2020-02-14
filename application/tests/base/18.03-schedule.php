@@ -180,5 +180,32 @@ class Test
         $actual = \Flexio\Base\Schedule::getNextScheduledTime('2020-01-01 00:00:00', $schedule);
         $expected = '2020-01-02 06:00:00';
         \Flexio\Tests\Check::assertString('F.4', 'Schedule; get next scheduled time',  $actual, $expected, $results);
+
+
+        // TEST: get next scheduled time for weekly frequency
+
+        // BEGIN TEST
+        $schedule = json_decode('{"frequency": "weekly", "timezone": "", "days": [], "times": []}',true);
+        $actual = \Flexio\Base\Schedule::getNextScheduledTime('2020-01-01 00:00:00', $schedule);
+        $expected = '2020-01-08 00:00:00';
+        \Flexio\Tests\Check::assertString('F.1', 'Schedule; get next scheduled time',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $schedule = json_decode('{"frequency": "weekly", "timezone": "UTC", "days": [], "times": []}',true);
+        $actual = \Flexio\Base\Schedule::getNextScheduledTime('2020-02-03 01:02:03', $schedule);
+        $expected = '2020-02-10 01:02:03';
+        \Flexio\Tests\Check::assertString('F.2', 'Schedule; get next scheduled time',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $schedule = json_decode('{"frequency": "weekly", "timezone": "UTC", "days": [], "times": []}',true);
+        $actual = \Flexio\Base\Schedule::getNextScheduledTime('2020-01-01 23:59:59', $schedule);
+        $expected = '2020-01-08 23:59:59';
+        \Flexio\Tests\Check::assertString('F.3', 'Schedule; get next scheduled time',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $schedule = json_decode('{"frequency": "weekly", "timezone": "CST", "days": [], "times": []}',true);
+        $actual = \Flexio\Base\Schedule::getNextScheduledTime('2020-01-01 00:00:00', $schedule);
+        $expected = '2020-01-08 06:00:00';
+        \Flexio\Tests\Check::assertString('F.4', 'Schedule; get next scheduled time',  $actual, $expected, $results);
     }
 }
