@@ -102,12 +102,9 @@ class Schedule
         if (count($schedule['days']) > 0 || count($schedule['times']) > 0)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
-        // TODO: for now, only UTC is supported
-        if (strlen($schedule['timezone']) > 0 && $schedule['timezone'] !== 'UTC')
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-
         $next_scheduled_time = false;
         $frequency = $schedule['frequency'];
+        $timezone = $schedule['timezone'];
 
         switch ($frequency)
         {
@@ -118,31 +115,31 @@ class Schedule
                 break;
 
             case self::FREQ_ONE_MINUTE:
-                $next_scheduled_time = strtotime($start_time . ' + 1 minute');
+                $next_scheduled_time = strtotime($start_time . " $timezone + 1 minute");
                 break;
 
             case self::FREQ_FIVE_MINUTES:
-                $next_scheduled_time = strtotime($start_time . ' + 5 minutes');
+                $next_scheduled_time = strtotime($start_time . " $timezone + 5 minutes");
                 break;
 
             case self::FREQ_FIFTEEN_MINUTES:
-                $next_scheduled_time = strtotime($start_time . ' + 15 minutes');
+                $next_scheduled_time = strtotime($start_time . " $timezone + 15 minutes");
                 break;
 
             case self::FREQ_THIRTY_MINUTES:
-                $next_scheduled_time = strtotime($start_time . ' + 30 minutes');
+                $next_scheduled_time = strtotime($start_time . " $timezone + 30 minutes");
                 break;
 
             case self::FREQ_HOURLY:
-                $next_scheduled_time = strtotime($start_time . ' + 1 hour');
+                $next_scheduled_time = strtotime($start_time . " $timezone + 1 hour");
                 break;
 
             case self::FREQ_DAILY:
-                $next_scheduled_time = strtotime($start_time . ' + 1 day');
+                $next_scheduled_time = strtotime($start_time . " $timezone + 1 day");
                 break;
 
             case self::FREQ_WEEKLY:
-                $next_scheduled_time = strtotime($start_time . ' + 7 day');
+                $next_scheduled_time = strtotime($start_time . " $timezone + 7 day");
                 break;
         }
 
