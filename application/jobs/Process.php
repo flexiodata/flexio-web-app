@@ -67,6 +67,7 @@ class Process implements \Flexio\IFace\IProcess
         'replace'   => '\Flexio\Jobs\Replace',
         'report'    => '\Flexio\Jobs\Report',
         'request'   => '\Flexio\Jobs\Request',
+        'search'    => '\Flexio\Jobs\Search',
         'select'    => '\Flexio\Jobs\Select',
         'sequence'  => '\Flexio\Jobs\Sequence',
         'set'       => '\Flexio\Jobs\Set',
