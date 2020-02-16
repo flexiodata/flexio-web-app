@@ -401,10 +401,11 @@ class Pipe
         \Flexio\Api\Response::sendRaw($content);
     }
 
-    public static function runbackground(\Flexio\Api\Request $request) : void
+    public static function populatecache(\Flexio\Api\Request $request) : void
     {
-        // TODO: experimental/test function for testing background processing and callbacks
-
+        // experimental/test function for populating an elasticsearch cache
+        // from the output of a pipe; this cache then be queried via another
+        // endpoint
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
         $pipe_eid = $request->getObjectFromUrl();
@@ -469,6 +470,10 @@ class Pipe
         );
 
         // create a process host to connect the store/engine and run the process
+        // for populating a cache, note: don't include the process count limits
+        // normally added in the callbacks; process count limits are primarily
+        // as a guard against a lot of user-driven api calls coming in at once,
+        // not background-type processes that only run periodically
         $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
         //$process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::incrementProcessCount', array());
         $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::addMountParams', array());
@@ -476,43 +481,18 @@ class Pipe
         //$process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_FINISHING, '\Flexio\Api\ProcessHandler::decrementProcessCount', array());
 
         // parse the request content and set the stream info
-        $php_stream_handle = \Flexio\System\System::openPhpInputStream();
-        $post_content_type = \Flexio\System\System::getPhpInputStreamContentType();
-         \Flexio\Base\StreamUtil::addProcessInputFromStream($php_stream_handle, $post_content_type, $process_engine);
+        // note: we don't need user inputs for background jobs that load
+        // data into elasticsearch, so disable these; here for reference
+        //$php_stream_handle = \Flexio\System\System::openPhpInputStream();
+        //$post_content_type = \Flexio\System\System::getPhpInputStreamContentType();
+        // \Flexio\Base\StreamUtil::addProcessInputFromStream($php_stream_handle, $post_content_type, $process_engine);
 
         // run the process in the background
-        $process_host->run(false /*true: run in background*/);
+        $process_host->run(true /*true: run in background*/);
 
-        if ($process_engine->hasError())
-        {
-            $error = $process_engine->getError();
-            \Flexio\Api\Response::sendError($error);
-            exit(0);
-        }
-
-        // connect to elasticsearch
-        $elasticsearch_connection_info = array(
-            'host'     => $GLOBALS['g_config']->experimental_cache_host ?? '',
-            'port'     => $GLOBALS['g_config']->experimental_cache_port ?? '',
-            'username' => $GLOBALS['g_config']->experimental_cache_username ?? '',
-            'password' => $GLOBALS['g_config']->experimental_cache_password ?? ''
-        );
-        $elasticsearch = \Flexio\Services\ElasticSearch::create($elasticsearch_connection_info);
-
-        // create a new index; delete any index that's already there
-$query = <<<EOT
-{
-    "query": {
-        "match_all": {}
-    }
-}
-EOT;
-        $query = json_decode($query, true);
-        $result = $elasticsearch->query($pipe_properties['eid'], $query);
-
-        // return the storable stream where the output will be written
+        // return information about the process; TODO: is this what we want to do?
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($process_store->get());
     }
 
     // using json_encode/decode() on arrays leads to ambiguities
