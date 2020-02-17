@@ -589,7 +589,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
     private function getHostUrlString() : string
     {
-        return $this->host . ':' . (string)$this->port;
+        return 'https://' . $this->host . ':' . (string)$this->port;
     }
 
     private function getBasicAuthString() : string
