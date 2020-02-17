@@ -357,7 +357,6 @@ class Pipe
         $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
         $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::incrementProcessCount', array());
         $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::addMountParams', array());
-        $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::addMountParams', array());
         // TODO: following saveStdoutToProcessOutputStream is a legacy to replace old process build mode so
         // that results can be displayed in the Web App Interface, which currently requires a stream eid;
         // processes created from the UI used to run in background mode, so this was necessary to get the
@@ -477,7 +476,6 @@ $experimental_task = array(
         // create a process host to connect the store/engine and run the process
         $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
         $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::incrementProcessCount', array());
-        $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::addMountParams', array());
         $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::addMountParams', array());
         // TODO: following saveStdoutToProcessOutputStream is a legacy to replace old process build mode so
         // that results can be displayed in the Web App Interface, which currently requires a stream eid;
