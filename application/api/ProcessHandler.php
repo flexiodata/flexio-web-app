@@ -206,6 +206,9 @@ class ProcessHandler
 
     public static function saveStdoutToElasticSearch(\Flexio\Jobs\ProcessHost $process_host, array $callback_params) : void
     {
+        if ($GLOBALS['g_config']->search_cache_type !== 'elasticsearch')
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, "Search not available");
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($callback_params, array(
                 'parent_eid' => array('type' => 'eid',    'required' => true), // the parent object (pipe) that the cahce is associated with
@@ -224,10 +227,10 @@ class ProcessHandler
 
         // connect to elasticsearch
         $elasticsearch_connection_info = array(
-            'host'     => $GLOBALS['g_config']->experimental_cache_host ?? '',
-            'port'     => $GLOBALS['g_config']->experimental_cache_port ?? '',
-            'username' => $GLOBALS['g_config']->experimental_cache_username ?? '',
-            'password' => $GLOBALS['g_config']->experimental_cache_password ?? ''
+            'host'     => $GLOBALS['g_config']->search_cache_host ?? '',
+            'port'     => $GLOBALS['g_config']->search_cache_port ?? '',
+            'username' => $GLOBALS['g_config']->search_cache_username ?? '',
+            'password' => $GLOBALS['g_config']->search_cache_password ?? ''
         );
         $elasticsearch = \Flexio\Services\ElasticSearch::create($elasticsearch_connection_info);
 

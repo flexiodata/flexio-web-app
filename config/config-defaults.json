@@ -12,12 +12,12 @@
 
     "storage_root": "",
 
-    "experimental_cache_type": "elasticsearch",
-    "experimental_cache_host": "localhost",
-    "experimental_cache_port": "9200",
-    "experimental_cache_username": "",
-    "experimental_cache_password": "",
-    "experimental_cache_name": "",
+    "search_cache_type": "",
+    "search_cache_host": "",
+    "search_cache_port": "",
+    "search_cache_username": "",
+    "search_cache_password": "",
+    "search_cache_name": "",
 
     "private_key": "",
 

@@ -39,6 +39,9 @@ class Search extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\IFace\IProcess $process) : void
     {
+        if ($GLOBALS['g_config']->search_cache_type !== 'elasticsearch')
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, "Search not available");
+
         $job_params = $this->getJobParameters();
         $index = $job_params['index'] ?? null;
         $query = $job_params['query'] ?? null;
@@ -50,10 +53,10 @@ class Search extends \Flexio\Jobs\Base
 
         // connect to elasticsearch
         $elasticsearch_connection_info = array(
-            'host'     => $GLOBALS['g_config']->experimental_cache_host ?? '',
-            'port'     => $GLOBALS['g_config']->experimental_cache_port ?? '',
-            'username' => $GLOBALS['g_config']->experimental_cache_username ?? '',
-            'password' => $GLOBALS['g_config']->experimental_cache_password ?? ''
+            'host'     => $GLOBALS['g_config']->search_cache_host ?? '',
+            'port'     => $GLOBALS['g_config']->search_cache_port ?? '',
+            'username' => $GLOBALS['g_config']->search_cache_username ?? '',
+            'password' => $GLOBALS['g_config']->search_cache_password ?? ''
         );
         $elasticsearch = \Flexio\Services\ElasticSearch::create($elasticsearch_connection_info);
 
