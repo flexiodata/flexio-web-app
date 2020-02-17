@@ -410,6 +410,16 @@ class Pipe
 
     public static function searchcache(\Flexio\Api\Request $request) : void
     {
+        // TODO: experimental
+
+// TODO: experimental
+$experimental_task = array(
+    "op" => "search",
+    "index" => $pipe_properties['eid'],
+    "query" => "",     // string, required
+    "columns" => ""     // string, optional
+);
+
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
         $pipe_eid = $request->getObjectFromUrl();
@@ -453,14 +463,6 @@ class Pipe
         if ($triggered_by === \Model::PROCESS_TRIGGERED_API && $api_trigger_active === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
-// TODO: experimental
-$experimental_task = array(
-    "op" => "search",
-    "index" => $pipe_properties['eid'],
-    "query" => "",     // string, required
-    "columns" => ""     // string, optional
-);
-
         // create a new process
         $process_properties = array(
             'parent_eid' => $pipe_properties['eid'],
@@ -474,18 +476,14 @@ $experimental_task = array(
         $process_engine = \Flexio\Jobs\Process::create();
 
         // create a process host to connect the store/engine and run the process
+        // note: don't include the process count limits normally added in the callbacks;
+        // process count limits are primarily as a guard against a lot of user-driven api
+        // calls that run an execute function a container, not limit inexpensive api calls
+        // like search or background processes that only run periodically
         $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
-        $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::incrementProcessCount', array());
+        //$process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::incrementProcessCount', array());
         $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::addMountParams', array());
-        // TODO: following saveStdoutToProcessOutputStream is a legacy to replace old process build mode so
-        // that results can be displayed in the Web App Interface, which currently requires a stream eid;
-        // processes created from the UI used to run in background mode, so this was necessary to get the
-        // results to display in the UI, but now processes from the UI run in the foreground, but the stream
-        // eid is still used to get the result; should convert over to Web App UI specifying a stream callback
-        // to store results if desired
-        if ($triggered_by ===\Model::PROCESS_TRIGGERED_INTERFACE)
-            $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_FINISHING, '\Flexio\Api\ProcessHandler::saveStdoutToProcessOutputStream', array());
-        $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_FINISHING, '\Flexio\Api\ProcessHandler::decrementProcessCount', array());
+        //$process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_FINISHING, '\Flexio\Api\ProcessHandler::decrementProcessCount', array());
 
         // parse the request content and set the stream info
         $php_stream_handle = \Flexio\System\System::openPhpInputStream();
@@ -597,14 +595,13 @@ $experimental_task = array(
         );
 
         // create a process host to connect the store/engine and run the process
-        // for populating a cache, note: don't include the process count limits
-        // normally added in the callbacks; process count limits are primarily
-        // as a guard against a lot of user-driven api calls coming in at once,
-        // not background-type processes that only run periodically
+        // note: don't include the process count limits normally added in the callbacks;
+        // process count limits are primarily as a guard against a lot of user-driven api
+        // calls that run an execute function a container, not limit inexpensive api calls
+        // like search or background processes that only run periodically
         $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
         //$process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::incrementProcessCount', array());
         $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::addMountParams', array());
-        $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_FINISHING, '\Flexio\Api\ProcessHandler::saveStdoutToElasticSearch', $elastic_search_params);
         //$process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_FINISHING, '\Flexio\Api\ProcessHandler::decrementProcessCount', array());
 
         // parse the request content and set the stream info
@@ -650,11 +647,17 @@ $experimental_task = array(
         $process_store = \Flexio\Object\Process::create($process_properties);
         $process_engine = \Flexio\Jobs\Process::create();
 
-        // STEP 3: run the process; don't increment/decrement process counts since we want
-        // scheduling to succeed and not be clamped; don't save any output, regardless of
-        // mode since build mode is associated with interactively running a pipe
+        // create a process host to connect the store/engine and run the process
+        // note: don't include the process count limits normally added in the callbacks;
+        // process count limits are primarily as a guard against a lot of user-driven api
+        // calls that run an execute function a container, not limit inexpensive api calls
+        // like search or background processes that only run periodically
         $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
+        //$process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::incrementProcessCount', array());
         $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::addMountParams', array());
+        //$process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_FINISHING, '\Flexio\Api\ProcessHandler::decrementProcessCount', array());
+
+        // STEP 3: run the process
         $process_host->run(true /*true: run in background*/);
     }
 
