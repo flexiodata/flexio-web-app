@@ -57,20 +57,26 @@ class ProcessHandler
         // get the process info from the process object; if the process doesn't
         // have a pipe parent, there's no mount info to add
         $process_obj_info = $process_host->getStore()->get();
-        if (!isset($process_obj_info['parent']['eid']))
+
+        // load the pipe parent, which is the mount connection; if we're unable
+        // to load the mount because it doesn't exist, there's nothing to
+        // populate; note: this will also silently return where parent eids do
+        // exist, but they can't be loaded; downstream logic that requires the
+        // mount parameters will fail, but may want to cut-it-off here
+        try
+        {
+            $pipe_eid = $process_obj_info['parent']['eid'] ?? '';
+            $pipe = \Flexio\Object\Pipe::load($pipe_eid);
+            $pipe_info = $pipe->get();
+
+            $connection_eid = $pipe_info['parent']['eid'] ?? '';
+            $connection = \Flexio\Object\Connection::load($connection_eid);
+            $connection_info = $connection->get();
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
             return;
-
-        // load the pipe parent, which is the mount connection
-        $pipe_eid = $process_obj_info['parent']['eid'];
-        $pipe = \Flexio\Object\Pipe::load($pipe_eid);
-        $pipe_info = $pipe->get();
-
-        if (!isset($pipe_info['parent']['eid']))
-            return;
-
-        $connection_eid = $pipe_info['parent']['eid'];
-        $connection = \Flexio\Object\Connection::load($connection_eid);
-        $connection_info = $connection->get();
+        }
 
         $setup_config = $connection_info['setup_config'];
         if (!$setup_config)
