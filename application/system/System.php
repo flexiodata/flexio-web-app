@@ -548,6 +548,17 @@ class System
         return $GLOBALS['g_config'];
     }
 
+    public static function getSearchCacheConfig() : array
+    {
+        return array(
+            'type'     => $GLOBALS['g_config']->search_cache_type ?? '',
+            'host'     => $GLOBALS['g_config']->search_cache_host ?? '',
+            'port'     => $GLOBALS['g_config']->search_cache_port ?? '',
+            'username' => $GLOBALS['g_config']->search_cache_username ?? '',
+            'password' => $GLOBALS['g_config']->search_cache_password ?? ''
+        );
+    }
+
     public static function log(string $str) : void
     {
         if (!isset($GLOBALS['g_config']->query_log))

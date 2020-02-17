@@ -39,9 +39,6 @@ class Search extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\IFace\IProcess $process) : void
     {
-        if ($GLOBALS['g_config']->search_cache_type !== 'elasticsearch')
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, "Search not available");
-
         $job_params = $this->getJobParameters();
         $index = $job_params['index'] ?? null;
         $query = $job_params['query'] ?? null;
@@ -52,12 +49,9 @@ class Search extends \Flexio\Jobs\Base
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Missing parameter 'query'");
 
         // connect to elasticsearch
-        $elasticsearch_connection_info = array(
-            'host'     => $GLOBALS['g_config']->search_cache_host ?? '',
-            'port'     => $GLOBALS['g_config']->search_cache_port ?? '',
-            'username' => $GLOBALS['g_config']->search_cache_username ?? '',
-            'password' => $GLOBALS['g_config']->search_cache_password ?? ''
-        );
+        $elasticsearch_connection_info = \Flexio\System\System::getSearchCacheConfig();
+        if ($elasticsearch_connection_info['type'] !== 'elasticsearch')
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, "Search not available");
         $elasticsearch = \Flexio\Services\ElasticSearch::create($elasticsearch_connection_info);
 
         // TODO: for now, return all results
