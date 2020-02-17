@@ -410,19 +410,18 @@ class Pipe
 
     public static function searchcache(\Flexio\Api\Request $request) : void
     {
-        // TODO: experimental
-
-// TODO: experimental
-$experimental_task = array(
-    "op" => "search",
-    "index" => $pipe_properties['eid'],
-    "query" => "",     // string, required
-    "columns" => ""     // string, optional
-);
-
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
         $pipe_eid = $request->getObjectFromUrl();
+
+        // experimental/test function for populating an elasticsearch cache
+        // from the output of a pipe; this cache then be queried via another
+        // endpoint; only allow adminstrator users to get this
+        $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
+        if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        if ($requesting_user->isAdministrator() !== true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
 /*
         $request->track(\Flexio\Api\Action::TYPE_PROCESS_CREATE);
@@ -462,6 +461,14 @@ $experimental_task = array(
                                $pipe_properties['deploy_api'] === \Model::PIPE_DEPLOY_STATUS_ACTIVE);
         if ($triggered_by === \Model::PROCESS_TRIGGERED_API && $api_trigger_active === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+        // TODO: experimental
+        $experimental_task = array(
+            "op" => "search",
+            "index" => $pipe_properties['eid'],
+            "query" => "",     // string, required
+            "columns" => ""     // string, optional
+        );
 
         // create a new process
         $process_properties = array(
@@ -528,12 +535,18 @@ $experimental_task = array(
 
     public static function populatecache(\Flexio\Api\Request $request) : void
     {
-        // experimental/test function for populating an elasticsearch cache
-        // from the output of a pipe; this cache then be queried via another
-        // endpoint
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
         $pipe_eid = $request->getObjectFromUrl();
+
+        // experimental/test function for populating an elasticsearch cache
+        // from the output of a pipe; this cache then be queried via another
+        // endpoint; only allow adminstrator users to get this
+        $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
+        if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        if ($requesting_user->isAdministrator() !== true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
 /*
         $request->track(\Flexio\Api\Action::TYPE_PROCESS_CREATE);
