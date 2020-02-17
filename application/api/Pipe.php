@@ -606,7 +606,7 @@ $experimental_task = array(
         \Flexio\Api\Response::sendContent($process_store->get());
     }
 
-    public static function runPipe(string $pipe_eid) : void
+    public static function runFromCron(string $pipe_eid) : void
     {
         // STEP 1: load the pipe
         $pipe = false;
