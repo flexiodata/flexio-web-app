@@ -124,7 +124,7 @@ class ProcessHandler
         $process_host->getEngine()->setParams(array_merge($user_variables, $mount_variables));
     }
 
-    public static function saveStdoutToStreamInBuildMode(\Flexio\Jobs\ProcessHost $process_host, array $callback_params) : void
+    public static function saveStdoutToProcessOutputStream(\Flexio\Jobs\ProcessHost $process_host, array $callback_params) : void
     {
         // if we're not in build mode, don't do anything
         if ($process_host->getStore()->getMode() !== \Flexio\Jobs\Process::MODE_BUILD)
