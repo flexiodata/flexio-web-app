@@ -155,7 +155,7 @@ class Cron
 
                         print("running job...");
                         $pipe_eid = $job['pipe_eid'];
-                        self::runPipe($pipe_eid);
+                        \Flexio\Api\Pipe::runPipe($pipe_eid);
                         print("\n");
                     }
                 }
@@ -166,7 +166,7 @@ class Cron
                     {
                         print("running job...");
                         $pipe_eid = $job['pipe_eid'];
-                        self::runPipe($pipe_eid);
+                        \Flexio\Api\Pipe::runPipe($pipe_eid);
                         print("\n");
                     }
                 }
@@ -177,7 +177,7 @@ class Cron
                     {
                         print("running job...");
                         $pipe_eid = $job['pipe_eid'];
-                        self::runPipe($pipe_eid);
+                        \Flexio\Api\Pipe::runPipe($pipe_eid);
                         print("\n");
                     }
                 }
@@ -188,7 +188,7 @@ class Cron
                     {
                         print("running job...");
                         $pipe_eid = $job['pipe_eid'];
-                        self::runPipe($pipe_eid);
+                        \Flexio\Api\Pipe::runPipe($pipe_eid);
                         print("\n");
                     }
                 }
@@ -199,7 +199,7 @@ class Cron
                     {
                         print("running job...");
                         $pipe_eid = $job['pipe_eid'];
-                        self::runPipe($pipe_eid);
+                        \Flexio\Api\Pipe::runPipe($pipe_eid);
                         print("\n");
                     }
                 }
@@ -210,7 +210,7 @@ class Cron
                     {
                         print("running job...");
                         $pipe_eid = $job['pipe_eid'];
-                        self::runPipe($pipe_eid);
+                        \Flexio\Api\Pipe::runPipe($pipe_eid);
                         print("\n");
                     }
                 }
@@ -301,51 +301,6 @@ class Cron
                 }
             }
         }
-    }
-
-    private static function runPipe(string $pipe_eid) : void
-    {
-        // TODO: following run code is similar to \1\Process::create()
-        // should factor; for example, the \Flexio\Api\Process::create()
-        // adds on the parent and owner
-
-        // TODO: check permissions based on the owner of the pipe
-        // TODO: check usage based on $owner_user->processUsageWithinLimit()
-
-        // STEP 1: load the pipe
-        $pipe = false;
-        $pipe_properties = false;
-        try
-        {
-            $pipe = \Flexio\Object\Pipe::load($pipe_eid);
-            if ($pipe->getStatus() === \Model::STATUS_DELETED)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-            $pipe_properties = $pipe->get();
-        }
-        catch (\Flexio\Base\Exception $e)
-        {
-            return;
-        }
-
-        $process_properties = array(
-            'parent_eid' => $pipe_properties['eid'],
-            'pipe_info' => $pipe_properties,
-            'task' => $pipe_properties['task'],
-            'triggered_by' => \Model::PROCESS_TRIGGERED_SCHEDULER,
-            'owned_by' => $pipe_properties['owned_by']['eid'],
-            'created_by' => $pipe_properties['owned_by']['eid'] // scheduled processes are created by the owner
-        );
-
-        // STEP 2: create the process
-        $process_store = \Flexio\Object\Process::create($process_properties);
-        $process_engine = \Flexio\Jobs\Process::create();
-
-        // STEP 3: run the process; don't increment/decrement process counts since we want
-        // scheduling to succeed and not be clamped; don't save any output, regardless of
-        // mode since build mode is associated with interactively running a pipe
-        $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
-        $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::addMountParams', array());
-        $process_host->run(true /*true: run in background*/);
     }
 
     private static function sendTrialEndingNotice(array $user_object_list)
