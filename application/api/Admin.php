@@ -32,6 +32,12 @@ class Admin
         $package_info = \Flexio\System\System::getPackageInfo();
         $git_version = \Flexio\System\System::getGitRevision();
 
+        $elasticsearch_connection_info = \Flexio\System\System::getSearchCacheConfig();
+        $elasticsearch = \Flexio\Services\ElasticSearch::create($elasticsearch_connection_info);
+        $search_cache_version = array();
+        if ($elasticsearch_connection_info['type'] === 'elasticsearch')
+            $search_cache_version = $elasticsearch->info();
+
         $result = array(
             "application" => array(
                 "name" => $package_info['name'] ?? '',
@@ -41,6 +47,9 @@ class Admin
             "database" =>  array(
                 "version" => \Flexio\System\System::getModel()->getDbVersionNumber(),
                 "counts" => \Flexio\System\System::getModel()->getTableCounts()
+            ),
+            "search_cache" => array(
+                "version" => $search_cache_version
             )
         );
 
