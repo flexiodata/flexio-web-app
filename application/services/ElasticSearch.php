@@ -204,8 +204,13 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         curl_setopt($ch, CURLOPT_HTTPGET, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-
         $result = curl_exec($ch);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($httpcode < 200 || $httpcode > 299)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
         $result = json_decode($result, true);
 
         $indexes = [];
@@ -250,7 +255,11 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
             $result = curl_exec($ch);
+            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
+
+            if ($httpcode < 200 || $httpcode > 299)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
 
             $result = json_decode($result,true);
 
@@ -350,7 +359,11 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
             $result = curl_exec($ch);
+            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
+
+            if ($httpcode < 200 || $httpcode > 299)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
             $result = json_decode($result,true);
 
@@ -398,7 +411,11 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
             $result = curl_exec($ch);
+            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
+
+            if ($httpcode < 200 || $httpcode > 299)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
             $result = json_decode($result,true);
 
@@ -435,9 +452,12 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             curl_setopt($ch, CURLOPT_POSTFIELDS, $index_write_string);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-
             $result = curl_exec($ch);
+            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
+
+            if ($httpcode < 200 || $httpcode > 299)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
             $result = json_decode($result,true);
 
@@ -466,6 +486,47 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         }
     }
 
+    public function info() : array
+    {
+        // TODO: parallels testConnection function; factor?
+        try
+        {
+            $url = $this->getHostUrlString();
+            $auth = $this->getBasicAuthString();
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, $url);
+            //curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Basic '. $auth]); // disable authorization header for public test
+            curl_setopt($ch, CURLOPT_HTTPGET, true);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+            $result = curl_exec($ch);
+            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+
+            if ($httpcode < 200 || $httpcode > 299)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_DATABASE);
+
+            $result = json_decode($result,true);
+
+            if (!is_array($result))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_DATABASE);
+            if (!isset($result['version']))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_DATABASE);
+
+            $version = $result['version'];
+            if (!isset($version['number']))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_DATABASE);
+
+            return $version;
+        }
+        catch (\Exception $e)
+        {
+            return array();
+        }
+    }
+
     private function initialize(string $host, int $port, string $username, string $password) : bool
     {
         $this->host = $host;
@@ -483,6 +544,8 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
     private function testConnection() : bool
     {
+    // TODO: parallels info() function; factor?
+
         // test the connection
         try
         {
@@ -497,7 +560,11 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
             $result = curl_exec($ch);
+            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
+
+            if ($httpcode < 200 || $httpcode > 299)
+                return false;
 
             $result = json_decode($result,true);
 
