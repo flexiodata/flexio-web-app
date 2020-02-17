@@ -86,10 +86,6 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             $properties['task'] = json_encode($properties['task']);
         }
 
-        // if no process mode is specified, run everything
-        if (!isset($properties['process_mode']))
-            $properties['process_mode'] = \Flexio\Jobs\Process::MODE_RUN;
-
         // if no process status is set, set a default
         if (!isset($properties['process_status']))
             $properties['process_status'] = \Flexio\Jobs\Process::STATUS_PENDING;
@@ -246,14 +242,6 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $properties['task'];
     }
 
-    public function getMode() : string
-    {
-        if ($this->isCached() === false)
-            $this->populateCache();
-
-        return $this->properties['process_mode'];
-    }
-
     public function incrementActiveProcessCount() : bool
     {
         $owner = $this->getOwner();
@@ -356,7 +344,6 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "eid_type" => null,
                 "eid_status" =>  null,
                 "parent" => null,
-                "process_mode" => null,
                 "task" => null,
                 "output" => null,
                 "triggered_by" => null,

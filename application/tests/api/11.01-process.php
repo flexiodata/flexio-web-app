@@ -82,7 +82,6 @@ class Test
             'token' => $token1,
             'content_type' => 'application/json',
             'params' => '{
-                "process_mode": "'.\Flexio\Jobs\Process::MODE_RUN.'",
                 "task": {
                     "op": "echo"
                 },
@@ -107,7 +106,6 @@ class Test
                 "created":"",
                 "updated":""
             },
-            "process_mode": "R",
             "task": {
                 "op": "echo"
             },

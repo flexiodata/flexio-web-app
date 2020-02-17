@@ -312,7 +312,6 @@ class Vfs
 
         // set the owner based on the owner being posted to
         $process_params = array();
-        $process_params['process_mode'] = \Flexio\Jobs\Process::MODE_RUN;
         $process_params['owned_by'] = $owner_user_eid;
         $process_params['created_by'] = $requesting_user_eid;
         $process_params['triggered_by'] = $triggered_by;

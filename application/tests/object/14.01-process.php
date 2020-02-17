@@ -221,7 +221,6 @@ class Test
                 "created": null,
                 "updated": null
             },
-            "process_mode": null,
             "task" : [
             ],
             "output": null,

@@ -79,7 +79,6 @@ EOD;
                 "run": true,
                 "background": true,
                 "debug": false,
-                "process_mode": "' . \Flexio\Jobs\Process::MODE_BUILD /*needed for output*/ . '",
                 "task": {
                     "op": "execute",
                     "lang": "python",

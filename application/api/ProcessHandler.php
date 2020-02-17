@@ -126,10 +126,6 @@ class ProcessHandler
 
     public static function saveStdoutToProcessOutputStream(\Flexio\Jobs\ProcessHost $process_host, array $callback_params) : void
     {
-        // if we're not in build mode, don't do anything
-        if ($process_host->getStore()->getMode() !== \Flexio\Jobs\Process::MODE_BUILD)
-            return;
-
         // get the stdout stream
         $stdout_stream = $process_host->getEngine()->getStdout();
 

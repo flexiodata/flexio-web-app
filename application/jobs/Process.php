@@ -21,10 +21,6 @@ class Process implements \Flexio\IFace\IProcess
     // note: the following constants may be stored in the database;
     // if they are changed, the database values need to be migrated
 
-    public const MODE_UNDEFINED  = '';
-    public const MODE_BUILD      = 'B';
-    public const MODE_RUN        = 'R';
-
     public const STATUS_UNDEFINED = '';
     public const STATUS_PENDING   = 'S'; // 'S' for 'Starting' ('P' used to be used for STATUS_PAUSED, which is no longer used)
     public const STATUS_WAITING   = 'W';
