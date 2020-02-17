@@ -197,6 +197,10 @@ CREATE INDEX idx_notice_created_by ON tbl_notice (created_by);
 --    A - active
 --    I - inactive
 
+-- pipe_mode values:
+--    I - index; when pipe is run from scheduler, task builds index; when pipe is run from api, results pull from index
+--    P - pass through; no index is used; pipe passes results straight back to the caller
+
 DROP TABLE IF EXISTS tbl_pipe;
 CREATE TABLE tbl_pipe (
   id serial,
@@ -209,9 +213,11 @@ CREATE TABLE tbl_pipe (
   description text default '',
   examples json,
   params json,
+  returns json,
   notes text default '',
   task json,
   schedule text default '',
+  pipe_mode varchar(1) NOT NULL default 'P',
   deploy_mode varchar(1) NOT NULL default 'B',
   deploy_schedule varchar(1) NOT NULL default 'I',
   deploy_email varchar(1) NOT NULL default 'I',
