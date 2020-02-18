@@ -93,7 +93,6 @@ class StreamUtil
         $stream = false;
         $streamwriter = false;
         $form_params = array();
-        $post_streams = array();
 
         // first fetch query string parameters
         foreach ($_GET as $key => $value)
@@ -144,7 +143,7 @@ class StreamUtil
         $size = 0;
 
         $parser = \Flexio\Base\MultipartParser::create();
-        $parser->parse($php_stream_handle, $post_content_type, function ($type, $name, $data, $filename, $content_type) use (&$stream, &$streamwriter, &$process, &$form_params, &$size, &$post_streams) {
+        $parser->parse($php_stream_handle, $post_content_type, function ($type, $name, $data, $filename, $content_type) use (&$stream, &$streamwriter, &$process, &$form_params, &$size) {
             if ($type == \Flexio\Base\MultipartParser::TYPE_FILE_BEGIN)
             {
                 $stream = \Flexio\Base\Stream::create();
