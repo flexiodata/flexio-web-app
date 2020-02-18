@@ -186,21 +186,24 @@ class StreamUtil
         $process->setParams($form_params);
     }
 
-    public static function handleStreamUpload(array $params, \Flexio\IFace\IStreamWriter $streamwriter, string &$filename, string &$mime_type) : void
+    public static function handleStreamUpload($php_stream_handle, string $post_content_type, array $params, \Flexio\IFace\IStreamWriter $streamwriter, string &$filename, string &$mime_type) : void
     {
         // function for writing input from the php input stream to a flexio stream
 
+        // example use:
+        // $php_stream_handle = \Flexio\System\System::openPhpInputStream();
+        // $post_content_type = \Flexio\System\System::getPhpInputStreamContentType();
+        // $outstream = \Flexio\Base\Stream::create();
+        // $outfilename = '';
+        // $outmimetype = '';
+        // \Flexio\Base\StreamUtil::handleStreamUpload($php_stream_handle, $post_content_type, array('filename_hint' => 'upload.csv'), $outstream, $outfilename, $outmimetype);
+
         $filename = '';
         $mime_type = '';
-
-        // get the information the parser needs to parse the content
-        $post_content_type = \Flexio\System\System::getPhpInputStreamContentType();
+        $determined_mime_type = $post_content_type; // start off with the declared mime type
 
         if (strpos($post_content_type, 'multipart/form-data') !== false)
         {
-            // multipart form-data upload
-            $php_stream_handle = \Flexio\System\System::openPhpInputStream();
-
             // parse the content and set the stream info
             $part_data_snippet = false;
             $part_filename = false;
@@ -251,7 +254,7 @@ class StreamUtil
 
             // sense the mime type, but go with what is declared if it's available
             $mime_type = \Flexio\Base\ContentType::STREAM;
-            $declared_mime_type = $part_mimetype;
+            $determined_mime_type = $part_mimetype;
 
             if ($part_data_snippet === false)
                 $part_data_snippet = '';
@@ -260,8 +263,6 @@ class StreamUtil
         }
          else
         {
-            $declared_mime_type = \Flexio\System\System::getPhpInputStreamContentType();
-            $php_stream_handle = \Flexio\System\System::openPhpInputStream();
             $part_data_snippet = false;
 
             while (true)
@@ -284,7 +285,6 @@ class StreamUtil
             $filename_hint = $_GET['filename_hint'] ?? $filename;
         }
 
-
         if (isset($_GET['filename_hint']))
         {
             // a hint filename was passed -- use that to try to determine the content type
@@ -293,13 +293,13 @@ class StreamUtil
         else
         {
             // use the Content-Type header passed to us
-            if ($declared_mime_type == "application/x-www-form-urlencoded")
-                $declared_mime_type = "application/octet-stream";
+            if ($determined_mime_type == "application/x-www-form-urlencoded")
+                $determined_mime_type = "application/octet-stream";
 
-            if (strlen($declared_mime_type) == 0 || $declared_mime_type == "autosense")
+            if (strlen($determined_mime_type) == 0 || $determined_mime_type == "autosense")
                 $mime_type = \Flexio\Base\ContentType::getMimeType($filename_hint, $part_data_snippet);
                     else
-                $mime_type = $declared_mime_type;
+                $mime_type = $determined_mime_type;
         }
     }
 }
