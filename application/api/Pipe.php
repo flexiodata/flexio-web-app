@@ -370,7 +370,7 @@ class Pipe
         // parse the request content and set the stream info
         $php_stream_handle = \Flexio\System\System::openPhpInputStream();
         $post_content_type = \Flexio\System\System::getPhpInputStreamContentType();
-         \Flexio\Base\StreamUtil::addProcessInputFromStream($php_stream_handle, $post_content_type, $process_engine);
+        \Flexio\Api\ProcessHandler::addProcessInputFromStream($php_stream_handle, $post_content_type, $process_engine);
 
         // run the process
         $process_host->run(false /*true: run in background*/);
@@ -495,7 +495,7 @@ class Pipe
         // parse the request content and set the stream info
         $php_stream_handle = \Flexio\System\System::openPhpInputStream();
         $post_content_type = \Flexio\System\System::getPhpInputStreamContentType();
-         \Flexio\Base\StreamUtil::addProcessInputFromStream($php_stream_handle, $post_content_type, $process_engine);
+        \Flexio\Api\ProcessHandler::addProcessInputFromStream($php_stream_handle, $post_content_type, $process_engine);
 
         // run the process
         $process_host->run(false /*true: run in background*/);
@@ -621,7 +621,7 @@ class Pipe
         // parse the request content and set the stream info
         $php_stream_handle = \Flexio\System\System::openPhpInputStream();
         $post_content_type = \Flexio\System\System::getPhpInputStreamContentType();
-        \Flexio\Base\StreamUtil::addProcessInputFromStream($php_stream_handle, $post_content_type, $process_engine);
+        \Flexio\Api\ProcessHandler::addProcessInputFromStream($php_stream_handle, $post_content_type, $process_engine);
 
         // run the process in the background
         $process_host->run(true /*true: run in background*/);
