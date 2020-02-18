@@ -188,6 +188,8 @@ class StreamUtil
 
     public static function handleStreamUpload(array $params, \Flexio\IFace\IStreamWriter $streamwriter, string &$filename, string &$mime_type) : void
     {
+        // function for writing input from the php input stream to a flexio stream
+
         $filename = '';
         $mime_type = '';
 
