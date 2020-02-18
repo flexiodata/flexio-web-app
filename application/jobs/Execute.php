@@ -976,11 +976,11 @@ class ScriptHost
         {
             $value = $v->getReader()->read(PHP_INT_MAX); // get all the contents; read() takes a default parameter that limits read size
 
-            // these variables may include mount parameters; these can be
-            // normal string key/values, or in one case, a key with a json-encoded
-            // value that contains connection info; these parameters have a special
-            // mime type, and we want to decode the json so it gets passed on to the
-            // script as a dictionary object; see \Flexio\Jobs\ProcessHost::getMountParams()
+            // these variables may include mount parameters; these can be normal
+            // string key/values, or in one case, a key with a json-encoded value
+            // that contains connection info; these parameters have a special mime
+            // type, and we want to decode the json so it gets passed on to the script
+            // as a dictionary object; see \Flexio\Api\ProcessHandler::addMountParams()
             $mime_type = $v->getMimeType();
             if ($mime_type === \Flexio\Base\ContentType::FLEXIO_CONNECTION_INFO)
                 $value = @json_decode($value, true);
