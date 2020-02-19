@@ -402,6 +402,8 @@
           markdown += '`' + p.name + '`|' + p.type + '|' + p.description
           if (show_required) {
             markdown += '|' + (p.required ? 'true' : 'false') + '\n'
+          } else {
+            markdown += '\n'
           }
         })
 
