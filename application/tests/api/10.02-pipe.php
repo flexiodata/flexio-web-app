@@ -235,6 +235,7 @@ class Test
                 "description": "Test Pipe Description Updated",
                 "examples": ["e1", "e2", "e3"],
                 "params": ["p1", "p2", "p3"],
+                "returns": ["r1", "r2", "r3"],
                 "notes": "Test Pipe Notes Updated",
                 "task": {
                     "op": "echo"
@@ -273,6 +274,7 @@ class Test
             "description": "Test Pipe Description Updated",
             "examples": ["e1", "e2", "e3"],
             "params": ["p1", "p2", "p3"],
+            "returns": ["r1", "r2", "r3"],
             "notes": "Test Pipe Notes Updated",
             "task": {
                 "op": "echo"

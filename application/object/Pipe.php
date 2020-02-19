@@ -84,13 +84,17 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             $properties['task'] = json_encode($properties['task']);
         }
 
-        // if the examples is set, encode it as JSON for storage
+        // if the examples value is set, encode it as JSON for storage
         if (isset($properties) && isset($properties['examples']))
             $properties['examples']= json_encode($properties['examples']);
 
-        // if the examples is set, encode it as JSON for storage
+        // if the params value is set, encode it as JSON for storage
         if (isset($properties) && isset($properties['params']))
             $properties['params']= json_encode($properties['params']);
+
+        // if the returns value is set, encode it as JSON for storage
+        if (isset($properties) && isset($properties['returns']))
+            $properties['returns']= json_encode($properties['returns']);
 
         // if the deploy mode is set, make sure it's valid; otherwise default to 'build'
         if (isset($properties) && isset($properties['deploy_mode']))
@@ -200,13 +204,17 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             $properties['task'] = json_encode($properties['task']);
         }
 
-        // if the examples is set, encode it as JSON for storage
+        // if the examples value is set, encode it as JSON for storage
         if (isset($properties) && isset($properties['examples']))
             $properties['examples']= json_encode($properties['examples']);
 
-        // if the examples is set, encode it as JSON for storage
+        // if the examples value is set, encode it as JSON for storage
         if (isset($properties) && isset($properties['params']))
             $properties['params']= json_encode($properties['params']);
+
+        // if the returns value is set, encode it as JSON for storage
+        if (isset($properties) && isset($properties['returns']))
+            $properties['returns']= json_encode($properties['returns']);
 
         // if the deploy mode is set, make sure it's valid; otherwise default to 'build'
         if (isset($properties) && isset($properties['deploy_mode']))
@@ -406,6 +414,7 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "description" => null,
                 "examples" => null,
                 "params" => null,
+                "returns" => null,
                 "notes" => null,
                 "task" => null,
                 "schedule" => null,
@@ -451,6 +460,11 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $params = @json_decode($mapped_properties['params'],true);
         if ($params !== false)
             $mapped_properties['params'] = $params;
+
+        // unpack the returns json
+        $returns = @json_decode($mapped_properties['returns'],true);
+        if ($returns !== false)
+            $mapped_properties['returns'] = $returns;
 
         // unpack the schedule json
         $schedule = @json_decode($mapped_properties['schedule'],true);

@@ -236,6 +236,8 @@ class Test
             },
             "params": {
             },
+            "returns": {
+            },
             "notes": null,
             "task" : {
             },

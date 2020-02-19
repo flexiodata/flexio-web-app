@@ -88,6 +88,7 @@ class Test
                 "description": "Test Pipe Description",
                 "examples": ["e1", "e2", "e3"],
                 "params": ["p1", "p2", "p3"],
+                "returns": ["r1", "r2", "r3"],
                 "notes": "Test Pipe Notes",
                 "task": {
                     "op": "echo"
@@ -125,6 +126,7 @@ class Test
             "description": "Test Pipe Description",
             "examples": ["e1", "e2", "e3"],
             "params": ["p1", "p2", "p3"],
+            "returns": ["r1", "r2", "r3"],
             "notes": "Test Pipe Notes",
             "task": {
                 "op": "echo"
