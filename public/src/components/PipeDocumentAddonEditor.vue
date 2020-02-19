@@ -60,6 +60,38 @@
             v-model="edit_pipe.description"
           />
         </el-form-item>
+        <el-form-item label="Sample Usage">
+          <div
+            class="mv2"
+            :item="item"
+            :index="index"
+            :key="index"
+            v-for="(item, index) in examples"
+          >
+            <div class="flex flex-row items-center">
+              <el-input
+                size="small"
+                auto-complete="off"
+                spellcheck="false"
+                :placeholder="params_syntax_str"
+                @input="onExampleItemChange"
+                v-model="examples[index]"
+              >
+                <template slot="prepend">{{syntax_prefix_str}}{{examples[index].trim().length > 0 ? ',' : '&nbsp;'}}</template>
+                <template slot="append">)</template>
+              </el-input>
+              <div
+                class="ml2 pointer f3 black-30 hover-black-60"
+                style="line-height: 1"
+                :class="index >= examples.length-1 ? 'o-0 no-pointer-events' : ''"
+                @click="removeExample(index)"
+
+              >
+                &times;
+              </div>
+            </div>
+          </div>
+        </el-form-item>
         <el-form-item label="Parameters">
           <div
             class="mv2"
@@ -72,7 +104,7 @@
               <el-input
                 size="small"
                 style="line-height: normal; width: 25%"
-                placeholder="Property"
+                placeholder="Name"
                 auto-complete="off"
                 spellcheck="false"
                 @input="onParamItemChange"
@@ -116,31 +148,48 @@
             </div>
           </div>
         </el-form-item>
-        <el-form-item label="Sample Usage">
+        <el-form-item label="Returns">
           <div
             class="mv2"
             :item="item"
             :index="index"
             :key="index"
-            v-for="(item, index) in examples"
+            v-for="(item, index) in returns"
           >
             <div class="flex flex-row items-center">
               <el-input
                 size="small"
+                style="line-height: normal; width: 25%"
+                placeholder="Name"
                 auto-complete="off"
                 spellcheck="false"
-                :placeholder="params_syntax_str"
-                @input="onExampleItemChange"
-                v-model="examples[index]"
-              >
-                <template slot="prepend">{{syntax_prefix_str}}{{examples[index].trim().length > 0 ? ',' : '&nbsp;'}}</template>
-                <template slot="append">)</template>
-              </el-input>
+                @input="onReturnsItemChange"
+                v-model="returns[index].name"
+              />
+              <el-input
+                class="ml2"
+                style="line-height: normal; width: 20%"
+                size="small"
+                placeholder="Type"
+                auto-complete="off"
+                spellcheck="false"
+                @input="onReturnsItemChange"
+                v-model="returns[index].type"
+              />
+              <el-input
+                class="ml2"
+                style="line-height: normal; width: 55%"
+                size="small"
+                placeholder="Description"
+                auto-complete="off"
+                @input="onReturnsItemChange"
+                v-model="returns[index].description"
+              />
               <div
-                class="ml2 pointer f3 black-30 hover-black-60"
+                class="ml3 pointer f3 black-30 hover-black-60"
                 style="line-height: 1"
-                :class="index >= examples.length-1 ? 'o-0 no-pointer-events' : ''"
-                @click="removeExample(index)"
+                :class="index >= returns.length-1 ? 'o-0 no-pointer-events' : ''"
+                @click="removeReturns(index)"
 
               >
                 &times;
@@ -202,10 +251,12 @@
       <div v-html="html_description"></div>
       <h3>Syntax</h3>
       <p><code>{{syntax_str}}</code></p>
-      <h3>Parameters</h3>
-      <div v-html="html_params"></div>
       <h3>Sample Usage</h3>
       <div v-html="html_examples"></div>
+      <h3>Parameters</h3>
+      <div v-html="html_params"></div>
+      <h3>Returns</h3>
+      <div v-html="html_returns"></div>
       <h3>Notes</h3>
       <div v-html="html_notes"></div>
     </div>
@@ -227,15 +278,21 @@
         description: '',
         notes: '',
         params: [],
+        returns: [],
         examples: [],
       },
       params: [],
+      returns: [],
       examples: [],
     }
   }
 
   const newParam = (param) => {
     return _.assign({ name: '', type: '', description: '', required: true }, param)
+  }
+
+  const newReturns = (returns) => {
+    return _.omit(newParam(returns), ['required'])
   }
 
   // make sure 'gfm' and 'breaks' are both set to true
@@ -305,17 +362,10 @@
         return marked(this.edit_pipe.notes)
       },
       html_params() {
-        if (this.edit_pipe.params.length == 0) {
-          return ''
-        }
-
-        var markdown = '' +
-          'Property|Type|Description|Required\n' +
-          '--------|----|-----------|--------\n'
-        _.each(this.edit_pipe.params, p => {
-          markdown += '`' + p.name + '`|' + p.type + '|' + p.description + '|' + (p.required ? 'true' : 'false') + '\n'
-        })
-        return marked(markdown)
+        return this.buildTable(this.edit_pipe.params, true)
+      },
+      html_returns() {
+        return this.buildTable(this.edit_pipe.returns, false)
       },
       html_examples() {
         var examples = _.map(this.edit_pipe.examples, example => getSyntaxStr(this.active_team_name, this.pipe.name, example) )
@@ -334,14 +384,38 @@
         // reset local objects
         this.edit_pipe = _.assign({}, this.edit_pipe, _.cloneDeep(this.pipe))
         this.params = [].concat(this.edit_pipe.params).concat(newParam())
+        this.returns = [].concat(this.edit_pipe.returns).concat(newReturns())
         this.examples = [].concat(this.edit_pipe.examples).concat('')
 
         this.$emit('update:isEditing', false)
+      },
+      buildTable(arr, show_required) {
+        if (arr.length == 0) {
+          return ''
+        }
+
+        var markdown = '' +
+          'Property|Type|Description' + (show_required ? '|Required\n' : '\n') +
+          '--------|----|-----------' + (show_required ? '|--------\n' : '\n')
+
+        _.each(arr, p => {
+          markdown += '`' + p.name + '`|' + p.type + '|' + p.description
+          if (show_required) {
+            markdown += '|' + (p.required ? 'true' : 'false') + '\n'
+          }
+        })
+
+        return marked(markdown)
       },
       removeParam(index) {
         var params = _.cloneDeep(this.params)
         _.pullAt(params, [index])
         this.params = params
+      },
+      removeReturns(index) {
+        var returns = _.cloneDeep(this.returns)
+        _.pullAt(returns, [index])
+        this.returns = returns
       },
       removeExample(index) {
         var examples = _.cloneDeep(this.examples)
@@ -354,6 +428,12 @@
           this.params = [].concat(arr).concat(newParam())
         }
       },
+      onReturnsItemChange() {
+        var arr = this.returns
+        if (arr.length > 0 && arr[arr.length-1].name.length > 0) {
+          this.returns = [].concat(arr).concat(newReturns())
+        }
+      },
       onExampleItemChange() {
         var arr = this.examples
         if (arr.length > 0 && arr[arr.length-1].length > 0) {
@@ -361,18 +441,25 @@
         }
       },
       onSaveClick() {
-        var edit_attrs = _.pick(this.edit_pipe, ['title', 'description', 'notes', 'params', 'examples'])
+        var edit_attrs = _.pick(this.edit_pipe, ['title', 'description', 'notes', 'params', 'returns', 'examples'])
+
+        // remove ghost row example
+        edit_attrs.examples = this.examples
+        edit_attrs.examples.pop()
 
         // remove ghost row param
         edit_attrs.params = this.params
         edit_attrs.params.pop()
 
-        // don't allow parameters that don't have a name
-        _.remove(edit_attrs.params, param => param.name.length == 0)
+        // remove ghost row returns
+        edit_attrs.returns = this.returns
+        edit_attrs.returns.pop()
 
-        // remove ghost row example
-        edit_attrs.examples = this.examples
-        edit_attrs.examples.pop()
+        // don't allow parameters that don't have a name
+        _.remove(edit_attrs.params, obj => obj.name.length == 0)
+
+        // don't allow returns that don't have a name
+        _.remove(edit_attrs.returns, obj => obj.name.length == 0)
 
         this.$emit('save-click', edit_attrs, this.pipe)
       },
