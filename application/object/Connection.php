@@ -525,6 +525,7 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             $pipe_description = $pipe_info_from_content['description'] ?? '';
             $pipe_examples = $pipe_info_from_content['examples'] ?? [];
             $pipe_funcparams = $pipe_info_from_content['params'] ?? [];
+            $pipe_funcreturns = $pipe_info_from_content['returns'] ?? [];
             $pipe_notes = $pipe_info_from_content['notes'] ?? '';
 
             // set basic pipe info
@@ -536,6 +537,7 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             $pipe_params['description'] = $pipe_description;
             $pipe_params['examples'] = $pipe_examples;
             $pipe_params['params'] = $pipe_funcparams;
+            $pipe_params['returns'] = $pipe_funcreturns;
             $pipe_params['notes'] = $pipe_notes;
             $pipe_params['deploy_mode'] = $pipe_deployed ? \Model::PIPE_DEPLOY_MODE_RUN : \Model::PIPE_DEPLOY_MODE_BUILD;
             $pipe_params['deploy_api'] = \Model::PIPE_DEPLOY_STATUS_ACTIVE;

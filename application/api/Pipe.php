@@ -77,7 +77,7 @@ class Pipe
 
         // get the pipe properties
         $properties = $pipe->get();
-        $result = self::cleanProperties($properties);
+        $result = self::cleanProperties($properties, $request);
         $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
@@ -107,7 +107,7 @@ class Pipe
         $pipe->delete();
 
         $properties = $pipe->get();
-        $result = self::cleanProperties($properties);
+        $result = self::cleanProperties($properties, $request);
         $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
@@ -160,7 +160,7 @@ class Pipe
         {
             $pipe->delete();
             $properties = $pipe->get();
-            $result[] = self::cleanProperties($properties);
+            $result[] = self::cleanProperties($properties, $request);
         }
 
         // send the response
@@ -218,7 +218,7 @@ class Pipe
         $pipe->set($validated_post_params);
 
         $properties = $pipe->get();
-        $result = self::cleanProperties($properties);
+        $result = self::cleanProperties($properties, $request);
         $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
@@ -245,7 +245,7 @@ class Pipe
 
         // get the properties
         $properties = $pipe->get();
-        $result = self::cleanProperties($properties);
+        $result = self::cleanProperties($properties, $request);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api\Response::sendContent($result);
     }
@@ -291,7 +291,7 @@ class Pipe
             // content from a separate call; leave in pipe item get() function
             unset($properties['task']);
 
-            $result[] = self::cleanProperties($properties);
+            $result[] = self::cleanProperties($properties, $request);
         }
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
@@ -706,7 +706,7 @@ class Pipe
         }
     }
 
-    private static function cleanProperties(array $properties) : array
+    private static function cleanProperties(array $properties, \Flexio\Api\Request $request) : array
     {
         if (isset($properties['task']) && count($properties['task']) === 0)
             $properties['task'] = (object)$properties['task'];
@@ -714,6 +714,30 @@ class Pipe
         if (isset($properties['task']) && is_array($properties['task']))
         {
             self::doTaskCasting($properties['task']);
+        }
+
+        // TODO: remove when add-ons are migrated
+        // if we're in interface mode, return the pipe 'returns' and 'notes' as-is;
+        // for all other modes, if the returns are populated, override the notes;
+        // this is necessary because the add-ons currently use the notes to display
+        // the information that a function returns; this let's us continue to use
+        // the notes area until the add-ons, but migrate the return values from the
+        // notes to the returns field for each of the integrations
+        $triggered_by = strlen($request->getToken()) > 0 ? \Model::PROCESS_TRIGGERED_API : \Model::PROCESS_TRIGGERED_INTERFACE;
+        if ($triggered_by !== \Model::PROCESS_TRIGGERED_INTERFACE)
+        {
+            if (is_array($properties['returns']) && count($properties['returns']) > 0)
+            {
+                $returns_in_string_format = "The following properties are allowed:\n";
+                foreach ($properties['returns'] as $r)
+                {
+                    $name = $r['name'];
+                    $description = $r['description'];
+                    $returns_in_string_format .= " * `$name`: $description\n";
+                }
+
+                $properties['notes'] = $returns_in_string_format;
+            }
         }
 
         return $properties;
