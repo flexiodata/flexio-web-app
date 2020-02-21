@@ -602,6 +602,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         switch ($structure_type)
         {
             default:
+            case \Flexio\Base\Structure::TYPE_STRING:
             case \Flexio\Base\Structure::TYPE_TEXT:
             case \Flexio\Base\Structure::TYPE_CHARACTER:
             case \Flexio\Base\Structure::TYPE_WIDECHARACTER:
