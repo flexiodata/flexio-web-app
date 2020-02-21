@@ -199,6 +199,7 @@ class Model
     public const CONNECTION_TYPE_CAPSULECRM         = 'capsulecrm';
     public const CONNECTION_TYPE_HUBSPOT            = 'hubspot';
     public const CONNECTION_TYPE_EVENTBRITE         = 'eventbrite';
+    public const CONNECTION_TYPE_BIGCOMMERCE        = 'bigcommerce';
 
     private $objs = array();
     private $database = null;

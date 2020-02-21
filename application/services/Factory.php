@@ -47,6 +47,7 @@ class Factory
         \Model::CONNECTION_TYPE_CAPSULECRM          => '\Flexio\Services\CapsuleCRM',
         \Model::CONNECTION_TYPE_HUBSPOT             => '\Flexio\Services\HubSpot',
         \Model::CONNECTION_TYPE_EVENTBRITE          => '\Flexio\Services\Eventbrite',
+        \Model::CONNECTION_TYPE_BIGCOMMERCE         => '\Flexio\Services\BigCommerce'
     );
 
     public static function create(string $connection_type, array $connection_info = array()) // TODO: add return type

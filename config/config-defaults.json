@@ -46,6 +46,9 @@
     "ses_access_key": "",
     "ses_secret_key": "",
 
+    "bigcommerce_client_id": "",
+    "bigcommerce_client_secret": "",
+
     "box_client_id": "",
     "box_client_secret": "",
 

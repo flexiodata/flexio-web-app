@@ -529,5 +529,10 @@ class Test
         $actual = \Model::CONNECTION_TYPE_EVENTBRITE;
         $expected = 'eventbrite';
         \Flexio\Tests\Check::assertString('K.29', 'Type constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Model::CONNECTION_TYPE_BIGCOMMERCE;
+        $expected = 'bigcommerce';
+        \Flexio\Tests\Check::assertString('K.30', 'Type constant',  $actual, $expected, $results);
     }
 }
