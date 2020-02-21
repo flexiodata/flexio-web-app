@@ -601,8 +601,8 @@ class Pipe
         $process_store = \Flexio\Object\Process::create($process_properties);
         $process_engine = \Flexio\Jobs\Process::create();
 
-        // EXPERIMENTAL for elasticsearch load: get the structure from the notes
-        $structure = $pipe_properties['notes'];
+        // get the structure from the pipe returns info
+        $structure = $pipe_properties['returns'];
         $structure = json_decode($structure, true);
         $elastic_search_params = array(
             'parent_eid' => $pipe_properties['eid'],

@@ -197,7 +197,7 @@ class ProcessHandler
             while (($row = $streamreader->readRow()) !== false)
                 $streamwriter->write($row);
         }
-            else
+         else
         {
             while (($data = $streamreader->read(32768)) !== false)
                 $streamwriter->write($data);
