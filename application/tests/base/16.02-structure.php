@@ -432,13 +432,13 @@ class Test
         // BEGIN TEST
         $column_info = json_decode('
         [
-            {"name":"field1", "type":"text"}
+            {"name":"field1", "type":"string"}
         ]
         ',true);
         $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
-            {"name":"field1", "type":"text"}
+            {"name":"field1", "type":"string"}
         ]
         ';
         \Flexio\Tests\Check::assertInArray('D.5', 'Structure::create(); if type is populated, make sure it\'s one of the allowed types',  $actual, $expected, $results);
@@ -446,13 +446,13 @@ class Test
         // BEGIN TEST
         $column_info = json_decode('
         [
-            {"name":"field1", "type":"character"}
+            {"name":"field1", "type":"text"}
         ]
         ',true);
         $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
-            {"name":"field1", "type":"character"}
+            {"name":"field1", "type":"text"}
         ]
         ';
         \Flexio\Tests\Check::assertInArray('D.6', 'Structure::create(); if type is populated, make sure it\'s one of the allowed types',  $actual, $expected, $results);
@@ -460,13 +460,13 @@ class Test
         // BEGIN TEST
         $column_info = json_decode('
         [
-            {"name":"field1", "type":"widecharacter"}
+            {"name":"field1", "type":"character"}
         ]
         ',true);
         $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
-            {"name":"field1", "type":"widecharacter"}
+            {"name":"field1", "type":"character"}
         ]
         ';
         \Flexio\Tests\Check::assertInArray('D.7', 'Structure::create(); if type is populated, make sure it\'s one of the allowed types',  $actual, $expected, $results);
@@ -474,13 +474,13 @@ class Test
         // BEGIN TEST
         $column_info = json_decode('
         [
-            {"name":"field1", "type":"numeric"}
+            {"name":"field1", "type":"widecharacter"}
         ]
         ',true);
         $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
-            {"name":"field1", "type":"numeric"}
+            {"name":"field1", "type":"widecharacter"}
         ]
         ';
         \Flexio\Tests\Check::assertInArray('D.8', 'Structure::create(); if type is populated, make sure it\'s one of the allowed types',  $actual, $expected, $results);
@@ -488,13 +488,13 @@ class Test
         // BEGIN TEST
         $column_info = json_decode('
         [
-            {"name":"field1", "type":"double"}
+            {"name":"field1", "type":"numeric"}
         ]
         ',true);
         $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
-            {"name":"field1", "type":"double"}
+            {"name":"field1", "type":"numeric"}
         ]
         ';
         \Flexio\Tests\Check::assertInArray('D.9', 'Structure::create(); if type is populated, make sure it\'s one of the allowed types',  $actual, $expected, $results);
@@ -502,13 +502,13 @@ class Test
         // BEGIN TEST
         $column_info = json_decode('
         [
-            {"name":"field1", "type":"integer"}
+            {"name":"field1", "type":"double"}
         ]
         ',true);
         $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
-            {"name":"field1", "type":"integer"}
+            {"name":"field1", "type":"double"}
         ]
         ';
         \Flexio\Tests\Check::assertInArray('D.10', 'Structure::create(); if type is populated, make sure it\'s one of the allowed types',  $actual, $expected, $results);
@@ -516,13 +516,13 @@ class Test
         // BEGIN TEST
         $column_info = json_decode('
         [
-            {"name":"field1", "type":"date"}
+            {"name":"field1", "type":"integer"}
         ]
         ',true);
         $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
-            {"name":"field1", "type":"date"}
+            {"name":"field1", "type":"integer"}
         ]
         ';
         \Flexio\Tests\Check::assertInArray('D.11', 'Structure::create(); if type is populated, make sure it\'s one of the allowed types',  $actual, $expected, $results);
@@ -530,6 +530,20 @@ class Test
         // BEGIN TEST
         $column_info = json_decode('
         [
+            {"name":"field1", "type":"date"}
+        ]
+        ',true);
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
+        $expected = '
+        [
+            {"name":"field1", "type":"date"}
+        ]
+        ';
+        \Flexio\Tests\Check::assertInArray('D.12', 'Structure::create(); if type is populated, make sure it\'s one of the allowed types',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $column_info = json_decode('
+        [
             {"name":"field1", "type":"datetime"}
         ]
         ',true);
@@ -539,7 +553,7 @@ class Test
             {"name":"field1", "type":"datetime"}
         ]
         ';
-        \Flexio\Tests\Check::assertInArray('D.12', 'Structure::create(); if type is populated, make sure it\'s one of the allowed types',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.13', 'Structure::create(); if type is populated, make sure it\'s one of the allowed types',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -553,7 +567,7 @@ class Test
             {"name":"field1", "type":"boolean"}
         ]
         ';
-        \Flexio\Tests\Check::assertInArray('D.13', 'Structure::create(); if type is populated, make sure it\'s one of the allowed types',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.14', 'Structure::create(); if type is populated, make sure it\'s one of the allowed types',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -567,7 +581,7 @@ class Test
             {"name":"field1", "type":"character"}
         ]
         ';
-        \Flexio\Tests\Check::assertInArray('D.14', 'Structure::create(); type parameter should be case-insensitive and converted to a lowercase value',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.15', 'Structure::create(); type parameter should be case-insensitive and converted to a lowercase value',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -581,7 +595,7 @@ class Test
             {"name":"field1", "type":"date"}
         ]
         ';
-        \Flexio\Tests\Check::assertInArray('D.15', 'Structure::create(); type parameter should be case-insensitive and converted to a lowercase value',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.16', 'Structure::create(); type parameter should be case-insensitive and converted to a lowercase value',  $actual, $expected, $results);
 
 
 

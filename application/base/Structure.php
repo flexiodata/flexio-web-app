@@ -20,6 +20,7 @@ class Structure
 {
     // column types
     public const TYPE_INVALID = '';
+    public const TYPE_STRING = 'string'; // alias for text that's compatible with JSON and common API convention for specifying text
     public const TYPE_TEXT = 'text';
     public const TYPE_CHARACTER = 'character';
     public const TYPE_WIDECHARACTER = 'widecharacter';
@@ -166,6 +167,7 @@ class Structure
             default:
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
+            case self::TYPE_STRING:
             case self::TYPE_TEXT:
             case self::TYPE_CHARACTER:
             case self::TYPE_WIDECHARACTER:
@@ -181,6 +183,7 @@ class Structure
         // adjust the width so it is reasonable for the specified type
         switch ($column_entry['type'])
         {
+            case self::TYPE_STRING:
             case self::TYPE_TEXT:
                 $column_entry['width'] = null;
                 break;
@@ -222,6 +225,7 @@ class Structure
         // adjust the scale so it is reasonable for the specified type
         switch ($column_entry['type'])
         {
+            case self::TYPE_STRING:
             case self::TYPE_TEXT:
             case self::TYPE_CHARACTER:
             case self::TYPE_WIDECHARACTER:
@@ -532,6 +536,7 @@ class Structure
             default:
                 return false;
 
+            case self::TYPE_STRING:
             case self::TYPE_TEXT:
             case self::TYPE_CHARACTER:
             case self::TYPE_WIDECHARACTER:
