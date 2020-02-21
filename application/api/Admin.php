@@ -167,7 +167,37 @@ class Admin
         $result = array();
         foreach ($actions as $a)
         {
-            $result[] = $a->get();
+            $action_info = $a->get();
+
+            try
+            {
+                $user_eid = $action_info['request_created_by'] ?? false;
+                if ($user_eid !== false)
+                {
+                    if (!isset($user_cache[$user_eid]))
+                    {
+                        $user = \Flexio\Object\User::load($user_eid);
+                        $u = $user->get();
+
+                        $user_info = array();
+                        $user_info['eid'] = $u['eid'] ?? '';
+                        $user_info['username'] = $u['username'] ?? '';
+                        $user_info['email'] = $u['email'] ?? '';
+                        $user_info['first_name'] = $u['first_name'] ?? '';
+                        $user_info['last_name'] = $u['last_name'] ?? '';
+                        $user_info['created'] = $u['created'] ?? '';
+
+                        $user_cache[$user_eid] = $user_info;
+                    }
+
+                    $action_info['request_created_by'] = $user_cache[$user_eid];
+                }
+            }
+            catch (\Flexio\Base\Exception $e)
+            {
+            }
+
+            $result[] = $action_info;
         }
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
