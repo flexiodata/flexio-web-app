@@ -198,9 +198,12 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         $url = $this->getHostUrlString() . '/_stats';
         $auth = $this->getBasicAuthString();
 
+        $headers = array();
+        $headers[] = 'Authorization: Basic ' . $auth;
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
-        // curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Basic '. $auth]); // disable authorization header for public test
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_HTTPGET, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
@@ -246,11 +249,13 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             $auth = $this->getBasicAuthString();
             $content_type = 'application/json';
 
-            $ch = curl_init();
+            $headers = array();
+            $headers[] = 'Authorization: Basic ' . $auth;
+            $headers[] = 'Content-Type: ' . $content_type;
 
+            $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
-            //curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Basic '. $auth, 'Content-Type: '. $content_type ]); // disable authorization header for public test
-            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: '. $content_type ]);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
@@ -349,11 +354,13 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             $auth = $this->getBasicAuthString();
             $content_type = 'application/json';
 
-            $ch = curl_init();
+            $headers = array();
+            $headers[] = 'Authorization: Basic ' . $auth;
+            $headers[] = 'Content-Type: ' . $content_type;
 
+            $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
-            //curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Basic '. $auth, 'Content-Type: '. $content_type ]); // disable authorization header for public test
-            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: '. $content_type ]);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
             //curl_setopt($ch, CURLOPT_POSTFIELDS, $index_mapping_info_string);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -401,11 +408,13 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             $auth = $this->getBasicAuthString();
             $content_type = 'application/x-ndjson'; // use ndjson for bulk operations
 
-            $ch = curl_init();
+            $headers = array();
+            $headers[] = 'Authorization: Basic ' . $auth;
+            $headers[] = 'Content-Type: ' . $content_type;
 
+            $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
-            //curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Basic '. $auth, 'Content-Type: '. $content_type ]); // disable authorization header for public test
-            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: '. $content_type ]);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $index_write_string);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -443,11 +452,13 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             $auth = $this->getBasicAuthString();
             $content_type = 'application/json';
 
-            $ch = curl_init();
+            $headers = array();
+            $headers[] = 'Authorization: Basic ' . $auth;
+            $headers[] = 'Content-Type: ' . $content_type;
 
+            $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
-            //curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Basic '. $auth, 'Content-Type: '. $content_type ]); // disable authorization header for public test
-            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: '. $content_type ]);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $index_write_string);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -494,10 +505,12 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             $url = $this->getHostUrlString();
             $auth = $this->getBasicAuthString();
 
-            $ch = curl_init();
+            $headers = array();
+            $headers[] = 'Authorization: Basic ' . $auth;
 
+            $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
-            //curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Basic '. $auth]); // disable authorization header for public test
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             curl_setopt($ch, CURLOPT_HTTPGET, true);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
@@ -552,10 +565,12 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             $url = $this->getHostUrlString();
             $auth = $this->getBasicAuthString();
 
-            $ch = curl_init();
+            $headers = array();
+            $headers[] = 'Authorization: Basic ' . $auth;
 
+            $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
-            //curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Basic '. $auth]); // disable authorization header for public test
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             curl_setopt($ch, CURLOPT_HTTPGET, true);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
@@ -589,7 +604,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
     private function getHostUrlString() : string
     {
-        return 'https://' . $this->host . ':' . (string)$this->port;
+        return 'http://' . $this->host . ':' . (string)$this->port;
     }
 
     private function getBasicAuthString() : string
