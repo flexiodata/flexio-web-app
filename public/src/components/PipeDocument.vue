@@ -53,7 +53,7 @@
           <el-checkbox
             v-model="is_run_mode_cache"
           >
-            Cache values
+            Cache output values
           </el-checkbox>
         </div>
       </div>
