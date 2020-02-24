@@ -186,6 +186,9 @@
   const DEPLOY_MODE_BUILD     = 'B'
   const DEPLOY_MODE_RUN       = 'R'
 
+  const RUN_MODE_PASS_THROUGH = 'P'
+  const RUN_MODE_CACHE        = 'I' /* index mode */
+
   export default {
     props: {
       pipeEid: {
