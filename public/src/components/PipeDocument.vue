@@ -14,37 +14,48 @@
       class="pipe-header flex flex-row"
       :class="is_task_editing || is_addon_editing ? 'o-40 no-pointer-events no-select' : ''"
     >
-      <div class="flex-fill flex flex-row items-center">
-        <div class="f3 fw6 lh-title">{{pipe.name}}</div>
-        <LabelSwitch
-          class="ml3 hint--bottom"
-          active-color="#13ce66"
-          :aria-label="is_deployed ? 'Turn function off' : 'Turn function on'"
-          :width="58"
-          v-model="is_deployed"
-          v-require-rights:pipe.update
-        />
+      <div class="flex-fill flex flex-row items-start">
+        <div class="flex flex-row items-center">
+          <div class="f3 fw6 lh-title">{{pipe.name}}</div>
+          <LabelSwitch
+            class="ml3 hint--bottom"
+            active-color="#13ce66"
+            :aria-label="is_deployed ? 'Turn function off' : 'Turn function on'"
+            :width="58"
+            v-model="is_deployed"
+            v-require-rights:pipe.update
+          />
+        </div>
       </div>
       <div class="flex-none">
-        <el-button
-          size="small"
-          class="ttu fw6"
-          style="min-width: 5rem"
-          @click="$emit('test-click')"
-          v-show="showTestButton"
-        >
-          Test
-        </el-button>
-        <el-button
-          size="small"
-          type="primary"
-          class="ttu fw6"
-          style="min-width: 5rem"
-          @click="onEditClick"
-          v-require-rights:pipe.update
-        >
-          Edit
-        </el-button>
+        <div class="tr">
+          <el-button
+            size="small"
+            class="ttu fw6"
+            style="min-width: 5rem"
+            @click="$emit('test-click')"
+            v-show="showTestButton"
+          >
+            Test
+          </el-button>
+          <el-button
+            size="small"
+            type="primary"
+            class="ttu fw6"
+            style="min-width: 5rem; margin-left: 0.5rem"
+            @click="onEditClick"
+            v-require-rights:pipe.update
+          >
+            Edit
+          </el-button>
+        </div>
+        <div class="tr mt3">
+          <el-checkbox
+            v-model="is_run_mode_cache"
+          >
+            Cache values
+          </el-checkbox>
+        </div>
       </div>
     </div>
 
@@ -251,6 +262,16 @@
           } else {
             this.deployPipe(value)
           }
+        }
+      },
+      is_run_mode_cache: {
+        get() {
+          return _.get(this.pipe, 'run_mode') == RUN_MODE_CACHE ? true : false
+        },
+        set(value) {
+          var run_mode = value === false ? RUN_MODE_PASS_THROUGH : RUN_MODE_CACHE
+          var attrs = { run_mode }
+          this.savePipe(attrs)
         }
       },
     },
