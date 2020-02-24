@@ -35,6 +35,7 @@ class Pipe extends ModelBase
                 'notes'           => array('type' => 'string', 'required' => false, 'default' => ''),
                 'task'            => array('type' => 'string', 'required' => false, 'default' => '{}'),
                 'schedule'        => array('type' => 'string', 'required' => false, 'default' => ''),
+                'run_mode'        => array('type' => 'string', 'required' => false, 'default' => \Model::PIPE_RUN_MODE_PASSTHROUGH),
                 'deploy_mode'     => array('type' => 'string', 'required' => false, 'default' => \Model::PIPE_DEPLOY_MODE_BUILD),
                 'deploy_schedule' => array('type' => 'string', 'required' => false, 'default' => \Model::PIPE_DEPLOY_STATUS_INACTIVE),
                 'deploy_email'    => array('type' => 'string', 'required' => false, 'default' => \Model::PIPE_DEPLOY_STATUS_INACTIVE),
@@ -65,6 +66,14 @@ class Pipe extends ModelBase
         $db->beginTransaction();
         try
         {
+            // TODO: migrate 'pipe_mode' to 'run_mode' or something that's more
+            // distinguishable than 'pipe_deploy'
+            if (isset($process_arr['run_mode']))
+            {
+                $process_arr['pipe_mode'] = $process_arr['run_mode'];
+                unset($process_arr['run_mode']);
+            }
+
             // make sure a name is unique within an owner and object type
             $qownedby = $db->quote($process_arr['owned_by']);
             $qname = $db->quote($process_arr['name']);
@@ -165,6 +174,7 @@ class Pipe extends ModelBase
                 'notes'           => array('type' => 'string', 'required' => false),
                 'task'            => array('type' => 'string', 'required' => false),
                 'schedule'        => array('type' => 'string', 'required' => false),
+                'run_mode'        => array('type' => 'string', 'required' => false),
                 'deploy_mode'     => array('type' => 'string', 'required' => false),
                 'deploy_schedule' => array('type' => 'string', 'required' => false),
                 'deploy_email'    => array('type' => 'string', 'required' => false),
@@ -201,6 +211,14 @@ class Pipe extends ModelBase
         $db->beginTransaction();
         try
         {
+            // TODO: migrate 'pipe_mode' to 'run_mode' or something that's more
+            // distinguishable than 'pipe_deploy'
+            if (isset($process_arr['run_mode']))
+            {
+                $process_arr['pipe_mode'] = $process_arr['run_mode'];
+                unset($process_arr['run_mode']);
+            }
+
             if (isset($params['name']) && $params['name'] !== '')
             {
                 // if an identifier is specified, make sure that it's unique within an owner and object type
@@ -275,6 +293,7 @@ class Pipe extends ModelBase
                               'notes'           => $row['notes'],
                               'task'            => $row['task'],
                               'schedule'        => $row['schedule'],
+                              'run_mode'        => $row['pipe_mode'], // TODO: migrate database name
                               'deploy_mode'     => $row['deploy_mode'],
                               'deploy_schedule' => $row['deploy_schedule'],
                               'deploy_email'    => $row['deploy_email'],

@@ -96,6 +96,22 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         if (isset($properties) && isset($properties['returns']))
             $properties['returns']= json_encode($properties['returns']);
 
+        // if the run mode is set, make sure it's valid; otherwise default to 'pass through'
+        if (isset($properties) && isset($properties['run_mode']))
+        {
+            switch ($properties['run_mode'])
+            {
+                default:
+                    $properties['run_mode'] = \Model::PIPE_RUN_MODE_PASSTHROUGH;
+                    break;
+
+                case \Model::PIPE_RUN_MODE_PASSTHROUGH:
+                case \Model::PIPE_RUN_MODE_INDEX:
+                    // leave what's there
+                    break;
+                }
+        }
+
         // if the deploy mode is set, make sure it's valid; otherwise default to 'build'
         if (isset($properties) && isset($properties['deploy_mode']))
         {
@@ -215,6 +231,22 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         // if the returns value is set, encode it as JSON for storage
         if (isset($properties) && isset($properties['returns']))
             $properties['returns']= json_encode($properties['returns']);
+
+        // if the run mode is set, make sure it's valid; otherwise default to 'pass through'
+        if (isset($properties) && isset($properties['run_mode']))
+        {
+            switch ($properties['run_mode'])
+            {
+                default:
+                    $properties['run_mode'] = \Model::PIPE_RUN_MODE_PASSTHROUGH;
+                    break;
+
+                case \Model::PIPE_RUN_MODE_PASSTHROUGH:
+                case \Model::PIPE_RUN_MODE_INDEX:
+                    // leave what's there
+                    break;
+                }
+        }
 
         // if the deploy mode is set, make sure it's valid; otherwise default to 'build'
         if (isset($properties) && isset($properties['deploy_mode']))
@@ -418,6 +450,7 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "notes" => null,
                 "task" => null,
                 "schedule" => null,
+                "run_mode" => null,
                 "deploy_mode" => null,
                 "deploy_schedule" => null,
                 "deploy_email" => null,

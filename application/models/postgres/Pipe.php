@@ -38,6 +38,7 @@ class Pipe extends ModelBase
                 'notes'           => array('type' => 'string', 'required' => false, 'default' => ''),
                 'task'            => array('type' => 'string', 'required' => false, 'default' => '{}'),
                 'schedule'        => array('type' => 'string', 'required' => false, 'default' => ''),
+                'run_mode'        => array('type' => 'string', 'required' => false, 'default' => \Model::PIPE_RUN_MODE_PASSTHROUGH),
                 'deploy_mode'     => array('type' => 'string', 'required' => false, 'default' => \Model::PIPE_DEPLOY_MODE_BUILD),
                 'deploy_schedule' => array('type' => 'string', 'required' => false, 'default' => \Model::PIPE_DEPLOY_STATUS_INACTIVE),
                 'deploy_email'    => array('type' => 'string', 'required' => false, 'default' => \Model::PIPE_DEPLOY_STATUS_INACTIVE),
@@ -67,6 +68,14 @@ class Pipe extends ModelBase
         $db = $this->getDatabase();
         try
         {
+            // TODO: migrate 'pipe_mode' to 'run_mode' or something that's more
+            // distinguishable than 'pipe_deploy'
+            if (isset($process_arr['run_mode']))
+            {
+                $process_arr['pipe_mode'] = $process_arr['run_mode'];
+                unset($process_arr['run_mode']);
+            }
+
             // create the object base
             $eid = $this->getModel()->createObjectBase(\Model::TYPE_PIPE, $process_arr);
             $timestamp = \Flexio\System\System::getTimestamp();
@@ -154,6 +163,7 @@ class Pipe extends ModelBase
                 'notes'           => array('type' => 'string', 'required' => false),
                 'task'            => array('type' => 'string', 'required' => false),
                 'schedule'        => array('type' => 'string', 'required' => false),
+                'run_mode'        => array('type' => 'string', 'required' => false),
                 'deploy_mode'     => array('type' => 'string', 'required' => false),
                 'deploy_schedule' => array('type' => 'string', 'required' => false),
                 'deploy_email'    => array('type' => 'string', 'required' => false),
@@ -189,6 +199,14 @@ class Pipe extends ModelBase
 
         try
         {
+            // TODO: migrate 'pipe_mode' to 'run_mode' or something that's more
+            // distinguishable than 'pipe_deploy'
+            if (isset($process_arr['run_mode']))
+            {
+                $process_arr['pipe_mode'] = $process_arr['run_mode'];
+                unset($process_arr['run_mode']);
+            }
+
             // set the properties
             $updates_made = $db->update('tbl_pipe', $process_arr, $filter_expr);
             return $updates_made;
@@ -237,6 +255,7 @@ class Pipe extends ModelBase
                               'notes'           => $row['notes'],
                               'task'            => $row['task'],
                               'schedule'        => $row['schedule'],
+                              'run_mode'        => $row['pipe_mode'], // TODO: migrate database name
                               'deploy_mode'     => $row['deploy_mode'],
                               'deploy_schedule' => $row['deploy_schedule'],
                               'deploy_email'    => $row['deploy_email'],

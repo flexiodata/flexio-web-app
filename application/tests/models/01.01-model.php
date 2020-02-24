@@ -223,34 +223,49 @@ class Test
         // databases
 
         // BEGIN TEST
-        $actual = \Model::PIPE_DEPLOY_STATUS_UNDEFINED;
+        $actual = \Model::PIPE_RUN_MODE_UNDEFINED;
         $expected = '';
         \Flexio\Tests\Check::assertString('E.1', 'Pipe deploy status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::PIPE_DEPLOY_STATUS_ACTIVE;
-        $expected = 'A';
+        $actual = \Model::PIPE_RUN_MODE_PASSTHROUGH;
+        $expected = 'P';
         \Flexio\Tests\Check::assertString('E.2', 'Pipe deploy status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::PIPE_DEPLOY_STATUS_INACTIVE;
+        $actual = \Model::PIPE_RUN_MODE_INDEX;
         $expected = 'I';
         \Flexio\Tests\Check::assertString('E.3', 'Pipe deploy status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
+        $actual = \Model::PIPE_DEPLOY_STATUS_UNDEFINED;
+        $expected = '';
+        \Flexio\Tests\Check::assertString('E.4', 'Pipe deploy status constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Model::PIPE_DEPLOY_STATUS_ACTIVE;
+        $expected = 'A';
+        \Flexio\Tests\Check::assertString('E.5', 'Pipe deploy status constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Model::PIPE_DEPLOY_STATUS_INACTIVE;
+        $expected = 'I';
+        \Flexio\Tests\Check::assertString('E.6', 'Pipe deploy status constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
         $actual = \Model::PIPE_DEPLOY_MODE_UNDEFINED;
         $expected = '';
-        \Flexio\Tests\Check::assertString('E.4', 'Pipe deply mode constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('E.7', 'Pipe deply mode constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::PIPE_DEPLOY_MODE_BUILD;
         $expected = 'B';
-        \Flexio\Tests\Check::assertString('E.5', 'Pipe deploy mode constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('E.8', 'Pipe deploy mode constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::PIPE_DEPLOY_MODE_RUN;
         $expected = 'R';
-        \Flexio\Tests\Check::assertString('E.6', 'Pipe deploy mode constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('E.9', 'Pipe deploy mode constant',  $actual, $expected, $results);
 
 
 

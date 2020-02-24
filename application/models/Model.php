@@ -133,6 +133,10 @@ class Model
     public const REGISTRY_VALUE_DATETIME  = 'T'; // (YYYY-MM-DD HH:MM:SS)
     public const REGISTRY_VALUE_BINARY    = 'X';
 
+    public const PIPE_RUN_MODE_UNDEFINED  = '';
+    public const PIPE_RUN_MODE_PASSTHROUGH = 'P';
+    public const PIPE_RUN_MODE_INDEX       = 'I';
+
     public const PIPE_DEPLOY_MODE_UNDEFINED  = '';
     public const PIPE_DEPLOY_MODE_BUILD      = 'B';
     public const PIPE_DEPLOY_MODE_RUN        = 'R';

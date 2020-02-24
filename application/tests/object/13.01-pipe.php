@@ -232,16 +232,17 @@ class Test
             "title" : null,
             "icon" : null,
             "description" : null,
-            "examples": {
-            },
-            "params": {
-            },
-            "returns": {
-            },
+            "examples": [
+            ],
+            "params": [
+            ],
+            "returns": [
+            ],
             "notes": null,
             "task" : {
             },
             "schedule" : null,
+            "run_mode": "P",
             "deploy_mode": "B",
             "deploy_schedule": "I",
             "deploy_email": "I",

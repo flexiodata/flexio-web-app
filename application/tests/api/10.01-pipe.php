@@ -104,6 +104,7 @@ class Test
                         }
                     ]
                 },
+                "run_mode": "I",
                 "deploy_mode": "B",
                 "deploy_schedule": "I",
                 "deploy_email": "A",
@@ -141,6 +142,7 @@ class Test
                     }
                 ]
             },
+            "run_mode": "I",
             "deploy_mode": "B",
             "deploy_schedule": "I",
             "deploy_email": "A",

@@ -52,6 +52,7 @@ class Pipe
                 'notes'           => array('type' => 'string', 'required' => false),
                 'task'            => array('type' => 'object', 'required' => false),
                 'schedule'        => array('type' => 'object', 'required' => false),
+                'run_mode'        => array('type' => 'string', 'required' => false),
                 'deploy_mode'     => array('type' => 'string', 'required' => false),
                 'deploy_schedule' => array('type' => 'string', 'required' => false),
                 'deploy_email'    => array('type' => 'string', 'required' => false),
@@ -193,6 +194,7 @@ class Pipe
                 'notes'           => array('type' => 'string', 'required' => false),
                 'task'            => array('type' => 'object', 'required' => false),
                 'schedule'        => array('type' => 'object', 'required' => false),
+                'run_mode'        => array('type' => 'string', 'required' => false),
                 'deploy_mode'     => array('type' => 'string', 'required' => false),
                 'deploy_schedule' => array('type' => 'string', 'required' => false),
                 'deploy_email'    => array('type' => 'string', 'required' => false),
@@ -731,8 +733,8 @@ class Pipe
                 $returns_in_string_format = "The following properties are allowed:\n";
                 foreach ($properties['returns'] as $r)
                 {
-                    $name = $r['name'];
-                    $description = $r['description'];
+                    $name = $r['name'] ?? '';
+                    $description = $r['description'] ?? '';
                     $returns_in_string_format .= " * `$name`: $description\n";
                 }
 

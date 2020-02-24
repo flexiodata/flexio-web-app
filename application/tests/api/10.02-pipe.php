@@ -289,6 +289,7 @@ class Test
                     }
                 ]
             },
+            "run_mode": "P",
             "deploy_mode": "B",
             "deploy_schedule": "I",
             "deploy_email": "A",
