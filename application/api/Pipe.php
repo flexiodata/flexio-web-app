@@ -345,22 +345,46 @@ class Pipe
         if ($triggered_by === \Model::PROCESS_TRIGGERED_API && $api_trigger_active === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
-        // create a new process
+        // create a new process; if we're in pass-through mode, run what's there; if we're in index
+        // mode, create a special search task
+        $pipe_run_mode = $pipe_properties['run_mode'];
         $process_properties = array(
             'parent_eid' => $pipe_properties['eid'],
             'pipe_info' => $pipe_properties,
-            'task' => $pipe_properties['task'],
+            'task' => false,
             'triggered_by' => $triggered_by,
             'owned_by' => $pipe_properties['owned_by']['eid'], // same as $owner_user_eid
             'created_by' => $requesting_user_eid
         );
+
+        if ($pipe_run_mode === \Model::PIPE_RUN_MODE_PASSTHROUGH)
+            $process_properties['task'] = $pipe_properties['task'];
+
+        if ($pipe_run_mode === \Model::PIPE_RUN_MODE_INDEX)
+        {
+            $search_task = array(
+                "op" => "search",
+                "index" => $pipe_properties['eid'],
+                "query" => "",     // string, required
+                "columns" => ""     // string, optional
+            );
+            $process_properties['task'] = $search_task;
+        }
+
+        if ($process_properties['task'] === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
         $process_store = \Flexio\Object\Process::create($process_properties);
         $process_engine = \Flexio\Jobs\Process::create();
 
         // create a process host to connect the store/engine and run the process
+        // note: only need to add mount parameters for pass through, since logic
+        // of search only depends on index already built and not any mount params;
+        // this helps save a little time
         $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
         $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::incrementProcessCount', array());
-        $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::addMountParams', array());
+        if ($pipe_run_mode === \Model::PIPE_RUN_MODE_PASSTHROUGH)
+            $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::addMountParams', array());
         $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_FINISHING, '\Flexio\Api\ProcessHandler::decrementProcessCount', array());
 
         // parse the request content and set the stream info
