@@ -627,8 +627,8 @@ class Pipe
         $post_content_type = \Flexio\System\System::getPhpInputStreamContentType();
         \Flexio\Api\ProcessHandler::addProcessInputFromStream($php_stream_handle, $post_content_type, $process_engine);
 
-        // run the process in the background
-        $process_host->run(true /*true: run in background*/);
+        // TODO: run the process in the background?
+        $process_host->run(false /*true: run in background*/);
 
         // return information about the process; TODO: is this what we want to do?
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
