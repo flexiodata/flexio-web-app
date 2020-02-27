@@ -92,6 +92,12 @@ class Connection
         // delete the object
         $connection->delete();
 
+        // if we're deleting a connection mount, delete associated pipes/connections
+        $connection_info = $connection->get();
+        $connection_mode = $connection_info['connection_mode'];
+        if ($connection_mode === \Model::CONNECTION_MODE_FUNCTION)
+            \Flexio\Api\ConnectionMount::create($connection)->delete();
+
         // return the result
         $properties = $connection->get();
         $result = self::cleanProperties($properties);
@@ -368,7 +374,7 @@ class Connection
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // sync
-        $connection = $connection->sync();
+        \Flexio\Api\ConnectionMount::create($connection)->sync();
 
         // return the pipes for the connection
         $result = array();
