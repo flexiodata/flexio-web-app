@@ -621,7 +621,6 @@ class Pipe
 
         // get the structure from the pipe returns info
         $structure = $pipe_properties['returns'];
-        $structure = json_decode($structure, true);
         $elastic_search_params = array(
             'parent_eid' => $pipe_properties['eid'],
             'structure' => $structure
