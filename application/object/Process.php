@@ -242,18 +242,6 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $properties['task'];
     }
 
-    public function incrementActiveProcessCount() : bool
-    {
-        $owner = $this->getOwner();
-        return $this->getModel()->process->incrementActiveProcessCount($owner);
-    }
-
-    public function decrementActiveProcessCount() : bool
-    {
-        $owner = $this->getOwner();
-        return $this->getModel()->process->decrementActiveProcessCount($owner);
-    }
-
     public function blockUntilStatusChanges(int $timeout) : void
     {
         // blocks until the process status changes or a timeout (in milliseconds)

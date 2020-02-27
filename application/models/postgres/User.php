@@ -599,6 +599,64 @@ class User extends ModelBase
         return true;
     }
 
+    public function incrementActiveProcessCount(string $eid) : bool
+    {
+        if (!\Flexio\Base\Eid::isValid($eid))
+            return false;
+
+        $db = $this->getDatabase();
+        try
+        {
+            // atomic operation for incrementing count up to ceiling
+            $quser_eid = $db->quote($eid);
+            $ceiling = \Model::MAX_ACTIVE_PROCESS_COUNT;
+            $update = "update tbl_user set ".
+                      "    process_active_count = process_active_count + 1 ".
+                      "where eid = $quser_eid and process_active_count < $ceiling;";
+            $result = $db->exec($update);
+
+            // return true if value was incremented
+            if ($result && $result > 0)
+                return true;
+        }
+        catch (\Exception $e)
+        {
+            // fall through
+        }
+
+        // process count wasn't incremented
+        return false;
+    }
+
+    public function decrementActiveProcessCount(string $eid) : bool
+    {
+        if (!\Flexio\Base\Eid::isValid($eid))
+            return false;
+
+        $db = $this->getDatabase();
+        try
+        {
+            // atomic operation for decrementing count
+            $quser_eid = $db->quote($eid);
+            $ceiling = \Model::MAX_ACTIVE_PROCESS_COUNT;
+            $update = "update tbl_user set ".
+                      "    process_active_count = process_active_count - 1 ".
+                      "where owned_by = $quser_eid and process_active_count > 0;";
+            $result = $db->exec($update);
+
+            // return true if value was decremented
+            if ($result && $result > 0)
+                return true;
+        }
+        catch (\Exception $e)
+        {
+            // fall through
+        }
+
+        // process count wasn't decremented
+        return false;
+    }
+
     public function isAdministrator(string $eid) : bool
     {
         if (!\Flexio\Base\Eid::isValid($eid))

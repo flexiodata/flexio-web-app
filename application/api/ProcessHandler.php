@@ -28,7 +28,8 @@ class ProcessHandler
 
         while (true)
         {
-            $success = $process_host->getStore()->incrementActiveProcessCount();
+            $owner_eid = $process_host->getStore()->getOwner();
+            $success = \Flexio\System\System::getModel()->user->incrementActiveProcessCount($owner_eid);
             if ($success == true)
                 break;
 
@@ -46,7 +47,8 @@ class ProcessHandler
 
     public static function decrementProcessCount(\Flexio\Jobs\ProcessHost $process_host, array $callback_params) : void
     {
-        $process_host->getStore()->decrementActiveProcessCount();
+        $owner_eid = $process_host->getStore()->getOwner();
+        \Flexio\System\System::getModel()->user->decrementActiveProcessCount($owner_eid);
     }
 
     public static function addMountParams(\Flexio\Jobs\ProcessHost $process_host, array $callback_params) : void

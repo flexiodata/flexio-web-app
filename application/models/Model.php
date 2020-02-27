@@ -205,6 +205,8 @@ class Model
     public const CONNECTION_TYPE_EVENTBRITE         = 'eventbrite';
     public const CONNECTION_TYPE_BIGCOMMERCE        = 'bigcommerce';
 
+    public const MAX_ACTIVE_PROCESS_COUNT = 50; // maximum number of a certain type of process a user can run at one time
+
     private $objs = array();
     private $database = null;
     private $dbtype = '';
