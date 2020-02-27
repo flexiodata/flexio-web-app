@@ -79,7 +79,7 @@
               v-model="expanded_groups"
             >
               <el-collapse-item
-              style="margin-left: 8px"
+                style="margin-left: 8px"
                 :key="group.id"
                 :name="group.id"
                 v-for="group in grouped_pipes"

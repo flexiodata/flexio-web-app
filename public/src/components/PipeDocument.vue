@@ -49,13 +49,6 @@
             Edit
           </el-button>
         </div>
-        <div class="tr mt3">
-          <el-checkbox
-            v-model="is_run_mode_cache"
-          >
-            Cache output values
-          </el-checkbox>
-        </div>
       </div>
     </div>
 
@@ -153,7 +146,6 @@
           </div>
         </div>
         <div class="pipe-section-body">
-
           <div
             :class="is_addon_editing ? '' : 'br2 mt2 pa4'"
             :style="is_addon_editing ? '' : 'border: 1px solid #dcdfe6'"
@@ -163,6 +155,43 @@
               :is-editing.sync="is_addon_editing"
               @save-click="updateAddOnSettings"
             />
+          </div>
+        </div>
+      </el-collapse-item>
+      <el-collapse-item
+        name="config"
+        class="pipe-section pipe-section-editable"
+        :class="{
+          'o-40 no-pointer-events no-select': is_task_editing,
+          'is-editing': is_config_editing
+        }"
+      >
+        <div
+          class="flex flex-row items-center pipe-section-title"
+          slot="title"
+        >
+          <div class="flex-fill f4 fw6 lh-title">Config</div>
+        </div>
+        <div class="pipe-section-body">
+          <div
+            :class="is_config_editing ? '' : 'br2 mt2 pa4'"
+            :style="is_config_editing ? '' : 'border: 1px solid #dcdfe6'"
+          >
+            <el-switch
+              v-model="is_run_mode_cache"
+              active-text="Run in index mode"
+            />
+            <div class="mt3">
+              <el-button
+                size="small"
+                class="ttu fw6"
+                style="min-width: 5rem"
+                @click="refreshIndex"
+                :disabled="!is_run_mode_cache"
+              >
+                Refresh
+              </el-button>
+            </div>
           </div>
         </div>
       </el-collapse-item>
@@ -224,8 +253,8 @@
         is_task_save_allowed: true, // we removed validation for now, so always allow tasks to be saved
         is_task_editing: false,
         is_addon_editing: false,
-        is_notes_editing: false,
-        expanded_sections: ['definition', 'documentation'],
+        is_config_editing: false,
+        expanded_sections: ['definition', 'documentation', 'config'],
       }
     },
     computed: {
@@ -363,6 +392,17 @@
       updateAddOnSettings(new_attrs, old_pipe) {
         this.savePipe(new_attrs).then(response => {
           this.is_addon_editing = false
+        })
+      },
+      refreshIndex() {
+        var team_name = this.active_team_name
+        var eid = this.pipe.eid
+
+        return this.$store.dispatch('pipes/populateCache', { team_name, eid }).then(response => {
+          this.$message({
+            message: 'Now indexing this function...',
+            type: 'success'
+          })
         })
       },
       tryScrollToElement(el, duration, offset) {

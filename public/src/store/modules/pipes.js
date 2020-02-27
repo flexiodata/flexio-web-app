@@ -132,6 +132,14 @@ const actions = {
       throw error
     })
   },
+
+  'populateCache' ({ commit }, { team_name, eid }) {
+    return api.populatePipeCache(team_name, eid).then(response => {
+      return response
+    }).catch(error => {
+      throw error
+    })
+  },
 }
 
 const getters = {
