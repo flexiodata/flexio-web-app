@@ -86,22 +86,19 @@
           <span class="ml2 f6">Running...</span>
         </div>
       </div>
-      <div v-else>
-        <div
-          class="ma2"
+      <template v-else>
+        <el-alert
+          style="border-radius: 0"
+          type="error"
+          show-icon
+          title="An error occured while running the function"
+          :closable="false"
           v-if="error_result"
-        >
-          <el-alert
-            type="error"
-            show-icon
-            title="An error occured while running the function"
-            @close="error_result = false"
-          />
-        </div>
-        <pre class="ph2 bg-white">
-          <code class="pa0">{{result}}</code>
+        />
+        <pre class="flex-fill ma0 ph2 bg-white">
+          <code class="ma0 pa0">{{result}}</code>
         </pre>
-      </div>
+      </template>
 
       <!-- output panel -->
       <ProcessContent
