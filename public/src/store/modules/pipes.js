@@ -133,8 +133,8 @@ const actions = {
     })
   },
 
-  'run' ({ commit }, { team_name, eid, cfg }) {
-    return api.runPipe(team_name, eid, cfg).then(response => {
+  'run' ({ commit }, { team_name, eid, data }) {
+    return api.runPipe(team_name, eid, data).then(response => {
       return response
     }).catch(error => {
       throw error

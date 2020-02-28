@@ -45,7 +45,7 @@ export default {
   createPipe:                     (team_name, attrs)              => AxiosResource(team_name)[POS] (`/pipes`, attrs),
   updatePipe:                     (team_name, object_name, attrs) => AxiosResource(team_name)[POS] (`/pipes/${object_name}`, attrs),
   deletePipe:                     (team_name, object_name)        => AxiosResource(team_name)[DEL] (`/pipes/${object_name}`),
-  runPipe:                        (team_name, object_name, cfg)   => AxiosResource(team_name)[POS] (`/pipes/${object_name}/run`, cfg),
+  runPipe:                        (team_name, object_name, data)  => AxiosResource(team_name)[POS] (`/pipes/${object_name}/run`, data),
   populatePipeCache:              (team_name, object_name)        => AxiosResource(team_name)[POS] (`/pipes/${object_name}/populatecache`),
 
   // connections

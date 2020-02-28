@@ -96,10 +96,10 @@
       </div>
       <template v-else>
         <el-alert
-          style="border-radius: 0"
           type="error"
           show-icon
           title="An error occured while running the function"
+          style="border-radius: 0"
           :closable="false"
           v-if="has_errors"
         />
@@ -234,10 +234,11 @@
         var eid = this.pipeEid
         var team_name = this.active_team_name
         var cfg = this.show_advanced_input ? this.process_input_advanced : this.process_input_simple
+        var data = cfg.data
 
         this.is_running = true
 
-        this.$store.dispatch('pipes/run', { team_name, eid, cfg }).then(response => {
+        this.$store.dispatch('pipes/run', { team_name, eid, data }).then(response => {
           this.has_errors = false
           this.response_arr = response.data
           this.response_str = JSON.stringify(response.data, null, 2)
