@@ -80,10 +80,34 @@
         <div class="f6 fw6">Result</div>
       </div>
 
+      <div v-if="is_running">
+        <div class="pa2 flex flex-row items-center">
+          <Spinner size="small" />
+          <span class="ml2 f6">Running...</span>
+        </div>
+      </div>
+      <div v-else>
+        <div
+          class="ma2"
+          v-if="error_result"
+        >
+          <el-alert
+            type="error"
+            show-icon
+            title="An error occured while running the function"
+            @close="error_result = false"
+          />
+        </div>
+        <pre class="ph2 bg-white">
+          <code class="pa0">{{result}}</code>
+        </pre>
+      </div>
+
       <!-- output panel -->
       <ProcessContent
         class="flex-fill flex flex-column"
         :process-eid="active_process_eid"
+        v-if="false"
       >
         <!-- don't show any empty text -->
         <div class="pa3 tc f6 lh-copy" slot="empty"></div>
@@ -95,6 +119,7 @@
 <script>
   import { mapState } from 'vuex'
   import { PROCESS_MODE_BUILD } from '@/constants/process'
+  import Spinner from 'vue-simple-spinner'
   import ProcessInput from '@/components/ProcessInput'
   import ProcessContent from '@/components/ProcessContent'
 
@@ -114,6 +139,8 @@
       process_input_simple: getSimpleProcessInput(),
       process_input_advanced: {},
       process_data: {},
+      result: '',
+      is_running: false
     }
   }
 
@@ -129,6 +156,7 @@
       }
     },
     components: {
+      Spinner,
       ProcessInput,
       ProcessContent,
     },
@@ -164,6 +192,7 @@
       initProcessInputFromParams() {
         this.process_input_simple = _.assign({}, getSimpleProcessInput())
       },
+      /*
       runTest() {
         var team_name = this.active_team_name
         var attrs = _.pick(this.pipe, ['task'])
@@ -179,6 +208,26 @@
           var eid = process.eid
           this.active_process_eid = eid
           this.$store.dispatch('processes/run', { team_name, eid, cfg })
+        })
+
+        this.$store.track('Tested Function')
+      },
+      */
+      runTest() {
+        var eid = this.pipeEid
+        var team_name = this.active_team_name
+        var cfg = this.show_advanced_input ? this.process_input_advanced : this.process_input_simple
+
+        this.is_running = true
+
+        this.$store.dispatch('pipes/run', { team_name, eid, cfg }).then(response => {
+          this.error_result = false
+          this.result = JSON.stringify(response.data, null, 2)
+        }).catch(error => {
+          this.error_result = true
+          this.result = _.get(error, 'response.data.error.message', '')
+        }).finally(() => {
+          this.is_running = false
         })
 
         this.$store.track('Tested Function')

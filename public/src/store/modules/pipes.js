@@ -133,6 +133,14 @@ const actions = {
     })
   },
 
+  'run' ({ commit }, { team_name, eid, cfg }) {
+    return api.runPipe(team_name, eid, cfg).then(response => {
+      return response
+    }).catch(error => {
+      throw error
+    })
+  },
+
   'populateCache' ({ commit }, { team_name, eid }) {
     return api.populatePipeCache(team_name, eid).then(response => {
       return response
