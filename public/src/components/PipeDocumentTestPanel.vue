@@ -77,7 +77,15 @@
     <div class="flex-fill flex flex-column">
       <!-- output panel header -->
       <div class="flex-none flex flex-row items-center bg-nearer-white bt bb b--black-05 pa2">
-        <div class="f6 fw6">Result</div>
+        <div class="flex-fill f6 fw6">Result</div>
+        <el-radio-group
+          size="micro"
+          v-model="result_view"
+          :disabled="has_errors"
+        >
+          <el-radio-button label="table"><span class="fw6">Table</span></el-radio-button>
+          <el-radio-button label="json"><span class="fw6">JSON</span></el-radio-button>
+        </el-radio-group>
       </div>
 
       <div v-if="is_running">
@@ -93,11 +101,18 @@
           show-icon
           title="An error occured while running the function"
           :closable="false"
-          v-if="error_result"
+          v-if="has_errors"
         />
-        <pre class="flex-fill ma0 ph2 bg-white">
-          <code class="ma0 pa0">{{result}}</code>
-        </pre>
+        <pre
+          class="flex-fill ma0 pa0 bg-white"
+          v-if="has_errors || result_view == 'json'"
+        ><code class="ma0 pa2">{{response_str}}</code></pre>
+        <SimpleTable
+          class="flex-fill overflow-x-auto"
+          style="border: none"
+          :rows="response_arr"
+          v-else-if="response_arr.length > 0"
+        />
       </template>
 
       <!-- output panel -->
@@ -117,6 +132,7 @@
   import { mapState } from 'vuex'
   import { PROCESS_MODE_BUILD } from '@/constants/process'
   import Spinner from 'vue-simple-spinner'
+  import SimpleTable from '@/components/SimpleTable'
   import ProcessInput from '@/components/ProcessInput'
   import ProcessContent from '@/components/ProcessContent'
 
@@ -136,7 +152,10 @@
       process_input_simple: getSimpleProcessInput(),
       process_input_advanced: {},
       process_data: {},
-      result: '',
+      response_arr: [],
+      response_str: '',
+      result_view: 'table', // 'json' or 'table'
+      has_errors: false,
       is_running: false
     }
   }
@@ -154,6 +173,7 @@
     },
     components: {
       Spinner,
+      SimpleTable,
       ProcessInput,
       ProcessContent,
     },
@@ -218,11 +238,13 @@
         this.is_running = true
 
         this.$store.dispatch('pipes/run', { team_name, eid, cfg }).then(response => {
-          this.error_result = false
-          this.result = JSON.stringify(response.data, null, 2)
+          this.has_errors = false
+          this.response_arr = response.data
+          this.response_str = JSON.stringify(response.data, null, 2)
         }).catch(error => {
-          this.error_result = true
-          this.result = _.get(error, 'response.data.error.message', '')
+          this.has_errors = true
+          this.response_arr = []
+          this.response_str = _.get(error, 'response.data.error.message', '')
         }).finally(() => {
           this.is_running = false
         })
