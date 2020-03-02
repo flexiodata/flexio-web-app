@@ -441,11 +441,11 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         }
     }
 
-    public function query(string $index, array $query) : array
+    public function query(string $index, string $query) : array
     {
         try
         {
-            $index_write_string = json_encode($query, JSON_UNESCAPED_SLASHES | JSON_FORCE_OBJECT);
+            $index_write_string = $query;
 
             // create the index with the specified mapping
             $url = $this->getHostUrlString() . '/' . urlencode($index) . '/_search?size=1000';

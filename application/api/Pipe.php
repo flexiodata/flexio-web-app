@@ -365,8 +365,7 @@ class Pipe
             $search_task = array(
                 "op" => "search",
                 "index" => $pipe_properties['eid'],
-                "query" => "",     // string, required
-                "columns" => ""     // string, optional
+                'structure' => $pipe_properties['returns'] // optional structure parameter that's used for getting available columns (not columns to actually return)
             );
             $process_properties['task'] = $search_task;
         }
@@ -620,10 +619,9 @@ class Pipe
         $process_engine = \Flexio\Jobs\Process::create();
 
         // get the structure from the pipe returns info
-        $structure = $pipe_properties['returns'];
         $elastic_search_params = array(
             'parent_eid' => $pipe_properties['eid'],
-            'structure' => $structure
+            'structure' => $pipe_properties['returns']
         );
 
         // create a process host to connect the store/engine and run the process
