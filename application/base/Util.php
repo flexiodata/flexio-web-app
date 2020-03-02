@@ -784,6 +784,54 @@ class Util
         return false;
     }
 
+    public static function coerceToArray($value, string $delimiter = ',') : array
+    {
+        // takes a value, delimited set of value, or array of values and makes sure
+        // it's an array of string values; for example
+        // null => [""]
+        // 1 => ["1"]
+        // false => ["false"]
+        // "1,2,3" = ["1", "2", "3"]
+        // "a,b,c" = ["a", "b", "c"]
+        // ["a","b","c"] = ["a", "b", "c"]
+        // [["a"],["b"],["c"]] = ["a", "b", "c"]
+
+        // TODO: handle other types of objects (e.g. datetime?)
+
+        if (!is_string($value) && !is_array($value) && !is_bool($value))
+            return [strval($value)];
+
+        if (is_bool($value))
+            return [$value ? "true" : "false"];
+
+        if (is_string($value))
+        {
+            $result = array();
+            $parts = explode($delimiter, $value);
+            foreach ($parts as $p)
+            {
+                $result[] = trim(strval($p));
+            }
+            return $result;
+        }
+
+        if (is_array($value))
+        {
+            $result = array();
+            foreach ($value as $v)
+            {
+                $parts = self::coerceToArray($v, $delimiter);
+                foreach ($parts as $p)
+                {
+                    $result[] = $p;
+                }
+            }
+            return $result;
+        }
+
+        return array();
+    }
+
     public static function generateRandomName(string $prefix) : string
     {
         $name = $prefix . \Flexio\Base\Util::generateRandomString(4);
