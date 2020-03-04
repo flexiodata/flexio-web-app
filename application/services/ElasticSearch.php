@@ -456,7 +456,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             $index_write_string = $query;
 
             // create the index with the specified mapping
-            $url = $this->getHostUrlString() . '/' . urlencode($index) . '/_search?size=1000';
+            $url = $this->getHostUrlString() . '/' . urlencode($index) . '/_search?size=10000'; // explicitly set max result size to 10k, which is default at this time
             $auth = $this->getBasicAuthString();
             $content_type = 'application/json';
 
