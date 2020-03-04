@@ -19,6 +19,8 @@ namespace Flexio\Services;
 class ElasticSearch implements \Flexio\IFace\IConnection,
                                \Flexio\IFace\IFileSystem
 {
+    private const MAX_INDEX_ROW_WRITE_LIMIT = 1000000; // maximum number of rows that can be written in the write loop; primarily to avoid hanging loops
+
     // connection info
     private $host = '';
     private $port = '';
@@ -167,6 +169,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         $buffer_size = 1000; // max rows to write at a time
         $rows_to_write = array();
 
+        $total_row_count = 0;
         while (true)
         {
             $row = $callback();
@@ -174,11 +177,16 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
                 break;
 
             $rows_to_write[] = $row;
+            $total_row_count++;
+
+            if ($total_row_count >= self::MAX_INDEX_ROW_WRITE_LIMIT)
+                break;
 
             if (count($rows_to_write) <= $buffer_size)
                 continue;
 
             $this->writeRows($index, $rows_to_write);
+            $rows_to_write = array();
         }
 
         // write out whatever is left over
