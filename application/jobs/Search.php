@@ -53,49 +53,17 @@ class Search extends \Flexio\Jobs\Base
             $available_columns = $structure->getNames();
         }
 
-        // TODO: experimental: parameters passed in as stdin; first parameter is
-        // a delimited list of columns we want to return or "*" for all columns;
-        // second parameter is a filter string to limit the results
+        // TODO: experimental: parameters passed in as stdin
         $instream = $process->getStdin();
         $streamreader = $instream->getReader();
 
         $data = '';
         while (($chunk = $streamreader->read()) !== false)
             $data .= $chunk;
-        $data = @json_decode($data, true);
 
-        $columns_to_return = $available_columns; // default; return all columns
-        $rows_requested = false;
-        if (is_array($data))
-        {
-            if (count($data) > 0)
-            {
-                $columns_to_return = [];
-                $columns_requested = $data[0];
-                $columns_requested = \Flexio\Base\Util::coerceToArray($columns_requested);
-
-                // replace wildcard columns with all available columns
-                foreach ($columns_requested as $c)
-                {
-                    if ($c !== '*')
-                    {
-                        $columns_to_return[] = $c;
-                    }
-                     else
-                    {
-                        foreach ($available_columns as $ac)
-                        {
-                            $columns_to_return[] = $ac;
-                        }
-                    }
-                }
-            }
-
-            if (count($data) > 1)
-            {
-                $rows_requested = $data[1];
-            }
-        }
+        $columns_to_return = array();
+        $rows_to_return = '';
+        self::getSearchParams($data, $available_columns, $columns_to_return, $rows_to_return);
 
         // connect to elasticsearch
         $elasticsearch_connection_info = \Flexio\System\System::getSearchCacheConfig();
@@ -103,28 +71,12 @@ class Search extends \Flexio\Jobs\Base
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, "Search not available");
         $elasticsearch = \Flexio\Services\ElasticSearch::create($elasticsearch_connection_info);
 
-        // if no query is specified, return all rows
-        $query = '{"query": {"match_all": {}}}';
-        if ($rows_requested !== false)
-        {
-            $query_parameters = array();
-            parse_str($rows_requested, $query_parameters);
 
-            // example:
-            // '{"query": {"bool": "must": {"match": {"first_name": "John"}}}}';
-            $match_expression = array();
-            foreach ($query_parameters as $key => $value)
-            {
-                // for now, straight key/value copy
-                $match_expression[] = ['match' => [$key => $value]];
-            }
-
-            $match_expression = json_encode($match_expression,JSON_UNESCAPED_SLASHES);
-            $query = '{"query": {"bool": {"must": '.$match_expression. '}}}';
-        }
+        //echo($rows_to_return);
+        //die;
 
         // query the index
-        $result = $elasticsearch->query($index, $query);
+        $result = $elasticsearch->query($index, $rows_to_return);
 
         // write the output of the search query to stdout
         $outstream = $process->getStdout();
@@ -155,6 +107,67 @@ class Search extends \Flexio\Jobs\Base
 
         // set the content type
         $outstream->setMimeType(\Flexio\Base\ContentType::JSON);
+    }
+
+    private static function getSearchParams(string $search_params, array $available_columns, array &$search_columns, string &$search_rows) : void
+    {
+        // EXPERIMENTAL: query params pass in as a string; example: ["*", "col1=a&col2=b"]
+        // first parameter: desired return columns or "*" for all columns
+        // second parameter: query string/array to limit the results
+
+        // default to all columns/rows
+        $search_columns = $available_columns;
+        $search_rows = '{"query": {"match_all": {}}}';
+
+        // get the input
+        $search_params = @json_decode($search_params, true);
+        if (!is_array($search_params))
+            return;
+
+        // get the column selection params
+        if (count($search_params) > 0)
+        {
+            $columns_to_return = [];
+            $columns_requested = $search_params[0];
+            $columns_requested = \Flexio\Base\Util::coerceToArray($columns_requested);
+
+            // replace wildcard columns with all available columns
+            foreach ($columns_requested as $c)
+            {
+                if ($c !== '*')
+                {
+                    $columns_to_return[] = $c;
+                }
+                 else
+                {
+                    foreach ($available_columns as $ac)
+                    {
+                        $columns_to_return[] = $ac;
+                    }
+                }
+            }
+
+            $search_columns = $columns_to_return;
+        }
+
+        // get the row selection params
+        if (count($search_params) > 1)
+        {
+            $query_parameters = array();
+            parse_str($search_params[1], $query_parameters);
+
+            // example:
+            // '{"query": {"bool": "must": {"match": {"first_name": "John"}}}}';
+            $match_expression = array();
+            foreach ($query_parameters as $key => $value)
+            {
+                // for now, straight key/value copy
+                $match_expression[] = ['match' => [$key => $value]];
+            }
+
+            $match_expression = json_encode($match_expression,JSON_UNESCAPED_SLASHES);
+            $search_rows = '{"query": {"bool": {"must": '.$match_expression. '}}}';
+        }
     }
 }
 
