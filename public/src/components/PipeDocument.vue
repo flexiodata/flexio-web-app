@@ -189,7 +189,7 @@
                 @click="refreshIndex"
                 :disabled="!is_run_mode_cache"
               >
-                Refresh
+                Refresh now
               </el-button>
             </div>
           </div>
