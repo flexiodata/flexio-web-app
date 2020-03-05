@@ -74,9 +74,6 @@ class Table
 
     public function getColCount() : int
     {
-        if (count($this->data[0]) === 0)
-            return 0;
-
         return count($this->data[0]);
     }
 
@@ -107,13 +104,22 @@ class Table
 
         $col1 = $col1 ?? 0;
         $row1 = $row1 ?? 0;
-        $col2 = $col2 ?? $col_count;
-        $row2 = $col2 ?? $row_count;
+        $col2 = $col2 ?? $col_count - 1;
+        $row2 = $row2 ?? $row_count - 1;
 
-        if ($col2 > $col_count)
-            $col2 = $col_count;
-        if ($row2 > $row_count)
-            $row2 = $row_count;
+        if ($col1 < 0)
+            $col1 = 0;
+        if ($row1 < 0)
+            $row1 = 0;
+        if ($col2 < 0)
+            $col2 = 0;
+        if ($row2 < 0)
+            $row2 = 0;
+
+        if ($col2 >= $col_count)
+            $col2 = $col_count - 1;
+        if ($row2 >= $row_count)
+            $row2 = $row_count - 1;
 
         if ($row2 < $row1)
         {
@@ -129,16 +135,16 @@ class Table
             $col2 = $t;
         }
 
-        $range = array();
-        for ($row_idx = $row1; $row_idx < $row2; $row_idx++)
+        $row_data = array();
+        for ($row_idx = $row1; $row_idx <= $row2; $row_idx++)
         {
-            $row = array();
-            for ($col_idx = $col1; $col_idx < $col2; $col_idx++)
+            $col_data = array();
+            for ($col_idx = $col1; $col_idx <= $col2; $col_idx++)
             {
-                $row[] = $this->data[$row_idx][$col_idx];
+                $col_data[] = $this->data[$row_idx][$col_idx];
             }
-            $range[] = $row;
+            $row_data[] = $col_data;
         }
-        return $range;
+        return $row_data;
     }
 }
