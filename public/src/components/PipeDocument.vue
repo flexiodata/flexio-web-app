@@ -181,11 +181,38 @@
               v-model="is_run_mode_cache"
               active-text="Run in index mode"
             />
-            <div class="mt3">
+            <div
+              class="mv3 f7"
+              v-if="is_scheduled"
+            >
+              <span style="margin-right: 6px">{{schedule_str}}</span>
+              <el-button
+                type="text"
+                size="tiny"
+                style="padding: 0; border: 0"
+                @click="show_pipe_schedule_dialog = true"
+              >
+                Edit...
+              </el-button>
+            </div>
+            <div class="flex flex-row mt3">
               <el-button
                 size="small"
                 class="ttu fw6"
-                style="min-width: 5rem"
+                @click="show_pipe_schedule_dialog = true"
+                :disabled="!is_run_mode_cache"
+                v-if="!is_scheduled"
+              >
+                Schedule indexing
+              </el-button>
+              <TextSeparator
+                class="mh3 f6"
+                style="width: 70px"
+                v-if="!is_scheduled"
+              />
+              <el-button
+                size="small"
+                class="ttu fw6"
                 @click="refreshIndex"
                 :disabled="!is_run_mode_cache"
               >
@@ -196,6 +223,23 @@
         </div>
       </el-collapse-item>
     </el-collapse>
+
+    <!-- pipe schedule dialog -->
+    <el-dialog
+      custom-class="el-dialog--no-header el-dialog--no-footer"
+      width="38rem"
+      top="4vh"
+      :modal-append-to-body="false"
+      :visible.sync="show_pipe_schedule_dialog"
+    >
+      <PipeSchedulePanel
+        :pipe="pipe"
+        :show-toggle="true"
+        @close="show_pipe_schedule_dialog = false"
+        @cancel="show_pipe_schedule_dialog = false"
+        @submit="onSubmitPipeSchedule"
+      />
+    </el-dialog>
   </div>
 </template>
 
@@ -203,13 +247,17 @@
   import zenscroll from 'zenscroll'
   import { mapState } from 'vuex'
   import { TASK_OP_EXTRACT, TASK_OP_LOOKUP } from '@/constants/task-op'
+  import { SCHEDULE_STATUS_ACTIVE } from '@/constants/schedule'
   import { afterLast } from '@/utils'
+  import { getDeployScheduleStr } from '@/utils/pipe'
   import Spinner from 'vue-simple-spinner'
   import LabelSwitch from '@/components/LabelSwitch'
   import PipeDocumentAddonEditor from '@/components/PipeDocumentAddonEditor'
   import PipeDocumentTaskExtract from '@/components/PipeDocumentTaskExtract'
   import PipeDocumentTaskLookup from '@/components/PipeDocumentTaskLookup'
   import PipeDocumentTaskExecute from '@/components/PipeDocumentTaskExecute'
+  import PipeSchedulePanel from '@/components/PipeSchedulePanel'
+  import TextSeparator from '@/components/TextSeparator'
 
   const DEPLOY_MODE_UNDEFINED = ''
   const DEPLOY_MODE_BUILD     = 'B'
@@ -240,6 +288,8 @@
       PipeDocumentTaskExtract,
       PipeDocumentTaskLookup,
       PipeDocumentTaskExecute,
+      PipeSchedulePanel,
+      TextSeparator,
     },
     watch: {
       pipeEid: {
@@ -254,6 +304,7 @@
         is_task_editing: false,
         is_addon_editing: false,
         is_config_editing: false,
+        show_pipe_schedule_dialog: false,
         expanded_sections: ['definition', 'documentation', 'config'],
       }
     },
@@ -296,6 +347,9 @@
           }
         }
       },
+      is_scheduled() {
+        return _.get(this.pipe, 'deploy_schedule') == SCHEDULE_STATUS_ACTIVE ? true : false
+      },
       is_run_mode_cache: {
         get() {
           return _.get(this.pipe, 'run_mode') == RUN_MODE_CACHE ? true : false
@@ -305,6 +359,10 @@
           var attrs = { run_mode }
           this.savePipe(attrs)
         }
+      },
+      schedule_str() {
+        var schedule = _.get(this.pipe, 'schedule')
+        return getDeployScheduleStr(schedule)
       },
     },
     methods: {
@@ -411,6 +469,12 @@
           var scroller = zenscroll.createScroller(scroll_container, duration, offset)
           scroller.to(el, duration)
         }
+      },
+      onSubmitPipeSchedule(pipe_attrs) {
+        var new_attrs = _.pick(pipe_attrs, ['schedule', 'deploy_schedule'])
+        this.savePipe(new_attrs).then(response => {
+          this.show_pipe_schedule_dialog = false
+        })
       },
       onEditDefinitionClick() {
         this.is_task_editing = true

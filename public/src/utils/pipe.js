@@ -1,12 +1,10 @@
+import * as sched from '@/constants/schedule'
+import moment from 'moment'
+
 export const getSyntaxStr = (team_name, pipe_name, syntax) => {
   var suffix = syntax.trim().length > 0 ? `, ${syntax}` : ''
   return `=FLEX("${team_name}/${pipe_name}"${suffix})`
 }
-
-/*
-import * as sched from '@/constants/schedule'
-//import doctrine from 'doctrine'
-import moment from 'moment'
 
 export const getTimeStr = (s) => {
   var times = _.get(s, 'times', [])
@@ -39,11 +37,6 @@ export const getMonthDayStr = (s) => {
   return days.join(', ')
 }
 
-export const getIdentifier = (pipe) => {
-  var pname = _.get(pipe, 'name', '')
-  return pname.length > 0 ? pname : _.get(pipe, 'eid', '')
-}
-
 export const getDeployScheduleStr = (s) => {
   if (_.isNil(s)) {
     return ''
@@ -69,6 +62,14 @@ export const getDeployScheduleStr = (s) => {
   }
 
   return ''
+}
+
+/*
+//import doctrine from 'doctrine'
+
+export const getIdentifier = (pipe) => {
+  var pname = _.get(pipe, 'name', '')
+  return pname.length > 0 ? pname : _.get(pipe, 'eid', '')
 }
 
 export const getDeployApiUrl = (identifier) => {

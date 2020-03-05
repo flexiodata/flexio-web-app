@@ -279,7 +279,7 @@
 
         if (_.isNil(_.get(edit_pipe, 'schedule'))) {
           _.set(edit_pipe, 'schedule', _.get(defaultAttrs(), 'schedule'))
-          edit_pipe.deploy_schedule = SCHEDULE_STATUS_INACTIVE
+          edit_pipe.deploy_schedule = schedule.SCHEDULE_STATUS_INACTIVE
         }
 
         this.edit_pipe = edit_pipe
