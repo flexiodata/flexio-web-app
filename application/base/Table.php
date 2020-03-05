@@ -119,6 +119,10 @@ class Table
         if ($row2 < 0)
             $row2 = 0;
 
+        if ($col1 >= $col_count)
+            $col1 = $col_count - 1;
+        if ($row1 >= $row_count)
+            $row1 = $row_count - 1;
         if ($col2 >= $col_count)
             $col2 = $col_count - 1;
         if ($row2 >= $row_count)
