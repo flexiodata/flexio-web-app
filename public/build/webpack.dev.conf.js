@@ -6,6 +6,15 @@ const options = require('./options')
 const base = require('./webpack.base.conf.js')
 
 const config = merge(base, {
+  node: {
+    setImmediate: false,
+    process: 'mock',
+    dgram: 'empty',
+    fs: 'empty',
+    net: 'empty',
+    tls: 'empty',
+    child_process: 'empty'
+  },
   devServer: {
     historyApiFallback: {
       index: './src/index-dev.html'
