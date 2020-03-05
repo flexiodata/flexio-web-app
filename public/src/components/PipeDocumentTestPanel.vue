@@ -40,6 +40,7 @@
         ref="process-input"
         v-model="process_input_advanced"
         :process-data.sync="process_data"
+        :pipe-params="pipe_params"
         v-if="show_advanced_input"
       />
       <div

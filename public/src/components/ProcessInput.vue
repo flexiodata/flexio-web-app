@@ -64,7 +64,12 @@
         style="line-height: 1.15; font-size: 13px; border: 1px solid #dcdfe6"
         :lang="ui.raw_type == 'application/json' ? 'json' : ''"
         :show-json-view-toggle="false"
-        :options="{ minRows: 8, maxRows: 20 }"
+        :options="{
+          minRows: 8,
+          maxRows: 20,
+          lineNumbers: false,
+          placeholder: json_input_placeholder
+        }"
         v-model="ui.raw"
       />
     </div>
@@ -93,7 +98,12 @@
         required: true
       },
       processData: {
-        type: Object
+        type: Object,
+         default: () => {}
+      },
+      pipeParams: {
+        type: Array,
+        default: () => []
       }
     },
     components: {
@@ -128,6 +138,12 @@
           { label: 'XML (text/xml)',                      val: 'text/xml'               },
           { label: 'HTML',                                val: 'text/html'              }
         ]
+      }
+    },
+    computed: {
+      json_input_placeholder() {
+        var keys = this.pipeParams.map(item => item.name)
+        return '[\n  "' + keys.join('",\n  "') + '"\n]'
       }
     },
     methods: {
