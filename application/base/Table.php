@@ -40,6 +40,7 @@ class Table
 
         foreach ($data as $row)
         {
+            $col_count = 0;
             foreach ($row as $value)
             {
                 if (!is_scalar($value))
@@ -62,6 +63,8 @@ class Table
 
         $object = (new self);
         $object->data = $data;
+
+        return $object;
     }
 
     public function getRowCount() : int
@@ -127,10 +130,10 @@ class Table
         }
 
         $range = array();
-        for ($row_idx = $row1; $row_idx <= $row2; $row_idx++)
+        for ($row_idx = $row1; $row_idx < $row2; $row_idx++)
         {
             $row = array();
-            for ($col_idx = $col1; $col_idx <= $col2; $col_idx++)
+            for ($col_idx = $col1; $col_idx < $col2; $col_idx++)
             {
                 $row[] = $this->data[$row_idx][$col_idx];
             }
