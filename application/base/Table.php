@@ -40,11 +40,14 @@ class Table
 
         foreach ($data as $row)
         {
+            if (!is_array($row))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+
             $col_count = 0;
             foreach ($row as $value)
             {
                 if (!is_scalar($value))
-                    throw new Exception(\Flexio\Base\Error::CREATE_FAILED);
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
                 $col_count++;
             }
 
@@ -55,11 +58,11 @@ class Table
         }
 
         if ($min_col_count !== $max_col_count)
-            throw new Exception(\Flexio\Base\Error::CREATE_FAILED);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         // make sure we have at least one row/col
         if ($max_col_count === 0)
-            throw new Exception(\Flexio\Base\Error::CREATE_FAILED);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         $object = (new self);
         $object->data = $data;
@@ -80,9 +83,9 @@ class Table
     public function getRow(int $idx) : array
     {
         if ($idx < 0)
-            throw new Exception(\Flexio\Base\Error::READ_FAILED);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
         if ($idx > ($this->getRowCount()-1))
-            throw new Exception(\Flexio\Base\Error::READ_FAILED);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         return $this->data[$idx];
     }
@@ -90,9 +93,9 @@ class Table
     public function getCol(int $idx) : array
     {
         if ($idx < 0)
-            throw new Exception(\Flexio\Base\Error::READ_FAILED);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
         if ($idx > ($this->getRowCount()-1))
-            throw new Exception(\Flexio\Base\Error::READ_FAILED);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         return array_column($this->data,$idx);
     }
