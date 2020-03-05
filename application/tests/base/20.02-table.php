@@ -146,7 +146,7 @@ class Test
         \Flexio\Tests\Check::assertNumber('C.3', '\Flexio\Base\Table::getCol()',  $actual, $expected, $results);
 
 
-        // TEST: table range
+        // TEST: table getRange
 
         // BEGIN TEST
         $table = \Flexio\Base\Table::create($data_basic);
@@ -157,7 +157,7 @@ class Test
             ["val4","val5","val6"],
             ["val7","val8","val9"],
         ];
-        \Flexio\Tests\Check::assertArray('D.1', '\Flexio\Base\Table::range(); basic test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.1', '\Flexio\Base\Table::getRange(); basic test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $table = \Flexio\Base\Table::create($data_basic);
@@ -168,7 +168,7 @@ class Test
             ["val4","val5","val6"],
             ["val7","val8","val9"],
         ];
-        \Flexio\Tests\Check::assertArray('D.2', '\Flexio\Base\Table::range(); basic test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.2', '\Flexio\Base\Table::getRange(); basic test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $table = \Flexio\Base\Table::create($data_basic);
@@ -179,7 +179,7 @@ class Test
             ["val4","val5","val6"],
             ["val7","val8","val9"],
         ];
-        \Flexio\Tests\Check::assertArray('D.3', '\Flexio\Base\Table::range(); basic test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.3', '\Flexio\Base\Table::getRange(); basic test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $table = \Flexio\Base\Table::create($data_basic);
@@ -190,7 +190,7 @@ class Test
             ["val4","val5","val6"],
             ["val7","val8","val9"],
         ];
-        \Flexio\Tests\Check::assertArray('D.4', '\Flexio\Base\Table::range(); basic test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.4', '\Flexio\Base\Table::getRange(); basic test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $table = \Flexio\Base\Table::create($data_basic);
@@ -201,7 +201,7 @@ class Test
             ["val4","val5","val6"],
             ["val7","val8","val9"],
         ];
-        \Flexio\Tests\Check::assertArray('D.5', '\Flexio\Base\Table::range(); basic test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.5', '\Flexio\Base\Table::getRange(); basic test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $table = \Flexio\Base\Table::create($data_basic);
@@ -209,7 +209,7 @@ class Test
         $expected = [
             ["col1"]
         ];
-        \Flexio\Tests\Check::assertArray('D.6', '\Flexio\Base\Table::range(); basic test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.6', '\Flexio\Base\Table::getRange(); basic test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $table = \Flexio\Base\Table::create($data_basic);
@@ -218,7 +218,7 @@ class Test
             ["col1","col2"],
             ["val1","val2"],
         ];
-        \Flexio\Tests\Check::assertArray('D.7', '\Flexio\Base\Table::range(); basic test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.7', '\Flexio\Base\Table::getRange(); basic test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $table = \Flexio\Base\Table::create($data_basic);
@@ -228,7 +228,7 @@ class Test
             ["val5","val6"],
             ["val8","val9"],
         ];
-        \Flexio\Tests\Check::assertArray('D.8', '\Flexio\Base\Table::range(); basic test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.8', '\Flexio\Base\Table::getRange(); basic test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $table = \Flexio\Base\Table::create($data_basic);
@@ -239,7 +239,7 @@ class Test
             ["val4"],
             ["val7"],
         ];
-        \Flexio\Tests\Check::assertArray('D.9', '\Flexio\Base\Table::range(); basic test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.9', '\Flexio\Base\Table::getRange(); basic test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $table = \Flexio\Base\Table::create($data_basic);
@@ -247,6 +247,110 @@ class Test
         $expected = [
             ["col1","col2","col3"],
         ];
-        \Flexio\Tests\Check::assertArray('D.10', '\Flexio\Base\Table::range(); basic test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.10', '\Flexio\Base\Table::getRange(); basic test',  $actual, $expected, $results);
+
+
+        // TEST: table setRange
+
+        // BEGIN TEST
+        $table = \Flexio\Base\Table::create($data_basic);
+        $actual = $table->setRange()->getRange();
+        $expected = [
+            ["col1","col2","col3"],
+            ["val1","val2","val3"],
+            ["val4","val5","val6"],
+            ["val7","val8","val9"],
+        ];
+        \Flexio\Tests\Check::assertArray('E.1', '\Flexio\Base\Table::setRange(); basic test',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $table = \Flexio\Base\Table::create($data_basic);
+        $actual = $table->setRange(-1,-1,100,100)->getRange();
+        $expected = [
+            ["col1","col2","col3"],
+            ["val1","val2","val3"],
+            ["val4","val5","val6"],
+            ["val7","val8","val9"],
+        ];
+        \Flexio\Tests\Check::assertArray('E.2', '\Flexio\Base\Table::setRange(); basic test',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $table = \Flexio\Base\Table::create($data_basic);
+        $actual = $table->setRange(100,100,-1,-1)->getRange();
+        $expected = [
+            ["col1","col2","col3"],
+            ["val1","val2","val3"],
+            ["val4","val5","val6"],
+            ["val7","val8","val9"],
+        ];
+        \Flexio\Tests\Check::assertArray('E.3', '\Flexio\Base\Table::setRange(); basic test',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $table = \Flexio\Base\Table::create($data_basic);
+        $actual = $table->setRange(0,0,2,3)->getRange();
+        $expected = [
+            ["col1","col2","col3"],
+            ["val1","val2","val3"],
+            ["val4","val5","val6"],
+            ["val7","val8","val9"],
+        ];
+        \Flexio\Tests\Check::assertArray('E.4', '\Flexio\Base\Table::setRange(); basic test',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $table = \Flexio\Base\Table::create($data_basic);
+        $actual = $table->setRange(2,3,0,0)->getRange();
+        $expected = [
+            ["col1","col2","col3"],
+            ["val1","val2","val3"],
+            ["val4","val5","val6"],
+            ["val7","val8","val9"],
+        ];
+        \Flexio\Tests\Check::assertArray('E.5', '\Flexio\Base\Table::setRange(); basic test',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $table = \Flexio\Base\Table::create($data_basic);
+        $actual = $table->setRange(0,0,0,0)->getRange();
+        $expected = [
+            ["col1"]
+        ];
+        \Flexio\Tests\Check::assertArray('E.6', '\Flexio\Base\Table::setRange(); basic test',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $table = \Flexio\Base\Table::create($data_basic);
+        $actual = $table->setRange(null,null,1,1)->getRange();
+        $expected = [
+            ["col1","col2"],
+            ["val1","val2"],
+        ];
+        \Flexio\Tests\Check::assertArray('E.7', '\Flexio\Base\Table::setRange(); basic test',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $table = \Flexio\Base\Table::create($data_basic);
+        $actual = $table->setRange(1,1,null,null)->getRange();
+        $expected = [
+            ["val2","val3"],
+            ["val5","val6"],
+            ["val8","val9"],
+        ];
+        \Flexio\Tests\Check::assertArray('E.8', '\Flexio\Base\Table::setRange(); basic test',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $table = \Flexio\Base\Table::create($data_basic);
+        $actual = $table->setRange(0,null,0,null)->getRange();
+        $expected = [
+            ["col1"],
+            ["val1"],
+            ["val4"],
+            ["val7"],
+        ];
+        \Flexio\Tests\Check::assertArray('E.9', '\Flexio\Base\Table::setRange(); basic test',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $table = \Flexio\Base\Table::create($data_basic);
+        $actual = $table->setRange(null,0,null,0)->getRange();
+        $expected = [
+            ["col1","col2","col3"],
+        ];
+        \Flexio\Tests\Check::assertArray('E.10', '\Flexio\Base\Table::setRange(); basic test',  $actual, $expected, $results);
     }
 }

@@ -100,6 +100,12 @@ class Table
         return array_column($this->data,$idx);
     }
 
+    public function setRange(int $col1 = null, int $row1 = null, int $col2 = null, int $row2 = null) : \Flexio\Base\Table
+    {
+        $this->data = self::getRange($col1, $row1, $col2, $row2);
+        return $this;
+    }
+
     public function getRange(int $col1 = null, int $row1 = null, int $col2 = null, int $row2 = null) : array
     {
         $row_count = self::getRowCount();
