@@ -657,7 +657,10 @@ class Pipe
             // TODO: check that user is within usage limits; should this be factored out into a separate object along with rights?
             // note: use here is primarily to avoid running pipes for users whose trials have expired and not
             // so much a limitation on total process executions
-            $owner_user = $pipe->getOwner();
+            $owner_user_eid = $pipe->getOwner();
+            $owner_user = \Flexio\Object\User::load($owner_user_eid);
+            if ($owner_user->getStatus() === \Model::STATUS_DELETED)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
             if ($owner_user->processUsageWithinLimit() === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::RATE_LIMIT_EXCEEDED);
 
