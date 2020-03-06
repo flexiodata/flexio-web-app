@@ -842,7 +842,13 @@ class Util
             //  - col1=a&col2=b
             $query_parameters = array();
             parse_str($value, $query_parameters);
-            return $query_parameters;
+
+            $result = array();
+            foreach ($query_parameters as $key => $value)
+            {
+                $result[$key] = [$value];
+            }
+            return $result;
         }
 
         if (is_array($value))
@@ -886,9 +892,8 @@ class Util
                         for ($idx = 0; $idx < $col_count; $idx++)
                         {
                             $column = $table->getCol($idx);
-                            $query_param_name = $column[0];
-                            $query_param_value = $column[1]; // TODO: for now, only use the first item
-                            $query_parameters[$query_param_name] = $query_param_value;
+                            $query_param_name = array_shift($column);
+                            $query_parameters[$query_param_name] = $column ?? array();
                         }
                     }
                     return $query_parameters;
@@ -902,9 +907,8 @@ class Util
                         for ($idx = 0; $idx < $row_count; $idx++)
                         {
                             $row = $table->getRow($idx);
-                            $query_param_name = $row[0];
-                            $query_param_value = $row[1]; // TODO: for now, only use the first item
-                            $query_parameters[$query_param_name] = $query_param_value;
+                            $query_param_name = array_shift($row);
+                            $query_parameters[$query_param_name] = $row ?? array();
                         }
                     }
                     return $query_parameters;

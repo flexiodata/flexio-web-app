@@ -164,6 +164,11 @@ class Search extends \Flexio\Jobs\Base
             foreach ($query_parameters as $key => $value)
             {
                 // for now, straight key/value copy
+
+                if (count($value) == 0)
+                    continue;
+                $value = $value[0];
+
                 $match_expression[] = ['match' => [$key => $value]];
             }
 
