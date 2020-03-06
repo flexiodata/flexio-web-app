@@ -647,19 +647,29 @@ class Pipe
     public static function runFromCron(string $pipe_eid) : void
     {
         // STEP 1: load the pipe
-        $pipe = false;
         $pipe_properties = false;
         try
         {
             $pipe = \Flexio\Object\Pipe::load($pipe_eid);
             if ($pipe->getStatus() === \Model::STATUS_DELETED)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+            // TODO: check that user is within usage limits; should this be factored out into a separate object along with rights?
+            // note: use here is primarily to avoid running pipes for users whose trials have expired and not
+            // so much a limitation on total process executions
+            $owner_user = $pipe->getOwner();
+            if ($owner_user->processUsageWithinLimit() === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::RATE_LIMIT_EXCEEDED);
+
             $pipe_properties = $pipe->get();
         }
         catch (\Flexio\Base\Exception $e)
         {
-            return;
         }
+
+        // if we couldn't get the pipe properties, don't run the pipe
+        if ($pipe_properties === false)
+            return;
 
         $process_properties = array(
             'parent_eid' => $pipe_properties['eid'],
@@ -682,6 +692,15 @@ class Pipe
         $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
         //$process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::incrementProcessCount', array());
         $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::addMountParams', array());
+        if ($pipe_properties['run_mode'] === \Model::PIPE_RUN_MODE_INDEX)
+        {
+            // get the structure from the pipe returns info
+            $elastic_search_params = array(
+                'parent_eid' => $pipe_properties['eid'],
+                'structure' => $pipe_properties['returns']
+            );
+            $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_FINISHING,  '\Flexio\Api\ProcessHandler::saveStdoutToElasticSearch', $elastic_search_params);
+        }
         //$process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_FINISHING, '\Flexio\Api\ProcessHandler::decrementProcessCount', array());
 
         // STEP 3: run the process
