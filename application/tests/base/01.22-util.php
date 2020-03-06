@@ -23,8 +23,13 @@ class Test
         // TEST: \Flexio\Base\Util::coerceToParams()
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::coerceToQueryParams("col1=a", ["col1"]);
+        $actual = \Flexio\Base\Util::coerceToQueryParams("col1=a");
         $expected = ["col1"=>"a"];
+        \Flexio\Tests\Check::assertArray('A.1', '\Flexio\Base\Util::coerceToQueryParams(); coerce input to an array of keys and associated match params',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\Util::coerceToQueryParams("col1=a&col2=b");
+        $expected = ["col1"=>"a","col2"=>"b"];
         \Flexio\Tests\Check::assertArray('A.1', '\Flexio\Base\Util::coerceToQueryParams(); coerce input to an array of keys and associated match params',  $actual, $expected, $results);
     }
 }

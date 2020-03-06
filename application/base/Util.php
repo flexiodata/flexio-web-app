@@ -832,7 +832,7 @@ class Util
         return array();
     }
 
-    public static function coerceToQueryParams($value, array $available_columns) : array
+    public static function coerceToQueryParams($value, array $available_columns = array()) : array
     {
         if (is_string($value))
         {
