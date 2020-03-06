@@ -156,7 +156,7 @@ class Search extends \Flexio\Jobs\Base
         // get the row selection params
         if (count($search_params) > 1)
         {
-            $query_parameters = self::coerceToQueryParams($search_params[1], $available_columns);
+            $query_parameters = \Flexio\Base\Util::coerceToQueryParams($search_params[1], $available_columns);
 
             // example:
             // '{"query": {"bool": "must": {"match": {"first_name": "John"}}}}';
@@ -170,94 +170,6 @@ class Search extends \Flexio\Jobs\Base
             $match_expression = json_encode($match_expression,JSON_UNESCAPED_SLASHES);
             $search_rows = '{"query": {"bool": {"must": '.$match_expression. '}}}';
         }
-    }
-
-    private static function coerceToQueryParams($value, array $available_columns) : array
-    {
-        if (is_string($value))
-        {
-            // if we have a string, treat it as a URL query string
-            // examples:\
-            //  - col1=a
-            //  - col1=a&col2=b
-            $query_parameters = array();
-            parse_str($value, $query_parameters);
-            return $query_parameters;
-        }
-
-        if (is_array($value))
-        {
-            // if we have an array, treat it is a combination of column names and associated
-            // filter values on those columns in either vertical or horizontal format:
-            // examples:
-            //  - [["col1","col2"],["a","b"]] // horizontal column format where values are under columns
-            //  - [["col1","a"],["col2","b"]] // vertical column format where values are to the right of the columns
-
-            // first, determine if we're in the horizontal or vertical mode by seeing which has
-            // values that match columns names; in even of tie, give precedence to vertical
-            // column format to handle basic filter where value would be next to column title: ["col1", "a"]
-
-            $table = array();
-            try
-            {
-                $table = \Flexio\Base\Table::create($value);
-
-                // get the first row and the first column
-                $possible_horizontal_columns = $table->getRow(0);
-                $possible_vertical_columns = $table->getCol(0);
-
-                // convert columns to lowercase string for match
-                $possible_horizontal_columns = array_map('strval', $possible_horizontal_columns);
-                $possible_horizontal_columns = array_map('strtolower', $possible_horizontal_columns);
-                $possible_vertical_columns = array_map('strval', $possible_vertical_columns);
-                $possible_vertical_columns = array_map('strtolower', $possible_vertical_columns);
-
-                // use the better orientation for determining the query values;
-                // give precedence to vertical column layout
-                $count_matching_columns_horizontal = count(array_intersect($available_columns, $possible_horizontal_columns));
-                $count_matching_columns_vertical = count(array_intersect($available_columns, $possible_vertical_columns));
-
-                if ($count_matching_columns_horizontal > $count_matching_columns_vertical)
-                {
-                    $query_parameters = array();
-                    if ($table->getRowCount() > 1)
-                    {
-                        $col_count = $table->getColCount();
-                        for ($idx = 0; $idx < $col_count; $idx++)
-                        {
-                            $column = $table->getCol($idx);
-                            $query_param_name = $column[0];
-                            $query_param_value = $column[1]; // TODO: for now, only use the first item
-                            $query_parameters[$query_param_name] = $query_param_value;
-                        }
-                    }
-                    return $query_parameters;
-                }
-                else
-                {
-                    $query_parameters = array();
-                    if ($table->getColCount() > 1)
-                    {
-                        $row_count = $table->getRowCount();
-                        for ($idx = 0; $idx < $row_count; $idx++)
-                        {
-                            $row = $table->getRow($idx);
-                            $query_param_name = $row[0];
-                            $query_param_value = $row[1]; // TODO: for now, only use the first item
-                            $query_parameters[$query_param_name] = $query_param_value;
-                        }
-                    }
-                    return $query_parameters;
-                }
-            }
-            catch (\Flexio\Base\Exception $e)
-            {
-                // fall through
-            }
-        }
-
-        // some other format
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
     }
 }
 
