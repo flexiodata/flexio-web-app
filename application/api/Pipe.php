@@ -435,12 +435,10 @@ class Pipe
 
         // experimental/test function for populating an elasticsearch cache
         // from the output of a pipe; this cache then be queried via another
-        // endpoint; only allow adminstrator users to get this
+        // endpoint
         $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
         if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($requesting_user->isAdministrator() !== true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
 /*
         $request->track(\Flexio\Api\Action::TYPE_PROCESS_CREATE);
@@ -560,12 +558,10 @@ class Pipe
 
         // experimental/test function for populating an elasticsearch cache
         // from the output of a pipe; this cache then be queried via another
-        // endpoint; only allow adminstrator users to get this
+        // endpoint
         $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
         if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($requesting_user->isAdministrator() !== true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
 /*
         $request->track(\Flexio\Api\Action::TYPE_PROCESS_CREATE);
