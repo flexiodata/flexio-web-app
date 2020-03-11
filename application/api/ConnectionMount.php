@@ -238,25 +238,18 @@ class ConnectionMount
 
             $existing_pipe_names[$pipe_name] = 1;
             $pipe_deployed = $pipe_info_from_content['deployed'] ?? false; // don't deploy by default
-            $pipe_title = $pipe_info_from_content['title'] ?? '';
-            $pipe_icon = $pipe_info_from_content['icon'] ?? '';
-            $pipe_description = $pipe_info_from_content['description'] ?? '';
-            $pipe_examples = $pipe_info_from_content['examples'] ?? [];
-            $pipe_funcparams = $pipe_info_from_content['params'] ?? [];
-            $pipe_funcreturns = $pipe_info_from_content['returns'] ?? [];
-            $pipe_notes = $pipe_info_from_content['notes'] ?? '';
 
             // set basic pipe info
             $pipe_params = array();
             $pipe_params['parent_eid'] = $connection_eid;
             $pipe_params['name'] = $pipe_name;
-            $pipe_params['title'] = $pipe_title;
-            $pipe_params['icon'] = $pipe_icon;
-            $pipe_params['description'] = $pipe_description;
-            $pipe_params['examples'] = $pipe_examples;
-            $pipe_params['params'] = $pipe_funcparams;
-            $pipe_params['returns'] = $pipe_funcreturns;
-            $pipe_params['notes'] = $pipe_notes;
+            $pipe_params['title'] = $pipe_info_from_content['title'] ?? '';
+            $pipe_params['icon'] = $pipe_info_from_content['icon'] ?? '';
+            $pipe_params['description'] = $pipe_info_from_content['description'] ?? '';
+            $pipe_params['examples'] = $pipe_info_from_content['examples'] ?? [];
+            $pipe_params['params'] = $pipe_info_from_content['params'] ?? [];
+            $pipe_params['returns'] = $pipe_info_from_content['returns'] ?? [];
+            $pipe_params['notes'] = $pipe_info_from_content['notes'] ?? '';
             $pipe_params['deploy_mode'] = $pipe_deployed ? \Model::PIPE_DEPLOY_MODE_RUN : \Model::PIPE_DEPLOY_MODE_BUILD;
             $pipe_params['deploy_api'] = \Model::PIPE_DEPLOY_STATUS_ACTIVE;
             $pipe_params['deploy_schedule'] = \Model::PIPE_DEPLOY_STATUS_INACTIVE;
