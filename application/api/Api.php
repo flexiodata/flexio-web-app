@@ -164,7 +164,6 @@ class Api
         // EXPERIMENTAL ENDPOINTS
 
         // experimental/test pipe endpoint for populating an elasticsearch cache from a pipe output
-        'GET /:teamid/pipes/:objid/searchcache'     => '\Flexio\Api\Pipe::searchcache',
         'POS /:teamid/pipes/:objid/populatecache'     => '\Flexio\Api\Pipe::populatecache',
 
         // experimental processes endpoint for running code (creates and runs a process from code)
