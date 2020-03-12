@@ -132,37 +132,6 @@ class ProcessHandler
         $process_host->getEngine()->setParams(array_merge($user_variables, $mount_variables));
     }
 
-    public static function saveStdoutToProcessOutputStream(\Flexio\Jobs\ProcessHost $process_host, array $callback_params) : void
-    {
-        // get the stdout stream
-        $stdout_stream = $process_host->getEngine()->getStdout();
-
-        // create a stream to store the stdout
-        $properties['path'] = \Flexio\Base\Util::generateHandle();
-        $properties['owned_by'] = $process_host->getStore()->getOwner();
-        $properties = array_merge($stdout_stream->get(), $properties);
-        $storable_stream = \Flexio\Object\Stream::create($properties);
-
-        // copy from the input stream to the storable stream
-        $streamreader = $stdout_stream->getReader();
-        $streamwriter = $storable_stream->getWriter();
-
-        if ($stdout_stream->getMimeType() === \Flexio\Base\ContentType::FLEXIO_TABLE)
-        {
-            while (($row = $streamreader->readRow()) !== false)
-                $streamwriter->write($row);
-        }
-        else
-        {
-            while (($data = $streamreader->read(32768)) !== false)
-                $streamwriter->write($data);
-        }
-
-        $process_params = array();
-        $process_params['output'] = array('stream' => $storable_stream->getEid());
-        $process_host->getStore()->set($process_params);
-    }
-
     public static function saveStdoutToStream(\Flexio\Jobs\ProcessHost $process_host, array $callback_params) : void
     {
         $validator = \Flexio\Base\Validator::create();
