@@ -223,12 +223,10 @@ class ConnectionMount
             $content = self::getContentFromCacheOrPath($connection_info, $item_info);
 
             // get the pipe info from the content; if we can't find any, don't import the pipe
-            $pipe_info_from_content = \Flexio\Object\Factory::getPipeInfoFromContent($content);
+            $pipe_info_from_content = \Flexio\Object\Factory::getPipeInfoFromContent($content, $language);
             if (!isset($pipe_info_from_content))
                 continue;
 
-            // see if the pipe name is in the list of existing pipes; if so, postfix it
-            // with a unique identifier
             // get the pipe name and make sure it's unique
             $pipe_name = $pipe_info_from_content['name'] ?? '';
             $pipe_name = self::getUniquePipeName($pipe_name, $existing_pipe_names);
@@ -244,30 +242,6 @@ class ConnectionMount
             $pipe_params['name'] = $pipe_name; // override supplied name with name that's unique
             $pipe_params['owned_by'] = $connection_info['owned_by']['eid'];
             $pipe_params['created_by'] = $connection_info['created_by']['eid'];
-
-            // set the task info
-            if ($language === 'flexio')
-            {
-                $task = array();
-                $pipe = @json_decode($content,true);
-                if (!is_null($pipe))
-                    $task = $pipe['task'] ?? array();
-                $pipe_params['task'] = $task;
-            }
-            else
-            {
-                $execute_job_params = array();
-                $execute_job_params['op'] = 'execute'; // set the execute operation so this doesn't need to be supplied
-                $execute_job_params['lang'] = $language; // TODO: set the language from the extension
-                $execute_job_params['code'] = base64_encode($content); // encode the script
-
-                $pipe_params['task'] = [
-                    "op" => "sequence",
-                    "items" => [
-                        $execute_job_params
-                    ]
-                ];
-            }
 
             // create the new pipe
             $item = \Flexio\Object\Pipe::create($pipe_params);
