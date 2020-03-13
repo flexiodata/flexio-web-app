@@ -157,21 +157,6 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             }
         }
 
-        if (isset($properties) && isset($properties['deploy_email']))
-        {
-            switch ($properties['deploy_email'])
-            {
-                default:
-                    $properties['deploy_email'] = \Model::PIPE_DEPLOY_STATUS_INACTIVE;
-                    break;
-
-                case \Model::PIPE_DEPLOY_STATUS_INACTIVE:
-                case \Model::PIPE_DEPLOY_STATUS_ACTIVE:
-                    // leave what's there
-                    break;
-            }
-        }
-
         if (isset($properties) && isset($properties['deploy_api']))
         {
             switch ($properties['deploy_api'])
@@ -283,21 +268,6 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             {
                 default:
                     $properties['deploy_schedule'] = \Model::PIPE_DEPLOY_STATUS_INACTIVE;
-                    break;
-
-                case \Model::PIPE_DEPLOY_STATUS_INACTIVE:
-                case \Model::PIPE_DEPLOY_STATUS_ACTIVE:
-                    // leave what's there
-                    break;
-            }
-        }
-
-        if (isset($properties) && isset($properties['deploy_email']))
-        {
-            switch ($properties['deploy_email'])
-            {
-                default:
-                    $properties['deploy_email'] = \Model::PIPE_DEPLOY_STATUS_INACTIVE;
                     break;
 
                 case \Model::PIPE_DEPLOY_STATUS_INACTIVE:
@@ -453,7 +423,6 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "run_mode" => null,
                 "deploy_mode" => null,
                 "deploy_schedule" => null,
-                "deploy_email" => null,
                 "deploy_api" => null,
                 "owned_by" => null,
                 "created_by" => null,

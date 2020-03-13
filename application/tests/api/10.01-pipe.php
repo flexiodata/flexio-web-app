@@ -107,7 +107,6 @@ class Test
                 "run_mode": "I",
                 "deploy_mode": "B",
                 "deploy_schedule": "I",
-                "deploy_email": "A",
                 "deploy_api": "A"
             }'
         );
@@ -145,7 +144,6 @@ class Test
             "run_mode": "I",
             "deploy_mode": "B",
             "deploy_schedule": "I",
-            "deploy_email": "A",
             "deploy_api": "A",
             "owned_by": {
                 "eid": "'.$userid1.'",
