@@ -237,21 +237,11 @@ class ConnectionMount
                 continue; // TODO: throw exception
 
             $existing_pipe_names[$pipe_name] = 1;
-            $pipe_deployed = $pipe_info_from_content['deployed'] ?? false; // don't deploy by default
 
             // set basic pipe info
-            $pipe_params = array();
+            $pipe_params = $pipe_info_from_content;
             $pipe_params['parent_eid'] = $connection_eid;
-            $pipe_params['name'] = $pipe_name;
-            $pipe_params['title'] = $pipe_info_from_content['title'] ?? '';
-            $pipe_params['icon'] = $pipe_info_from_content['icon'] ?? '';
-            $pipe_params['description'] = $pipe_info_from_content['description'] ?? '';
-            $pipe_params['examples'] = $pipe_info_from_content['examples'] ?? [];
-            $pipe_params['params'] = $pipe_info_from_content['params'] ?? [];
-            $pipe_params['returns'] = $pipe_info_from_content['returns'] ?? [];
-            $pipe_params['notes'] = $pipe_info_from_content['notes'] ?? '';
-            $pipe_params['deploy_mode'] = $pipe_deployed ? \Model::PIPE_DEPLOY_MODE_RUN : \Model::PIPE_DEPLOY_MODE_BUILD;
-            $pipe_params['deploy_schedule'] = \Model::PIPE_DEPLOY_STATUS_INACTIVE;
+            $pipe_params['name'] = $pipe_name; // override supplied name with name that's unique
             $pipe_params['owned_by'] = $connection_info['owned_by']['eid'];
             $pipe_params['created_by'] = $connection_info['created_by']['eid'];
 
@@ -358,7 +348,21 @@ class ConnectionMount
         try
         {
             $yaml = \Flexio\Base\Yaml::extract($content);
-            return \Flexio\Base\Yaml::parse($yaml);
+            $pipe_info_from_content = \Flexio\Base\Yaml::parse($yaml);
+
+            // set basic pipe info using mostly same parameter names as
+            // pipe api; use defaults supplied by object/model as well
+            $pipe_params = $pipe_info_from_content;
+
+            // content format consolidates schedule information: if it exists
+            // the schedule is activated and if it doesn't exist, the schedule
+            // isn't; unpack into form currently used by the model/api
+            if (isset($pipe_info_from_content['schedule']))
+                $pipe_params['deploy_schedule'] = \Model::PIPE_DEPLOY_STATUS_ACTIVE;
+                 else
+                $pipe_params['deploy_schedule'] = \Model::PIPE_DEPLOY_STATUS_INACTIVE;
+
+            return $pipe_params;
         }
         catch (\Exception $exception)
         {
