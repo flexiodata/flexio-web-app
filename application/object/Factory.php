@@ -122,13 +122,17 @@ class Factory
 
     public static function createConnectionFromFile(string $user_eid, string $file_name) : string
     {
-        // STEP 1: read the pipe file and convert it to JSON
-        $buf = \Flexio\Base\File::read($file_name);
-        $definition = @json_decode($buf,true);
-        if ($definition === false)
+        // STEP 1: read the file and extract the info
+        $content = \Flexio\Base\File::read($file_name);
+        if (!is_string($content))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        $definition = self::getConnectionInfoFromContent($content);
+        if (!isset($definition))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         // STEP 2: add additional info
+        $call_params = $definition;
         $call_params['name'] = $definition['name'] ?? 'sample-connection';
         $call_params['owned_by'] = $user_eid;
         $call_params['created_by'] = $user_eid;
@@ -140,15 +144,20 @@ class Factory
 
     public static function createPipeFromFile(string $user_eid, string $file_name) : string
     {
-        // STEP 1: read the pipe file and convert it to JSON
-        $buf = \Flexio\Base\File::read($file_name);
-        $definition = @json_decode($buf,true);
-        if ($definition === false)
+        // STEP 1: read the file and extract the info
+        $content = \Flexio\Base\File::read($file_name);
+        if (!is_string($content))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        $definition = self::getPipeInfoFromContent($content);
+        if (!isset($definition))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         // STEP 2: add additional info
         $file_name_base = \Flexio\Base\File::getFilename($file_name);
         $default_pipe_name = \Flexio\Base\Identifier::makeValid($file_name_base);
+
+        $call_params = $definition;
         $call_params['name'] = $definition['name'] ?? $default_pipe_name;
         $call_params['owned_by'] = $user_eid;
         $call_params['created_by'] = $user_eid;
@@ -175,15 +184,14 @@ class Factory
         return null;
     }
 
-    public static function getPipeInfoFromContent(string $content) : ?array
+    public static function getPipeInfoFromContent(string $content, string $language = 'python') : ?array
     {
         try
         {
-            $yaml = \Flexio\Base\Yaml::extract($content);
-            $pipe_info_from_content = \Flexio\Base\Yaml::parse($yaml);
-
             // set basic pipe info using mostly same parameter names as
             // pipe api; use defaults supplied by object/model as well
+            $yaml = \Flexio\Base\Yaml::extract($content);
+            $pipe_info_from_content = \Flexio\Base\Yaml::parse($yaml);
             $pipe_params = $pipe_info_from_content;
 
             // content format consolidates schedule information: if it exists
@@ -193,6 +201,33 @@ class Factory
                 $pipe_params['deploy_schedule'] = \Model::PIPE_DEPLOY_STATUS_ACTIVE;
                  else
                 $pipe_params['deploy_schedule'] = \Model::PIPE_DEPLOY_STATUS_INACTIVE;
+
+            // set the task info
+            if ($language === 'flexio')
+            {
+                // TODO: need to trim off front-matter; currently, 'flexio' pipes
+                // aren't used, so this isn't a factor and following code provides
+                // an outline
+                $task = array();
+                $pipe = @json_decode($pipe_info_from_content,true);
+                if (!is_null($pipe))
+                    $task = $pipe['task'] ?? array();
+                $pipe_params['task'] = $task;
+            }
+            else
+            {
+                $execute_job_params = array();
+                $execute_job_params['op'] = 'execute'; // set the execute operation so this doesn't need to be supplied
+                $execute_job_params['lang'] = $language;
+                $execute_job_params['code'] = base64_encode($pipe_info_from_content); // encode the script
+
+                $pipe_params['task'] = [
+                    "op" => "sequence",
+                    "items" => [
+                        $execute_job_params
+                    ]
+                ];
+            }
 
             return $pipe_params;
         }
@@ -211,20 +246,11 @@ class Factory
 
         $objects = array(
 
-            // connection with data used for creating some sample functions
-            array('eid_type' => \Model::TYPE_CONNECTION, 'path' => $demo_dir . 'connection_amazons3.json'),
+            // execute function
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_example_currency_rates.yml'),
 
             // execute function
-            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_example_currency_rates.json'),
-
-            // execute function
-            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_example_currency_converter.json'),
-
-            // extract function
-            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_example_contact_list.json'),
-
-            // lookup function
-            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_example_contact_lookup.json')
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_example_currency_converter.yml'),
         );
 
         return $objects;
