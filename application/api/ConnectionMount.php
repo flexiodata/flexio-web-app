@@ -223,7 +223,7 @@ class ConnectionMount
             $content = self::getContentFromCacheOrPath($connection_info, $item_info);
 
             // get the pipe info from the content; if we can't find any, don't import the pipe
-            $pipe_info_from_content = self::getPipeInfoFromContent($content);
+            $pipe_info_from_content = \Flexio\Object\Factory::getPipeInfoFromContent($content);
             if (!isset($pipe_info_from_content))
                 continue;
 
@@ -341,36 +341,6 @@ class ConnectionMount
         // if we haven't found anything, return something that will be unique
         // TODO: different approach?
         $pipe_name = $pipe_name . '-' . \Flexio\Base\Util::generateRandomString(10);
-    }
-
-    private static function getPipeInfoFromContent(string $content) : ?array
-    {
-        try
-        {
-            $yaml = \Flexio\Base\Yaml::extract($content);
-            $pipe_info_from_content = \Flexio\Base\Yaml::parse($yaml);
-
-            // set basic pipe info using mostly same parameter names as
-            // pipe api; use defaults supplied by object/model as well
-            $pipe_params = $pipe_info_from_content;
-
-            // content format consolidates schedule information: if it exists
-            // the schedule is activated and if it doesn't exist, the schedule
-            // isn't; unpack into form currently used by the model/api
-            if (isset($pipe_info_from_content['schedule']))
-                $pipe_params['deploy_schedule'] = \Model::PIPE_DEPLOY_STATUS_ACTIVE;
-                 else
-                $pipe_params['deploy_schedule'] = \Model::PIPE_DEPLOY_STATUS_INACTIVE;
-
-            return $pipe_params;
-        }
-        catch (\Exception $exception)
-        {
-            // DEBUG:
-            // echo('Unable to parse the YAML string: %s', $exception->getMessage());
-        }
-
-        return null;
     }
 }
 

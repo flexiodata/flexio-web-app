@@ -149,6 +149,36 @@ class Factory
         return $pipe->getEid();
     }
 
+    public static function getPipeInfoFromContent(string $content) : ?array
+    {
+        try
+        {
+            $yaml = \Flexio\Base\Yaml::extract($content);
+            $pipe_info_from_content = \Flexio\Base\Yaml::parse($yaml);
+
+            // set basic pipe info using mostly same parameter names as
+            // pipe api; use defaults supplied by object/model as well
+            $pipe_params = $pipe_info_from_content;
+
+            // content format consolidates schedule information: if it exists
+            // the schedule is activated and if it doesn't exist, the schedule
+            // isn't; unpack into form currently used by the model/api
+            if (isset($pipe_info_from_content['schedule']))
+                $pipe_params['deploy_schedule'] = \Model::PIPE_DEPLOY_STATUS_ACTIVE;
+                 else
+                $pipe_params['deploy_schedule'] = \Model::PIPE_DEPLOY_STATUS_INACTIVE;
+
+            return $pipe_params;
+        }
+        catch (\Exception $exception)
+        {
+            // DEBUG:
+            // echo('Unable to parse the YAML string: %s', $exception->getMessage());
+        }
+
+        return null;
+    }
+
     public static function createExampleObjects(string $user_eid) : array
     {
         $created_items = array();
