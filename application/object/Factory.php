@@ -128,25 +128,13 @@ class Factory
         if ($definition === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-        // STEP 2: create the object
+        // STEP 2: add additional info
         $call_params['name'] = $definition['name'] ?? 'sample-connection';
-        $call_params['description'] = $definition['description'] ?? '';
-
-        if (isset($definition['connection_status']))
-            $call_params['connection_status'] = $definition['connection_status'];
-        if (isset($definition['connection_type']))
-            $call_params['connection_type'] = $definition['connection_type'];
-        if (isset($definition['connection_mode']))
-            $call_params['connection_mode'] = $definition['connection_mode'];
-        if (isset($definition['connection_info']))
-            $call_params['connection_info'] = $definition['connection_info'];
-        if (isset($definition['expires']))
-            $call_params['expires'] = $definition['expires'];
-
         $call_params['owned_by'] = $user_eid;
         $call_params['created_by'] = $user_eid;
-        $connection = \Flexio\Object\Connection::create($call_params);
 
+        // STEP 3: create the object
+        $connection = \Flexio\Object\Connection::create($call_params);
         return $connection->getEid();
     }
 
@@ -158,25 +146,15 @@ class Factory
         if ($definition === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-        // STEP 2: get a default pipe name in case name isn't specified in
-        // the pipe info
+        // STEP 2: add additional info
         $file_name_base = \Flexio\Base\File::getFilename($file_name);
         $default_pipe_name = \Flexio\Base\Identifier::makeValid($file_name_base);
-
-        // STEP 2: create the object
         $call_params['name'] = $definition['name'] ?? $default_pipe_name;
-        $call_params['title'] = $definition['title'] ?? '';
-        $call_params['description'] = $definition['description'] ?? '';
-        $call_params['deploy_mode'] = $definition['deploy_mode'] ?? \Model::PIPE_DEPLOY_MODE_RUN;
-        $call_params['deploy_schedule'] = $definition['deploy_schedule'] ?? \Model::PIPE_DEPLOY_STATUS_INACTIVE;
-        $call_params['examples'] = $definition['examples'] ?? [];
-        $call_params['params'] = $definition['params'] ?? [];
-        $call_params['notes'] = $definition['notes'] ?? '';
-        $call_params['task'] = $definition['task'] ?? [];
         $call_params['owned_by'] = $user_eid;
         $call_params['created_by'] = $user_eid;
-        $pipe = \Flexio\Object\Pipe::create($call_params);
 
+        // STEP 3: create the object
+        $pipe = \Flexio\Object\Pipe::create($call_params);
         return $pipe->getEid();
     }
 
