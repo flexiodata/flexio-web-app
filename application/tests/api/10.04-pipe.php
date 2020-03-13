@@ -43,8 +43,7 @@ class Test
                     "op": "echo",
                     "msg": "${form.msg}"
                 },
-                "deploy_mode": "R",
-                "deploy_api": "A"
+                "deploy_mode": "R"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -62,8 +61,7 @@ class Test
                     "op": "echo",
                     "msg": "${form.msg}"
                 },
-                "deploy_mode": "R",
-                "deploy_api": "A"
+                "deploy_mode": "R"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -81,8 +79,7 @@ class Test
                     "op": "echo",
                     "msg": "Hello, ${form.noun}. Would you like to ${form.verb}?"
                 },
-                "deploy_mode": "R",
-                "deploy_api": "A"
+                "deploy_mode": "R"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -100,8 +97,7 @@ class Test
                     "op": "echo",
                     "msg": "${input.msg}"
                 },
-                "deploy_mode": "R",
-                "deploy_api": "A"
+                "deploy_mode": "R"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);

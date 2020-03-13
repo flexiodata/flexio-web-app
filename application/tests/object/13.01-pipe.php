@@ -245,7 +245,6 @@ class Test
             "run_mode": "P",
             "deploy_mode": "B",
             "deploy_schedule": "I",
-            "deploy_api": "I",
             "owned_by" : {
                 "eid" : null,
                 "eid_type" : null

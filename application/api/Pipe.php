@@ -54,8 +54,7 @@ class Pipe
                 'schedule'        => array('type' => 'object', 'required' => false),
                 'run_mode'        => array('type' => 'string', 'required' => false),
                 'deploy_mode'     => array('type' => 'string', 'required' => false),
-                'deploy_schedule' => array('type' => 'string', 'required' => false),
-                'deploy_api'      => array('type' => 'string', 'required' => false)
+                'deploy_schedule' => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
@@ -195,8 +194,7 @@ class Pipe
                 'schedule'        => array('type' => 'object', 'required' => false),
                 'run_mode'        => array('type' => 'string', 'required' => false),
                 'deploy_mode'     => array('type' => 'string', 'required' => false),
-                'deploy_schedule' => array('type' => 'string', 'required' => false),
-                'deploy_api'      => array('type' => 'string', 'required' => false)
+                'deploy_schedule' => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
@@ -336,10 +334,8 @@ class Pipe
         // get the pipe properties
         $pipe_properties = $pipe->get();
 
-        // only allow pipes to be triggered from an API call if the pipe is deployed
-        // and the api deployment option is activated
-        $api_trigger_active = ($pipe_properties['deploy_mode'] === \Model::PIPE_DEPLOY_MODE_RUN &&
-                               $pipe_properties['deploy_api'] === \Model::PIPE_DEPLOY_STATUS_ACTIVE);
+        // only allow pipes to be triggered from an API call if the pipe is active
+        $api_trigger_active = ($pipe_properties['deploy_mode'] === \Model::PIPE_DEPLOY_MODE_RUN);
         if ($triggered_by === \Model::PROCESS_TRIGGERED_API && $api_trigger_active === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
@@ -470,10 +466,8 @@ class Pipe
         // get the pipe properties
         $pipe_properties = $pipe->get();
 
-        // only allow pipes to be triggered from an API call if the pipe is deployed
-        // and the api deployment option is activated
-        $api_trigger_active = ($pipe_properties['deploy_mode'] === \Model::PIPE_DEPLOY_MODE_RUN &&
-                               $pipe_properties['deploy_api'] === \Model::PIPE_DEPLOY_STATUS_ACTIVE);
+        // only allow pipes to be triggered from an API call if the pipe is active
+        $api_trigger_active = ($pipe_properties['deploy_mode'] === \Model::PIPE_DEPLOY_MODE_RUN);
         if ($triggered_by === \Model::PROCESS_TRIGGERED_API && $api_trigger_active === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 

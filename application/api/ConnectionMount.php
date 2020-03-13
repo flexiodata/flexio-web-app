@@ -251,7 +251,6 @@ class ConnectionMount
             $pipe_params['returns'] = $pipe_info_from_content['returns'] ?? [];
             $pipe_params['notes'] = $pipe_info_from_content['notes'] ?? '';
             $pipe_params['deploy_mode'] = $pipe_deployed ? \Model::PIPE_DEPLOY_MODE_RUN : \Model::PIPE_DEPLOY_MODE_BUILD;
-            $pipe_params['deploy_api'] = \Model::PIPE_DEPLOY_STATUS_ACTIVE;
             $pipe_params['deploy_schedule'] = \Model::PIPE_DEPLOY_STATUS_INACTIVE;
             $pipe_params['owned_by'] = $connection_info['owned_by']['eid'];
             $pipe_params['created_by'] = $connection_info['created_by']['eid'];

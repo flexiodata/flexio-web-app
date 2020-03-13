@@ -137,7 +137,6 @@ class Factory
         $call_params['title'] = $definition['title'] ?? '';
         $call_params['description'] = $definition['description'] ?? '';
         $call_params['deploy_mode'] = $definition['deploy_mode'] ?? \Model::PIPE_DEPLOY_MODE_RUN;
-        $call_params['deploy_api'] = $definition['deploy_api'] ?? \Model::PIPE_DEPLOY_STATUS_ACTIVE;
         $call_params['deploy_schedule'] = $definition['deploy_schedule'] ?? \Model::PIPE_DEPLOY_STATUS_INACTIVE;
         $call_params['examples'] = $definition['examples'] ?? [];
         $call_params['params'] = $definition['params'] ?? [];
