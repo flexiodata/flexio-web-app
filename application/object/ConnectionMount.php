@@ -8,19 +8,19 @@
  * Created:  2020-02-27
  *
  * @package flexio
- * @subpackage Api
+ * @subpackage Object
  */
 
 
 declare(strict_types=1);
-namespace Flexio\Api;
+namespace Flexio\Object;
 
 
 class ConnectionMount
 {
     private $connection;
 
-    public static function create(\Flexio\Object\Connection $connection) : \Flexio\Api\ConnectionMount
+    public static function create(\Flexio\Object\Connection $connection) : \Flexio\Object\ConnectionMount
     {
         $object = new static();
         $object->connection = $connection;
