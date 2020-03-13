@@ -89,6 +89,37 @@ class Factory
         return $streams[0];
     }
 
+    public static function createExampleObjects(string $user_eid) : array
+    {
+        $created_items = array();
+
+        $objects = self::getExampleObjects();
+        foreach ($objects as $o)
+        {
+            if (!isset($o['eid_type']))
+                continue;
+
+            $new_object = false;
+            switch ($o['eid_type'])
+            {
+                case \Model::TYPE_CONNECTION:
+                    $object_eid = self::createConnectionFromFile($user_eid, $o['path']);
+                    $new_object = \Flexio\Object\Connection::load($object_eid);
+                    break;
+
+                case \Model::TYPE_PIPE:
+                    $object_eid = self::createPipeFromFile($user_eid, $o['path']);
+                    $new_object = \Flexio\Object\Pipe::load($object_eid);
+                    break;
+            }
+
+            if ($new_object !== false)
+                $created_items[] = $new_object->get();
+        }
+
+        return $created_items;
+    }
+
     public static function createConnectionFromFile(string $user_eid, string $file_name) : string
     {
         // STEP 1: read the pipe file and convert it to JSON
@@ -149,35 +180,21 @@ class Factory
         return $pipe->getEid();
     }
 
-    public static function createExampleObjects(string $user_eid) : array
+    public static function getConnectionInfoFromContent(string $content) : ?array
     {
-        $created_items = array();
-
-        $objects = self::getExampleObjects();
-        foreach ($objects as $o)
+        try
         {
-            if (!isset($o['eid_type']))
-                continue;
-
-            $new_object = false;
-            switch ($o['eid_type'])
-            {
-                case \Model::TYPE_CONNECTION:
-                    $object_eid = self::createConnectionFromFile($user_eid, $o['path']);
-                    $new_object = \Flexio\Object\Connection::load($object_eid);
-                    break;
-
-                case \Model::TYPE_PIPE:
-                    $object_eid = self::createPipeFromFile($user_eid, $o['path']);
-                    $new_object = \Flexio\Object\Pipe::load($object_eid);
-                    break;
-            }
-
-            if ($new_object !== false)
-                $created_items[] = $new_object->get();
+            $yaml = \Flexio\Base\Yaml::extract($content);
+            $connection_info_from_content = \Flexio\Base\Yaml::parse($yaml);
+            return $connection_info_from_content;
+        }
+        catch (\Exception $exception)
+        {
+            // DEBUG:
+            // echo('Unable to parse the YAML string: %s', $exception->getMessage());
         }
 
-        return $created_items;
+        return null;
     }
 
     public static function getPipeInfoFromContent(string $content) : ?array
@@ -200,23 +217,6 @@ class Factory
                 $pipe_params['deploy_schedule'] = \Model::PIPE_DEPLOY_STATUS_INACTIVE;
 
             return $pipe_params;
-        }
-        catch (\Exception $exception)
-        {
-            // DEBUG:
-            // echo('Unable to parse the YAML string: %s', $exception->getMessage());
-        }
-
-        return null;
-    }
-
-    public static function getConnectionInfoFromContent(string $content) : ?array
-    {
-        try
-        {
-            $yaml = \Flexio\Base\Yaml::extract($content);
-            $connection_info_from_content = \Flexio\Base\Yaml::parse($yaml);
-            return $connection_info_from_content;
         }
         catch (\Exception $exception)
         {
