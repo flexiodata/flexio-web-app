@@ -210,6 +210,23 @@ class Factory
         return null;
     }
 
+    public static function getConnectionInfoFromContent(string $content) : ?array
+    {
+        try
+        {
+            $yaml = \Flexio\Base\Yaml::extract($content);
+            $connection_info_from_content = \Flexio\Base\Yaml::parse($yaml);
+            return $connection_info_from_content;
+        }
+        catch (\Exception $exception)
+        {
+            // DEBUG:
+            // echo('Unable to parse the YAML string: %s', $exception->getMessage());
+        }
+
+        return null;
+    }
+
     private static function getExampleObjects() : array
     {
         $demo_dir = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'demo' . DIRECTORY_SEPARATOR;
