@@ -245,12 +245,8 @@ class Factory
         $demo_dir = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'demo' . DIRECTORY_SEPARATOR;
 
         $objects = array(
-
-            // execute function
-            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_example_currency_rates.yml'),
-
-            // execute function
-            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_example_currency_converter.yml'),
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'currency-rates.py'),
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'currency-converter.py'),
         );
 
         return $objects;
