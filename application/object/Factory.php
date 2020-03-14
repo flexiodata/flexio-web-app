@@ -209,7 +209,7 @@ class Factory
                 // aren't used, so this isn't a factor and following code provides
                 // an outline
                 $task = array();
-                $pipe = @json_decode($pipe_info_from_content,true);
+                $pipe = @json_decode($content,true);
                 if (!is_null($pipe))
                     $task = $pipe['task'] ?? array();
                 $pipe_params['task'] = $task;
@@ -219,7 +219,7 @@ class Factory
                 $execute_job_params = array();
                 $execute_job_params['op'] = 'execute'; // set the execute operation so this doesn't need to be supplied
                 $execute_job_params['lang'] = $language;
-                $execute_job_params['code'] = base64_encode($pipe_info_from_content); // encode the script
+                $execute_job_params['code'] = base64_encode($content); // encode the script
 
                 $pipe_params['task'] = [
                     "op" => "sequence",
