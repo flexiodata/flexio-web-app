@@ -194,6 +194,16 @@ class Factory
             $pipe_info_from_content = \Flexio\Base\Yaml::parse($yaml);
             $pipe_params = $pipe_info_from_content;
 
+            // convert config type into pipe run mode; default to pass-through
+            $pipe_params['run_mode'] = \Model::PIPE_RUN_MODE_PASSTHROUGH;
+            if (isset($pipe_info_from_content['config']) && $pipe_info_from_content['config'] === 'index')
+                $pipe_params['run_mode'] = \Model::PIPE_RUN_MODE_INDEX;
+
+            // convert deploy flag into deploy mode; default to inactive (build)
+            $pipe_params['deploy_mode'] = \Model::PIPE_DEPLOY_MODE_BUILD;
+            if (isset($pipe_info_from_content['deployed']) && $pipe_info_from_content['deployed'] === true)
+                $pipe_params['deploy_mode'] = \Model::PIPE_DEPLOY_MODE_RUN;
+
             // content format consolidates schedule information: if it exists
             // the schedule is activated and if it doesn't exist, the schedule
             // isn't; unpack into form currently used by the model/api
