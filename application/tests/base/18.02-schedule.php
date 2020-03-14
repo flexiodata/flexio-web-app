@@ -83,6 +83,36 @@ class Test
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('A.5', 'Schedule; make sure base properties are there',  $actual, $expected, $results);
 
+        // BEGIN TEST
+        $schedule = json_decode('
+        {
+            "frequency": "daily"
+        }
+        ',true);
+        $actual = \Flexio\Base\Schedule::isValid($schedule);
+        $expected = false;
+        \Flexio\Tests\Check::assertBoolean('A.6', 'Schedule; make sure base properties are there; allow simple representation for minute/hourly formats',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $schedule = json_decode('
+        {
+            "frequency": "hourly"
+        }
+        ',true);
+        $actual = \Flexio\Base\Schedule::isValid($schedule);
+        $expected = true;
+        \Flexio\Tests\Check::assertBoolean('A.7', 'Schedule; make sure base properties are there; allow simple representation for minute/hourly formats',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $schedule = json_decode('
+        {
+            "frequency": "one-minute"
+        }
+        ',true);
+        $actual = \Flexio\Base\Schedule::isValid($schedule);
+        $expected = true;
+        \Flexio\Tests\Check::assertBoolean('A.8', 'Schedule; make sure base properties are there; allow simple representation for minute/hourly formats',  $actual, $expected, $results);
+
 
         // TEST: schedule frequency values
 
