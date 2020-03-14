@@ -58,15 +58,21 @@ class Schedule
         if (!is_array($properties))
             return false;
 
-        if (\Flexio\Base\ValidatorSchema::check($properties, self::SCHEDULE_SCHEMA)->hasErrors())
-            return false;
+        // check simple schedule with minute/hourly frequency
+        $validator = \Flexio\Base\ValidatorSchema::check($properties, self::SCHEDULE_SCHEMA_SIMPLE);
+        if ($validator->hasErrors() === false)
+            return true;
 
-        // make sure timezone is a valid
-        $timezone = $properties['timezone'] ;
-        if (!self::isValidTimeZone($timezone))
-            return false;
+        // check full schedule with daily times, etc
+        $validator = \Flexio\Base\ValidatorSchema::check($properties, self::SCHEDULE_SCHEMA_FULL);
+        if ($validator->hasErrors() === false)
+        {
+            $timezone = $properties['timezone'];
+            if (self::isValidTimeZone($timezone))
+                return true;
+        }
 
-        return true;
+        return false;
     }
 
     public static function isValidTimeZone($timezone) : bool
@@ -151,7 +157,20 @@ class Schedule
         return $next_scheduled_time;
     }
 
-    private const SCHEDULE_SCHEMA = <<<EOD
+    private const SCHEDULE_SCHEMA_SIMPLE = <<<EOD
+    {
+        "type": "object",
+        "required": ["frequency"],
+        "properties": {
+            "frequency": {
+                "type": "string",
+                "enum": ["one-minute","five-minutes","fifteen-minutes","thirty-minutes","hourly"]
+            }
+        }
+    }
+EOD;
+
+    private const SCHEDULE_SCHEMA_FULL = <<<EOD
     {
         "type": "object",
         "required": ["frequency","timezone","days","times"],
