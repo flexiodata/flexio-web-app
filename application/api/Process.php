@@ -265,10 +265,6 @@ class Process
         if ($process_status !== \Flexio\Jobs\Process::STATUS_PENDING)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::EXECUTE_FAILED);
 
-        $triggered_by = $process_store->get()['triggered_by'];
-        if ($triggered_by === \Model::PROCESS_TRIGGERED_API && $api_trigger_active === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-
         // create a process engine
         $process_engine = \Flexio\Jobs\Process::create();
 
