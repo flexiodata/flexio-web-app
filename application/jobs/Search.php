@@ -71,10 +71,6 @@ class Search extends \Flexio\Jobs\Base
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, "Search not available");
         $elasticsearch = \Flexio\Services\ElasticSearch::create($elasticsearch_connection_info);
 
-
-        //echo($rows_to_return);
-        //die;
-
         // query the index
         $result = $elasticsearch->query($index, $rows_to_return);
 
