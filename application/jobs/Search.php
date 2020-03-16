@@ -53,17 +53,27 @@ class Search extends \Flexio\Jobs\Base
             $available_columns = $structure->getNames();
         }
 
-        // TODO: experimental: parameters passed in as stdin
+        // get the query parameters; these are passed in as stdin;
+        // TODO: should we do it a different way?
         $instream = $process->getStdin();
         $streamreader = $instream->getReader();
 
-        $data = '';
+        $query_parameters = '';
         while (($chunk = $streamreader->read()) !== false)
-            $data .= $chunk;
+            $query_parameters .= $chunk;
 
         $columns_to_return = array();
         $rows_to_return = '';
-        self::getSearchParams($data, $available_columns, $columns_to_return, $rows_to_return);
+        $additional_output_config = array();
+        self::getSearchParams($query_parameters, $available_columns, $columns_to_return, $rows_to_return, $additional_output_config);
+
+        $return_headers = false;
+        if (isset($additional_output_config['headers']) && $additional_output_config['headers'] === true)
+            $return_headers = true;
+
+        $limit_row_count = false;
+        if (isset($additional_output_config['limit']))
+            $limit_row_count = $additional_output_config['limit'];
 
         // connect to elasticsearch
         $elasticsearch_connection_info = \Flexio\System\System::getSearchCacheConfig();
@@ -80,21 +90,32 @@ class Search extends \Flexio\Jobs\Base
 
         // start the output
         $streamwriter->write("[");
+        $first = true;
+
+        if ($return_headers == true)
+        {
+            $streamwriter->write(json_encode($columns_to_return));
+            $first = false;
+        }
 
         // write out each row
-        $first = true;
+        $idx = 0;
         foreach ($result as $r)
         {
+            if ($limit_row_count !== false && $idx >= $limit_row_count)
+                break;
+
+            if ($first !== true)
+                $streamwriter->write(',');
+
             $row_values = [];
             foreach ($columns_to_return as $c)
             {
                 $row_values[] = $r[$c] ?? '';
             }
 
-            if ($first !== true)
-                $streamwriter->write(',');
-
             $streamwriter->write(json_encode($row_values));
+            $idx++;
             $first = false;
         }
 
@@ -105,18 +126,25 @@ class Search extends \Flexio\Jobs\Base
         $outstream->setMimeType(\Flexio\Base\ContentType::JSON);
     }
 
-    private static function getSearchParams(string $search_params, array $available_columns, array &$search_columns, string &$search_rows) : void
+    private static function getSearchParams(string $search_params, array $available_columns, array &$search_columns, string &$search_rows, array &$config) : void
     {
         // EXPERIMENTAL: query params passed in as a json string of array values
         // first parameter: desired return columns or "*" for all columns
         // second parameter: query string/array to limit the results
+        // third parameter; additional configuration (header=true/false, limit=max rows to return)
         // examples:
         //  - ["*", "col1=a&col2=b"]
+        //  - ["*", "col1=a&col2=b", "headers=true&limit=0"]
         //  - [["col1","col2"], ["col1","a"],["col2","b"]]
 
         // default to all columns/rows
         $search_columns = $available_columns;
         $search_rows = '{"query": {"match_all": {}}}';
+
+        // default configuration
+        $config = array();
+        $config['headers'] = false;
+        $config['limit'] = false;
 
         // get the input
         $search_params = @json_decode($search_params, true);
@@ -170,6 +198,25 @@ class Search extends \Flexio\Jobs\Base
 
             $match_expression = json_encode($match_expression,JSON_UNESCAPED_SLASHES);
             $search_rows = '{"query": {"bool": {"must": '.$match_expression. '}}}';
+        }
+
+        // get the configuration
+        if (count($search_params) > 2)
+        {
+            $config = array();
+            $config['headers'] = false;
+            $config['limit'] = false;
+
+            $config_parameters = array();
+            parse_str($search_params[2], $config_parameters);
+
+            $config['headers'] = false;
+            if (isset($config_parameters['headers']) && toBoolean($config_parameters['headers']) === true)
+                $config['headers'] = true;
+
+            $config['limit'] = false;
+            if (isset($config_parameters['limit']) && intval($config_parameters['limit']) >= 0)
+            $config['limit'] = intval($config_parameters['limit']);
         }
     }
 }
