@@ -393,6 +393,7 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "run_mode" => null,
                 "deploy_mode" => null,
                 "deploy_schedule" => null,
+                "deploy_api" => null, // legacy; needed for add-on display
                 "owned_by" => null,
                 "created_by" => null,
                 "created" => null,
@@ -403,6 +404,9 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         // sanity check: if the data record is missing, then eid will be null
         if (!isset($mapped_properties['eid']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        // placeholder value for deploy_api:
+        $mapped_properties['deploy_api'] = \Model::PIPE_DEPLOY_STATUS_ACTIVE;
 
         // expand the parent connection info
         $mapped_properties['parent'] = array(
