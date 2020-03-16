@@ -204,6 +204,12 @@ class ProcessHandler
         $elasticsearch->createIndex($parent_eid, $structure->get());
 
         // get the data from stdout; TODO: make this more efficient with memory
+        // note: data to write should be in key value two-dimensional array format
+        // where the keys match the structure; for example:
+        // [
+        //   ["col1"=>"val1", "col2"=>"val2"],
+        //   ["col1"=>"val3", "col2"=>"val4"]
+        // ]
         $data_to_write = '';
         $stdout_reader= $process_host->getEngine()->getStdout()->getReader();
         while (($chunk = $stdout_reader->read(32768)) !== false)
@@ -221,11 +227,11 @@ class ProcessHandler
             'structure' => $structure
         );
         $field_names = $structure->getNames();
-        $elasticsearch->write($params, function() use (&$data_to_write, &$field_names) {
+        $elasticsearch->write($params, function() use (&$data_to_write, &$structure) {
             $row = array_shift($data_to_write);
-            if (!$row)
+            if (!is_array($row))
                 return false;
-            $row = array_combine($field_names, $row); // return key/value
+            // TODO: coerce row types
             return $row;
         });
     }
