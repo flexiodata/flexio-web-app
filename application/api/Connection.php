@@ -426,7 +426,7 @@ class Connection
             $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_FINISHING,  '\Flexio\Api\ProcessHandler::saveStdoutToElasticSearch', $elastic_search_params);
             //$process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_FINISHING, '\Flexio\Api\ProcessHandler::decrementProcessCount', array());
 
-            $process_host->run(false /*true: run in background*/);
+            $process_host->run(true /*true: run in background*/);
         }
 
         // return the info for the pipes that were just added
