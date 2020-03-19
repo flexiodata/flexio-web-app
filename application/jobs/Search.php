@@ -130,11 +130,11 @@ class Search extends \Flexio\Jobs\Base
     {
         // EXPERIMENTAL: query params passed in as a json string of array values
         // first parameter: desired return columns or "*" for all columns
-        // second parameter: query string/array to limit the results
+        // second parameter: query string/array to limit the results; when in string mode, uses lucene query syntax
         // third parameter; additional configuration (header=true/false, limit=max rows to return)
         // examples:
-        //  - ["*", "col1=a&col2=b"]
-        //  - ["*", "col1=a&col2=b", "headers=true&limit=0"]
+        //  - ["*", "_exists_:title"]
+        //  - ["*", "author:brown", "headers=true&limit=0"]
         //  - [["col1","col2"], ["col1","a"],["col2","b"]]
 
         // default to all columns/rows
@@ -180,24 +180,37 @@ class Search extends \Flexio\Jobs\Base
         // get the row selection params
         if (count($search_params) > 1)
         {
-            $query_parameters = \Flexio\Base\Util::coerceToQueryParams($search_params[1], $available_columns);
+            $query_param = $search_params[1];
 
-            // example:
-            // '{"query": {"bool": "must": {"match": {"first_name": "John"}}}}';
-            $match_expression = array();
-            foreach ($query_parameters as $key => $value)
+            // if the search parameter is a string, pass it through as a lucene query string,
+            // unless it's empty, in which case, return all items
+            if (is_string($query_param))
             {
-                // for now, straight key/value copy
-
-                if (count($value) == 0)
-                    continue;
-                $value = $value[0];
-
-                $match_expression[] = ['match' => [$key => $value]];
+                if (strlen(trim($query_param)) > 0)
+                    $search_rows = json_encode(["query" => ["query_string" => ["query" => $query_param]]], JSON_UNESCAPED_SLASHES);
+                     else { /* don't do anything */ }
             }
+            else
+            {
+                $query_parameters = \Flexio\Base\Util::coerceToQueryParams($search_params[1], $available_columns);
 
-            $match_expression = json_encode($match_expression,JSON_UNESCAPED_SLASHES);
-            $search_rows = '{"query": {"bool": {"must": '.$match_expression. '}}}';
+                // example:
+                // '{"query": {"bool": "must": {"match": {"first_name": "John"}}}}';
+                $match_expression = array();
+                foreach ($query_parameters as $key => $value)
+                {
+                    // for now, straight key/value copy
+
+                    if (count($value) == 0)
+                        continue;
+                    $value = $value[0];
+
+                    $match_expression[] = ['match' => [$key => $value]];
+                }
+
+                $match_expression = json_encode($match_expression,JSON_UNESCAPED_SLASHES);
+                $search_rows = '{"query": {"bool": {"must": '.$match_expression. '}}}';
+            }
         }
 
         // get the configuration
