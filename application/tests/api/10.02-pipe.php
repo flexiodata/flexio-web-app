@@ -252,9 +252,7 @@ class Test
                     ]
                 },
                 "deploy_mode": "B",
-                "deploy_schedule": "I",
-                "deploy_email": "A",
-                "deploy_api": "A"
+                "deploy_schedule": "I"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -292,8 +290,6 @@ class Test
             "run_mode": "P",
             "deploy_mode": "B",
             "deploy_schedule": "I",
-            "deploy_email": "A",
-            "deploy_api": "A",
             "owned_by": {
                 "eid": "'.$userid1.'",
                 "eid_type": "USR"

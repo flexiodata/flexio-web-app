@@ -164,7 +164,6 @@ class Api
         // EXPERIMENTAL ENDPOINTS
 
         // experimental/test pipe endpoint for populating an elasticsearch cache from a pipe output
-        'GET /:teamid/pipes/:objid/searchcache'     => '\Flexio\Api\Pipe::searchcache',
         'POS /:teamid/pipes/:objid/populatecache'     => '\Flexio\Api\Pipe::populatecache',
 
         // experimental processes endpoint for running code (creates and runs a process from code)
@@ -243,11 +242,14 @@ class Api
         $request_query_params = $server_request->getQueryParams();
         $request_post_params = $server_request->getPostParams();
         $request_user_agent = $server_request->getUserAgent();
-        $request_source = $request_header_params['x-flexio-source'] ?? '';
         $request_ip_address = strtolower($server_request->getIpAddress());
         $request_url = $server_request->getUri(); // leave URL as-is to match param handling
         $request_method = strtoupper($server_request->getMethod());
         $request_timestamp = \Flexio\System\System::getTimestamp();
+
+        $request_source = $request_header_params['x-flexio-source'] ?? ''; // try to get the source from the header
+        if (strlen($request_source) == 0)
+            $request_source = $request_query_params['flexio_source'] ?? ''; // if we can't get it from the header, try a query param
 
         // STEP 3: if we have an options request, we're done
         if ($request_method == 'OPTIONS')

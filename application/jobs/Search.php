@@ -53,27 +53,33 @@ class Search extends \Flexio\Jobs\Base
             $available_columns = $structure->getNames();
         }
 
-        // TODO: experimental: parameters passed in as stdin
+        // get the query parameters; these are passed in as stdin;
+        // TODO: should we do it a different way?
         $instream = $process->getStdin();
         $streamreader = $instream->getReader();
 
-        $data = '';
+        $query_parameters = '';
         while (($chunk = $streamreader->read()) !== false)
-            $data .= $chunk;
+            $query_parameters .= $chunk;
 
         $columns_to_return = array();
         $rows_to_return = '';
-        self::getSearchParams($data, $available_columns, $columns_to_return, $rows_to_return);
+        $additional_output_config = array();
+        self::getSearchParams($query_parameters, $available_columns, $columns_to_return, $rows_to_return, $additional_output_config);
+
+        $return_headers = false;
+        if (isset($additional_output_config['headers']) && $additional_output_config['headers'] === true)
+            $return_headers = true;
+
+        $limit_row_count = false;
+        if (isset($additional_output_config['limit']))
+            $limit_row_count = $additional_output_config['limit'];
 
         // connect to elasticsearch
         $elasticsearch_connection_info = \Flexio\System\System::getSearchCacheConfig();
         if ($elasticsearch_connection_info['type'] !== 'elasticsearch')
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, "Search not available");
         $elasticsearch = \Flexio\Services\ElasticSearch::create($elasticsearch_connection_info);
-
-
-        //echo($rows_to_return);
-        //die;
 
         // query the index
         $result = $elasticsearch->query($index, $rows_to_return);
@@ -84,21 +90,32 @@ class Search extends \Flexio\Jobs\Base
 
         // start the output
         $streamwriter->write("[");
+        $first = true;
+
+        if ($return_headers == true)
+        {
+            $streamwriter->write(json_encode($columns_to_return));
+            $first = false;
+        }
 
         // write out each row
-        $first = true;
+        $idx = 0;
         foreach ($result as $r)
         {
+            if ($limit_row_count !== false && $idx >= $limit_row_count)
+                break;
+
+            if ($first !== true)
+                $streamwriter->write(',');
+
             $row_values = [];
             foreach ($columns_to_return as $c)
             {
                 $row_values[] = $r[$c] ?? '';
             }
 
-            if ($first !== true)
-                $streamwriter->write(',');
-
             $streamwriter->write(json_encode($row_values));
+            $idx++;
             $first = false;
         }
 
@@ -109,18 +126,25 @@ class Search extends \Flexio\Jobs\Base
         $outstream->setMimeType(\Flexio\Base\ContentType::JSON);
     }
 
-    private static function getSearchParams(string $search_params, array $available_columns, array &$search_columns, string &$search_rows) : void
+    private static function getSearchParams(string $search_params, array $available_columns, array &$search_columns, string &$search_rows, array &$config) : void
     {
         // EXPERIMENTAL: query params passed in as a json string of array values
         // first parameter: desired return columns or "*" for all columns
-        // second parameter: query string/array to limit the results
+        // second parameter: query string/array to limit the results; when in string mode, uses lucene query syntax
+        // third parameter; additional configuration (header=true/false, limit=max rows to return)
         // examples:
-        //  - ["*", "col1=a&col2=b"]
+        //  - ["*", "_exists_:title"]
+        //  - ["*", "author:brown", "headers=true&limit=0"]
         //  - [["col1","col2"], ["col1","a"],["col2","b"]]
 
         // default to all columns/rows
         $search_columns = $available_columns;
         $search_rows = '{"query": {"match_all": {}}}';
+
+        // default configuration
+        $config = array();
+        $config['headers'] = false;
+        $config['limit'] = false;
 
         // get the input
         $search_params = @json_decode($search_params, true);
@@ -156,108 +180,57 @@ class Search extends \Flexio\Jobs\Base
         // get the row selection params
         if (count($search_params) > 1)
         {
-            $query_parameters = self::coerceToQueryParams($search_params[1], $available_columns);
+            $query_param = $search_params[1];
 
-            // example:
-            // '{"query": {"bool": "must": {"match": {"first_name": "John"}}}}';
-            $match_expression = array();
-            foreach ($query_parameters as $key => $value)
+            // if the search parameter is a string, pass it through as a lucene query string,
+            // unless it's empty, in which case, return all items
+            if (is_string($query_param))
             {
-                // for now, straight key/value copy
-                $match_expression[] = ['match' => [$key => $value]];
+                if (strlen(trim($query_param)) > 0)
+                    $search_rows = json_encode(["query" => ["query_string" => ["query" => $query_param]]], JSON_UNESCAPED_SLASHES);
+                     else { /* don't do anything */ }
             }
-
-            $match_expression = json_encode($match_expression,JSON_UNESCAPED_SLASHES);
-            $search_rows = '{"query": {"bool": {"must": '.$match_expression. '}}}';
-        }
-    }
-
-    private static function coerceToQueryParams($value, array $available_columns) : array
-    {
-        if (is_string($value))
-        {
-            // if we have a string, treat it as a URL query string
-            // examples:\
-            //  - col1=a
-            //  - col1=a&col2=b
-            $query_parameters = array();
-            parse_str($value, $query_parameters);
-            return $query_parameters;
-        }
-
-        if (is_array($value))
-        {
-            // if we have an array, treat it is a combination of column names and associated
-            // filter values on those columns in either vertical or horizontal format:
-            // examples:
-            //  - [["col1","col2"],["a","b"]] // horizontal column format where values are under columns
-            //  - [["col1","a"],["col2","b"]] // vertical column format where values are to the right of the columns
-
-            // first, determine if we're in the horizontal or vertical mode by seeing which has
-            // values that match columns names; in even of tie, give precedence to vertical
-            // column format to handle basic filter where value would be next to column title: ["col1", "a"]
-
-            $table = array();
-            try
+            else
             {
-                $table = \Flexio\Base\Table::create($value);
+                $query_parameters = \Flexio\Base\Util::coerceToQueryParams($search_params[1], $available_columns);
 
-                // get the first row and the first column
-                $possible_horizontal_columns = $table->getRow(0);
-                $possible_vertical_columns = $table->getCol(0);
-
-                // convert columns to lowercase string for match
-                $possible_horizontal_columns = array_map('strval', $possible_horizontal_columns);
-                $possible_horizontal_columns = array_map('strtolower', $possible_horizontal_columns);
-                $possible_vertical_columns = array_map('strval', $possible_vertical_columns);
-                $possible_vertical_columns = array_map('strtolower', $possible_vertical_columns);
-
-                // use the better orientation for determining the query values;
-                // give precedence to vertical column layout
-                $count_matching_columns_horizontal = count(array_intersect($available_columns, $possible_horizontal_columns));
-                $count_matching_columns_vertical = count(array_intersect($available_columns, $possible_vertical_columns));
-
-                if ($count_matching_columns_horizontal > $count_matching_columns_vertical)
+                // example:
+                // '{"query": {"bool": "must": {"match": {"first_name": "John"}}}}';
+                $match_expression = array();
+                foreach ($query_parameters as $key => $value)
                 {
-                    $query_parameters = array();
-                    if ($table->getRowCount() > 1)
-                    {
-                        $col_count = $table->getColCount();
-                        for ($idx = 0; $idx < $col_count; $idx++)
-                        {
-                            $column = $table->getCol($idx);
-                            $query_param_name = $column[0];
-                            $query_param_value = $column[1]; // TODO: for now, only use the first item
-                            $query_parameters[$query_param_name] = $query_param_value;
-                        }
-                    }
-                    return $query_parameters;
+                    // for now, straight key/value copy
+
+                    if (count($value) == 0)
+                        continue;
+                    $value = $value[0];
+
+                    $match_expression[] = ['match' => [$key => $value]];
                 }
-                else
-                {
-                    $query_parameters = array();
-                    if ($table->getColCount() > 1)
-                    {
-                        $row_count = $table->getRowCount();
-                        for ($idx = 0; $idx < $row_count; $idx++)
-                        {
-                            $row = $table->getRow($idx);
-                            $query_param_name = $row[0];
-                            $query_param_value = $row[1]; // TODO: for now, only use the first item
-                            $query_parameters[$query_param_name] = $query_param_value;
-                        }
-                    }
-                    return $query_parameters;
-                }
-            }
-            catch (\Flexio\Base\Exception $e)
-            {
-                // fall through
+
+                $match_expression = json_encode($match_expression,JSON_UNESCAPED_SLASHES);
+                $search_rows = '{"query": {"bool": {"must": '.$match_expression. '}}}';
             }
         }
 
-        // some other format
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+        // get the configuration
+        if (count($search_params) > 2)
+        {
+            $config = array();
+            $config['headers'] = false;
+            $config['limit'] = false;
+
+            $config_parameters = array();
+            parse_str($search_params[2], $config_parameters);
+
+            $config['headers'] = false;
+            if (isset($config_parameters['headers']) && toBoolean($config_parameters['headers']) === true)
+                $config['headers'] = true;
+
+            $config['limit'] = false;
+            if (isset($config_parameters['limit']) && intval($config_parameters['limit']) >= 0)
+            $config['limit'] = intval($config_parameters['limit']);
+        }
     }
 }
 

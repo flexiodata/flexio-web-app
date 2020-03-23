@@ -54,9 +54,7 @@ class Pipe
                 'schedule'        => array('type' => 'object', 'required' => false),
                 'run_mode'        => array('type' => 'string', 'required' => false),
                 'deploy_mode'     => array('type' => 'string', 'required' => false),
-                'deploy_schedule' => array('type' => 'string', 'required' => false),
-                'deploy_email'    => array('type' => 'string', 'required' => false),
-                'deploy_api'      => array('type' => 'string', 'required' => false)
+                'deploy_schedule' => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
@@ -196,9 +194,7 @@ class Pipe
                 'schedule'        => array('type' => 'object', 'required' => false),
                 'run_mode'        => array('type' => 'string', 'required' => false),
                 'deploy_mode'     => array('type' => 'string', 'required' => false),
-                'deploy_schedule' => array('type' => 'string', 'required' => false),
-                'deploy_email'    => array('type' => 'string', 'required' => false),
-                'deploy_api'      => array('type' => 'string', 'required' => false)
+                'deploy_schedule' => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
@@ -338,10 +334,8 @@ class Pipe
         // get the pipe properties
         $pipe_properties = $pipe->get();
 
-        // only allow pipes to be triggered from an API call if the pipe is deployed
-        // and the api deployment option is activated
-        $api_trigger_active = ($pipe_properties['deploy_mode'] === \Model::PIPE_DEPLOY_MODE_RUN &&
-                               $pipe_properties['deploy_api'] === \Model::PIPE_DEPLOY_STATUS_ACTIVE);
+        // only allow pipes to be triggered from an API call if the pipe is active
+        $api_trigger_active = ($pipe_properties['deploy_mode'] === \Model::PIPE_DEPLOY_MODE_RUN);
         if ($triggered_by === \Model::PROCESS_TRIGGERED_API && $api_trigger_active === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
@@ -427,131 +421,6 @@ class Pipe
         \Flexio\Api\Response::sendRaw($content);
     }
 
-    public static function searchcache(\Flexio\Api\Request $request) : void
-    {
-        $requesting_user_eid = $request->getRequestingUser();
-        $owner_user_eid = $request->getOwnerFromUrl();
-        $pipe_eid = $request->getObjectFromUrl();
-
-        // experimental/test function for populating an elasticsearch cache
-        // from the output of a pipe; this cache then be queried via another
-        // endpoint; only allow adminstrator users to get this
-        $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
-        if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($requesting_user->isAdministrator() !== true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
-/*
-        $request->track(\Flexio\Api\Action::TYPE_PROCESS_CREATE);
-        $request->setRequestParams($post_params);
-*/
-
-        // load the object; make sure the eid is associated with the owner
-        // as an additional check
-        $pipe = \Flexio\Object\Pipe::load($pipe_eid);
-        if ($owner_user_eid !== $pipe->getOwner())
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-
-        // check the rights on the pipe object
-        if ($pipe->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($pipe->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PROCESS_CREATE) === false)
-             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
-        // TODO: check that user is within usage limits; should this be factored out into a separate object along with rights?
-        $owner_user = \Flexio\Object\User::load($owner_user_eid);
-        if ($owner_user->processUsageWithinLimit() === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::RATE_LIMIT_EXCEEDED);
-
-        // if the process is created with a request from an api token, it's
-        // triggered with an api; if there's no api token, it's triggered
-        // from a web session, in which case it's triggered by the UI;
-        // TODO: this will work until we allow processes to be created from
-        // public pipes that don't require a token
-        $triggered_by = strlen($request->getToken()) > 0 ? \Model::PROCESS_TRIGGERED_API : \Model::PROCESS_TRIGGERED_INTERFACE;
-
-        // get the pipe properties
-        $pipe_properties = $pipe->get();
-
-        // only allow pipes to be triggered from an API call if the pipe is deployed
-        // and the api deployment option is activated
-        $api_trigger_active = ($pipe_properties['deploy_mode'] === \Model::PIPE_DEPLOY_MODE_RUN &&
-                               $pipe_properties['deploy_api'] === \Model::PIPE_DEPLOY_STATUS_ACTIVE);
-        if ($triggered_by === \Model::PROCESS_TRIGGERED_API && $api_trigger_active === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-
-        // TODO: experimental
-        $experimental_task = array(
-            "op" => "search",
-            "index" => $pipe_properties['eid'],
-            "query" => "",     // string, required
-            "columns" => ""     // string, optional
-        );
-
-        // create a new process
-        $process_properties = array(
-            'parent_eid' => $pipe_properties['eid'],
-            'pipe_info' => $pipe_properties,
-            'task' => $experimental_task,
-            'triggered_by' => $triggered_by,
-            'owned_by' => $pipe_properties['owned_by']['eid'], // same as $owner_user_eid
-            'created_by' => $requesting_user_eid
-        );
-        $process_store = \Flexio\Object\Process::create($process_properties);
-        $process_engine = \Flexio\Jobs\Process::create();
-
-        // create a process host to connect the store/engine and run the process
-        // note: don't include the process count limits normally added in the callbacks;
-        // process count limits are primarily as a guard against a lot of user-driven api
-        // calls that run an execute function a container, not limit inexpensive api calls
-        // like search or background processes that only run periodically
-        $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
-        //$process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::incrementProcessCount', array());
-        $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::addMountParams', array());
-        //$process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_FINISHING, '\Flexio\Api\ProcessHandler::decrementProcessCount', array());
-
-        // parse the request content and set the stream info
-        $php_stream_handle = \Flexio\System\System::openPhpInputStream();
-        $post_content_type = \Flexio\System\System::getPhpInputStreamContentType();
-        \Flexio\Api\ProcessHandler::addProcessInputFromStream($php_stream_handle, $post_content_type, $process_engine);
-
-        // run the process
-        $process_host->run(false /*true: run in background*/);
-
-        if ($process_engine->hasError())
-        {
-            $error = $process_engine->getError();
-            \Flexio\Api\Response::sendError($error);
-            exit(0);
-        }
-
-        $stream = $process_engine->getStdout();
-        $stream_info = $stream->get();
-        if ($stream_info === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-
-        $mime_type = $stream_info['mime_type'];
-        $start = 0;
-        $limit = PHP_INT_MAX;
-        $content = \Flexio\Base\StreamUtil::getStreamContents($stream, $start, $limit);
-        $response_code = $process_engine->getResponseCode();
-
-        if ($mime_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
-        {
-            // return content as-is
-            header('Content-Type: ' . $mime_type, true, $response_code);
-        }
-        else
-        {
-            // flexio table; return application/json in place of internal mime
-            header('Content-Type: ' . \Flexio\Base\ContentType::JSON, true, $response_code);
-            $content = json_encode($content, JSON_UNESCAPED_SLASHES);
-        }
-
-        \Flexio\Api\Response::sendRaw($content);
-    }
-
     public static function populatecache(\Flexio\Api\Request $request) : void
     {
         $requesting_user_eid = $request->getRequestingUser();
@@ -560,12 +429,10 @@ class Pipe
 
         // experimental/test function for populating an elasticsearch cache
         // from the output of a pipe; this cache then be queried via another
-        // endpoint; only allow adminstrator users to get this
+        // endpoint
         $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
         if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-        if ($requesting_user->isAdministrator() !== true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
 /*
         $request->track(\Flexio\Api\Action::TYPE_PROCESS_CREATE);
@@ -599,10 +466,8 @@ class Pipe
         // get the pipe properties
         $pipe_properties = $pipe->get();
 
-        // only allow pipes to be triggered from an API call if the pipe is deployed
-        // and the api deployment option is activated
-        $api_trigger_active = ($pipe_properties['deploy_mode'] === \Model::PIPE_DEPLOY_MODE_RUN &&
-                               $pipe_properties['deploy_api'] === \Model::PIPE_DEPLOY_STATUS_ACTIVE);
+        // only allow pipes to be triggered from an API call if the pipe is active
+        $api_trigger_active = ($pipe_properties['deploy_mode'] === \Model::PIPE_DEPLOY_MODE_RUN);
         if ($triggered_by === \Model::PROCESS_TRIGGERED_API && $api_trigger_active === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
@@ -641,7 +506,7 @@ class Pipe
         \Flexio\Api\ProcessHandler::addProcessInputFromStream($php_stream_handle, $post_content_type, $process_engine);
 
         // TODO: run the process in the background?
-        $process_host->run(false /*true: run in background*/);
+        $process_host->run(true /*true: run in background*/);
 
         // return information about the process; TODO: is this what we want to do?
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
@@ -651,19 +516,32 @@ class Pipe
     public static function runFromCron(string $pipe_eid) : void
     {
         // STEP 1: load the pipe
-        $pipe = false;
         $pipe_properties = false;
         try
         {
             $pipe = \Flexio\Object\Pipe::load($pipe_eid);
             if ($pipe->getStatus() === \Model::STATUS_DELETED)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+            // TODO: check that user is within usage limits; should this be factored out into a separate object along with rights?
+            // note: use here is primarily to avoid running pipes for users whose trials have expired and not
+            // so much a limitation on total process executions
+            $owner_user_eid = $pipe->getOwner();
+            $owner_user = \Flexio\Object\User::load($owner_user_eid);
+            if ($owner_user->getStatus() === \Model::STATUS_DELETED)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+            if ($owner_user->processUsageWithinLimit() === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::RATE_LIMIT_EXCEEDED);
+
             $pipe_properties = $pipe->get();
         }
         catch (\Flexio\Base\Exception $e)
         {
-            return;
         }
+
+        // if we couldn't get the pipe properties, don't run the pipe
+        if ($pipe_properties === false)
+            return;
 
         $process_properties = array(
             'parent_eid' => $pipe_properties['eid'],
@@ -686,6 +564,15 @@ class Pipe
         $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
         //$process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::incrementProcessCount', array());
         $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::addMountParams', array());
+        if ($pipe_properties['run_mode'] === \Model::PIPE_RUN_MODE_INDEX)
+        {
+            // get the structure from the pipe returns info
+            $elastic_search_params = array(
+                'parent_eid' => $pipe_properties['eid'],
+                'structure' => $pipe_properties['returns']
+            );
+            $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_FINISHING,  '\Flexio\Api\ProcessHandler::saveStdoutToElasticSearch', $elastic_search_params);
+        }
         //$process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_FINISHING, '\Flexio\Api\ProcessHandler::decrementProcessCount', array());
 
         // STEP 3: run the process

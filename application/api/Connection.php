@@ -96,7 +96,7 @@ class Connection
         $connection_info = $connection->get();
         $connection_mode = $connection_info['connection_mode'];
         if ($connection_mode === \Model::CONNECTION_MODE_FUNCTION)
-            \Flexio\Api\ConnectionMount::create($connection)->delete();
+            \Flexio\Object\ConnectionMount::create($connection)->delete();
 
         // return the result
         $properties = $connection->get();
@@ -374,14 +374,63 @@ class Connection
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // sync
-        \Flexio\Api\ConnectionMount::create($connection)->sync();
+        \Flexio\Object\ConnectionMount::create($connection)->sync();
 
-        // return the pipes for the connection
-        $result = array();
+        // get the newly created pipes; if we have an index pipe, populate the cache
+        // TODO: populating the cache should take place in ConnectionMount::sync(); however,
+        // it's here because ConnectionMount is in the object layer, and the process mechanism
+        // which currently loads data into the cache is in the api layer becasue of a rights
+        // check; need to move things into logical places, but a lot has been in flux with
+        // the application and what connections/pipes/process are and how they function
 
+        // get the pipes for the connection
+        $triggered_by = strlen($request->getToken()) > 0 ? \Model::PROCESS_TRIGGERED_API : \Model::PROCESS_TRIGGERED_INTERFACE;
         $filter = array('owned_by' => $owner_user_eid, 'eid_status' => \Model::STATUS_AVAILABLE, 'parent_eid' => $connection->getEid());
         $pipes = \Flexio\Object\Pipe::list($filter);
 
+        // populate the initial cache for index pipes
+        foreach ($pipes as $p)
+        {
+            $pipe_properties = $p->get();
+
+            // if we don't have an index pipe, don't populate the cache
+            if ($pipe_properties['run_mode'] !== \Model::PIPE_RUN_MODE_INDEX)
+                continue;
+
+            // create a new process
+            $process_properties = array(
+                'parent_eid' => $pipe_properties['eid'],
+                'pipe_info' => $pipe_properties,
+                'task' => $pipe_properties['task'],
+                'triggered_by' => $triggered_by,
+                'owned_by' => $pipe_properties['owned_by']['eid'], // same as $owner_user_eid
+                'created_by' => $requesting_user_eid
+            );
+            $process_store = \Flexio\Object\Process::create($process_properties);
+            $process_engine = \Flexio\Jobs\Process::create();
+
+            // get the structure from the pipe returns info
+            $elastic_search_params = array(
+                'parent_eid' => $pipe_properties['eid'],
+                'structure' => $pipe_properties['returns']
+            );
+
+            // create a process host to connect the store/engine and run the process
+            // note: don't include the process count limits normally added in the callbacks;
+            // process count limits are primarily as a guard against a lot of user-driven api
+            // calls that run an execute function a container, not limit inexpensive api calls
+            // like search or background processes that only run periodically
+            $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
+            //$process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::incrementProcessCount', array());
+            $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::addMountParams', array());
+            $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_FINISHING,  '\Flexio\Api\ProcessHandler::saveStdoutToElasticSearch', $elastic_search_params);
+            //$process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_FINISHING, '\Flexio\Api\ProcessHandler::decrementProcessCount', array());
+
+            $process_host->run(true /*true: run in background*/);
+        }
+
+        // return the info for the pipes that were just added
+        $result = array();
         foreach ($pipes as $p)
         {
             if ($p->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PIPE_READ) === false)
@@ -392,7 +441,6 @@ class Connection
             // TODO: remove 'task' from pipe list to prepare for getting pipe
             // content from a separate call; leave in pipe item get() function
             unset($properties['task']);
-
             $result[] = $properties;
         }
 

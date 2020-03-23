@@ -70,10 +70,8 @@ class Trigger
         // get the pipe properties
         $pipe_properties = $pipe->get();
 
-        // only allow pipes to be triggered from an API call if the email is deployed
-        // and the email deployment option is activated
-        $email_trigger_active = ($pipe_properties['deploy_mode'] === \Model::PIPE_DEPLOY_MODE_RUN &&
-                                 $pipe_properties['deploy_email'] === \Model::PIPE_DEPLOY_STATUS_ACTIVE);
+        // only allow pipes to be triggered if the pipe is activated
+        $email_trigger_active = ($pipe_properties['deploy_mode'] === \Model::PIPE_DEPLOY_MODE_RUN);
         if ($email_trigger_active === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 

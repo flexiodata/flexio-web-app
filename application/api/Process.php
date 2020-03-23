@@ -217,7 +217,6 @@ class Process
             $process_info_subset['eid_type'] = $process_info['eid_type'];
             $process_info_subset['eid_status'] = $process_info['eid_status'];
             $process_info_subset['parent'] = $process_info['parent'] ?? null;
-            $process_info_subset['output'] = $process_info['output'];
             $process_info_subset['triggered_by'] = $process_info['triggered_by'];
             $process_info_subset['started_by'] = $process_info['started_by'];
             $process_info_subset['started'] = $process_info['started'];
@@ -266,10 +265,6 @@ class Process
         if ($process_status !== \Flexio\Jobs\Process::STATUS_PENDING)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::EXECUTE_FAILED);
 
-        $triggered_by = $process_store->get()['triggered_by'];
-        if ($triggered_by === \Model::PROCESS_TRIGGERED_API && $api_trigger_active === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-
         // create a process engine
         $process_engine = \Flexio\Jobs\Process::create();
 
@@ -277,14 +272,6 @@ class Process
         $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
         $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::incrementProcessCount', array());
         $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::addMountParams', array());
-        // TODO: following saveStdoutToProcessOutputStream is a legacy to replace old process build mode so
-        // that results can be displayed in the Web App Interface, which currently requires a stream eid;
-        // processes created from the UI used to run in background mode, so this was necessary to get the
-        // results to display in the UI, but now processes from the UI run in the foreground, but the stream
-        // eid is still used to get the result; should convert over to Web App UI specifying a stream callback
-        // to store results if desired
-        if ($triggered_by ===\Model::PROCESS_TRIGGERED_INTERFACE)
-            $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_FINISHING, '\Flexio\Api\ProcessHandler::saveStdoutToProcessOutputStream', array());
         $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_FINISHING, '\Flexio\Api\ProcessHandler::decrementProcessCount', array());
 
         // parse the request content and set the stream info

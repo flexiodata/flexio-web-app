@@ -8,19 +8,19 @@
  * Created:  2020-02-27
  *
  * @package flexio
- * @subpackage Api
+ * @subpackage Object
  */
 
 
 declare(strict_types=1);
-namespace Flexio\Api;
+namespace Flexio\Object;
 
 
 class ConnectionMount
 {
     private $connection;
 
-    public static function create(\Flexio\Object\Connection $connection) : \Flexio\Api\ConnectionMount
+    public static function create(\Flexio\Object\Connection $connection) : \Flexio\Object\ConnectionMount
     {
         $object = new static();
         $object->connection = $connection;
@@ -223,12 +223,10 @@ class ConnectionMount
             $content = self::getContentFromCacheOrPath($connection_info, $item_info);
 
             // get the pipe info from the content; if we can't find any, don't import the pipe
-            $pipe_info_from_content = self::getPipeInfoFromContent($content);
+            $pipe_info_from_content = \Flexio\Object\Factory::getPipeInfoFromContent($content, $language);
             if (!isset($pipe_info_from_content))
                 continue;
 
-            // see if the pipe name is in the list of existing pipes; if so, postfix it
-            // with a unique identifier
             // get the pipe name and make sure it's unique
             $pipe_name = $pipe_info_from_content['name'] ?? '';
             $pipe_name = self::getUniquePipeName($pipe_name, $existing_pipe_names);
@@ -237,56 +235,13 @@ class ConnectionMount
                 continue; // TODO: throw exception
 
             $existing_pipe_names[$pipe_name] = 1;
-            $pipe_deployed = $pipe_info_from_content['deployed'] ?? false; // don't deploy by default
-            $pipe_title = $pipe_info_from_content['title'] ?? '';
-            $pipe_icon = $pipe_info_from_content['icon'] ?? '';
-            $pipe_description = $pipe_info_from_content['description'] ?? '';
-            $pipe_examples = $pipe_info_from_content['examples'] ?? [];
-            $pipe_funcparams = $pipe_info_from_content['params'] ?? [];
-            $pipe_funcreturns = $pipe_info_from_content['returns'] ?? [];
-            $pipe_notes = $pipe_info_from_content['notes'] ?? '';
 
             // set basic pipe info
-            $pipe_params = array();
+            $pipe_params = $pipe_info_from_content;
             $pipe_params['parent_eid'] = $connection_eid;
-            $pipe_params['name'] = $pipe_name;
-            $pipe_params['title'] = $pipe_title;
-            $pipe_params['icon'] = $pipe_icon;
-            $pipe_params['description'] = $pipe_description;
-            $pipe_params['examples'] = $pipe_examples;
-            $pipe_params['params'] = $pipe_funcparams;
-            $pipe_params['returns'] = $pipe_funcreturns;
-            $pipe_params['notes'] = $pipe_notes;
-            $pipe_params['deploy_mode'] = $pipe_deployed ? \Model::PIPE_DEPLOY_MODE_RUN : \Model::PIPE_DEPLOY_MODE_BUILD;
-            $pipe_params['deploy_api'] = \Model::PIPE_DEPLOY_STATUS_ACTIVE;
-            $pipe_params['deploy_schedule'] = \Model::PIPE_DEPLOY_STATUS_INACTIVE;
-            $pipe_params['deploy_email'] = \Model::PIPE_DEPLOY_STATUS_INACTIVE;
+            $pipe_params['name'] = $pipe_name; // override supplied name with name that's unique
             $pipe_params['owned_by'] = $connection_info['owned_by']['eid'];
             $pipe_params['created_by'] = $connection_info['created_by']['eid'];
-
-            // set the task info
-            if ($language === 'flexio')
-            {
-                $task = array();
-                $pipe = @json_decode($content,true);
-                if (!is_null($pipe))
-                    $task = $pipe['task'] ?? array();
-                $pipe_params['task'] = $task;
-            }
-            else
-            {
-                $execute_job_params = array();
-                $execute_job_params['op'] = 'execute'; // set the execute operation so this doesn't need to be supplied
-                $execute_job_params['lang'] = $language; // TODO: set the language from the extension
-                $execute_job_params['code'] = base64_encode($content); // encode the script
-
-                $pipe_params['task'] = [
-                    "op" => "sequence",
-                    "items" => [
-                        $execute_job_params
-                    ]
-                ];
-            }
 
             // create the new pipe
             $item = \Flexio\Object\Pipe::create($pipe_params);
@@ -360,22 +315,6 @@ class ConnectionMount
         // if we haven't found anything, return something that will be unique
         // TODO: different approach?
         $pipe_name = $pipe_name . '-' . \Flexio\Base\Util::generateRandomString(10);
-    }
-
-    private static function getPipeInfoFromContent(string $content) : ?array
-    {
-        try
-        {
-            $yaml = \Flexio\Base\Yaml::extract($content);
-            return \Flexio\Base\Yaml::parse($yaml);
-        }
-        catch (\Exception $exception)
-        {
-            // DEBUG:
-            // echo('Unable to parse the YAML string: %s', $exception->getMessage());
-        }
-
-        return null;
     }
 }
 
