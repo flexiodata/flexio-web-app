@@ -322,7 +322,30 @@ class System
 
     public static function getTeamInviteLink(string $email_to, string $verify_code, string $team_name) : string
     {
-        return self::getBaseUrl() . '/app/'.$team_name.'/members/join?email='.urlencode($email_to).'&verify_code='.$verify_code;
+        $link = self::getBaseUrl() . '/app/'.$team_name.'/members/join?email='.urlencode($email_to);
+
+        // if the user already exists and is verified,
+        // don't add a verify code to the team invite link
+        try
+        {
+            // get the eid for the user joining
+            $user_eid = \Flexio\Object\User::getEidFromEmail($email_to);
+            if ($user_eid === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+            $current_user = \Flexio\Object\User::load($user_eid);
+            if ($current_user->getStatus() !== \Model::STATUS_AVAILABLE)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+            // return url without verify code
+            return $link;
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+            // return url with verify code
+            $link .= '&verify_code='.$verify_code;
+            return $link;
+        }
     }
 
     public static function getBaseDirectory() : string
