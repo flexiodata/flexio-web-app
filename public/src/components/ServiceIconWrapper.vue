@@ -63,10 +63,13 @@
   .form-logo
     background: #fff
     height: 48px
+    width: 64px // IE11 fix
     margin: -56px auto 24px
     padding: 0 8px
+    text-align: center // IE11 fix
 
   .form-logo-icon
     border-radius: 4px
     max-height: 48px
+    max-width: 48px // IE11 fix
 </style>
