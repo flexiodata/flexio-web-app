@@ -19,6 +19,7 @@ namespace Flexio\Services;
 class ElasticSearch implements \Flexio\IFace\IConnection,
                                \Flexio\IFace\IFileSystem
 {
+    private const MAX_INDEX_RESULT_WINDOW   = 1000000;     // maximum number of items that will be returned from a search without pagination
     private const MAX_INDEX_ROW_WRITE_LIMIT = 1000000; // maximum number of rows that can be written in the write loop; primarily to avoid hanging loops
 
     // connection info
@@ -190,7 +191,8 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         }
 
         // write out whatever is left over
-        $this->writeRows($index, $rows_to_write);
+        if (count($rows_to_write) > 0)
+            $this->writeRows($index, $rows_to_write);
     }
 
     ////////////////////////////////////////////////////////////
@@ -297,12 +299,28 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
     public function createIndex(string $index, array $structure = null) : void
     {
+        // see here for more info about index creation and settings:
+        // https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-create-index.html
+        // https://www.elastic.co/guide/en/elasticsearch/reference/current/index-modules.html
+
         // for now, disable mapping; rely instead on default mapping
         // that elasticsearch creates from json
         $mapping_enabled = false;
 
         try
         {
+            // configure index
+            $index_configuration = array();
+            $index_configuration['settings'] = [
+                'max_result_window' => self::MAX_INDEX_RESULT_WINDOW
+            ];
+
+            if ($mapping_enabled)
+            {
+                $index_mapping_info = self::getMappingFromStructure($structure);
+                $index_configuration['mappings'] = $index_mapping_info['mappings'];
+            }
+
             // create the index with the specified mapping
             $url = $this->getHostUrlString() . '/' . urlencode($index);
             $auth = $this->getBasicAuthString();
@@ -316,14 +334,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-
-            if ($mapping_enabled)
-            {
-                $index_mapping_info = self::getMappingFromStructure($structure);
-                $index_mapping_info_string = json_encode($index_mapping_info );
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $index_mapping_info_string);
-            }
-
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($index_configuration));
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
             $result = curl_exec($ch);
@@ -348,7 +359,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         }
     }
 
-    public function writeRows(string $index, array $rows, bool $refresh_immediately = true) : void
+    public function writeRows(string $index, array $rows, bool $refresh_immediately = false) : void
     {
         try
         {
@@ -413,7 +424,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             $index_query_string = $query;
 
             $query_params = array(
-                'size' => 10000 // set max result size to 10k, which is default at this time
+                'size' => self::MAX_INDEX_RESULT_WINDOW
             );
             $query_str = http_build_query($query_params);
 
