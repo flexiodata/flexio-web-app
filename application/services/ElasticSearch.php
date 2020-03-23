@@ -253,7 +253,13 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         try
         {
             // write the content
-            $url = $this->getHostUrlString() . '/' . urlencode($index) . '?ignore_unavailable=true'; // don't throw an exception if index doesn't exist
+
+            $query_params = array(
+                'ignore_unavailable' => 'true' // don't throw an exception if index doesn't exist
+            );
+            $query_str = http_build_query($query_params);
+
+            $url = $this->getHostUrlString() . '/' . urlencode($index) . '?' . $query_str;
             $auth = $this->getBasicAuthString();
             $content_type = 'application/json';
 
@@ -291,69 +297,9 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
     public function createIndex(string $index, array $structure = null) : void
     {
-        // create an index with the specified mapping
-
-        // note: elasticsearch indexes can store different types of documents,
-        // which are called a type; so separate indexes can be created for
-        // individual document types, one index with multiple types, or some
-        // combination; which configuration is used depends on factors such
-        // as number of indexes and types; search can span multiple indexes
-        // and types within an index; the type simply allows a handle to filter
-        // a particular document type within an index if one index is used
-        // with multiple document types; each type has a mapping (like a
-        // structure) associated with the type that determines how the information
-        // within the document type is indexed (e.g. string vs. numeric vs.
-        // date); in our particular usage, we're working with small volumes of
-        // data (<100k rows) where we're rebuilding the index each time we
-        // load data into it and where we have one type of data within an index;
-        // for our purposes, then we only need to expose the index name and
-        // structure and create a placeholder document type to associate with
-        // the single type of data being inserted
-
-        // creating an index with a mapping has the following form:
-        /*
-        PUT <index>
-        {
-            "mappings": {
-                "<type>": {
-                    "properties": {
-                        "<field1>": {
-                            "type": text|integer|double|date|boolean
-                            <extra info>
-                        },
-                        "<field2>": {
-                            "type": text|integer|double|date|boolean
-                            <extra info>
-                        }
-                    }
-                }
-            }
-        }
-        */
-
-        // see here for info indexes, types, and mappings:
-        // https://www.elastic.co/blog/found-elasticsearch-mapping-introduction
-
-        // get a default document type name and create a mapping from the structure
-        // to associate with the rows of data being inserted into this index
-        $doc_type = self::getDefaultDocTypeName();
-        $index_mapping_info = array();
-        if (isset($structure))
-        {
-            $index_mapping_info = array('mappings' => array($doc_type => array('properties' => null)));
-            $doc_type_properties = array();
-
-            foreach ($structure as $field)
-            {
-                $fieldname = $field['name'];
-                $fieldtype = $field['type'];
-                $doc_type_properties[$fieldname] = self::getMappingInfoFromStructureType($fieldtype);
-            }
-
-            $index_mapping_info['mappings'][$doc_type]['_all'] = array('enabled' => false);
-            $index_mapping_info['mappings'][$doc_type]['properties'] = $doc_type_properties;
-        }
-        $index_mapping_info_string = json_encode($index_mapping_info);
+        // for now, disable mapping; rely instead on default mapping
+        // that elasticsearch creates from json
+        $mapping_enabled = false;
 
         try
         {
@@ -370,7 +316,14 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-            //curl_setopt($ch, CURLOPT_POSTFIELDS, $index_mapping_info_string);
+
+            if ($mapping_enabled)
+            {
+                $index_mapping_info = self::getMappingFromStructure($structure);
+                $index_mapping_info_string = json_encode($index_mapping_info );
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $index_mapping_info_string);
+            }
+
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
             $result = curl_exec($ch);
@@ -395,16 +348,15 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         }
     }
 
-    public function writeRows(string $index, array $rows) : void
+    public function writeRows(string $index, array $rows, bool $refresh_immediately = true) : void
     {
         try
         {
             // create the post buffer for the bulk api endpoint
-            $doc_type = self::getDefaultDocTypeName();
             $index_write_string = '';
             foreach ($rows as $r)
             {
-                $index_write_string .= '{"index": {"_index": "' . $index . '", "_type": "' . $doc_type . '"}}';
+                $index_write_string .= '{"index": {"_index": "' . $index . '"}}';
                 $index_write_string .= "\n";
                 $index_write_string .= json_encode($r, 0); // encode json without returns (each row must be on one line)
                 $index_write_string .= "\n";
@@ -412,7 +364,12 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             $index_write_string .= "\n"; // payload must end with newline
 
             // write the content
-            $url = $this->getHostUrlString() . '/_bulk?refresh=true'; // TODO: temporarily refresh immediately
+            $query_params = array(
+                'refresh' => $refresh_immediately ? 'true' : 'false'
+            );
+            $query_str = http_build_query($query_params);
+
+            $url = $this->getHostUrlString() . '/_bulk?' . $query_str;
             $auth = $this->getBasicAuthString();
             $content_type = 'application/x-ndjson'; // use ndjson for bulk operations
 
@@ -453,10 +410,14 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
     {
         try
         {
-            $index_write_string = $query;
+            $index_query_string = $query;
 
-            // create the index with the specified mapping
-            $url = $this->getHostUrlString() . '/' . urlencode($index) . '/_search?size=10000'; // explicitly set max result size to 10k, which is default at this time
+            $query_params = array(
+                'size' => 10000 // set max result size to 10k, which is default at this time
+            );
+            $query_str = http_build_query($query_params);
+
+            $url = $this->getHostUrlString() . '/' . urlencode($index) . '/_search?' . $query_str;
             $auth = $this->getBasicAuthString();
             $content_type = 'application/json';
 
@@ -468,7 +429,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $index_write_string);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $index_query_string);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
             $result = curl_exec($ch);
@@ -620,6 +581,49 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         return base64_encode($this->username . ':' . $this->password);
     }
 
+    private static function getMappingFromStructure(array $structure = null) : array
+    {
+        // see here for info indexes, types, and mappings:
+        // https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping.html
+
+        // example:
+        /*
+        PUT <index>
+        {
+            "mappings": {
+                "properties": {
+                    "<field1>": {
+                        "type": text|integer|double|date|boolean
+                        <extra info>
+                    },
+                    "<field2>": {
+                        "type": text|integer|double|date|boolean
+                        <extra info>
+                    }
+                }
+            }
+        }
+        */
+
+        if (!isset($structure))
+            return array();
+
+        // create a mapping from the structure
+        $properties = array();
+        foreach ($structure as $field)
+        {
+            $fieldname = $field['name'];
+            $fieldtype = $field['type'];
+            $properties[$fieldname] = self::getMappingInfoFromStructureType($fieldtype);
+        }
+
+        $index_mapping_info = array();
+        //$index_mapping_info['mappings']['_all'] = array('enabled' => false);
+        $index_mapping_info['mappings']['properties'] = $properties;
+
+        return $index_mapping_info;
+    }
+
     private static function getMappingInfoFromStructureType(string $structure_type) : array
     {
         switch ($structure_type)
@@ -680,11 +684,6 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
                 );
                 return $info;
         }
-    }
-
-    private static function getDefaultDocTypeName() : string
-    {
-        return 'row';
     }
 
     private static function convertToValid(string $name) : string
