@@ -1,11 +1,19 @@
 {
-  "presets": ["env"],
-  "plugins": [
-    "transform-object-rest-spread",
-    ["component", {
-      "libraryName": "element-ui",
-      "styleLibraryName": "theme-chalk"
+  "presets": [
+    ["@babel/preset-env", {
+      useBuiltIns: "usage", // or "entry"
+      corejs: 3,
     }]
+  ],
+  "plugins": [
+    "@babel/plugin-proposal-object-rest-spread",
+    [
+      "component",
+      {
+        "libraryName": "element-ui",
+        "styleLibraryName": "theme-chalk"
+      }
+    ]
   ],
   "comments": false
 }

@@ -15,6 +15,7 @@
   "dependencies": {
     "axios": "^0.16.1",
     "clipboard": "^1.5.16",
+    "core-js": "^3.6.4",
     "element-ui": "2.4.0",
     "filesize": "^3.3.0",
     "flat": "^4.0.0",
@@ -39,13 +40,13 @@
     "zenscroll": "^4.0.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.0.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
     "assets-webpack-plugin": "^3.5.1",
     "autoprefixer-loader": "^3.2.0",
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
+    "babel-loader": "^8.0.0",
     "babel-plugin-component": "^1.1.0",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
     "cross-env": "^5.1.1",
     "css-loader": "^0.28.7",
     "deep-assign": "^2.0.0",
@@ -65,5 +66,10 @@
     "webpack-dev-server": "^2.9.7",
     "webpack-md5-hash": "^0.0.6",
     "yaml-loader": "^0.5.0"
-  }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "ie 11"
+  ]
 }
