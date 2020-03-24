@@ -32,6 +32,12 @@ class Process implements \Flexio\IFace\IProcess
     public const RESPONSE_NONE = 0;
     public const RESPONSE_NORMAL = 200;
 
+    // events are passed in a callback function along along with a reference to the process
+    public const EVENT_STARTING       = 'process.starting';
+    public const EVENT_FINISHING      = 'process.finishing';
+
+    private $handlers = [];     // array of callbacks invoked for each event
+
     private static $manifest = array(
         'archive'   => '\Flexio\Jobs\Archive',
         'calc'      => '\Flexio\Jobs\CalcField',
@@ -300,20 +306,75 @@ class Process implements \Flexio\IFace\IProcess
 
     public function execute(array $task) : \Flexio\Jobs\Process
     {
+        // STEP 1: signal the start of the process
+        $this->signal(self::EVENT_STARTING, $this);
+
+        // STEP 2: run the process
         if (!IS_PROCESSTRYCATCH())
         {
             // during debugging, sometimes try/catch needs to be turned
             // of completely; this switch is implemented here and in Api.php
             $job = self::createTask($task);
             $job->run($this);
-            return $this;
         }
+         else
+        {
+            try
+            {
+                // create the job with the task; set the job input, run the job, and get the output
+                $job = self::createTask($task);
+                $job->run($this);
+            }
+            catch (\Flexio\Base\Exception | \Exception | \Error $e)
+            {
+                $error_info = \Flexio\Base\Error::getInfo($e);
+                $code = $error_info['code'] ?? '';
+                $message = $error_info['message'] ?? '';
+                $module = $error_info['module'] ?? null;
+                $line = $error_info['line'] ?? null;
+                $type = $error_info['type'] ?? null;
+                $trace = $error_info['trace'] ?? null;
+                $this->setError($code, $message, $module, $line, $type, $trace);
+            }
+        }
+
+        // STEP 3: signal the end of the process
+        $this->signal(self::EVENT_FINISHING, $this);
+
+        return $this;
+    }
+
+    ////////////////////////////////////////////////////////////
+    // additional functions
+    ////////////////////////////////////////////////////////////
+
+    public function addEventHandler(string $event, string $handler, array $metadata = array()) : void
+    {
+        // if needed, initialize the array of handlers for a particular event
+        if (!isset($this->handlers[$event]))
+            $this->handlers[$event] = array();
+
+        // add the event handler to the list
+        $this->handlers[$event][] = array(
+            'function' => $handler,
+            'metadata' => $metadata
+        );
+    }
+
+    private function signal(string $event, \Flexio\Jobs\Process $process) : void
+    {
+        // get the handlers for this particular event
+        $handlers = $this->handlers[$event] ?? array();
 
         try
         {
-            // create the job with the task; set the job input, run the job, and get the output
-            $job = self::createTask($task);
-            $job->run($this);
+            // call the event handlers for the given event
+            foreach ($handlers as $h)
+            {
+                $function = $h['function'];
+                $metadata = $h['metadata'];
+                call_user_func($function, $process, $metadata);
+            }
         }
         catch (\Flexio\Base\Exception | \Exception | \Error $e)
         {
@@ -324,15 +385,9 @@ class Process implements \Flexio\IFace\IProcess
             $line = $error_info['line'] ?? null;
             $type = $error_info['type'] ?? null;
             $trace = $error_info['trace'] ?? null;
-            $this->setError($code, $message, $module, $line, $type, $trace);
+            $process->setError($code, $message, $module, $line, $type, $trace);
         }
-
-        return $this;
     }
-
-    ////////////////////////////////////////////////////////////
-    // additional functions
-    ////////////////////////////////////////////////////////////
 
     private static function createTask(array $task) : \Flexio\IFace\IJob
     {

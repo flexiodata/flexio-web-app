@@ -75,7 +75,7 @@ class Trigger
         if ($email_trigger_active === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
-        // create a new process
+        // create a new process object for storing process info
         $process_properties = array(
             'parent_eid' => $pipe_properties['eid'],
             'pipe_info' => $pipe_properties,
@@ -85,11 +85,10 @@ class Trigger
             'created_by' => $pipe_properties['owned_by']['eid'] // TODO: we need to determine user based on email (e.g. owner, or public)
         );
         $process_store = \Flexio\Object\Process::create($process_properties);
-        $process_engine = \Flexio\Jobs\Process::create();
 
-        // create a process host to connect the store/engine and run the process
-        $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
-        $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::addMountParams', array());
+        // create a new process engine for running a process
+        $process_engine = \Flexio\Jobs\Process::create();
+        $process_engine->addEventHandler(\Flexio\Jobs\Process::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::addMountParams', $process_properties);
 
         // set an environment variable (parameter) with the "from" email address
         $process_email_params = array();
@@ -117,7 +116,8 @@ class Trigger
             $process_engine->addFile($s->getName(), $s);
         }
 
-        // run the process
+        // create a process host to connect the store/engine and run the process
+        $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
         $process_host->run(false);
 
         // if the echo result flag is set, then return the result of the process

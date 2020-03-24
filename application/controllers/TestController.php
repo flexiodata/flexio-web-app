@@ -317,7 +317,6 @@ EOT;
             "code" => base64_encode($code)
         );
 
-
 /*
 $code = <<<EOT
 // basic hello world example
@@ -331,33 +330,26 @@ EOT;
             "lang" => "nodejs",
             "code" => base64_encode($code)
         );
-
-
-$task = array(
-    "op" => "sleep",
-    "value" => 1
-);
 */
 
+        // create a new process object for storing process info
         $process_properties = array(
             'task' => $task
         );
-
-        // STEP 1: create a new process
         $process_store = \Flexio\Object\Process::create($process_properties);
+
+        // create a new process engine for running a process
         $process_engine = \Flexio\Jobs\Process::create();
 
-        // STEP 2: create a process host to connect the store/engine and run the process
+        // create a process host to connect the store/engine and run the process
         $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
         $process_host->run($background);
 
-        /*
+        // if we're in background mode, return the process info
+        if ($background === true)
+            return $process_store->get();
 
-        // note: if not in background mode, following can be used to
-        // echo results
-
-
-        // STEP 3: return the result
+        // if we're not in background mode, return the result
         if ($process_engine->hasError())
         {
             $error = $process_engine->getError();
@@ -389,9 +381,5 @@ $task = array(
         }
 
         echo $content;
-        */
-
-
-        return $process;
     }
 }

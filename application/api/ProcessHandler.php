@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class ProcessHandler
 {
-    public static function incrementProcessCount(\Flexio\Jobs\ProcessHost $process_host, array $callback_params) : void
+    public static function incrementProcessCount(\Flexio\Jobs\Process $process, array $callback_params) : void
     {
         // try to increment the active process count; if we're unable to, then the user is as the
         // maximum number of processes, so a little and then try again
@@ -28,7 +28,7 @@ class ProcessHandler
 
         while (true)
         {
-            $owner_eid = $process_host->getStore()->getOwner();
+            $owner_eid = $process->getOwner();
             $success = \Flexio\System\System::getModel()->user->incrementActiveProcessCount($owner_eid);
             if ($success == true)
                 break;
@@ -45,20 +45,16 @@ class ProcessHandler
         }
     }
 
-    public static function decrementProcessCount(\Flexio\Jobs\ProcessHost $process_host, array $callback_params) : void
+    public static function decrementProcessCount(\Flexio\Jobs\Process $process, array $callback_params) : void
     {
-        $owner_eid = $process_host->getStore()->getOwner();
+        $owner_eid = $process->getOwner();
         \Flexio\System\System::getModel()->user->decrementActiveProcessCount($owner_eid);
     }
 
-    public static function addMountParams(\Flexio\Jobs\ProcessHost $process_host, array $callback_params) : void
+    public static function addMountParams(\Flexio\Jobs\Process $process, array $callback_params) : void
     {
         // callback function to add parameters from mounts for functions that
         // are mounted
-
-        // get the process info from the process object; if the process doesn't
-        // have a pipe parent, there's no mount info to add
-        $process_obj_info = $process_host->getStore()->get();
 
         // load the pipe parent, which is the mount connection; if we're unable
         // to load the mount because it doesn't exist, there's nothing to
@@ -67,7 +63,7 @@ class ProcessHandler
         // mount parameters will fail, but may want to cut-it-off here
         try
         {
-            $pipe_eid = $process_obj_info['parent']['eid'] ?? '';
+            $pipe_eid = $callback_params['parent_eid'] ?? '';
             $pipe = \Flexio\Object\Pipe::load($pipe_eid);
             $pipe_info = $pipe->get();
 
@@ -104,7 +100,7 @@ class ProcessHandler
             // get the access token
             try
             {
-                $requesting_user_eid = $process_host->getEngine()->getOwner();
+                $requesting_user_eid = $process->getOwner();
                 $connection = \Flexio\Object\Connection::load($mount_item_eid);
                 if ($connection->getStatus() !== \Model::STATUS_AVAILABLE)
                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
@@ -128,11 +124,11 @@ class ProcessHandler
         }
 
         // merge the mount variables into the existing parameters
-        $user_variables = $process_host->getEngine()->getParams();
-        $process_host->getEngine()->setParams(array_merge($user_variables, $mount_variables));
+        $user_variables = $process->getParams();
+        $process->setParams(array_merge($user_variables, $mount_variables));
     }
 
-    public static function saveStdoutToStream(\Flexio\Jobs\ProcessHost $process_host, array $callback_params) : void
+    public static function saveStdoutToStream(\Flexio\Jobs\Process $process, array $callback_params) : void
     {
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($callback_params, array(
@@ -148,7 +144,7 @@ class ProcessHandler
         $stream_eid = $validated_params['stream_eid'];
 
         // get the stream output
-        $stdout_stream = $process_host->getEngine()->getStdout();
+        $stdout_stream = $process->getStdout();
         $stdout_stream_info = $stdout_stream->get();
 
         // copy the stdout stream info to the storable_stream
@@ -175,7 +171,7 @@ class ProcessHandler
         }
     }
 
-    public static function saveStdoutToElasticSearch(\Flexio\Jobs\ProcessHost $process_host, array $callback_params) : void
+    public static function saveStdoutToElasticSearch(\Flexio\Jobs\Process $process, array $callback_params) : void
     {
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($callback_params, array(
@@ -211,7 +207,7 @@ class ProcessHandler
         //   ["col1"=>"val3", "col2"=>"val4"]
         // ]
         $data_to_write = '';
-        $stdout_reader= $process_host->getEngine()->getStdout()->getReader();
+        $stdout_reader= $process->getStdout()->getReader();
         while (($chunk = $stdout_reader->read(32768)) !== false)
         {
             $data_to_write .= $chunk;

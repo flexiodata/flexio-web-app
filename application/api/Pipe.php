@@ -367,27 +367,29 @@ class Pipe
         if ($process_properties['task'] === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
+        // create a new process object for storing process info
         $process_store = \Flexio\Object\Process::create($process_properties);
+
+        // create a new process engine for running a process;
+        // note: increment/decrement process count included here to prevent
+        // overload when calling the api from a spreadsheet with "drag down";
+        // since this is the only user-drive endpoint used in a spreadsheet, this
+        // constraint is only included here
         $process_engine = \Flexio\Jobs\Process::create();
-
-        // create a process host to connect the store/engine and run the process
-        // note: only need to add mount parameters for pass through, since logic
-        // of search only depends on index already built and not any mount params;
-        // this helps save a little time
-        $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
-        $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::incrementProcessCount', array());
+        $process_engine->addEventHandler(\Flexio\Jobs\Process::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::incrementProcessCount', array());
         if ($pipe_run_mode === \Model::PIPE_RUN_MODE_PASSTHROUGH)
-            $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::addMountParams', array());
-        $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_FINISHING, '\Flexio\Api\ProcessHandler::decrementProcessCount', array());
+            $process_engine->addEventHandler(\Flexio\Jobs\Process::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::addMountParams', $process_properties);
+        $process_engine->addEventHandler(\Flexio\Jobs\Process::EVENT_FINISHING, '\Flexio\Api\ProcessHandler::decrementProcessCount', array());
 
-        // parse the request content and set the stream info
         $php_stream_handle = \Flexio\System\System::openPhpInputStream();
         $post_content_type = \Flexio\System\System::getPhpInputStreamContentType();
         \Flexio\Api\ProcessHandler::addProcessInputFromStream($php_stream_handle, $post_content_type, $process_engine);
 
-        // run the process
+        // create a process host to connect the store/engine and run the process
+        $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
         $process_host->run(false /*true: run in background*/);
 
+        // return the result
         if ($process_engine->hasError())
         {
             $error = $process_engine->getError();
@@ -471,7 +473,7 @@ class Pipe
         if ($triggered_by === \Model::PROCESS_TRIGGERED_API && $api_trigger_active === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
-        // create a new process
+        // create a new process object for storing process info
         $process_properties = array(
             'parent_eid' => $pipe_properties['eid'],
             'pipe_info' => $pipe_properties,
@@ -481,31 +483,22 @@ class Pipe
             'created_by' => $requesting_user_eid
         );
         $process_store = \Flexio\Object\Process::create($process_properties);
-        $process_engine = \Flexio\Jobs\Process::create();
 
-        // get the structure from the pipe returns info
+        // create a new process engine for running a process
         $elastic_search_params = array(
             'parent_eid' => $pipe_properties['eid'],
             'structure' => $pipe_properties['returns']
         );
+        $process_engine = \Flexio\Jobs\Process::create();
+        $process_engine->addEventHandler(\Flexio\Jobs\Process::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::addMountParams', $process_properties);
+        $process_engine->addEventHandler(\Flexio\Jobs\Process::EVENT_FINISHING,  '\Flexio\Api\ProcessHandler::saveStdoutToElasticSearch', $elastic_search_params);
 
-        // create a process host to connect the store/engine and run the process
-        // note: don't include the process count limits normally added in the callbacks;
-        // process count limits are primarily as a guard against a lot of user-driven api
-        // calls that run an execute function a container, not limit inexpensive api calls
-        // like search or background processes that only run periodically
-        $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
-        //$process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::incrementProcessCount', array());
-        $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::addMountParams', array());
-        $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_FINISHING,  '\Flexio\Api\ProcessHandler::saveStdoutToElasticSearch', $elastic_search_params);
-        //$process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_FINISHING, '\Flexio\Api\ProcessHandler::decrementProcessCount', array());
-
-        // parse the request content and set the stream info
         $php_stream_handle = \Flexio\System\System::openPhpInputStream();
         $post_content_type = \Flexio\System\System::getPhpInputStreamContentType();
         \Flexio\Api\ProcessHandler::addProcessInputFromStream($php_stream_handle, $post_content_type, $process_engine);
 
-        // TODO: run the process in the background?
+        // create a process host to connect the store/engine and run the process
+        $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
         $process_host->run(true /*true: run in background*/);
 
         // return information about the process; TODO: is this what we want to do?
@@ -515,7 +508,7 @@ class Pipe
 
     public static function runFromCron(string $pipe_eid) : void
     {
-        // STEP 1: load the pipe
+        // load the pipe
         $pipe_properties = false;
         try
         {
@@ -543,6 +536,7 @@ class Pipe
         if ($pipe_properties === false)
             return;
 
+        // create a new process object for storing process info
         $process_properties = array(
             'parent_eid' => $pipe_properties['eid'],
             'pipe_info' => $pipe_properties,
@@ -551,31 +545,20 @@ class Pipe
             'owned_by' => $pipe_properties['owned_by']['eid'],
             'created_by' => $pipe_properties['owned_by']['eid'] // scheduled processes are created by the owner
         );
-
-        // STEP 2: create the process
         $process_store = \Flexio\Object\Process::create($process_properties);
+
+        // create a new process engine for running a process
+        $elastic_search_params = array(
+            'parent_eid' => $pipe_properties['eid'],
+            'structure' => $pipe_properties['returns']
+        );
         $process_engine = \Flexio\Jobs\Process::create();
+        $process_engine->addEventHandler(\Flexio\Jobs\Process::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::addMountParams', $process_properties);
+        if ($pipe_properties['run_mode'] === \Model::PIPE_RUN_MODE_INDEX)
+            $process_engine->addEventHandler(\Flexio\Jobs\Process::EVENT_FINISHING,  '\Flexio\Api\ProcessHandler::saveStdoutToElasticSearch', $elastic_search_params);
 
         // create a process host to connect the store/engine and run the process
-        // note: don't include the process count limits normally added in the callbacks;
-        // process count limits are primarily as a guard against a lot of user-driven api
-        // calls that run an execute function a container, not limit inexpensive api calls
-        // like search or background processes that only run periodically
         $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
-        //$process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::incrementProcessCount', array());
-        $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::addMountParams', array());
-        if ($pipe_properties['run_mode'] === \Model::PIPE_RUN_MODE_INDEX)
-        {
-            // get the structure from the pipe returns info
-            $elastic_search_params = array(
-                'parent_eid' => $pipe_properties['eid'],
-                'structure' => $pipe_properties['returns']
-            );
-            $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_FINISHING,  '\Flexio\Api\ProcessHandler::saveStdoutToElasticSearch', $elastic_search_params);
-        }
-        //$process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_FINISHING, '\Flexio\Api\ProcessHandler::decrementProcessCount', array());
-
-        // STEP 3: run the process
         $process_host->run(true /*true: run in background*/);
     }
 

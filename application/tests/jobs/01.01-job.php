@@ -76,12 +76,12 @@ class Test
         // TEST: ProcessHost event constants
 
         // BEGIN TEST
-        $actual = \Flexio\Jobs\ProcessHost::EVENT_STARTING;
+        $actual = \Flexio\Jobs\Process::EVENT_STARTING;
         $expected = 'process.starting';
         \Flexio\Tests\Check::assertString('C.1', 'Event type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Jobs\ProcessHost::EVENT_ENDING;
+        $actual = \Flexio\Jobs\Process::EVENT_ENDING;
         $expected = 'process.finishing';
         \Flexio\Tests\Check::assertString('C.2', 'Event type constant',  $actual, $expected, $results);
     }
