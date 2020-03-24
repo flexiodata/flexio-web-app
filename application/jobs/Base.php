@@ -75,7 +75,7 @@ class Base implements \Flexio\IFace\IJob
             $info['files'] = $process->getFiles();
         }
 
-        $this->replaceParameterTokensRecurse($info, $process, $this->properties);
+        self::replaceParameterTokensRecurse($info, $process, $this->properties);
         return $this;
     }
 
