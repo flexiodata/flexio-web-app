@@ -355,23 +355,6 @@ class Base implements \Flexio\IFace\IJob
             $res->setMimeType($content_type);
         }
 
-        /*
-         else
-        {
-            // no content type was passed; if it is JSON, set the content type to JSON
-            $test = trim($data);
-            $firstch = substr($test,0,1);
-            if ($firstch === '[' || $firstch === '{')
-            {
-                $test = @json_encode($data, JSON_UNESCAPED_SLASHES);
-                if ($test !== false)
-                {
-                    $ret->setMimeType($content_type);
-                }
-            }
-        }
-        */
-
         $res->buffer = $data;     // shortcut to speed it up -- can also use getWriter()->write((string)$v)
         return $res;
     }
