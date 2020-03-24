@@ -64,7 +64,6 @@ class Process implements \Flexio\IFace\IProcess
         'select'    => '\Flexio\Jobs\Select',
         'sequence'  => '\Flexio\Jobs\Sequence',
         'settype'   => '\Flexio\Jobs\SetType',
-        'sleep'     => '\Flexio\Jobs\Sleep',
         'transform' => '\Flexio\Jobs\Transform',
         'unarchive' => '\Flexio\Jobs\Unarchive',
         'write'     => '\Flexio\Jobs\Write'
