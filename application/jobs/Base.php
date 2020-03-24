@@ -58,27 +58,9 @@ class Base implements \Flexio\IFace\IJob
 
     public function replaceParameterTokens($process) : \Flexio\Jobs\Base
     {
-        $info = [];
-
-        // normally, $process is an object that exposes the \Flexio\IFace\IProcess interface; however, for the
-        // convenience of the test suite, a key/value array may be passed instead.
-        // $value is the array or value that we will replace tokens on
-
-        if (is_array($process))
-        {
-            $info['variables'] = $process;
-            $info['files'] = [];
-        }
-        else
-        {
-            $info['variables'] = $process->getParams();
-            $info['files'] = $process->getFiles();
-        }
-
-        self::replaceParameterTokensRecurse($info, $process, $this->properties);
+        self::replaceParameterTokensRecurse($process, $this->properties);
         return $this;
     }
-
 
     public static function addEids(array $task) : array
     {
@@ -156,7 +138,7 @@ class Base implements \Flexio\IFace\IJob
         return $task;
     }
 
-    private static function replaceParameterTokensRecurse(&$info, $process, &$value) : void
+    private static function replaceParameterTokensRecurse($process, &$value) : void
     {
         if (is_array($value))
         {
@@ -166,7 +148,7 @@ class Base implements \Flexio\IFace\IJob
 
             foreach ($value as $k => &$v)
             {
-                self::replaceParameterTokensRecurse($info, $process, $v);
+                self::replaceParameterTokensRecurse($process, $v);
             }
         }
          else
