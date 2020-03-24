@@ -79,8 +79,7 @@ class Base implements \Flexio\IFace\IJob
         return $this;
     }
 
-
-    public function getParameterStream($process, string $varname, array $info = null) : ?\Flexio\Base\Stream
+    private function getParameterStream($process, string $varname, array $info = null) : ?\Flexio\Base\Stream
     {
         if ($info === null)
         {
