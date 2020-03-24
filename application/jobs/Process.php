@@ -48,8 +48,6 @@ class Process implements \Flexio\IFace\IProcess
         'exit'      => '\Flexio\Jobs\Exit1',
         'fail'      => '\Flexio\Jobs\Fail',
         'filter'    => '\Flexio\Jobs\Filter',
-        'for'       => '\Flexio\Jobs\Foreach1',
-        'foreach'   => '\Flexio\Jobs\Foreach1',
         'grep'      => '\Flexio\Jobs\Grep',
         'insert'    => '\Flexio\Jobs\Insert',
         'limit'     => '\Flexio\Jobs\Limit',
