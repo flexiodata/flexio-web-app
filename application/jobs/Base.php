@@ -79,7 +79,7 @@ class Base implements \Flexio\IFace\IJob
         return $this;
     }
 
-    private function getParameterStream($process, string $varname, array $info = null) : ?\Flexio\Base\Stream
+    private static function getParameterStream($process, string $varname, array $info = null) : ?\Flexio\Base\Stream
     {
         if ($info === null)
         {
@@ -206,7 +206,7 @@ class Base implements \Flexio\IFace\IJob
         return self::ensureStream($data);
     }
 
-    private function replaceParameterTokensRecurse(&$info, $process, &$value) : void
+    private static function replaceParameterTokensRecurse(&$info, $process, &$value) : void
     {
         if (is_array($value))
         {
@@ -216,7 +216,7 @@ class Base implements \Flexio\IFace\IJob
 
             foreach ($value as $k => &$v)
             {
-                $this->replaceParameterTokensRecurse($info, $process, $v);
+                self::replaceParameterTokensRecurse($info, $process, $v);
             }
         }
          else
@@ -239,7 +239,7 @@ class Base implements \Flexio\IFace\IJob
 
                         $varname = substr($token, 2, -1);  // turn '${myvar}' into 'myvar'
 
-                        $stream = $this->getParameterStream($process, $varname);
+                        $stream = self::getParameterStream($process, $varname);
                         $replacement = '';
 
                         if ($stream !== null)
