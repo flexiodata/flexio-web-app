@@ -339,21 +339,17 @@ class Pipe
         if ($triggered_by === \Model::PROCESS_TRIGGERED_API && $api_trigger_active === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
-        // create a new process; if we're in pass-through mode, run what's there; if we're in index
-        // mode, create a special search task
-        $pipe_run_mode = $pipe_properties['run_mode'];
+        // create a new process; run what's there by default (pass-through mode);
+        // if we're in index mode, create a special search task
+        $pipe_run_mode = $pipe_properties['run_mode'] ?? \Model::PIPE_RUN_MODE_PASSTHROUGH;
         $process_properties = array(
             'parent_eid' => $pipe_properties['eid'],
             'pipe_info' => $pipe_properties,
-            'task' => false,
+            'task' => $pipe_properties['task'],
             'triggered_by' => $triggered_by,
             'owned_by' => $pipe_properties['owned_by']['eid'], // same as $owner_user_eid
             'created_by' => $requesting_user_eid
         );
-
-        if ($pipe_run_mode === \Model::PIPE_RUN_MODE_PASSTHROUGH)
-            $process_properties['task'] = $pipe_properties['task'];
-
         if ($pipe_run_mode === \Model::PIPE_RUN_MODE_INDEX)
         {
             $search_task = array(
@@ -363,9 +359,6 @@ class Pipe
             );
             $process_properties['task'] = $search_task;
         }
-
-        if ($process_properties['task'] === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         // create a new process object for storing process info
         $process_store = \Flexio\Object\Process::create($process_properties);
