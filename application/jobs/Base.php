@@ -56,6 +56,30 @@ class Base implements \Flexio\IFace\IJob
         $this->replaceParameterTokens($process);
     }
 
+    public function replaceParameterTokens($process) : \Flexio\Jobs\Base
+    {
+        $info = [];
+
+        // normally, $process is an object that exposes the \Flexio\IFace\IProcess interface; however, for the
+        // convenience of the test suite, a key/value array may be passed instead.
+        // $value is the array or value that we will replace tokens on
+
+        if (is_array($process))
+        {
+            $info['variables'] = $process;
+            $info['files'] = [];
+        }
+        else
+        {
+            $info['variables'] = $process->getParams();
+            $info['files'] = $process->getFiles();
+        }
+
+        $this->replaceParameterTokensRecurse($info, $process, $this->properties);
+        return $this;
+    }
+
+
     public function getParameterStream($process, string $varname, array $info = null) : ?\Flexio\Base\Stream
     {
         if ($info === null)
@@ -181,29 +205,6 @@ class Base implements \Flexio\IFace\IJob
 
 
         return self::ensureStream($data);
-    }
-
-    public function replaceParameterTokens($process) : \Flexio\Jobs\Base
-    {
-        $info = [];
-
-        // normally, $process is an object that exposes the \Flexio\IFace\IProcess interface; however, for the
-        // convenience of the test suite, a key/value array may be passed instead.
-        // $value is the array or value that we will replace tokens on
-
-        if (is_array($process))
-        {
-            $info['variables'] = $process;
-            $info['files'] = [];
-        }
-        else
-        {
-            $info['variables'] = $process->getParams();
-            $info['files'] = $process->getFiles();
-        }
-
-        $this->replaceParameterTokensRecurse($info, $process, $this->properties);
-        return $this;
     }
 
     private function replaceParameterTokensRecurse(&$info, $process, &$value) : void
