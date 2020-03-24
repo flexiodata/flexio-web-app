@@ -64,7 +64,6 @@ class Process implements \Flexio\IFace\IProcess
         'search'    => '\Flexio\Jobs\Search',
         'select'    => '\Flexio\Jobs\Select',
         'sequence'  => '\Flexio\Jobs\Sequence',
-        'set'       => '\Flexio\Jobs\Set',
         'settype'   => '\Flexio\Jobs\SetType',
         'sleep'     => '\Flexio\Jobs\Sleep',
         'transform' => '\Flexio\Jobs\Transform',
