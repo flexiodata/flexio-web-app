@@ -35,7 +35,6 @@ class Process implements \Flexio\IFace\IProcess
     private static $manifest = array(
         'archive'   => '\Flexio\Jobs\Archive',
         'calc'      => '\Flexio\Jobs\CalcField',
-        'connect'   => '\Flexio\Jobs\Connect',
         'convert'   => '\Flexio\Jobs\Convert',
         'copy'      => '\Flexio\Jobs\Copy',
         'create'    => '\Flexio\Jobs\Create',
