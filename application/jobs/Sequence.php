@@ -47,7 +47,7 @@ class Sequence implements \Flexio\IFace\IJob
 
         // don't do parameter replace on the task because it will do
         // this on the entire sequence before variables are set/evaluated
-        //\Flexio\Jobs\Base::replaceParameterTokens($process, $task);
+        //\Flexio\Jobs\Util::replaceParameterTokens($process, $task);
 
         $object = new static();
         $object->properties = $task;

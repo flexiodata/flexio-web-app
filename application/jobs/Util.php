@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 
-class Base
+class Util
 {
     public static function replaceParameterTokens($process, array &$task) : void
     {

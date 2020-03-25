@@ -50,7 +50,7 @@ class Search implements \Flexio\IFace\IJob
         // search is an internal function for pulling info from the
         // elasticsearch index; don't allow parameter replacement to
         // save a little bit of time
-        //\Flexio\Jobs\Base::replaceParameterTokens($process, $task);
+        //\Flexio\Jobs\Util::replaceParameterTokens($process, $task);
 
         $object = new static();
         $object->properties = $task;

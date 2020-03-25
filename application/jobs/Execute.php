@@ -1489,7 +1489,7 @@ class Execute implements \Flexio\IFace\IJob
 
         // don't replace parameters to save a little bit of work;
         // logic is in script so no replacement necessary
-        //\Flexio\Jobs\Base::replaceParameterTokens($process, $task);
+        //\Flexio\Jobs\Util::replaceParameterTokens($process, $task);
 
         $object = new static();
         $object->properties = $task;

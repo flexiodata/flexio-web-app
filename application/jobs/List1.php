@@ -44,7 +44,7 @@ class List1 implements \Flexio\IFace\IJob
     public static function run(\Flexio\IFace\IProcess $process, array $task) : void
     {
         unset($task['op']);
-        \Flexio\Jobs\Base::replaceParameterTokens($process, $task);
+        \Flexio\Jobs\Util::replaceParameterTokens($process, $task);
 
         $object = new static();
         $object->properties = $task;
