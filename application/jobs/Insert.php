@@ -32,12 +32,28 @@ if (($validator->check($params, array(
     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 */
 
-class Insert extends \Flexio\Jobs\Base
+class Insert implements \Flexio\IFace\IJob
 {
-    public function run(\Flexio\IFace\IProcess $process) : void
-    {
-        parent::run($process);
+    private $properties = array();
 
+    public static function validate(array $task) : array
+    {
+        $errors = array();
+        return $errors;
+    }
+
+    public static function run(\Flexio\IFace\IProcess $process, array $task) : void
+    {
+        unset($task['op']);
+        \Flexio\Jobs\Base::replaceParameterTokens($process, $task);
+
+        $object = new static();
+        $object->properties = $task;
+        $object->run_internal($process);
+    }
+
+    private function run_internal(\Flexio\IFace\IProcess $process) : void
+    {
         // create job adds new streams; don't clear existing streams
         $params = $this->getJobParameters();
         $path = $params['path'] ?? '';
@@ -70,5 +86,10 @@ class Insert extends \Flexio\Jobs\Base
 
         if (!$vfs->insert($path, $values))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+    }
+
+    private function getJobParameters() : array
+    {
+        return $this->properties;
     }
 }

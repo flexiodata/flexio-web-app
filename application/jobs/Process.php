@@ -293,8 +293,8 @@ class Process implements \Flexio\IFace\IProcess
     {
         try
         {
-            $job = self::createTask($task);
-            return $job->validate();
+            $job = self::getJobClass($task);
+            return $job::validate($task);
         }
         catch (\Error $e)
         {
@@ -314,16 +314,16 @@ class Process implements \Flexio\IFace\IProcess
         {
             // during debugging, sometimes try/catch needs to be turned
             // of completely; this switch is implemented here and in Api.php
-            $job = self::createTask($task);
-            $job->run($this);
+            $job = self::getJobClass($task);
+            $job::run($this, $task);
         }
          else
         {
             try
             {
                 // create the job with the task; set the job input, run the job, and get the output
-                $job = self::createTask($task);
-                $job->run($this);
+                $job = self::getJobClass($task);
+                $job::run($this, $task);
             }
             catch (\Flexio\Base\Exception | \Exception | \Error $e)
             {
@@ -389,7 +389,7 @@ class Process implements \Flexio\IFace\IProcess
         }
     }
 
-    private static function createTask(array $task) : \Flexio\IFace\IJob
+    private static function getJobClass(array $task) : string
     {
         if (!isset($task['op']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, _('Missing operation \'op\' task parameter'));
@@ -417,12 +417,7 @@ class Process implements \Flexio\IFace\IProcess
 
         // load the job's php file and instantiate the job object
         include_once $job_class_file;
-        $job = $job_class_name::create($task);
-
-        if ($job === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-
-        return $job;
+        return $job_class_name;
     }
 
     private static function createStream() : \Flexio\IFace\IStream

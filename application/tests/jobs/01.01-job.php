@@ -81,7 +81,7 @@ class Test
         \Flexio\Tests\Check::assertString('C.1', 'Event type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Jobs\Process::EVENT_ENDING;
+        $actual = \Flexio\Jobs\Process::EVENT_FINISHING;
         $expected = 'process.finishing';
         \Flexio\Tests\Check::assertString('C.2', 'Event type constant',  $actual, $expected, $results);
     }

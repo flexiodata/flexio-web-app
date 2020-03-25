@@ -32,7 +32,8 @@ class Test
         $variables = [
             "v1" => "field1"
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": ""
@@ -49,7 +50,8 @@ class Test
         ',true);
         $variables = [
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": ""
@@ -67,7 +69,8 @@ class Test
         $variables = [
             "v2" => "field1"
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": ""
@@ -85,7 +88,8 @@ class Test
         $variables = [
             "v1" => "field1"
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": "field1"
@@ -103,7 +107,8 @@ class Test
         $variables = [
             "v1" => "field1"
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": "field1"
@@ -121,7 +126,8 @@ class Test
         $variables = [
             "v1" => "field1"
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": ""
@@ -139,7 +145,8 @@ class Test
         $variables = [
             "v1" => "field1"
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": "$ {v1}"
@@ -157,7 +164,8 @@ class Test
         $variables = [
             "v1" => "field1"
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": ""
@@ -175,7 +183,8 @@ class Test
         $variables = [
             "v1" => "field1"
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": ""
@@ -193,7 +202,8 @@ class Test
         $variables = [
             "v1" => "field1"
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": "  field1  "
@@ -211,7 +221,8 @@ class Test
         $variables = [
             "v1" => "field1"
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": "{v1}"
@@ -229,7 +240,8 @@ class Test
         $variables = [
             "v1" => "field1"
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": "$v1}"
@@ -247,7 +259,8 @@ class Test
         $variables = [
             "v1" => "field1"
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": "${v1"
@@ -265,7 +278,8 @@ class Test
         $variables = [
             "1" => "test@flex.io"
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": "test@flex.io"
@@ -283,7 +297,8 @@ class Test
         $variables = [
             "_1" => "test@flex.io"
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": "test@flex.io"
@@ -301,7 +316,8 @@ class Test
         $variables = [
             "email-address-1" => "test@flex.io"
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": "test@flex.io"
@@ -319,7 +335,8 @@ class Test
         $variables = [
             "email_address_1" => "test@flex.io"
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": "test@flex.io"
@@ -337,7 +354,8 @@ class Test
         $variables = [
             "variable" => "'"
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": "\'"
@@ -355,7 +373,8 @@ class Test
         $variables = [
             'variable' => '${}'
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": "${}"
@@ -373,7 +392,8 @@ class Test
         $variables = [
             'variable' => "\\"
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": "\\\\"
@@ -395,7 +415,8 @@ class Test
         $variables = [
             "different_value" => null
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": null
@@ -413,7 +434,8 @@ class Test
         $variables = [
             "value" => null
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": ""
@@ -431,7 +453,8 @@ class Test
         $variables = [
             "different_value" => false
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": null
@@ -449,7 +472,8 @@ class Test
         $variables = [
             "value" => false
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": "false"
@@ -467,7 +491,8 @@ class Test
         $variables = [
             "value" => true
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": "true"
@@ -485,7 +510,8 @@ class Test
         $variables = [
             "different_value" => 10
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": null
@@ -503,7 +529,8 @@ class Test
         $variables = [
             "value" => 10
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": "10"
@@ -521,7 +548,8 @@ class Test
         $variables = [
             "value" => -2.1
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": "-2.1"
@@ -539,7 +567,8 @@ class Test
         $variables = [
             "different_value" => [1,2,3]
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": null
@@ -557,7 +586,8 @@ class Test
         $variables = [
             "value" => [1,2,3]
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": "[1,2,3]"
@@ -575,7 +605,8 @@ class Test
         $variables = [
             "different_value" => ["a" => "b"]
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": null
@@ -593,7 +624,8 @@ class Test
         $variables = [
             "value" => ["a" => "b"]
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": "{\"a\":\"b\"}"
@@ -611,7 +643,8 @@ class Test
         $variables = [
             "different_value" => 10
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": "The value is:  units."
@@ -629,7 +662,8 @@ class Test
         $variables = [
             "value" => 10
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": "The value is: 10 units."
@@ -647,7 +681,8 @@ class Test
         $variables = [
             "different_value" => true
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": "The statement is ."
@@ -665,7 +700,8 @@ class Test
         $variables = [
             "value" => true
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": "The statement is true."
@@ -683,7 +719,8 @@ class Test
         $variables = [
             "value" => null
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": "The value is ."
@@ -701,7 +738,8 @@ class Test
         $variables = [
             "value" => 10
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": "10/10 is 1"
@@ -724,7 +762,8 @@ class Test
             "v1" => "field1",
             "v2" => "field2"
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": [ "field1", "field2" ]
@@ -743,7 +782,8 @@ class Test
             "v1" => "field1",
             "v2" => "field2"
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": [ "field2", "field1" ]
@@ -762,7 +802,8 @@ class Test
             "v1" => "field1",
             "v2" => "field2"
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": [ "field2", "field1", "field2", "field1" ]
@@ -781,7 +822,8 @@ class Test
             "v2" => "field2",
             "v3" => "field3"
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": [ "field2", "", "field2", "" ]
@@ -800,7 +842,8 @@ class Test
             "key" => "a",
             "value" => "b"
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": {"${key}": "b"}
@@ -819,7 +862,8 @@ class Test
             "_1" => "key",
             "_2" => "value"
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": "The key is value."
@@ -838,7 +882,8 @@ class Test
             "_1" => "key",
             "_2" => "Value"
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": "Value is key."
@@ -857,7 +902,8 @@ class Test
             "var_01" => "A",
             "var_02" => "B"
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         {
             "params": {"a": "A", "b": "B"}
@@ -888,7 +934,8 @@ class Test
         $variables = [
             "v1" => "field1"
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         [
             {
@@ -926,7 +973,8 @@ class Test
         $variables = [
             "v1" => "field1"
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         [
             {
@@ -963,7 +1011,8 @@ class Test
         $variables = [
             "v1" => "field1"
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         [
             {
@@ -1005,7 +1054,8 @@ class Test
             "width" => "14",
             "scale" => "4"
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         [
             {
@@ -1055,7 +1105,8 @@ class Test
             "width" => null,
             "scale" => null
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         [
             {
@@ -1107,7 +1158,8 @@ class Test
             "width" => 14,
             "scale" => 4
         ];
-        $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
+        \Flexio\Jobs\Base::replaceParameterTokens($variables, $properties);
+        $actual = $properties;
         $expected = '
         [
             {

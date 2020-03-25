@@ -45,15 +45,31 @@ if (($validator->check($params, array(
     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 */
 
-class Email extends \Flexio\Jobs\Base
+class Email implements \Flexio\IFace\IJob
 {
     private const EMAIL_WAIT_FREQUENCY = 1; // wait time between emails that are sent
     private const EMAIL_TO_ADDRESS_MAX_SIZE = 25; // maximum number of users that an email can be sent to at once
 
-    public function run(\Flexio\IFace\IProcess $process) : void
-    {
-        parent::run($process);
+    private $properties = array();
 
+    public static function validate(array $task) : array
+    {
+        $errors = array();
+        return $errors;
+    }
+
+    public static function run(\Flexio\IFace\IProcess $process, array $task) : void
+    {
+        unset($task['op']);
+        \Flexio\Jobs\Base::replaceParameterTokens($process, $task);
+
+        $object = new static();
+        $object->properties = $task;
+        $object->run_internal($process);
+    }
+
+    private function run_internal(\Flexio\IFace\IProcess $process) : void
+    {
         // get the parameters
         $params = $this->getJobParameters();
         $to = $params['to'] ?? array();
@@ -258,5 +274,10 @@ class Email extends \Flexio\Jobs\Base
 
         fclose($handle);
         return true;
+    }
+
+    private function getJobParameters() : array
+    {
+        return $this->properties;
     }
 }

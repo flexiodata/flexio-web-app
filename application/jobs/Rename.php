@@ -30,13 +30,28 @@ if (($validator->check($params, array(
     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 */
 
-class Rename extends \Flexio\Jobs\Base
+class Rename implements \Flexio\IFace\IJob
 {
-    public function run(\Flexio\IFace\IProcess $process) : void
-    {
-        parent::run($process);
+    private $properties = array();
 
-        // stdin/stdout
+    public static function validate(array $task) : array
+    {
+        $errors = array();
+        return $errors;
+    }
+
+    public static function run(\Flexio\IFace\IProcess $process, array $task) : void
+    {
+        unset($task['op']);
+        \Flexio\Jobs\Base::replaceParameterTokens($process, $task);
+
+        $object = new static();
+        $object->properties = $task;
+        $object->run_internal($process);
+    }
+
+    private function run_internal(\Flexio\IFace\IProcess $process) : void
+    {
         $instream = $process->getStdin();
         $outstream = $process->getStdout();
         $this->processStream($instream, $outstream, $process->getParams());
@@ -149,5 +164,10 @@ class Rename extends \Flexio\Jobs\Base
         }
 
         return \Flexio\Base\ExprEvaluate::evaluate($expr, $variables, $structure, $retval);
+    }
+
+    private function getJobParameters() : array
+    {
+        return $this->properties;
     }
 }

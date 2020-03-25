@@ -16,50 +16,12 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 
-class Base implements \Flexio\IFace\IJob
+class Base
 {
-    // properties for derived classes; these the job parameters
-    protected $properties;
-
-    public function __construct()
+    public static function replaceParameterTokens($process, array &$task) : void
     {
-        $this->properties = array();
-    }
-
-    public static function create(array $task) : \Flexio\Jobs\Base
-    {
-        $object = new static();
-        $object->properties = $task;
-        return $object;
-    }
-
-    public function getProperties() : array
-    {
-        return $this->properties;
-    }
-
-    public function getJobParameters() : array
-    {
-        $params = $this->properties;
-        unset($params['op']);
-        return $params;
-    }
-
-    public function validate() : array
-    {
-        $errors = array();
-        return $errors;
-    }
-
-    public function run(\Flexio\IFace\IProcess $process) : void
-    {
-        $this->replaceParameterTokens($process);
-    }
-
-    public function replaceParameterTokens($process) : \Flexio\Jobs\Base
-    {
-        self::replaceParameterTokensRecurse($process, $this->properties);
-        return $this;
+        // note: $process can be either a process or an array
+        self::replaceParameterTokensRecurse($process, $task);
     }
 
     public static function addEids(array $task) : array

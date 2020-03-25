@@ -1425,8 +1425,9 @@ class ScriptHost
 
 
 
-class Execute extends \Flexio\Jobs\Base
+class Execute implements \Flexio\IFace\IJob
 {
+    private $properties = array();
     private $code_base64 = '';
     private $code = '';
     private $process = null;
@@ -1445,10 +1446,10 @@ class Execute extends \Flexio\Jobs\Base
         return $contents;
     }
 
-    public function validate() : array
+    public static function validate(array $task) : array
     {
         $errors = array();
-        $job_params = $this->getJobParameters();
+        $job_params = $task;
 
         if (!isset($job_params['op']))
             $errors[] = array('code' => \Flexio\Base\Error::INVALID_SYNTAX, 'message' => '');
@@ -1482,10 +1483,21 @@ class Execute extends \Flexio\Jobs\Base
         return $errors;
     }
 
-    public function run(\Flexio\IFace\IProcess $process) : void
+    public static function run(\Flexio\IFace\IProcess $process, array $task) : void
     {
-        parent::run($process);
+        unset($task['op']);
 
+        // don't replace parameters to save a little bit of work;
+        // logic is in script so no replacement necessary
+        //\Flexio\Jobs\Base::replaceParameterTokens($process, $task);
+
+        $object = new static();
+        $object->properties = $task;
+        $object->run_internal($process);
+    }
+
+    private function run_internal(\Flexio\IFace\IProcess $process) : void
+    {
         $this->process = $process;
 
         // properties
@@ -1652,5 +1664,10 @@ class Execute extends \Flexio\Jobs\Base
             // unknown language
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
         }
+    }
+
+    private function getJobParameters() : array
+    {
+        return $this->properties;
     }
 }
