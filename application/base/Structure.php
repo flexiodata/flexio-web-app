@@ -118,6 +118,27 @@ class Structure
         return self::create($structure_output);
     }
 
+    public static function convertRowValues(array $row, array $changed_columns) : array
+    {
+        $output_row = array();
+
+        foreach ($row as $name => $value)
+        {
+            foreach ($changed_columns as $c)
+            {
+                if ($c['name'] === $name)
+                {
+                    $value = self::convertValue($value, $c['type'], $c['scale']);
+                    break;
+                }
+            }
+
+            $output_row[$name] = $value;
+        }
+
+        return $output_row;
+    }
+
     public static function convertValue($value, string $new_type, int $new_scale = 0)
     {
         switch ($new_type)
