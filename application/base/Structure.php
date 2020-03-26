@@ -118,11 +118,8 @@ class Structure
         return self::create($structure_output);
     }
 
-    public static function convertValue($value, $changed_column) // TODO: add return type
+    public static function convertValue($value, string $new_type, int $new_scale = 0)
     {
-        $new_type = $changed_column['type'];
-        $new_scale = $changed_column['scale'];
-
         switch ($new_type)
         {
             default:
