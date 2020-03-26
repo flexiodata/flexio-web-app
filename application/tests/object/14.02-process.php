@@ -50,8 +50,8 @@ class Test
         $task = [
             "op" => "application/bad-job-definition"
         ];
-        $process_store = \Flexio\Object\Process::create(["task" => $task]);
-        $process_engine = \Flexio\Jobs\Process::create();
+        $process_store = \Flexio\Object\Process::create();
+        $process_engine = \Flexio\Jobs\Process::create()->queue("\Flexio\Jobs\Task::run", $task);
         $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine)->run(false);
         $actual = $process_store->getProcessStatus();
         $expected = \Flexio\Jobs\Process::STATUS_FAILED;
@@ -66,8 +66,8 @@ class Test
             ],
             "content" => "bad content"
         ];
-        $process_store = \Flexio\Object\Process::create(["task" => $task]);
-        $process_engine = \Flexio\Jobs\Process::create();
+        $process_store = \Flexio\Object\Process::create();
+        $process_engine = \Flexio\Jobs\Process::create()->queue("\Flexio\Jobs\Task::run", $task);
         $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine)->run(false);
         $actual = $process_store->getProcessStatus();
         $expected = \Flexio\Jobs\Process::STATUS_FAILED;
@@ -77,8 +77,8 @@ class Test
         $task = [
             "op" => "exit"
         ];
-        $process_store = \Flexio\Object\Process::create(["task" => $task]);
-        $process_engine = \Flexio\Jobs\Process::create();
+        $process_store = \Flexio\Object\Process::create();
+        $process_engine = \Flexio\Jobs\Process::create()->queue("\Flexio\Jobs\Task::run", $task);
         $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine)->run(false);
         $actual = $process_store->getProcessStatus();
         $expected = \Flexio\Jobs\Process::STATUS_COMPLETED;

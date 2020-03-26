@@ -96,12 +96,8 @@ class ProcessHost
             'started' => \Flexio\Base\Util::getCurrentTimestamp()
         ]);
 
-        // STEP 2: if we have an associative array, we have a top-level task, so simply
-        // execute it; otherwise we have an array of tasks, so package them in a sequence job
-        $task = $this->procobj->getTask();
-        if (\Flexio\Base\Util::isAssociativeArray($task) === false)
-            $task = array('op' => 'sequence', 'params' => array('items' => $task));
-        $this->engine->execute($task);
+        // STEP 2: run the process
+        $this->engine->run();
 
         // STEP 3: save final process info
         $process_params = array();

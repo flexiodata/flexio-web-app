@@ -414,8 +414,9 @@ class Connection
                 'structure' => $pipe_properties['returns']
             );
             $process_engine = \Flexio\Jobs\Process::create();
-            $process_engine->addEventHandler(\Flexio\Jobs\Process::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::addMountParams', $process_properties);
-            $process_engine->addEventHandler(\Flexio\Jobs\Process::EVENT_FINISHING,  '\Flexio\Api\ProcessHandler::saveStdoutToElasticSearch', $elastic_search_params);
+            $process_engine->queue('\Flexio\Api\ProcessHandler::addMountParams', $process_properties);
+            $process_engine->queue('\Flexio\Jobs\Task::run', $process_properties['task']);
+            $process_engine->queue('\Flexio\Api\ProcessHandler::saveStdoutToElasticSearch', $elastic_search_params);
 
             // create a process host to connect the store/engine and run the process
             $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);

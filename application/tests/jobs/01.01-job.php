@@ -70,19 +70,5 @@ class Test
         $actual = \Flexio\Jobs\Process::RESPONSE_NORMAL;
         $expected = 200;
         \Flexio\Tests\Check::assertNumber('B.2', 'Process response constant',  $actual, $expected, $results);
-
-
-
-        // TEST: ProcessHost event constants
-
-        // BEGIN TEST
-        $actual = \Flexio\Jobs\Process::EVENT_STARTING;
-        $expected = 'process.starting';
-        \Flexio\Tests\Check::assertString('C.1', 'Event type constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Flexio\Jobs\Process::EVENT_FINISHING;
-        $expected = 'process.finishing';
-        \Flexio\Tests\Check::assertString('C.2', 'Event type constant',  $actual, $expected, $results);
     }
 }
