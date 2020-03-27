@@ -50,21 +50,21 @@ class Filter
         {
             $date = $filter_items['created_min'];
             $date = strtotime($date);
-            if ($date !== false)
-            {
-                $date_clean = date('Y-m-d', $date);
-                $filter_expr .= (' and (created >= ' . $db->quote($date_clean) . ')');
-            }
+            if ($date === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+            $date_clean = date('Y-m-d', $date);
+            $filter_expr .= (' and (created >= ' . $db->quote($date_clean) . ')');
         }
         if (isset($filter_items['created_max']) && array_key_exists('created_max', $allowed_item_keys))
         {
             $date = $filter_items['created_max'];
             $date = strtotime($date . ' + 1 days');
-            if ($date !== false)
-            {
-                $date_clean = date('Y-m-d', $date);
-                $filter_expr .= (' and (created < ' . $db->quote($date_clean) . ')'); // created is a timestamp, so use < on the next day
-            }
+            if ($date === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+            $date_clean = date('Y-m-d', $date);
+            $filter_expr .= (' and (created < ' . $db->quote($date_clean) . ')'); // created is a timestamp, so use < on the next day
         }
 
         if (strlen($filter_expr) > 0)
