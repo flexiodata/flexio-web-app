@@ -194,6 +194,12 @@ class Connection
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
+                'eid_status'  => array(
+                    'required' => false,
+                    'array' => true, // explode parameter into array, each element of which must satisfy type/enum
+                    'type' => 'string',
+                    'default' => \Model::STATUS_AVAILABLE,
+                    'enum' => [\Model::STATUS_AVAILABLE, \Model::STATUS_PENDING]),
                 'start'       => array('type' => 'integer', 'required' => false),
                 'tail'        => array('type' => 'integer', 'required' => false),
                 'limit'       => array('type' => 'integer', 'required' => false),
@@ -212,8 +218,8 @@ class Connection
         // return the result
         $result = array();
 
-        $filter = array('owned_by' => $owner_user_eid, 'eid_status' => \Model::STATUS_AVAILABLE);
-        $filter = array_merge($validated_query_params, $filter); // give precedence to fixed owner/status
+        $filter = array('owned_by' => $owner_user_eid);
+        $filter = array_merge($validated_query_params, $filter); // only allow items for owner
         $connections = \Flexio\Object\Connection::list($filter);
 
         foreach ($connections as $c)
