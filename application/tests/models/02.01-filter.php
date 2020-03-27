@@ -24,7 +24,7 @@ class Test
         $db = \Flexio\System\System::getModel()->getDatabase();
 
 
-        // TEST: build function
+        // TEST: build function; allowed items
 
         // BEGIN TEST
         $actual = '';
@@ -89,27 +89,82 @@ class Test
         \Flexio\Tests\Check::assertString('A.5', '\Flexio\Model\Filter::build(); don\'t require allowed parameters to have associated filter items',  $actual, $expected, $results);
 
 
-        // TEST: build function
+        // TEST: build function; basic OR filters
 
         // BEGIN TEST
         $allowed_items = array('owned_by');
         $filter = array('owned_by' => 'A');
         $actual = \Filter::build($db, $filter, $allowed_items);
         $expected = "(true and (owned_by = 'A'))";
-        \Flexio\Tests\Check::assertString('B.1', '\Flexio\Model\Filter::build(); build filter string',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.1', '\Flexio\Model\Filter::build(); basic AND filters',  $actual, $expected, $results);
+
+        // TODO:
+
+
+        // TEST: build function; created_min/created_max formatting
 
         // BEGIN TEST
-        $allowed_items = array('eid_status');
-        $filter = array('eid_status' => 'A');
-        $actual = \Filter::build($db, $filter, $allowed_items);
-        $expected = "(true and (eid_status = 'A'))";
-        \Flexio\Tests\Check::assertString('B.2', '\Flexio\Model\Filter::build(); build filter string',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $allowed_items = array('created_min');
+            $filter = array('created_min' => 'ab');
+            $file_expr = \Filter::build($db, $filter, $allowed_items);
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('D.1', '\Flexio\Model\Filter::build(); throw an exception if created_min date is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $allowed_items = array('owned_by', 'eid_status');
-        $filter = array('owned_by' => 'A', 'eid_status' => 'B');
-        $actual = \Filter::build($db, $filter, $allowed_items);
-        $expected = "(true and (owned_by = 'A') and (eid_status = 'B'))";
-        \Flexio\Tests\Check::assertString('B.3', '\Flexio\Model\Filter::build(); build filter string',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $allowed_items = array('created_min');
+            $filter = array('created_min' => '2010-01-02 01:02:03');
+            $file_expr = \Filter::build($db, $filter, $allowed_items);
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
+        \Flexio\Tests\Check::assertString('D.2', '\Flexio\Model\Filter::build(); throw an exception if created_min date is invalid',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = '';
+        try
+        {
+            $allowed_items = array('created_max');
+            $filter = array('created_max' => 'ab');
+            $file_expr = \Filter::build($db, $filter, $allowed_items);
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('D.3', '\Flexio\Model\Filter::build(); throw an exception if created_min date is invalid',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = '';
+        try
+        {
+            $allowed_items = array('created_max');
+            $filter = array('created_max' => '2010-01-02 01:02:03');
+            $file_expr = \Filter::build($db, $filter, $allowed_items);
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
+        \Flexio\Tests\Check::assertString('D.4', '\Flexio\Model\Filter::build(); throw an exception if created_min date is invalid',  $actual, $expected, $results);
     }
 }
