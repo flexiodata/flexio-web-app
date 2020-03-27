@@ -190,7 +190,10 @@ class Process
                     'type' => 'string',
                     'default' => \Model::STATUS_AVAILABLE,
                     'enum' => [\Model::STATUS_AVAILABLE, \Model::STATUS_PENDING]),
-                'parent_eid'  => array('type' => 'eid',     'required' => false),
+                'parent_eid'  => array(
+                    'required' => false,
+                    'array' => true, // explode parameter into array, each element of which must satisfy type/enum
+                    'type' => 'eid'),
                 'start'       => array('type' => 'integer', 'required' => false),
                 'tail'        => array('type' => 'integer', 'required' => false),
                 'limit'       => array('type' => 'integer', 'required' => false),
