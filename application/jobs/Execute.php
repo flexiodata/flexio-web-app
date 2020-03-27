@@ -234,13 +234,10 @@ class ExecuteProxy
         });
 
 
-
-
         //echo("Time c2 " . (microtime(true)-$c1) . ";");
 
 
         // find out if we need to start a container
-
         //self::debugstep($c1, "Looking for IPC file $host_container_zmq");
 
         if (file_exists($host_container_zmq))
@@ -264,7 +261,6 @@ class ExecuteProxy
                 if ($message === false)
                 {
                     //self::debugstep($c1, "zmq_client->recv() returned false");
-
                     $zmqsock_client = null;
                 }
                  else
@@ -277,7 +273,6 @@ class ExecuteProxy
                     else
                     {
                         //self::debugstep($c1, "hello message returned something other than hello: " . json_encode($message));
-
                         $zmqsock_client = null;
                     }
                 }
@@ -309,7 +304,6 @@ class ExecuteProxy
             //echo "./update-docker-images && " . str_replace(" -d ", " ", str_replace(" -i", " -it", $cmd));
             //ob_end_flush();
             //flush();
-
 
             //self::debugstep($c1, "Executing $cmd 2>&1");
 
@@ -347,11 +341,7 @@ class ExecuteProxy
         }
 
 
-
-
         //echo("Time c4 " . (microtime(true)-$c1) . ";");
-
-
 
 
         // start a zeromq server with a domain socket
@@ -389,7 +379,6 @@ class ExecuteProxy
         //echo("Time c5 " . (microtime(true)-$c1) . ";");
 
 
-
         register_shutdown_function(function() use (&$zmqsock_server, $dsn) {
             if ($zmqsock_server !== null && $zmqsock_server->_is_bound)
             {
@@ -422,7 +411,9 @@ class ExecuteProxy
                 $message = @json_decode($message);
 
                 if ($message === null)
+                {
                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: decoding fault");
+                }
                 $message = (array)$message;
 
                 if (isset($message['access_key']) && $message['access_key'] == $access_key)
@@ -475,10 +466,6 @@ class ExecuteProxy
                 $execution_seconds = (int)floor(microtime(true) - $actual_start_time);
                 if ($execution_seconds > $max_execution_time)
                 {
-                    // first, make sure container is 'dead'
-                    $cmd = "$g_dockerbin kill $container_name";
-                    @exec("$cmd > /dev/null &");
-
                     $exception = \Flexio\Base\Error::GENERAL;
                     $exception_msg = "Maximum execution time exceeded";
                     break;
@@ -501,14 +488,9 @@ class ExecuteProxy
 
                     if ($seconds >= 300 || !$is_running)
                     {
-                        // first, make sure container is 'dead'
-                        $cmd = "$g_dockerbin kill $container_name";
-                        @exec("$cmd > /dev/null &");
-
                         $exception = \Flexio\Base\Error::GENERAL;
                         $exception_msg = "Execute proxy: IPC timeout";
                         //$exception_msg = "Execute proxy: IPC timeout Container=$container_name Exit Code=$exit_code Output=$docker_exec_output State=$full_state";
-
                         break;
                     }
                 }
@@ -536,10 +518,8 @@ class ExecuteProxy
             throw new \Flexio\Base\Exception($exception, $exception_msg);
         }
 
-
         //echo("Time c9 " . (microtime(true)-$c1) . ";");
         //self::debugstep($c1, "Total runtime " . '' . (microtime(true)-$c1));
-
     }
 
     public function func_compile_error($error)
