@@ -23,6 +23,13 @@ class Filter
     {
         $allowed_item_keys = array_flip($allowed_items);
 
+        // make sure the filter items are in the allowed items
+        foreach ($filter_items as $key => $value)
+        {
+            if (array_key_exists($key, $allowed_item_keys) === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+        }
+
         // initial condition
         $filter_expr = 'true';
 
@@ -34,36 +41,63 @@ class Filter
                 continue;
 
             // all other keys, build up a equality comparison using the column name
-            if (isset($value) && array_key_exists($key, $allowed_item_keys))
-                $filter_expr .= (" and ($key = " . $db->quote($value) . ")");
+            $filter_in_expr = self::buildInExpr($db, $value);
+            $filter_expr .= (" and ($key in " . $filter_in_expr . ")");
         }
 
-        // handle the date ranges
-        if (isset($filter_items['created_min']) && array_key_exists('created_min', $allowed_item_keys))
+        // handle the date ranges; don't allow multiple dates since it's min/max
+        if (isset($filter_items['created_min']))
         {
             $date = $filter_items['created_min'];
             $date = strtotime($date);
-            if ($date !== false)
-            {
-                $date_clean = date('Y-m-d', $date);
-                $filter_expr .= (' and (created >= ' . $db->quote($date_clean) . ')');
-            }
+            if ($date === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+            $date_clean = date('Y-m-d', $date);
+            $filter_expr .= (' and (created >= ' . $db->quote($date_clean) . ')');
         }
-        if (isset($filter_items['created_max']) && array_key_exists('created_max', $allowed_item_keys))
+        if (isset($filter_items['created_max']))
         {
             $date = $filter_items['created_max'];
             $date = strtotime($date . ' + 1 days');
-            if ($date !== false)
-            {
-                $date_clean = date('Y-m-d', $date);
-                $filter_expr .= (' and (created < ' . $db->quote($date_clean) . ')'); // created is a timestamp, so use < on the next day
-            }
+            if ($date === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+            $date_clean = date('Y-m-d', $date);
+            $filter_expr .= (' and (created < ' . $db->quote($date_clean) . ')'); // created is a timestamp, so use < on the next day
         }
 
         if (strlen($filter_expr) > 0)
             $filter_expr = '(' . $filter_expr . ')';
 
         return $filter_expr;
+    }
+
+    private static function buildInExpr($db, $value) : string
+    {
+        if (!is_string($value) && !is_array($value))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        $in_values = is_string($value) ? [$value] : $value;
+
+        // handle case of empty array; since '()' is invalid syntax, return
+        // '(null)' which will evaluate to false when used in 'in' statement
+        if (count($in_values) === 0)
+            return '(null)';
+
+        $expr = '';
+        foreach ($in_values as $v)
+        {
+            if (!is_string($v))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+            if (strlen($expr) > 0)
+                $expr .= ',';
+
+            $expr .= $db->quote($v);
+        }
+
+        return '(' . $expr . ')';
     }
 }
 

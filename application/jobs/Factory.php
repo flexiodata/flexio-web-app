@@ -48,7 +48,6 @@ class Factory
         'search'    => '\Flexio\Jobs\Search',
         'select'    => '\Flexio\Jobs\Select',
         'sequence'  => '\Flexio\Jobs\Sequence',
-        'settype'   => '\Flexio\Jobs\SetType',
         'transform' => '\Flexio\Jobs\Transform',
         'unarchive' => '\Flexio\Jobs\Unarchive',
         'write'     => '\Flexio\Jobs\Write'

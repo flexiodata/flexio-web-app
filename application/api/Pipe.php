@@ -256,6 +256,16 @@ class Pipe
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
+                'eid_status'  => array(
+                    'required' => false,
+                    'array' => true, // explode parameter into array, each element of which must satisfy type/enum
+                    'type' => 'string',
+                    'default' => \Model::STATUS_AVAILABLE,
+                    'enum' => [\Model::STATUS_AVAILABLE, \Model::STATUS_PENDING]),
+                'parent_eid'  => array(
+                    'required' => false,
+                    'array' => true, // explode parameter into array, each element of which must satisfy type/enum
+                    'type' => 'eid'),
                 'start'       => array('type' => 'integer', 'required' => false),
                 'tail'        => array('type' => 'integer', 'required' => false),
                 'limit'       => array('type' => 'integer', 'required' => false),
@@ -274,8 +284,8 @@ class Pipe
         // get the pipes
         $result = array();
 
-        $filter = array('owned_by' => $owner_user_eid, 'eid_status' => \Model::STATUS_AVAILABLE);
-        $filter = array_merge($validated_query_params, $filter); // give precedence to fixed owner/status
+        $filter = array('owned_by' => $owner_user_eid);
+        $filter = array_merge($validated_query_params, $filter); // only allow items for owner
         $pipes = \Flexio\Object\Pipe::list($filter);
 
         foreach ($pipes as $p)

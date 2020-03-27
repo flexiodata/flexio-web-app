@@ -118,6 +118,74 @@ class Structure
         return self::create($structure_output);
     }
 
+    public static function convertRowValues(array $row, array $changed_columns) : array
+    {
+        $output_row = array();
+
+        foreach ($row as $name => $value)
+        {
+            foreach ($changed_columns as $c)
+            {
+                if ($c['name'] === $name)
+                {
+                    $value = self::convertValue($value, $c['type'], $c['scale']);
+                    break;
+                }
+            }
+
+            $output_row[$name] = $value;
+        }
+
+        return $output_row;
+    }
+
+    public static function convertValue($value, string $new_type, int $new_scale = 0)
+    {
+        switch ($new_type)
+        {
+            default:
+                return $value;
+
+            case 'text':
+            case 'character':
+            case 'widecharacter':
+                return strval($value);
+
+            case 'numeric':
+            case 'double':
+                $value = floatval($value);
+                $value = round($value, $new_scale);
+                return floatval($value);
+
+            case 'integer':
+                $value = floatval($value);
+                $value = round($value, 0);
+                return intval($value);
+
+            case 'date':
+                $value = strval($value);
+                $value = strtotime($value);
+                if ($value === false)
+                    return null;
+                return date('Y-m-d', $value);
+
+            case 'datetime':
+                $value = strval($value);
+                $value = strtotime($value);
+                if ($value === false)
+                    return null;
+                return date('Y-m-d H:i:s.u', $value);
+
+            case 'boolean':
+                $value = strval($value);
+                $value = strtolower(trim($value));
+                if ($value === 'true' || $value === 't' || (is_numeric($value) && intval($value) != 0))
+                    return true;
+                     else
+                    return false;
+        }
+    }
+
     public function push(array $column) : array
     {
         // note: returns the added column with info that includes any adjustments made

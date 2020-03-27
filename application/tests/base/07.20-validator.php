@@ -216,6 +216,7 @@ class Test
         \Flexio\Tests\Check::assertBoolean('A.15', '\Flexio\Base\Validator::check(); check enumeration of allowed values',  $actual, $expected, $results);
 
 
+
         // TEST: check enumeration of allowed values; make sure values still pass other contraints
 
         // BEGIN TEST
@@ -334,5 +335,119 @@ class Test
         $actual = $validator->check($values, $checks)->getParams();
         $expected = false;
         \Flexio\Tests\Check::assertBoolean('B.9', '\Flexio\Base\Validator::check(); check enumeration of allowed values; value must still pass other contraints',  $actual, $expected, $results);
+
+
+
+        // TEST: check enumeration of allowed values
+
+        // BEGIN TEST
+        $validator = \Flexio\Base\Validator::create();
+        $values = array(
+            'status' => 'A'
+        );
+        $checks = array(
+            'status' => array(
+                'array' => true, // explode status into an array, each element of which must satisfy type/enum
+                'type' => 'string',
+                'required' => false,
+                'enum' => ['A','B']
+            )
+        );
+        $actual = $validator->check($values, $checks)->getParams();
+        $expected = array(
+            'status' => ['A']
+        );
+        \Flexio\Tests\Check::assertInArray('C.1', '\Flexio\Base\Validator::check(); check enumeration of allowed values; value must still pass other contraints',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $validator = \Flexio\Base\Validator::create();
+        $values = array(
+            'status' => 'B'
+        );
+        $checks = array(
+            'status' => array(
+                'array' => true, // explode status into an array, each element of which must satisfy type/enum
+                'type' => 'string',
+                'required' => false,
+                'enum' => ['A','B']
+            )
+        );
+        $actual = $validator->check($values, $checks)->getParams();
+        $expected = array(
+            'status' => ['B']
+        );
+        \Flexio\Tests\Check::assertInArray('C.2', '\Flexio\Base\Validator::check(); check enumeration of allowed values; value must still pass other contraints',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $validator = \Flexio\Base\Validator::create();
+        $values = array(
+            'status' => 'A,B'
+        );
+        $checks = array(
+            'status' => array(
+                'array' => true, // explode status into an array, each element of which must satisfy type/enum
+                'type' => 'string',
+                'required' => false,
+                'enum' => ['A','B']
+            )
+        );
+        $actual = $validator->check($values, $checks)->getParams();
+        $expected = array(
+            'status' => ['A','B']
+        );
+        \Flexio\Tests\Check::assertInArray('C.3', '\Flexio\Base\Validator::check(); check enumeration of allowed values; value must still pass other contraints',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $validator = \Flexio\Base\Validator::create();
+        $values = array(
+            'status' => 'A,B'
+        );
+        $checks = array(
+            'status' => array(
+                'array' => false, // explode status into an array, each element of which must satisfy type/enum
+                'type' => 'string',
+                'required' => false,
+                'enum' => ['A,B']
+            )
+        );
+        $actual = $validator->check($values, $checks)->getParams();
+        $expected = array(
+            'status' => 'A,B'
+        );
+        \Flexio\Tests\Check::assertInArray('C.4', '\Flexio\Base\Validator::check(); check enumeration of allowed values; value must still pass other contraints',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $validator = \Flexio\Base\Validator::create();
+        $values = array(
+            'status' => 'A,B'
+        );
+        $checks = array(
+            'status' => array(
+                'array' => false, // explode status into an array, each element of which must satisfy type/enum
+                'type' => 'string',
+                'required' => false,
+                'enum' => ['A','B']
+            )
+        );
+        $actual = $validator->check($values, $checks)->getParams();
+        $expected = false;
+        \Flexio\Tests\Check::assertBoolean('C.5', '\Flexio\Base\Validator::check(); check enumeration of allowed values; value must still pass other contraints',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $validator = \Flexio\Base\Validator::create();
+        $values = array(
+            'status' => 'A,C'
+        );
+        $checks = array(
+            'status' => array(
+                'array' => true, // explode status into an array, each element of which must satisfy type/enum
+                'type' => 'string',
+                'required' => false,
+                'enum' => ['A','B']
+            )
+        );
+        $actual = $validator->check($values, $checks)->getParams();
+        $expected = false;
+        \Flexio\Tests\Check::assertBoolean('C.6', '\Flexio\Base\Validator::check(); check enumeration of allowed values; value must still pass other contraints',  $actual, $expected, $results);
     }
 }

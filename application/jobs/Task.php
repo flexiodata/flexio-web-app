@@ -18,17 +18,13 @@ namespace Flexio\Jobs;
 /*
 // DESCRIPTION:
 {
-    "op": "fail",  // string, required
-    "code": "",    // string
-    "message": ""  // string
+    "op": ""      // string; any valid job followed by any additional parameters
 }
 
 // VALIDATOR:
 $validator = \Flexio\Base\Validator::create();
 if (($validator->check($params, array(
-        'op'         => array('required' => true,  'enum' => ['fail']),
-        'code'       => array('required' => false, 'type' => 'string'),
-        'message'    => array('required' => false, 'type' => 'string')
+        'op'         => array('required' => true)
     ))->hasErrors()) === true)
     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 */
