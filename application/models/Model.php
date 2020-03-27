@@ -23,6 +23,13 @@ class Filter
     {
         $allowed_item_keys = array_flip($allowed_items);
 
+        // make sure the filter items are in the allowed items
+        foreach ($filter_items as $key => $value)
+        {
+            if (array_key_exists($key, $allowed_item_keys) === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+        }
+
         // initial condition
         $filter_expr = 'true';
 
