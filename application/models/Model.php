@@ -41,12 +41,11 @@ class Filter
                 continue;
 
             // all other keys, build up a equality comparison using the column name
-            if (isset($value) && array_key_exists($key, $allowed_item_keys))
-                $filter_expr .= (" and ($key = " . $db->quote($value) . ")");
+            $filter_expr .= (" and ($key = " . $db->quote($value) . ")");
         }
 
         // handle the date ranges
-        if (isset($filter_items['created_min']) && array_key_exists('created_min', $allowed_item_keys))
+        if (isset($filter_items['created_min']))
         {
             $date = $filter_items['created_min'];
             $date = strtotime($date);
@@ -56,7 +55,7 @@ class Filter
             $date_clean = date('Y-m-d', $date);
             $filter_expr .= (' and (created >= ' . $db->quote($date_clean) . ')');
         }
-        if (isset($filter_items['created_max']) && array_key_exists('created_max', $allowed_item_keys))
+        if (isset($filter_items['created_max']))
         {
             $date = $filter_items['created_max'];
             $date = strtotime($date . ' + 1 days');
