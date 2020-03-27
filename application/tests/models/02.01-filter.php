@@ -89,16 +89,139 @@ class Test
         \Flexio\Tests\Check::assertString('A.5', '\Flexio\Model\Filter::build(); don\'t require allowed parameters to have associated filter items',  $actual, $expected, $results);
 
 
-        // TEST: build function; basic OR filters
+
+        // TEST: build function; basic filters
+
+        // BEGIN TEST
+        $allowed_items = array('owned_by');
+        $filter = array('owned_by' => '');
+        $actual = \Filter::build($db, $filter, $allowed_items);
+        $expected = "(true and (owned_by in ('')))";
+        \Flexio\Tests\Check::assertString('B.1', '\Flexio\Model\Filter::build(); basic filters',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $allowed_items = array('owned_by');
+        $filter = array('owned_by' => []);
+        $actual = \Filter::build($db, $filter, $allowed_items);
+        $expected = "(true and (owned_by in (null)))";
+        \Flexio\Tests\Check::assertString('B.2', '\Flexio\Model\Filter::build(); basic filters',  $actual, $expected, $results);
 
         // BEGIN TEST
         $allowed_items = array('owned_by');
         $filter = array('owned_by' => 'A');
         $actual = \Filter::build($db, $filter, $allowed_items);
-        $expected = "(true and (owned_by = 'A'))";
-        \Flexio\Tests\Check::assertString('C.1', '\Flexio\Model\Filter::build(); basic AND filters',  $actual, $expected, $results);
+        $expected = "(true and (owned_by in ('A')))";
+        \Flexio\Tests\Check::assertString('B.3', '\Flexio\Model\Filter::build(); basic filters',  $actual, $expected, $results);
 
-        // TODO:
+        // BEGIN TEST
+        $allowed_items = array('owned_by');
+        $filter = array('owned_by' => ['A']);
+        $actual = \Filter::build($db, $filter, $allowed_items);
+        $expected = "(true and (owned_by in ('A')))";
+        \Flexio\Tests\Check::assertString('B.4', '\Flexio\Model\Filter::build(); basic filters',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $allowed_items = array('owned_by');
+        $filter = array('owned_by' => 'A,b');
+        $actual = \Filter::build($db, $filter, $allowed_items);
+        $expected = "(true and (owned_by in ('A,b')))";
+        \Flexio\Tests\Check::assertString('B.5', '\Flexio\Model\Filter::build(); basic filters',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $allowed_items = array('owned_by');
+        $filter = array('owned_by' => ['A,b']);
+        $actual = \Filter::build($db, $filter, $allowed_items);
+        $expected = "(true and (owned_by in ('A,b')))";
+        \Flexio\Tests\Check::assertString('B.6', '\Flexio\Model\Filter::build(); basic filters',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $allowed_items = array('owned_by');
+        $filter = array('owned_by' => 'A\'b');
+        $actual = \Filter::build($db, $filter, $allowed_items);
+        $expected = "(true and (owned_by in ('A''b')))";
+        \Flexio\Tests\Check::assertString('B.7', '\Flexio\Model\Filter::build(); basic filters',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $allowed_items = array('owned_by');
+        $filter = array('owned_by' => ['A\'b']);
+        $actual = \Filter::build($db, $filter, $allowed_items);
+        $expected = "(true and (owned_by in ('A''b')))";
+        \Flexio\Tests\Check::assertString('B.8', '\Flexio\Model\Filter::build(); basic filters',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $allowed_items = array('owned_by');
+        $filter = array('owned_by' => 'A"b');
+        $actual = \Filter::build($db, $filter, $allowed_items);
+        $expected = "(true and (owned_by in ('A\"b')))";
+        \Flexio\Tests\Check::assertString('B.9', '\Flexio\Model\Filter::build(); basic filters',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $allowed_items = array('owned_by');
+        $filter = array('owned_by' => ['A"b']);
+        $actual = \Filter::build($db, $filter, $allowed_items);
+        $expected = "(true and (owned_by in ('A\"b')))";
+        \Flexio\Tests\Check::assertString('B.10', '\Flexio\Model\Filter::build(); basic filters',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $allowed_items = array('owned_by');
+        $filter = array('owned_by' => ['A','b']);
+        $actual = \Filter::build($db, $filter, $allowed_items);
+        $expected = "(true and (owned_by in ('A','b')))";
+        \Flexio\Tests\Check::assertString('B.11', '\Flexio\Model\Filter::build(); basic filters',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $allowed_items = array('owned_by');
+        $filter = array('owned_by' => ['A,',',b']);
+        $actual = \Filter::build($db, $filter, $allowed_items);
+        $expected = "(true and (owned_by in ('A,',',b')))";
+        \Flexio\Tests\Check::assertString('B.12', '\Flexio\Model\Filter::build(); basic filters',  $actual, $expected, $results);
+
+
+
+        // TEST: build function; basic filters
+
+        // BEGIN TEST
+        $allowed_items = array('owned_by', 'eid_status');
+        $filter = array('owned_by' => 'A', 'eid_status' => 'B');
+        $actual = \Filter::build($db, $filter, $allowed_items);
+        $expected = "(true and (owned_by in ('A')) and (eid_status in ('B')))";
+        \Flexio\Tests\Check::assertString('C.1', '\Flexio\Model\Filter::build(); basic filters',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $allowed_items = array('owned_by', 'eid_status');
+        $filter = array('owned_by' => ['A'], 'eid_status' => 'B');
+        $actual = \Filter::build($db, $filter, $allowed_items);
+        $expected = "(true and (owned_by in ('A')) and (eid_status in ('B')))";
+        \Flexio\Tests\Check::assertString('C.2', '\Flexio\Model\Filter::build(); basic filters',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $allowed_items = array('owned_by', 'eid_status');
+        $filter = array('owned_by' => 'A', 'eid_status' => ['B']);
+        $actual = \Filter::build($db, $filter, $allowed_items);
+        $expected = "(true and (owned_by in ('A')) and (eid_status in ('B')))";
+        \Flexio\Tests\Check::assertString('C.3', '\Flexio\Model\Filter::build(); basic filters',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $allowed_items = array('owned_by', 'eid_status');
+        $filter = array('owned_by' => ['A'], 'eid_status' => ['B']);
+        $actual = \Filter::build($db, $filter, $allowed_items);
+        $expected = "(true and (owned_by in ('A')) and (eid_status in ('B')))";
+        \Flexio\Tests\Check::assertString('C.4', '\Flexio\Model\Filter::build(); basic filters',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $allowed_items = array('owned_by', 'eid_status');
+        $filter = array('owned_by' => ['A','B'], 'eid_status' => 'C');
+        $actual = \Filter::build($db, $filter, $allowed_items);
+        $expected = "(true and (owned_by in ('A','B')) and (eid_status in ('C')))";
+        \Flexio\Tests\Check::assertString('C.5', '\Flexio\Model\Filter::build(); basic filters',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $allowed_items = array('owned_by', 'eid_status');
+        $filter = array('owned_by' => 'A', 'eid_status' => ['B','C']);
+        $actual = \Filter::build($db, $filter, $allowed_items);
+        $expected = "(true and (owned_by in ('A')) and (eid_status in ('B','C')))";
+        \Flexio\Tests\Check::assertString('C.6', '\Flexio\Model\Filter::build(); basic filters',  $actual, $expected, $results);
+
 
 
         // TEST: build function; created_min/created_max formatting

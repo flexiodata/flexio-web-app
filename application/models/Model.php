@@ -41,10 +41,11 @@ class Filter
                 continue;
 
             // all other keys, build up a equality comparison using the column name
-            $filter_expr .= (" and ($key = " . $db->quote($value) . ")");
+            $filter_in_expr = self::buildInExpr($db, $value);
+            $filter_expr .= (" and ($key in " . $filter_in_expr . ")");
         }
 
-        // handle the date ranges
+        // handle the date ranges; don't allow multiple dates since it's min/max
         if (isset($filter_items['created_min']))
         {
             $date = $filter_items['created_min'];
@@ -70,6 +71,33 @@ class Filter
             $filter_expr = '(' . $filter_expr . ')';
 
         return $filter_expr;
+    }
+
+    private static function buildInExpr($db, $value) : string
+    {
+        if (!is_string($value) && !is_array($value))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        $in_values = is_string($value) ? [$value] : $value;
+
+        // handle case of empty array; since '()' is invalid syntax, return
+        // '(null)' which will evaluate to false when used in 'in' statement
+        if (count($in_values) === 0)
+            return '(null)';
+
+        $expr = '';
+        foreach ($in_values as $v)
+        {
+            if (!is_string($v))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+            if (strlen($expr) > 0)
+                $expr .= ',';
+
+            $expr .= $db->quote($v);
+        }
+
+        return '(' . $expr . ')';
     }
 }
 
