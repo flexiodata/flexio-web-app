@@ -97,5 +97,19 @@ class Test
         $actual = \Filter::build($db, $filter, $allowed_items);
         $expected = "(true and (owned_by = 'A'))";
         \Flexio\Tests\Check::assertString('B.1', '\Flexio\Model\Filter::build(); build filter string',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $allowed_items = array('eid_status');
+        $filter = array('eid_status' => 'A');
+        $actual = \Filter::build($db, $filter, $allowed_items);
+        $expected = "(true and (eid_status = 'A'))";
+        \Flexio\Tests\Check::assertString('B.2', '\Flexio\Model\Filter::build(); build filter string',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $allowed_items = array('owned_by', 'eid_status');
+        $filter = array('owned_by' => 'A', 'eid_status' => 'B');
+        $actual = \Filter::build($db, $filter, $allowed_items);
+        $expected = "(true and (owned_by = 'A') and (eid_status = 'B'))";
+        \Flexio\Tests\Check::assertString('B.3', '\Flexio\Model\Filter::build(); build filter string',  $actual, $expected, $results);
     }
 }
