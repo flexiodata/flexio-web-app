@@ -250,7 +250,7 @@
         if (this.mode == 'add') {
           switch (this.mountType) {
             case 'integration': return "Add a collection of pre-built spreadsheet functions using one of the services below."
-            case 'mount':       return "Add a spreadsheet functions you've built with own Python or Node.js code that are located in an external data location, like GitHub."
+            case 'mount':       return "Add functions or content from data files located in an external data location, like GitHub or Dropbox."
           }
         }
 
@@ -339,10 +339,16 @@
           this.edit_mount = _.assign({}, this.edit_mount, { setup_template })
           this.active_step = prompts.length > 0 ? 'setup-config' : 'setup-success'
         }).catch(error => {
-          this.$store.dispatch('connections/delete', { team_name, eid }).then(response => {
-            this.active_step = 'setup-error'
-            this.error_msg = _.get(error, 'response.data.error.message', '')
-          })
+
+          if (this.mountType == 'integration') {
+            this.$store.dispatch('connections/delete', { team_name, eid }).then(response => {
+              this.active_step = 'setup-error'
+              this.error_msg = _.get(error, 'response.data.error.message', '')
+            })
+          } else {
+            // function mounts don't require a flexio.yml file
+            this.active_step = 'setup-success'
+          }
         })
       },
       processSetupConfig(setup_config, parent_eid, callback) {
