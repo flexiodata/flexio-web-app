@@ -97,68 +97,6 @@ class ConnectionMount
         $connection_model->update($connections_to_update, $process_arr);
     }
 
-    private function getConnectionItemsToImport() : array
-    {
-        $connection_info = $this->getConnection()->get();
-
-        // if we have a regular file type service, just get the list of files
-        // from the service; TODO: use file system interface as test
-        if ($connection_info['connection_type'] !== \Model::CONNECTION_TYPE_HTTP)
-        {
-            $service =  $this->getConnection()->getService();
-            return $service->list();
-        }
-
-        // in the case of HTTP, the list of files to return is specific to a particular
-        // manifest at a URL (which is why a general service list implementation isn't
-        // used); get the manifest and build up the list of files from the manifest
-
-        $manifest_url = '';
-        if (isset($connection_info['connection_info']) && isset($connection_info['connection_info']['url']))
-            $manifest_url = $connection_info['connection_info']['url'];
-        $manifest_url_base = dirname($manifest_url);
-
-        try
-        {
-            $content = '';
-            $http_service = \Flexio\Services\Http::create();
-            $http_service->read(['path' => $manifest_url], function($data) use (&$content) {
-                $content .= $data;
-            });
-
-            $manifest_info = \Flexio\Base\Yaml::parse($content);
-
-            if (!$manifest_info)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-            if (!isset($manifest_info['functions']))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-
-            $functions = $manifest_info['functions'];
-            $result = [];
-            foreach ($functions as $f)
-            {
-                if (!isset($f['path']))
-                    continue;
-
-                $function_path = \Flexio\Base\Util::appendUrlPath($manifest_url_base, $f['path']);
-                $item = [];
-                $item['type'] = 'FILE';
-                $item['path'] = $function_path;
-                $item['hash'] = '';
-                $item['size'] = 0;
-                $result[] = $item;
-            }
-
-            return $result;
-        }
-        catch (\Exception $e)
-        {
-            // fall through
-        }
-
-        return array();
-    }
-
     private function createAssociatedPipes() : void
     {
         // note: creates associated pipes for a mounted connection
@@ -246,6 +184,69 @@ class ConnectionMount
             // create the new pipe
             $item = \Flexio\Object\Pipe::create($pipe_params);
         }
+    }
+
+
+    private function getConnectionItemsToImport() : array
+    {
+        $connection_info = $this->getConnection()->get();
+
+        // if we have a regular file type service, just get the list of files
+        // from the service; TODO: use file system interface as test
+        if ($connection_info['connection_type'] !== \Model::CONNECTION_TYPE_HTTP)
+        {
+            $service =  $this->getConnection()->getService();
+            return $service->list();
+        }
+
+        // in the case of HTTP, the list of files to return is specific to a particular
+        // manifest at a URL (which is why a general service list implementation isn't
+        // used); get the manifest and build up the list of files from the manifest
+
+        $manifest_url = '';
+        if (isset($connection_info['connection_info']) && isset($connection_info['connection_info']['url']))
+            $manifest_url = $connection_info['connection_info']['url'];
+        $manifest_url_base = dirname($manifest_url);
+
+        try
+        {
+            $content = '';
+            $http_service = \Flexio\Services\Http::create();
+            $http_service->read(['path' => $manifest_url], function($data) use (&$content) {
+                $content .= $data;
+            });
+
+            $manifest_info = \Flexio\Base\Yaml::parse($content);
+
+            if (!$manifest_info)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+            if (!isset($manifest_info['functions']))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+            $functions = $manifest_info['functions'];
+            $result = [];
+            foreach ($functions as $f)
+            {
+                if (!isset($f['path']))
+                    continue;
+
+                $function_path = \Flexio\Base\Util::appendUrlPath($manifest_url_base, $f['path']);
+                $item = [];
+                $item['type'] = 'FILE';
+                $item['path'] = $function_path;
+                $item['hash'] = '';
+                $item['size'] = 0;
+                $result[] = $item;
+            }
+
+            return $result;
+        }
+        catch (\Exception $e)
+        {
+            // fall through
+        }
+
+        return array();
     }
 
     private static function getContentFromCacheOrPath(array $connection_info, array $item_info) : ?string
