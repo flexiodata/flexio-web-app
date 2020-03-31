@@ -275,6 +275,55 @@ class Factory
         return null;
     }
 
+    public static function getContentFromCacheOrPath(array $connection_info, array $item_info) : ?string
+    {
+        $connection_eid = $connection_info['eid'];
+
+        // if we have an http connection type, load the content each time; TODO: use
+        // etags to get a hash signature, and then we can cache content
+        if ($connection_info['connection_type'] === \Model::CONNECTION_TYPE_HTTP)
+        {
+            $content = '';
+            $http_service = \Flexio\Services\Http::create();
+            $http_service->read(['path' => $item_info['path']], function($data) use (&$content) {
+                $content .= $data;
+            });
+
+            return $content;
+        }
+
+        // generate a handle for the content signature that will uniquely identify it;
+        // use the owner plus a hash of some identifiers that constitute unique content
+        $content_handle = '';
+        $content_handle .= $connection_info['owned_by']['eid']; // include owner in the identifier so that even if the connection owner changes (later?), the cache will only exist for this owner
+        $content_handle .= $item_info['hash']; // not always populated, so also add on info from the file
+        $content_handle .= md5(
+            $item_info['path'] .
+            strval($item_info['size']) .
+            $item_info['modified']
+        );
+
+        // get the cached content; if it doesn't exist, create the cache
+        $stream = self::getStreamContentCache($connection_eid, $content_handle);
+        if (!isset($stream))
+        {
+            $remote_path = $item_info['path'];
+            $stream = self::createStreamContentCache($connection_eid, $remote_path, $content_handle);
+        }
+
+        if (!isset($stream))
+            return null;
+
+        $content = '';
+        $reader = $stream->getReader();
+        while (($data = $reader->read()) != false)
+        {
+            $content .= $data;
+        }
+
+        return $content;
+    }
+
     private static function getExampleObjects() : array
     {
         $demo_dir = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'demo' . DIRECTORY_SEPARATOR;

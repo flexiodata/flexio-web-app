@@ -135,13 +135,13 @@ class ConnectionMount
                 case 'flexio':
                 case 'py':
                 case 'js':
-                    $content = self::getContentFromCacheOrPath($connection_info, $item_info);
+                    $content = \Flexio\Object\Factory::getContentFromCacheOrPath($connection_info, $item_info);
                     $pipe_info = \Flexio\Object\Factory::getPipeInfoFromContent($content, $extension);
                     break;
 
                 // if we have a csv file, build it manually
                 case 'csv':
-                    $content = self::getContentFromCacheOrPath($connection_info, $item_info);
+                    $content = \Flexio\Object\Factory::getContentFromCacheOrPath($connection_info, $item_info);
                     $file_name_base = \Flexio\Base\File::getFilename($item_info['path']);
                     $pipe_info['name'] = \Flexio\Base\Identifier::makeValid($file_name_base);
                     break;
@@ -232,55 +232,6 @@ class ConnectionMount
         }
 
         return array();
-    }
-
-    private static function getContentFromCacheOrPath(array $connection_info, array $item_info) : ?string
-    {
-        $connection_eid = $connection_info['eid'];
-
-        // if we have an http connection type, load the content each time; TODO: use
-        // etags to get a hash signature, and then we can cache content
-        if ($connection_info['connection_type'] === \Model::CONNECTION_TYPE_HTTP)
-        {
-            $content = '';
-            $http_service = \Flexio\Services\Http::create();
-            $http_service->read(['path' => $item_info['path']], function($data) use (&$content) {
-                $content .= $data;
-            });
-
-            return $content;
-        }
-
-        // generate a handle for the content signature that will uniquely identify it;
-        // use the owner plus a hash of some identifiers that constitute unique content
-        $content_handle = '';
-        $content_handle .= $connection_info['owned_by']['eid']; // include owner in the identifier so that even if the connection owner changes (later?), the cache will only exist for this owner
-        $content_handle .= $item_info['hash']; // not always populated, so also add on info from the file
-        $content_handle .= md5(
-            $item_info['path'] .
-            strval($item_info['size']) .
-            $item_info['modified']
-        );
-
-        // get the cached content; if it doesn't exist, create the cache
-        $stream = \Flexio\Object\Factory::getStreamContentCache($connection_eid, $content_handle);
-        if (!isset($stream))
-        {
-            $remote_path = $item_info['path'];
-            $stream = \Flexio\Object\Factory::createStreamContentCache($connection_eid, $remote_path, $content_handle);
-        }
-
-        if (!isset($stream))
-            return null;
-
-        $content = '';
-        $reader = $stream->getReader();
-        while (($data = $reader->read()) != false)
-        {
-            $content .= $data;
-        }
-
-        return $content;
     }
 
     private static function getUniquePipeName(string $pipe_name, array $existing_pipe_names) : string
