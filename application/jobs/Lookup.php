@@ -85,32 +85,18 @@ class Lookup implements \Flexio\IFace\IJob
         if (!is_array($lookup_values))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Invalid lookup values");
 
-        // get the lookup table from the path
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "read",
-                "path" => $path
-            ],
-            [
-                "op" => "convert",
-                "input" => [
-                    //"format" => "delimited",
-                    //"header" => true
-                ],
-                "output" => [
-                    "format" => "table"
-                ]
-            ]
-        ]);
-
-        $inner_process = \Flexio\Jobs\Process::create();
-        $inner_process->setOwner($process->getOwner());
-        $inner_process->execute($task);
-        $inner_process_output = $inner_process->getStdout();
+        // read the file to get the info; TODO: use cache?
+        $process_engine = \Flexio\Jobs\Process::create();
+        $process_engine->setOwner($process->getOwner());
+        $process_engine->queue('\Flexio\Jobs\Read::run', array('path' => $path));
+        $process_engine->queue('\Flexio\Jobs\ProcessHandler::chain', array());
+        $process_engine->queue('\Flexio\Jobs\Convert::run', array('input' => array(), 'output' => array('format' => 'table')));
+        $process_engine->run();
 
         // create a lookup index from the table
         $lookup_index = array();
-        $rows = \Flexio\Base\StreamUtil::getStreamContents($inner_process_output);
+        $process_engine_output = $process_engine->getStdout();
+        $rows = \Flexio\Base\StreamUtil::getStreamContents($process_engine_output);
 
         foreach ($rows as $r)
         {

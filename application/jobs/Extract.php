@@ -62,30 +62,15 @@ class Extract implements \Flexio\IFace\IJob
         $instream = $process->getStdin();
         $outstream = $process->getStdout();
 
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "read",
-                "path" => $path
-            ],
-            [
-                "op" => "convert",
-                "input" => [
-                    //"format" => "delimited",
-                    //"header" => true
-                ],
-                "output" => [
-                    "format" => "table"
-                ]
-            ]
-        ]);
+        // read the file to get the info; TODO: use cache?
+        $process_engine = \Flexio\Jobs\Process::create();
+        $process_engine->setOwner($process->getOwner());
+        $process_engine->queue('\Flexio\Jobs\Read::run', array('path' => $path));
+        $process_engine->queue('\Flexio\Jobs\ProcessHandler::chain', array());
+        $process_engine->queue('\Flexio\Jobs\Convert::run', array('input' => array(), 'output' => array('format' => 'table')));
+        $process_engine->run();
 
-
-        $inner_process = \Flexio\Jobs\Process::create();
-        $inner_process->setOwner($process->getOwner());
-        $inner_process->setStdin($instream);
-        $inner_process->execute($task);
-
-        $inner_process_output = $inner_process->getStdout();
+        $process_engine_output = $process_engine->getStdout();
 
         // convert the table to json, but do so manually so we can
         // handle large tables
@@ -95,12 +80,11 @@ class Extract implements \Flexio\IFace\IJob
         $streamwriter->write("[");
 
         // write out the column names
-        $column_names = $inner_process_output->getStructure()->getNames();
-
+        $column_names = $process_engine_output->getStructure()->getNames();
         $streamwriter->write(json_encode($column_names));
 
         // write out each row
-        $rows = \Flexio\Base\StreamUtil::getStreamContents($inner_process_output);
+        $rows = \Flexio\Base\StreamUtil::getStreamContents($process_engine_output);
         foreach ($rows as $r)
         {
             $row_values = array_values($r);

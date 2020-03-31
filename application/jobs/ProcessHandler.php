@@ -21,6 +21,15 @@ class ProcessHandler
     // utility functions that can be run as functions in a process using queue, but
     // that don't have a full task associated with them
 
+    public static function chain(\Flexio\Jobs\Process $process, array $callback_params) : void
+    {
+        // moves stdout to stdin and clears stdout; used for chaining jobs
+        // manually in a queue, similar to what the sequence task does
+        $new_stdout_stream = \Flexio\Base\Stream::create()->setMimeType(\Flexio\Base\ContentType::TEXT);
+        $process->setStdin($process->getStdout());
+        $process->setStdout($new_stdout_stream);
+    }
+
     public static function incrementProcessCount(\Flexio\Jobs\Process $process, array $callback_params) : void
     {
         // try to increment the active process count; if we're unable to, then the user is as the
