@@ -178,7 +178,7 @@ class ProcessHandler
     {
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($callback_params, array(
-                'parent_eid' => array('type' => 'eid',    'required' => true), // the parent object (pipe) that the cahce is associated with
+                'index' => array('type' => 'string', 'required' => true), // the name of the index to drop/create/write-to
                 'structure'  => array('type' => 'object', 'required' => true)  // structure of the data for the index
             ))->hasErrors()) === true)
         {
@@ -188,7 +188,7 @@ class ProcessHandler
         }
 
         $validated_params = $validator->getParams();
-        $parent_eid = $validated_params['parent_eid'];
+        $index = $validated_params['index'];
         $structure = $validated_params['structure'];
         $structure = \Flexio\Base\Structure::create($structure);
 
@@ -199,8 +199,8 @@ class ProcessHandler
         $elasticsearch = \Flexio\Services\ElasticSearch::create($elasticsearch_connection_info);
 
         // create a new index; delete any index that's already there
-        $elasticsearch->deleteIndex($parent_eid);
-        $elasticsearch->createIndex($parent_eid, $structure->get());
+        $elasticsearch->deleteIndex($index);
+        $elasticsearch->createIndex($index, $structure->get());
 
         // get the data from stdout; TODO: make this more efficient with memory
         // note: data to write should be in key value two-dimensional array format
@@ -222,7 +222,7 @@ class ProcessHandler
 
         // write the output to elasticsearch
         $params = array(
-            'path' => $parent_eid, // service uses path for consistency with other services
+            'path' => $index, // service uses path for consistency with other services
             'structure' => $structure
         );
         $field_names = $structure->getNames();

@@ -490,7 +490,7 @@ class Pipe
 
         // create a new process engine for running a process
         $elastic_search_params = array(
-            'parent_eid' => $pipe_properties['eid'],
+            'index' => $pipe_properties['eid'],
             'structure' => $pipe_properties['returns']
         );
         $process_engine = \Flexio\Jobs\Process::create();
@@ -554,7 +554,7 @@ class Pipe
 
         // create a new process engine for running a process
         $elastic_search_params = array(
-            'parent_eid' => $pipe_properties['eid'],
+            'index' => $pipe_properties['eid'],
             'structure' => $pipe_properties['returns']
         );
         $process_engine = \Flexio\Jobs\Process::create();
