@@ -38,17 +38,37 @@ if (($validator->check($params, array(
     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 */
 
-class Convert extends \Flexio\Jobs\Base
+class Convert implements \Flexio\IFace\IJob
 {
-    public function run(\Flexio\IFace\IProcess $process) : void
-    {
-        parent::run($process);
+    private $properties = array();
 
-        // stdin/stdout
+    public static function validate(array $task) : array
+    {
+        $errors = array();
+        return $errors;
+    }
+
+    public static function run(\Flexio\IFace\IProcess $process, array $task) : void
+    {
+        unset($task['op']);
+        \Flexio\Jobs\Util::replaceParameterTokens($process, $task);
+
+        $object = new static();
+        $object->properties = $task;
+        $object->run_internal($process);
+    }
+
+    private function run_internal(\Flexio\IFace\IProcess $process) : void
+    {
         $instream = $process->getStdin();
         $outstream = $process->getStdout();
         $job_params = $this->getJobParameters();
         \Flexio\Base\StreamConverter::process($job_params, $instream, $outstream);
+    }
+
+    private function getJobParameters() : array
+    {
+        return $this->properties;
     }
 }
 

@@ -33,9 +33,31 @@ if (($validator->check($params, array(
     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 */
 
-class Search extends \Flexio\Jobs\Base
+class Search implements \Flexio\IFace\IJob
 {
-    public function run(\Flexio\IFace\IProcess $process) : void
+    private $properties = array();
+
+    public static function validate(array $task) : array
+    {
+        $errors = array();
+        return $errors;
+    }
+
+    public static function run(\Flexio\IFace\IProcess $process, array $task) : void
+    {
+        unset($task['op']);
+
+        // search is an internal function for pulling info from the
+        // elasticsearch index; don't allow parameter replacement to
+        // save a little bit of time
+        //\Flexio\Jobs\Util::replaceParameterTokens($process, $task);
+
+        $object = new static();
+        $object->properties = $task;
+        $object->run_internal($process);
+    }
+
+    private function run_internal(\Flexio\IFace\IProcess $process) : void
     {
         // get the input index
         $job_params = $this->getJobParameters();
@@ -124,6 +146,11 @@ class Search extends \Flexio\Jobs\Base
 
         // set the content type
         $outstream->setMimeType(\Flexio\Base\ContentType::JSON);
+    }
+
+    private function getJobParameters() : array
+    {
+        return $this->properties;
     }
 
     private static function getSearchParams(string $search_params, array $available_columns, array &$search_columns, string &$search_rows, array &$config) : void

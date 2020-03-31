@@ -39,7 +39,7 @@ if (($validator->check($params, array(
     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 */
 
-class Transform extends \Flexio\Jobs\Base
+class Transform implements \Flexio\IFace\IJob
 {
     // transform options
     public const OPERATION_NONE        = '';
@@ -120,12 +120,27 @@ class Transform extends \Flexio\Jobs\Base
     public const CHARACTER_CLASS_WORD   = 'word';
     public const CHARACTER_CLASS_XDIGIT = 'xdigit';
 
+    // task information
+    private $properties = array();
 
-    public function run(\Flexio\IFace\IProcess $process) : void
+    public static function validate(array $task) : array
     {
-        parent::run($process);
+        $errors = array();
+        return $errors;
+    }
 
-        // stdin/stdout
+    public static function run(\Flexio\IFace\IProcess $process, array $task) : void
+    {
+        unset($task['op']);
+        \Flexio\Jobs\Util::replaceParameterTokens($process, $task);
+
+        $object = new static();
+        $object->properties = $task;
+        $object->run_internal($process);
+    }
+
+    private function run_internal(\Flexio\IFace\IProcess $process) : void
+    {
         $instream = $process->getStdin();
         $outstream = $process->getStdout();
         $this->processStream($instream, $outstream);
@@ -415,6 +430,11 @@ class Transform extends \Flexio\Jobs\Base
         );
 
         return $column_expression_map;
+    }
+
+    private function getJobParameters() : array
+    {
+        return $this->properties;
     }
 
     private static function getChangeCaseExpr(array $operation, string $expr) : ?string

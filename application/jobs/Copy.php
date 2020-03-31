@@ -33,15 +33,29 @@ if (($validator->check($params, array(
     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 */
 
-class Copy extends \Flexio\Jobs\Base
+class Copy implements \Flexio\IFace\IJob
 {
+    private $properties = array();
     private $recursive = false;   // similar to cp -r flag
 
-    public function run(\Flexio\IFace\IProcess $process) : void
+    public static function validate(array $task) : array
     {
-        parent::run($process);
+        $errors = array();
+        return $errors;
+    }
 
-        // stdin/stdout
+    public static function run(\Flexio\IFace\IProcess $process, array $task) : void
+    {
+        unset($task['op']);
+        \Flexio\Jobs\Util::replaceParameterTokens($process, $task);
+
+        $object = new static();
+        $object->properties = $task;
+        $object->run_internal($process);
+    }
+
+    private function run_internal(\Flexio\IFace\IProcess $process) : void
+    {
         $instream = $process->getStdin();
         $outstream = $process->getStdout();
         $params = $this->getJobParameters();
@@ -167,5 +181,10 @@ class Copy extends \Flexio\Jobs\Base
         $subprocess->setOwner($process_owner_eid);
         $subprocess->execute([ 'op' => 'read', 'path' => $from ]);
         $subprocess->execute([ 'op' => 'write', 'path' => $to ]);  // executes can be chained; stdout of previous execute becomes stdin of next
+    }
+
+    private function getJobParameters() : array
+    {
+        return $this->properties;
     }
 }

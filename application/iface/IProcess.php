@@ -42,6 +42,7 @@ interface IProcess
     public function getError();
     public function hasError();
     public function validate(array $task);
-    public function execute(array $task);
+    public function queue(string $handler, array $task = array());
+    public function run();
 }
 

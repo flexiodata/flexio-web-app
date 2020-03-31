@@ -16,15 +16,29 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 
-
-class Archive extends \Flexio\Jobs\Base
+class Archive implements \Flexio\IFace\IJob
 {
+    private $properties = array();
     private $to_delete = [];
 
-    public function run(\Flexio\IFace\IProcess $process) : void
+    public static function validate(array $task) : array
     {
-        parent::run($process);
+        $errors = array();
+        return $errors;
+    }
 
+    public static function run(\Flexio\IFace\IProcess $process, array $task) : void
+    {
+        unset($task['op']);
+        \Flexio\Jobs\Util::replaceParameterTokens($process, $task);
+
+        $object = new static();
+        $object->properties = $task;
+        $object->run_internal($process);
+    }
+
+    private function run_internal(\Flexio\IFace\IProcess $process) : void
+    {
         $instream = $process->getStdin();
         $outstream = $process->getStdout();
 
@@ -161,10 +175,11 @@ class Archive extends \Flexio\Jobs\Base
         {
             // unknown format
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Unknown value for 'format' parameter.");
-
-
-
-
         }
+    }
+
+    private function getJobParameters() : array
+    {
+        return $this->properties;
     }
 }

@@ -32,47 +32,7 @@ class Process implements \Flexio\IFace\IProcess
     public const RESPONSE_NONE = 0;
     public const RESPONSE_NORMAL = 200;
 
-    private static $manifest = array(
-        'archive'   => '\Flexio\Jobs\Archive',
-        'calc'      => '\Flexio\Jobs\CalcField',
-        'connect'   => '\Flexio\Jobs\Connect',
-        'convert'   => '\Flexio\Jobs\Convert',
-        'copy'      => '\Flexio\Jobs\Copy',
-        'create'    => '\Flexio\Jobs\Create',
-        'delete'    => '\Flexio\Jobs\Delete',
-        'dump'      => '\Flexio\Jobs\Dump',
-        'echo'      => '\Flexio\Jobs\Echo1',
-        'email'     => '\Flexio\Jobs\Email',
-        'execute'   => '\Flexio\Jobs\Execute',
-        'extract'   => '\Flexio\Jobs\Extract',
-        'exit'      => '\Flexio\Jobs\Exit1',
-        'fail'      => '\Flexio\Jobs\Fail',
-        'filter'    => '\Flexio\Jobs\Filter',
-        'for'       => '\Flexio\Jobs\Foreach1',
-        'foreach'   => '\Flexio\Jobs\Foreach1',
-        'grep'      => '\Flexio\Jobs\Grep',
-        'insert'    => '\Flexio\Jobs\Insert',
-        'limit'     => '\Flexio\Jobs\Limit',
-        'list'      => '\Flexio\Jobs\List1',
-        'lookup'    => '\Flexio\Jobs\Lookup',
-        'merge'     => '\Flexio\Jobs\Merge',
-        'mkdir'     => '\Flexio\Jobs\Mkdir',
-        'read'      => '\Flexio\Jobs\Read',
-        'rename'    => '\Flexio\Jobs\Rename',
-        'render'    => '\Flexio\Jobs\Render',
-        'replace'   => '\Flexio\Jobs\Replace',
-        'report'    => '\Flexio\Jobs\Report',
-        'request'   => '\Flexio\Jobs\Request',
-        'search'    => '\Flexio\Jobs\Search',
-        'select'    => '\Flexio\Jobs\Select',
-        'sequence'  => '\Flexio\Jobs\Sequence',
-        'set'       => '\Flexio\Jobs\Set',
-        'settype'   => '\Flexio\Jobs\SetType',
-        'sleep'     => '\Flexio\Jobs\Sleep',
-        'transform' => '\Flexio\Jobs\Transform',
-        'unarchive' => '\Flexio\Jobs\Unarchive',
-        'write'     => '\Flexio\Jobs\Write'
-    );
+    private $handlers = [];     // array of callbacks to run
 
     private $owner_eid;                 // user eid of the owner of the process
     private $response_code;
@@ -293,8 +253,8 @@ class Process implements \Flexio\IFace\IProcess
     {
         try
         {
-            $job = self::createTask($task);
-            return $job->validate();
+            $job = \Flexio\Jobs\Factory::getJobClass($task);
+            return $job::validate($task);
         }
         catch (\Error $e)
         {
@@ -304,33 +264,53 @@ class Process implements \Flexio\IFace\IProcess
         }
     }
 
-    public function execute(array $task) : \Flexio\Jobs\Process
+    public function queue(string $handler, array $task = array()) : \Flexio\Jobs\Process
+    {
+        $this->handlers[] = array(
+            'func' => $handler,
+            'task' => $task
+        );
+
+        return $this;
+    }
+
+    public function run() : \Flexio\Jobs\Process
     {
         if (!IS_PROCESSTRYCATCH())
         {
             // during debugging, sometimes try/catch needs to be turned
             // of completely; this switch is implemented here and in Api.php
-            $job = self::createTask($task);
-            $job->run($this);
-            return $this;
+            // call the event handlers for the given event
+            foreach ($this->handlers as $h)
+            {
+                $func = $h['func'];
+                $task = $h['task'];
+                call_user_func($func, $this, $task);
+            }
         }
-
-        try
+         else
         {
-            // create the job with the task; set the job input, run the job, and get the output
-            $job = self::createTask($task);
-            $job->run($this);
-        }
-        catch (\Flexio\Base\Exception | \Exception | \Error $e)
-        {
-            $error_info = \Flexio\Base\Error::getInfo($e);
-            $code = $error_info['code'] ?? '';
-            $message = $error_info['message'] ?? '';
-            $module = $error_info['module'] ?? null;
-            $line = $error_info['line'] ?? null;
-            $type = $error_info['type'] ?? null;
-            $trace = $error_info['trace'] ?? null;
-            $this->setError($code, $message, $module, $line, $type, $trace);
+            try
+            {
+                // call the event handlers for the given event
+                foreach ($this->handlers as $h)
+                {
+                    $func = $h['func'];
+                    $task = $h['task'];
+                    call_user_func($func, $this, $task);
+                }
+            }
+            catch (\Flexio\Base\Exception | \Exception | \Error $e)
+            {
+                $error_info = \Flexio\Base\Error::getInfo($e);
+                $code = $error_info['code'] ?? '';
+                $message = $error_info['message'] ?? '';
+                $module = $error_info['module'] ?? null;
+                $line = $error_info['line'] ?? null;
+                $type = $error_info['type'] ?? null;
+                $trace = $error_info['trace'] ?? null;
+                $this->setError($code, $message, $module, $line, $type, $trace);
+            }
         }
 
         return $this;
@@ -340,40 +320,35 @@ class Process implements \Flexio\IFace\IProcess
     // additional functions
     ////////////////////////////////////////////////////////////
 
-    private static function createTask(array $task) : \Flexio\IFace\IJob
+    public function execute(array $task) : \Flexio\Jobs\Process
     {
-        if (!isset($task['op']))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, _('Missing operation \'op\' task parameter'));
+        if (!IS_PROCESSTRYCATCH())
+        {
+            // during debugging, sometimes try/catch needs to be turned
+            // of completely; this switch is implemented here and in Api.php
+            // call the event handlers for the given event
+            \Flexio\Jobs\Task::run($this, $task);
+        }
+         else
+        {
+            try
+            {
+                \Flexio\Jobs\Task::run($this, $task);
+            }
+            catch (\Flexio\Base\Exception | \Exception | \Error $e)
+            {
+                $error_info = \Flexio\Base\Error::getInfo($e);
+                $code = $error_info['code'] ?? '';
+                $message = $error_info['message'] ?? '';
+                $module = $error_info['module'] ?? null;
+                $line = $error_info['line'] ?? null;
+                $type = $error_info['type'] ?? null;
+                $trace = $error_info['trace'] ?? null;
+                $this->setError($code, $message, $module, $line, $type, $trace);
+            }
+        }
 
-        $operation = $task['op'];
-
-        if (!is_string($operation))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, _('Invalid operation \'op\' task parameter'));
-
-        // make sure the job is registered; note: this isn't strictly necessary,
-        // but gives us a convenient way of limiting what jobs are available for
-        // processing
-        $job_class_name = self::$manifest[$operation] ?? false;
-        if ($job_class_name === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, _('Invalid operation \'op\' task parameter'));
-
-        // try to find the job file
-        $class_name_parts = explode("\\", $job_class_name);
-        if (!isset($class_name_parts[3]))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-
-        $job_class_file = \Flexio\System\System::getApplicationDirectory() . DIRECTORY_SEPARATOR . 'jobs' . DIRECTORY_SEPARATOR . $class_name_parts[3] . '.php';
-        if (!@file_exists($job_class_file))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-
-        // load the job's php file and instantiate the job object
-        include_once $job_class_file;
-        $job = $job_class_name::create($task);
-
-        if ($job === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-
-        return $job;
+        return $this;
     }
 
     private static function createStream() : \Flexio\IFace\IStream

@@ -116,6 +116,7 @@ class Process
         $process_params['triggered_by'] = $triggered_by;
         $process = \Flexio\Object\Process::create($process_params);
 
+        // return the process info
         $result = $process->get();
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api\Response::sendContent($result);
@@ -183,7 +184,16 @@ class Process
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
-                'parent_eid'  => array('type' => 'eid',     'required' => false),
+                'eid_status'  => array(
+                    'required' => false,
+                    'array' => true, // explode parameter into array, each element of which must satisfy type/enum
+                    'type' => 'string',
+                    'default' => \Model::STATUS_AVAILABLE,
+                    'enum' => [\Model::STATUS_AVAILABLE, \Model::STATUS_PENDING]),
+                'parent_eid'  => array(
+                    'required' => false,
+                    'array' => true, // explode parameter into array, each element of which must satisfy type/enum
+                    'type' => 'eid'),
                 'start'       => array('type' => 'integer', 'required' => false),
                 'tail'        => array('type' => 'integer', 'required' => false),
                 'limit'       => array('type' => 'integer', 'required' => false),
@@ -200,8 +210,8 @@ class Process
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         // get the processes
-        $filter = array('owned_by' => $owner_user_eid, 'eid_status' => \Model::STATUS_AVAILABLE);
-        $filter = array_merge($validated_query_params, $filter); // give precedence to fixed owner/status
+        $filter = array('owned_by' => $owner_user_eid);
+        $filter = array_merge($validated_query_params, $filter); // only allow items for owner
         $processes = \Flexio\Object\Process::list($filter);
 
         $result = array();
@@ -265,23 +275,21 @@ class Process
         if ($process_status !== \Flexio\Jobs\Process::STATUS_PENDING)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::EXECUTE_FAILED);
 
-        // create a process engine
+        // create a new process engine for running a process
+        $process_properties = $process_store->get();
         $process_engine = \Flexio\Jobs\Process::create();
+        $process_engine->queue('\Flexio\Api\ProcessHandler::addMountParams', $process_properties);
+        $process_engine->queue('\Flexio\Jobs\Task::run', $process_properties['task']);
 
-        // create a process host to connect the store/engine and run the process
-        $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
-        $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::incrementProcessCount', array());
-        $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::addMountParams', array());
-        $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_FINISHING, '\Flexio\Api\ProcessHandler::decrementProcessCount', array());
-
-        // parse the request content and set the stream info
         $php_stream_handle = \Flexio\System\System::openPhpInputStream();
         $post_content_type = \Flexio\System\System::getPhpInputStreamContentType();
         \Flexio\Api\ProcessHandler::addProcessInputFromStream($php_stream_handle, $post_content_type, $process_engine);
 
-        // run the process
+        // create a process host to connect the store/engine and run the process
+        $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
         $process_host->run(false  /*true: run in background*/);
 
+        // return the result
         if ($process_engine->hasError())
         {
             $error = $process_engine->getError();
@@ -359,6 +367,7 @@ class Process
         if ($owner_user->processUsageWithinLimit() === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::RATE_LIMIT_EXCEEDED);
 
+        // create a new process object for storing process info;
         // set the owner based on the owner being posted to
         $process_params = array();
         $process_params['owned_by'] = $owner_user_eid;
@@ -371,13 +380,9 @@ class Process
             ]
         ];
         $process_store = \Flexio\Object\Process::create($process_params);
-        $process_engine = \Flexio\Jobs\Process::create($process);
 
-        // create a process host to connect the store/engine and run the process
-        $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
-        $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::incrementProcessCount', array());
-        $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::addMountParams', array());
-        $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_FINISHING, '\Flexio\Api\ProcessHandler::decrementProcessCount', array());
+        // create a new process engine for running a process
+        $process_engine = \Flexio\Jobs\Process::create($process);
 
         // NOTE: disabled, because posted parameters contain the logic, not the
         // parameters to run against; re-enable if posted info changes to
@@ -387,9 +392,11 @@ class Process
         //$post_content_type = \Flexio\System\System::getPhpInputStreamContentType();
         //\Flexio\Api\ProcessHandler::addProcessInputFromStream($php_stream_handle, $post_content_type, $process_engine);
 
-        // run the process
+        // create a process host to connect the store/engine and run the process
+        $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
         $process_host->run(false  /*true: run in background*/);
 
+        // return the result
         if ($process_engine->hasError())
         {
             $error = $process_engine->getError();

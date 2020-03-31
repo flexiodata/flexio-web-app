@@ -194,6 +194,16 @@ class Connection
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
+                'eid_status'  => array(
+                    'required' => false,
+                    'array' => true, // explode parameter into array, each element of which must satisfy type/enum
+                    'type' => 'string',
+                    'default' => \Model::STATUS_AVAILABLE,
+                    'enum' => [\Model::STATUS_AVAILABLE, \Model::STATUS_PENDING]),
+                'parent_eid'  => array(
+                    'required' => false,
+                    'array' => true, // explode parameter into array, each element of which must satisfy type/enum
+                    'type' => 'eid'),
                 'start'       => array('type' => 'integer', 'required' => false),
                 'tail'        => array('type' => 'integer', 'required' => false),
                 'limit'       => array('type' => 'integer', 'required' => false),
@@ -212,8 +222,8 @@ class Connection
         // return the result
         $result = array();
 
-        $filter = array('owned_by' => $owner_user_eid, 'eid_status' => \Model::STATUS_AVAILABLE);
-        $filter = array_merge($validated_query_params, $filter); // give precedence to fixed owner/status
+        $filter = array('owned_by' => $owner_user_eid);
+        $filter = array_merge($validated_query_params, $filter); // only allow items for owner
         $connections = \Flexio\Object\Connection::list($filter);
 
         foreach ($connections as $c)
@@ -397,7 +407,7 @@ class Connection
             if ($pipe_properties['run_mode'] !== \Model::PIPE_RUN_MODE_INDEX)
                 continue;
 
-            // create a new process
+            // create a new process object for storing process info
             $process_properties = array(
                 'parent_eid' => $pipe_properties['eid'],
                 'pipe_info' => $pipe_properties,
@@ -407,25 +417,19 @@ class Connection
                 'created_by' => $requesting_user_eid
             );
             $process_store = \Flexio\Object\Process::create($process_properties);
-            $process_engine = \Flexio\Jobs\Process::create();
 
-            // get the structure from the pipe returns info
+            // create a new process engine for running a process
             $elastic_search_params = array(
                 'parent_eid' => $pipe_properties['eid'],
                 'structure' => $pipe_properties['returns']
             );
+            $process_engine = \Flexio\Jobs\Process::create();
+            $process_engine->queue('\Flexio\Api\ProcessHandler::addMountParams', $process_properties);
+            $process_engine->queue('\Flexio\Jobs\Task::run', $process_properties['task']);
+            $process_engine->queue('\Flexio\Api\ProcessHandler::saveStdoutToElasticSearch', $elastic_search_params);
 
             // create a process host to connect the store/engine and run the process
-            // note: don't include the process count limits normally added in the callbacks;
-            // process count limits are primarily as a guard against a lot of user-driven api
-            // calls that run an execute function a container, not limit inexpensive api calls
-            // like search or background processes that only run periodically
             $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
-            //$process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::incrementProcessCount', array());
-            $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_STARTING,  '\Flexio\Api\ProcessHandler::addMountParams', array());
-            $process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_FINISHING,  '\Flexio\Api\ProcessHandler::saveStdoutToElasticSearch', $elastic_search_params);
-            //$process_host->addEventHandler(\Flexio\Jobs\ProcessHost::EVENT_FINISHING, '\Flexio\Api\ProcessHandler::decrementProcessCount', array());
-
             $process_host->run(true /*true: run in background*/);
         }
 

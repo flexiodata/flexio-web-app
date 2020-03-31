@@ -340,25 +340,20 @@ class Vfs
             ];
         }
 
-        // create a new process
+        // create a new process object for storing process info
         $process_store = \Flexio\Object\Process::create($process_params);
+
+        // create a new process engine for running a process
         $process_engine = \Flexio\Jobs\Process::create();
-
-        // create a process host to connect the store/engine and run the process;
-        // don't include any standard event handlers; items run in vfs don't need
-        // to gather mount info, increment/decrement process counts (running from
-        // vfs is for internal development) or save the stream to stdout (run from
-        // an api endpoint, not the interface)
-        $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
-
-        // parse the request content and set the stream info
         $php_stream_handle = \Flexio\System\System::openPhpInputStream();
         $post_content_type = \Flexio\System\System::getPhpInputStreamContentType();
         \Flexio\Api\ProcessHandler::addProcessInputFromStream($php_stream_handle, $post_content_type, $process_engine);
 
-        // run the process
+        // create a process host to connect the store/engine and run the process
+        $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
         $process_host->run(false  /*true: run in background*/);
 
+        // return the result
         if ($process_engine->hasError())
         {
             $error = $process_engine->getError();

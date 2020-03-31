@@ -16,12 +16,28 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 
-class Unarchive extends \Flexio\Jobs\Base
+class Unarchive implements \Flexio\IFace\IJob
 {
-    public function run(\Flexio\IFace\IProcess $process) : void
-    {
-        parent::run($process);
+    private $properties = array();
 
+    public static function validate(array $task) : array
+    {
+        $errors = array();
+        return $errors;
+    }
+
+    public static function run(\Flexio\IFace\IProcess $process, array $task) : void
+    {
+        unset($task['op']);
+        \Flexio\Jobs\Util::replaceParameterTokens($process, $task);
+
+        $object = new static();
+        $object->properties = $task;
+        $object->run_internal($process);
+    }
+
+    private function run_internal(\Flexio\IFace\IProcess $process) : void
+    {
         $instream = $process->getStdin();
         $outstream = $process->getStdout();
 
@@ -133,5 +149,10 @@ class Unarchive extends \Flexio\Jobs\Base
             $writer->close();
             unset($writer);
         }
+    }
+
+    private function getJobParameters() : array
+    {
+        return $this->properties;
     }
 }

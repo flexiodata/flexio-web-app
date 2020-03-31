@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        // TEST: \Flexio\Jobs\Base::addEids(); test adding new eids
+        // TEST: \Flexio\Jobs\Util::addEids(); test adding new eids
 
         // BEGIN TEST
         $properties = json_decode('
@@ -28,14 +28,14 @@ class Test
             "op": ""
         }
         ',true);
-        $actual = \Flexio\Jobs\Base::addEids($properties);
+        $actual = \Flexio\Jobs\Util::addEids($properties);
         $expected = json_decode('
         {
             "eid": "",
             "op": ""
         }
         ',true);
-        \Flexio\Tests\Check::assertArrayKeys('A.1', '\Flexio\Jobs\Base::addEids(); make sure eids are added for each operation', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArrayKeys('A.1', '\Flexio\Jobs\Util::addEids(); make sure eids are added for each operation', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -45,7 +45,7 @@ class Test
             }
         ]
         ',true);
-        $actual = \Flexio\Jobs\Base::addEids($properties);
+        $actual = \Flexio\Jobs\Util::addEids($properties);
         $expected = json_decode('
         [
             {
@@ -54,7 +54,7 @@ class Test
             }
         ]
         ',true);
-        \Flexio\Tests\Check::assertArrayKeys('A.2', '\Flexio\Jobs\Base::addEids(); make sure eids are added for each operation', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArrayKeys('A.2', '\Flexio\Jobs\Util::addEids(); make sure eids are added for each operation', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -67,7 +67,7 @@ class Test
             }
         ]
         ',true);
-        $actual = \Flexio\Jobs\Base::addEids($properties);
+        $actual = \Flexio\Jobs\Util::addEids($properties);
         $expected = json_decode('
         [
             {
@@ -80,7 +80,7 @@ class Test
             }
         ]
         ',true);
-        \Flexio\Tests\Check::assertArrayKeys('A.3', '\Flexio\Jobs\Base::addEids(); make sure eids are added for each operation', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArrayKeys('A.3', '\Flexio\Jobs\Util::addEids(); make sure eids are added for each operation', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -98,7 +98,7 @@ class Test
             }
         }
         ',true);
-        $actual = \Flexio\Jobs\Base::addEids($properties);
+        $actual = \Flexio\Jobs\Util::addEids($properties);
         $expected = json_decode('
         {
             "eid": "",
@@ -117,7 +117,7 @@ class Test
             }
         }
         ',true);
-        \Flexio\Tests\Check::assertArrayKeys('A.4', '\Flexio\Jobs\Base::addEids(); make sure eids are added for each operation', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArrayKeys('A.4', '\Flexio\Jobs\Util::addEids(); make sure eids are added for each operation', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -160,7 +160,7 @@ class Test
             }
         ]
         ',true);
-        $actual = \Flexio\Jobs\Base::addEids($properties);
+        $actual = \Flexio\Jobs\Util::addEids($properties);
         $expected = json_decode('
         [
             {
@@ -209,11 +209,11 @@ class Test
             }
         ]
         ',true);
-        \Flexio\Tests\Check::assertArrayKeys('A.5', '\Flexio\Jobs\Base::addEids(); make sure eids are added for each operation', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArrayKeys('A.5', '\Flexio\Jobs\Util::addEids(); make sure eids are added for each operation', $actual, $expected, $results);
 
 
 
-        // TEST: \Flexio\Jobs\Base::addEids(); don't replace existing eids
+        // TEST: \Flexio\Jobs\Util::addEids(); don't replace existing eids
 
         // BEGIN TEST
         $properties = json_decode('
@@ -222,13 +222,13 @@ class Test
             "op": ""
         }
         ',true);
-        $actual = \Flexio\Jobs\Base::addEids($properties);
+        $actual = \Flexio\Jobs\Util::addEids($properties);
         $expected = json_decode('
         {
             "eid": "abc",
             "op": ""
         }
         ',true);
-        \Flexio\Tests\Check::assertArrayKeys('A.1', '\Flexio\Jobs\Base::addEids(); don\'t replace existing eids', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArrayKeys('A.1', '\Flexio\Jobs\Util::addEids(); don\'t replace existing eids', $actual, $expected, $results);
     }
 }
