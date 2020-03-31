@@ -506,7 +506,7 @@ class Pipe
         $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
         $process_host->run(true /*true: run in background*/);
 
-        // return information about the process; TODO: is this what we want to do?
+        // return information about the process
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api\Response::sendContent($process_store->get());
     }
