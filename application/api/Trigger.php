@@ -88,7 +88,7 @@ class Trigger
 
         // create a new process engine for running a process
         $process_engine = \Flexio\Jobs\Process::create();
-        $process_engine->queue('\Flexio\Api\ProcessHandler::addMountParams', $process_properties);
+        $process_engine->queue('\Flexio\Jobs\ProcessHandler::addMountParams', $process_properties);
         $process_engine->queue('\Flexio\Jobs\Task::run', $process_properties['task']);
 
         // set an environment variable (parameter) with the "from" email address

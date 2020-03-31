@@ -960,7 +960,7 @@ class ScriptHost
             // string key/values, or in one case, a key with a json-encoded value
             // that contains connection info; these parameters have a special mime
             // type, and we want to decode the json so it gets passed on to the script
-            // as a dictionary object; see \Flexio\Api\ProcessHandler::addMountParams()
+            // as a dictionary object; see \Flexio\Jobs\ProcessHandler::addMountParams()
             $mime_type = $v->getMimeType();
             if ($mime_type === \Flexio\Base\ContentType::FLEXIO_CONNECTION_INFO)
                 $value = @json_decode($value, true);

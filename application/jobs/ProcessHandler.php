@@ -8,16 +8,19 @@
  * Created:  2020-02-10
  *
  * @package flexio
- * @subpackage Api
+ * @subpackage Jobs
  */
 
 
 declare(strict_types=1);
-namespace Flexio\Api;
+namespace Flexio\Jobs;
 
 
 class ProcessHandler
 {
+    // utility functions that can be run as functions in a process using queue, but
+    // that don't have a full task associated with them
+
     public static function incrementProcessCount(\Flexio\Jobs\Process $process, array $callback_params) : void
     {
         // try to increment the active process count; if we're unable to, then the user is as the

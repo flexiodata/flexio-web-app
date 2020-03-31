@@ -379,15 +379,15 @@ class Pipe
         // since this is the only user-drive endpoint used in a spreadsheet, this
         // constraint is only included here
         $process_engine = \Flexio\Jobs\Process::create();
-        $process_engine->queue('\Flexio\Api\ProcessHandler::incrementProcessCount', array());
+        $process_engine->queue('\Flexio\Jobs\ProcessHandler::incrementProcessCount', array());
         if ($pipe_run_mode === \Model::PIPE_RUN_MODE_PASSTHROUGH)
-            $process_engine->queue('\Flexio\Api\ProcessHandler::addMountParams', $process_properties);
+            $process_engine->queue('\Flexio\Jobs\ProcessHandler::addMountParams', $process_properties);
         $process_engine->queue('\Flexio\Jobs\Task::run', $process_properties['task']);
-        $process_engine->queue('\Flexio\Api\ProcessHandler::decrementProcessCount', array());
+        $process_engine->queue('\Flexio\Jobs\ProcessHandler::decrementProcessCount', array());
 
         $php_stream_handle = \Flexio\System\System::openPhpInputStream();
         $post_content_type = \Flexio\System\System::getPhpInputStreamContentType();
-        \Flexio\Api\ProcessHandler::addProcessInputFromStream($php_stream_handle, $post_content_type, $process_engine);
+        \Flexio\Jobs\ProcessHandler::addProcessInputFromStream($php_stream_handle, $post_content_type, $process_engine);
 
         // create a process host to connect the store/engine and run the process
         $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
@@ -494,13 +494,13 @@ class Pipe
             'structure' => $pipe_properties['returns']
         );
         $process_engine = \Flexio\Jobs\Process::create();
-        $process_engine->queue('\Flexio\Api\ProcessHandler::addMountParams', $process_properties);
+        $process_engine->queue('\Flexio\Jobs\ProcessHandler::addMountParams', $process_properties);
         $process_engine->queue('\Flexio\Jobs\Task::run', $process_properties['task']);
-        $process_engine->queue('\Flexio\Api\ProcessHandler::saveStdoutToElasticSearch', $elastic_search_params);
+        $process_engine->queue('\Flexio\Jobs\ProcessHandler::saveStdoutToElasticSearch', $elastic_search_params);
 
         $php_stream_handle = \Flexio\System\System::openPhpInputStream();
         $post_content_type = \Flexio\System\System::getPhpInputStreamContentType();
-        \Flexio\Api\ProcessHandler::addProcessInputFromStream($php_stream_handle, $post_content_type, $process_engine);
+        \Flexio\Jobs\ProcessHandler::addProcessInputFromStream($php_stream_handle, $post_content_type, $process_engine);
 
         // create a process host to connect the store/engine and run the process
         $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
@@ -558,10 +558,10 @@ class Pipe
             'structure' => $pipe_properties['returns']
         );
         $process_engine = \Flexio\Jobs\Process::create();
-        $process_engine->queue('\Flexio\Api\ProcessHandler::addMountParams', $process_properties);
+        $process_engine->queue('\Flexio\Jobs\ProcessHandler::addMountParams', $process_properties);
         $process_engine->queue('\Flexio\Jobs\Task::run', $process_properties['task']);
         if ($pipe_properties['run_mode'] === \Model::PIPE_RUN_MODE_INDEX)
-            $process_engine->queue('\Flexio\Api\ProcessHandler::saveStdoutToElasticSearch', $elastic_search_params);
+            $process_engine->queue('\Flexio\Jobs\ProcessHandler::saveStdoutToElasticSearch', $elastic_search_params);
 
         // create a process host to connect the store/engine and run the process
         $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
