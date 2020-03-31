@@ -109,29 +109,7 @@ class ConnectionMount
         if ($connection_mode !== \Model::CONNECTION_MODE_FUNCTION)
             return;
 
-        // STEP 1: get the list of files to use to create pipes
-        $connection_items = $this->getConnectionItemsToImport();
-
-        $connection_item_info = array();
-        foreach ($connection_items as $item)
-        {
-            $item_info = $item;
-
-            // TODO: add constant for "FILE"
-            if ($item_info['type'] !== "FILE")
-                continue;
-
-            // filter out items that aren't flexio tasks, or javascript/python scripts
-            // TODO: adjust filter criteria?
-            $name = $item_info['path'];
-            $ext = strtolower(\Flexio\Base\File::getFileExtension($name));
-            if ($ext !== 'flexio' && $ext !== 'py' && $ext !== 'js')
-                continue;
-
-            $connection_item_info[] = $item_info;
-        }
-
-        // STEP 2: get a list of existing pipe names for this owner so
+        // STEP 1: get a list of existing pipe names for this owner so
         // we can make sure the pipe name created is unique
         $existing_pipe_names = array();
         $filter = array('owned_by' =>  $this->getConnection()->getOwner(), 'eid_status' => \Model::STATUS_AVAILABLE);
@@ -142,31 +120,39 @@ class ConnectionMount
             $existing_pipe_names[$pipe_info['name']] = 1;
         }
 
-        // STEP 3: create the pipes
-        foreach ($connection_item_info as $item_info)
+        // STEP 2: create the pipes
+        $connection_items = $this->getConnectionItemsToImport();
+        foreach ($connection_items as $item_info)
         {
-            // get the file extension and set the language
-            $language = false;
-            $ext = strtolower(\Flexio\Base\File::getFileExtension($item_info['path']));
-            if ($ext === 'flexio')
-                $language = 'flexio'; // execute content as a JSON pipe
-            if ($ext === 'py')
-                $language = 'python';
-            if ($ext === 'js')
-                $language = 'nodejs';
+            // get the file extension
+            $extension = strtolower(\Flexio\Base\File::getFileExtension($item_info['path']));
 
-            if ($language === false)
-                continue;
+            // get the pipe content and info
+            $pipe_info = null;
+            switch ($extension)
+            {
+                // if we have a script, get it from the front-matter
+                case 'flexio':
+                case 'py':
+                case 'js':
+                    $content = self::getContentFromCacheOrPath($connection_info, $item_info);
+                    $pipe_info = \Flexio\Object\Factory::getPipeInfoFromContent($content, $extension);
+                    break;
 
-            $content = self::getContentFromCacheOrPath($connection_info, $item_info);
+                // if we have a csv file, build it manually
+                case 'csv':
+                    $content = self::getContentFromCacheOrPath($connection_info, $item_info);
+                    $file_name_base = \Flexio\Base\File::getFilename($item_info['path']);
+                    $pipe_info['name'] = \Flexio\Base\Identifier::makeValid($file_name_base);
+                    break;
+            }
 
-            // get the pipe info from the content; if we can't find any, don't import the pipe
-            $pipe_info_from_content = \Flexio\Object\Factory::getPipeInfoFromContent($content, $language);
-            if (!isset($pipe_info_from_content))
+            // if we can't get the pipe info, move on
+            if (!isset($pipe_info))
                 continue;
 
             // get the pipe name and make sure it's unique
-            $pipe_name = $pipe_info_from_content['name'] ?? '';
+            $pipe_name = $pipe_info['name'] ?? '';
             $pipe_name = self::getUniquePipeName($pipe_name, $existing_pipe_names);
 
             if (\Flexio\Base\Identifier::isValid($pipe_name) === false)
@@ -175,7 +161,7 @@ class ConnectionMount
             $existing_pipe_names[$pipe_name] = 1;
 
             // set basic pipe info
-            $pipe_params = $pipe_info_from_content;
+            $pipe_params = $pipe_info;
             $pipe_params['parent_eid'] = $connection_eid;
             $pipe_params['name'] = $pipe_name; // override supplied name with name that's unique
             $pipe_params['owned_by'] = $connection_info['owned_by']['eid'];
@@ -185,7 +171,6 @@ class ConnectionMount
             $item = \Flexio\Object\Pipe::create($pipe_params);
         }
     }
-
 
     private function getConnectionItemsToImport() : array
     {

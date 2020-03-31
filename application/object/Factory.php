@@ -149,7 +149,8 @@ class Factory
         if (!is_string($content))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-        $definition = self::getPipeInfoFromContent($content);
+        $extension = strtolower(\Flexio\Base\File::getFileExtension($file_name));
+        $definition = self::getPipeInfoFromContent($content, $extension);
         if (!isset($definition))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
@@ -184,10 +185,22 @@ class Factory
         return null;
     }
 
-    public static function getPipeInfoFromContent(string $content, string $language = 'python') : ?array
+    public static function getPipeInfoFromContent(string $content, string $extension) : ?array
     {
         try
         {
+            // get the language from the extension type
+            $language = false;
+            switch ($extension)
+            {
+                case 'flexio':  $language = 'flexio'; break;
+                case 'py':      $language = 'python'; break;
+                case 'js':      $language = 'nodejs'; break;
+            }
+
+            if ($language === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
             // set basic pipe info using mostly same parameter names as
             // pipe api; use defaults supplied by object/model as well
             $yaml = \Flexio\Base\Yaml::extract($content);
