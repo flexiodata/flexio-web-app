@@ -24,6 +24,7 @@ class Mount
     // and therefore, needs to be able to be added to the process queue
 
     private $connection;
+    private $properties;
 
     public static function create()
     {
@@ -39,6 +40,7 @@ class Mount
         $object = new static();
         $connection_eid = $callback_params['connection_eid'] ?? '';
         $object->connection = \Flexio\Object\Connection::load($connection_eid);
+        $object->properties = $callback_params;
 
         // if the connection mode isn't a mount; there are no associated pipes
         $connection_info = $object->getConnection()->get();
@@ -79,6 +81,11 @@ class Mount
     private function getConnection() : \Flexio\Object\Connection
     {
         return $this->connection;
+    }
+
+    private function getProperties() : array
+    {
+        return $this->properties;
     }
 
     private function deleteAssociatedPipes()
@@ -162,9 +169,10 @@ class Mount
 
                 // if we have a csv file, build it manually
                 case 'csv':
-                    $stream = \Flexio\Object\Factory::getStreamFromConnectionInfo($connection_info, $item_info);
+                    //$stream = \Flexio\Object\Factory::getStreamFromConnectionInfo($connection_info, $item_info);
                     $file_name_base = \Flexio\Base\File::getFilename($item_info['path']);
                     $pipe_info['name'] = \Flexio\Base\Identifier::makeValid($file_name_base);
+                    //$pipe_info['run_mode'] = \Model::PIPE_RUN_MODE_INDEX; // pipes with content are always an index type
                     break;
             }
 
@@ -196,6 +204,9 @@ class Mount
     private function populatePipeIndexCaches()
     {
         $connection =  $this->getConnection();
+        $properties = $this->getProperties();
+        $triggered_by = $properties['triggered_by'] ?? '';
+
         $owner_user_eid = $connection->getOwner();
 
         // get a list of pipes for this connection

@@ -281,37 +281,32 @@ class Factory
         return $memory_stream;
     }
 
-    public static function getStreamFromConnectionInfo(array $connection_info, array $item_info) : \Flexio\Base\Stream
+    public static function getStreamFromConnectionInfo(array $connection_info, array $item_info) : \Flexio\Object\Stream
     {
-        $connection_eid = $connection_info['eid'];
-
-        // if we have an http connection type, load the content each time; TODO: use
-        // etags to get a hash signature, and then we can cache content
-        if ($connection_info['connection_type'] === \Model::CONNECTION_TYPE_HTTP)
-        {
-            $memory_stream = \Flexio\Base\Stream::create();
-            $streamwriter = $memory_stream->getWriter();
-
-            $http_service = \Flexio\Services\Http::create();
-            $http_service->read(['path' => $item_info['path']], function($data) use (&$streamwriter) {
-                $streamwriter->write($data);
-            });
-
-            return $memory_stream;
-        }
-
         // generate a handle for the content signature that will uniquely identify it;
         // use the owner plus a hash of some identifiers that constitute unique content
         $content_handle = '';
         $content_handle .= $connection_info['owned_by']['eid']; // include owner in the identifier so that even if the connection owner changes (later?), the cache will only exist for this owner
-        $content_handle .= $item_info['hash']; // not always populated, so also add on info from the file
-        $content_handle .= md5(
-            $item_info['path'] .
-            strval($item_info['size']) .
-            $item_info['modified']
-        );
+
+        if ($connection_info['connection_type'] === \Model::CONNECTION_TYPE_HTTP)
+        {
+            // for HTTP content, download the content each time; to trigger this,
+            // generate a unique handle for the content
+            // TODO: use etags to get a hash signature, and then we can cache content
+            $content_handle .= md5(\Flexio\Base\Util::generateHandle());
+        }
+        else
+        {
+            $content_handle .= $item_info['hash']; // not always populated, so also add on info from the file
+            $content_handle .= md5(
+                $item_info['path'] .
+                strval($item_info['size']) .
+                $item_info['modified']
+            );
+        }
 
         // get the cached content; if it doesn't exist, create the cache
+        $connection_eid = $connection_info['eid'];
         $stored_stream = self::getStreamContentCache($connection_eid, $content_handle);
         if (!isset($stored_stream))
         {
@@ -319,16 +314,7 @@ class Factory
             $stored_stream = self::createStreamContentCache($connection_eid, $remote_path, $content_handle);
         }
 
-        // copy the stream contents to a memory stream
-        $memory_stream = \Flexio\Base\Stream::create();
-
-        $streamreader = $stored_stream->getReader();
-        $streamwriter = $memory_stream->getWriter();
-
-        while (($data = $streamreader->read(32768)) !== false)
-            $streamwriter->write($data);
-
-        return $memory_stream;
+        return $stored_stream;
     }
 
     public static function createStreamContentCache(string $connection_eid, string $remote_path, string $handle) : \Flexio\Object\Stream

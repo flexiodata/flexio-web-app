@@ -409,7 +409,7 @@ class Connection
 
         // create a new process engine for running a process
         $process_engine = \Flexio\Jobs\Process::create();
-        $process_engine->queue('\Flexio\Jobs\Mount::import', array('connection_eid' => $connection_eid));
+        $process_engine->queue('\Flexio\Jobs\Mount::import', array('connection_eid' => $connection_eid, 'triggered_by' => $triggered_by));
 
         // create a process host to connect the store/engine and run the process
         $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
