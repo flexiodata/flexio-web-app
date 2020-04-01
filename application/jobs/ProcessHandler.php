@@ -231,11 +231,9 @@ class ProcessHandler
 
         // write the output to elasticsearch
         $params = array(
-            'path' => $index, // service uses path for consistency with other services
-            'structure' => $structure
+            'path' => $index // service uses path for consistency with other services
         );
-        $field_names = $structure->getNames();
-        $elasticsearch->write($params, function() use (&$data_to_write, &$structure) {
+        $elasticsearch->write($params, function() use (&$data_to_write) {
             $row = array_shift($data_to_write);
             if (!is_array($row))
                 return false;
