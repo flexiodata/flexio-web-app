@@ -188,7 +188,7 @@ class Search implements \Flexio\IFace\IJob
             // replace wildcard columns with all available columns
             foreach ($columns_requested as $c)
             {
-                if ($c !== '*')
+                if ($c !== '*' && $c !== '')
                 {
                     $columns_to_return[] = $c;
                 }
