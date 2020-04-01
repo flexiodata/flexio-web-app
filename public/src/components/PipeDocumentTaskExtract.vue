@@ -52,6 +52,17 @@
           :rows="structure_rows"
         />
       </div>
+      <div
+        class="relative el-form-item"
+        v-else
+      >
+        <el-alert
+          type="warning"
+          show-icon
+          title="Unable to load structure"
+          :closable="false"
+        />
+      </div>
     </el-form>
     <ButtonBar
       class="mt4"

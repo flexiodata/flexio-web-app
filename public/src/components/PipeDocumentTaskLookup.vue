@@ -53,6 +53,19 @@
         />
         <div class="mt3" style="border-bottom: 2px dotted #dcdfe6"></div>
       </div>
+      <div
+        class="relative el-form-item"
+        v-else
+      >
+        <el-alert
+          type="warning"
+          show-icon
+          title="Unable to load structure"
+          :closable="false"
+        />
+        <div class="mt3" style="border-bottom: 2px dotted #dcdfe6"></div>
+      </div>
+
       <el-form-item
         key="lookup_keys"
         label="2. Select the key fields"
