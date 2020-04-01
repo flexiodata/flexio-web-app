@@ -211,7 +211,11 @@ class Search implements \Flexio\IFace\IJob
 
             // if the search parameter is a string, pass it through as a lucene query string,
             // unless it's empty, in which case, return all items
-            if (is_string($query_param))
+            if (!isset($query_param))
+            {
+                // fall through; equivalent to empty; don't do anything
+            }
+            else if (is_string($query_param))
             {
                 if (strlen(trim($query_param)) > 0)
                     $search_rows = json_encode(["query" => ["query_string" => ["query" => $query_param]]], JSON_UNESCAPED_SLASHES);
@@ -243,20 +247,25 @@ class Search implements \Flexio\IFace\IJob
         // get the configuration
         if (count($search_params) > 2)
         {
-            $config = array();
-            $config['headers'] = false;
-            $config['limit'] = false;
+            $query_param = $search_params[2];
 
-            $config_parameters = array();
-            parse_str($search_params[2], $config_parameters);
+            if (is_string($query_param))
+            {
+                $config = array();
+                $config['headers'] = false;
+                $config['limit'] = false;
 
-            $config['headers'] = false;
-            if (isset($config_parameters['headers']) && toBoolean($config_parameters['headers']) === true)
-                $config['headers'] = true;
+                $config_parameters = array();
+                parse_str($query_param, $config_parameters);
 
-            $config['limit'] = false;
-            if (isset($config_parameters['limit']) && intval($config_parameters['limit']) >= 0)
-            $config['limit'] = intval($config_parameters['limit']);
+                $config['headers'] = false;
+                if (isset($config_parameters['headers']) && toBoolean($config_parameters['headers']) === true)
+                    $config['headers'] = true;
+
+                $config['limit'] = false;
+                if (isset($config_parameters['limit']) && intval($config_parameters['limit']) >= 0)
+                $config['limit'] = intval($config_parameters['limit']);
+            }
         }
     }
 }
