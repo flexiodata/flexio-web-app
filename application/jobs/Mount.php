@@ -260,11 +260,6 @@ class Mount
                     'parent_eid' => $pipe_properties['eid'],
                     'triggered_by' => $triggered_by
                 );
-                $elastic_search_params = array(
-                    'index' => $pipe_properties['eid'],
-                    //'structure' => $pipe_properties['returns']
-                    'structure' => array() // structure is a required field, but currently isn't used in creating the index
-                );
                 $process_engine = \Flexio\Jobs\Process::create();
                 $process_engine->setOwner($owner_user_eid);
 
@@ -276,30 +271,31 @@ class Mount
                 while (($data = $streamreader->read(32768)) !== false)
                     $streamwriter->write($data);
 
-                // run the job
-                $process_engine->queue('\Flexio\Jobs\Convert::run', array('input' => array('format' => 'csv'), 'output' => array('format' => 'json')));
-                $process_engine->queue('\Flexio\Jobs\ProcessHandler::saveStdoutToElasticSearch', $elastic_search_params);
+                // run the initial conversion
+                $process_engine->queue('\Flexio\Jobs\Convert::run', array('input' => array('format' => 'csv'), 'output' => array('format' => 'table')));
                 $process_engine->run();
 
-/*
-                // debug:
-                $stream_to_output = $process_engine->getStdout();
-                $content = \Flexio\Base\StreamUtil::getStreamContents($stream_to_output);
-                $response_code = '200';
-                //$content = json_encode($content, JSON_UNESCAPED_SLASHES);
+                // get the structure and save it
+                $structure = $process_engine->getStdout()->getStructure();
+                $returns = array();
+                $column_info = $structure->get();
+                foreach ($column_info as $c)
+                {
+                    $item = array();
+                    $item['name'] = $c['name'];
+                    $item['type'] = $c['type'];
+                    $item['description'] = '';
+                    $returns[] = $item;
+                }
+                $p->set(array('returns' => $returns));
 
-                if ($mime_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
-                {
-                    // return content as-is
-                    header('Content-Type: ' . $mime_type, true, $response_code);
-                }
-                else
-                {
-                    // flexio table; return application/json in place of internal mime
-                    header('Content-Type: ' . \Flexio\Base\ContentType::JSON, true, $response_code);
-                    $content = json_encode($content, JSON_UNESCAPED_SLASHES);
-                }
-*/
+                // load the converted data into the index
+                $elastic_search_params = array(
+                    'index' => $pipe_properties['eid'],
+                    'structure' => $returns
+                );
+                $process_engine->queue('\Flexio\Jobs\ProcessHandler::saveStdoutToElasticSearch', $elastic_search_params);
+                $process_engine->run();
             }
             else
             {

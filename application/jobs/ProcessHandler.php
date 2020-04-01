@@ -211,35 +211,63 @@ class ProcessHandler
         $elasticsearch->deleteIndex($index);
         $elasticsearch->createIndex($index, $structure->get());
 
-        // get the data from stdout; TODO: make this more efficient with memory
-        // note: data to write should be in key value two-dimensional array format
-        // where the keys match the structure; for example:
-        // [
-        //   ["col1"=>"val1", "col2"=>"val2"],
-        //   ["col1"=>"val3", "col2"=>"val4"]
-        // ]
-        $data_to_write = '';
-        $stdout_reader= $process->getStdout()->getReader();
-        while (($chunk = $stdout_reader->read(32768)) !== false)
+        // get the stdout mime type
+        $stdout_stream_info = $process->getStdout()->get();
+        if ($stdout_stream_info === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        $stdout_mime_type = $stdout_stream_info['mime_type'];
+
+
+        if ($stdout_mime_type === \Flexio\Base\ContentType::FLEXIO_TABLE)
         {
-            $data_to_write .= $chunk;
+            // handle table type
+            $stdout_reader = $process->getStdout()->getReader();
+
+            // write the output to elasticsearch
+            $params = array(
+                'path' => $index // service uses path for consistency with other services
+            );
+            $elasticsearch->write($params, function() use (&$stdout_reader) {
+                $row = $stdout_reader->readRow();
+                if ($row === false)
+                    return false;
+                // TODO: coerce row types?
+                return $row;
+            });
         }
-        $data_to_write = json_decode($data_to_write, true);
 
-        if (!is_array($data_to_write))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+        if ($stdout_mime_type === \Flexio\Base\ContentType::JSON)
+        {
+            // handle json content type
 
-        // write the output to elasticsearch
-        $params = array(
-            'path' => $index // service uses path for consistency with other services
-        );
-        $elasticsearch->write($params, function() use (&$data_to_write) {
-            $row = array_shift($data_to_write);
-            if (!is_array($row))
-                return false;
-            // TODO: coerce row types
-            return $row;
-        });
+            // [
+            //   ["col1"=>"val1", "col2"=>"val2"],
+            //   ["col1"=>"val3", "col2"=>"val4"]
+            // ]
+            $data_to_write = '';
+            $stdout_reader= $process->getStdout()->getReader();
+            while (($chunk = $stdout_reader->read(32768)) !== false)
+            {
+                $data_to_write .= $chunk;
+            }
+            $data_to_write = json_decode($data_to_write, true);
+
+            if (!is_array($data_to_write))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+
+            // write the output to elasticsearch
+            $params = array(
+                'path' => $index // service uses path for consistency with other services
+            );
+            $elasticsearch->write($params, function() use (&$data_to_write) {
+                $row = array_shift($data_to_write);
+                if (!is_array($row))
+                    return false;
+                // TODO: coerce row types?
+                return $row;
+            });
+        }
     }
 
     public static function addProcessInputFromStream($php_stream_handle, string $post_content_type, $process) : void
