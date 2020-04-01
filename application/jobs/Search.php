@@ -170,7 +170,7 @@ class Search implements \Flexio\IFace\IJob
 
         // default configuration
         $config = array();
-        $config['headers'] = false;
+        $config['headers'] = true;
         $config['limit'] = false;
 
         // get the input
