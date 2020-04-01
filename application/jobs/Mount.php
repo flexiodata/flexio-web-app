@@ -172,6 +172,7 @@ class Mount
                     $stream = \Flexio\Object\Factory::getStreamFromConnectionInfo($connection_info, $item_info);
                     $file_name_base = \Flexio\Base\File::getFilename($item_info['path']);
                     $pipe_info['name'] = \Flexio\Base\Identifier::makeValid($file_name_base);
+                    $pipe_info['title'] = $file_name_base;
 
                     // add temporary task for triggering index; note: this isn't a real job, and is replace
                     // with an empty task in a subsequent import step; it's just a flag to trigger the
@@ -275,24 +276,51 @@ class Mount
                 $process_engine->queue('\Flexio\Jobs\Convert::run', array('input' => array('format' => 'csv'), 'output' => array('format' => 'table')));
                 $process_engine->run();
 
-                // get the structure and save it
+                // get the structure and set the various pipe info
                 $structure = $process_engine->getStdout()->getStructure();
-                $returns = array();
+
+                $pipe_returns_info = array();
                 $column_info = $structure->get();
                 foreach ($column_info as $c)
                 {
                     $item = array();
                     $item['name'] = $c['name'];
                     $item['type'] = $c['type'];
-                    $item['description'] = '';
-                    $returns[] = $item;
+                    $item['description'] = 'The ' . $c['name'] . ' of the item';
+                    $pipe_returns_info[] = $item;
                 }
-                $p->set(array('returns' => $returns));
+
+                $pipe_params_info = array();
+                $pipe_params_info[] = array(
+                    'name' => 'properties',
+                    'type' => 'array',
+                    'description' => 'The properties to return; use "*" for all properties, which is also the default',
+                    'required' => false
+                );
+                $pipe_params_info[] = array(
+                    'name' => 'filter',
+                    'type' => 'string',
+                    'description' => 'Search query to determine the rows to return',
+                    'required' => false
+                );
+                $pipe_params_info[] = array(
+                    'name' => 'config',
+                    'type' => 'string',
+                    'description' => 'Additional configuration items',
+                    'required' => false
+                );
+
+                $pipe_params_examples = array(
+                    '',
+                    '"*"'
+                );
+
+                $p->set(array('params' => $pipe_params_info, 'examples' => $pipe_params_examples, 'returns' => $pipe_returns_info));
 
                 // load the converted data into the index
                 $elastic_search_params = array(
                     'index' => $pipe_properties['eid'],
-                    'structure' => $returns
+                    'structure' => $pipe_returns_info
                 );
                 $process_engine->queue('\Flexio\Jobs\ProcessHandler::saveStdoutToElasticSearch', $elastic_search_params);
                 $process_engine->run();
