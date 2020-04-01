@@ -10,8 +10,12 @@
 
       <h1 class="fw6 f2 tc pb2">{{title}}</h1>
 
+      <!-- step: choose existing or new integration -->
+      <div v-if="active_step == 'choose-existing'">
+      </div>
+
       <!-- step: set up integrations -->
-      <div v-if="active_step == 'setup'">
+      <div v-else-if="active_step == 'setup'">
         <!-- fetching config -->
         <div v-if="is_fetching_config">
           <div class="br2 ba b--black-10 pv5 ph4">
@@ -88,7 +92,7 @@
       is_submitting: false,
       is_fetching_config: false,
       route_title: '',
-      active_step: 'setup', // 'setup' or 'setup-success'
+      active_step: '', // 'choose-existing' or 'setup' or 'setup-success'
       active_integration: {},
       setup_template: null,
       output_mount: {}
@@ -112,6 +116,12 @@
       ServiceIconWrapper,
       MemberInvitePanel,
     },
+    watch: {
+      route_action: {
+        handler: 'handleRouteActionChange',
+        immediate: true
+      }
+    },
     data() {
       return getDefaultState()
     },
@@ -134,8 +144,11 @@
       step_order() {
        return ['setup', 'setup-success']
       },
-      integration_from_route() {
+      route_integration() {
         return _.get(this.$route, 'query.integration', '')
+      },
+      route_action() {
+        return _.get(this.$route, 'params.action', 'setup')
       },
       title() {
         if (this.route_title.length > 0) {
@@ -149,20 +162,8 @@
       var team_name = this.getActiveUsername()
       this.$store.dispatch('teams/changeActiveTeam', { team_name })
 
-      // pre-select integrations
-      this.selectIntegrationFromRoute()
-
-      // update the active step from the route
-      this.active_step = _.get(this.$route, 'params.action', 'integrations')
-
-      if (this.active_step == 'setup') {
-        this.fetchIntegrationConfig()
-      }
-
       // update title from route
       this.route_title = _.get(this.$route, 'query.title', '')
-
-      this.setRoute(this.active_step)
     },
     methods: {
       ...mapGetters('users', {
@@ -171,8 +172,19 @@
       ...mapGetters('integrations', {
         'getProductionIntegrations': 'getProductionIntegrations',
       }),
-      selectIntegrationFromRoute() {
-        var cname = this.integration_from_route
+      handleRouteActionChange(val, old_val) {
+        // update the active step from the route
+        this.active_step = val
+
+        // pre-select integrations
+        this.initIntegrationFromRoute()
+
+        if (val == 'setup') {
+          this.fetchIntegrationConfig()
+        }
+      },
+      initIntegrationFromRoute() {
+        var cname = this.route_integration
         var route_integration = _.find(this.integrations, f => _.get(f, 'connection.name', '') == cname)
         if (route_integration) {
           this.active_integration = Object.assign({}, route_integration)
