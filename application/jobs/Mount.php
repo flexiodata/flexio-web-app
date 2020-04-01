@@ -155,13 +155,14 @@ class Mount
                 case 'flexio':
                 case 'py':
                 case 'js':
-                    $content = \Flexio\Object\Factory::getContentFromCacheOrPath($connection_info, $item_info);
+                    $stream = \Flexio\Object\Factory::getStreamFromConnectionInfo($connection_info, $item_info);
+                    $content = \Flexio\Base\StreamUtil::getStreamContents($stream);
                     $pipe_info = \Flexio\Object\Factory::getPipeInfoFromContent($content, $extension);
                     break;
 
                 // if we have a csv file, build it manually
                 case 'csv':
-                    $content = \Flexio\Object\Factory::getContentFromCacheOrPath($connection_info, $item_info);
+                    $stream = \Flexio\Object\Factory::getStreamFromConnectionInfo($connection_info, $item_info);
                     $file_name_base = \Flexio\Base\File::getFilename($item_info['path']);
                     $pipe_info['name'] = \Flexio\Base\Identifier::makeValid($file_name_base);
                     break;

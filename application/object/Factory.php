@@ -238,7 +238,50 @@ class Factory
         return null;
     }
 
-    public static function getContentFromCacheOrPath(array $connection_info, array $item_info) : ?string
+    public static function getStreamFromFile(string $owner, string $path) : \Flexio\Base\Stream
+    {
+        // TODO: connection mounts in connection object contain a similar caching
+        // mechanism; should factor
+
+        // get the connection identifier and remote path from the given path
+        $connection_identifier = '';
+        $remote_path = '';
+        $vfs = new \Flexio\Services\Vfs($owner);
+        $service = $vfs->getServiceFromPath($path, $connection_identifier, $remote_path);
+
+        // get the file info
+        $connection_eid = \Flexio\Object\Connection::getEidFromName($owner, $connection_identifier);
+        $file_info = $service->getFileInfo($remote_path);
+
+        // generate a handle for the content signature that will uniquely identify it;
+        // use the owner plus a hash of some identifiers that constitute unique content
+        $content_handle = '';
+        $content_handle .= $owner; // include owner in the identifier so that even if the connection owner changes (later?), the cache will only exist for this owner
+        $content_handle .= $file_info['hash']; // not always populated, so also add on info from the file
+        $content_handle .= md5(
+            $remote_path .
+            strval($file_info['size']) .
+            $file_info['modified']
+        );
+
+        // get the cached content; if it doesn't exist, create the cache
+        $stored_stream = self::getStreamContentCache($connection_eid, $content_handle);
+        if (!isset($stored_stream))
+            $stored_stream = self::createStreamContentCache($connection_eid, $remote_path, $content_handle);
+
+        // copy the stream contents to a memory stream
+        $memory_stream = \Flexio\Base\Stream::create();
+
+        $streamreader = $stored_stream->getReader();
+        $streamwriter = $memory_stream->getWriter();
+
+        while (($data = $streamreader->read(32768)) !== false)
+            $streamwriter->write($data);
+
+        return $memory_stream;
+    }
+
+    public static function getStreamFromConnectionInfo(array $connection_info, array $item_info) : \Flexio\Base\Stream
     {
         $connection_eid = $connection_info['eid'];
 
@@ -246,13 +289,15 @@ class Factory
         // etags to get a hash signature, and then we can cache content
         if ($connection_info['connection_type'] === \Model::CONNECTION_TYPE_HTTP)
         {
-            $content = '';
+            $memory_stream = \Flexio\Base\Stream::create();
+            $streamwriter = $memory_stream->getWriter();
+
             $http_service = \Flexio\Services\Http::create();
-            $http_service->read(['path' => $item_info['path']], function($data) use (&$content) {
-                $content .= $data;
+            $http_service->read(['path' => $item_info['path']], function($data) use (&$streamwriter) {
+                $streamwriter->write($data);
             });
 
-            return $content;
+            return $memory_stream;
         }
 
         // generate a handle for the content signature that will uniquely identify it;
@@ -267,24 +312,23 @@ class Factory
         );
 
         // get the cached content; if it doesn't exist, create the cache
-        $stream = self::getStreamContentCache($connection_eid, $content_handle);
-        if (!isset($stream))
+        $stored_stream = self::getStreamContentCache($connection_eid, $content_handle);
+        if (!isset($stored_stream))
         {
             $remote_path = $item_info['path'];
-            $stream = self::createStreamContentCache($connection_eid, $remote_path, $content_handle);
+            $stored_stream = self::createStreamContentCache($connection_eid, $remote_path, $content_handle);
         }
 
-        if (!isset($stream))
-            return null;
+        // copy the stream contents to a memory stream
+        $memory_stream = \Flexio\Base\Stream::create();
 
-        $content = '';
-        $reader = $stream->getReader();
-        while (($data = $reader->read()) != false)
-        {
-            $content .= $data;
-        }
+        $streamreader = $stored_stream->getReader();
+        $streamwriter = $memory_stream->getWriter();
 
-        return $content;
+        while (($data = $streamreader->read(32768)) !== false)
+            $streamwriter->write($data);
+
+        return $memory_stream;
     }
 
     public static function createStreamContentCache(string $connection_eid, string $remote_path, string $handle) : \Flexio\Object\Stream

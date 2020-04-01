@@ -142,49 +142,6 @@ class Lookup implements \Flexio\IFace\IJob
         $outstream->setMimeType(\Flexio\Base\ContentType::JSON);
     }
 
-    private function getStreamFromFile(string $owner, string $path) : \Flexio\Base\Stream
-    {
-        // TODO: connection mounts in connection object contain a similar caching
-        // mechanism; should factor
-
-        // get the connection identifier and remote path from the given path
-        $connection_identifier = '';
-        $remote_path = '';
-        $vfs = new \Flexio\Services\Vfs($owner);
-        $service = $vfs->getServiceFromPath($path, $connection_identifier, $remote_path);
-
-        // get the file info
-        $connection_eid = \Flexio\Object\Connection::getEidFromName($owner, $connection_identifier);
-        $file_info = $service->getFileInfo($remote_path);
-
-        // generate a handle for the content signature that will uniquely identify it;
-        // use the owner plus a hash of some identifiers that constitute unique content
-        $content_handle = '';
-        $content_handle .= $owner; // include owner in the identifier so that even if the connection owner changes (later?), the cache will only exist for this owner
-        $content_handle .= $file_info['hash']; // not always populated, so also add on info from the file
-        $content_handle .= md5(
-            $remote_path .
-            strval($file_info['size']) .
-            $file_info['modified']
-        );
-
-        // get the cached content; if it doesn't exist, create the cache
-        $stored_stream = \Flexio\Object\Factory::getStreamContentCache($connection_eid, $content_handle);
-        if (!isset($stored_stream))
-            $stored_stream = \Flexio\Object\Factory::createStreamContentCache($connection_eid, $remote_path, $content_handle);
-
-        // copy the stream contents to a memory stream
-        $memory_stream = \Flexio\Base\Stream::create();
-
-        $streamreader = $stored_stream->getReader();
-        $streamwriter = $memory_stream->getWriter();
-
-        while (($data = $streamreader->read(32768)) !== false)
-            $streamwriter->write($data);
-
-        return $memory_stream;
-    }
-
     private function getJobParameters() : array
     {
         return $this->properties;
