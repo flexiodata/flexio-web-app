@@ -10,8 +10,45 @@
 
       <h1 class="fw6 f2 tc pb2">{{title}}</h1>
 
-      <!-- step: choose existing or new integration -->
-      <div v-if="active_step == 'choose-existing'">
+      <!-- step: show spinner text and take user to the copy sheet page -->
+      <div v-if="matching_integrations.length > 0 && active_step == 'template'">
+        <Spinner
+          size="large"
+          message="Loading template..."
+          v-if="is_loading_template"
+        />
+        <div
+          class="mv4 mh3 pa4 bg-nearer-white br3"
+          v-else
+        >
+          <p>Would you like to open this template in Google Sheets or Microsoft Excel?</p>
+          <div class="flex flex-row flex-wrap">
+            <div class="flex-fill">
+              <el-button
+                class="w-100 fw6"
+                plain
+                @click="redirectToGoogleSheets"
+              >
+                <div class="flex flex-row items-center justify-center">
+                  <img src="../assets/icon/icon-google-sheets-128.png" alt="Google Sheets" style="height: 32px" />
+                  <div class="ml2 fw6 f5">Google Sheets</div>
+                </div>
+              </el-button>
+            </div>
+
+            <div class="flex-fill pl4">
+              <el-button
+                class="w-100 fw6"
+                plain
+              >
+                <div class="flex flex-row items-center justify-center">
+                  <img src="../assets/icon/icon-excel-128.png" alt="Microsoft Excel" style="height: 32px" />
+                  <div class="ml3 fw6 f5">Microsoft Excel 365</div>
+                </div>
+              </el-button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- step: set up integrations -->
@@ -43,8 +80,8 @@
         </FunctionMountSetupWizard>
       </div>
 
-      <!-- step 4: show result (success) -->
-      <div v-else-if="active_step == 'setup-success'">
+      <!-- step: show result (success) -->
+      <div v-else-if="active_step == 'success'">
         <ServiceIconWrapper :innerSpacing="10">
           <i
             class="el-icon-success bg-white f2 dark-green"
@@ -91,11 +128,13 @@
     return {
       is_submitting: false,
       is_fetching_config: false,
+      is_loading_template: false,
       route_title: '',
-      active_step: '', // 'choose-existing' or 'setup' or 'setup-success'
+      step_order: ['setup', 'success'],
+      active_step: '', // 'template' or 'setup' or 'success'
       active_integration: {},
       setup_template: null,
-      output_mount: {}
+      output_mount: {},
     }
   }
 
@@ -129,6 +168,15 @@
       ...mapState({
         active_team_name: state => state.teams.active_team_name,
       }),
+      function_mounts() {
+        return this.getAvailableFunctionMounts()
+      },
+      matching_integrations() {
+        return _.filter(this.function_mounts, f => {
+          var manifest_url = _.get(f, 'connection_info.url', '')
+          return manifest_url.indexOf('functions-'+this.route_integration) >= 0 ? true : false
+        })
+      },
       integrations() {
         return this.getProductionIntegrations()
       },
@@ -141,14 +189,20 @@
       has_setup_template() {
         return !_.isNil(this.setup_template)
       },
-      step_order() {
-       return ['setup', 'setup-success']
-      },
       route_integration() {
         return _.get(this.$route, 'query.integration', '')
       },
       route_action() {
         return _.get(this.$route, 'params.action', 'setup')
+      },
+      template_target() {
+        return _.get(this.$route, 'query.target', '')
+      },
+      spreadsheet_id() {
+        return _.get(this.$route, 'query.spreadsheet_id', '')
+      },
+      spreadsheet_path() {
+        return _.get(this.$route, 'query.spreadsheet_path', '')
       },
       title() {
         if (this.route_title.length > 0) {
@@ -167,7 +221,10 @@
     },
     methods: {
       ...mapGetters('users', {
-        'getActiveUsername': 'getActiveUsername'
+        'getActiveUsername': 'getActiveUsername',
+      }),
+      ...mapGetters('connections', {
+        'getAvailableFunctionMounts': 'getAvailableFunctionMounts',
       }),
       ...mapGetters('integrations', {
         'getProductionIntegrations': 'getProductionIntegrations',
@@ -176,10 +233,31 @@
         // update the active step from the route
         this.active_step = val
 
+        if (this.active_step == 'template') {
+          // the user has already created an integration of this type (crunchbase, etc.)
+          // and most likely only has one integration of this type; just take them directly
+          // to the template in Google Sheets
+          if (this.matching_integrations.length > 0) {
+            this.is_loading_template = true
+
+            if (this.template_target == 'gsheets' && this.spreadsheet_id.length > 0) {
+              setTimeout(() => { this.redirectToGoogleSheets() }, 750)
+            } else if (this.template_target == 'excel' && this.spreadsheet_path.length > 0) {
+              // show Excel download page (looks like Google Sheets copy sheet page)
+              setTimeout(() => { this.is_loading_template = false }, 750)
+            } else {
+              // show choose Google Sheets or Excel page
+              setTimeout(() => { this.is_loading_template = false }, 750)
+            }
+          } else {
+            this.active_step = 'setup'
+          }
+        }
+
         // pre-select integrations
         this.initIntegrationFromRoute()
 
-        if (val == 'setup') {
+        if (this.active_step == 'setup') {
           this.fetchIntegrationConfig()
         }
       },
@@ -197,10 +275,12 @@
         new_route.params = _.assign({}, new_route.params, { action })
         this.$router[current_action.length == 0 ? 'replace' : 'push'](new_route)
       },
+      redirectToGoogleSheets() {
+        window.location = 'https://docs.google.com/spreadsheets/d/' + this.spreadsheet_id + '/copy'
+      },
       onNextStepClick() {
         // we're on the last step; commit all changes to the backend and take the user to the app
         if (this.active_step_idx == this.step_order.length - 1) {
-          debugger
           this.submitIntegrationConfig()
           return
         }

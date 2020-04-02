@@ -18,7 +18,7 @@
             <ServiceIcon
               class="item-img-icon"
               :type="getItemConnectionType(item)"
-              :url="getItemUrl(item)"
+              :url="getItemIconUrl(item)"
               :title="getItemTitle(item)"
             />
           </div>
@@ -47,6 +47,18 @@
       items: {
         type: [String, Array], // 'services', []
         default: () => []
+      },
+      itemKeyPath: {
+        type: String,
+        default: 'repository'
+      },
+      itemTitlePath: {
+        type: String,
+        default: 'connection.title'
+      },
+      itemIconPath: {
+        type: String,
+        default: 'connection.icon'
       },
       selectedItems: {
         type: Array,
@@ -90,17 +102,17 @@
       },
     },
     methods: {
-      getItemKey(item) {
-        return item.repository || item.connection_type
-      },
-      getItemTitle(item) {
-        return _.get(item, 'connection.title') || _.get(item, 'service_name') || ''
-      },
       getItemConnectionType(item) {
         return _.get(item, 'connection_type')
       },
-      getItemUrl(item) {
-        return _.get(item, 'connection.icon') || _.get(item, 'url')
+      getItemKey(item) {
+        return _.get(item, this.itemKeyPath) || _.get(item, 'connection_type')
+      },
+      getItemTitle(item) {
+        return _.get(item, this.itemTitlePath) || _.get(item, 'service_name') || ''
+      },
+      getItemIconUrl(item) {
+        return _.get(item, this.itemIconPath) || _.get(item, 'url')
       },
       isSelected(item) {
         return this.selected_item_keys.indexOf(this.getItemKey(item)) >= 0 ? true : false
