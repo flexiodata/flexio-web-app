@@ -110,6 +110,17 @@ class Search implements \Flexio\IFace\IJob
         $outstream = $process->getStdout();
         $streamwriter = $outstream->getWriter();
 
+        // if we're not returning the headers and there's no content, return a
+        // two-dimensional array with an empty string; this allows this function
+        // to return results that won't throw an error in the add-on; note: for API
+        // usage, this may not be the best behavior, so we want do something else
+        if ($return_headers === false && count($result) === 0)
+        {
+            $streamwriter->write('[[""]]');
+            $outstream->setMimeType(\Flexio\Base\ContentType::JSON);
+            return;
+        }
+
         // start the output
         $streamwriter->write("[");
         $first = true;
