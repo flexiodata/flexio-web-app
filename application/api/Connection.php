@@ -413,14 +413,15 @@ class Connection
 
         // create a process host to connect the store/engine and run the process
         $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
-        $process_host->run(false /*true: run in background*/);
+        $process_host->run(true /*true: run in background*/);
 
-        // return information about the process;
-        // TODO: UI Status Mechanism: return process info instead of pipe info when implemented
-        //$request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        //\Flexio\Api\Response::sendContent($process_store->get());
+        // return information about the process
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        \Flexio\Api\Response::sendContent($process_store->get());
 
-        // TODO: UI Status Mechanism: return process info instead of pipe info when implemented
+/*
+        // if we're not running in background mode, use the following to return
+        // the pipe information
 
         // get the pipes for the connection
         $filter = array('owned_by' => $owner_user_eid, 'eid_status' => \Model::STATUS_AVAILABLE, 'parent_eid' => $connection->getEid());
@@ -447,6 +448,7 @@ class Connection
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         //$request->track();
         \Flexio\Api\Response::sendContent($result);
+*/
     }
 
     private static function cleanProperties(array $properties) : array
