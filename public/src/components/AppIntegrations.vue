@@ -40,12 +40,14 @@
               <el-button
                 class="w-100 fw6"
                 plain
+                disabled
               >
                 <div class="flex flex-row items-center justify-center">
                   <img src="../assets/icon/icon-excel-128.png" alt="Microsoft Excel" style="height: 32px" />
                   <div class="ml3 fw6 f5">Microsoft Excel 365</div>
                 </div>
               </el-button>
+              <div class="tc mt2 f6 i">Excel templates coming soon!</div>
             </div>
           </div>
         </div>
