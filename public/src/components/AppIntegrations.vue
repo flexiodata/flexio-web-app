@@ -12,14 +12,10 @@
 
       <!-- step: show spinner text and take user to the copy sheet page -->
       <div v-if="matching_integrations.length > 0 && active_step == 'template'">
-        <div
-          class="mv4 mh3 ph4 pv5 ba b--black-10 br3"
-          v-if="is_auto_loading_template"
-        >
-          <Spinner
-            size="large"
-            message="Loading template..."
-          />
+        <div v-if="is_auto_loading_template">
+          <div class="mv4 mh3 br3 ba b--black-10 pv5 ph4">
+            <Spinner size="large" message="Loading template..." />
+          </div>
         </div>
         <div
           class="mv4 mh3 pa4 bg-nearer-white br3"
@@ -132,6 +128,7 @@
       is_submitting: false,
       is_fetching_config: false,
       is_auto_loading_template: false,
+      is_started_on_template: false,
       route_title: '',
       step_order: ['setup', 'success'],
       active_step: '', // 'template' or 'setup' or 'success'
@@ -253,6 +250,9 @@
               // show choose Google Sheets or Excel page
             }
           } else {
+            // set this flag so we know to come back to the template stuff
+            // after configuring the integration
+            this.is_started_on_template = true
             this.active_step = 'setup'
           }
         }
@@ -413,7 +413,13 @@
               }
 
               this.is_submitting = false
-              this.$emit('done')
+
+              if (this.is_started_on_template === true) {
+                // go back to setting up a template
+                this.setRoute('template')
+              } else {
+                this.$emit('done')
+              }
             })
           })
         })
