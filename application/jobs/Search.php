@@ -219,28 +219,40 @@ class Search implements \Flexio\IFace\IJob
             {
                 if (strlen(trim($query_param)) > 0)
                     $search_rows = json_encode(["query" => ["query_string" => ["query" => $query_param]]], JSON_UNESCAPED_SLASHES);
-                     else { /* don't do anything */ }
+                     else { /* don't do anything with an empty string */ }
             }
             else
             {
-                $query_parameters = \Flexio\Base\Util::coerceToQueryParams($search_params[1], $available_columns);
+                $query_param_str = self::buildQuery($query_param, $available_columns);
+                if (strlen(trim($query_param_str)) > 0)
+                    $search_rows = json_encode(["query" => ["query_string" => ["query" => $query_param]]], JSON_UNESCAPED_SLASHES);
+                     else { /* don't do anything with an empty array*/ }
 
-                // example:
-                // '{"query": {"bool": "must": {"match": {"first_name": "John"}}}}';
-                $match_expression = array();
-                foreach ($query_parameters as $key => $value)
-                {
-                    // for now, straight key/value copy
+                /*
+                    // deprecated; following is an example of query-builder type query that uses an array to
+                    // fine a query of based on fieldnames and associated values specified in a two-dimensional
+                    // array; this approach is abandoned in favor of a more useful value-based approach that
+                    // makes it easier to use the values from one search in another (e.g. looking up rows
+                    // in one table based on values in columns in another table)
 
-                    if (count($value) == 0)
-                        continue;
-                    $value = $value[0];
+                    // example:
+                    // '{"query": {"bool": "must": {"match": {"first_name": "John"}}}}';
+                    $query_param = \Flexio\Base\Util::coerceToQueryParams($search_params[1], $available_columns);
+                    $match_expression = array();
+                    foreach ($query_parameters as $key => $value)
+                    {
+                        // for now, straight key/value copy
 
-                    $match_expression[] = ['match' => [$key => $value]];
-                }
+                        if (count($value) == 0)
+                            continue;
+                        $value = $value[0];
 
-                $match_expression = json_encode($match_expression,JSON_UNESCAPED_SLASHES);
-                $search_rows = '{"query": {"bool": {"must": '.$match_expression. '}}}';
+                        $match_expression[] = ['match' => [$key => $value]];
+                    }
+
+                    $match_expression = json_encode($match_expression,JSON_UNESCAPED_SLASHES);
+                    $search_rows = '{"query": {"bool": {"must": '.$match_expression. '}}}';
+                */
             }
         }
 
@@ -267,6 +279,46 @@ class Search implements \Flexio\IFace\IJob
                 $config['limit'] = intval($config_parameters['limit']);
             }
         }
+    }
+
+    private static function buildQuery(array $arr) : string
+    {
+        // make sure we have a basic two-dimensional array
+        $table = \Flexio\Base\Table::create($arr)->getRange();
+
+        // get the content and build the query; combine rows
+        // into AND of values (ignoring empty spaces)
+        $query = '';
+        foreach ($table as $row)
+        {
+            $row_query = '';
+            foreach ($row as $value)
+            {
+                // ignore nulls/booleans
+                if (!is_numeric($value) && !is_string($value))
+                    continue;
+
+                // ignore empty values
+                if ($value === '')
+                    continue;
+
+                if (strlen($row_query) > 0)
+                    $row_query .= ' AND ';
+
+                $row_query .= '(' . strval($value) . ')';
+            }
+
+            // ignore empty rows
+            if (strlen($row_query) === 0)
+                continue;
+
+            if (strlen($query) > 0)
+                $query .= ' OR ';
+
+            $query .= '(' . $row_query . ')';
+        }
+
+        return $query;
     }
 }
 
