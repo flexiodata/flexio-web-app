@@ -168,19 +168,21 @@ class Copy implements \Flexio\IFace\IJob
 
     private function copyFile(\Flexio\IFace\IProcess $process, \Flexio\Services\Vfs $vfs, string $from, string $to) : void
     {
-        $subprocess = \Flexio\Jobs\Process::create();
+        // create a job
+        $process_engine = \Flexio\Jobs\Process::create();
+        $process_engine->setOwner($process->getOwner());
 
         // proxy the local connections
         $local_connections = $process->getLocalConnections();
         foreach ($local_connections as $key => $value)
         {
-            $subprocess->addLocalConnection($key, $value);
+            $process_engine->addLocalConnection($key, $value);
         }
 
-        $process_owner_eid = $process->getOwner();
-        $subprocess->setOwner($process_owner_eid);
-        $subprocess->execute([ 'op' => 'read', 'path' => $from ]);
-        $subprocess->execute([ 'op' => 'write', 'path' => $to ]);  // executes can be chained; stdout of previous execute becomes stdin of next
+        // add the logic and run
+        $process_engine->queue('\Flexio\Jobs\Read::run', array('path' => $from));
+        $process_engine->queue('\Flexio\Jobs\ProcessHandler::chain', array());
+        $process_engine->queue('\Flexio\Jobs\Write::run', array('path' => $to));
     }
 
     private function getJobParameters() : array

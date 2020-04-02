@@ -92,11 +92,18 @@ class Connection
         // delete the object
         $connection->delete();
 
-        // if we're deleting a connection mount, delete associated pipes/connections
+        // if we're deleting a connection mount, delete associated pipes/connections;
+        // use a job so we can switch over to running this in the background in case
+        // the delete takes time
         $connection_info = $connection->get();
         $connection_mode = $connection_info['connection_mode'];
         if ($connection_mode === \Model::CONNECTION_MODE_FUNCTION)
-            \Flexio\Object\ConnectionMount::create($connection)->delete();
+        {
+            $process_engine = \Flexio\Jobs\Process::create();
+            $process_engine->setOwner($connection->getOwner());
+            $process_engine->queue('\Flexio\Jobs\Mount::delete', array('connection_eid' => $connection->getEid()));
+            $process_engine->run(false /*true: run in background*/);
+        }
 
         // return the result
         $properties = $connection->get();
@@ -383,55 +390,41 @@ class Connection
         if ($connection->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PIPE_UPDATE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        // sync
-        \Flexio\Object\ConnectionMount::create($connection)->sync();
+        // if the process is created with a request from an api token, it's
+        // triggered with an api; if there's no api token, it's triggered
+        // from a web session, in which case it's triggered by the UI;
+        // TODO: this will work until we allow processes to be created from
+        // public pipes that don't require a token
+        $triggered_by = strlen($request->getToken()) > 0 ? \Model::PROCESS_TRIGGERED_API : \Model::PROCESS_TRIGGERED_INTERFACE;
 
-        // get the newly created pipes; if we have an index pipe, populate the cache
-        // TODO: populating the cache should take place in ConnectionMount::sync(); however,
-        // it's here because ConnectionMount is in the object layer, and the process mechanism
-        // which currently loads data into the cache is in the api layer becasue of a rights
-        // check; need to move things into logical places, but a lot has been in flux with
-        // the application and what connections/pipes/process are and how they function
+        // create a new process object for storing process info
+        $process_properties = array(
+            'parent_eid' => $connection->getEid(),
+            'task' => array(), // TODO: first instance where we have a job without concrete task info
+            'triggered_by' => $triggered_by,
+            'owned_by' => $owner_user_eid,
+            'created_by' => $requesting_user_eid
+        );
+        $process_store = \Flexio\Object\Process::create($process_properties);
+
+        // create a new process engine for running a process
+        $process_engine = \Flexio\Jobs\Process::create();
+        $process_engine->queue('\Flexio\Jobs\Mount::import', array('connection_eid' => $connection_eid, 'triggered_by' => $triggered_by));
+
+        // create a process host to connect the store/engine and run the process
+        $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
+        $process_host->run(false /*true: run in background*/);
+
+        // return information about the process;
+        // TODO: UI Status Mechanism: return process info instead of pipe info when implemented
+        //$request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        //\Flexio\Api\Response::sendContent($process_store->get());
+
+        // TODO: UI Status Mechanism: return process info instead of pipe info when implemented
 
         // get the pipes for the connection
-        $triggered_by = strlen($request->getToken()) > 0 ? \Model::PROCESS_TRIGGERED_API : \Model::PROCESS_TRIGGERED_INTERFACE;
         $filter = array('owned_by' => $owner_user_eid, 'eid_status' => \Model::STATUS_AVAILABLE, 'parent_eid' => $connection->getEid());
         $pipes = \Flexio\Object\Pipe::list($filter);
-
-        // populate the initial cache for index pipes
-        foreach ($pipes as $p)
-        {
-            $pipe_properties = $p->get();
-
-            // if we don't have an index pipe, don't populate the cache
-            if ($pipe_properties['run_mode'] !== \Model::PIPE_RUN_MODE_INDEX)
-                continue;
-
-            // create a new process object for storing process info
-            $process_properties = array(
-                'parent_eid' => $pipe_properties['eid'],
-                'pipe_info' => $pipe_properties,
-                'task' => $pipe_properties['task'],
-                'triggered_by' => $triggered_by,
-                'owned_by' => $pipe_properties['owned_by']['eid'], // same as $owner_user_eid
-                'created_by' => $requesting_user_eid
-            );
-            $process_store = \Flexio\Object\Process::create($process_properties);
-
-            // create a new process engine for running a process
-            $elastic_search_params = array(
-                'parent_eid' => $pipe_properties['eid'],
-                'structure' => $pipe_properties['returns']
-            );
-            $process_engine = \Flexio\Jobs\Process::create();
-            $process_engine->queue('\Flexio\Api\ProcessHandler::addMountParams', $process_properties);
-            $process_engine->queue('\Flexio\Jobs\Task::run', $process_properties['task']);
-            $process_engine->queue('\Flexio\Api\ProcessHandler::saveStdoutToElasticSearch', $elastic_search_params);
-
-            // create a process host to connect the store/engine and run the process
-            $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
-            $process_host->run(true /*true: run in background*/);
-        }
 
         // return the info for the pipes that were just added
         $result = array();

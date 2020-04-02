@@ -8,16 +8,28 @@
  * Created:  2020-02-10
  *
  * @package flexio
- * @subpackage Api
+ * @subpackage Jobs
  */
 
 
 declare(strict_types=1);
-namespace Flexio\Api;
+namespace Flexio\Jobs;
 
 
 class ProcessHandler
 {
+    // utility functions that can be run as functions in a process using queue, but
+    // that don't have a full task associated with them
+
+    public static function chain(\Flexio\Jobs\Process $process, array $callback_params) : void
+    {
+        // moves stdout to stdin and clears stdout; used for chaining jobs
+        // manually in a queue, similar to what the sequence task does
+        $new_stdout_stream = \Flexio\Base\Stream::create()->setMimeType(\Flexio\Base\ContentType::TEXT);
+        $process->setStdin($process->getStdout());
+        $process->setStdout($new_stdout_stream);
+    }
+
     public static function incrementProcessCount(\Flexio\Jobs\Process $process, array $callback_params) : void
     {
         // try to increment the active process count; if we're unable to, then the user is as the
@@ -175,7 +187,7 @@ class ProcessHandler
     {
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($callback_params, array(
-                'parent_eid' => array('type' => 'eid',    'required' => true), // the parent object (pipe) that the cahce is associated with
+                'index' => array('type' => 'string', 'required' => true), // the name of the index to drop/create/write-to
                 'structure'  => array('type' => 'object', 'required' => true)  // structure of the data for the index
             ))->hasErrors()) === true)
         {
@@ -185,7 +197,7 @@ class ProcessHandler
         }
 
         $validated_params = $validator->getParams();
-        $parent_eid = $validated_params['parent_eid'];
+        $index = $validated_params['index'];
         $structure = $validated_params['structure'];
         $structure = \Flexio\Base\Structure::create($structure);
 
@@ -196,40 +208,66 @@ class ProcessHandler
         $elasticsearch = \Flexio\Services\ElasticSearch::create($elasticsearch_connection_info);
 
         // create a new index; delete any index that's already there
-        $elasticsearch->deleteIndex($parent_eid);
-        $elasticsearch->createIndex($parent_eid, $structure->get());
+        $elasticsearch->deleteIndex($index);
+        $elasticsearch->createIndex($index, $structure->get());
 
-        // get the data from stdout; TODO: make this more efficient with memory
-        // note: data to write should be in key value two-dimensional array format
-        // where the keys match the structure; for example:
-        // [
-        //   ["col1"=>"val1", "col2"=>"val2"],
-        //   ["col1"=>"val3", "col2"=>"val4"]
-        // ]
-        $data_to_write = '';
-        $stdout_reader= $process->getStdout()->getReader();
-        while (($chunk = $stdout_reader->read(32768)) !== false)
+        // get the stdout mime type
+        $stdout_stream_info = $process->getStdout()->get();
+        if ($stdout_stream_info === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        $stdout_mime_type = $stdout_stream_info['mime_type'];
+
+
+        if ($stdout_mime_type === \Flexio\Base\ContentType::FLEXIO_TABLE)
         {
-            $data_to_write .= $chunk;
+            // handle table type
+            $stdout_reader = $process->getStdout()->getReader();
+
+            // write the output to elasticsearch
+            $params = array(
+                'path' => $index // service uses path for consistency with other services
+            );
+            $elasticsearch->write($params, function() use (&$stdout_reader) {
+                $row = $stdout_reader->readRow();
+                if ($row === false)
+                    return false;
+                // TODO: coerce row types?
+                return $row;
+            });
         }
-        $data_to_write = json_decode($data_to_write, true);
 
-        if (!is_array($data_to_write))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+        if ($stdout_mime_type === \Flexio\Base\ContentType::JSON)
+        {
+            // handle json content type
 
-        // write the output to elasticsearch
-        $params = array(
-            'path' => $parent_eid, // service uses path for consistency with other services
-            'structure' => $structure
-        );
-        $field_names = $structure->getNames();
-        $elasticsearch->write($params, function() use (&$data_to_write, &$structure) {
-            $row = array_shift($data_to_write);
-            if (!is_array($row))
-                return false;
-            // TODO: coerce row types
-            return $row;
-        });
+            // [
+            //   ["col1"=>"val1", "col2"=>"val2"],
+            //   ["col1"=>"val3", "col2"=>"val4"]
+            // ]
+            $data_to_write = '';
+            $stdout_reader= $process->getStdout()->getReader();
+            while (($chunk = $stdout_reader->read(32768)) !== false)
+            {
+                $data_to_write .= $chunk;
+            }
+            $data_to_write = json_decode($data_to_write, true);
+
+            if (!is_array($data_to_write))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+
+            // write the output to elasticsearch
+            $params = array(
+                'path' => $index // service uses path for consistency with other services
+            );
+            $elasticsearch->write($params, function() use (&$data_to_write) {
+                $row = array_shift($data_to_write);
+                if (!is_array($row))
+                    return false;
+                // TODO: coerce row types?
+                return $row;
+            });
+        }
     }
 
     public static function addProcessInputFromStream($php_stream_handle, string $post_content_type, $process) : void

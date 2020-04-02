@@ -193,27 +193,15 @@ class Vfs
         // grab path, including preceding slash
         $path = substr($path, $pos+10);
 
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "read",
-                "path" => $path
-            ],
-            [
-                "op" => "convert",
-                "input" => [
-                   // "format" => "delimited",
-                   // "header" => true
-                ],
-                "output" => [
-                    "format" => "table"
-                ]
-            ]
-        ]);
+        // read the file to get the info; TODO: use cache?
+        $process_engine = \Flexio\Jobs\Process::create();
+        $process_engine->setOwner($owner_user_eid);
+        $process_engine->queue('\Flexio\Jobs\Read::run', array('path' => $path));
+        $process_engine->queue('\Flexio\Jobs\ProcessHandler::chain', array());
+        $process_engine->queue('\Flexio\Jobs\Convert::run', array('input' => array(), 'output' => array('format' => 'table')));
+        $process_engine->run();
 
-        $local_process = \Flexio\Jobs\Process::create();
-        $local_process->setOwner($owner_user_eid);
-        $local_process->execute($task);
-        $local_stdout = $local_process->getStdout();
+        $local_stdout = $process_engine->getStdout();
         $column_info = $local_stdout->getStructure()->get();
         $row_info = \Flexio\Base\StreamUtil::getStreamContents($local_stdout, 1, 10);
 
@@ -347,7 +335,7 @@ class Vfs
         $process_engine = \Flexio\Jobs\Process::create();
         $php_stream_handle = \Flexio\System\System::openPhpInputStream();
         $post_content_type = \Flexio\System\System::getPhpInputStreamContentType();
-        \Flexio\Api\ProcessHandler::addProcessInputFromStream($php_stream_handle, $post_content_type, $process_engine);
+        \Flexio\Jobs\ProcessHandler::addProcessInputFromStream($php_stream_handle, $post_content_type, $process_engine);
 
         // create a process host to connect the store/engine and run the process
         $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);

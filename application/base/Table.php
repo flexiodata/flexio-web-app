@@ -46,7 +46,7 @@ class Table
             $col_count = 0;
             foreach ($row as $value)
             {
-                if (!is_scalar($value))
+                if (!is_scalar($value) && !is_null($value))
                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
                 $col_count++;
             }

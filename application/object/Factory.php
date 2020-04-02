@@ -52,43 +52,6 @@ class Factory
         }
     }
 
-    public static function createStreamContentCache(string $connection_eid, string $remote_path, string $handle) : \Flexio\Object\Stream
-    {
-        // STEP 1: get the connection
-        $connection = \Flexio\Object\Connection::load($connection_eid);
-
-        // STEP 2: create the stream
-        $properties = array();
-        $properties['connection_eid'] = $connection->getEid();
-        $properties['parent_eid'] = ''; // cached content has no parent
-        $properties['stream_type'] = \Flexio\Object\Stream::TYPE_FILE;
-        $properties['name'] = $handle;
-        $properties['path'] = \Flexio\Base\Util::generateHandle(); // path is the path to storage, not the path in the connection
-        $properties['owned_by'] = $connection->getOwner();
-        $storable_stream = \Flexio\Object\Stream::create($properties);
-
-        // TODO: cache metadata about the file
-
-        // STEP 3: copy the contents
-        $streamwriter = $storable_stream->getWriter();
-        $connection->getService()->read(['path' => $remote_path], function($data) use (&$streamwriter) {
-            $streamwriter->write($data);
-        });
-
-        return $storable_stream;
-    }
-
-    public static function getStreamContentCache(string $connection_eid, string $handle) : ?\Flexio\Object\Stream
-    {
-        $filter = array('connection_eid' => $connection_eid, 'name' => $handle);
-        $streams = \Flexio\Object\Stream::list($filter);
-
-        if (count($streams) !== 1)
-            return null;
-
-        return $streams[0];
-    }
-
     public static function createExampleObjects(string $user_eid) : array
     {
         $created_items = array();
@@ -149,7 +112,8 @@ class Factory
         if (!is_string($content))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-        $definition = self::getPipeInfoFromContent($content);
+        $extension = strtolower(\Flexio\Base\File::getFileExtension($file_name));
+        $definition = self::getPipeInfoFromContent($content, $extension);
         if (!isset($definition))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
@@ -184,10 +148,22 @@ class Factory
         return null;
     }
 
-    public static function getPipeInfoFromContent(string $content, string $language = 'python') : ?array
+    public static function getPipeInfoFromContent(string $content, string $extension) : ?array
     {
         try
         {
+            // get the language from the extension type
+            $language = false;
+            switch ($extension)
+            {
+                case 'flexio':  $language = 'flexio'; break;
+                case 'py':      $language = 'python'; break;
+                case 'js':      $language = 'nodejs'; break;
+            }
+
+            if ($language === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
             // set basic pipe info using mostly same parameter names as
             // pipe api; use defaults supplied by object/model as well
             $yaml = \Flexio\Base\Yaml::extract($content);
@@ -260,6 +236,122 @@ class Factory
         }
 
         return null;
+    }
+
+    public static function getStreamFromFile(string $owner, string $path) : \Flexio\Base\Stream
+    {
+        // TODO: connection mounts in connection object contain a similar caching
+        // mechanism; should factor
+
+        // get the connection identifier and remote path from the given path
+        $connection_identifier = '';
+        $remote_path = '';
+        $vfs = new \Flexio\Services\Vfs($owner);
+        $service = $vfs->getServiceFromPath($path, $connection_identifier, $remote_path);
+
+        // get the file info
+        $connection_eid = \Flexio\Object\Connection::getEidFromName($owner, $connection_identifier);
+        $file_info = $service->getFileInfo($remote_path);
+
+        // generate a handle for the content signature that will uniquely identify it;
+        // use the owner plus a hash of some identifiers that constitute unique content
+        $content_handle = '';
+        $content_handle .= $owner; // include owner in the identifier so that even if the connection owner changes (later?), the cache will only exist for this owner
+        $content_handle .= $file_info['hash']; // not always populated, so also add on info from the file
+        $content_handle .= md5(
+            $remote_path .
+            strval($file_info['size']) .
+            $file_info['modified']
+        );
+
+        // get the cached content; if it doesn't exist, create the cache
+        $stored_stream = self::getStreamContentCache($connection_eid, $content_handle);
+        if (!isset($stored_stream))
+            $stored_stream = self::createStreamContentCache($connection_eid, $remote_path, $content_handle);
+
+        // copy the stream contents to a memory stream
+        $memory_stream = \Flexio\Base\Stream::create();
+
+        $streamreader = $stored_stream->getReader();
+        $streamwriter = $memory_stream->getWriter();
+
+        while (($data = $streamreader->read(32768)) !== false)
+            $streamwriter->write($data);
+
+        return $memory_stream;
+    }
+
+    public static function getStreamFromConnectionInfo(array $connection_info, array $item_info) : \Flexio\Object\Stream
+    {
+        // generate a handle for the content signature that will uniquely identify it;
+        // use the owner plus a hash of some identifiers that constitute unique content
+        $content_handle = '';
+        $content_handle .= $connection_info['owned_by']['eid']; // include owner in the identifier so that even if the connection owner changes (later?), the cache will only exist for this owner
+
+        if ($connection_info['connection_type'] === \Model::CONNECTION_TYPE_HTTP)
+        {
+            // for HTTP content, download the content each time; to trigger this,
+            // generate a unique handle for the content
+            // TODO: use etags to get a hash signature, and then we can cache content
+            $content_handle .= md5(\Flexio\Base\Util::generateHandle());
+        }
+        else
+        {
+            $content_handle .= $item_info['hash']; // not always populated, so also add on info from the file
+            $content_handle .= md5(
+                $item_info['path'] .
+                strval($item_info['size']) .
+                $item_info['modified']
+            );
+        }
+
+        // get the cached content; if it doesn't exist, create the cache
+        $connection_eid = $connection_info['eid'];
+        $stored_stream = self::getStreamContentCache($connection_eid, $content_handle);
+        if (!isset($stored_stream))
+        {
+            $remote_path = $item_info['path'];
+            $stored_stream = self::createStreamContentCache($connection_eid, $remote_path, $content_handle);
+        }
+
+        return $stored_stream;
+    }
+
+    public static function createStreamContentCache(string $connection_eid, string $remote_path, string $handle) : \Flexio\Object\Stream
+    {
+        // STEP 1: get the connection
+        $connection = \Flexio\Object\Connection::load($connection_eid);
+
+        // STEP 2: create the stream
+        $properties = array();
+        $properties['connection_eid'] = $connection->getEid();
+        $properties['parent_eid'] = ''; // cached content has no parent
+        $properties['stream_type'] = \Flexio\Object\Stream::TYPE_FILE;
+        $properties['name'] = $handle;
+        $properties['path'] = \Flexio\Base\Util::generateHandle(); // path is the path to storage, not the path in the connection
+        $properties['owned_by'] = $connection->getOwner();
+        $storable_stream = \Flexio\Object\Stream::create($properties);
+
+        // TODO: cache metadata about the file
+
+        // STEP 3: copy the contents
+        $streamwriter = $storable_stream->getWriter();
+        $connection->getService()->read(['path' => $remote_path], function($data) use (&$streamwriter) {
+            $streamwriter->write($data);
+        });
+
+        return $storable_stream;
+    }
+
+    public static function getStreamContentCache(string $connection_eid, string $handle) : ?\Flexio\Object\Stream
+    {
+        $filter = array('connection_eid' => $connection_eid, 'name' => $handle);
+        $streams = \Flexio\Object\Stream::list($filter);
+
+        if (count($streams) !== 1)
+            return null;
+
+        return $streams[0];
     }
 
     private static function getExampleObjects() : array
