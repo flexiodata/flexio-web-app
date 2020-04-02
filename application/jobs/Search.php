@@ -225,7 +225,7 @@ class Search implements \Flexio\IFace\IJob
             {
                 $query_param_str = self::buildQuery($query_param, $available_columns);
                 if (strlen(trim($query_param_str)) > 0)
-                    $search_rows = json_encode(["query" => ["query_string" => ["query" => $query_param]]], JSON_UNESCAPED_SLASHES);
+                    $search_rows = json_encode(["query" => ["query_string" => ["query" => $query_param_str]]], JSON_UNESCAPED_SLASHES);
                      else { /* don't do anything with an empty array*/ }
 
                 /*
