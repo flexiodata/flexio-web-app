@@ -407,8 +407,10 @@
 
             // make sure we add parent eids to all child connections if we need to
             this.processSetupConfig(setup_config, eid, () => {
-              var msg_json = { type: 'flexio-integration-setup-complete' }
-              window.opener.postMessage(msg_json, "*")
+              if (window.opener) {
+                var msg_json = { type: 'flexio-integration-setup-complete' }
+                window.opener.postMessage(msg_json, "*")
+              }
 
               this.is_submitting = false
               this.$emit('done')
