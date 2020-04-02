@@ -184,7 +184,9 @@ class Mount
                     // maybe a stream reference? but whatever is copied to the process by way of reference should
                     // not longer change, so maybe when a process is run, copy the stream
                     $pipe_info['task'] = array('op' => 'import', 'stream' => $stream->getEid());
-                    $pipe_info['run_mode'] = \Model::PIPE_RUN_MODE_INDEX; // pipes with content are always an index type
+                    $pipe_info['run_mode'] = \Model::PIPE_RUN_MODE_INDEX;                // pipes with content are always an index type
+                    $pipe_info['deploy_schedule'] = \Model::PIPE_DEPLOY_STATUS_INACTIVE; // no schedule
+                    $pipe_info['deploy_mode'] = \Model::PIPE_DEPLOY_MODE_RUN;            // turn on pipes
                     break;
             }
 
