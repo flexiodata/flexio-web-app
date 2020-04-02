@@ -12,17 +12,21 @@
 
       <!-- step: show spinner text and take user to the copy sheet page -->
       <div v-if="matching_integrations.length > 0 && active_step == 'template'">
-        <Spinner
-          size="large"
-          message="Loading template..."
-          v-if="is_loading_template"
-        />
+        <div
+          class="mv4 mh3 ph4 pv5 ba b--black-10 br3"
+          v-if="is_auto_loading_template"
+        >
+          <Spinner
+            size="large"
+            message="Loading template..."
+          />
+        </div>
         <div
           class="mv4 mh3 pa4 bg-nearer-white br3"
           v-else
         >
           <p>Would you like to open this template in Google Sheets or Microsoft Excel?</p>
-          <div class="flex flex-row flex-wrap">
+          <div class="flex-l flex-row-l">
             <div class="flex-fill">
               <el-button
                 class="w-100 fw6"
@@ -36,7 +40,7 @@
               </el-button>
             </div>
 
-            <div class="flex-fill pl4">
+            <div class="flex-fill pt3 pt0-l pl4-l">
               <el-button
                 class="w-100 fw6"
                 plain
@@ -97,7 +101,6 @@
           @submit-click="submitIntegrationConfig"
         />
       </div>
-
     </div>
   </main>
 </template>
@@ -128,7 +131,7 @@
     return {
       is_submitting: false,
       is_fetching_config: false,
-      is_loading_template: false,
+      is_auto_loading_template: false,
       route_title: '',
       step_order: ['setup', 'success'],
       active_step: '', // 'template' or 'setup' or 'success'
@@ -238,16 +241,16 @@
           // and most likely only has one integration of this type; just take them directly
           // to the template in Google Sheets
           if (this.matching_integrations.length > 0) {
-            this.is_loading_template = true
-
             if (this.template_target == 'gsheets' && this.spreadsheet_id.length > 0) {
-              setTimeout(() => { this.redirectToGoogleSheets() }, 750)
+              // redirect to Copy Google Sheet page
+              this.is_auto_loading_template = true
+              setTimeout(() => { this.redirectToGoogleSheets() }, 500)
             } else if (this.template_target == 'excel' && this.spreadsheet_path.length > 0) {
               // show Excel download page (looks like Google Sheets copy sheet page)
-              setTimeout(() => { this.is_loading_template = false }, 750)
+              this.is_auto_loading_template = true
+              setTimeout(() => { this.is_auto_loading_template = false }, 500)
             } else {
               // show choose Google Sheets or Excel page
-              setTimeout(() => { this.is_loading_template = false }, 750)
             }
           } else {
             this.active_step = 'setup'
