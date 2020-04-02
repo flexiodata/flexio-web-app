@@ -116,7 +116,7 @@
               </div>
             </div>
           </div>
-          <p class="center mw7 f8 nt3">* The Microsoft Excel 365 add-in will only function with an Excel for Office 365 subscription (currently on Targeted and Insider channels and soon for all Excel 365 users).</p>
+          <p class="center mw7 f8 nt3">* The Microsoft Excel 365 add-in will only function with an Excel for Office 365 subscription</p>
         </div>
 
         <!-- button bar for the entire onboarding wizard -->
