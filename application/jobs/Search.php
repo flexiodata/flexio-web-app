@@ -136,7 +136,7 @@ class Search implements \Flexio\IFace\IJob
                 $row_values[] = $r[$c] ?? '';
             }
 
-            $streamwriter->write(json_encode($row_values));
+            $streamwriter->write(json_encode($row_values, JSON_UNESCAPED_SLASHES));
             $idx++;
             $first = false;
         }
