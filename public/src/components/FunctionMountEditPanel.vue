@@ -339,7 +339,6 @@
           this.edit_mount = _.assign({}, this.edit_mount, { setup_template })
           this.active_step = prompts.length > 0 ? 'setup-config' : 'setup-success'
         }).catch(error => {
-
           if (this.mountType == 'integration') {
             this.$store.dispatch('connections/delete', { team_name, eid }).then(response => {
               this.active_step = 'setup-error'
