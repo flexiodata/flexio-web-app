@@ -205,6 +205,7 @@ class Mount
 
             // set basic pipe info
             $pipe_params = $pipe_info;
+            $pipe_params['eid_status'] = \Model::STATUS_PENDING; // set initial status to pending; this will be set to available when final pipe content is loaded
             $pipe_params['parent_eid'] = $connection_eid;
             $pipe_params['name'] = $pipe_name; // override supplied name with name that's unique
             $pipe_params['owned_by'] = $connection_info['owned_by']['eid'];
@@ -222,8 +223,8 @@ class Mount
         $owner_user_eid = $connection->getOwner();
         $triggered_by = $properties['triggered_by'] ?? '';
 
-        // get a list of pipes for this connection
-        $filter = array('owned_by' => $owner_user_eid, 'eid_status' => \Model::STATUS_AVAILABLE, 'parent_eid' => $connection->getEid());
+        // get a list of pending pipes for this connection
+        $filter = array('owned_by' => $owner_user_eid, 'eid_status' => \Model::STATUS_PENDING, 'parent_eid' => $connection->getEid());
         $pipes = \Flexio\Object\Pipe::list($filter);
 
         // get the newly created pipes; if we have an index pipe, populate the cache
@@ -241,7 +242,10 @@ class Mount
 
             // if we don't have an index pipe, don't populate the cache
             if ($pipe_properties['run_mode'] !== \Model::PIPE_RUN_MODE_INDEX)
+            {
+                $p->set(array('eid_status' => \Model::STATUS_AVAILABLE));
                 continue;
+            }
 
             // if we have an "import" type task, we're importing a raw file; this "import"
             // task is set in a previous mount step and isn't an official job, but simply
@@ -317,6 +321,7 @@ class Mount
                     '"*"'
                 );
 
+                // provide pipe info while indexing is loaded
                 $p->set(array('params' => $pipe_params_info, 'examples' => $pipe_params_examples, 'returns' => $pipe_returns_info));
 
                 // load the converted data into the index
@@ -326,6 +331,9 @@ class Mount
                 );
                 $process_engine->queue('\Flexio\Jobs\ProcessHandler::saveStdoutToElasticSearch', $elastic_search_params);
                 $process_engine->run();
+
+                // pipe is ready
+                $p->set(array('eid_status' => \Model::STATUS_AVAILABLE));
             }
             else
             {
