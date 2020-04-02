@@ -356,6 +356,9 @@ class Mount
                 $process_engine->queue('\Flexio\Jobs\Task::run', $process_properties['task']);
                 $process_engine->queue('\Flexio\Jobs\ProcessHandler::saveStdoutToElasticSearch', $elastic_search_params);
                 $process_engine->run();
+
+                // pipe is ready
+                $p->set(array('eid_status' => \Model::STATUS_AVAILABLE));
             }
         }
     }
