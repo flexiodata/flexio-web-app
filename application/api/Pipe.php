@@ -373,17 +373,27 @@ class Pipe
         // create a new process object for storing process info
         $process_store = \Flexio\Object\Process::create($process_properties);
 
-        // create a new process engine for running a process;
-        // note: increment/decrement process count included here to prevent
-        // overload when calling the api from a spreadsheet with "drag down";
-        // since this is the only user-drive endpoint used in a spreadsheet, this
-        // constraint is only included here
+        // create a new process engine for running a process
         $process_engine = \Flexio\Jobs\Process::create();
-        $process_engine->queue('\Flexio\Jobs\ProcessHandler::incrementProcessCount', array());
-        if ($pipe_run_mode === \Model::PIPE_RUN_MODE_PASSTHROUGH)
+
+        if ($pipe_run_mode !== \Model::PIPE_RUN_MODE_PASSTHROUGH)
+        {
+            // if we're not running in passthrough, then we're doing an
+            // index lookup against the cache, so the mount parameters aren't
+            // needed; also, we don't need to increment/decrement the count
+            // since the search is fast
+            $process_engine->queue('\Flexio\Jobs\Task::run', $process_properties['task']);
+        }
+         else
+        {
+            // if we're running in passthrough, we may be running something, so
+            // we need the mount parameters, and also a constraint to make sure
+            // that not too many jobs are run at once
+            $process_engine->queue('\Flexio\Jobs\ProcessHandler::incrementProcessCount', array());
             $process_engine->queue('\Flexio\Jobs\ProcessHandler::addMountParams', $process_properties);
-        $process_engine->queue('\Flexio\Jobs\Task::run', $process_properties['task']);
-        $process_engine->queue('\Flexio\Jobs\ProcessHandler::decrementProcessCount', array());
+            $process_engine->queue('\Flexio\Jobs\Task::run', $process_properties['task']);
+            $process_engine->queue('\Flexio\Jobs\ProcessHandler::decrementProcessCount', array());
+        }
 
         $php_stream_handle = \Flexio\System\System::openPhpInputStream();
         $post_content_type = \Flexio\System\System::getPhpInputStreamContentType();
