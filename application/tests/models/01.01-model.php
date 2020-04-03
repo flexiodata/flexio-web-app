@@ -164,9 +164,14 @@ class Test
         \Flexio\Tests\Check::assertString('C.2', 'Model status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
+        $actual = \Model::STATUS_UPDATING;
+        $expected = 'U';
+        \Flexio\Tests\Check::assertString('C.3', 'Model status constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
         $actual = \Model::STATUS_AVAILABLE;
         $expected = 'A';
-        \Flexio\Tests\Check::assertString('C.3', 'Model status constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.4', 'Model status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::STATUS_DELETED;

@@ -156,6 +156,7 @@ class Model
 
     public const STATUS_UNDEFINED = '';
     public const STATUS_PENDING   = 'P';
+    public const STATUS_UPDATING  = 'U';
     public const STATUS_AVAILABLE = 'A';
     public const STATUS_DELETED   = 'D';
 
@@ -337,6 +338,7 @@ class Model
                 return false;
 
             case \Model::STATUS_PENDING:
+            case \Model::STATUS_UPDATING:
             case \Model::STATUS_AVAILABLE:
             case \Model::STATUS_DELETED:
                 return true;
