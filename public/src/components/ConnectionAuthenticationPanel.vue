@@ -152,7 +152,21 @@
               placeholder="Base Path (optional)"
               spellcheck="false"
               v-model="edit_connection_info.base_path"
-            />
+            >
+              <BrowsePopover
+                slot="append"
+                :placement="'bottom-end'"
+                :width="500"
+                :connection="edit_connection"
+              >
+                <el-button
+                  class="ttu fw6"
+                  slot="reference"
+                >
+                  Browse
+                </el-button>
+              </BrowsePopover>
+            </el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -206,6 +220,7 @@
   import * as ctypes from '@/constants/connection-type'
   import * as cinfos from '@/constants/connection-info'
   import BuilderItemForm from '@/components/BuilderItemForm'
+  import BrowsePopover from '@/components/BrowsePopover'
   import TextSeparator from '@/components/TextSeparator'
   import MixinOauth from '@/components/mixins/oauth'
   import MixinConnection from '@/components/mixins/connection'
@@ -255,6 +270,7 @@
     mixins: [MixinOauth, MixinConnection],
     components: {
       BuilderItemForm,
+      BrowsePopover,
       TextSeparator,
     },
     watch: {
