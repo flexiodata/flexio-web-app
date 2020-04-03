@@ -373,27 +373,13 @@ class Pipe
         // create a new process object for storing process info
         $process_store = \Flexio\Object\Process::create($process_properties);
 
-        // create a new process engine for running a process
+        // create a new process engine for running a process; only add
+        // mount parameters if we're running passthrough mode; otherwise,
+        // the cache has already been built and mount parametesr aren't needed
         $process_engine = \Flexio\Jobs\Process::create();
-
-        if ($pipe_run_mode !== \Model::PIPE_RUN_MODE_PASSTHROUGH)
-        {
-            // if we're not running in passthrough, then we're doing an
-            // index lookup against the cache, so the mount parameters aren't
-            // needed; also, we don't need to increment/decrement the count
-            // since the search is fast
-            $process_engine->queue('\Flexio\Jobs\Task::run', $process_properties['task']);
-        }
-         else
-        {
-            // if we're running in passthrough, we may be running something, so
-            // we need the mount parameters, and also a constraint to make sure
-            // that not too many jobs are run at once
-            $process_engine->queue('\Flexio\Jobs\ProcessHandler::incrementProcessCount', array());
+        if ($pipe_run_mode == \Model::PIPE_RUN_MODE_PASSTHROUGH)
             $process_engine->queue('\Flexio\Jobs\ProcessHandler::addMountParams', $process_properties);
-            $process_engine->queue('\Flexio\Jobs\Task::run', $process_properties['task']);
-            $process_engine->queue('\Flexio\Jobs\ProcessHandler::decrementProcessCount', array());
-        }
+        $process_engine->queue('\Flexio\Jobs\Task::run', $process_properties['task']);
 
         $php_stream_handle = \Flexio\System\System::openPhpInputStream();
         $post_content_type = \Flexio\System\System::getPhpInputStreamContentType();
@@ -401,7 +387,17 @@ class Pipe
 
         // create a process host to connect the store/engine and run the process
         $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
+
+        // run the job; only increment/decrement the process count if we're running in passthrough;
+        // do this manually so that the increment/decrement happen regardless of whether or not
+        // the process has an error
+        if ($pipe_run_mode === \Model::PIPE_RUN_MODE_PASSTHROUGH)
+            \Flexio\Jobs\ProcessHandler::incrementProcessCount($process_engine, array());
+
         $process_host->run(false /*true: run in background*/);
+
+        if ($pipe_run_mode === \Model::PIPE_RUN_MODE_PASSTHROUGH)
+            \Flexio\Jobs\ProcessHandler::decrementProcessCount($process_engine, array());
 
         // return the result
         if ($process_engine->hasError())
