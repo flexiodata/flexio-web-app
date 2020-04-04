@@ -8,7 +8,7 @@ const isLocalhost = () => {
 }
 
 const hasActiveUser = () => {
- return store.state.users.active_user_eid.length > 0
+ return _.get(store.state, 'users.active_user_eid', '').length > 0
 }
 
 const canProceed = () => {
@@ -72,7 +72,7 @@ router.beforeEach((to, from, next) => {
     goNext()
   } else {
     // we're already fetching the user; we're done
-    if (store.state.users.is_signing_in || store.state.users.is_initializing) {
+    if (_.get(store.state, 'users.is_signing_in') || _.get(store.state, 'users.is_initializing')) {
       debugRoute('already fetching user:', to)
       return
     }
