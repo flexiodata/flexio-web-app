@@ -6,9 +6,10 @@
     v-model="is_visible"
   >
     <FileChooser
-      style="max-height: 60vh"
+      style="min-height: 250px; height: 36vh"
       :connection="connection"
       :selected-items.sync="files"
+      v-on="$listeners"
       v-bind="file_chooser_opts"
     />
     <slot name="reference" slot="reference">Browse</slot>

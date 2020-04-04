@@ -157,7 +157,13 @@
                 slot="append"
                 :placement="'bottom-end'"
                 :width="500"
-                :connection="edit_connection"
+                :connection="browse_connection"
+                :fileChooserOptions="{
+                  columns: ['name'],
+                  foldersOnly: true,
+                  allowMultiple: false
+                }"
+                @selection-change="onBasepathBrowsePathChange"
               >
                 <el-button
                   class="ttu fw6"
@@ -236,6 +242,7 @@
   const getDefaultState = () => {
     return {
       is_emitting_update: false,
+      is_updating_basepath: false,
       test_state: 'none', // none, testing, error, success
       forms: {
         amazons3,
@@ -254,6 +261,7 @@
       // edit values
       edit_connection: {},
       edit_connection_info: {},
+      browse_connection: {}, // we can't use 'edit_connection' for the browse popover; it results in an infinite loop of updates
       github_url: '',
       shopify_store_name: '',
       pipedrive_company_domain: ''
@@ -404,6 +412,7 @@
         // reset local objects
         this.edit_connection = _.assign({}, this.edit_connection, _.cloneDeep(this.connection))
         this.edit_connection_info = _.cloneDeep(_.get(this.connection, 'connection_info', {}))
+        this.browse_connection = _.cloneDeep(this.edit_connection)
 
         // set up value for GitHub repo URL input model
         if (this.is_github) {
@@ -523,6 +532,8 @@
                 var connection_status = _.get(response.data, 'connection_status', '')
                 this.updateEditConnection({ connection_status })
 
+                this.browse_connection = _.cloneDeep(this.edit_connection)
+
                 this.$nextTick(() => {
                   if (this.is_connected) {
                     this.$message({
@@ -542,6 +553,23 @@
             }
           })
         }
+      },
+      onBasepathBrowsePathChange(items, path) {
+        if (this.is_updating_basepath === true ) {
+          return
+        }
+
+        this.is_updating_basepath = true
+
+        var edit_path = path.substring(path.indexOf('/'))
+        if (edit_path == '/') {
+          edit_path = ''
+        }
+
+        var base_path = edit_path
+        this.edit_connection_info = _.assign({}, this.edit_connection_info, { base_path })
+
+        this.$nextTick(() => { this.is_updating_basepath = false })
       },
       onValuesChange(values) {
         this.edit_connection_info = _.assign({}, this.edit_connection_info, values)

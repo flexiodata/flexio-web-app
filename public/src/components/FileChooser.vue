@@ -43,6 +43,7 @@
 <script>
   import { mapGetters } from 'vuex'
   import * as connections from '@/constants/connection-info'
+  import { OBJECT_STATUS_PENDING } from '@/constants/object-status'
   import FileExplorerBar from '@/components/FileExplorerBar'
   import FileChooserList from '@/components/FileChooserList'
   import ConnectionList from '@/components/ConnectionList'
@@ -136,8 +137,10 @@
         this.$emit('open-folder', this.connection_path)
       },
       getConnectionIdentifier() {
-        var cid = _.get(this.active_connection, 'name', '')
-        return cid.length > 0 ? cid : _.get(this.active_connection, 'eid', '')
+        var cname = _.get(this.active_connection, 'name', '')
+        var eid = _.get(this.active_connection, 'eid', '')
+        var is_pending = _.get(this.active_connection, 'eid_status', '') === OBJECT_STATUS_PENDING
+        return is_pending ? eid : cname.length > 0 ? cname : eid
       },
       getConnectionBasePath() {
         // Flex.io connection now has a name of 'flex'... keeping this for reference for a bit...
