@@ -285,8 +285,13 @@ class Mount
                 while (($data = $streamreader->read(32768)) !== false)
                     $streamwriter->write($data);
 
-                // run the initial conversion
+                // load the data into the index
+                $elastic_search_params = array(
+                    'index' => $pipe_properties['eid'],
+                    'structure' => array() // index currently creates implicit structure from content; if explicity structure is needed, do the conversion first
+                );
                 $process_engine->queue('\Flexio\Jobs\Convert::run', array('input' => array('format' => 'csv'), 'output' => array('format' => 'table')));
+                $process_engine->queue('\Flexio\Jobs\ProcessHandler::saveStdoutToElasticSearch', $elastic_search_params);
                 $process_engine->run();
 
                 // get the structure and set the various pipe info
@@ -328,19 +333,8 @@ class Mount
                     '"*"'
                 );
 
-                // provide pipe info while indexing is loaded
-                $p->set(array('params' => $pipe_params_info, 'examples' => $pipe_params_examples, 'returns' => $pipe_returns_info));
-
-                // load the converted data into the index
-                $elastic_search_params = array(
-                    'index' => $pipe_properties['eid'],
-                    'structure' => $pipe_returns_info
-                );
-                $process_engine->queue('\Flexio\Jobs\ProcessHandler::saveStdoutToElasticSearch', $elastic_search_params);
-                $process_engine->run();
-
-                // pipe is ready
-                $p->set(array('eid_status' => \Model::STATUS_AVAILABLE));
+                // update the pipe info
+                $p->set(array('eid_status' => \Model::STATUS_AVAILABLE, 'params' => $pipe_params_info, 'examples' => $pipe_params_examples, 'returns' => $pipe_returns_info));
             }
             else
             {
