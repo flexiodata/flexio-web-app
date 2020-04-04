@@ -71,7 +71,8 @@ RUN pip3 install zmq && \
     pip3 install boto3 && \
     pip3 install mysql-connector && \
     pip3 install selenium && \
-    pip3 install newspaper3k
+    pip3 install newspaper3k && \
+    pip3 install pytrends
 
 
 RUN cd /tmp && wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
