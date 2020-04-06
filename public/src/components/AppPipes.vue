@@ -73,7 +73,22 @@
           </div>
 
           <!-- list -->
-          <div style="max-width: 20rem" v-bar>
+          <div
+            style="max-width: 20rem"
+            v-show="pipe_list_filter.length > 0 && filtered_pipes.length == 0"
+          >
+            <div
+              class="lh-title silver i"
+              style="padding: 2px 0 2px 8px; margin: 0 12px 0 0; font-size: 13px"
+            >
+              There are no functions that match the search criteria
+            </div>
+          </div>
+          <div
+            style="max-width: 20rem"
+            v-show="filtered_pipes.length > 0"
+            v-bar
+          >
             <el-collapse
               class="el-collapse--plain el-collapse--arrow-left"
               v-model="expanded_groups"
@@ -82,6 +97,7 @@
                 style="margin-left: 8px"
                 :key="group.id"
                 :name="group.id"
+                v-show="group.pipes.length > 0"
                 v-for="group in grouped_pipes"
               >
                 <div
