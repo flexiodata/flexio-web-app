@@ -51,7 +51,6 @@ class Mount
             return;
 
         // set the status to updating
-        $original_status = $connection_info['eid_status'];
         $object->getConnection()->set(array('eid_status' => \Model::STATUS_UPDATING));
 
         // delete the pipes that are no longer in the connection
@@ -68,7 +67,7 @@ class Mount
         $object->populatePipeIndexCaches();
 
         // set the status back to what it was
-        $object->getConnection()->set(array('eid_status' => $original_status));
+        $object->getConnection()->set(array('eid_status' => \Model::STATUS_AVAILABLE));
     }
 
     public static function delete(\Flexio\Jobs\Process $process, array $callback_params) : void

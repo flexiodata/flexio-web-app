@@ -390,6 +390,9 @@ class Connection
         if ($connection->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PIPE_UPDATE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
+        // set the status to updating
+        $connection->set(array('eid_status' => \Model::STATUS_UPDATING));
+
         // if the process is created with a request from an api token, it's
         // triggered with an api; if there's no api token, it's triggered
         // from a web session, in which case it's triggered by the UI;
@@ -415,9 +418,9 @@ class Connection
         $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
         $process_host->run(true /*true: run in background*/);
 
-        // return information about the process
+        // return information about the connection
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api\Response::sendContent($process_store->get());
+        \Flexio\Api\Response::sendContent($connection->get());
 
         // if we're not running in background mode, use the following to return
         // the pipe information
