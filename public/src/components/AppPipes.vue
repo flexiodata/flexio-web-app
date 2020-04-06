@@ -574,7 +574,8 @@ def flex_handler(flex):
         if (identifier) {
           pipe = _.find(this.sorted_pipes, p => p.eid == identifier || p.name == identifier)
         } else {
-          pipe = _.first(this.sorted_pipes)
+          var group = _.first(this.grouped_pipes)
+          pipe = _.first(group.pipes)
         }
 
         this.selectPipe(pipe)
