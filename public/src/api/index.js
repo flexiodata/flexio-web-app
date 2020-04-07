@@ -49,7 +49,7 @@ export default {
   populatePipeCache:              (team_name, object_name)        => AxiosResource(team_name)[POS] (`/pipes/${object_name}/populatecache`),
 
   // connections
-  fetchConnections:               (team_name)                     => AxiosResource(team_name)[GET] (`/connections`),
+  fetchConnections:               (team_name, params)             => AxiosResource(team_name)[GET] (`/connections`, params),
   fetchConnection:                (team_name, object_name)        => AxiosResource(team_name)[GET] (`/connections/${object_name}`),
   createConnection:               (team_name, attrs)              => AxiosResource(team_name)[POS] (`/connections`, attrs),
   updateConnection:               (team_name, object_name, attrs) => AxiosResource(team_name)[POS] (`/connections/${object_name}`, attrs),

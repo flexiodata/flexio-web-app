@@ -98,7 +98,7 @@ const actions = {
     })
   },
 
-  'fetch' ({ commit }, { team_name, eid, name }) {
+  'fetch' ({ commit }, { team_name, eid, name, params }) {
     if (eid || name) {
       // fetching a single item
       return api.fetchPipe(team_name, eid || name).then(response => {
@@ -111,7 +111,7 @@ const actions = {
       // fetching a collection of items
       commit('FETCHING_PIPES', true)
 
-      return api.fetchPipes(team_name).then(response => {
+      return api.fetchPipes(team_name, params).then(response => {
         commit('FETCHED_PIPES', response.data)
         commit('FETCHING_PIPES', false)
         return response

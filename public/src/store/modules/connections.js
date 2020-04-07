@@ -101,7 +101,7 @@ const actions = {
     })
   },
 
-  'fetch' ({ commit }, { team_name, eid, name }) {
+  'fetch' ({ commit }, { team_name, eid, name, params }) {
     if (eid || name) {
       // fetching a single item
       return api.fetchConnection(team_name, eid || name).then(response => {
@@ -114,7 +114,7 @@ const actions = {
       // fetching a collection of items
       commit('FETCHING_CONNECTIONS', true)
 
-      return api.fetchConnections(team_name).then(response => {
+      return api.fetchConnections(team_name, params).then(response => {
         commit('FETCHED_CONNECTIONS', response.data)
         commit('FETCHING_CONNECTIONS', false)
         return response

@@ -39,7 +39,7 @@ export default {
         axios.all([
           dispatch('teams/fetch', { team_name: active_username }),
           dispatch('members/fetch', { team_name }),
-          dispatch('connections/fetch', { team_name }),
+          dispatch('connections/fetch', { team_name, params: { eid_status: 'A,U' } }),
           dispatch('integrations/fetch'),
         ])
         .then(axios.spread((teams_response, members_response, connections_response) => {

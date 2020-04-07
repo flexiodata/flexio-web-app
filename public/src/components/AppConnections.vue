@@ -220,7 +220,7 @@
         var team_name = this.active_team_name
 
         if (!this.is_fetched && !this.is_fetching) {
-          this.$store.dispatch('connections/fetch', { team_name })
+          this.$store.dispatch('connections/fetch', { team_name, params: { eid_status: 'A,U' } })
         }
       },
       onUpdateConnection(connection) {
