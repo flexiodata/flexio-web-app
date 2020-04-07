@@ -56,7 +56,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         // which is either on or off.  When on, the requests must be signed with
         // the Signature V4 algorithm; when off, HTTP basic authentication is used
         // HTTP basic authentication is not supported on AWS
-        $use_aws_iam = (($param['type'] ?? '') == 'elasticsearch-aws');
+        $use_aws_iam = (($params['type'] ?? '') == 'elasticsearch-aws');
 
         $service = new self;
         $service->initialize($host, $port, $username, $password, $use_aws_iam);
