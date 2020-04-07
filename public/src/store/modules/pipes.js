@@ -47,6 +47,13 @@ const mutations = {
     state.is_fetched = true
   },
 
+  'MOUNT_FETCHING_PIPES' (state, is_fetching) {
+  },
+
+  'MOUNT_FETCHED_PIPES' (state, items) {
+    addItem(state, items, getDefaultMeta())
+  },
+
   // this is problematic since we key on `eid`, but can now do fetching calls using `name`
   /*
   'FETCHING_PIPE' (state, { eid, name, is_fetching }) {
@@ -113,6 +120,20 @@ const actions = {
         throw error
       })
     }
+  },
+
+  'fetchFromMount' ({ commit }, { team_name, params }) {
+    // fetching a collection of items
+    commit('MOUNT_FETCHING_PIPES', true)
+
+    return api.fetchPipes(team_name, params).then(response => {
+      commit('MOUNT_FETCHED_PIPES', response.data)
+      commit('MOUNT_FETCHING_PIPES', false)
+      return response
+    }).catch(error => {
+      commit('MOUNT_FETCHING_PIPES', false)
+      throw error
+    })
   },
 
   'update' ({ commit }, { team_name, eid, attrs }) {

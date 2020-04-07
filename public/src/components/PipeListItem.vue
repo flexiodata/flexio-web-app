@@ -45,6 +45,7 @@
 </template>
 
 <script>
+  import { OBJECT_STATUS_AVAILABLE } from '@/constants/object-status'
   const DEPLOY_MODE_RUN = 'R'
 
   export default {
@@ -73,6 +74,10 @@
         type: String,
         default: 'item-selected'
       },
+      disabledCls: {
+        type: String,
+        default: 'item-disabled'
+      },
       showDropdown: {
         type: Boolean,
         default: false
@@ -86,8 +91,14 @@
       eid() {
         return _.get(this.item, 'eid', '')
       },
+      eid_status() {
+        return _.get(this.item, 'eid_status', '')
+      },
       pname() {
         return _.get(this.item, 'name', '')
+      },
+      is_available() {
+        return this.eid_status == OBJECT_STATUS_AVAILABLE
       },
       is_selected() {
         return _.get(this.selectedItem, 'eid') === this.eid
@@ -99,8 +110,9 @@
         var cls = this.itemCls
         var size_cls = this.itemCls + '-' + this.itemSize
         var sel_cls = this.is_selected ? this.selectedCls : ''
+        var disable_cls = this.is_available ? '' : this.disabledCls
 
-        return `${cls} ${size_cls} ${sel_cls} hide-child`
+        return `${cls} ${size_cls} ${sel_cls} ${disable_cls} hide-child`
       }
     },
     methods: {
@@ -113,7 +125,9 @@
         }
       },
       onClick: _.debounce(function() {
-        this.$emit('activate', this.item)
+        if (this.is_available) {
+          this.$emit('activate', this.item)
+        }
       }, 500, { 'leading': true, 'trailing': false })
     }
   }
@@ -170,6 +184,9 @@
   .item-selected
     position: relative
     background-color: darken($nearer-white, 1%)
+
+  .item-disabled
+    opacity: 0.4
 
   // -- sizing modifiers --
 

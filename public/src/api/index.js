@@ -40,7 +40,7 @@ export default {
   deleteToken:                    (team_name, object_name)        => AxiosResource(team_name)[DEL] (`/auth/keys/${object_name}`),
 
   // pipes
-  fetchPipes:                     (team_name)                     => AxiosResource(team_name)[GET] (`/pipes`),
+  fetchPipes:                     (team_name, params)             => AxiosResource(team_name)[GET] (`/pipes`, params),
   fetchPipe:                      (team_name, object_name)        => AxiosResource(team_name)[GET] (`/pipes/${object_name}`),
   createPipe:                     (team_name, attrs)              => AxiosResource(team_name)[POS] (`/pipes`, attrs),
   updatePipe:                     (team_name, object_name, attrs) => AxiosResource(team_name)[POS] (`/pipes/${object_name}`, attrs),

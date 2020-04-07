@@ -6,7 +6,7 @@ import {
   updateMeta,
   removeMeta,
 } from '@/store/helpers'
-import { OBJECT_STATUS_AVAILABLE } from '@/constants/object-status'
+import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_UPDATING } from '@/constants/object-status'
 import { sanitizeMasked } from '@/utils'
 
 const CONNECTION_MODE_RESOURCE = 'R'
@@ -18,7 +18,6 @@ const getDefaultMeta = () => {
     is_fetched: false,
     is_testing: false,
     is_disconnecting: false,
-    is_syncing: false,
     /*error: {},*/
   }
 }
@@ -87,10 +86,6 @@ const mutations = {
   'DISCONNECTED_CONNECTION' (state, { eid, item }) {
     updateItem(state, eid, item)
   },
-
-  'SYNCING_FUNCTION_MOUNT' (state, { eid, is_syncing }) {
-    updateMeta(state, eid, { is_syncing })
-  },
 }
 
 const actions = {
@@ -155,11 +150,10 @@ const actions = {
   },
 
   'sync' ({ commit, dispatch }, { team_name, eid }) {
-    commit('SYNCING_FUNCTION_MOUNT', { eid, is_syncing: true })
     return api.syncConnection(team_name, eid).then(response => {
       dispatch('mountPurge', { eid })
-      dispatch('mountPopulate', { items: response.data })
-      commit('SYNCING_FUNCTION_MOUNT', { eid, is_syncing: false })
+      //dispatch('mountPopulate', { items: response.data })
+      commit('UPDATED_CONNECTION', { eid, item: response.data })
       return response
     }).catch(error => {
       throw error
@@ -209,12 +203,14 @@ const actions = {
     }
   },
 
+  /*
   // helper action for adding pipes associated with a function mount
   'mountPopulate' ({ commit }, { items }) {
     // since this call simply returns a list of pipes for now, just commit
     // the `pipes/FETCHED_PIPES` mutation to populate the Vuex store
     commit('pipes/FETCHED_PIPES', items, { root: true })
   },
+  */
 }
 
 const getters = {
@@ -228,7 +224,11 @@ const getters = {
   },
 
   getAvailableFunctionMounts (state, getters) {
-    return _.filter(getters.getAllConnections, { eid_status: OBJECT_STATUS_AVAILABLE, connection_mode: CONNECTION_MODE_FUNCTION })
+    return _.filter(getters.getAllConnections, item => {
+      return item.connection_mode == CONNECTION_MODE_FUNCTION &&
+        (item.eid_status == OBJECT_STATUS_AVAILABLE ||
+         item.eid_status == OBJECT_STATUS_UPDATING)
+    })
   },
 }
 

@@ -97,7 +97,11 @@
                 style="margin-left: 8px"
                 :key="group.id"
                 :name="group.id"
-                v-show="group.pipes.length > 0"
+                v-show="
+                  group.is_updating ||
+                  group.pipes.length > 0 ||
+                  group.pipes.length == 0 && pipe_list_filter.length == 0 // no items to show
+                "
                 v-for="group in grouped_pipes"
               >
                 <div
@@ -117,17 +121,17 @@
                   >
                     home
                   </i>
-                  <div class="flex-fill fw6">{{group.title}}</div>
+                  <div class="truncate flex-fill fw6 mr2">{{group.title}}</div>
                   <el-dropdown
                     trigger="click"
                     v-show="group.id != 'local'"
                   >
-                    <span
+                    <div
                       class="el-dropdown-link pointer mr2"
                       @click.stop
                     >
                       <svg class="octicon octicon-gear black-30 hover-black-60" viewBox="0 0 14 16" version="1.1" width="14" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M14 8.77v-1.6l-1.94-.64-.45-1.09.88-1.84-1.13-1.13-1.81.91-1.09-.45-.69-1.92h-1.6l-.63 1.94-1.11.45-1.84-.88-1.13 1.13.91 1.81-.45 1.09L0 7.23v1.59l1.94.64.45 1.09-.88 1.84 1.13 1.13 1.81-.91 1.09.45.69 1.92h1.59l.63-1.94 1.11-.45 1.84.88 1.13-1.13-.92-1.81.47-1.09L14 8.75v.02zM7 11c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"></path></svg>
-                    </span>
+                    </div>
                     <el-dropdown-menu style="min-width: 10rem" slot="dropdown">
                       <el-dropdown-item
                         class="flex flex-row items-center"
@@ -153,14 +157,16 @@
                 </div>
 
                 <div
-                  style="padding: 2px 0 2px 12px; margin: 0 12px 0 0; font-size: 13px"
-                  v-if="isFunctionMountSyncing(group.connection)"
+                  style="padding: 2px 0 2px 0; margin: 0 12px 4px 0; font-size: 13px"
+                  v-if="group.is_updating"
                 >
-                  <div class="flex flex-row items-center">
-                    <Spinner size="small" />
-                    <span class="ml2">Importing...</span>
+                  <div class="pa3 br2 import-notice">
+                    <div class="flex flex-row items-center">
+                      <Spinner size="small" />
+                      <span class="ml2">Importing...</span>
+                    </div>
+                    <div class="pt2 lh-title silver i">NOTE: Importing from a function mount may take awhile to complete</div>
                   </div>
-                  <div class="pt2 lh-title silver i">NOTE: Importing from a function mount may take awhile to complete</div>
                 </div>
                 <div
                   class="lh-title silver i"
@@ -178,7 +184,6 @@
                   :show-delete="true"
                   @item-activate="selectPipe"
                   @item-delete="tryDeletePipe"
-                  v-else
                 />
               </el-collapse-item>
             </el-collapse>
@@ -277,7 +282,9 @@
 
 <script>
   import randomstring from 'randomstring'
+  import axios from 'axios'
   import { mapState, mapGetters } from 'vuex'
+  import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_UPDATING } from '@/constants/object-status'
   import { btoaUnicode } from '@/utils'
   import Spinner from 'vue-simple-spinner'
   import NewFunctionDropdown from '@/components/NewFunctionDropdown'
@@ -344,6 +351,7 @@ def flex_handler(flex):
       new_connection_attrs: {
         connection_mode: CONNECTION_MODE_FUNCTION
       },
+      polling_function_mounts: [],
     }
   }
 
@@ -376,11 +384,15 @@ def flex_handler(flex):
         handler: 'loadPipe',
         immediate: true
       },
+      updating_function_mounts: {
+        handler: 'pollUpdatingFunctionMounts',
+        immediate: true
+      },
       pipes(val, old_val) {
         if (!this.has_pipe) {
           this.loadPipe(this.route_object_name)
         }
-      }
+      },
     },
     data() {
       return getDefaultState()
@@ -394,6 +406,9 @@ def flex_handler(flex):
       }),
       function_mounts() {
         return this.getAvailableFunctionMounts()
+      },
+      updating_function_mounts() {
+        return _.filter(this.function_mounts, { eid_status: OBJECT_STATUS_UPDATING })
       },
       pipes() {
         return this.getAllPipes()
@@ -424,6 +439,7 @@ def flex_handler(flex):
           return {
             id: key.length == 0 ? 'local' : key,
             icon: _.get(connection, 'icon', ''),
+            is_updating: _.get(connection, 'eid_status', '') == OBJECT_STATUS_UPDATING,
             connection_type: _.get(connection, 'connection_type', ''),
             title: key.length == 0 ? 'My Functions' : _.get(connection, 'name', `Not found (${key})`),
             pipes: _.sortBy(val, ['name']),
@@ -565,8 +581,49 @@ def flex_handler(flex):
           this.expanded_groups = this.expanded_groups.concat([eid])
         }
       },
-      isFunctionMountSyncing(connection) {
-        return _.get(connection, 'vuex_meta.is_syncing', false)
+      pollUpdatingFunctionMounts() {
+        this.updating_function_mounts.forEach(mount => {
+          var mount_eid = _.get(mount, 'eid', '')
+          if (this.polling_function_mounts.indexOf(mount_eid) == -1) {
+            console.log('here')
+            this.pollUpdatingFunctionMount(mount)
+          }
+        })
+      },
+      pollUpdatingFunctionMount(mount) {
+        var team_name = this.active_team_name
+        var eid = _.get(mount, 'eid', '')
+        var params = {
+          parent_eid: eid,
+          eid_status: 'A,P'
+        }
+
+        if (eid.length > 0) {
+          // make sure we know we're polling this connection
+          if (this.polling_function_mounts.indexOf(eid) == -1) {
+            this.polling_function_mounts.push(eid)
+          }
+
+          // query these objects fresh
+          axios.all([
+            this.$store.dispatch('connections/fetch', { team_name, eid }),
+            this.$store.dispatch('pipes/fetchFromMount', { team_name, params }),
+          ])
+          .then(axios.spread((connections_response, pipes_response) => {
+            var mount = connections_response.data
+            var status = _.get(mount, 'eid_status', '')
+
+            if (status == OBJECT_STATUS_UPDATING) {
+              setTimeout(() => { this.pollUpdatingFunctionMount(mount) }, 1000)
+            } else if (status == OBJECT_STATUS_AVAILABLE) {
+              // make sure we know we're no longer polling this connection
+              this.polling_function_mounts = _.filter(this.polling_function_mounts, val => val != eid)
+            }
+          }))
+          .catch(() => {
+
+          })
+        }
       },
       loadPipe(identifier) {
         var pipe
@@ -574,8 +631,14 @@ def flex_handler(flex):
         if (identifier) {
           pipe = _.find(this.sorted_pipes, p => p.eid == identifier || p.name == identifier)
         } else {
+          // select the first pipe in the first group
           var group = _.first(this.grouped_pipes)
           pipe = _.first(group.pipes)
+
+          // fallback scenario
+          if (_.isNil(pipe)) {
+            pipe = _.first(this.sorted_pipes)
+          }
         }
 
         this.selectPipe(pipe)
@@ -717,4 +780,10 @@ def flex_handler(flex):
     margin-right: 8px
     max-height: 24px
     max-width: 48px
+
+  .import-notice
+    // match blue background and text color from hover menu item
+    //color: rgba(102, 177, 255, 1)
+    //border: 1px solid rgba(102, 177, 255, 0.25)
+    background: rgba(236, 245, 255, 0.75)
 </style>
