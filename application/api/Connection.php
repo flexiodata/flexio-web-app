@@ -390,8 +390,22 @@ class Connection
         if ($connection->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PIPE_UPDATE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        // set the status to updating
+        // make sure we're on a function mount
+        $connection_info = $connection->get();
+        if ($connection_info['connection_mode'] !== \Model::CONNECTION_MODE_FUNCTION)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+
+        // update the connection and delete associated pipes; note: the mount job
+        // also does this, but we want to do this while still blocking so that the
+        // result from this function shows the status change and doesn't return
+        // any associated pipes; TODO: should we make something in the job that
+        // allows initial job stuff to be set in non-blocking mode before the job
+        // runs?
         $connection->set(array('eid_status' => \Model::STATUS_UPDATING));
+        $pipe_model = \Flexio\System\System::getModel()->pipe;
+        $pipes_to_update = array('parent_eid' => $connection->getEid());
+        $process_arr = array('eid_status' => \Model::STATUS_DELETED, 'name' => '');
+        $pipe_model->update($pipes_to_update, $process_arr);
 
         // if the process is created with a request from an api token, it's
         // triggered with an api; if there's no api token, it's triggered
