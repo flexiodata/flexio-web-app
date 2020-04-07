@@ -51,9 +51,15 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         $port = intval($validated_params['port']);
         $username = $validated_params['username'];
         $password = $validated_params['password'];
+ 
+        // AWS elasticsearch services uses IAM for access control; this is a mode
+        // which is either on or off.  When on, the requests must be signed with
+        // the Signature V4 algorithm; when off, HTTP basic authentication is used
+        // HTTP basic authentication is not supported on AWS
+        $use_aws_iam = (($param['type'] ?? '') == 'elasticsearch-aws');
 
         $service = new self;
-        $service->initialize($host, $port, $username, $password);
+        $service->initialize($host, $port, $username, $password, $use_aws_iam);
 
         return $service;
     }
@@ -64,12 +70,13 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
     public function connect() : bool
     {
+        $use_aws_iam = $this->use_aws_iam;
         $host = $this->host;
         $port = $this->port;
         $username = $this->username;
         $password = $this->password;
 
-        if ($this->initialize($host, $port, $username, $password) === false)
+        if ($this->initialize($host, $port, $username, $password, $use_aws_iam) === false)
             return false;
 
         return true;
@@ -205,6 +212,8 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             return array();
 
         // get the indexes
+
+        /*
         $url = $this->getHostUrlString() . '/_stats';
         $auth = $this->getBasicAuthString();
 
@@ -220,7 +229,14 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         $result = curl_exec($ch);
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
+        */
 
+        $url = $this->getHostUrlString() . '/_stats';
+        $request = new GuzzleHttp\Psr7\Request('GET', $url);
+        $response = $this->sendWithCredentials($request);
+
+        $httpcode = $response->getStatusCode();
+        $result = $response->getBody();
         if ($httpcode < 200 || $httpcode > 299)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
@@ -261,6 +277,10 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             );
             $query_str = http_build_query($query_params);
 
+
+
+            /*
+
             $url = $this->getHostUrlString() . '/' . urlencode($index) . '?' . $query_str;
             $auth = $this->getBasicAuthString();
             $content_type = 'application/json';
@@ -278,7 +298,14 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             $result = curl_exec($ch);
             $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
+            */
 
+            $url = $this->getHostUrlString() . '/' . urlencode($index) . '?' . $query_str;
+            $request = new GuzzleHttp\Psr7\Request('DELETE', $url);
+            $response = $this->sendWithCredentials($request);
+
+            $httpcode = $response->getStatusCode();
+            $result = $response->getBody();
             if ($httpcode < 200 || $httpcode > 299)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
 
@@ -321,6 +348,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
                 $index_configuration['mappings'] = $index_mapping_info['mappings'];
             }
 
+            /*
             // create the index with the specified mapping
             $url = $this->getHostUrlString() . '/' . urlencode($index);
             $auth = $this->getBasicAuthString();
@@ -340,7 +368,14 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             $result = curl_exec($ch);
             $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
+            */
 
+            $url = $this->getHostUrlString() . '/' . urlencode($index) . '?' . $query_str;
+            $request = new GuzzleHttp\Psr7\Request('PUT', $url, ['Content-Type' => 'application/json'], json_encode($index_configuration));
+            $response = $this->sendWithCredentials($request);
+
+            $httpcode = $response->getStatusCode();
+            $result = $response->getBody();
             if ($httpcode < 200 || $httpcode > 299)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
@@ -380,6 +415,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             );
             $query_str = http_build_query($query_params);
 
+            /*
             $url = $this->getHostUrlString() . '/_bulk?' . $query_str;
             $auth = $this->getBasicAuthString();
             $content_type = 'application/x-ndjson'; // use ndjson for bulk operations
@@ -398,6 +434,14 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             $result = curl_exec($ch);
             $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
+            */
+
+            $url = $this->getHostUrlString() . '/_bulk?' . $query_str;
+            $request = new GuzzleHttp\Psr7\Request('POST', $url, ['Content-Type' => 'application/x-ndjson'], $index_write_string); // use ndjson for bulk operations
+            $response = $this->sendWithCredentials($request);
+
+            $httpcode = $response->getStatusCode();
+            $result = $response->getBody();
 
             if ($httpcode < 200 || $httpcode > 299)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
@@ -428,6 +472,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             );
             $query_str = http_build_query($query_params);
 
+            /*
             $url = $this->getHostUrlString() . '/' . urlencode($index) . '/_search?' . $query_str;
             $auth = $this->getBasicAuthString();
             $content_type = 'application/json';
@@ -446,7 +491,14 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             $result = curl_exec($ch);
             $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
+            */
 
+            $url = $this->getHostUrlString() . '/' . urlencode($index) . '/_search?' . $query_str;
+            $request = new GuzzleHttp\Psr7\Request('POST', $url, ['Content-Type' => 'application/json'], $index_write_string);
+            $response = $this->sendWithCredentials($request);
+
+            $httpcode = $response->getStatusCode();
+            $result = $response->getBody();
             if ($httpcode < 200 || $httpcode > 299)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
@@ -482,6 +534,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         // TODO: parallels testConnection function; factor?
         try
         {
+            /*
             $url = $this->getHostUrlString();
             $auth = $this->getBasicAuthString();
 
@@ -497,7 +550,14 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             $result = curl_exec($ch);
             $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
+            */
 
+            $url = $this->getHostUrlString();
+            $request = new GuzzleHttp\Psr7\Request('GET', $url);
+            $response = $this->sendWithCredentials($request);
+
+            $httpcode = $response->getStatusCode();
+            $result = $response->getBody();
             if ($httpcode < 200 || $httpcode > 299)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_DATABASE);
 
@@ -520,8 +580,9 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         }
     }
 
-    private function initialize(string $host, int $port, string $username, string $password) : bool
+    private function initialize(string $host, int $port, string $username, string $password, bool $use_aws_iam = false) : bool
     {
+        $this->use_aws_iam = $use_aws_iam;
         $this->host = $host;
         $this->port = $port;
         $this->username = $username;
@@ -542,6 +603,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         // test the connection
         try
         {
+            /*
             $url = $this->getHostUrlString();
             $auth = $this->getBasicAuthString();
 
@@ -557,7 +619,14 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             $result = curl_exec($ch);
             $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
+            */
 
+            $url = $this->getHostUrlString();
+            $request = new GuzzleHttp\Psr7\Request('GET', $url);
+            $response = $this->sendWithCredentials($request);
+
+            $httpcode = $response->getStatusCode();
+            $result = $response->getBody();
             if ($httpcode < 200 || $httpcode > 299)
                 return false;
 
@@ -702,4 +771,26 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         $name = ltrim($name,'/');
         return strtolower($name);
     }
+
+
+    private function sendWithCredentials(GuzzleHttp\Psr7\Request $request)
+    {
+        $client = new \GuzzleHttp\Client();
+        $options = [];
+
+        if (($this->use_aws_iam ?? false))
+        {
+            $credentials = new Aws\Credentials\Credentials($this->username, $this->password);
+            $signer = new Aws\Signature\SignatureV4('es', 'us-east-1');
+            $request = $signer->signRequest($request, $credentials);
+        }
+        else
+        {
+            $options = [ 'auth' => [ $this->username, $this->password ] ];
+        }
+
+        return $client->send($request, $options);
+    }
+
+
 }
