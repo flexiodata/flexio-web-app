@@ -785,8 +785,8 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
         if (($this->use_aws_iam ?? false))
         {
-            $credentials = new Aws\Credentials\Credentials($this->username, $this->password);
-            $signer = new Aws\Signature\SignatureV4('es', 'us-east-1');
+            $credentials = new \Aws\Credentials\Credentials($this->username, $this->password);
+            $signer = new \Aws\Signature\SignatureV4('es', 'us-east-1');
             $request = $signer->signRequest($request, $credentials);
         }
         else
