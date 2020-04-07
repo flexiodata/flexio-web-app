@@ -653,6 +653,11 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
     private function getHostUrlString() : string
     {
+        if (($this->use_aws_iam ?? false))
+        {
+            return 'https://' . $this->host;
+        }
+
         return 'http://' . $this->host . ':' . (string)$this->port;
     }
 
