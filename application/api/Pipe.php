@@ -261,7 +261,7 @@ class Pipe
                     'array' => true, // explode parameter into array, each element of which must satisfy type/enum
                     'type' => 'string',
                     'default' => \Model::STATUS_AVAILABLE,
-                    'enum' => [\Model::STATUS_AVAILABLE, \Model::STATUS_PENDING]),
+                    'enum' => [\Model::STATUS_AVAILABLE, \Model::STATUS_PENDING, \Model::STATUS_UPDATING]),
                 'parent_eid'  => array(
                     'required' => false,
                     'array' => true, // explode parameter into array, each element of which must satisfy type/enum
