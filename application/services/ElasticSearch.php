@@ -653,11 +653,11 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
     private function getHostUrlString() : string
     {
-        if ($this->port == 80)
+        if ((string)$this->port == "80")
         {
             return 'http://' . $this->host;
         }
-        else if (($this->use_aws_iam ?? false) || $this->port == 443)
+        else if (($this->use_aws_iam ?? false) || (string)$this->port == "443")
         {
             return 'https://' . $this->host;
         }
