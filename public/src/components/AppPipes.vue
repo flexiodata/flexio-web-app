@@ -585,7 +585,6 @@ def flex_handler(flex):
         this.updating_function_mounts.forEach(mount => {
           var mount_eid = _.get(mount, 'eid', '')
           if (this.polling_function_mounts.indexOf(mount_eid) == -1) {
-            console.log('here')
             this.pollUpdatingFunctionMount(mount)
           }
         })
