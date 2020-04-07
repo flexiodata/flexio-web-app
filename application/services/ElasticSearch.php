@@ -236,7 +236,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         $response = $this->sendWithCredentials($request);
 
         $httpcode = $response->getStatusCode();
-        $result = $response->getBody();
+        $result = (string)$response->getBody();
         if ($httpcode < 200 || $httpcode > 299)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
@@ -305,7 +305,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             $response = $this->sendWithCredentials($request);
 
             $httpcode = $response->getStatusCode();
-            $result = $response->getBody();
+            $result = (string)$response->getBody();
             if ($httpcode < 200 || $httpcode > 299)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
 
@@ -375,7 +375,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             $response = $this->sendWithCredentials($request);
 
             $httpcode = $response->getStatusCode();
-            $result = $response->getBody();
+            $result = (string)$response->getBody();
             if ($httpcode < 200 || $httpcode > 299)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
@@ -441,7 +441,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             $response = $this->sendWithCredentials($request);
 
             $httpcode = $response->getStatusCode();
-            $result = $response->getBody();
+            $result = (string)$response->getBody();
 
             if ($httpcode < 200 || $httpcode > 299)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
@@ -498,7 +498,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             $response = $this->sendWithCredentials($request);
 
             $httpcode = $response->getStatusCode();
-            $result = $response->getBody();
+            $result = (string)$response->getBody();
             if ($httpcode < 200 || $httpcode > 299)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
@@ -557,7 +557,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             $response = $this->sendWithCredentials($request);
 
             $httpcode = $response->getStatusCode();
-            $result = $response->getBody();
+            $result = (string)$response->getBody();
             if ($httpcode < 200 || $httpcode > 299)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_DATABASE);
 
@@ -626,7 +626,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             $response = $this->sendWithCredentials($request);
 
             $httpcode = $response->getStatusCode();
-            $result = $response->getBody();
+            $result = (string)$response->getBody();
             if ($httpcode < 200 || $httpcode > 299)
                 return false;
 
