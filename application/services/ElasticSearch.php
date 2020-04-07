@@ -232,7 +232,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         */
 
         $url = $this->getHostUrlString() . '/_stats';
-        $request = new GuzzleHttp\Psr7\Request('GET', $url);
+        $request = new \GuzzleHttp\Psr7\Request('GET', $url);
         $response = $this->sendWithCredentials($request);
 
         $httpcode = $response->getStatusCode();
@@ -301,7 +301,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             */
 
             $url = $this->getHostUrlString() . '/' . urlencode($index) . '?' . $query_str;
-            $request = new GuzzleHttp\Psr7\Request('DELETE', $url);
+            $request = new \GuzzleHttp\Psr7\Request('DELETE', $url);
             $response = $this->sendWithCredentials($request);
 
             $httpcode = $response->getStatusCode();
@@ -371,7 +371,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             */
 
             $url = $this->getHostUrlString() . '/' . urlencode($index) . '?' . $query_str;
-            $request = new GuzzleHttp\Psr7\Request('PUT', $url, ['Content-Type' => 'application/json'], json_encode($index_configuration));
+            $request = new \GuzzleHttp\Psr7\Request('PUT', $url, ['Content-Type' => 'application/json'], json_encode($index_configuration));
             $response = $this->sendWithCredentials($request);
 
             $httpcode = $response->getStatusCode();
@@ -437,7 +437,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             */
 
             $url = $this->getHostUrlString() . '/_bulk?' . $query_str;
-            $request = new GuzzleHttp\Psr7\Request('POST', $url, ['Content-Type' => 'application/x-ndjson'], $index_write_string); // use ndjson for bulk operations
+            $request = new \GuzzleHttp\Psr7\Request('POST', $url, ['Content-Type' => 'application/x-ndjson'], $index_write_string); // use ndjson for bulk operations
             $response = $this->sendWithCredentials($request);
 
             $httpcode = $response->getStatusCode();
@@ -494,7 +494,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             */
 
             $url = $this->getHostUrlString() . '/' . urlencode($index) . '/_search?' . $query_str;
-            $request = new GuzzleHttp\Psr7\Request('POST', $url, ['Content-Type' => 'application/json'], $index_write_string);
+            $request = new \GuzzleHttp\Psr7\Request('POST', $url, ['Content-Type' => 'application/json'], $index_write_string);
             $response = $this->sendWithCredentials($request);
 
             $httpcode = $response->getStatusCode();
@@ -553,7 +553,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             */
 
             $url = $this->getHostUrlString();
-            $request = new GuzzleHttp\Psr7\Request('GET', $url);
+            $request = new \GuzzleHttp\Psr7\Request('GET', $url);
             $response = $this->sendWithCredentials($request);
 
             $httpcode = $response->getStatusCode();
@@ -622,7 +622,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             */
 
             $url = $this->getHostUrlString();
-            $request = new GuzzleHttp\Psr7\Request('GET', $url);
+            $request = new \GuzzleHttp\Psr7\Request('GET', $url);
             $response = $this->sendWithCredentials($request);
 
             $httpcode = $response->getStatusCode();
@@ -773,7 +773,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
     }
 
 
-    private function sendWithCredentials(GuzzleHttp\Psr7\Request $request)
+    private function sendWithCredentials(\GuzzleHttp\Psr7\Request $request)
     {
         $client = new \GuzzleHttp\Client();
         $options = [];
