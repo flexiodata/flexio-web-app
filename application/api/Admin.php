@@ -35,7 +35,7 @@ class Admin
         $elasticsearch_connection_info = \Flexio\System\System::getSearchCacheConfig();
         $elasticsearch = \Flexio\Services\ElasticSearch::create($elasticsearch_connection_info);
         $search_cache_version = array();
-        if ($elasticsearch_connection_info['type'] === 'elasticsearch')
+        if ($elasticsearch_connection_info['type'] === 'elasticsearch' || $elasticsearch_connection_info['type'] === 'elasticsearch-aws')
             $search_cache_version = $elasticsearch->info();
 
         $result = array(
