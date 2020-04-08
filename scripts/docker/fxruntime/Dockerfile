@@ -9,7 +9,7 @@ MAINTAINER ben@flex.io
 ########################################
 
 RUN apt -y update && \
-    apt -y install sudo wget apt-utils curl git python3-pip libzmq3-dev libzmq5 libjsoncpp-dev golang chromium-browser libgconf2-4 nodejs npm python3-psycopg2 unzip && \
+    apt -y install sudo wget apt-utils curl git python3-pip libzmq3-dev libzmq5 libjsoncpp-dev golang chromium-browser libgconf2-4 nodejs npm python3-psycopg2 unzip libgbm1 && \
     npm install -g yarn && \
     apt -y install fonts-liberation libappindicator3-1 lsb-release
 
