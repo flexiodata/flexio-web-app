@@ -218,7 +218,6 @@ class ProcessHandler
 
         $stdout_mime_type = $stdout_stream_info['mime_type'];
 
-
         if ($stdout_mime_type === \Flexio\Base\ContentType::FLEXIO_TABLE)
         {
             // handle table type

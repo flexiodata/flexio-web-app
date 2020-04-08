@@ -51,7 +51,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         $port = intval($validated_params['port']);
         $username = $validated_params['username'];
         $password = $validated_params['password'];
- 
+
         // AWS elasticsearch services uses IAM for access control; this is a mode
         // which is either on or off.  When on, the requests must be signed with
         // the Signature V4 algorithm; when off, HTTP basic authentication is used
@@ -370,12 +370,13 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             curl_close($ch);
             */
 
-            $url = $this->getHostUrlString() . '/' . urlencode($index) . '?' . $query_str;
+            $url = $this->getHostUrlString() . '/' . urlencode($index);
             $request = new \GuzzleHttp\Psr7\Request('PUT', $url, ['Content-Type' => 'application/json'], json_encode($index_configuration));
             $response = $this->sendWithCredentials($request);
 
             $httpcode = $response->getStatusCode();
             $result = (string)$response->getBody();
+
             if ($httpcode < 200 || $httpcode > 299)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
