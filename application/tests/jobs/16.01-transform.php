@@ -237,54 +237,59 @@ class Test
         \Flexio\Tests\Check::assertString('G.1', 'Transform job constant',  $actual, $expected, $results);
 
         // BEGIN TEST
+        $actual = \Flexio\Jobs\Transform::COLUMN_TYPE_STRING;
+        $expected = 'string';
+        \Flexio\Tests\Check::assertString('G.2', 'Transform job constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
         $actual = \Flexio\Jobs\Transform::COLUMN_TYPE_TEXT;
         $expected = 'text';
-        \Flexio\Tests\Check::assertString('G.2', 'Transform job constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('G.3', 'Transform job constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Jobs\Transform::COLUMN_TYPE_CHARACTER;
         $expected = 'character';
-        \Flexio\Tests\Check::assertString('G.3', 'Transform job constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('G.4', 'Transform job constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Jobs\Transform::COLUMN_TYPE_WIDECHARACTER;
         $expected = 'widecharacter';
-        \Flexio\Tests\Check::assertString('G.4', 'Transform job constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('G.5', 'Transform job constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Jobs\Transform::COLUMN_TYPE_NUMBER;
         $expected = 'number';
-        \Flexio\Tests\Check::assertString('G.5', 'Transform job constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('G.6', 'Transform job constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Jobs\Transform::COLUMN_TYPE_NUMERIC;
         $expected = 'numeric';
-        \Flexio\Tests\Check::assertString('G.6', 'Transform job constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('G.7', 'Transform job constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Jobs\Transform::COLUMN_TYPE_DOUBLE;
         $expected = 'double';
-        \Flexio\Tests\Check::assertString('G.7', 'Transform job constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('G.8', 'Transform job constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Jobs\Transform::COLUMN_TYPE_INTEGER;
         $expected = 'integer';
-        \Flexio\Tests\Check::assertString('G.8', 'Transform job constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('G.9', 'Transform job constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Jobs\Transform::COLUMN_TYPE_DATE;
         $expected = 'date';
-        \Flexio\Tests\Check::assertString('G.9', 'Transform job constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('G.10', 'Transform job constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Jobs\Transform::COLUMN_TYPE_DATETIME;
         $expected = 'datetime';
-        \Flexio\Tests\Check::assertString('G.10', 'Transform job constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('G.11', 'Transform job constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Jobs\Transform::COLUMN_TYPE_BOOLEAN;
         $expected = 'boolean';
-        \Flexio\Tests\Check::assertString('G.11', 'Transform job constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('G.12', 'Transform job constant',  $actual, $expected, $results);
 
 
 
