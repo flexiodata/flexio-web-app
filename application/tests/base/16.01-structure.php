@@ -46,34 +46,39 @@ class Test
         \Flexio\Tests\Check::assertString('A.5', 'Structure; verify class constants',  $actual, $expected, $results);
 
         // BEGIN TEST
+        $actual = \Flexio\Base\Structure::TYPE_NUMBER;
+        $expected = 'number';
+        \Flexio\Tests\Check::assertString('A.6', 'Structure; verify class constants',  $actual, $expected, $results);
+
+        // BEGIN TEST
         $actual = \Flexio\Base\Structure::TYPE_NUMERIC;
         $expected = 'numeric';
-        \Flexio\Tests\Check::assertString('A.6', 'Structure; verify class constants',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.7', 'Structure; verify class constants',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Structure::TYPE_DOUBLE;
         $expected = 'double';
-        \Flexio\Tests\Check::assertString('A.7', 'Structure; verify class constants',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.8', 'Structure; verify class constants',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Structure::TYPE_INTEGER;
         $expected = 'integer';
-        \Flexio\Tests\Check::assertString('A.8', 'Structure; verify class constants',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.9', 'Structure; verify class constants',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Structure::TYPE_DATE;
         $expected = 'date';
-        \Flexio\Tests\Check::assertString('A.9', 'Structure; verify class constants',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.10', 'Structure; verify class constants',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Structure::TYPE_DATETIME;
         $expected = 'datetime';
-        \Flexio\Tests\Check::assertString('A.10', 'Structure; verify class constants',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.11', 'Structure; verify class constants',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Structure::TYPE_BOOLEAN;
         $expected = 'boolean';
-        \Flexio\Tests\Check::assertString('A.11', 'Structure; verify class constants',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.12', 'Structure; verify class constants',  $actual, $expected, $results);
 
 
 

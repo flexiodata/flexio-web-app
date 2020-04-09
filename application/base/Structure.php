@@ -24,6 +24,7 @@ class Structure
     public const TYPE_TEXT = 'text';
     public const TYPE_CHARACTER = 'character';
     public const TYPE_WIDECHARACTER = 'widecharacter';
+    public const TYPE_NUMBER = 'number'; // alias for numeric that's compatible with JSON and common API convention for specifying text
     public const TYPE_NUMERIC = 'numeric';
     public const TYPE_DOUBLE = 'double';
     public const TYPE_INTEGER = 'integer';
@@ -239,6 +240,7 @@ class Structure
             case self::TYPE_TEXT:
             case self::TYPE_CHARACTER:
             case self::TYPE_WIDECHARACTER:
+            case self::TYPE_NUMBER:
             case self::TYPE_NUMERIC:
             case self::TYPE_DOUBLE:
             case self::TYPE_INTEGER:
@@ -268,6 +270,7 @@ class Structure
                 }
                 break;
 
+            case self::TYPE_NUMBER:
             case self::TYPE_NUMERIC:
                 // numeric width must be between 2 and 18
                 if (!isset($column_entry['width']))
@@ -304,6 +307,7 @@ class Structure
                 $column_entry['scale'] = null;
                 break;
 
+            case self::TYPE_NUMBER:
             case self::TYPE_NUMERIC:
             case self::TYPE_DOUBLE:
                 if (!isset($column_entry['scale']))
@@ -317,6 +321,8 @@ class Structure
 
         // if the type is numeric, make sure the scale is less than the width
         // by at least 2
+        if ($column_entry['type'] === self::TYPE_NUMBER && ($column_entry['scale'] > $column_entry['width'] - 2))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
         if ($column_entry['type'] === self::TYPE_NUMERIC && ($column_entry['scale'] > $column_entry['width'] - 2))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
@@ -619,6 +625,7 @@ class Structure
             default:
                 return false;
 
+            case self::TYPE_NUMBER:
             case self::TYPE_NUMERIC:
             case self::TYPE_DOUBLE:
             case self::TYPE_INTEGER:

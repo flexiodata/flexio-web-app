@@ -694,6 +694,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
                 );
                 return $info;
 
+            case \Flexio\Base\Structure::TYPE_NUMBER:
             case \Flexio\Base\Structure::TYPE_NUMERIC:
             case \Flexio\Base\Structure::TYPE_DOUBLE:
                 $info = array(
