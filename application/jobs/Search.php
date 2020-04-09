@@ -85,7 +85,7 @@ class Search implements \Flexio\IFace\IJob
             $query_parameters .= $chunk;
 
         $columns_to_return = array();
-        $rows_to_return = '';
+        $rows_to_return = array();
         $additional_output_config = array();
         self::getSearchParams($query_parameters, $available_columns, $columns_to_return, $rows_to_return, $additional_output_config);
 
@@ -103,23 +103,10 @@ class Search implements \Flexio\IFace\IJob
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, "Search not available");
         $elasticsearch = \Flexio\Services\ElasticSearch::create($elasticsearch_connection_info);
 
-        // search the index
-        $result = $elasticsearch->search($index, $rows_to_return);
-
         // write the output of the search query to stdout
         $outstream = $process->getStdout();
+        $outstream->setMimeType(\Flexio\Base\ContentType::JSON);
         $streamwriter = $outstream->getWriter();
-
-        // if we're not returning the headers and there's no content, return a
-        // two-dimensional array with an empty string; this allows this function
-        // to return results that won't throw an error in the add-on; note: for API
-        // usage, this may not be the best behavior, so we want do something else
-        if ($return_headers === false && count($result) === 0)
-        {
-            $streamwriter->write('[[""]]');
-            $outstream->setMimeType(\Flexio\Base\ContentType::JSON);
-            return;
-        }
 
         // start the output
         $streamwriter->write("[");
@@ -131,32 +118,32 @@ class Search implements \Flexio\IFace\IJob
             $first = false;
         }
 
-        // write out each row
-        $idx = 0;
-        foreach ($result as $r)
-        {
-            if ($limit_row_count !== false && $idx >= $limit_row_count)
-                break;
+        // write the output
+        $params['path'] = $index;
+        $params['q'] = $rows_to_return;
+        $params['limit'] = $limit_row_count;
 
+        $elasticsearch->read($params, function($row) use (&$streamwriter, &$columns_to_return, &$first) {
             if ($first !== true)
                 $streamwriter->write(',');
 
             $row_values = [];
             foreach ($columns_to_return as $c)
-            {
-                $row_values[] = $r[$c] ?? '';
-            }
+                $row_values[] = $row[$c] ?? '';
 
             $streamwriter->write(json_encode($row_values, JSON_UNESCAPED_SLASHES));
-            $idx++;
             $first = false;
-        }
+        });
+
+        // if first is true, we haven't written anything, add an output with
+        // a two-dimensional array with an empty string; this allows this function
+        // to return results that won't throw an error in the add-on; note: for API
+        // usage, this may not be the best behavior, so we want do something else
+        if ($first === true)
+            $streamwriter->write('[""]');
 
         // end the output
         $streamwriter->write(']');
-
-        // set the content type
-        $outstream->setMimeType(\Flexio\Base\ContentType::JSON);
     }
 
     private function getJobParameters() : array
@@ -164,7 +151,7 @@ class Search implements \Flexio\IFace\IJob
         return $this->properties;
     }
 
-    private static function getSearchParams(string $search_params, array $available_columns, array &$search_columns, string &$search_rows, array &$config) : void
+    private static function getSearchParams(string $search_params, array $available_columns, array &$search_columns, array &$search_rows = null, array &$config) : void
     {
         // EXPERIMENTAL: query params passed in as a json string of array values
         // first parameter: desired return columns or "*" for all columns
@@ -177,7 +164,7 @@ class Search implements \Flexio\IFace\IJob
 
         // default to all columns/rows
         $search_columns = $available_columns;
-        $search_rows = '{"query": {"match_all": {}}}';
+        $search_rows = null;
 
         // default configuration
         $config = array();
@@ -229,14 +216,14 @@ class Search implements \Flexio\IFace\IJob
             else if (is_string($query_param))
             {
                 if (strlen(trim($query_param)) > 0)
-                    $search_rows = json_encode(["query" => ["query_string" => ["query" => $query_param]]], JSON_UNESCAPED_SLASHES);
+                    $search_rows = ["query" => ["query_string" => ["query" => $query_param]]];
                      else { /* don't do anything with an empty string */ }
             }
             else
             {
                 $query_param_str = self::buildQuery($query_param, $available_columns);
                 if (strlen(trim($query_param_str)) > 0)
-                    $search_rows = json_encode(["query" => ["query_string" => ["query" => $query_param_str]]], JSON_UNESCAPED_SLASHES);
+                    $search_rows = ["query" => ["query_string" => ["query" => $query_param_str]]];
                      else { /* don't do anything with an empty array*/ }
 
                 /*
@@ -262,7 +249,7 @@ class Search implements \Flexio\IFace\IJob
                     }
 
                     $match_expression = json_encode($match_expression,JSON_UNESCAPED_SLASHES);
-                    $search_rows = '{"query": {"bool": {"must": '.$match_expression. '}}}';
+                    $search_rows = @json_decode('{"query": {"bool": {"must": '.$match_expression. '}}}',true);
                 */
             }
         }

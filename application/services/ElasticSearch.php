@@ -19,8 +19,15 @@ namespace Flexio\Services;
 class ElasticSearch implements \Flexio\IFace\IConnection,
                                \Flexio\IFace\IFileSystem
 {
-    private const MAX_INDEX_RESULT_WINDOW   = 1000000;     // maximum number of items that will be returned from a search without pagination
-    private const MAX_INDEX_ROW_WRITE_LIMIT = 1000000; // maximum number of rows that can be written in the write loop; primarily to avoid hanging loops
+    // number of rows returned in each page while scrolling
+    private const SCROLL_PAGE_SIZE = 5000;
+
+    // maximum number of items that will be returned from a search without using scrolling;
+    // note: here for reference; defaults to 10k, and setting it higher can result in bad performance
+    private const MAX_INDEX_RESULT_WINDOW = 10000;
+
+    // maximum number of rows that can be written in the write loop; primarily to avoid hanging loops
+    private const MAX_INDEX_ROW_WRITE_LIMIT = 1000000;
 
     // connection info
     private $host = '';
@@ -160,8 +167,49 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
     public function read(array $params, callable $callback) // TODO: add return type
     {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        if (!isset($params['path']))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+        if (!array_key_exists('q', $params))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        $path = $params['path'];
+        $query = $params['q'];
+        if (!is_string($path))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        $limit = $params['limit'] ?? PHP_INT_MAX;
+        if (!is_integer($limit))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        // get the rows using scrolling to return all the matching rows
+        $idx = 0;
+        $scroll_id = '';
+        $result = [];
+        while (true)
+        {
+            $page = $this->search($path, $query, $scroll_id);
+            $rows = $page['hits']['hits'] ?? false;
+            if ($rows === false || count($rows) === 0)
+            {
+                $this->deleteSearchScroll($scroll_id);
+                return;
+            }
+
+            foreach ($rows as $r)
+            {
+                if ($idx >= $limit)
+                {
+                    $this->deleteSearchScroll($scroll_id);
+                    return;
+                }
+
+                $content = $r['_source'];
+                $callback($content);
+                $idx++;
+            }
+
+            $scroll_id = $page['_scroll_id'];
+        }
     }
 
     public function write(array $params, callable $callback) // TODO: add return type
@@ -374,17 +422,71 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         }
     }
 
-    public function search(string $index, string $search_query) : array
+    public function search(string $index, array $search_query = null, string $scroll_id = null) : array
     {
         try
         {
-            $url_query_params = array(
-                'size' => self::MAX_INDEX_RESULT_WINDOW
-            );
-            $url_query_str = http_build_query($url_query_params);
+            $request = false;
 
-            $url = $this->getHostUrlString() . '/' . urlencode($index) . '/_search?' . $url_query_str;
-            $request = new \GuzzleHttp\Psr7\Request('POST', $url, ['Content-Type' => 'application/json'], $search_query);
+            // if the search query is null, return all rows
+            if (!isset($search_query))
+                $search_query = array('query' => array('match_all' => new \stdClass()));
+
+            // if we don't have a scroll id, perform a regular search query;
+            // if we have a zero-length string scroll_id, it's the start of the scrolling, but otherwise a regular query
+            // if we have a non-zero-length string scroll_id, it's part of an ongoing query
+
+            // see here for more info about scrolling:
+            // https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-body.html#request-body-search-scroll
+
+            if (!isset($scroll_id))
+            {
+                // perform regular search query
+
+                $url_query_params = array();
+                $url_query_params['size'] = self::MAX_INDEX_RESULT_WINDOW; // set this to maximum available size we can get without scrolling
+                $url_query_str = http_build_query($url_query_params);
+                $url = $this->getHostUrlString() . '/' . urlencode($index) . '/_search?' . $url_query_str;
+                $search_str = json_encode($search_query);
+                $request = new \GuzzleHttp\Psr7\Request('POST', $url, ['Content-Type' => 'application/json'], $search_str);
+            }
+
+            if (isset($scroll_id) && strlen($scroll_id) === 0)
+            {
+                // perform initial query for a scroll query; scrolling will be finished
+                // when there are no hit results
+
+                // with scrolling, use doc sort order for speed per note in documentation
+                $search_query['sort'] = ['_doc'];
+                $url_query_params = array();
+                $url_query_params['size'] = self::SCROLL_PAGE_SIZE;
+                $url_query_params['scroll'] = '1m'; // set timeout to 1 minute
+                $url_query_str = http_build_query($url_query_params);
+                $url = $this->getHostUrlString() . '/' . urlencode($index) . '/_search?' . $url_query_str;
+                $search_str = json_encode($search_query);
+                $request = new \GuzzleHttp\Psr7\Request('POST', $url, ['Content-Type' => 'application/json'], $search_str);
+            }
+
+            if (isset($scroll_id) && strlen($scroll_id) > 0)
+            {
+                // perform additional query for scroll query; scrolling will be finished
+                // when there are no hit results
+
+                $search_query = array(
+                    'scroll_id' => $scroll_id
+                );
+
+                $url_query_params = array();
+                $url_query_params['scroll'] = '1m'; // use scrolling since we want to return all results
+                $url_query_str = http_build_query($url_query_params);
+                $url = $this->getHostUrlString() . '/_search/scroll?' . $url_query_str;
+                $request = new \GuzzleHttp\Psr7\Request('POST', $url, ['Content-Type' => 'application/json'], json_encode($search_query));
+            }
+
+            if ($request === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+            // send the request;
             $response = $this->sendWithCredentials($request);
 
             $httpcode = $response->getStatusCode();
@@ -401,21 +503,28 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             if (isset($result['errors']) && $result['errors'] === true)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-            $rows = $result['hits']['hits'] ?? false;
-            if (!is_array($rows))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-
-            $output = array();
-            foreach ($rows as $r)
-            {
-                $output[] = $r['_source'];
-            }
-
-            return $output;
+            return $result;
         }
         catch (\Exception $e)
         {
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+        }
+    }
+
+    public function deleteSearchScroll(string $scroll_id)
+    {
+        if (strlen($scroll_id) === 0)
+            return;
+
+        try
+        {
+            $url = $this->getHostUrlString() . '/_search/scroll/' . urlencode($scroll_id);
+            $request = new \GuzzleHttp\Psr7\Request('DELETE', $url);
+            $response = $this->sendWithCredentials($request);
+        }
+        catch (\Exception $e)
+        {
+            // don't fail; search scroll will automatically delete
         }
     }
 
