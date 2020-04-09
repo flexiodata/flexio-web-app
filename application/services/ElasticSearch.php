@@ -374,7 +374,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         }
     }
 
-    public function query(string $index, string $index_query) : array
+    public function search(string $index, string $search_query) : array
     {
         try
         {
@@ -384,7 +384,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             $url_query_str = http_build_query($url_query_params);
 
             $url = $this->getHostUrlString() . '/' . urlencode($index) . '/_search?' . $url_query_str;
-            $request = new \GuzzleHttp\Psr7\Request('POST', $url, ['Content-Type' => 'application/json'], $index_query);
+            $request = new \GuzzleHttp\Psr7\Request('POST', $url, ['Content-Type' => 'application/json'], $search_query);
             $response = $this->sendWithCredentials($request);
 
             $httpcode = $response->getStatusCode();

@@ -103,8 +103,8 @@ class Search implements \Flexio\IFace\IJob
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, "Search not available");
         $elasticsearch = \Flexio\Services\ElasticSearch::create($elasticsearch_connection_info);
 
-        // query the index
-        $result = $elasticsearch->query($index, $rows_to_return);
+        // search the index
+        $result = $elasticsearch->search($index, $rows_to_return);
 
         // write the output of the search query to stdout
         $outstream = $process->getStdout();
