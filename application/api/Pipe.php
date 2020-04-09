@@ -516,8 +516,7 @@ class Pipe
 
         // create a new process engine for running a process
         $elastic_search_params = array(
-            'index' => $pipe_properties['eid'],
-            'structure' => $pipe_properties['returns']
+            'index' => $pipe_properties['eid']
         );
         $process_engine = \Flexio\Jobs\Process::create();
         $process_engine->queue('\Flexio\Jobs\ProcessHandler::addMountParams', $process_properties);
@@ -580,8 +579,7 @@ class Pipe
 
         // create a new process engine for running a process
         $elastic_search_params = array(
-            'index' => $pipe_properties['eid'],
-            'structure' => $pipe_properties['returns']
+            'index' => $pipe_properties['eid']
         );
         $process_engine = \Flexio\Jobs\Process::create();
         $process_engine->queue('\Flexio\Jobs\ProcessHandler::addMountParams', $process_properties);

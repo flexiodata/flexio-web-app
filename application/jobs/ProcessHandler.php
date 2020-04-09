@@ -187,8 +187,7 @@ class ProcessHandler
     {
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($callback_params, array(
-                'index' => array('type' => 'string', 'required' => true), // the name of the index to drop/create/write-to
-                'structure'  => array('type' => 'object', 'required' => true)  // structure of the data for the index
+                'index' => array('type' => 'string', 'required' => true) // the name of the index to drop/create/write-to
             ))->hasErrors()) === true)
         {
             // note: parameters are internal, so proper error is write failing
@@ -198,8 +197,6 @@ class ProcessHandler
 
         $validated_params = $validator->getParams();
         $index = $validated_params['index'];
-        $structure = $validated_params['structure'];
-        $structure = \Flexio\Base\Structure::create($structure);
 
         // connect to elasticsearch
         $elasticsearch_connection_info = \Flexio\System\System::getSearchCacheConfig();
@@ -209,7 +206,7 @@ class ProcessHandler
 
         // create a new index; delete any index that's already there
         $elasticsearch->deleteIndex($index);
-        $elasticsearch->createIndex($index, $structure->get());
+        $elasticsearch->createIndex($index);
 
         // get the stdout mime type
         $stdout_stream_info = $process->getStdout()->get();
