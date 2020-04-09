@@ -211,26 +211,6 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         if (!$this->authenticated())
             return array();
 
-        // get the indexes
-
-        /*
-        $url = $this->getHostUrlString() . '/_stats';
-        $auth = $this->getBasicAuthString();
-
-        $headers = array();
-        $headers[] = 'Authorization: Basic ' . $auth;
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_HTTPGET, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-        $result = curl_exec($ch);
-        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-        */
-
         $url = $this->getHostUrlString() . '/_stats';
         $request = new \GuzzleHttp\Psr7\Request('GET', $url);
         $response = $this->sendWithCredentials($request);
@@ -270,35 +250,10 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
     {
         try
         {
-            // write the content
-
             $query_params = array(
                 'ignore_unavailable' => 'true' // don't throw an exception if index doesn't exist
             );
             $query_str = http_build_query($query_params);
-
-
-
-            /*
-
-            $url = $this->getHostUrlString() . '/' . urlencode($index) . '?' . $query_str;
-            $auth = $this->getBasicAuthString();
-            $content_type = 'application/json';
-
-            $headers = array();
-            $headers[] = 'Authorization: Basic ' . $auth;
-            $headers[] = 'Content-Type: ' . $content_type;
-
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-            $result = curl_exec($ch);
-            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
-            */
 
             $url = $this->getHostUrlString() . '/' . urlencode($index) . '?' . $query_str;
             $request = new \GuzzleHttp\Psr7\Request('DELETE', $url);
@@ -348,28 +303,6 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
                 $index_configuration['mappings'] = $index_mapping_info['mappings'];
             }
 
-            /*
-            // create the index with the specified mapping
-            $url = $this->getHostUrlString() . '/' . urlencode($index);
-            $auth = $this->getBasicAuthString();
-            $content_type = 'application/json';
-
-            $headers = array();
-            $headers[] = 'Authorization: Basic ' . $auth;
-            $headers[] = 'Content-Type: ' . $content_type;
-
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($index_configuration));
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-            $result = curl_exec($ch);
-            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
-            */
-
             $url = $this->getHostUrlString() . '/' . urlencode($index);
             $request = new \GuzzleHttp\Psr7\Request('PUT', $url, ['Content-Type' => 'application/json'], json_encode($index_configuration));
             $response = $this->sendWithCredentials($request);
@@ -416,27 +349,6 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             );
             $query_str = http_build_query($query_params);
 
-            /*
-            $url = $this->getHostUrlString() . '/_bulk?' . $query_str;
-            $auth = $this->getBasicAuthString();
-            $content_type = 'application/x-ndjson'; // use ndjson for bulk operations
-
-            $headers = array();
-            $headers[] = 'Authorization: Basic ' . $auth;
-            $headers[] = 'Content-Type: ' . $content_type;
-
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $index_write_string);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-            $result = curl_exec($ch);
-            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
-            */
-
             $url = $this->getHostUrlString() . '/_bulk?' . $query_str;
             $request = new \GuzzleHttp\Psr7\Request('POST', $url, ['Content-Type' => 'application/x-ndjson'], $index_write_string); // use ndjson for bulk operations
             $response = $this->sendWithCredentials($request);
@@ -472,27 +384,6 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
                 'size' => self::MAX_INDEX_RESULT_WINDOW
             );
             $query_str = http_build_query($query_params);
-
-            /*
-            $url = $this->getHostUrlString() . '/' . urlencode($index) . '/_search?' . $query_str;
-            $auth = $this->getBasicAuthString();
-            $content_type = 'application/json';
-
-            $headers = array();
-            $headers[] = 'Authorization: Basic ' . $auth;
-            $headers[] = 'Content-Type: ' . $content_type;
-
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $index_query_string);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-            $result = curl_exec($ch);
-            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
-            */
 
             $url = $this->getHostUrlString() . '/' . urlencode($index) . '/_search?' . $query_str;
             $request = new \GuzzleHttp\Psr7\Request('POST', $url, ['Content-Type' => 'application/json'], $index_query_string);
@@ -535,24 +426,6 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         // TODO: parallels testConnection function; factor?
         try
         {
-            /*
-            $url = $this->getHostUrlString();
-            $auth = $this->getBasicAuthString();
-
-            $headers = array();
-            $headers[] = 'Authorization: Basic ' . $auth;
-
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($ch, CURLOPT_HTTPGET, true);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-            $result = curl_exec($ch);
-            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
-            */
-
             $url = $this->getHostUrlString();
             $request = new \GuzzleHttp\Psr7\Request('GET', $url);
             $response = $this->sendWithCredentials($request);
@@ -604,24 +477,6 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         // test the connection
         try
         {
-            /*
-            $url = $this->getHostUrlString();
-            $auth = $this->getBasicAuthString();
-
-            $headers = array();
-            $headers[] = 'Authorization: Basic ' . $auth;
-
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($ch, CURLOPT_HTTPGET, true);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-            $result = curl_exec($ch);
-            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
-            */
-
             $url = $this->getHostUrlString();
             $request = new \GuzzleHttp\Psr7\Request('GET', $url);
             $response = $this->sendWithCredentials($request);
