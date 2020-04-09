@@ -71,7 +71,15 @@ class Search implements \Flexio\IFace\IJob
         $available_columns = array();
         if ($structure !== false)
         {
-            $structure = \Flexio\Base\Structure::create($structure);
+            // we only care about names; ignore types since structure info can come
+            // from places like the interface that may not care about official types
+            // so much as describing behavior (e.g. descriptive type of: array[string]
+            // or something like that)
+            $simple_structure = array();
+            foreach ($structure as $s)
+                $simple_structure[] = array('name' => $s['name'] ?? '');
+
+            $structure = \Flexio\Base\Structure::create($simple_structure);
             $available_columns = $structure->getNames();
         }
 
