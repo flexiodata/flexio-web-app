@@ -250,12 +250,12 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
     {
         try
         {
-            $query_params = array(
+            $url_query_params = array(
                 'ignore_unavailable' => 'true' // don't throw an exception if index doesn't exist
             );
-            $query_str = http_build_query($query_params);
+            $url_query_str = http_build_query($url_query_params);
 
-            $url = $this->getHostUrlString() . '/' . urlencode($index) . '?' . $query_str;
+            $url = $this->getHostUrlString() . '/' . urlencode($index) . '?' . $url_query_str;
             $request = new \GuzzleHttp\Psr7\Request('DELETE', $url);
             $response = $this->sendWithCredentials($request);
 
@@ -344,12 +344,12 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             $index_write_string .= "\n"; // payload must end with newline
 
             // write the content
-            $query_params = array(
+            $url_query_params = array(
                 'refresh' => $refresh_immediately ? 'true' : 'false'
             );
-            $query_str = http_build_query($query_params);
+            $url_query_str = http_build_query($url_query_params);
 
-            $url = $this->getHostUrlString() . '/_bulk?' . $query_str;
+            $url = $this->getHostUrlString() . '/_bulk?' . $url_query_str;
             $request = new \GuzzleHttp\Psr7\Request('POST', $url, ['Content-Type' => 'application/x-ndjson'], $index_write_string); // use ndjson for bulk operations
             $response = $this->sendWithCredentials($request);
 
@@ -374,19 +374,17 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         }
     }
 
-    public function query(string $index, string $query) : array
+    public function query(string $index, string $index_query) : array
     {
         try
         {
-            $index_query_string = $query;
-
-            $query_params = array(
+            $url_query_params = array(
                 'size' => self::MAX_INDEX_RESULT_WINDOW
             );
-            $query_str = http_build_query($query_params);
+            $url_query_str = http_build_query($url_query_params);
 
-            $url = $this->getHostUrlString() . '/' . urlencode($index) . '/_search?' . $query_str;
-            $request = new \GuzzleHttp\Psr7\Request('POST', $url, ['Content-Type' => 'application/json'], $index_query_string);
+            $url = $this->getHostUrlString() . '/' . urlencode($index) . '/_search?' . $url_query_str;
+            $request = new \GuzzleHttp\Psr7\Request('POST', $url, ['Content-Type' => 'application/json'], $index_query);
             $response = $this->sendWithCredentials($request);
 
             $httpcode = $response->getStatusCode();
