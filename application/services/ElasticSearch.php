@@ -20,7 +20,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
                                \Flexio\IFace\IFileSystem
 {
     // number of rows returned in each page while scrolling
-    private const SCROLL_PAGE_SIZE = 5000;
+    private const READ_PAGE_SIZE = 5000;
 
     // number of rows that will be sent to to ES to index in one request
     private const WRITE_PAGE_SIZE = 1000;
@@ -462,7 +462,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
                 // with scrolling, use doc sort order for speed per note in documentation
                 $search_query['sort'] = ['_doc'];
                 $url_query_params = array();
-                $url_query_params['size'] = self::SCROLL_PAGE_SIZE;
+                $url_query_params['size'] = self::READ_PAGE_SIZE;
                 $url_query_params['scroll'] = '1m'; // set timeout to 1 minute
                 $url_query_str = http_build_query($url_query_params);
                 $url = $this->getHostUrlString() . '/' . urlencode($index) . '/_search?' . $url_query_str;
