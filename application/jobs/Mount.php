@@ -312,13 +312,13 @@ class Mount
                         case \Flexio\Base\Structure::TYPE_WIDECHARACTER:
                         case \Flexio\Base\Structure::TYPE_DATE:
                         case \Flexio\Base\Structure::TYPE_DATETIME:
-                            $type = \Flexio\Base\Structure::TYPE_STRING:
+                            $type = \Flexio\Base\Structure::TYPE_STRING;
                             break;
 
                         case \Flexio\Base\Structure::TYPE_NUMBER:
                         case \Flexio\Base\Structure::TYPE_NUMERIC:
                         case \Flexio\Base\Structure::TYPE_DOUBLE:
-                            $type = \Flexio\Base\Structure::TYPE_NUMBER:
+                            $type = \Flexio\Base\Structure::TYPE_NUMBER;
                             break;
                     }
 
