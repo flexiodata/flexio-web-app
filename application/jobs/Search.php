@@ -129,7 +129,9 @@ class Search implements \Flexio\IFace\IJob
         // write the output
         $params['path'] = $index;
         $params['q'] = $rows_to_return;
-        $params['limit'] = $limit_row_count;
+
+        if ($limit_row_count !== false)
+            $params['limit'] = $limit_row_count;
 
         $elasticsearch->read($params, function($row) use (&$streamwriter, &$columns_to_return, &$first) {
             if ($first !== true)
