@@ -31,6 +31,7 @@ class ContentType
     public const JPEG           = 'image/jpeg';
     public const JAVASCRIPT     = 'application/javascript';
     public const JSON           = 'application/json';
+    public const NDJSON         = 'application/x-ndjson';
     public const MARKDOWN       = 'text/markdown';
     public const PDF            = 'application/pdf';
     public const PNG            = 'image/png';
@@ -162,6 +163,7 @@ class ContentType
             case ContentType::JPEG:       return 'jpg';
             case ContentType::JAVASCRIPT: return 'js';
             case ContentType::JSON:       return 'json';
+            case ContentType::NDJSON:     return 'ndjson';
             case ContentType::MARKDOWN:   return 'md';
             case ContentType::PDF:        return 'pdf';
             case ContentType::PNG:        return 'png';
@@ -190,33 +192,34 @@ class ContentType
 
         switch ($ext)
         {
-            default:      return $def_return;
+            default:       return $def_return;
 
-            case "bmp":   return ContentType::BMP;
-            case "css":   return ContentType::CSS;
+            case "bmp":    return ContentType::BMP;
+            case "css":    return ContentType::CSS;
             case "icsv":
-            case "csv":   return ContentType::CSV;
-            case "doc":   return ContentType::DOC;
-            case "docx":  return ContentType::DOCX;
-            case "gif":   return ContentType::GIF;
-            case "gz":    return ContentType::GZIP;
+            case "csv":    return ContentType::CSV;
+            case "doc":    return ContentType::DOC;
+            case "docx":   return ContentType::DOCX;
+            case "gif":    return ContentType::GIF;
+            case "gz":     return ContentType::GZIP;
             case "html":
-            case "htm":   return ContentType::HTML;
+            case "htm":    return ContentType::HTML;
             case "jpeg":
-            case "jpg":   return ContentType::JPEG;
-            case "js":    return ContentType::JAVASCRIPT;
-            case "json":  return ContentType::JSON;
-            case "md":    return ContentType::MARKDOWN;
-            case "pdf":   return ContentType::PDF;
-            case "png":   return ContentType::PNG;
-            case "svg":   return ContentType::SVG;
+            case "jpg":    return ContentType::JPEG;
+            case "js":     return ContentType::JAVASCRIPT;
+            case "json":   return ContentType::JSON;
+            case "md":     return ContentType::MARKDOWN;
+            case "ndjson": return ContentType::NDJSON;
+            case "pdf":    return ContentType::PDF;
+            case "png":    return ContentType::PNG;
+            case "svg":    return ContentType::SVG;
             case "tiff":
-            case "tif":   return ContentType::TIFF;
-            case "txt":   return ContentType::TEXT;
-            case "xls":   return ContentType::XLS;
-            case "xlsx":  return ContentType::XLSX;
-            case "xml":   return ContentType::XML;
-            case "zip":   return ContentType::ZIP;
+            case "tif":    return ContentType::TIFF;
+            case "txt":    return ContentType::TEXT;
+            case "xls":    return ContentType::XLS;
+            case "xlsx":   return ContentType::XLSX;
+            case "xml":    return ContentType::XML;
+            case "zip":    return ContentType::ZIP;
         }
     }
 
