@@ -22,6 +22,9 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
     // number of rows returned in each page while scrolling
     private const SCROLL_PAGE_SIZE = 5000;
 
+    // number of rows that will be sent to to ES to index in one request
+    private const WRITE_PAGE_SIZE = 1000;
+
     // maximum number of items that will be returned from a search without using scrolling;
     // note: here for reference; defaults to 10k, and setting it higher can result in bad performance
     private const MAX_INDEX_RESULT_WINDOW = 10000;
@@ -222,7 +225,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         $index = self::convertToValid($index);
 
         // output the rows
-        $buffer_size = 1000; // max rows to write at a time
+        $buffer_size = self::WRITE_PAGE_SIZE; // max rows to write at a time
         $rows_to_write = array();
 
         $total_row_count = 0;
