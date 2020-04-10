@@ -233,16 +233,37 @@ class ProcessHandler
             });
         }
 
+        if ($stdout_mime_type === \Flexio\Base\ContentType::NDJSON)
+        {
+            // handle json content type
+            //   ["col1"=>"val1", "col2"=>"val2"]\n
+            //   ["col1"=>"val3", "col2"=>"val4"]\n
+            $stdout_reader = $process->getStdout()->getReader();
+
+            // write the output to elasticsearch
+            $params = array(
+                'path' => $index // service uses path for consistency with other services
+            );
+            $elasticsearch->write($params, function() use (&$stdout_reader) {
+                $row = $stdout_reader->readRow();
+                if ($row === false)
+                    return false;
+                // TODO: coerce row types?
+                $row = json_decode($row, true);
+                return $row;
+            });
+        }
+
         if ($stdout_mime_type === \Flexio\Base\ContentType::JSON)
         {
             // handle json content type
-
             // [
             //   ["col1"=>"val1", "col2"=>"val2"],
             //   ["col1"=>"val3", "col2"=>"val4"]
             // ]
-            $data_to_write = '';
             $stdout_reader= $process->getStdout()->getReader();
+
+            $data_to_write = '';
             while (($chunk = $stdout_reader->read(32768)) !== false)
             {
                 $data_to_write .= $chunk;
