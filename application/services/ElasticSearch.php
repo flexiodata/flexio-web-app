@@ -22,8 +22,10 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
     // number of rows returned in each page while scrolling
     private const READ_PAGE_SIZE = 5000;
 
-    // number of rows that will be sent to to ES to index in one request
-    private const WRITE_PAGE_SIZE = 1000;
+    // min/max number of rows that will be sent to to ES to index in one request;
+    // actual number is a range between these based on row size
+    private const MIN_WRITE_PAGE_SIZE = 100;
+    private const MAX_WRITE_PAGE_SIZE = 10000;
 
     // maximum number of items that will be returned from a search without using scrolling;
     // note: here for reference; defaults to 10k, and setting it higher can result in bad performance
@@ -225,7 +227,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         $index = self::convertToValid($index);
 
         // output the rows
-        $buffer_size = self::WRITE_PAGE_SIZE; // max rows to write at a time
+        $write_page_size = 0;
         $rows_to_write = array();
 
         $total_row_count = 0;
@@ -235,17 +237,23 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             if ($row === false)
                 break;
 
+            if ($write_page_size === 0)
+                $write_page_size = self::getWritePageSize($row);
+
             $rows_to_write[] = $row;
             $total_row_count++;
 
             if ($total_row_count >= self::MAX_INDEX_ROW_WRITE_LIMIT)
                 break;
 
-            if (count($rows_to_write) <= $buffer_size)
+            if (count($rows_to_write) <= $write_page_size)
                 continue;
 
             $this->writeRows($index, $rows_to_write);
             $rows_to_write = array();
+
+            // small delay
+            usleep(100000); // sleep 1000ms
         }
 
         // write out whatever is left over
@@ -770,5 +778,26 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         return $client->send($request, $options);
     }
 
+    private static function getWritePageSize(array $row) : int
+    {
+        // calculate how many records to write at for approximate
+        // 5MB payload using row record as rough estimate
+        $sample = json_encode($row,0);
+        if ($sample === false)
+            return self::MAX_WRITE_PAGE_SIZE;
 
+        $sample_size = strlen($sample);
+        if ($sample_size === 0)
+            return self::MAX_WRITE_PAGE_SIZE;
+
+        $write_page_size = (int)(5000000/$sample_size);
+
+        // clamp the number with a range
+        if ($write_page_size > self::MAX_WRITE_PAGE_SIZE)
+            $write_page_size = self::MAX_WRITE_PAGE_SIZE;
+        if ($write_page_size <= self::MIN_WRITE_PAGE_SIZE)
+            $write_page_size = self::MIN_WRITE_PAGE_SIZE;
+
+        return $write_page_size;
+    }
 }
