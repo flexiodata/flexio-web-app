@@ -389,6 +389,12 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
     public function writeRows(string $index, array $rows, bool $refresh_immediately = false) : void
     {
+        // additional optimizations:
+        // https://aws.amazon.com/premiumsupport/knowledge-center/elasticsearch-indexing-performance/
+
+        // common api options; see here for more information about filtering results
+        // https://www.elastic.co/guide/en/elasticsearch/reference/current/common-options.html
+
         try
         {
             // create the post buffer for the bulk api endpoint
@@ -402,9 +408,13 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             }
             $index_write_string .= "\n"; // payload must end with newline
 
-            // write the content
+            // write the content; note: set the filter path to pull back basic header info;
+            // a lot of info is returned back for each of the bulk request row items and this
+            // can add up to signficant network traffic when inserting 100ks rows; per AWS
+            // recommendation
             $url_query_params = array(
-                'refresh' => $refresh_immediately ? 'true' : 'false'
+                'refresh' => $refresh_immediately ? 'true' : 'false',
+                'filter_path' => 'took,errors'
             );
             $url_query_str = http_build_query($url_query_params);
 
@@ -456,6 +466,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
                 $url_query_params = array();
                 $url_query_params['size'] = self::MAX_INDEX_RESULT_WINDOW; // set this to maximum available size we can get without scrolling
+                $url_query_params['filter_path'] = '_scroll_id,took,hits.hits._source'; // default response includes a lot of metadata; only get what we need to save network traffic
                 $url_query_str = http_build_query($url_query_params);
                 $url = $this->getHostUrlString() . '/' . urlencode($index) . '/_search?' . $url_query_str;
                 $search_str = json_encode($search_query);
@@ -472,6 +483,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
                 $url_query_params = array();
                 $url_query_params['size'] = self::READ_PAGE_SIZE;
                 $url_query_params['scroll'] = '1m'; // set timeout to 1 minute
+                $url_query_params['filter_path'] = '_scroll_id,took,hits.hits._source'; // default response includes a lot of metadata; only get what we need to save network traffic
                 $url_query_str = http_build_query($url_query_params);
                 $url = $this->getHostUrlString() . '/' . urlencode($index) . '/_search?' . $url_query_str;
                 $search_str = json_encode($search_query);
@@ -489,6 +501,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
                 $url_query_params = array();
                 $url_query_params['scroll'] = '1m'; // use scrolling since we want to return all results
+                $url_query_params['filter_path'] = '_scroll_id,took,hits.hits._source'; // default response includes a lot of metadata; only get what we need to save network traffic
                 $url_query_str = http_build_query($url_query_params);
                 $url = $this->getHostUrlString() . '/_search/scroll?' . $url_query_str;
                 $request = new \GuzzleHttp\Psr7\Request('POST', $url, ['Content-Type' => 'application/json'], json_encode($search_query));
@@ -497,11 +510,12 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             if ($request === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-            // send the request;
+            // send the request
             $response = $this->sendWithCredentials($request);
 
             $httpcode = $response->getStatusCode();
             $result = (string)$response->getBody();
+
             if ($httpcode < 200 || $httpcode > 299)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
