@@ -242,7 +242,7 @@ class Stream implements \Flexio\IFace\IStream
     {
         if (($this->properties['mime_type'] ?? '') == \Flexio\Base\ContentType::FLEXIO_TABLE)
             return true;
-        return count($this->properties['structure']) > 0 ? true : false;
+        return false;
     }
 
     private $structure_stamp = '';
