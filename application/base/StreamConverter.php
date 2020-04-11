@@ -909,7 +909,6 @@ class StreamConverter
                     $structure = self::determineStructureFromRow($row, $header);
                 }
 
-
                 if (!$streamwriter)
                 {
                     $outstream->setStructure($structure);
@@ -1030,7 +1029,8 @@ class StreamConverter
             // input/output
             $outstream->set([
                 'mime_type' => $output_mime_type,
-                'size' => strlen($contents)
+                'size' => strlen($contents),
+                'structure' => $structure
             ]);
         }
 
@@ -1048,7 +1048,8 @@ class StreamConverter
         {
             $output_properties = array(
                 'mime_type' => \Flexio\Base\ContentType::JSON,
-                'size' => $total_json_size
+                'size' => $total_json_size,
+                'structure' => $structure
             );
 
             $outstream->set($output_properties);
@@ -1058,7 +1059,8 @@ class StreamConverter
         {
             $output_properties = array(
                 'mime_type' => \Flexio\Base\ContentType::NDJSON,
-                'size' => $total_ndjson_size
+                'size' => $total_ndjson_size,
+                'structure' => $structure
             );
 
             $outstream->set($output_properties);
