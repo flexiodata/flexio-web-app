@@ -288,7 +288,7 @@ class Mount
                 $elastic_search_params = array(
                     'index' => $pipe_properties['eid']
                 );
-                $process_engine->queue('\Flexio\Jobs\Convert::run', array('input' => array('format' => 'csv'), 'output' => array('format' => 'table')));
+                $process_engine->queue('\Flexio\Jobs\Convert::run', array('input' => array('format' => 'csv'), 'output' => array('format' => 'ndjson')));
                 $process_engine->queue('\Flexio\Jobs\ProcessHandler::saveStdoutToElasticSearch', $elastic_search_params);
                 $process_engine->run();
 
