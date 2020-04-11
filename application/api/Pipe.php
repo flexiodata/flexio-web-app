@@ -391,12 +391,12 @@ class Pipe
         // run the job; only increment/decrement the process count if we're running in passthrough;
         // do this manually so that the increment/decrement happen regardless of whether or not
         // the process has an error
-        if ($pipe_run_mode === \Model::PIPE_RUN_MODE_PASSTHROUGH)
+        if (!IS_DEBUG() && $pipe_run_mode === \Model::PIPE_RUN_MODE_PASSTHROUGH)
             \Flexio\Jobs\ProcessHandler::incrementProcessCount($process_engine, array());
 
         $process_host->run(false /*true: run in background*/);
 
-        if ($pipe_run_mode === \Model::PIPE_RUN_MODE_PASSTHROUGH)
+        if (!IS_DEBUG() && $pipe_run_mode === \Model::PIPE_RUN_MODE_PASSTHROUGH)
             \Flexio\Jobs\ProcessHandler::decrementProcessCount($process_engine, array());
 
         // return the result
