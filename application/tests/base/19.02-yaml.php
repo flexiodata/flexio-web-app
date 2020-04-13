@@ -241,5 +241,52 @@ EOD;
         ';
         \Flexio\Tests\Check::assertArray('B.4', '\Flexio\Base\Yaml::parse(); extract and parse yaml from front matter in comments',  $actual, $expected, $results);
 
+
+        // TEST: yaml parse schedule info
+        $content = <<<EOD
+# ---
+# schedule:
+#   frequency: hourly
+# ---
+EOD;
+        $yaml = \Flexio\Base\Yaml::extract($content);
+        $object = \Flexio\Base\Yaml::parse($yaml);
+        $actual = $object['schedule'] ?? array();
+        $expected = '
+        {
+            "frequency": "hourly"
+        }
+        ';
+        \Flexio\Tests\Check::assertArray('C.1', '\Flexio\Base\Yaml::parse(); extract and parse yaml from front matter in comments',  $actual, $expected, $results);
+
+        $content = <<<EOD
+# ---
+# schedule:
+#   frequency: daily
+#   timezone: UTC
+#   days: []
+#   times:
+#   - hour: 7
+#     minute: 5
+# ---
+EOD;
+        $yaml = \Flexio\Base\Yaml::extract($content);
+        $object = \Flexio\Base\Yaml::parse($yaml);
+        $actual = $object['schedule'] ?? array();
+        $expected = '
+        {
+            "frequency": "daily",
+            "timezone": "UTC",
+            "days": [],
+            "times": [
+                {
+                    "hour": 7,
+                    "minute": 5
+                }
+            ]
+        }
+        ';
+        \Flexio\Tests\Check::assertArray('C.2', '\Flexio\Base\Yaml::parse(); extract and parse yaml from front matter in comments',  $actual, $expected, $results);
+
     }
 }
