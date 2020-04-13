@@ -198,7 +198,10 @@ class Factory
             // isn't; unpack into form currently used by the model/api
             $pipe_params['deploy_schedule'] = \Model::PIPE_DEPLOY_STATUS_INACTIVE;
             if (isset($pipe_info_from_content['schedule']))
+            {
                 $pipe_params['deploy_schedule'] = \Model::PIPE_DEPLOY_STATUS_ACTIVE;
+                $pipe_params['schedule'] = $pipe_info_from_content['schedule'];
+            }
 
             // set the task info
             if ($language === 'flexio')
