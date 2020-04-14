@@ -272,7 +272,7 @@ class Search implements \Flexio\IFace\IJob
             if (is_string($query_param))
             {
                 $config = array();
-                $config['headers'] = false;
+                $config['headers'] = true; // use same default if parameters are specified since only limit may be specified
                 $config['limit'] = false;
 
                 $config_parameters = array();
