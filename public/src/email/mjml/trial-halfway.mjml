@@ -11,8 +11,8 @@
         <mj-include path="./partials/logo.mjml" />
         <mj-spacer height="12px" />
         <mj-text>Hi ${first_name},</mj-text>
-        <mj-text>We hope you are enjoying Flex.io functions in your spreadsheet! Just wanted to send a quick reminder that your free trial will be ending in 7 days.</mj-text>
-        <mj-text>If you need a data integration you didn't see or would like any help at all, please shoot us a note at <a href="mailto:support@flex.io" style="color: #2196f3">support@flex.io</a> and we'll be happy to assist! Or, if you're ready to roll, choose a plan now.</mj-text>
+        <mj-text>You're 3 days in! We hope you're enjoying Flex.io. Anything we can help you with? Shoot us a note at <a href="mailto:support@flex.io" style="color: #2196f3">support@flex.io</a>.</mj-text>
+        <mj-text>Or, if you're ready to roll, choose a plan now!</mj-text>
         <mj-button href="${billing_link}">Choose a plan</mj-button>
         <mj-text>Thanks!</mj-text>
         <mj-text>- The Flex.io Team</mj-text>

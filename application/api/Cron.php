@@ -68,13 +68,13 @@ class Cron
         $registry_model->setString('', self::JOB_NOTIFICATION_LASTRUN_KEY, $current_timestamp);
 
         // get a list of active, non-customer users that have trial periods ending in 1 day
-        $trial_expires_one_day_date = strtotime($current_timestamp . ' + 1 days');
+        $trial_expires_one_day_date = strtotime($current_timestamp . ' + 1 days'); // TRIAL_DATE_CONFIG
         $trial_expires_one_day_date = date('Y-m-d', $trial_expires_one_day_date);
         $filter = array('eid_status' => \Model::STATUS_AVAILABLE, 'is_customer' => 'false', 'trialend_min' => $trial_expires_one_day_date, 'trialend_max' => $trial_expires_one_day_date);
         $users_expires_one_day_list = \Flexio\Object\User::list($filter);
 
-        // get a list of active, non-customer users that have trial periods ending in 7 days
-        $trial_expires_one_week_date = strtotime($current_timestamp . ' + 7 days');
+        // get a list of active, non-customer users that have trial periods ending in 4 days (3-days in for a 7 day period)
+        $trial_expires_one_week_date = strtotime($current_timestamp . ' + 4 days'); // TRIAL_DATE_CONFIG
         $trial_expires_one_week_date = date('Y-m-d', $trial_expires_one_week_date);
         $filter = array('eid_status' => \Model::STATUS_AVAILABLE, 'is_customer' => 'false', 'trialend_min' => $trial_expires_one_week_date, 'trialend_max' => $trial_expires_one_week_date);
         $users_expires_one_week_list = \Flexio\Object\User::list($filter);

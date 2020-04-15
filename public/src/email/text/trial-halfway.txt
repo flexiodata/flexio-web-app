@@ -1,8 +1,8 @@
 Hi ${first_name},
 
-We hope you are enjoying Flex.io functions in your spreadsheet! Just wanted to send a quick reminder that your free trial will be ending in 7 days.
+You're 3 days in! We hope you're enjoying Flex.io. Anything we can help you with? Shoot us a note at support@flex.io.
 
-If you need a data integration you didn't see or would like any help at all, please shoot us a note at support@flex.io and we'll be happy to assist! Or, if you're ready to roll, choose a plan now.
+Or, if you're ready to roll, choose a plan now!
 
 ${billing_link}
 
