@@ -25,7 +25,7 @@
           <div class="flex flex-row">
             <div class="flex-fill">
               <h2 class="fw4 f2">Download spreadsheet</h2>
-              <p>Would you like to download <strong>this spreadsheet</strong>?</p>
+              <p>Would you like to download <strong>{{template_title}}</strong>?</p>
               <div class="mt4">
                 <a
                   class="link dib tc border-box no-select ttu fw6 ph4 pv2a lh-title white bg-blue br2 darken-10"
@@ -283,6 +283,12 @@
         var backward_compatible = _.get(this.$route, 'query.spreadsheet_path', '')
         return _.get(this.$route, 'query.excel_spreadsheet_path', backward_compatible)
       },
+      template_title() {
+        var templates = _.get(this.setup_template, 'templates', [])
+        var template = _.find(templates, t => t.excel_spreadsheet_path == this.excel_spreadsheet_path)
+        var title = _.get(template, 'title', 'this spreadsheet')
+        return title
+      },
       template_target() {
         return _.get(this.$route, 'query.target', '')
       },
@@ -346,9 +352,9 @@
         // pre-select integrations
         this.initActiveIntegrationFromRoute()
 
-        if (this.active_step == 'setup') {
-          this.fetchIntegrationConfig()
-        }
+        // fetch the integration config (we need this for things like
+        // the template names as well as the function pack setup)
+        this.fetchIntegrationConfig()
       },
       initActiveIntegrationFromRoute() {
         var cname = this.route_integration
