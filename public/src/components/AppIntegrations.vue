@@ -10,9 +10,15 @@
 
       <h1 class="fw6 f2 tc pb2">{{title}}</h1>
 
+
+      <!-- show excel templat download page -->
+      <div v-if="is_show_excel_template_download_page">
+        Excel download page goes here...
+      </div>
+
       <!-- step: show spinner text and take user to the copy sheet page -->
-      <div v-if="matching_integrations.length > 0 && active_step == 'template'">
-        <div v-if="is_auto_loading_template">
+      <div v-else-if="active_step == 'template' && existing_integrations.length > 0">
+        <div v-if="is_show_loading_template">
           <div class="mv4 mh3 br3 ba b--black-10 pv5 ph4">
             <Spinner size="large" message="Loading template..." />
           </div>
@@ -27,6 +33,7 @@
               <el-button
                 class="w-100 fw6"
                 plain
+                :disabled="gsheets_spreadsheet_id.length == 0"
                 @click="redirectToGoogleSheets"
               >
                 <div class="flex flex-row items-center justify-center">
@@ -34,20 +41,32 @@
                   <div class="ml2 fw6 f5">Google Sheets</div>
                 </div>
               </el-button>
+              <div
+                class="tc mt2 f6 i"
+                v-if="gsheets_spreadsheet_id.length == 0"
+              >
+                Google Sheets template coming soon!
+              </div>
             </div>
 
             <div class="flex-fill pt3 pt0-l pl4-l">
               <el-button
                 class="w-100 fw6"
                 plain
-                disabled
+                :disabled="excel_spreadsheet_path.length == 0"
+                @click="is_show_excel_template_download_page = true"
               >
                 <div class="flex flex-row items-center justify-center">
                   <img src="../assets/icon/icon-excel-128.png" alt="Microsoft Excel" style="height: 32px" />
                   <div class="ml3 fw6 f5">Microsoft Excel 365</div>
                 </div>
               </el-button>
-              <div class="tc mt2 f6 i">Excel templates coming soon!</div>
+              <div
+                class="tc mt2 f6 i"
+                v-if="excel_spreadsheet_path.length == 0"
+              >
+                Excel template coming soon!
+              </div>
             </div>
           </div>
         </div>
@@ -129,8 +148,9 @@
     return {
       is_submitting: false,
       is_fetching_config: false,
-      is_auto_loading_template: false,
       is_started_on_template: false,
+      is_show_loading_template: false,
+      is_show_excel_template_download_page: false,
       route_title: '',
       step_order: ['setup', 'success'],
       active_step: '', // 'template' or 'setup' or 'success'
@@ -173,10 +193,10 @@
       function_mounts() {
         return this.getAvailableFunctionMounts()
       },
-      matching_integrations() {
+      existing_integrations() {
         return _.filter(this.function_mounts, f => {
           var manifest_url = _.get(f, 'connection_info.url', '')
-          return manifest_url.indexOf('functions-'+this.route_integration) >= 0 ? true : false
+          return manifest_url.indexOf('functions-' + this.route_integration) >= 0 ? true : false
         })
       },
       integrations() {
@@ -235,15 +255,18 @@
           // the user has already created an integration of this type (crunchbase, etc.)
           // and most likely only has one integration of this type; just take them directly
           // to the template in Google Sheets
-          if (this.matching_integrations.length > 0) {
+          if (this.existing_integrations.length > 0) {
             if (this.template_target == 'gsheets' && this.gsheets_spreadsheet_id.length > 0) {
               // redirect to Copy Google Sheet page
-              this.is_auto_loading_template = true
+              this.is_show_loading_template = true
               setTimeout(() => { this.redirectToGoogleSheets() }, 500)
             } else if (this.template_target == 'excel' && this.excel_spreadsheet_path.length > 0) {
               // show Excel download page (looks like Google Sheets copy sheet page)
-              this.is_auto_loading_template = true
-              setTimeout(() => { this.is_auto_loading_template = false }, 500)
+              this.is_show_loading_template = true
+              setTimeout(() => {
+                this.is_show_loading_template = false
+                this.is_show_excel_template_download_page = true
+              }, 500)
             } else {
               // show choose Google Sheets or Excel page
             }
@@ -256,13 +279,13 @@
         }
 
         // pre-select integrations
-        this.initIntegrationFromRoute()
+        this.initActiveIntegrationFromRoute()
 
         if (this.active_step == 'setup') {
           this.fetchIntegrationConfig()
         }
       },
-      initIntegrationFromRoute() {
+      initActiveIntegrationFromRoute() {
         var cname = this.route_integration
         var route_integration = _.find(this.integrations, f => _.get(f, 'connection.name', '') == cname)
         if (route_integration) {
