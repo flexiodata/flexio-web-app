@@ -79,8 +79,8 @@ class User extends ModelBase
 
             // create the base user info to add; for users, consider them to be their
             // own owner and that their account from them signing up (even if they're
-            // invited); trial ends 14 days from signup by default
-            $trial_end_date = date('Y-m-d H:i:s.u', strtotime($timestamp . ' + 14 days'));
+            // invited); trial ends 7 days from signup by default
+            $trial_end_date = date('Y-m-d H:i:s.u', strtotime($timestamp . ' + 7 days')); // TRIAL_DATE_CONFIG
             $user_arr['eid'] = $eid;
             $user_arr['trial_end_date'] = $trial_end_date;
             $user_arr['created'] = $timestamp;
