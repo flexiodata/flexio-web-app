@@ -1,5 +1,14 @@
 <template>
-  <main class="overflow-y-scroll bg-white">
+  <!-- malformed URL; bail out -->
+  <PageNotFound
+    class="flex-fill bg-nearer-white"
+    v-if="route_integration.length == 0 || route_action.length == 0"
+  />
+
+  <main
+    class="overflow-y-scroll bg-white"
+    v-else
+  >
     <div
       class="w-100 center mw-doc pv4 ph5 bg-white"
       style="margin-bottom: 15rem"
@@ -10,8 +19,7 @@
 
       <h1 class="fw6 f2 tc pb2">{{title}}</h1>
 
-
-      <!-- show excel templat download page -->
+      <!-- show excel template download page -->
       <div v-if="is_show_excel_template_download_page">
         Excel download page goes here...
       </div>
@@ -135,6 +143,7 @@
   import FunctionMountSetupWizard from '@/components/FunctionMountSetupWizard'
   import ServiceIconWrapper from '@/components/ServiceIconWrapper'
   import MemberInvitePanel from '@/components/MemberInvitePanel'
+  import PageNotFound from '@/components/PageNotFound'
 
   const getNameSuffix = (length) => {
     return randomstring.generate({
@@ -176,6 +185,7 @@
       FunctionMountSetupWizard,
       ServiceIconWrapper,
       MemberInvitePanel,
+      PageNotFound,
     },
     watch: {
       route_action: {
@@ -211,17 +221,41 @@
       has_setup_template() {
         return !_.isNil(this.setup_template)
       },
-      route_action() {
-        return _.get(this.$route, 'params.action', 'setup')
-      },
       route_integration() {
-        return _.get(this.$route, 'query.integration', '')
+        // NOTE: this value is required to make this page backward compatible
+        // for older add-ons and should be removed at some point (the integration name
+        // used to be specified as a query param with key value `integration`, but is
+        // now the first URL param `integration_name`)
+        var backward_compatible = _.get(this.$route, 'query.integration', '')
+
+        if (_.get(this.$route, 'params.action', '').length == 0) {
+          return backward_compatible
+        }
+
+        return _.get(this.$route, 'params.integration_name', backward_compatible)
+      },
+      route_action() {
+        // NOTE: this value is required to make this page backward compatible
+        // for older add-ons and should be removed at some point (the action used to be
+        // specified as the first URL params, but now the integration name is the first
+        // URL parameter and the action is the second URL parameter
+        // is now the first URL param, but `action` used to be the first URL param)
+        var backward_compatible = _.get(this.$route, 'params.integration_name', '')
+        return _.get(this.$route, 'params.action', backward_compatible)
       },
       gsheets_spreadsheet_id() {
-        return _.get(this.$route, 'query.gsheets_spreadsheet_id', '')
+        // NOTE: this value is required to make this page backward compatible
+        // for older add-ons and should be removed at some point: we renamed the
+        // query parameter `spreadsheet_id` => `gsheets_spreadsheet_id`
+        var backward_compatible = _.get(this.$route, 'query.spreadsheet_id', '')
+        return _.get(this.$route, 'query.gsheets_spreadsheet_id', backward_compatible)
       },
       excel_spreadsheet_path() {
-        return _.get(this.$route, 'query.excel_spreadsheet_path', '')
+        // NOTE: this value is required to make this page backward compatible
+        // for older add-ons and should be removed at some point: we renamed the
+        // query parameter `spreadsheet_path` => `excel_spreadsheet_path`
+        var backward_compatible = _.get(this.$route, 'query.spreadsheet_path', '')
+        return _.get(this.$route, 'query.excel_spreadsheet_path', backward_compatible)
       },
       template_target() {
         return _.get(this.$route, 'query.target', '')
@@ -248,6 +282,11 @@
         'getProductionIntegrations': 'getProductionIntegrations',
       }),
       handleRouteActionChange(val, old_val) {
+        // the URL is malformed; bail out
+        if (val == '') {
+          return
+        }
+
         // update the active step from the route
         this.active_step = val
 
@@ -433,7 +472,7 @@
                 window.opener.postMessage(msg_json, "*")
               }
 
-              this.is_submitting = false
+              setTimeout(() => { this.is_submitting = false }, 1000)
 
               if (this.is_started_on_template === true) {
                 // go back to setting up a template
