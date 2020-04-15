@@ -200,18 +200,14 @@
       template_target() {
         return _.get(this.$route, 'query.target', '')
       },
-      spreadsheet_id() {
-        return _.get(this.$route, 'query.spreadsheet_id', '')
+      gsheets_spreadsheet_id() {
+        return _.get(this.$route, 'query.gsheets_spreadsheet_id', '')
       },
-      spreadsheet_path() {
-        return _.get(this.$route, 'query.spreadsheet_path', '')
+      excel_spreadsheet_path() {
+        return _.get(this.$route, 'query.excel_spreadsheet_path', '')
       },
       title() {
-        if (this.route_title.length > 0) {
-          return this.route_title
-        } else {
-          return 'Integration Setup'
-        }
+        return this.route_title.length > 0 ? this.route_title : 'Integration Setup'
       }
     },
     mounted() {
@@ -240,11 +236,11 @@
           // and most likely only has one integration of this type; just take them directly
           // to the template in Google Sheets
           if (this.matching_integrations.length > 0) {
-            if (this.template_target == 'gsheets' && this.spreadsheet_id.length > 0) {
+            if (this.template_target == 'gsheets' && this.gsheets_spreadsheet_id.length > 0) {
               // redirect to Copy Google Sheet page
               this.is_auto_loading_template = true
               setTimeout(() => { this.redirectToGoogleSheets() }, 500)
-            } else if (this.template_target == 'excel' && this.spreadsheet_path.length > 0) {
+            } else if (this.template_target == 'excel' && this.excel_spreadsheet_path.length > 0) {
               // show Excel download page (looks like Google Sheets copy sheet page)
               this.is_auto_loading_template = true
               setTimeout(() => { this.is_auto_loading_template = false }, 500)
@@ -281,7 +277,7 @@
         this.$router[current_action.length == 0 ? 'replace' : 'push'](new_route)
       },
       redirectToGoogleSheets() {
-        window.location = 'https://docs.google.com/spreadsheets/d/' + this.spreadsheet_id + '/copy'
+        window.location = 'https://docs.google.com/spreadsheets/d/' + this.gsheets_spreadsheet_id + '/copy'
       },
       onNextStepClick() {
         // we're on the last step; commit all changes to the backend and take the user to the app
