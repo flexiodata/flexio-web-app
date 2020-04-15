@@ -10,7 +10,7 @@
     v-else
   >
     <div
-      class="w-100 center mw-doc pv4 ph5 bg-white"
+      class="w-100 center mw-doc pv4 ph4 ph5-l bg-white"
       style="margin-bottom: 15rem"
     >
       <div class="tc">
@@ -32,10 +32,11 @@
           </div>
         </div>
         <div
-          class="mv4 mh3 pa4 bg-nearer-white br3"
+          class="mv4 mh3-l pa4 bg-nearer-white br3"
           v-else
         >
-          <p>Would you like to open this template in Google Sheets or Microsoft Excel?</p>
+          <p class="tc f3 lh-title">Your spreadsheet template is ready to go! </p>
+          <p class="tc">Would you like to open this template in Google Sheets or Microsoft Excel?</p>
           <div class="flex-l flex-row-l">
             <div class="flex-fill">
               <el-button
@@ -116,15 +117,14 @@
             class="el-icon-success bg-white f2 dark-green"
             slot="icon"
           ></i>
-          <p class="tc">Your integration was created successfully. Click <strong>"Done"</strong> to begin importing functions.</p>
+          <p class="tc f3 lh-title">Your integration was created successfully!</p>
+          <p class="nt3 f6 tc silver i">We're importing your functions now. You'll be redirected from this page in <span class="b">{{redirect_seconds}}</span> second(s)...</p>
+          <div class="ma2 bg-nearer-white pa4 tc br2">
+            <Spinner size="medium" />
+            <div class="mt2 fw6">Importing functions...</div>
+            <div class="mt2 tc lh-title silver i f7">NOTE: This process may take awhile to complete</div>
+          </div>
         </ServiceIconWrapper>
-        <ButtonBar
-          class="mt4"
-          :cancel-button-visible="false"
-          :submit-button-text="is_submitting ? 'Submitting...' : 'Done'"
-          :submit-button-disabled="is_submitting"
-          @submit-click="submitIntegrationConfig"
-        />
       </div>
     </div>
   </main>
@@ -166,6 +166,7 @@
       active_integration: {},
       setup_template: null,
       output_mount: {},
+      redirect_seconds: 5,
     }
   }
 
@@ -342,16 +343,19 @@
         window.location = 'https://docs.google.com/spreadsheets/d/' + this.gsheets_spreadsheet_id + '/copy'
       },
       onNextStepClick() {
-        // we're on the last step; commit all changes to the backend and take the user to the app
-        if (this.active_step_idx == this.step_order.length - 1) {
+        this.active_step = this.step_order[this.active_step_idx + 1]
+
+        // we're on the last step; commit all changes to the backend
+        // and take the user to wherever they're headed next
+        if (this.active_step == 'success') {
           this.submitIntegrationConfig()
           return
         }
 
-        this.active_step = this.step_order[this.active_step_idx + 1]
-
-        // make sure the route is in sync
-        this.setRoute(this.active_step)
+        // TODO: I don't think we want to mess around with routes just
+        //       for showing the success page -- it just causes problems
+        //       if the user decides to do a hard page refresh
+        //this.setRoute(this.active_step)
       },
       fetchIntegrationConfig() {
         this.is_fetching_config = true
@@ -445,8 +449,17 @@
           this.onNextStepClick()
         })
       },
+      decrementRedirect() {
+        setTimeout(() => {
+          this.redirect_seconds--
+          if (this.redirect_seconds > 1) {
+            this.decrementRedirect()
+          }
+        }, 1000)
+      },
       submitIntegrationConfig() {
         this.is_submitting = true
+        this.decrementRedirect()
 
         var team_name = this.active_team_name
         var create_xhrs = []
@@ -467,19 +480,23 @@
 
             // make sure we add parent eids to all child connections if we need to
             this.processSetupConfig(setup_config, eid, () => {
-              if (window.opener) {
-                var msg_json = { type: 'flexio-integration-setup-complete' }
-                window.opener.postMessage(msg_json, "*")
-              }
+              // show the 'success' message for a couple of seconds and then move along
+              setTimeout(() => {
+                if (window.opener) {
+                  var msg_json = { type: 'flexio-integration-setup-complete' }
+                  window.opener.postMessage(msg_json, "*")
+                }
 
-              setTimeout(() => { this.is_submitting = false }, 1000)
+                setTimeout(() => { this.is_submitting = false }, 1000)
 
-              if (this.is_started_on_template === true) {
-                // go back to setting up a template
-                this.setRoute('template')
-              } else {
-                this.$router.push({ path: `/${team_name}/functions` })
-              }
+                if (this.is_started_on_template === true) {
+                  // go back to setting up a template
+                  this.active_step = 'template'
+                  this.setRoute('template')
+                } else {
+                  this.$router.push({ path: `/${team_name}/functions` })
+                }
+              }, 5000)
             })
           })
         })
