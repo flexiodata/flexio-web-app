@@ -1,5 +1,14 @@
 <template>
-  <main class="overflow-y-scroll bg-white">
+  <!-- malformed URL; bail out -->
+  <PageNotFound
+    class="flex-fill bg-nearer-white"
+    v-if="route_integration.length == 0 || route_action.length == 0"
+  />
+
+  <main
+    class="overflow-y-scroll bg-white"
+    v-else
+  >
     <div
       class="w-100 center mw-doc pv4 ph5 bg-white"
       style="margin-bottom: 15rem"
@@ -10,9 +19,14 @@
 
       <h1 class="fw6 f2 tc pb2">{{title}}</h1>
 
+      <!-- show excel template download page -->
+      <div v-if="is_show_excel_template_download_page">
+        Excel download page goes here...
+      </div>
+
       <!-- step: show spinner text and take user to the copy sheet page -->
-      <div v-if="matching_integrations.length > 0 && active_step == 'template'">
-        <div v-if="is_auto_loading_template">
+      <div v-else-if="active_step == 'template' && existing_integrations.length > 0">
+        <div v-if="is_show_loading_template">
           <div class="mv4 mh3 br3 ba b--black-10 pv5 ph4">
             <Spinner size="large" message="Loading template..." />
           </div>
@@ -27,6 +41,7 @@
               <el-button
                 class="w-100 fw6"
                 plain
+                :disabled="gsheets_spreadsheet_id.length == 0"
                 @click="redirectToGoogleSheets"
               >
                 <div class="flex flex-row items-center justify-center">
@@ -34,20 +49,32 @@
                   <div class="ml2 fw6 f5">Google Sheets</div>
                 </div>
               </el-button>
+              <div
+                class="tc mt2 f6 i"
+                v-if="gsheets_spreadsheet_id.length == 0"
+              >
+                Google Sheets template coming soon!
+              </div>
             </div>
 
             <div class="flex-fill pt3 pt0-l pl4-l">
               <el-button
                 class="w-100 fw6"
                 plain
-                disabled
+                :disabled="excel_spreadsheet_path.length == 0"
+                @click="is_show_excel_template_download_page = true"
               >
                 <div class="flex flex-row items-center justify-center">
                   <img src="../assets/icon/icon-excel-128.png" alt="Microsoft Excel" style="height: 32px" />
                   <div class="ml3 fw6 f5">Microsoft Excel 365</div>
                 </div>
               </el-button>
-              <div class="tc mt2 f6 i">Excel templates coming soon!</div>
+              <div
+                class="tc mt2 f6 i"
+                v-if="excel_spreadsheet_path.length == 0"
+              >
+                Excel template coming soon!
+              </div>
             </div>
           </div>
         </div>
@@ -116,6 +143,7 @@
   import FunctionMountSetupWizard from '@/components/FunctionMountSetupWizard'
   import ServiceIconWrapper from '@/components/ServiceIconWrapper'
   import MemberInvitePanel from '@/components/MemberInvitePanel'
+  import PageNotFound from '@/components/PageNotFound'
 
   const getNameSuffix = (length) => {
     return randomstring.generate({
@@ -129,8 +157,9 @@
     return {
       is_submitting: false,
       is_fetching_config: false,
-      is_auto_loading_template: false,
       is_started_on_template: false,
+      is_show_loading_template: false,
+      is_show_excel_template_download_page: false,
       route_title: '',
       step_order: ['setup', 'success'],
       active_step: '', // 'template' or 'setup' or 'success'
@@ -156,6 +185,7 @@
       FunctionMountSetupWizard,
       ServiceIconWrapper,
       MemberInvitePanel,
+      PageNotFound,
     },
     watch: {
       route_action: {
@@ -173,10 +203,10 @@
       function_mounts() {
         return this.getAvailableFunctionMounts()
       },
-      matching_integrations() {
+      existing_integrations() {
         return _.filter(this.function_mounts, f => {
           var manifest_url = _.get(f, 'connection_info.url', '')
-          return manifest_url.indexOf('functions-'+this.route_integration) >= 0 ? true : false
+          return manifest_url.indexOf('functions-' + this.route_integration) >= 0 ? true : false
         })
       },
       integrations() {
@@ -192,27 +222,47 @@
         return !_.isNil(this.setup_template)
       },
       route_integration() {
-        return _.get(this.$route, 'query.integration', '')
+        // NOTE: this value is required to make this page backward compatible
+        // for older add-ons and should be removed at some point (the integration name
+        // used to be specified as a query param with key value `integration`, but is
+        // now the first URL param `integration_name`)
+        var backward_compatible = _.get(this.$route, 'query.integration', '')
+
+        if (_.get(this.$route, 'params.action', '').length == 0) {
+          return backward_compatible
+        }
+
+        return _.get(this.$route, 'params.integration_name', backward_compatible)
       },
       route_action() {
-        return _.get(this.$route, 'params.action', 'setup')
+        // NOTE: this value is required to make this page backward compatible
+        // for older add-ons and should be removed at some point (the action used to be
+        // specified as the first URL params, but now the integration name is the first
+        // URL parameter and the action is the second URL parameter
+        // is now the first URL param, but `action` used to be the first URL param)
+        var backward_compatible = _.get(this.$route, 'params.integration_name', '')
+        return _.get(this.$route, 'params.action', backward_compatible)
+      },
+      gsheets_spreadsheet_id() {
+        // NOTE: this value is required to make this page backward compatible
+        // for older add-ons and should be removed at some point: we renamed the
+        // query parameter `spreadsheet_id` => `gsheets_spreadsheet_id`
+        var backward_compatible = _.get(this.$route, 'query.spreadsheet_id', '')
+        return _.get(this.$route, 'query.gsheets_spreadsheet_id', backward_compatible)
+      },
+      excel_spreadsheet_path() {
+        // NOTE: this value is required to make this page backward compatible
+        // for older add-ons and should be removed at some point: we renamed the
+        // query parameter `spreadsheet_path` => `excel_spreadsheet_path`
+        var backward_compatible = _.get(this.$route, 'query.spreadsheet_path', '')
+        return _.get(this.$route, 'query.excel_spreadsheet_path', backward_compatible)
       },
       template_target() {
         return _.get(this.$route, 'query.target', '')
       },
-      spreadsheet_id() {
-        return _.get(this.$route, 'query.spreadsheet_id', '')
-      },
-      spreadsheet_path() {
-        return _.get(this.$route, 'query.spreadsheet_path', '')
-      },
       title() {
-        if (this.route_title.length > 0) {
-          return this.route_title
-        } else {
-          return 'Integration Setup'
-        }
-      }
+        return this.route_title.length > 0 ? this.route_title : 'Integration Setup'
+      },
     },
     mounted() {
       var team_name = this.getActiveUsername()
@@ -232,6 +282,11 @@
         'getProductionIntegrations': 'getProductionIntegrations',
       }),
       handleRouteActionChange(val, old_val) {
+        // the URL is malformed; bail out
+        if (val == '') {
+          return
+        }
+
         // update the active step from the route
         this.active_step = val
 
@@ -239,15 +294,18 @@
           // the user has already created an integration of this type (crunchbase, etc.)
           // and most likely only has one integration of this type; just take them directly
           // to the template in Google Sheets
-          if (this.matching_integrations.length > 0) {
-            if (this.template_target == 'gsheets' && this.spreadsheet_id.length > 0) {
+          if (this.existing_integrations.length > 0) {
+            if (this.template_target == 'gsheets' && this.gsheets_spreadsheet_id.length > 0) {
               // redirect to Copy Google Sheet page
-              this.is_auto_loading_template = true
+              this.is_show_loading_template = true
               setTimeout(() => { this.redirectToGoogleSheets() }, 500)
-            } else if (this.template_target == 'excel' && this.spreadsheet_path.length > 0) {
+            } else if (this.template_target == 'excel' && this.excel_spreadsheet_path.length > 0) {
               // show Excel download page (looks like Google Sheets copy sheet page)
-              this.is_auto_loading_template = true
-              setTimeout(() => { this.is_auto_loading_template = false }, 500)
+              this.is_show_loading_template = true
+              setTimeout(() => {
+                this.is_show_loading_template = false
+                this.is_show_excel_template_download_page = true
+              }, 500)
             } else {
               // show choose Google Sheets or Excel page
             }
@@ -260,13 +318,13 @@
         }
 
         // pre-select integrations
-        this.initIntegrationFromRoute()
+        this.initActiveIntegrationFromRoute()
 
         if (this.active_step == 'setup') {
           this.fetchIntegrationConfig()
         }
       },
-      initIntegrationFromRoute() {
+      initActiveIntegrationFromRoute() {
         var cname = this.route_integration
         var route_integration = _.find(this.integrations, f => _.get(f, 'connection.name', '') == cname)
         if (route_integration) {
@@ -281,7 +339,7 @@
         this.$router[current_action.length == 0 ? 'replace' : 'push'](new_route)
       },
       redirectToGoogleSheets() {
-        window.location = 'https://docs.google.com/spreadsheets/d/' + this.spreadsheet_id + '/copy'
+        window.location = 'https://docs.google.com/spreadsheets/d/' + this.gsheets_spreadsheet_id + '/copy'
       },
       onNextStepClick() {
         // we're on the last step; commit all changes to the backend and take the user to the app
@@ -414,13 +472,13 @@
                 window.opener.postMessage(msg_json, "*")
               }
 
-              this.is_submitting = false
+              setTimeout(() => { this.is_submitting = false }, 1000)
 
               if (this.is_started_on_template === true) {
                 // go back to setting up a template
                 this.setRoute('template')
               } else {
-                this.$emit('done')
+                this.$router.push({ path: `/${team_name}/functions` })
               }
             })
           })
