@@ -582,6 +582,17 @@ class System
         );
     }
 
+    public static function logTimestamp(string $str) : void
+    {
+        $t1 = (int)microtime(true);
+        $t1_micropart = sprintf("%06d", ($t1 - floor($t1)) * 1000000);
+        $date = new \DateTime(date('Y-m-d H:i:s.' . $t1_micropart, $t1));
+        $timestamp = $date->format("Y-m-d H:i:s.u");
+
+        $log = "Timestamp: $timestamp\n$str";
+        self::log($log);
+    }
+
     public static function log(string $str) : void
     {
         if (!isset($GLOBALS['g_config']->query_log))

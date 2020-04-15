@@ -36,6 +36,7 @@ class StreamConverter
     public const FORMAT_DELIMITED_TEXT = 'delimited';
     public const FORMAT_FIXED_LENGTH   = 'fixed';
     public const FORMAT_JSON           = 'json';
+    public const FORMAT_NDJSON         = 'ndjson';
     public const FORMAT_RSS            = 'rss';
     public const FORMAT_ATOM           = 'atom';
     public const FORMAT_PDF            = 'pdf';
@@ -191,10 +192,8 @@ class StreamConverter
             $outstream->setMimeType($output_mime_type);
             $streamreader = $instream->getReader();
             $streamwriter = $outstream->getWriter();
-    
-            $rown = 0;
 
-            // transfer the data
+            $rown = 0;
             $streamwriter->write("[");
 
             while (true)
@@ -213,12 +212,31 @@ class StreamConverter
             $streamwriter->close();
             $outstream->setSize($streamwriter->getBytesWritten());
         }
+         else if ($output_mime_type == \Flexio\Base\ContentType::NDJSON)
+        {
+            $outstream->setMimeType($output_mime_type);
+            $streamreader = $instream->getReader();
+            $streamwriter = $outstream->getWriter();
+
+            while (true)
+            {
+                $row = $streamreader->readRow();
+                if ($row === false)
+                    break;
+
+                $json = json_encode($row, 0) + "\n";
+                $streamwriter->write($json);
+            }
+
+            $streamwriter->close();
+            $outstream->setSize($streamwriter->getBytesWritten());
+        }
          else if ($output_mime_type == \Flexio\Base\ContentType::XLSX || $output_mime_type == \Flexio\Base\ContentType::XLS || $output_mime_type == \Flexio\Base\ContentType::ODS)
         {
             $outstream->setMimeType($output_mime_type);
             $streamreader = $instream->getReader();
             $streamwriter = $outstream->getWriter();
-    
+
             $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
             $worksheet = $spreadsheet->getActiveSheet();
 
@@ -276,7 +294,7 @@ class StreamConverter
             $outstream->setMimeType($output_mime_type);
             $streamreader = $instream->getReader();
             $streamwriter = $outstream->getWriter();
-    
+
             $delimiter = $convert_params['output']['delimiter'] ?? self::DELIMITER_COMMA;
             $header = toBoolean($convert_params['output']['header'] ?? true);
             $qualifier = $convert_params['output']['qualifier'] ?? self::TEXT_QUALIFIER_DOUBLE_QUOTE;
@@ -414,6 +432,11 @@ class StreamConverter
             if ($output_mime_type == \Flexio\Base\ContentType::JSON)
             {
                 $rows[] = $row;
+            }
+            else if ($output_mime_type == \Flexio\Base\ContentType::NDJSON)
+            {
+                $json = json_encode($row,0) + "\n";
+                $streamwriter->write($row);
             }
             else if ($output_mime_type == \Flexio\Base\ContentType::FLEXIO_TABLE)
             {
@@ -613,6 +636,21 @@ class StreamConverter
                 'size' => strlen($contents)
             ]);
         }
+         else if ($output_mime_type == \Flexio\Base\ContentType::NDJSON)
+        {
+            $size = 0;
+            foreach ($items as $i)
+            {
+                $json = json_encode($i,0) + "\n";
+                $size += strlen($json);
+                $streamwriter->write($json);
+            }
+
+            $outstream->set([
+                'mime_type' => $output_mime_type,
+                'size' => $size
+            ]);
+        }
          else
         {
             // set the output structure and write the rows
@@ -628,15 +666,13 @@ class StreamConverter
 
             $streamwriter = $outstream->getWriter();
 
-            foreach($items as $i)
+            foreach ($items as $i)
             {
                 $streamwriter->write($i);
             }
 
             $streamwriter->close();
         }
-
-
     }
 
     private static function createOutputFromCsvInput(array $convert_params, \Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream, string $output_mime_type) : void
@@ -650,6 +686,8 @@ class StreamConverter
 
         if ($output_mime_type == \Flexio\Base\ContentType::JSON)
             $output = 'json';
+        else if ($output_mime_type == \Flexio\Base\ContentType::NDJSON)
+            $output = 'ndjson';
         else if ($output_mime_type == \Flexio\Base\ContentType::XLSX || $output_mime_type == \Flexio\Base\ContentType::XLS || $output_mime_type == \Flexio\Base\ContentType::ODS)
             $output = 'spreadsheet';
         else
@@ -657,6 +695,7 @@ class StreamConverter
 
         $spreadsheet_output = [];
         $total_json_size = 0;
+        $total_ndjson_size = 0;
 
         $header = toBoolean($convert_params['input']['header'] ?? true);
         $qualifier = $convert_params['input']['qualifier'] ?? self::TEXT_QUALIFIER_DOUBLE_QUOTE;
@@ -706,8 +745,14 @@ class StreamConverter
         {
             // for json output, streamwriter is created here; for table output, streamwriter
             // is created below, because header row must be collected in advance
+            $json= '[';
+            $total_json_size += strlen($json);
             $streamwriter = $outstream->getWriter();
-            $streamwriter->write("[");
+            $streamwriter->write($json);
+        }
+         else if ($output == 'ndjson')
+        {
+            $streamwriter = $outstream->getWriter();
         }
          else if ($output == 'spreadsheet')
         {
@@ -864,7 +909,6 @@ class StreamConverter
                     $structure = self::determineStructureFromRow($row, $header);
                 }
 
-
                 if (!$streamwriter)
                 {
                     $outstream->setStructure($structure);
@@ -894,6 +938,11 @@ class StreamConverter
                 $total_json_size += strlen($json);
                 $result = $streamwriter->write($json);
             }
+            else if ($output == 'ndjson')
+            {
+                $json = json_encode($row, 0) . "\n";
+                $result = $streamwriter->write($json);
+            }
              else if ($output == 'spreadsheet')
             {
                 $spreadsheet_output[] = array_values($row);
@@ -916,7 +965,13 @@ class StreamConverter
         {
             if ($output == 'json')
             {
-                $streamwriter->write("\n]");
+                $json = "\n]";
+                $total_json_size += strlen($json);
+                $streamwriter->write($json);
+            }
+            else if ($output == 'ndjson')
+            {
+                // nothing
             }
             else if ($output == 'table')
             {
@@ -974,7 +1029,8 @@ class StreamConverter
             // input/output
             $outstream->set([
                 'mime_type' => $output_mime_type,
-                'size' => strlen($contents)
+                'size' => strlen($contents),
+                'structure' => $structure
             ]);
         }
 
@@ -992,7 +1048,19 @@ class StreamConverter
         {
             $output_properties = array(
                 'mime_type' => \Flexio\Base\ContentType::JSON,
-                'size' => $total_json_size
+                'size' => $total_json_size,
+                'structure' => $structure
+            );
+
+            $outstream->set($output_properties);
+        }
+
+        if ($output == 'ndjson')
+        {
+            $output_properties = array(
+                'mime_type' => \Flexio\Base\ContentType::NDJSON,
+                'size' => $total_ndjson_size,
+                'structure' => $structure
             );
 
             $outstream->set($output_properties);
@@ -1032,6 +1100,25 @@ class StreamConverter
             // input/output
             $outstream->set([
                 'mime_type' => \Flexio\Base\ContentType::JSON,
+                'size' => $streamwriter->getBytesWritten()
+            ]);
+        }
+         else if ($output_mime_type == \Flexio\Base\ContentType::NDJSON)
+        {
+            // transfer the data
+            $streamwriter = $outstream->getWriter();
+
+            foreach ($rows as $r)
+            {
+                $json = json_encode($r, 0) + "\n";
+                $streamwriter->write($json);
+            }
+
+            $streamwriter->close();
+
+            // input/output
+            $outstream->set([
+                'mime_type' => \Flexio\Base\ContentType::NDJSON,
                 'size' => $streamwriter->getBytesWritten()
             ]);
         }
@@ -1524,6 +1611,8 @@ class StreamConverter
             return \Flexio\Base\ContentType::TEXT;
         else if ($format == self::FORMAT_JSON)
             return \Flexio\Base\ContentType::JSON;
+        else if ($format == self::FORMAT_NDJSON)
+            return \Flexio\Base\ContentType::NDJSON;
         else if ($format == self::FORMAT_RSS)
             return \Flexio\Base\ContentType::RSS;
         else if ($format == self::FORMAT_ATOM)

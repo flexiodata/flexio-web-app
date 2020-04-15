@@ -19,8 +19,20 @@ namespace Flexio\Services;
 class ElasticSearch implements \Flexio\IFace\IConnection,
                                \Flexio\IFace\IFileSystem
 {
-    private const MAX_INDEX_RESULT_WINDOW   = 1000000;     // maximum number of items that will be returned from a search without pagination
-    private const MAX_INDEX_ROW_WRITE_LIMIT = 1000000; // maximum number of rows that can be written in the write loop; primarily to avoid hanging loops
+    // number of rows returned in each page while scrolling
+    private const READ_PAGE_SIZE = 5000;
+
+    // min/max number of rows that will be sent to to ES to index in one request;
+    // actual number is a range between these based on row size
+    private const MIN_WRITE_PAGE_SIZE = 100;
+    private const MAX_WRITE_PAGE_SIZE = 10000;
+
+    // maximum number of items that will be returned from a search without using scrolling;
+    // note: here for reference; defaults to 10k, and setting it higher can result in bad performance
+    private const MAX_INDEX_RESULT_WINDOW = 10000;
+
+    // maximum number of rows that can be written in the write loop; primarily to avoid hanging loops
+    private const MAX_INDEX_ROW_WRITE_LIMIT = 1000000;
 
     // connection info
     private $host = '';
@@ -52,8 +64,14 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         $username = $validated_params['username'];
         $password = $validated_params['password'];
 
+        // AWS elasticsearch services uses IAM for access control; this is a mode
+        // which is either on or off.  When on, the requests must be signed with
+        // the Signature V4 algorithm; when off, HTTP basic authentication is used
+        // HTTP basic authentication is not supported on AWS
+        $use_aws_iam = (($params['type'] ?? '') == 'elasticsearch-aws');
+
         $service = new self;
-        $service->initialize($host, $port, $username, $password);
+        $service->initialize($host, $port, $username, $password, $use_aws_iam);
 
         return $service;
     }
@@ -64,12 +82,13 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
     public function connect() : bool
     {
+        $use_aws_iam = $this->use_aws_iam;
         $host = $this->host;
         $port = $this->port;
         $username = $this->username;
         $password = $this->password;
 
-        if ($this->initialize($host, $port, $username, $password) === false)
+        if ($this->initialize($host, $port, $username, $password, $use_aws_iam) === false)
             return false;
 
         return true;
@@ -153,8 +172,49 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
     public function read(array $params, callable $callback) // TODO: add return type
     {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        if (!isset($params['path']))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+        if (!array_key_exists('q', $params))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        $path = $params['path'];
+        $query = $params['q'];
+        if (!is_string($path))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        $limit = $params['limit'] ?? PHP_INT_MAX;
+        if (!is_integer($limit))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        // get the rows using scrolling to return all the matching rows
+        $idx = 0;
+        $scroll_id = '';
+        $result = [];
+        while (true)
+        {
+            $page = $this->search($path, $query, $scroll_id);
+            $rows = $page['hits']['hits'] ?? false;
+            if ($rows === false || count($rows) === 0)
+            {
+                $this->deleteSearchScroll($scroll_id);
+                return;
+            }
+
+            foreach ($rows as $r)
+            {
+                if ($idx >= $limit)
+                {
+                    $this->deleteSearchScroll($scroll_id);
+                    return;
+                }
+
+                $content = $r['_source'];
+                $callback($content);
+                $idx++;
+            }
+
+            $scroll_id = $page['_scroll_id'];
+        }
     }
 
     public function write(array $params, callable $callback) // TODO: add return type
@@ -167,7 +227,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         $index = self::convertToValid($index);
 
         // output the rows
-        $buffer_size = 1000; // max rows to write at a time
+        $write_page_size = 0;
         $rows_to_write = array();
 
         $total_row_count = 0;
@@ -177,17 +237,23 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             if ($row === false)
                 break;
 
+            if ($write_page_size === 0)
+                $write_page_size = self::getWritePageSize($row);
+
             $rows_to_write[] = $row;
             $total_row_count++;
 
             if ($total_row_count >= self::MAX_INDEX_ROW_WRITE_LIMIT)
                 break;
 
-            if (count($rows_to_write) <= $buffer_size)
+            if (count($rows_to_write) <= $write_page_size)
                 continue;
 
             $this->writeRows($index, $rows_to_write);
             $rows_to_write = array();
+
+            // small delay
+            usleep(100000); // sleep 1000ms
         }
 
         // write out whatever is left over
@@ -204,23 +270,12 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         if (!$this->authenticated())
             return array();
 
-        // get the indexes
         $url = $this->getHostUrlString() . '/_stats';
-        $auth = $this->getBasicAuthString();
+        $request = new \GuzzleHttp\Psr7\Request('GET', $url);
+        $response = $this->sendWithCredentials($request);
 
-        $headers = array();
-        $headers[] = 'Authorization: Basic ' . $auth;
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_HTTPGET, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-        $result = curl_exec($ch);
-        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-
+        $httpcode = $response->getStatusCode();
+        $result = (string)$response->getBody();
         if ($httpcode < 200 || $httpcode > 299)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
@@ -254,31 +309,17 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
     {
         try
         {
-            // write the content
-
-            $query_params = array(
+            $url_query_params = array(
                 'ignore_unavailable' => 'true' // don't throw an exception if index doesn't exist
             );
-            $query_str = http_build_query($query_params);
+            $url_query_str = http_build_query($url_query_params);
 
-            $url = $this->getHostUrlString() . '/' . urlencode($index) . '?' . $query_str;
-            $auth = $this->getBasicAuthString();
-            $content_type = 'application/json';
+            $url = $this->getHostUrlString() . '/' . urlencode($index) . '?' . $url_query_str;
+            $request = new \GuzzleHttp\Psr7\Request('DELETE', $url);
+            $response = $this->sendWithCredentials($request);
 
-            $headers = array();
-            $headers[] = 'Authorization: Basic ' . $auth;
-            $headers[] = 'Content-Type: ' . $content_type;
-
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-            $result = curl_exec($ch);
-            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
-
+            $httpcode = $response->getStatusCode();
+            $result = (string)$response->getBody();
             if ($httpcode < 200 || $httpcode > 299)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
 
@@ -321,25 +362,12 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
                 $index_configuration['mappings'] = $index_mapping_info['mappings'];
             }
 
-            // create the index with the specified mapping
             $url = $this->getHostUrlString() . '/' . urlencode($index);
-            $auth = $this->getBasicAuthString();
-            $content_type = 'application/json';
+            $request = new \GuzzleHttp\Psr7\Request('PUT', $url, ['Content-Type' => 'application/json'], json_encode($index_configuration));
+            $response = $this->sendWithCredentials($request);
 
-            $headers = array();
-            $headers[] = 'Authorization: Basic ' . $auth;
-            $headers[] = 'Content-Type: ' . $content_type;
-
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($index_configuration));
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-            $result = curl_exec($ch);
-            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
+            $httpcode = $response->getStatusCode();
+            $result = (string)$response->getBody();
 
             if ($httpcode < 200 || $httpcode > 299)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
@@ -361,6 +389,12 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
     public function writeRows(string $index, array $rows, bool $refresh_immediately = false) : void
     {
+        // additional optimizations:
+        // https://aws.amazon.com/premiumsupport/knowledge-center/elasticsearch-indexing-performance/
+
+        // common api options; see here for more information about filtering results
+        // https://www.elastic.co/guide/en/elasticsearch/reference/current/common-options.html
+
         try
         {
             // create the post buffer for the bulk api endpoint
@@ -374,30 +408,22 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             }
             $index_write_string .= "\n"; // payload must end with newline
 
-            // write the content
-            $query_params = array(
-                'refresh' => $refresh_immediately ? 'true' : 'false'
+            // write the content; note: set the filter path to pull back basic header info;
+            // a lot of info is returned back for each of the bulk request row items and this
+            // can add up to signficant network traffic when inserting 100ks rows; per AWS
+            // recommendation
+            $url_query_params = array(
+                'refresh' => $refresh_immediately ? 'true' : 'false',
+                'filter_path' => 'took,errors'
             );
-            $query_str = http_build_query($query_params);
+            $url_query_str = http_build_query($url_query_params);
 
-            $url = $this->getHostUrlString() . '/_bulk?' . $query_str;
-            $auth = $this->getBasicAuthString();
-            $content_type = 'application/x-ndjson'; // use ndjson for bulk operations
+            $url = $this->getHostUrlString() . '/_bulk?' . $url_query_str;
+            $request = new \GuzzleHttp\Psr7\Request('POST', $url, ['Content-Type' => 'application/x-ndjson'], $index_write_string); // use ndjson for bulk operations
+            $response = $this->sendWithCredentials($request);
 
-            $headers = array();
-            $headers[] = 'Authorization: Basic ' . $auth;
-            $headers[] = 'Content-Type: ' . $content_type;
-
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $index_write_string);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-            $result = curl_exec($ch);
-            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
+            $httpcode = $response->getStatusCode();
+            $result = (string)$response->getBody();
 
             if ($httpcode < 200 || $httpcode > 299)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
@@ -417,35 +443,78 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         }
     }
 
-    public function query(string $index, string $query) : array
+    public function search(string $index, array $search_query = null, string $scroll_id = null) : array
     {
         try
         {
-            $index_query_string = $query;
+            $request = false;
 
-            $query_params = array(
-                'size' => self::MAX_INDEX_RESULT_WINDOW
-            );
-            $query_str = http_build_query($query_params);
+            // if the search query is null, return all rows
+            if (!isset($search_query))
+                $search_query = array('query' => array('match_all' => new \stdClass()));
 
-            $url = $this->getHostUrlString() . '/' . urlencode($index) . '/_search?' . $query_str;
-            $auth = $this->getBasicAuthString();
-            $content_type = 'application/json';
+            // if we don't have a scroll id, perform a regular search query;
+            // if we have a zero-length string scroll_id, it's the start of the scrolling, but otherwise a regular query
+            // if we have a non-zero-length string scroll_id, it's part of an ongoing query
 
-            $headers = array();
-            $headers[] = 'Authorization: Basic ' . $auth;
-            $headers[] = 'Content-Type: ' . $content_type;
+            // see here for more info about scrolling:
+            // https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-body.html#request-body-search-scroll
 
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $index_query_string);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-            $result = curl_exec($ch);
-            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
+            if (!isset($scroll_id))
+            {
+                // perform regular search query
+
+                $url_query_params = array();
+                $url_query_params['size'] = self::MAX_INDEX_RESULT_WINDOW; // set this to maximum available size we can get without scrolling
+                $url_query_params['filter_path'] = '_scroll_id,took,hits.hits._source'; // default response includes a lot of metadata; only get what we need to save network traffic
+                $url_query_str = http_build_query($url_query_params);
+                $url = $this->getHostUrlString() . '/' . urlencode($index) . '/_search?' . $url_query_str;
+                $search_str = json_encode($search_query);
+                $request = new \GuzzleHttp\Psr7\Request('POST', $url, ['Content-Type' => 'application/json'], $search_str);
+            }
+
+            if (isset($scroll_id) && strlen($scroll_id) === 0)
+            {
+                // perform initial query for a scroll query; scrolling will be finished
+                // when there are no hit results
+
+                // with scrolling, use doc sort order for speed per note in documentation
+                $search_query['sort'] = ['_doc'];
+                $url_query_params = array();
+                $url_query_params['size'] = self::READ_PAGE_SIZE;
+                $url_query_params['scroll'] = '1m'; // set timeout to 1 minute
+                $url_query_params['filter_path'] = '_scroll_id,took,hits.hits._source'; // default response includes a lot of metadata; only get what we need to save network traffic
+                $url_query_str = http_build_query($url_query_params);
+                $url = $this->getHostUrlString() . '/' . urlencode($index) . '/_search?' . $url_query_str;
+                $search_str = json_encode($search_query);
+                $request = new \GuzzleHttp\Psr7\Request('POST', $url, ['Content-Type' => 'application/json'], $search_str);
+            }
+
+            if (isset($scroll_id) && strlen($scroll_id) > 0)
+            {
+                // perform additional query for scroll query; scrolling will be finished
+                // when there are no hit results
+
+                $search_query = array(
+                    'scroll_id' => $scroll_id
+                );
+
+                $url_query_params = array();
+                $url_query_params['scroll'] = '1m'; // use scrolling since we want to return all results
+                $url_query_params['filter_path'] = '_scroll_id,took,hits.hits._source'; // default response includes a lot of metadata; only get what we need to save network traffic
+                $url_query_str = http_build_query($url_query_params);
+                $url = $this->getHostUrlString() . '/_search/scroll?' . $url_query_str;
+                $request = new \GuzzleHttp\Psr7\Request('POST', $url, ['Content-Type' => 'application/json'], json_encode($search_query));
+            }
+
+            if ($request === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+            // send the request
+            $response = $this->sendWithCredentials($request);
+
+            $httpcode = $response->getStatusCode();
+            $result = (string)$response->getBody();
 
             if ($httpcode < 200 || $httpcode > 299)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
@@ -459,21 +528,28 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             if (isset($result['errors']) && $result['errors'] === true)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-            $rows = $result['hits']['hits'] ?? false;
-            if (!is_array($rows))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-
-            $output = array();
-            foreach ($rows as $r)
-            {
-                $output[] = $r['_source'];
-            }
-
-            return $output;
+            return $result;
         }
         catch (\Exception $e)
         {
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+        }
+    }
+
+    public function deleteSearchScroll(string $scroll_id)
+    {
+        if (strlen($scroll_id) === 0)
+            return;
+
+        try
+        {
+            $url = $this->getHostUrlString() . '/_search/scroll/' . urlencode($scroll_id);
+            $request = new \GuzzleHttp\Psr7\Request('DELETE', $url);
+            $response = $this->sendWithCredentials($request);
+        }
+        catch (\Exception $e)
+        {
+            // don't fail; search scroll will automatically delete
         }
     }
 
@@ -483,21 +559,11 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         try
         {
             $url = $this->getHostUrlString();
-            $auth = $this->getBasicAuthString();
+            $request = new \GuzzleHttp\Psr7\Request('GET', $url);
+            $response = $this->sendWithCredentials($request);
 
-            $headers = array();
-            $headers[] = 'Authorization: Basic ' . $auth;
-
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($ch, CURLOPT_HTTPGET, true);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-            $result = curl_exec($ch);
-            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
-
+            $httpcode = $response->getStatusCode();
+            $result = (string)$response->getBody();
             if ($httpcode < 200 || $httpcode > 299)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_DATABASE);
 
@@ -520,8 +586,9 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         }
     }
 
-    private function initialize(string $host, int $port, string $username, string $password) : bool
+    private function initialize(string $host, int $port, string $username, string $password, bool $use_aws_iam = false) : bool
     {
+        $this->use_aws_iam = $use_aws_iam;
         $this->host = $host;
         $this->port = $port;
         $this->username = $username;
@@ -543,21 +610,11 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         try
         {
             $url = $this->getHostUrlString();
-            $auth = $this->getBasicAuthString();
+            $request = new \GuzzleHttp\Psr7\Request('GET', $url);
+            $response = $this->sendWithCredentials($request);
 
-            $headers = array();
-            $headers[] = 'Authorization: Basic ' . $auth;
-
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($ch, CURLOPT_HTTPGET, true);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-            $result = curl_exec($ch);
-            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
-
+            $httpcode = $response->getStatusCode();
+            $result = (string)$response->getBody();
             if ($httpcode < 200 || $httpcode > 299)
                 return false;
 
@@ -584,7 +641,18 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
     private function getHostUrlString() : string
     {
-        return 'http://' . $this->host . ':' . (string)$this->port;
+        if ((string)$this->port == "80")
+        {
+            return 'http://' . $this->host;
+        }
+        else if (($this->use_aws_iam ?? false) || (string)$this->port == "443")
+        {
+            return 'https://' . $this->host;
+        }
+        else
+        {
+            return 'http://' . $this->host . ':' . (string)$this->port;
+        }
     }
 
     private function getBasicAuthString() : string
@@ -651,6 +719,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
                 );
                 return $info;
 
+            case \Flexio\Base\Structure::TYPE_NUMBER:
             case \Flexio\Base\Structure::TYPE_NUMERIC:
             case \Flexio\Base\Structure::TYPE_DOUBLE:
                 $info = array(
@@ -701,5 +770,48 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
     {
         $name = ltrim($name,'/');
         return strtolower($name);
+    }
+
+
+    private function sendWithCredentials(\GuzzleHttp\Psr7\Request $request)
+    {
+        $client = new \GuzzleHttp\Client();
+        $options = [];
+
+        if (($this->use_aws_iam ?? false))
+        {
+            $credentials = new \Aws\Credentials\Credentials($this->username, $this->password);
+            $signer = new \Aws\Signature\SignatureV4('es', 'us-east-1');
+            $request = $signer->signRequest($request, $credentials);
+        }
+        else
+        {
+            $options = [ 'auth' => [ $this->username, $this->password ] ];
+        }
+
+        return $client->send($request, $options);
+    }
+
+    private static function getWritePageSize(array $row) : int
+    {
+        // calculate how many records to write at for approximate
+        // 5MB payload using row record as rough estimate
+        $sample = json_encode($row,0);
+        if ($sample === false)
+            return self::MAX_WRITE_PAGE_SIZE;
+
+        $sample_size = strlen($sample);
+        if ($sample_size === 0)
+            return self::MAX_WRITE_PAGE_SIZE;
+
+        $write_page_size = (int)(5000000/$sample_size);
+
+        // clamp the number with a range
+        if ($write_page_size > self::MAX_WRITE_PAGE_SIZE)
+            $write_page_size = self::MAX_WRITE_PAGE_SIZE;
+        if ($write_page_size <= self::MIN_WRITE_PAGE_SIZE)
+            $write_page_size = self::MIN_WRITE_PAGE_SIZE;
+
+        return $write_page_size;
     }
 }

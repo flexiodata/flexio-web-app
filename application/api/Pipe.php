@@ -391,12 +391,12 @@ class Pipe
         // run the job; only increment/decrement the process count if we're running in passthrough;
         // do this manually so that the increment/decrement happen regardless of whether or not
         // the process has an error
-        if ($pipe_run_mode === \Model::PIPE_RUN_MODE_PASSTHROUGH)
+        if (!IS_DEBUG() && $pipe_run_mode === \Model::PIPE_RUN_MODE_PASSTHROUGH)
             \Flexio\Jobs\ProcessHandler::incrementProcessCount($process_engine, array());
 
         $process_host->run(false /*true: run in background*/);
 
-        if ($pipe_run_mode === \Model::PIPE_RUN_MODE_PASSTHROUGH)
+        if (!IS_DEBUG() && $pipe_run_mode === \Model::PIPE_RUN_MODE_PASSTHROUGH)
             \Flexio\Jobs\ProcessHandler::decrementProcessCount($process_engine, array());
 
         // return the result
@@ -413,24 +413,44 @@ class Pipe
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         $mime_type = $stream_info['mime_type'];
-        $start = 0;
-        $limit = PHP_INT_MAX;
-        $content = \Flexio\Base\StreamUtil::getStreamContents($stream, $start, $limit);
         $response_code = $process_engine->getResponseCode();
 
         if ($mime_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
         {
-            // return content as-is
-            header('Content-Type: ' . $mime_type, true, $response_code);
+            // send headers
+            \Flexio\Api\Response::setDefaultHeaders($mime_type, $response_code);
+
+            // send the content
+            $reader = $stream->getReader();
+            while (($content = $reader->read(4096)) !== false)
+            {
+                echo($content);
+            }
         }
         else
         {
-            // flexio table; return application/json in place of internal mime
-            header('Content-Type: ' . \Flexio\Base\ContentType::JSON, true, $response_code);
-            $content = json_encode($content, JSON_UNESCAPED_SLASHES);
+            // send headers
+            $mime_type = \Flexio\Base\ContentType::JSON;
+            \Flexio\Api\Response::setDefaultHeaders($mime_type, $response_code);
+
+            // send the content; return application/json in place of internal mime
+            echo('[');
+
+            $first = true;
+            $reader = $stream->getReader();
+            while (($row = $reader->readRow()) !== false)
+            {
+                $content = $first ? '' : ',';
+                $content .= json_encode($row, JSON_UNESCAPED_SLASHES);
+                echo($content);
+
+                $first = false;
+            }
+
+            echo(']');
         }
 
-        \Flexio\Api\Response::sendRaw($content);
+        exit(0);
     }
 
     public static function populatecache(\Flexio\Api\Request $request) : void
@@ -496,8 +516,7 @@ class Pipe
 
         // create a new process engine for running a process
         $elastic_search_params = array(
-            'index' => $pipe_properties['eid'],
-            'structure' => $pipe_properties['returns']
+            'index' => $pipe_properties['eid']
         );
         $process_engine = \Flexio\Jobs\Process::create();
         $process_engine->queue('\Flexio\Jobs\ProcessHandler::addMountParams', $process_properties);
@@ -560,8 +579,7 @@ class Pipe
 
         // create a new process engine for running a process
         $elastic_search_params = array(
-            'index' => $pipe_properties['eid'],
-            'structure' => $pipe_properties['returns']
+            'index' => $pipe_properties['eid']
         );
         $process_engine = \Flexio\Jobs\Process::create();
         $process_engine->queue('\Flexio\Jobs\ProcessHandler::addMountParams', $process_properties);

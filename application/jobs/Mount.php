@@ -286,10 +286,9 @@ class Mount
 
                 // load the data into the index
                 $elastic_search_params = array(
-                    'index' => $pipe_properties['eid'],
-                    'structure' => array() // index currently creates implicit structure from content; if explicity structure is needed, do the conversion first
+                    'index' => $pipe_properties['eid']
                 );
-                $process_engine->queue('\Flexio\Jobs\Convert::run', array('input' => array('format' => 'csv'), 'output' => array('format' => 'table')));
+                $process_engine->queue('\Flexio\Jobs\Convert::run', array('input' => array('format' => 'csv'), 'output' => array('format' => 'ndjson')));
                 $process_engine->queue('\Flexio\Jobs\ProcessHandler::saveStdoutToElasticSearch', $elastic_search_params);
                 $process_engine->run();
 
@@ -300,10 +299,33 @@ class Mount
                 $column_info = $structure->get();
                 foreach ($column_info as $c)
                 {
+                    $name = $c['name'];
+                    $type = $c['type'];
+
+                    // convert structure type to appropriate api/json convention
+                    switch ($type)
+                    {
+
+                        case \Flexio\Base\Structure::TYPE_STRING:
+                        case \Flexio\Base\Structure::TYPE_TEXT:
+                        case \Flexio\Base\Structure::TYPE_CHARACTER:
+                        case \Flexio\Base\Structure::TYPE_WIDECHARACTER:
+                        case \Flexio\Base\Structure::TYPE_DATE:
+                        case \Flexio\Base\Structure::TYPE_DATETIME:
+                            $type = \Flexio\Base\Structure::TYPE_STRING;
+                            break;
+
+                        case \Flexio\Base\Structure::TYPE_NUMBER:
+                        case \Flexio\Base\Structure::TYPE_NUMERIC:
+                        case \Flexio\Base\Structure::TYPE_DOUBLE:
+                            $type = \Flexio\Base\Structure::TYPE_NUMBER;
+                            break;
+                    }
+
                     $item = array();
-                    $item['name'] = $c['name'];
-                    $item['type'] = $c['type'];
-                    $item['description'] = 'The ' . $c['name'] . ' of the item';
+                    $item['name'] = $name;
+                    $item['type'] = $type;
+                    $item['description'] = 'The ' . $name . ' of the item';
                     $pipe_returns_info[] = $item;
                 }
 
@@ -347,8 +369,7 @@ class Mount
                     'triggered_by' => $triggered_by
                 );
                 $elastic_search_params = array(
-                    'index' => $pipe_properties['eid'],
-                    'structure' => $pipe_properties['returns']
+                    'index' => $pipe_properties['eid']
                 );
                 $process_engine = \Flexio\Jobs\Process::create();
                 $process_engine->setOwner($owner_user_eid);

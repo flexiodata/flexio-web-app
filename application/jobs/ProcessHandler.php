@@ -187,8 +187,7 @@ class ProcessHandler
     {
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($callback_params, array(
-                'index' => array('type' => 'string', 'required' => true), // the name of the index to drop/create/write-to
-                'structure'  => array('type' => 'object', 'required' => true)  // structure of the data for the index
+                'index' => array('type' => 'string', 'required' => true) // the name of the index to drop/create/write-to
             ))->hasErrors()) === true)
         {
             // note: parameters are internal, so proper error is write failing
@@ -198,18 +197,16 @@ class ProcessHandler
 
         $validated_params = $validator->getParams();
         $index = $validated_params['index'];
-        $structure = $validated_params['structure'];
-        $structure = \Flexio\Base\Structure::create($structure);
 
         // connect to elasticsearch
         $elasticsearch_connection_info = \Flexio\System\System::getSearchCacheConfig();
-        if ($elasticsearch_connection_info['type'] !== 'elasticsearch')
+        if ($elasticsearch_connection_info['type'] !== 'elasticsearch' && $elasticsearch_connection_info['type'] !== 'elasticsearch-aws')
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, "Search not available");
         $elasticsearch = \Flexio\Services\ElasticSearch::create($elasticsearch_connection_info);
 
         // create a new index; delete any index that's already there
         $elasticsearch->deleteIndex($index);
-        $elasticsearch->createIndex($index, $structure->get());
+        $elasticsearch->createIndex($index);
 
         // get the stdout mime type
         $stdout_stream_info = $process->getStdout()->get();
@@ -217,7 +214,6 @@ class ProcessHandler
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         $stdout_mime_type = $stdout_stream_info['mime_type'];
-
 
         if ($stdout_mime_type === \Flexio\Base\ContentType::FLEXIO_TABLE)
         {
@@ -237,16 +233,37 @@ class ProcessHandler
             });
         }
 
+        if ($stdout_mime_type === \Flexio\Base\ContentType::NDJSON)
+        {
+            // handle json content type
+            //   ["col1"=>"val1", "col2"=>"val2"]\n
+            //   ["col1"=>"val3", "col2"=>"val4"]\n
+            $stdout_reader = $process->getStdout()->getReader();
+
+            // write the output to elasticsearch
+            $params = array(
+                'path' => $index // service uses path for consistency with other services
+            );
+            $elasticsearch->write($params, function() use (&$stdout_reader) {
+                $row = $stdout_reader->readRow();
+                if ($row === false)
+                    return false;
+                // TODO: coerce row types?
+                $row = json_decode($row, true);
+                return $row;
+            });
+        }
+
         if ($stdout_mime_type === \Flexio\Base\ContentType::JSON)
         {
             // handle json content type
-
             // [
             //   ["col1"=>"val1", "col2"=>"val2"],
             //   ["col1"=>"val3", "col2"=>"val4"]
             // ]
-            $data_to_write = '';
             $stdout_reader= $process->getStdout()->getReader();
+
+            $data_to_write = '';
             while (($chunk = $stdout_reader->read(32768)) !== false)
             {
                 $data_to_write .= $chunk;

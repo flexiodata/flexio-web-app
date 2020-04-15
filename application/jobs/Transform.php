@@ -91,9 +91,11 @@ class Transform implements \Flexio\IFace\IJob
 
     // column classes
     public const COLUMN_TYPE_NONE           = '';
+    public const COLUMN_TYPE_STRING         = 'string';
     public const COLUMN_TYPE_TEXT           = 'text';
     public const COLUMN_TYPE_CHARACTER      = 'character';
     public const COLUMN_TYPE_WIDECHARACTER  = 'widecharacter';
+    public const COLUMN_TYPE_NUMBER         = 'number';
     public const COLUMN_TYPE_NUMERIC        = 'numeric';
     public const COLUMN_TYPE_FLOAT          = 'float';
     public const COLUMN_TYPE_DOUBLE         = 'double';
@@ -664,9 +666,11 @@ class Transform implements \Flexio\IFace\IJob
 
         // make sure it's a valid type
         $column_types = array(
+            self::COLUMN_TYPE_STRING,
             self::COLUMN_TYPE_TEXT,
             self::COLUMN_TYPE_CHARACTER,
             self::COLUMN_TYPE_WIDECHARACTER,
+            self::COLUMN_TYPE_NUMBER,
             self::COLUMN_TYPE_NUMERIC,
             self::COLUMN_TYPE_DOUBLE,
             self::COLUMN_TYPE_INTEGER,
@@ -690,6 +694,7 @@ class Transform implements \Flexio\IFace\IJob
                     $new_structure['width'] = 20;
                     break;
 
+                case self::COLUMN_TYPE_NUMBER:
                 case self::COLUMN_TYPE_NUMERIC:
                 case self::COLUMN_TYPE_DOUBLE:
                     if ($old_structure['width'] < 0)
@@ -708,7 +713,7 @@ class Transform implements \Flexio\IFace\IJob
             }
         }
 
-        if ($new_structure['type'] == self::COLUMN_TYPE_NUMERIC)
+        if ($new_structure['type'] == self::COLUMN_TYPE_NUMBER || $new_structure['type'] == self::COLUMN_TYPE_NUMERIC)
         {
             switch ($old_structure['type'])
             {
@@ -743,6 +748,7 @@ class Transform implements \Flexio\IFace\IJob
 
         switch ($new_type)
         {
+            case self::COLUMN_TYPE_STRING:
             case self::COLUMN_TYPE_TEXT:
             case self::COLUMN_TYPE_CHARACTER:
             case self::COLUMN_TYPE_WIDECHARACTER:
@@ -752,6 +758,7 @@ class Transform implements \Flexio\IFace\IJob
                     // float, double, and integer as-is)
                     $format = '';
                     if ($old_type === self::COLUMN_TYPE_NUMERIC
+                           || $old_type === self::COLUMN_TYPE_NUMBER
                         // || $old_type === self::COLUMN_TYPE_FLOAT
                         // || $old_type === self::COLUMN_TYPE_DOUBLE
                         // || $old_type === self::COLUMN_TYPE_INTEGER
@@ -782,6 +789,7 @@ class Transform implements \Flexio\IFace\IJob
                 }
                 break;
 
+            case self::COLUMN_TYPE_NUMBER:
             case self::COLUMN_TYPE_NUMERIC:
             case self::COLUMN_TYPE_FLOAT:
             case self::COLUMN_TYPE_DOUBLE:
@@ -800,9 +808,9 @@ class Transform implements \Flexio\IFace\IJob
 
             case self::COLUMN_TYPE_BOOLEAN:
                 {
-                    if ($old_type === self::COLUMN_TYPE_TEXT || $old_type === self::COLUMN_TYPE_CHARACTER || $old_type === self::COLUMN_TYPE_WIDECHARACTER)
+                    if ($old_type === self::COLUMN_TYPE_STRING || $old_type === self::COLUMN_TYPE_TEXT || $old_type === self::COLUMN_TYPE_CHARACTER || $old_type === self::COLUMN_TYPE_WIDECHARACTER)
                         $expr = "if(lower($expr) = 'true' or lower($expr) = 't', true, false)";
-                    if ($old_type === self::COLUMN_TYPE_NUMERIC || $old_type === self::COLUMN_TYPE_FLOAT || $old_type === self::COLUMN_TYPE_DOUBLE || $old_type === self::COLUMN_TYPE_INTEGER)
+                    if ($old_type === self::COLUMN_TYPE_NUMBER || $old_type === self::COLUMN_TYPE_NUMERIC || $old_type === self::COLUMN_TYPE_FLOAT || $old_type === self::COLUMN_TYPE_DOUBLE || $old_type === self::COLUMN_TYPE_INTEGER)
                         $expr = "if($expr != 0, true, false)";
                     if ($old_type === self::COLUMN_TYPE_DATE || $old_type === self::COLUMN_TYPE_DATETIME || $old_type === self::COLUMN_TYPE_TIMESTAMP)
                         $expr = "if(isnull($expr), true, false)";
