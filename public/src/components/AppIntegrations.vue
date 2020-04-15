@@ -13,119 +13,144 @@
       class="w-100 center mw-doc pv4 ph4 ph5-l bg-white"
       style="margin-bottom: 15rem"
     >
-      <div class="tc">
-        <img src="../assets/logo-square-80x80.png" alt="Flex.io" class="br-100 ba bw1 b--white" style="width: 84px; box-shadow: 0 0 3px rgba(0,0,0,0.4)">
-      </div>
-
-      <h1 class="fw6 f2 tc pb2">{{title}}</h1>
-
       <!-- show excel template download page -->
       <div v-if="is_show_excel_template_download_page">
-        Excel download page goes here...
-      </div>
-
-      <!-- step: show spinner text and take user to the copy sheet page -->
-      <div v-else-if="active_step == 'template' && existing_integrations.length > 0">
-        <div v-if="is_show_loading_template">
-          <div class="mv4 mh3 br3 ba b--black-10 pv5 ph4">
-            <Spinner size="large" message="Loading template..." />
+        <div class="center mw7 mt5-l">
+          <div class="h1"></div>
+          <div class="flex flex-row items-center">
+            <img src="../assets/icon/icon-excel-128.png" alt="Microsoft Excel" style="height: 48px" />
+            <div class="ml3 fw6 f4">Microsoft Excel 365</div>
           </div>
-        </div>
-        <div
-          class="mv4 mh3-l pa4 bg-nearer-white br3"
-          v-else
-        >
-          <p class="tc f3 lh-title">Your spreadsheet template is ready to go! </p>
-          <p class="tc">Would you like to open this template in Google Sheets or Microsoft Excel?</p>
-          <div class="flex-l flex-row-l">
+          <div class="h2"></div>
+          <div class="flex flex-row">
             <div class="flex-fill">
-              <el-button
-                class="w-100 fw6"
-                plain
-                :disabled="gsheets_spreadsheet_id.length == 0"
-                @click="redirectToGoogleSheets"
-              >
-                <div class="flex flex-row items-center justify-center">
-                  <img src="../assets/icon/icon-google-sheets-128.png" alt="Google Sheets" style="height: 32px" />
-                  <div class="ml2 fw6 f5">Google Sheets</div>
-                </div>
-              </el-button>
-              <div
-                class="tc mt2 f6 i"
-                v-if="gsheets_spreadsheet_id.length == 0"
-              >
-                Google Sheets template coming soon!
+              <h2 class="fw4 f2">Download spreadsheet</h2>
+              <p>Would you like to download <strong>this spreadsheet</strong>?</p>
+              <div class="mt4">
+                <a
+                  class="link dib tc border-box no-select ttu fw6 ph4 pv2a lh-title white bg-blue br2 darken-10"
+                  :href="excel_spreadsheet_path"
+                >
+                  Download
+                </a>
               </div>
             </div>
-
-            <div class="flex-fill pt3 pt0-l pl4-l">
-              <el-button
-                class="w-100 fw6"
-                plain
-                :disabled="excel_spreadsheet_path.length == 0"
-                @click="is_show_excel_template_download_page = true"
-              >
-                <div class="flex flex-row items-center justify-center">
-                  <img src="../assets/icon/icon-excel-128.png" alt="Microsoft Excel" style="height: 32px" />
-                  <div class="ml3 fw6 f5">Microsoft Excel 365</div>
-                </div>
-              </el-button>
-              <div
-                class="tc mt2 f6 i"
-                v-if="excel_spreadsheet_path.length == 0"
-              >
-                Excel template coming soon!
-              </div>
+            <div class="tc">
+              <i class="material-icons moon-gray" style="font-size: 9rem">cloud_download</i>
             </div>
           </div>
         </div>
       </div>
+      <template v-else>
+        <div class="tc">
+          <img src="../assets/logo-square-80x80.png" alt="Flex.io" class="br-100 ba bw1 b--white" style="width: 84px; box-shadow: 0 0 3px rgba(0,0,0,0.4)">
+        </div>
 
-      <!-- step: set up integrations -->
-      <div v-else-if="active_step == 'setup'">
-        <!-- fetching config -->
-        <div v-if="is_fetching_config">
-          <div class="br2 ba b--black-10 pv5 ph4">
-            <Spinner size="large" message="Loading configuration..." />
+        <h1 class="fw6 f2 tc pb2">{{title}}</h1>
+
+        <!-- step: show spinner text and take user to the copy sheet page -->
+        <div v-if="active_step == 'template' && existing_integrations.length > 0">
+          <div v-if="is_show_loading_template">
+            <div class="mv4 mh3 br3 ba b--black-10 pv5 ph4">
+              <Spinner size="large" message="Loading template..." />
+            </div>
+          </div>
+          <div
+            class="mv4 mh3-l pa4 bg-nearer-white br3"
+            v-else
+          >
+            <p class="tc f3 lh-title">Your spreadsheet template is ready to go! </p>
+            <p class="tc">Would you like to open this template in Google Sheets or Microsoft Excel?</p>
+            <div class="flex-l flex-row-l">
+              <div class="flex-fill">
+                <el-button
+                  class="w-100 fw6"
+                  plain
+                  :disabled="gsheets_spreadsheet_id.length == 0"
+                  @click="redirectToGoogleSheets"
+                >
+                  <div class="flex flex-row items-center justify-center">
+                    <img src="../assets/icon/icon-google-sheets-128.png" alt="Google Sheets" style="height: 32px" />
+                    <div class="ml2 fw6 f5">Google Sheets</div>
+                  </div>
+                </el-button>
+                <div
+                  class="tc mt2 f6 i"
+                  v-if="gsheets_spreadsheet_id.length == 0"
+                >
+                  Google Sheets template coming soon!
+                </div>
+              </div>
+
+              <div class="flex-fill pt3 pt0-l pl4-l">
+                <el-button
+                  class="w-100 fw6"
+                  plain
+                  :disabled="excel_spreadsheet_path.length == 0"
+                  @click="is_show_excel_template_download_page = true"
+                >
+                  <div class="flex flex-row items-center justify-center">
+                    <img src="../assets/icon/icon-excel-128.png" alt="Microsoft Excel" style="height: 32px" />
+                    <div class="ml3 fw6 f5">Microsoft Excel 365</div>
+                  </div>
+                </el-button>
+                <div
+                  class="tc mt2 f6 i"
+                  v-if="excel_spreadsheet_path.length == 0"
+                >
+                  Excel template coming soon!
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <FunctionMountSetupWizard
-          :connection="active_connection"
-          :setup-template="setup_template"
-          @submit="saveIntegration"
-          @oauth-connect="oauthConnect"
-          v-else
-        >
-          <div slot="no-prompts">
-            <div class="tc f6 fw4 lh-copy moon-gray"><em>No configuration is required for this integration.</em></div>
-            <ButtonBar
-              class="mt4"
-              :cancel-button-visible="false"
-              :cancel-button-text="'Back'"
-              :submit-button-text="'Next'"
-              @submit-click="saveIntegration({})"
-            />
+        <!-- step: set up integrations -->
+        <div v-else-if="active_step == 'setup'">
+          <!-- fetching config -->
+          <div v-if="is_fetching_config">
+            <div class="br2 ba b--black-10 pv5 ph4">
+              <Spinner size="large" message="Loading configuration..." />
+            </div>
           </div>
-        </FunctionMountSetupWizard>
-      </div>
 
-      <!-- step: show result (success) -->
-      <div v-else-if="active_step == 'success'">
-        <ServiceIconWrapper :innerSpacing="10">
-          <i
-            class="el-icon-success bg-white f2 dark-green"
-            slot="icon"
-          ></i>
-          <p class="tc f3 lh-title">Your integration was created successfully!</p>
-          <p class="nt3 f6 tc silver i">We're importing your functions now. You'll be redirected from this page in <span class="b">{{redirect_seconds}}</span> second(s)...</p>
-          <div class="ma2 bg-nearer-white pa4 tc br2">
-            <Spinner size="medium" />
-            <div class="mt2 fw6">Importing functions...</div>
-            <div class="mt2 tc lh-title silver i f7">NOTE: This process may take awhile to complete</div>
-          </div>
-        </ServiceIconWrapper>
-      </div>
+          <FunctionMountSetupWizard
+            :connection="active_connection"
+            :setup-template="setup_template"
+            @submit="saveIntegration"
+            @oauth-connect="oauthConnect"
+            v-else
+          >
+            <div slot="no-prompts">
+              <div class="tc f6 fw4 lh-copy moon-gray"><em>No configuration is required for this integration.</em></div>
+              <ButtonBar
+                class="mt4"
+                :cancel-button-visible="false"
+                :cancel-button-text="'Back'"
+                :submit-button-text="'Next'"
+                @submit-click="saveIntegration({})"
+              />
+            </div>
+          </FunctionMountSetupWizard>
+        </div>
+
+        <!-- step: show result (success) -->
+        <div v-else-if="active_step == 'success'">
+          <ServiceIconWrapper :innerSpacing="10">
+            <i
+              class="el-icon-success bg-white f2 dark-green"
+              slot="icon"
+            ></i>
+            <p class="tc f3 lh-title">Your integration was created successfully!</p>
+            <p class="nt3 f6 tc silver i">We're importing your functions now. You'll be redirected from this page in <span class="b">{{redirect_seconds}}</span> second(s)...</p>
+            <div class="ma2 bg-nearer-white pa4 tc br2">
+              <Spinner size="medium" />
+              <div class="mt2 fw6">Importing functions...</div>
+              <div class="mt2 tc lh-title silver i f7">NOTE: This process may take awhile to complete</div>
+            </div>
+          </ServiceIconWrapper>
+        </div>
+      </template>
     </div>
   </main>
 </template>
