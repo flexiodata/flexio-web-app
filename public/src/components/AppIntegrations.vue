@@ -478,7 +478,7 @@
                 // go back to setting up a template
                 this.setRoute('template')
               } else {
-                this.$emit('done')
+                this.$router.push({ path: `/${team_name}/functions` })
               }
             })
           })
