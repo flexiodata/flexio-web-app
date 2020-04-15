@@ -191,14 +191,11 @@
       has_setup_template() {
         return !_.isNil(this.setup_template)
       },
-      route_integration() {
-        return _.get(this.$route, 'query.integration', '')
-      },
       route_action() {
         return _.get(this.$route, 'params.action', 'setup')
       },
-      template_target() {
-        return _.get(this.$route, 'query.target', '')
+      route_integration() {
+        return _.get(this.$route, 'query.integration', '')
       },
       gsheets_spreadsheet_id() {
         return _.get(this.$route, 'query.gsheets_spreadsheet_id', '')
@@ -206,9 +203,12 @@
       excel_spreadsheet_path() {
         return _.get(this.$route, 'query.excel_spreadsheet_path', '')
       },
+      template_target() {
+        return _.get(this.$route, 'query.target', '')
+      },
       title() {
         return this.route_title.length > 0 ? this.route_title : 'Integration Setup'
-      }
+      },
     },
     mounted() {
       var team_name = this.getActiveUsername()
