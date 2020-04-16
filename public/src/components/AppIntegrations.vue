@@ -518,15 +518,17 @@
                   window.opener.postMessage(msg_json, "*")
                 }
 
-                setTimeout(() => { this.is_submitting = false }, 1000)
+                setTimeout(() => {
+                  if (this.is_started_on_template === true) {
+                    // go back to setting up a template
+                    this.active_step = 'template'
+                    this.setRoute('template')
+                  } else {
+                    this.$router.push({ path: `/${team_name}/functions` })
+                  }
+                }, 50)
 
-                if (this.is_started_on_template === true) {
-                  // go back to setting up a template
-                  this.active_step = 'template'
-                  this.setRoute('template')
-                } else {
-                  this.$router.push({ path: `/${team_name}/functions` })
-                }
+                setTimeout(() => { this.is_submitting = false }, 100)
               }, 5000)
             })
           })
