@@ -353,8 +353,21 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             // configure index
             $index_configuration = array();
             $index_configuration['settings'] = [
-                'max_result_window' => self::MAX_INDEX_RESULT_WINDOW
+                'max_result_window' => self::MAX_INDEX_RESULT_WINDOW,
+                "number_of_shards" => 1, // * see note 1, note 2
+                "number_of_replicas" => 1
             ];
+            // * note 1: number of shards is important because a cluster limits the amount
+            //           of shards overall based on number of nodes, and if this limit is
+            //           exceeded, then index creation fails; default is 1000 shards per node
+            //           this can also be changed, but it can affect performance; replicas count
+            //           towards this limit, but closed indexes do not; for example, with one
+            //           node, and one-shard-per-index and one-replica-per-index, we could have
+            //           500 open indexes per node; see:
+            //           https://www.elastic.co/guide/en/elasticsearch/reference/master/misc-cluster.html
+            // * note 2: normal default is 5, but our typical index size is small (max shard size of 50GB
+            //           seems to work well, but we're well below that); see:
+            //           https://www.elastic.co/blog/how-many-shards-should-i-have-in-my-elasticsearch-cluster
 
             if ($mapping_enabled)
             {
