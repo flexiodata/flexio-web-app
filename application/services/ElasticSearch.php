@@ -267,6 +267,9 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
     public function listIndexes() : array
     {
+        // see here:
+        // https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-stats.html
+
         if (!$this->authenticated())
             return array();
 
@@ -566,6 +569,62 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         }
     }
 
+    public function getClusterStats() : array
+    {
+        // additional information is available about hte cluster here; TODO return?
+        // cluster shard limit: https://www.elastic.co/guide/en/elasticsearch/reference/master/misc-cluster.html
+        // GET /_cluster/settings?include_defaults=true
+
+        try
+        {
+            $url = $this->getHostUrlString() . '/_cluster/stats';
+            $request = new \GuzzleHttp\Psr7\Request('GET', $url);
+            $response = $this->sendWithCredentials($request);
+
+            $httpcode = $response->getStatusCode();
+            $result = (string)$response->getBody();
+            if ($httpcode < 200 || $httpcode > 299)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_DATABASE);
+
+            $result = json_decode($result,true);
+            return $result;
+        }
+        catch (\Exception $e)
+        {
+            return array();
+        }
+    }
+
+    public function getIndicesStats() : array
+    {
+        // see here:
+        // https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-stats.html
+
+        // also available:
+        // https://www.elastic.co/guide/en/elasticsearch/reference/current/cat-indices.html
+        // GET /_cat/indices?format=json
+        // GET /_cat/shards
+
+        try
+        {
+            $url = $this->getHostUrlString() . '/_stats';
+            $request = new \GuzzleHttp\Psr7\Request('GET', $url);
+            $response = $this->sendWithCredentials($request);
+
+            $httpcode = $response->getStatusCode();
+            $result = (string)$response->getBody();
+            if ($httpcode < 200 || $httpcode > 299)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_DATABASE);
+
+            $result = json_decode($result,true);
+            return $result;
+        }
+        catch (\Exception $e)
+        {
+            return array();
+        }
+    }
+
     public function info() : array
     {
         // TODO: parallels testConnection function; factor?
@@ -617,7 +676,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
     private function testConnection() : bool
     {
-    // TODO: parallels info() function; factor?
+        // TODO: parallels info() function; factor?
 
         // test the connection
         try

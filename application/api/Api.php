@@ -144,16 +144,20 @@ class Api
         'POS /admin/email/run'                        => '\Flexio\Api\Admin::email',
         'POS /admin/cron/run'                         => '\Flexio\Api\Admin::cron',
 
-        // diagnostic/system info
-        'GET /admin/info/settings'                    => '\Flexio\Api\Admin::settings',
-        'GET /admin/info/system'                      => '\Flexio\Api\Admin::system',
+        // system usage
         'GET /admin/info/users'                       => '\Flexio\Api\Admin::users',
         'GET /admin/info/actions'                     => '\Flexio\Api\Admin::actions',
         'GET /admin/info/connections'                 => '\Flexio\Api\Admin::connections',
         'GET /admin/info/pipes'                       => '\Flexio\Api\Admin::pipes',
         'GET /admin/info/processes'                   => '\Flexio\Api\Admin::processes',
         'GET /admin/info/processes/summary/user'      => '\Flexio\Api\Admin::process_summary_byuser',
-        'GET /admin/info/stats'                       => '\Flexio\Api\Admin::stats',
+
+        // system configuration/status
+        'GET /admin/info/system/version'              => '\Flexio\Api\Admin::system',
+        'GET /admin/info/system/database/stats'       => '\Flexio\Api\Admin::statsDatabase',
+        'GET /admin/info/system/cluster/stats'        => '\Flexio\Api\Admin::statsCluster',
+        'GET /admin/info/system/indices/stats'        => '\Flexio\Api\Admin::statsIndices',
+        'GET /admin/info/settings'                    => '\Flexio\Api\Admin::settings',
 
         // tests
         'GET /admin/tests/configure'                  => '\Flexio\Tests\Base::configure',
