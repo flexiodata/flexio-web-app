@@ -465,6 +465,58 @@ class Admin
         \Flexio\Api\Response::sendContent($result);
     }
 
+    public static function statsIndicesBasic(\Flexio\Api\Request $request) : void
+    {
+        $requesting_user_eid = $request->getRequestingUser();
+
+        // only allow users from flex.io to get this info
+        $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
+        if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        if ($requesting_user->isAdministrator() !== true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        $elasticsearch_connection_info = \Flexio\System\System::getSearchCacheConfig();
+        $elasticsearch = \Flexio\Services\ElasticSearch::create($elasticsearch_connection_info);
+
+        $stats = $elasticsearch->getIndicesStats();
+        $indices = $stats['indices'];
+
+        $result = [];
+        foreach ($indices as $index_name => $index_info)
+        {
+            $pipe_info = array();
+            try
+            {
+                $pipe = \Flexio\Object\Pipe::load($index_name);
+                $pipe_info = $pipe->get();
+            }
+            catch (\Flexio\Base\Exception $e)
+            {
+
+            }
+
+
+            $uuid = $index_info['uuid'] ?? '';
+            $doc_count = $index_info['primaries']['docs'] ?? null;
+            $size = $index_info['primaries']['store']['size_in_bytes'] ?? null;
+
+            // TODO: include other information from the stats
+            $result[] = array(
+                            'name' => $index_name,
+                            'uuid' => $uuid,
+                            'size' => $size,
+                            'doc_count' => $doc_count,
+                            'pipe_eid' => $pipe_info['eid'] ?? '',
+                            'pipe_eid_status' => $pipe_info['eid_status'] ?? '',
+                            'pipe_owner' => $pipe_info['owned_by'] ?? ''
+                        );
+        }
+
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        \Flexio\Api\Response::sendContent($result);
+    }
+
     public static function email(\Flexio\Api\Request $request) : void
     {
         $f = \Flexio\System\System::openPhpInputStream();

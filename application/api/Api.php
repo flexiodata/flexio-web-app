@@ -157,6 +157,7 @@ class Api
         'GET /admin/info/system/database/stats'       => '\Flexio\Api\Admin::statsDatabase',
         'GET /admin/info/system/cluster/stats'        => '\Flexio\Api\Admin::statsCluster',
         'GET /admin/info/system/indices/stats'        => '\Flexio\Api\Admin::statsIndices',
+        'GET /admin/info/system/indices/stats/basic'  => '\Flexio\Api\Admin::statsIndicesBasic', // used for finding listing indices to compare with pipes
         'GET /admin/info/settings'                    => '\Flexio\Api\Admin::settings',
 
         // tests
