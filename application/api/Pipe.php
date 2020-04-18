@@ -145,21 +145,24 @@ class Pipe
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
             // check the rights on the object
-            if ($pipe->getStatus() === \Model::STATUS_DELETED)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+            // in bulk, don't throw an error if a pipe is already deleted; just take
+            // the list and do the operation silently
+            // if ($pipe->getStatus() === \Model::STATUS_DELETED)
+            //     throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
             if ($pipe->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PIPE_DELETE) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
             $pipes_to_delete[] = $pipe;
         }
 
-        // if everything is good, delete all the pipes at the same time
+        // if everything is good, delete all the pipes at the same time;
+        // only return the list of pipes that were deleted
         $result = array();
         foreach ($pipes_to_delete as $pipe)
         {
             $pipe->delete();
             $properties = $pipe->get();
-            $result[] = self::cleanProperties($properties, $request);
+            $result[] = array('eid' => $pipe->getEid());
         }
 
         // send the response
