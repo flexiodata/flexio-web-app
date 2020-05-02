@@ -368,9 +368,10 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             //           node, and one-shard-per-index and one-replica-per-index, we could have
             //           500 open indexes per node; see:
             //           https://www.elastic.co/guide/en/elasticsearch/reference/master/misc-cluster.html
-            // * note 2: normal default is 5, but our typical index size is small (max shard size of 50GB
-            //           seems to work well, but we're well below that); see:
+            // * note 2: normal default is 5, but our typical index size is small (recommended target size
+            //           of 1 shard per 30GB); see:
             //           https://www.elastic.co/blog/how-many-shards-should-i-have-in-my-elasticsearch-cluster
+            //           https://aws.amazon.com/blogs/database/get-started-with-amazon-elasticsearch-service-how-many-shards-do-i-need/
 
             if ($mapping_enabled)
             {
