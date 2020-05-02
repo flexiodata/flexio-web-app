@@ -365,9 +365,11 @@
         this.edit_plan_info = _.assign({}, this.edit_plan_info, { plan_id })
         this.is_editing_seats = true
         this.is_editing_plan = true
+        this.$store.track('Selected Billing Plan', { plan_id })
       },
       submitPlan() {
         var payload = _.omit(this.edit_plan_info, ['subscription_id', 'discount'])
+        var plan_id = _.get(payload, 'plan_id')
         var seat_cnt = _.get(payload, 'seat_cnt', 1)
 
         // -- basic seat count lockdown --
@@ -396,8 +398,10 @@
           var eid = this.active_user_eid
           var stripe_subscription_id = _.get(response.data, 'subscription_id', '')
           this.$store.commit('users/UPDATED_USER', { eid, item: { stripe_subscription_id } })
+          this.$store.track('Updated Billing Subscription', { plan_id, seat_cnt, stripe_subscription_id })
         }).catch(error => {
           this.error_msg = _.get(error, 'response.data.error.message', '')
+          this.$store.track('Updated Billing Subscription (FAILED)', { plan_id, seat_cnt, error_msg: this.error_msg })
         }).finally(() => {
           this.is_submitting = false
         })
