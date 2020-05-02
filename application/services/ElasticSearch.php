@@ -267,6 +267,9 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
     public function listIndexes() : array
     {
+        // see here:
+        // https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-stats.html
+
         if (!$this->authenticated())
             return array();
 
@@ -353,8 +356,21 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             // configure index
             $index_configuration = array();
             $index_configuration['settings'] = [
-                'max_result_window' => self::MAX_INDEX_RESULT_WINDOW
+                'max_result_window' => self::MAX_INDEX_RESULT_WINDOW,
+                "number_of_shards" => 1, // * see note 1, note 2
+                "number_of_replicas" => 1
             ];
+            // * note 1: number of shards is important because a cluster limits the amount
+            //           of shards overall based on number of nodes, and if this limit is
+            //           exceeded, then index creation fails; default is 1000 shards per node
+            //           this can also be changed, but it can affect performance; replicas count
+            //           towards this limit, but closed indexes do not; for example, with one
+            //           node, and one-shard-per-index and one-replica-per-index, we could have
+            //           500 open indexes per node; see:
+            //           https://www.elastic.co/guide/en/elasticsearch/reference/master/misc-cluster.html
+            // * note 2: normal default is 5, but our typical index size is small (max shard size of 50GB
+            //           seems to work well, but we're well below that); see:
+            //           https://www.elastic.co/blog/how-many-shards-should-i-have-in-my-elasticsearch-cluster
 
             if ($mapping_enabled)
             {
@@ -553,6 +569,62 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         }
     }
 
+    public function getClusterStats() : array
+    {
+        // additional information is available about hte cluster here; TODO return?
+        // cluster shard limit: https://www.elastic.co/guide/en/elasticsearch/reference/master/misc-cluster.html
+        // GET /_cluster/settings?include_defaults=true
+
+        try
+        {
+            $url = $this->getHostUrlString() . '/_cluster/stats';
+            $request = new \GuzzleHttp\Psr7\Request('GET', $url);
+            $response = $this->sendWithCredentials($request);
+
+            $httpcode = $response->getStatusCode();
+            $result = (string)$response->getBody();
+            if ($httpcode < 200 || $httpcode > 299)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_DATABASE);
+
+            $result = json_decode($result,true);
+            return $result;
+        }
+        catch (\Exception $e)
+        {
+            return array();
+        }
+    }
+
+    public function getIndicesStats() : array
+    {
+        // see here:
+        // https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-stats.html
+
+        // also available:
+        // https://www.elastic.co/guide/en/elasticsearch/reference/current/cat-indices.html
+        // GET /_cat/indices?format=json
+        // GET /_cat/shards
+
+        try
+        {
+            $url = $this->getHostUrlString() . '/_stats';
+            $request = new \GuzzleHttp\Psr7\Request('GET', $url);
+            $response = $this->sendWithCredentials($request);
+
+            $httpcode = $response->getStatusCode();
+            $result = (string)$response->getBody();
+            if ($httpcode < 200 || $httpcode > 299)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_DATABASE);
+
+            $result = json_decode($result,true);
+            return $result;
+        }
+        catch (\Exception $e)
+        {
+            return array();
+        }
+    }
+
     public function info() : array
     {
         // TODO: parallels testConnection function; factor?
@@ -604,7 +676,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
     private function testConnection() : bool
     {
-    // TODO: parallels info() function; factor?
+        // TODO: parallels info() function; factor?
 
         // test the connection
         try

@@ -169,9 +169,27 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public function delete() : \Flexio\Object\Pipe
     {
+        $pipe_eid = $this->getEid();
+
+        // delete the pipe in the model
         $this->clearCache();
         $pipe_model = $this->getModel()->pipe;
-        $pipe_model->delete($this->getEid());
+        $pipe_model->delete($pipe_eid);
+
+        // delete any associated elasticsearch index
+        // TODO: note: this is a temporary way to delete associated indices
+        // and is a temporary solution to allow partial cleanup; however,
+        // there's other places where pipes are deleted (deleting a mount),
+        // simply setting the status flag, etc, so this isn't a reliable
+        // way of deleting all associated indices; ideally, we need a
+        // some type of garbage collection that will look at the indices
+        // in elastic search and perdically purge ones where there isn't
+        // a corresponding pipe eid or the pipe eid status is set to deleted
+
+        $elasticsearch_connection_info = \Flexio\System\System::getSearchCacheConfig();
+        $elasticsearch = \Flexio\Services\ElasticSearch::create($elasticsearch_connection_info);
+        $elasticsearch->deleteIndex($pipe_eid);
+
         return $this;
     }
 

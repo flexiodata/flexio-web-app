@@ -45,10 +45,9 @@ class Admin
                 "sha" => $git_version
             ),
             "database" =>  array(
-                "version" => \Flexio\System\System::getModel()->getDbVersionNumber(),
-                "counts" => \Flexio\System\System::getModel()->getTableCounts()
+                "version" => \Flexio\System\System::getModel()->getDbVersionNumber()
             ),
-            "search_cache" => array(
+            "index" => array(
                 "version" => $search_cache_version
             )
         );
@@ -412,33 +411,9 @@ class Admin
         \Flexio\Api\Response::sendContent($results);
     }
 
-    public static function stats(\Flexio\Api\Request $request) : void
+    public static function statsDatabase(\Flexio\Api\Request $request) : void
     {
-        // TODO:
-        // 1. move model logic to appropriate place in model
-        // 2. move object to route instead of query param
-        // 3. use this in place of other stat functions?
-
-        $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
-
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($query_params, array(
-                'object'      => array('type' => 'string',  'required' => true),
-                'owned_by'    => array('type' => 'string',  'required' => false),
-                'created_by'  => array('type' => 'string',  'required' => false),
-                'start'       => array('type' => 'integer', 'required' => false),
-                'tail'        => array('type' => 'integer', 'required' => false),
-                'limit'       => array('type' => 'integer', 'required' => false),
-                'created_min' => array('type' => 'date',    'required' => false),
-                'created_max' => array('type' => 'date',    'required' => false)
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-
-        $validated_query_params = $validator->getParams();
-
-        // convert owned_by/created_by identifiers into eids
-        $validated_query_params = self::convertUserIdentifierQueryParams($validated_query_params);
 
         // only allow users from flex.io to get this info
         $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
@@ -447,56 +422,96 @@ class Admin
         if ($requesting_user->isAdministrator() !== true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        $filter = array('eid_status' => \Model::STATUS_AVAILABLE);
-        $filter = array_merge($validated_query_params, $filter); // give precedence to fixed status
+        $result = \Flexio\System\System::getModel()->getTableCounts();
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        \Flexio\Api\Response::sendContent($result);
+    }
 
-        $table = $validated_query_params['object'];
-        $table = strtolower($table);
+    public static function statsCluster(\Flexio\Api\Request $request) : void
+    {
+        $requesting_user_eid = $request->getRequestingUser();
 
-        switch ($table)
+        // only allow users from flex.io to get this info
+        $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
+        if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        if ($requesting_user->isAdministrator() !== true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        $elasticsearch_connection_info = \Flexio\System\System::getSearchCacheConfig();
+        $elasticsearch = \Flexio\Services\ElasticSearch::create($elasticsearch_connection_info);
+
+        $result = $elasticsearch->getClusterStats();
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        \Flexio\Api\Response::sendContent($result);
+    }
+
+    public static function statsIndices(\Flexio\Api\Request $request) : void
+    {
+        $requesting_user_eid = $request->getRequestingUser();
+
+        // only allow users from flex.io to get this info
+        $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
+        if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        if ($requesting_user->isAdministrator() !== true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        $elasticsearch_connection_info = \Flexio\System\System::getSearchCacheConfig();
+        $elasticsearch = \Flexio\Services\ElasticSearch::create($elasticsearch_connection_info);
+
+        $result = $elasticsearch->getIndicesStats();
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        \Flexio\Api\Response::sendContent($result);
+    }
+
+    public static function statsIndicesBasic(\Flexio\Api\Request $request) : void
+    {
+        $requesting_user_eid = $request->getRequestingUser();
+
+        // only allow users from flex.io to get this info
+        $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
+        if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        if ($requesting_user->isAdministrator() !== true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        $elasticsearch_connection_info = \Flexio\System\System::getSearchCacheConfig();
+        $elasticsearch = \Flexio\Services\ElasticSearch::create($elasticsearch_connection_info);
+
+        $stats = $elasticsearch->getIndicesStats();
+        $indices = $stats['indices'];
+
+        $result = [];
+        foreach ($indices as $index_name => $index_info)
         {
-            default:
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+            $pipe_info = array();
+            try
+            {
+                $pipe = \Flexio\Object\Pipe::load($index_name);
+                $pipe_info = $pipe->get();
+            }
+            catch (\Flexio\Base\Exception $e)
+            {
 
-            // allowed values
-            case 'user':
-            case 'token':
-            case 'pipe':
-            case 'connection':
-            case 'process':
-            case 'stream':
-            case 'comment':
-            case 'action':
-                $table = 'tbl_' . $table;
-                break;
+            }
+
+
+            $uuid = $index_info['uuid'] ?? '';
+            $doc_count = $index_info['primaries']['docs'] ?? null;
+            $size = $index_info['primaries']['store']['size_in_bytes'] ?? null;
+
+            // TODO: include other information from the stats
+            $result[] = array(
+                            'name' => $index_name,
+                            'uuid' => $uuid,
+                            'size' => $size,
+                            'doc_count' => $doc_count,
+                            'pipe_eid' => $pipe_info['eid'] ?? '',
+                            'pipe_eid_status' => $pipe_info['eid_status'] ?? '',
+                            'pipe_owner' => $pipe_info['owned_by'] ?? ''
+                        );
         }
-
-        $result = [[]];
-        try
-        {
-            $db = \Flexio\System\System::getModel()->getDatabase();
-            $allowed_items = array('eid_status', 'owned_by', 'created_min', 'created_max');
-            $filter_expr = \Filter::build($db, $filter, $allowed_items);
-            $sql = "
-                select owned_by,
-                    extract(year from created) as year,
-                    extract(month from created) as month,
-                    count(*) as count
-                from $table
-                where $filter_expr
-                group by
-                    owned_by,
-                    extract(year from created),
-                    extract(month from created)
-                order by
-                    owned_by, year, month
-            ";
-            $result = $db->fetchAll($sql);
-         }
-         catch (\Exception $e)
-         {
-             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-         }
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api\Response::sendContent($result);
