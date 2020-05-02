@@ -387,7 +387,7 @@
         this.error_msg = ''
         this.is_submitting = true
 
-        api.submitPlan('me', payload).then(response => {
+        api.updatePlan('me', payload).then(response => {
           this.plan_info = _.assign({}, getDefaultPlanInfo(), response.data)
           this.edit_plan_info = _.assign({}, getDefaultPlanInfo(), response.data)
           this.is_editing_seats = false
