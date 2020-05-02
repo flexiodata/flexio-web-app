@@ -203,7 +203,7 @@
           :submit-button-text="is_submitting ? 'Submitting...' : 'Save Changes'"
           :submit-button-disabled="is_submitting || is_editing_coupon || has_errors"
           @cancel-click="cancelEdit"
-          @submit-click="updatePlan"
+          @submit-click="submitPlan"
           v-if="has_plan || (has_payment_method && !has_plan)"
         />
       </div>
@@ -215,10 +215,12 @@
   import api from '@/api'
   import usage_plans from '@/data/usage-plans.yml'
   import { mapState, mapGetters } from 'vuex'
-  import { isProduction } from '@/utils'
   import Spinner from 'vue-simple-spinner'
   import FreeTrialNotice from '@/components/FreeTrialNotice'
   import ButtonBar from '@/components/ButtonBar'
+
+  // switch this to 'stripe_test_plan_id' to test the Stripe payment system
+  const PLAN_ID_KEY = 'stripe_plan_id'
 
   const getDefaultPlanInfo = () => {
     return {
@@ -327,16 +329,14 @@
         })
       },
       findPlan(plan_id) {
-        var plan_key = isProduction() ? 'stripe_plan_id' : 'stripe_test_plan_id'
-        return _.find(this.usage_plans, p => p[plan_key] == plan_id)
+        return _.find(this.usage_plans, p => p[PLAN_ID_KEY] == plan_id)
       },
       hasPlan(plan_id) {
         var plan = this.findPlan(plan_id)
         return !_.isNil(plan)
       },
       isCurrentPlan(plan, plan_id) {
-        var plan_key = isProduction() ? 'stripe_plan_id' : 'stripe_test_plan_id'
-        return plan[plan_key] == plan_id
+        return plan[PLAN_ID_KEY] == plan_id
       },
       isPlanGreater(plan1, plan2) {
         if (plan1 && plan2) {
@@ -361,13 +361,12 @@
         this.error_msg = ''
       },
       selectPlan(plan) {
-        var plan_key = isProduction() ? 'stripe_plan_id' : 'stripe_test_plan_id'
-        var plan_id = plan[plan_key]
+        var plan_id = plan[PLAN_ID_KEY]
         this.edit_plan_info = _.assign({}, this.edit_plan_info, { plan_id })
         this.is_editing_seats = true
         this.is_editing_plan = true
       },
-      updatePlan() {
+      submitPlan() {
         var payload = _.omit(this.edit_plan_info, ['subscription_id', 'discount'])
         var seat_cnt = _.get(payload, 'seat_cnt', 1)
 
@@ -386,7 +385,7 @@
         this.error_msg = ''
         this.is_submitting = true
 
-        api.updatePlan('me', payload).then(response => {
+        api.submitPlan('me', payload).then(response => {
           this.plan_info = _.assign({}, getDefaultPlanInfo(), response.data)
           this.edit_plan_info = _.assign({}, getDefaultPlanInfo(), response.data)
           this.is_editing_seats = false

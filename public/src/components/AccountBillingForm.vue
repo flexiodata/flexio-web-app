@@ -81,7 +81,6 @@
   import api from '@/api'
   import countries from '@/data/countries.yml'
   import { mapState } from 'vuex'
-  import { isProduction } from '@/utils'
   import Spinner from 'vue-simple-spinner'
   import AccountBillingEditForm from '@/components/AccountBillingEditForm'
 
@@ -95,12 +94,12 @@
   import unionpay from 'payment-icons/min/flat/unionpay.svg'
 
   // Stripe public keys
-  const stripe_test_key = 'pk_test_TYooMQauvdEDq54NiTphI7jx' // Stripe public test key
-  const flexio_test_key = 'pk_test_0b06VXFmtZ2ISyRiBgIfbi3O' // Flex.io public test key
-  const flexio_prod_key = 'pk_live_0VQaMv9XVFoZcAC3VFAuBuyg' // Flex.io public production key
+  const STRIPE_TEST_KEY = 'pk_test_TYooMQauvdEDq54NiTphI7jx' // Stripe public test key
+  const FLEXIO_TEST_KEY = 'pk_test_0b06VXFmtZ2ISyRiBgIfbi3O' // Flex.io public test key
+  const FLEXIO_PROD_KEY = 'pk_live_0VQaMv9XVFoZcAC3VFAuBuyg' // Flex.io public production key
 
-  // whichever key is specified here will be the key that is used
-  const stripe_public_key = isProduction() ? flexio_prod_key : flexio_test_key
+  // switch this to 'FLEXIO_TEST_KEY' to test the Stripe payment system
+  const STRIPE_PUBLIC_KEY = FLEXIO_PROD_KEY
 
   const getDefaultBillingInfo = () => {
     return {
@@ -139,7 +138,7 @@
       },
       billing_info: getDefaultBillingInfo(),
       billing_error: '',
-      stripe_public_key,
+      stripe_public_key: STRIPE_PUBLIC_KEY,
       is_fetching: false,
       is_editing: false,
       edit_mode: 'all',

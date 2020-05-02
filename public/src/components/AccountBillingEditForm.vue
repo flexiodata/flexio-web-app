@@ -248,7 +248,6 @@
 
 <script>
   import api from '@/api'
-  import { isProduction } from '@/utils'
   import states from '@/data/us-states.yml'
   import { CardNumber, CardExpiry, CardCvc, createToken } from 'vue-stripe-elements-plus'
   import CountrySelect from '@/components/CountrySelect'
