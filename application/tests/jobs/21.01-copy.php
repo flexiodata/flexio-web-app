@@ -22,9 +22,10 @@ class Test
     {
         // SETUP
         $files = \Flexio\Tests\Util::getTestDataSamples();
-        $test_folder = 'tests' . \Flexio\Tests\Util::getTimestampName();
-        $source_directory = \Flexio\Tests\Base::STORAGE_FLEX . ":/$test_folder/";
-        $target_directory = \Flexio\Tests\Base::STORAGE_DROPBOX . ":/$test_folder/";
+        $test_source_folder = 'tests_source' . \Flexio\Tests\Util::getTimestampName();
+        $test_target_folder = 'tests_target' . \Flexio\Tests\Util::getTimestampName();
+        $source_directory = \Flexio\Tests\Base::STORAGE_DROPBOX . ":/$test_source_folder/";
+        $target_directory = \Flexio\Tests\Base::STORAGE_DROPBOX . ":/$test_target_folder/";
 
         $process_owner = \Flexio\Tests\Util::getTestStorageOwner();
 

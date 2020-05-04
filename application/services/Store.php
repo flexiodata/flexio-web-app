@@ -398,7 +398,7 @@ class Store implements \Flexio\IFace\IConnection,
             return null;
         }
 
-        $stream = $user->getStoreRoot();
+        $stream = self::getStoreRoot($owner_user_eid);
         if (!$stream)
             return null;
 
@@ -433,6 +433,26 @@ class Store implements \Flexio\IFace\IConnection,
 
             $stream = $child;
         }
+
+        return $stream;
+    }
+
+    private static function getStoreRoot(string $user_eid) : \Flexio\Object\Stream
+    {
+        // get the store root for the specified user; if we can't find one, create one
+        $filter = array('parent_eid' => '', 'stream_type' => \Flexio\Object\Stream::TYPE_DIRECTORY,
+                        'eid_status' => \Model::STATUS_AVAILABLE, 'owned_by' => $user_eid);
+        $streams = \Flexio\Object\Stream::list($filter);
+        if (count($streams) > 0)
+            return $streams[0];
+
+        // we don't have a root; so create one
+        $properties = array();
+        $properties['name'] = '';
+        $properties['path'] = '';
+        $properties['stream_type'] = \Flexio\Object\Stream::TYPE_DIRECTORY;
+        $properties['owned_by'] = $user_eid;
+        $stream = \Flexio\Object\Stream::create($properties);
 
         return $stream;
     }

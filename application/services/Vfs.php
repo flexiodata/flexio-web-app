@@ -331,23 +331,11 @@ class Vfs implements \Flexio\IFace\IFileSystem
         }
          else
         {
-            //$connection_identifier = 'flex';
-            //$rpath = $path;
+            $arr = $this->splitPath($path);
+            $connection_identifier = $arr[0];
+            $rpath = rtrim(trim($arr[1]), '/');
 
-            try
-            {
-                $arr = $this->splitPath($path);
-                $connection_identifier = $arr[0];
-                $rpath = rtrim(trim($arr[1]), '/');
-
-                return $this->getService($connection_identifier);
-            }
-            catch (\Exception $e)
-            {
-                // connection not found -- use flexio storage
-                $connection_identifier = 'flex';
-                $rpath = $path;
-            }
+            return $this->getService($connection_identifier);
         }
 
         return $this->getService($connection_identifier);
@@ -380,17 +368,6 @@ class Vfs implements \Flexio\IFace\IFileSystem
             $s3_service = \Flexio\Services\AmazonS3::create();
             $this->service_map[$connection_identifier] = $s3_service;
             return $s3_service;
-        }
-
-        if ($connection_identifier == 'home' || $connection_identifier == 'flex' || $connection_identifier == 'flexio')
-        {
-            if ($this->store_service === null)
-            {
-                $params = array('owned_by' => $this->getOwner());
-                $this->store_service = \Flexio\Services\Store::create($params);
-            }
-            $this->service_map[$connection_identifier] = $this->store_service;
-            return $this->store_service;
         }
 
         if ($this->process)

@@ -35,8 +35,6 @@ class Test
 
         $storage_items = array();
 
-        if (\Flexio\Tests\Base::TEST_SERVICE_FLEX === true)
-            $storage_items[] = \Flexio\Tests\Base::STORAGE_FLEX;
         if (\Flexio\Tests\Base::TEST_SERVICE_AMAZONS3 === true)
             $storage_items[] = \Flexio\Tests\Base::STORAGE_AMAZONS3;
         if (\Flexio\Tests\Base::TEST_SERVICE_BOX === true)
@@ -85,10 +83,6 @@ class Test
         $storage_owner = \Flexio\Tests\Util::getTestStorageOwner();
         foreach ($storage_items as $storage_location)
         {
-            // don't test local storage; no connection exists
-            if ($storage_location === \Flexio\Tests\Base::STORAGE_FLEX)
-                continue;
-
             // get the connection info for the current testsuite connections
             $testsuite_connection_eid = \Flexio\Object\Connection::getEidFromName($storage_owner, $storage_location);
 

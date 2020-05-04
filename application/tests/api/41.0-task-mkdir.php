@@ -61,8 +61,6 @@ class Test
 
         $storage_items = array();
 
-        if (\Flexio\Tests\Base::TEST_SERVICE_FLEX === true)
-            $storage_items[] = \Flexio\Tests\Base::STORAGE_FLEX;
         if (\Flexio\Tests\Base::TEST_SERVICE_AMAZONS3 === true)
             $storage_items[] = \Flexio\Tests\Base::STORAGE_AMAZONS3;
         if (\Flexio\Tests\Base::TEST_SERVICE_BOX === true)
