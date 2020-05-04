@@ -140,49 +140,6 @@ class ProcessHandler
         $process->setParams(array_merge($user_variables, $mount_variables));
     }
 
-    public static function saveStdoutToStream(\Flexio\Jobs\Process $process, array $callback_params) : void
-    {
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($callback_params, array(
-                'stream_eid'  => array('type' => 'eid',     'required' => true)
-            ))->hasErrors()) === true)
-        {
-            // note: parameters are internal, so proper error is write failing
-            // as opposed to invalid parameters
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
-        }
-
-        $validated_params = $validator->getParams();
-        $stream_eid = $validated_params['stream_eid'];
-
-        // get the stream output
-        $stdout_stream = $process->getStdout();
-        $stdout_stream_info = $stdout_stream->get();
-
-        // copy the stdout stream info to the storable_stream
-        $storable_stream = \Flexio\Object\Stream::load($stream_eid);
-        $storable_stream_info_updated = array(
-            'mime_type' => $stdout_stream_info['mime_type'],
-            'structure' => $stdout_stream_info['structure']
-        );
-        $storable_stream->set($storable_stream_info_updated);
-
-        // copy from the input stream to the storable stream
-        $streamreader = $stdout_stream->getReader();
-        $streamwriter = $storable_stream->getWriter();
-
-        if ($stdout_stream->getMimeType() === \Flexio\Base\ContentType::FLEXIO_TABLE)
-        {
-            while (($row = $streamreader->readRow()) !== false)
-                $streamwriter->write($row);
-        }
-         else
-        {
-            while (($data = $streamreader->read(32768)) !== false)
-                $streamwriter->write($data);
-        }
-    }
-
     public static function saveStdoutToElasticSearch(\Flexio\Jobs\Process $process, array $callback_params) : void
     {
         $validator = \Flexio\Base\Validator::create();
