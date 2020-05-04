@@ -320,7 +320,7 @@ class Factory
         return $stored_stream;
     }
 
-    public static function createStreamContentCache(string $connection_eid, string $remote_path, string $handle) : \Flexio\Object\Stream
+    private static function createStreamContentCache(string $connection_eid, string $remote_path, string $handle) : \Flexio\Object\Stream
     {
         // STEP 1: get the connection
         $connection = \Flexio\Object\Connection::load($connection_eid);
@@ -346,7 +346,7 @@ class Factory
         return $storable_stream;
     }
 
-    public static function getStreamContentCache(string $connection_eid, string $handle) : ?\Flexio\Object\Stream
+    private static function getStreamContentCache(string $connection_eid, string $handle) : ?\Flexio\Object\Stream
     {
         $filter = array('connection_eid' => $connection_eid, 'name' => $handle);
         $streams = \Flexio\Object\Stream::list($filter);
