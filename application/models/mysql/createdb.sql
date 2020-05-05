@@ -301,8 +301,6 @@ CREATE TABLE tbl_process (
   pipe_info text default NULL,
   process_mode varchar(1) NOT NULL default '',
   task text default NULL,
-  input text default NULL,
-  output text default NULL,
   triggered_by varchar(1) NOT NULL default '',
   started_by varchar(12) NOT NULL default '',
   started timestamp NULL default NULL,

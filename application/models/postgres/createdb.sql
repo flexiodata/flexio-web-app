@@ -292,8 +292,6 @@ CREATE TABLE tbl_process (
   pipe_info json,
   process_mode varchar(1) NOT NULL default '',
   task json,
-  input json,
-  output json,
   triggered_by varchar(1) NOT NULL default '',
   started_by varchar(12) NOT NULL default '',
   started timestamp NULL default NULL,
