@@ -298,7 +298,6 @@ CREATE TABLE tbl_process (
   finished timestamp NULL default NULL,
   process_info json,
   process_status varchar(1) NOT NULL default '',
-  cache_used varchar(1) NOT NULL default '',
   owned_by varchar(12) NOT NULL default '',
   created_by varchar(12) NOT NULL default '',
   created timestamp NULL default NULL,

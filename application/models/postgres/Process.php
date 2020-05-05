@@ -31,7 +31,6 @@ class Process extends ModelBase
                 'finished'       => array('type' => 'date',   'required' => false, 'default' => null, 'allow_null' => true),
                 'process_info'   => array('type' => 'string', 'required' => false, 'default' => '{}'),
                 'process_status' => array('type' => 'string', 'required' => false, 'default' => ''),
-                'cache_used'     => array('type' => 'string', 'required' => false, 'default' => ''),
                 'owned_by'       => array('type' => 'string', 'required' => false, 'default' => ''),
                 'created_by'     => array('type' => 'string', 'required' => false, 'default' => '')
             ))->hasErrors()) === true)
@@ -122,7 +121,6 @@ class Process extends ModelBase
                 'finished'       => array('type' => 'date',   'required' => false, 'allow_null' => true),
                 'process_info'   => array('type' => 'string', 'required' => false),
                 'process_status' => array('type' => 'string', 'required' => false),
-                'cache_used'     => array('type' => 'string', 'required' => false),
                 'owned_by'       => array('type' => 'string', 'required' => false),
                 'created_by'     => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
@@ -182,7 +180,6 @@ class Process extends ModelBase
                               'duration'         => \Flexio\Base\Util::formatDateDiff($row['started'], $row['finished']),
                               'process_info'     => $row['process_info'],
                               'process_status'   => $row['process_status'],
-                              'cache_used'       => $row['cache_used'],
                               'owned_by'         => $row['owned_by'],
                               'created_by'       => $row['created_by'],
                               'created'          => \Flexio\Base\Util::formatDate($row['created']),
