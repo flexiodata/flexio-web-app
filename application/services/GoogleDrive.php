@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * Copyright (c) 2015, Gold Prairie LLC. All rights reserved.
+ * Copyright (c) 2015, Flex Research LLC. All rights reserved.
  *
  * Project:  Flex.io App
  * Author:   Aaron L. Williams
@@ -573,7 +573,7 @@ class GoogleDrive implements \Flexio\IFace\IConnection,
 
     public function oauthConnect(array $params = null) : bool
     {
-        
+
     }
 
     public function oauthCallback(array $params = null) : bool
