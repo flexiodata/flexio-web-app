@@ -241,6 +241,12 @@ class Factory
         return null;
     }
 
+/*
+    // TODO: STREAM UPDATE. temporarily experimental implementation for importing
+    // from CSVs until streams are overhauled; this is to avoid creating new temporary
+    // streams after having cleared out old streams until we the stream table structure
+    // and storage mechanism as needed; see \Flexio\Jobs\Mount
+
     public static function getStreamFromConnectionInfo(array $connection_info, array $item_info) : \Flexio\Object\Stream
     {
         // generate a handle for the content signature that will uniquely identify it;
@@ -313,6 +319,7 @@ class Factory
 
         return $streams[0];
     }
+*/
 
     private static function getExampleObjects() : array
     {

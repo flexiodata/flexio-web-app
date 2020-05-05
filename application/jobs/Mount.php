@@ -164,14 +164,22 @@ class Mount
             $pipe_info = null;
             switch ($extension)
             {
-                // if we have a script, get it from the front-matter
+                // if we have a script, get the info from the front-matter
                 case 'flexio':
                 case 'py':
                 case 'js':
-                    $stream = \Flexio\Object\Factory::getStreamFromConnectionInfo($connection_info, $item_info);
-                    $content = \Flexio\Base\StreamUtil::getStreamContents($stream);
+                    $content = '';
+                    $connection = \Flexio\Object\Connection::load($connection_eid);
+                    $connection->getService()->read(['path' => $item_info['path']], function($data) use (&$content) {
+                        $content .= $data;
+                    });
                     $pipe_info = \Flexio\Object\Factory::getPipeInfoFromContent($content, $extension);
                     break;
+/*
+                // TODO: STREAM UPDATE. temporarily experimental implementation for importing
+                // from CSVs until streams are overhauled; this is to avoid creating new temporary
+                // streams after having cleared out old streams until we the stream table structure
+                // and storage mechanism as needed; see \Flexio\Object\Factory
 
                 // if we have a csv file, build it manually
                 case 'csv':
@@ -194,6 +202,7 @@ class Mount
                     $pipe_info['deploy_schedule'] = \Model::PIPE_DEPLOY_STATUS_INACTIVE; // no schedule
                     $pipe_info['deploy_mode'] = \Model::PIPE_DEPLOY_MODE_RUN;            // turn on pipes
                     break;
+*/
             }
 
             // if we can't get the pipe info, move on
