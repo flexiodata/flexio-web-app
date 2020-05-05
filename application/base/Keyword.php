@@ -36,9 +36,6 @@ class Keyword
         // 'flexio' => '', // allow flexio, since we want to use it as our public account
         'flexible' => '',
         'flexiodata' => '',
-        // 'goldprairie' => '',
-        // 'kirix' => '',
-        // 'kirixresearch' => '',
 
         // public file and folder names
         'api' => '',

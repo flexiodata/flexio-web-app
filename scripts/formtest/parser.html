@@ -7,15 +7,6 @@
   <p>Here are some examples to try:</p>
   <pre>
 input from: my-connection file: aphist,invhead
-input from: my-connection file: aphist => APHistory, invhead => "Invoice Header"
-input from: my-connection file: { "path": "aphist", "name": "AP History" }, { "path": "invhead", "name" : "Invoice Header" }
-input from: my-connection file: *.csv where: createdate > 1/1/2016
-input from: mysql://user:pass@host/database?charset=utf8 file: ap-hist, vendor-master
-input from: mysql://user:pass@host/database?charset=utf8 query: "select * from vend_mast" as: vendmast
-input type: mysql host: www.myserver.com port: 3306 database: sample user: myuser password: mypw table: abc,def
-input file: https://webapps.goldprairie.com/filetrans/?download=kfjgssycsm => contacts
-input file: https://webapps.goldprairie.com/filetrans/?download=kfjgssycsm => "Sample Contacts"
-input file: { "path": "https://webapps.goldprairie.com/filetrans/?download=kfjgssycsm", "name": "Sample Contacts"}
 calc value: curdate() as: myfld type: date decimals: 0
 convert from: delimited to: table delimiter: comma qualifier: double-quote header: true
 email to: ben@flex.io subject: Test Message body: This is a test message
