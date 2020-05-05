@@ -326,8 +326,8 @@ class Factory
         $demo_dir = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'demo' . DIRECTORY_SEPARATOR;
 
         $objects = array(
-            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'currency-rates.py'),
-            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'currency-converter.py'),
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'flex-sample-contacts.py'),
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'flex-zipcode-stats.py'),
         );
 
         return $objects;
