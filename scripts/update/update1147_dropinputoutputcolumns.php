@@ -52,7 +52,7 @@ try
     $sql = <<<EOT
         alter table tbl_process
             drop column input,
-            drop column ouput;
+            drop column output;
 EOT;
     $db->exec($sql);
 EOT;
