@@ -51,9 +51,7 @@ try
     // STEP 1: drop the old cached_used; this is no longer used
     $sql = <<<EOT
         alter table tbl_process
-            drop column if exists cache_used;
-EOT;
-    $db->exec($sql);
+            drop column cache_used;
 EOT;
     $db->exec($sql);
 }

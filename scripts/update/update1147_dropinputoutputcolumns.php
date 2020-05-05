@@ -55,8 +55,6 @@ try
             drop column output;
 EOT;
     $db->exec($sql);
-EOT;
-    $db->exec($sql);
 }
 catch(\Exception $e)
 {
