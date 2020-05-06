@@ -92,6 +92,7 @@
 <script>
   import api from '@/api'
   import { ROUTE_APP_ONBOARDING } from '@/constants/route'
+  import MixinRedirect from '@/components/mixins/redirect'
 
   export default {
     props: {
@@ -106,6 +107,7 @@
         }
       }
     },
+    mixins: [MixinRedirect],
     watch: {
       user: {
         handler: 'initSelf',
@@ -175,13 +177,23 @@
           api.verifyAccount(verify_params).then(response => {
             this.$store.track('Verified Account')
             this.is_verified = true
-            var query = _.omit(verify_params, ['ref', 'verify_code'])
-            setTimeout(() => {
-              this.$router.replace({
-                name: ROUTE_APP_ONBOARDING,
-                query
-              })
-            }, 3000)
+            var redirect = _.get(this.$route, 'query.redirect', '')
+
+            if (redirect.length > 0) {
+                // if we've already specified a redirect, go there...
+              setTimeout(() => {
+                this.$_Redirect_redirect()
+              }, 3000)
+            } else {
+              // ...otherwise, take the user to the onboarding (fwiw)
+              var query = _.omit(verify_params, ['ref', 'verify_code'])
+              setTimeout(() => {
+                this.$router.replace({
+                  name: ROUTE_APP_ONBOARDING,
+                  query
+                })
+              }, 3000)
+            }
           }).catch(error => {
             this.error_msg = _.get(error, 'response.data.error.message', '')
           }).finally(() => {
