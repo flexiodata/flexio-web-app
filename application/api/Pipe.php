@@ -636,30 +636,6 @@ class Pipe
             self::doTaskCasting($properties['task']);
         }
 
-        // TODO: remove when add-ons are migrated
-        // if we're in interface mode, return the pipe 'returns' and 'notes' as-is;
-        // for all other modes, if the returns are populated, override the notes;
-        // this is necessary because the add-ons currently use the notes to display
-        // the information that a function returns; this let's us continue to use
-        // the notes area until the add-ons, but migrate the return values from the
-        // notes to the returns field for each of the integrations
-        $triggered_by = strlen($request->getToken()) > 0 ? \Model::PROCESS_TRIGGERED_API : \Model::PROCESS_TRIGGERED_INTERFACE;
-        if ($triggered_by !== \Model::PROCESS_TRIGGERED_INTERFACE)
-        {
-            if (is_array($properties['returns']) && count($properties['returns']) > 0)
-            {
-                $returns_in_string_format = "The following properties are allowed:\n";
-                foreach ($properties['returns'] as $r)
-                {
-                    $name = $r['name'] ?? '';
-                    $description = $r['description'] ?? '';
-                    $returns_in_string_format .= " * `$name`: $description\n";
-                }
-
-                $properties['notes'] = $returns_in_string_format;
-            }
-        }
-
         return $properties;
     }
 }
