@@ -106,23 +106,24 @@ class Admin
         if ($requesting_user->isAdministrator() !== true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        $filter = array('eid_status' => \Model::STATUS_AVAILABLE);
-        $filter = array_merge($validated_query_params, $filter); // give precedence to fixed status
-        $userlist = \Flexio\Object\User::list($filter);
+        $filter = array('eid_status' => [\Model::STATUS_PENDING, \Model::STATUS_AVAILABLE]);
+        $users = \Flexio\System\System::getModel()->user->list($filter);
 
         $result = array();
-        foreach ($userlist as $userobj)
+        foreach ($users as $u)
         {
-            $u = $userobj->get();
-
             $user_info = array();
             $user_info['eid'] = $u['eid'] ?? '';
+            $user_info['eid_status'] = $u['eid_status'] ?? '';
             $user_info['username'] = $u['username'] ?? '';
             $user_info['email'] = $u['email'] ?? '';
             $user_info['first_name'] = $u['first_name'] ?? '';
             $user_info['last_name'] = $u['last_name'] ?? '';
+            $user_info['stripe_customer_id'] = $u['stripe_customer_id'] ?? '';
+            $user_info['stripe_subscription_id'] = $u['stripe_subscription_id'] ?? '';
+            $user_info['trial_end_date'] = $u['trial_end_date'] ?? '';
             $user_info['created'] = $u['created'] ?? '';
-
+            $user_info['updated'] = $u['updated'] ?? '';
             $result[] = $user_info;
         }
 
