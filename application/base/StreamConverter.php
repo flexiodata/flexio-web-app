@@ -758,6 +758,12 @@ class StreamConverter
         {
             $streamwriter = $outstream->getWriter();
         }
+         else if ($output == 'table')
+         {
+            $outstream->set([
+                'mime_type' => \Flexio\Base\ContentType::FLEXIO_TABLE
+            ]);
+         }
 
         // parse each row into a table
         $first_row = true;
