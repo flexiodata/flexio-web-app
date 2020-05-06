@@ -155,7 +155,7 @@ class Cron
 
                         print("running job...");
                         $pipe_eid = $job['pipe_eid'];
-                        \Flexio\Api\Pipe::runFromCron($pipe_eid);
+                        \Flexio\Api\Pipe::runFromEid($pipe_eid);
                         print("\n");
                     }
                 }
@@ -166,7 +166,7 @@ class Cron
                     {
                         print("running job...");
                         $pipe_eid = $job['pipe_eid'];
-                        \Flexio\Api\Pipe::runFromCron($pipe_eid);
+                        \Flexio\Api\Pipe::runFromEid($pipe_eid);
                         print("\n");
                     }
                 }
@@ -177,7 +177,7 @@ class Cron
                     {
                         print("running job...");
                         $pipe_eid = $job['pipe_eid'];
-                        \Flexio\Api\Pipe::runFromCron($pipe_eid);
+                        \Flexio\Api\Pipe::runFromEid($pipe_eid);
                         print("\n");
                     }
                 }
@@ -188,7 +188,7 @@ class Cron
                     {
                         print("running job...");
                         $pipe_eid = $job['pipe_eid'];
-                        \Flexio\Api\Pipe::runFromCron($pipe_eid);
+                        \Flexio\Api\Pipe::runFromEid($pipe_eid);
                         print("\n");
                     }
                 }
@@ -199,7 +199,7 @@ class Cron
                     {
                         print("running job...");
                         $pipe_eid = $job['pipe_eid'];
-                        \Flexio\Api\Pipe::runFromCron($pipe_eid);
+                        \Flexio\Api\Pipe::runFromEid($pipe_eid);
                         print("\n");
                     }
                 }
@@ -210,7 +210,7 @@ class Cron
                     {
                         print("running job...");
                         $pipe_eid = $job['pipe_eid'];
-                        \Flexio\Api\Pipe::runFromCron($pipe_eid);
+                        \Flexio\Api\Pipe::runFromEid($pipe_eid);
                         print("\n");
                     }
                 }

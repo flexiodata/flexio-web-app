@@ -539,8 +539,10 @@ class Pipe
         \Flexio\Api\Response::sendContent($process_store->get());
     }
 
-    public static function runFromCron(string $pipe_eid) : void
+    public static function runFromEid(string $pipe_eid) : void
     {
+        // runs a pipe from an eid instead of an api endpoint
+
         // load the pipe
         $pipe_properties = false;
         try

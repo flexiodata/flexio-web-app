@@ -77,7 +77,7 @@ class Factory
             }
 
             if ($new_object !== false)
-                $created_items[] = $new_object->get();
+                $created_items[] = $new_object;
         }
 
         return $created_items;

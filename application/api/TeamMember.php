@@ -89,7 +89,21 @@ class TeamMember
 
             // if appropriate, create default examples
             if (\Flexio\Api\User::CREATE_DEFAULT_EXAMPLES === true)
-                \Flexio\Object\Factory::createExampleObjects($user->getEid());
+            {
+                // create default example objects
+                $created_objects = \Flexio\Object\Factory::createExampleObjects($user->getEid());
+
+                // run default pipes; this will run in the background and load data into
+                // the index
+                foreach ($created_objects as $o)
+                {
+                    if ($o->getType() !== \Model::TYPE_PIPE)
+                        continue;
+
+                    $pipe_eid = $o->getEid();
+                    \Flexio\Api\Pipe::runFromEid($pipe_eid);
+                }
+            }
 
             $member_user_eid = $user->getEid();
         }
