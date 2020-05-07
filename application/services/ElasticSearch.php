@@ -20,7 +20,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
                                \Flexio\IFace\IFileSystem
 {
     // number of rows returned in each page while scrolling
-    private const READ_PAGE_SIZE = 5000;
+    private const READ_PAGE_SIZE = 10000;
 
     // min/max number of rows that will be sent to to ES to index in one request;
     // actual number is a range between these based on row size
@@ -186,34 +186,73 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         if (!is_integer($limit))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-        // get the rows using scrolling to return all the matching rows
-        $idx = 0;
-        $scroll_id = '';
-        $result = [];
-        while (true)
-        {
-            $page = $this->search($path, $query, $scroll_id);
-            $rows = $page['hits']['hits'] ?? false;
-            if ($rows === false || count($rows) === 0)
-            {
-                $this->deleteSearchScroll($scroll_id);
-                return;
-            }
+        // clamp limit
+        if ($limit < 0)
+            $limit = 0;
+        if ($limit > PHP_INT_MAX)
+            $limit = PHP_INT_MAX;
 
+        // no results to return
+        if ($limit == 0)
+            return;
+
+        if ($limit <= self::MAX_INDEX_RESULT_WINDOW)
+        {
+            // if the limit is less than or equal to the max index result window size,
+            // we can get all the data without using scrolling, which is much more
+            // efficient than using scrolling
+            $result = $this->search($path, $query, $limit);
+            $rows = $result['hits']['hits'] ?? false;
+
+            if ($rows === false || count($rows) === 0)
+                return;
+
+            // get the rows; if the limit is exceeded, we're done
             foreach ($rows as $r)
             {
-                if ($idx >= $limit)
+                $content = $r['_source'];
+                $callback($content);
+            }
+        }
+         else
+        {
+            // if the limit is greater than the max index result window size, we
+            // need to use scrolling to get the results; the max index result
+            // window size could be set to larger values, but this results in
+            // bad performance, so use scrolling
+
+            $idx = 0;
+            $scroll_id = null;
+            $result = [];
+            while (true)
+            {
+                // get the page of results
+                $page = $this->searchScroll($path, $query, $scroll_id);
+                $rows = $page['hits']['hits'] ?? false;
+
+                // if we don't have any rows, we're done; make sure to cleanup search scroll
+                if ($rows === false || count($rows) === 0)
                 {
                     $this->deleteSearchScroll($scroll_id);
                     return;
                 }
 
-                $content = $r['_source'];
-                $callback($content);
-                $idx++;
-            }
+                // get the rows; if the limit is exceeded, we're done
+                foreach ($rows as $r)
+                {
+                    if ($idx >= $limit)
+                    {
+                        $this->deleteSearchScroll($scroll_id);
+                        return;
+                    }
 
-            $scroll_id = $page['_scroll_id'];
+                    $content = $r['_source'];
+                    $callback($content);
+                    $idx++;
+                }
+
+                $scroll_id = $page['_scroll_id'];
+            }
         }
     }
 
@@ -460,7 +499,63 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         }
     }
 
-    public function search(string $index, array $search_query = null, string $scroll_id = null) : array
+    public function search(string $index, array $search_query = null, int $limit = self::MAX_INDEX_RESULT_WINDOW) : array
+    {
+        // perform a regular query without scrolling; used for search requests
+        // less than the max result window
+
+        // clamp limit to max result window size
+        if ($limit > self::MAX_INDEX_RESULT_WINDOW)
+            $limit = self::MAX_INDEX_RESULT_WINDOW;
+
+        try
+        {
+            $request = false;
+
+            // if the search query is null, return all rows
+            if (!isset($search_query))
+                $search_query = array('query' => array('match_all' => new \stdClass()));
+
+            // perform regular search query
+            $url_query_params = array();
+            $url_query_params['from'] = 0;
+            $url_query_params['size'] = $limit;
+            $url_query_params['filter_path'] = '_scroll_id,took,hits.hits._source'; // default response includes a lot of metadata; only get what we need to save network traffic
+            $url_query_str = http_build_query($url_query_params);
+            $url = $this->getHostUrlString() . '/' . urlencode($index) . '/_search?' . $url_query_str;
+            $search_str = json_encode($search_query);
+            $request = new \GuzzleHttp\Psr7\Request('POST', $url, ['Content-Type' => 'application/json'], $search_str);
+
+            if ($request === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+            // send the request
+            $response = $this->sendWithCredentials($request);
+
+            $httpcode = $response->getStatusCode();
+            $result = (string)$response->getBody();
+
+            if ($httpcode < 200 || $httpcode > 299)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+            $result = json_decode($result,true);
+
+            if (!is_array($result))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+            if (isset($result['error']) && $result['error'] === true)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+            if (isset($result['errors']) && $result['errors'] === true)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+            return $result;
+        }
+        catch (\Exception $e)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+        }
+    }
+
+    public function searchScroll(string $index, array $search_query = null, string $scroll_id = null) : array
     {
         try
         {
@@ -470,27 +565,13 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             if (!isset($search_query))
                 $search_query = array('query' => array('match_all' => new \stdClass()));
 
-            // if we don't have a scroll id, perform a regular search query;
-            // if we have a zero-length string scroll_id, it's the start of the scrolling, but otherwise a regular query
-            // if we have a non-zero-length string scroll_id, it's part of an ongoing query
+            // if we don't have a scroll_id, it's the start of the scrolling
+            // if we have a scroll_id, it's part of an ongoing query
 
             // see here for more info about scrolling:
             // https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-body.html#request-body-search-scroll
 
             if (!isset($scroll_id))
-            {
-                // perform regular search query
-
-                $url_query_params = array();
-                $url_query_params['size'] = self::MAX_INDEX_RESULT_WINDOW; // set this to maximum available size we can get without scrolling
-                $url_query_params['filter_path'] = '_scroll_id,took,hits.hits._source'; // default response includes a lot of metadata; only get what we need to save network traffic
-                $url_query_str = http_build_query($url_query_params);
-                $url = $this->getHostUrlString() . '/' . urlencode($index) . '/_search?' . $url_query_str;
-                $search_str = json_encode($search_query);
-                $request = new \GuzzleHttp\Psr7\Request('POST', $url, ['Content-Type' => 'application/json'], $search_str);
-            }
-
-            if (isset($scroll_id) && strlen($scroll_id) === 0)
             {
                 // perform initial query for a scroll query; scrolling will be finished
                 // when there are no hit results
@@ -498,7 +579,8 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
                 // with scrolling, use doc sort order for speed per note in documentation
                 $search_query['sort'] = ['_doc'];
                 $url_query_params = array();
-                $url_query_params['size'] = self::READ_PAGE_SIZE;
+                $url_query_params['from'] = 0;
+                $url_query_params['size'] = self::READ_PAGE_SIZE; // here, size is the paging size; subsequent scrolling calls will returns additional results and overall limit is controlled by page calls
                 $url_query_params['scroll'] = '1m'; // set timeout to 1 minute
                 $url_query_params['filter_path'] = '_scroll_id,took,hits.hits._source'; // default response includes a lot of metadata; only get what we need to save network traffic
                 $url_query_str = http_build_query($url_query_params);
@@ -506,8 +588,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
                 $search_str = json_encode($search_query);
                 $request = new \GuzzleHttp\Psr7\Request('POST', $url, ['Content-Type' => 'application/json'], $search_str);
             }
-
-            if (isset($scroll_id) && strlen($scroll_id) > 0)
+             else
             {
                 // perform additional query for scroll query; scrolling will be finished
                 // when there are no hit results
@@ -553,9 +634,9 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         }
     }
 
-    public function deleteSearchScroll(string $scroll_id)
+    public function deleteSearchScroll(string $scroll_id = null)
     {
-        if (strlen($scroll_id) === 0)
+        if (!isset($scroll_id) || strlen($scroll_id) === 0)
             return;
 
         try
