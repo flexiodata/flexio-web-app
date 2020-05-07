@@ -1,6 +1,6 @@
 {
   "name": "flexio",
-  "version": "2.12.5",
+  "version": "2.12.6",
   "description": "Flex.io Client Web Application",
   "author": "David Z. Williams <dave@flex.io>",
   "private": true,
