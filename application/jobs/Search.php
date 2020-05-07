@@ -83,6 +83,16 @@ class Search implements \Flexio\IFace\IJob
             $available_columns = $structure->getNames();
         }
 
+        // EXPERIMENTAL: query params passed in via stdin as a json string of array
+        // values as follows:
+        // first parameter: desired return columns or "*" for all columns
+        // second parameter: query string/array to limit the results; when in string mode, uses lucene query syntax
+        // third parameter; additional configuration (header=true/false, limit=max rows to return)
+        // examples:
+        //  - ["*", "_exists_:title"]
+        //  - ["*", "author:brown", "headers=true&limit=0"]
+        //  - [["col1","col2"], ["col1","a"],["col2","b"]]
+
         // get the query parameters; these are passed in as stdin;
         // TODO: should we do it a different way?
         $instream = $process->getStdin();
@@ -92,16 +102,22 @@ class Search implements \Flexio\IFace\IJob
         while (($chunk = $streamreader->read()) !== false)
             $query_parameters .= $chunk;
 
-        $columns_to_return = array();
-        $rows_to_return = array();
-        $additional_output_config = array();
-        self::getSearchParams($query_parameters, $available_columns, $columns_to_return, $rows_to_return, $additional_output_config);
+        $query_parameters = @json_decode($query_parameters, true);
+        if (is_null($query_parameters) || (is_string($query_parameters) && strlen($query_parameters) === 0))
+            $query_parameters = array(); // treat null or empty string like empty parameters
 
-        $return_headers = false;
-        if (isset($additional_output_config['headers']) && $additional_output_config['headers'] === true)
-            $return_headers = true;
+        if (!is_array($query_parameters))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
-        $limit_row_count = false;
+        $columns_to_return = self::getColumns($query_parameters, $available_columns);
+        $rows_to_return = self::getQuery($query_parameters);
+        $additional_output_config = self::getConfig($query_parameters);
+
+        $return_headers = true; // return headers by default
+        if (isset($additional_output_config['headers']))
+            $return_headers = $additional_output_config['headers'];
+
+        $limit_row_count = false; // don't limit rows by default
         if (isset($additional_output_config['limit']))
             $limit_row_count = $additional_output_config['limit'];
 
@@ -161,132 +177,111 @@ class Search implements \Flexio\IFace\IJob
         return $this->properties;
     }
 
-    private static function getSearchParams(string $search_params, array $available_columns, array &$search_columns, array &$search_rows = null, array &$config) : void
+    private static function getColumns(array $search_params, array $available_columns) : ?array
     {
-        // EXPERIMENTAL: query params passed in as a json string of array values
-        // first parameter: desired return columns or "*" for all columns
-        // second parameter: query string/array to limit the results; when in string mode, uses lucene query syntax
-        // third parameter; additional configuration (header=true/false, limit=max rows to return)
-        // examples:
-        //  - ["*", "_exists_:title"]
-        //  - ["*", "author:brown", "headers=true&limit=0"]
-        //  - [["col1","col2"], ["col1","a"],["col2","b"]]
+        // if we don't have any column params, return all the columns
+        if (count($search_params) < 1)
+            return $available_columns;
 
-        // default to all columns/rows
-        $search_columns = $available_columns;
-        $search_rows = null;
+        // get the requested columns
+        $columns_requested = $search_params[0];
+        $columns_requested = \Flexio\Base\Util::coerceToArray($columns_requested);
 
-        // default configuration
-        $config = array();
-        $config['headers'] = true;
-        $config['limit'] = false;
-
-        // get the input
-        $search_params = @json_decode($search_params, true);
-        if (!is_array($search_params))
-            return;
-
-        // get the column selection params
-        if (count($search_params) > 0)
+        // replace wildcard columns with all available columns
+        $columns_to_return = [];
+        foreach ($columns_requested as $c)
         {
-            $columns_to_return = [];
-            $columns_requested = $search_params[0];
-            $columns_requested = \Flexio\Base\Util::coerceToArray($columns_requested);
-
-            // replace wildcard columns with all available columns
-            foreach ($columns_requested as $c)
+            if ($c !== '*' && $c !== '')
             {
-                if ($c !== '*' && $c !== '')
+                // add listed column
+                $columns_to_return[] = $c;
+            }
+             else
+            {
+                foreach ($available_columns as $ac)
                 {
-                    $columns_to_return[] = $c;
-                }
-                 else
-                {
-                    foreach ($available_columns as $ac)
-                    {
-                        $columns_to_return[] = $ac;
-                    }
+                    $columns_to_return[] = $ac;
                 }
             }
-
-            $search_columns = $columns_to_return;
         }
 
-        // get the row selection params
-        if (count($search_params) > 1)
+        return $columns_to_return;
+    }
+
+    private static function getQuery(array $search_params) : ?array
+    {
+        if (count($search_params) < 2)
+            return null;
+
+        $query_param = $search_params[1];
+
+        // no search param; return null, which will cause all items to be returned
+        if (is_null($query_param))
+            return null;
+
+        if (is_bool($query_param))
         {
-            $query_param = $search_params[1];
+            $query_string = 'false';
+            if ($query_param === true)
+                $query_string = 'true';
 
-            // if the search parameter is a string, pass it through as a lucene query string,
-            // unless it's empty, in which case, return all items
-            if (!isset($query_param))
-            {
-                // fall through; equivalent to empty; don't do anything
-            }
-            else if (is_string($query_param))
-            {
-                if (strlen(trim($query_param)) > 0)
-                    $search_rows = ["query" => ["query_string" => ["query" => $query_param]]];
-                     else { /* don't do anything with an empty string */ }
-            }
-            else
-            {
-                $query_param_str = self::buildQuery($query_param, $available_columns);
-                if (strlen(trim($query_param_str)) > 0)
-                    $search_rows = ["query" => ["query_string" => ["query" => $query_param_str]]];
-                     else { /* don't do anything with an empty array*/ }
-
-                /*
-                    // deprecated; following is an example of query-builder type query that uses an array to
-                    // fine a query of based on fieldnames and associated values specified in a two-dimensional
-                    // array; this approach is abandoned in favor of a more useful value-based approach that
-                    // makes it easier to use the values from one search in another (e.g. looking up rows
-                    // in one table based on values in columns in another table)
-
-                    // example:
-                    // '{"query": {"bool": "must": {"match": {"first_name": "John"}}}}';
-                    $query_param = \Flexio\Base\Util::coerceToQueryParams($search_params[1], $available_columns);
-                    $match_expression = array();
-                    foreach ($query_parameters as $key => $value)
-                    {
-                        // for now, straight key/value copy
-
-                        if (count($value) == 0)
-                            continue;
-                        $value = $value[0];
-
-                        $match_expression[] = ['match' => [$key => $value]];
-                    }
-
-                    $match_expression = json_encode($match_expression,JSON_UNESCAPED_SLASHES);
-                    $search_rows = @json_decode('{"query": {"bool": {"must": '.$match_expression. '}}}',true);
-                */
-            }
+            return ['query' => ['query_string' => ['query' => $query_string]]];
         }
 
-        // get the configuration
-        if (count($search_params) > 2)
+        if (is_int($query_param))
         {
-            $query_param = $search_params[2];
-
-            if (is_string($query_param))
-            {
-                $config = array();
-                $config['headers'] = true; // use same default if parameters are specified since only limit may be specified
-                $config['limit'] = false;
-
-                $config_parameters = array();
-                parse_str($query_param, $config_parameters);
-
-                $config['headers'] = false;
-                if (isset($config_parameters['headers']) && toBoolean($config_parameters['headers']) === true)
-                    $config['headers'] = true;
-
-                $config['limit'] = false;
-                if (isset($config_parameters['limit']) && intval($config_parameters['limit']) >= 0)
-                $config['limit'] = intval($config_parameters['limit']);
-            }
+            $query_string = strval($query_param);
+            return ['query' => ['query_string' => ['query' => $query_string]]];
         }
+
+        if (is_float($query_param))
+        {
+            $query_string = strval($query_param);
+            return ['query' => ['query_string' => ['query' => $query_string]]];
+        }
+
+        if (is_string($query_param))
+        {
+            $query_string = $query_param;
+
+            // if we have an empty string, return null, which will cause all items to be returned
+            if (strlen($query_string) === 0)
+                return null;
+
+            return ['query' => ['query_string' => ['query' => $query_string]]];
+        }
+
+        if (is_array($query_param))
+        {
+            $query_string = self::buildQuery($query_param);
+            return ['query' => ['query_string' => ['query' => $query_string]]];
+        }
+
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+    }
+
+    private static function getConfig(array $search_params) : ?array
+    {
+        if (count($search_params) < 3)
+            return null;
+
+        $config_param = $search_params[2];
+
+        if (!is_string($config_param))
+            return null;
+
+        $parse_arr = array();
+        parse_str($config_param, $parse_arr);
+        if (!isset($parse_arr))
+            return null;
+
+        $result = array();
+        if (array_key_exists('headers', $parse_arr))
+            $result['headers'] = toBoolean($parse_arr['headers']);
+        if (array_key_exists('limit', $parse_arr))
+            $result['limit'] = intval($parse_arr['limit']);
+
+        return $result;
     }
 
     private static function buildQuery(array $arr) : string
@@ -302,18 +297,27 @@ class Search implements \Flexio\IFace\IJob
             $row_query = '';
             foreach ($row as $value)
             {
-                // ignore nulls/booleans
-                if (!is_numeric($value) && !is_string($value))
+                // ignore nulls and empty strings
+                if (is_null($value) || $value === '')
                     continue;
 
-                // ignore empty values
-                if ($value === '')
-                    continue;
+                // convert boolean to equivalent string
+                if (is_bool($value))
+                {
+                    if ($value === true)
+                        $value = 'true';
+                         else
+                        $value = 'false';
+                }
+
+                // convert ints/floats to equivalent string
+                if (is_int($value) || is_float($value))
+                    $value = strval($value);
 
                 if (strlen($row_query) > 0)
                     $row_query .= ' AND ';
 
-                $row_query .= '(' . strval($value) . ')';
+                $row_query .= '(' . $value . ')';
             }
 
             // ignore empty rows
