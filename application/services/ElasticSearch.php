@@ -40,9 +40,6 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
     private $username = '';
     private $password = '';
 
-    // state info
-    private $authenticated = false;
-
     public static function create(array $params = null) : \Flexio\Services\ElasticSearch
     {
         if (isset($params['port']))
@@ -97,14 +94,12 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
     public function disconnect() : void
     {
-        // reset secret credentials and authentication flag
         $this->password = '';
-        $this->authenticated = false;
     }
 
     public function authenticated() : bool
     {
-        return $this->authenticated;
+        return $this->testConnection();
     }
 
     public function get() : array
@@ -309,9 +304,6 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
     {
         // see here:
         // https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-stats.html
-
-        if (!$this->authenticated())
-            return array();
 
         $url = $this->getHostUrlString() . '/_stats';
         $request = new \GuzzleHttp\Psr7\Request('GET', $url);
@@ -748,20 +740,11 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         $this->port = $port;
         $this->username = $username;
         $this->password = $password;
-        $this->authenticated = false;
-
-        if ($this->testConnection() === false)
-            return false;
-
-        $this->authenticated = true;
         return true;
     }
 
     private function testConnection() : bool
     {
-        // TODO: parallels info() function; factor?
-
-        // test the connection
         try
         {
             $url = $this->getHostUrlString();
@@ -785,10 +768,6 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
                 return false;
 
             // TODO: do we want/need to require a minimum version?
-
-echo('wow');
-die;
-
             return true;
         }
         catch (\Exception $e)
