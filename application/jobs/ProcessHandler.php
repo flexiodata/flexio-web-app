@@ -155,13 +155,8 @@ class ProcessHandler
         $validated_params = $validator->getParams();
         $index = $validated_params['index'];
 
-        // connect to elasticsearch
-        $elasticsearch_connection_info = \Flexio\System\System::getSearchCacheConfig();
-        if ($elasticsearch_connection_info['type'] !== 'elasticsearch' && $elasticsearch_connection_info['type'] !== 'elasticsearch-aws')
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, "Search not available");
-        $elasticsearch = \Flexio\Services\ElasticSearch::create($elasticsearch_connection_info);
-
         // create a new index; delete any index that's already there
+        $elasticsearch = \Flexio\System\System::getSearchCache();
         $elasticsearch->deleteIndex($index);
         $elasticsearch->createIndex($index);
 

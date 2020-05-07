@@ -223,6 +223,25 @@ class System
         return $model;
     }
 
+    public static function getSearchCache() : \Flexio\Services\ElasticSearch
+    {
+        global $g_store;
+        if (isset($g_store->search_cache))
+            return $g_store->search_cache;
+
+        $elasticsearch_connection_info = array(
+            'type'     => $GLOBALS['g_config']->search_cache_type ?? '',
+            'host'     => $GLOBALS['g_config']->search_cache_host ?? '',
+            'port'     => $GLOBALS['g_config']->search_cache_port ?? '',
+            'username' => $GLOBALS['g_config']->search_cache_username ?? '',
+            'password' => $GLOBALS['g_config']->search_cache_password ?? ''
+        );
+
+        $search_cache = \Flexio\Services\ElasticSearch::create($elasticsearch_connection_info);
+        $g_store->search_cache = $search_cache;
+        return $search_cache;
+    }
+
     public static function getLocaleDateFormat(string $lang) : string
     {
         $lang_prefix = substr($lang, 0, 2);
@@ -569,17 +588,6 @@ class System
     public static function getConfig() // TODO: add return type
     {
         return $GLOBALS['g_config'];
-    }
-
-    public static function getSearchCacheConfig() : array
-    {
-        return array(
-            'type'     => $GLOBALS['g_config']->search_cache_type ?? '',
-            'host'     => $GLOBALS['g_config']->search_cache_host ?? '',
-            'port'     => $GLOBALS['g_config']->search_cache_port ?? '',
-            'username' => $GLOBALS['g_config']->search_cache_username ?? '',
-            'password' => $GLOBALS['g_config']->search_cache_password ?? ''
-        );
     }
 
     public static function logTimestamp(string $str) : void

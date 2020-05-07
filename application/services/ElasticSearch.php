@@ -45,9 +45,8 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
     public static function create(array $params = null) : \Flexio\Services\ElasticSearch
     {
-
         if (isset($params['port']))
-        $params['port'] = (string)$params['port'];
+            $params['port'] = (string)$params['port'];
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
@@ -71,7 +70,9 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         $use_aws_iam = (($params['type'] ?? '') == 'elasticsearch-aws');
 
         $service = new self;
-        $service->initialize($host, $port, $username, $password, $use_aws_iam);
+        $connected = $service->initialize($host, $port, $username, $password, $use_aws_iam);
+        if ($connected === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
         return $service;
     }
@@ -784,6 +785,9 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
                 return false;
 
             // TODO: do we want/need to require a minimum version?
+
+echo('wow');
+die;
 
             return true;
         }

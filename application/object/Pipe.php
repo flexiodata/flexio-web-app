@@ -186,8 +186,7 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         // in elastic search and perdically purge ones where there isn't
         // a corresponding pipe eid or the pipe eid status is set to deleted
 
-        $elasticsearch_connection_info = \Flexio\System\System::getSearchCacheConfig();
-        $elasticsearch = \Flexio\Services\ElasticSearch::create($elasticsearch_connection_info);
+        $elasticsearch = \Flexio\System\System::getSearchCache();
         $elasticsearch->deleteIndex($pipe_eid);
 
         return $this;

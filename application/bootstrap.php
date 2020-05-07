@@ -37,6 +37,7 @@ $g_store->dir_home = ($g_config->dir_home ?? dirname(__DIR__));
 $g_store->http_host = null;    // see GET_HTTP_HOST() below
 $g_store->timestamp = null;
 $g_store->model = null;
+$g_store->search_cache = null;
 $g_store->connections = [];
 $g_store->connection_enckey = '9i$8iw]aKmZzq12r8';
 

@@ -32,11 +32,8 @@ class Admin
         $package_info = \Flexio\System\System::getPackageInfo();
         $git_version = \Flexio\System\System::getGitRevision();
 
-        $elasticsearch_connection_info = \Flexio\System\System::getSearchCacheConfig();
-        $elasticsearch = \Flexio\Services\ElasticSearch::create($elasticsearch_connection_info);
-        $search_cache_version = array();
-        if ($elasticsearch_connection_info['type'] === 'elasticsearch' || $elasticsearch_connection_info['type'] === 'elasticsearch-aws')
-            $search_cache_version = $elasticsearch->info();
+        $elasticsearch = \Flexio\System\System::getSearchCache();
+        $search_cache_version = $elasticsearch->info();
 
         $result = array(
             "application" => array(
@@ -439,10 +436,9 @@ class Admin
         if ($requesting_user->isAdministrator() !== true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        $elasticsearch_connection_info = \Flexio\System\System::getSearchCacheConfig();
-        $elasticsearch = \Flexio\Services\ElasticSearch::create($elasticsearch_connection_info);
-
+        $elasticsearch = \Flexio\System\System::getSearchCache();
         $result = $elasticsearch->getClusterStats();
+
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api\Response::sendContent($result);
     }
@@ -458,10 +454,9 @@ class Admin
         if ($requesting_user->isAdministrator() !== true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        $elasticsearch_connection_info = \Flexio\System\System::getSearchCacheConfig();
-        $elasticsearch = \Flexio\Services\ElasticSearch::create($elasticsearch_connection_info);
-
+        $elasticsearch = \Flexio\System\System::getSearchCache();
         $result = $elasticsearch->getIndicesStats();
+
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api\Response::sendContent($result);
     }
@@ -477,9 +472,7 @@ class Admin
         if ($requesting_user->isAdministrator() !== true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        $elasticsearch_connection_info = \Flexio\System\System::getSearchCacheConfig();
-        $elasticsearch = \Flexio\Services\ElasticSearch::create($elasticsearch_connection_info);
-
+        $elasticsearch = \Flexio\System\System::getSearchCache();
         $stats = $elasticsearch->getIndicesStats();
         $indices = $stats['indices'];
 
