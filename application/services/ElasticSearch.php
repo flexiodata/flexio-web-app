@@ -192,18 +192,30 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         if ($limit == 0)
             return;
 
-        if ($limit <= self::MAX_INDEX_RESULT_WINDOW)
-        {
-            // if the limit is less than or equal to the max index result window size,
-            // we can get all the data without using scrolling, which is much more
-            // efficient than using scrolling
-            $result = $this->search($path, $query, $limit);
-            $rows = $result['hits']['hits'] ?? false;
+        // elasticsearch limits results returned in a basic search to a
+        // maximum result size for performance; if matching results are
+        // less than the maximum result size, we can get all of them with
+        // a performant query; otherwise, we have to use a scrolling query
+        // which is much more expensive; in following logic, to avoid
+        // using the more expensive scrolling query if we don't have a known
+        // limit, assume queries will return a small result size, which will
+        // either give us the result or tell us if we need to do a more
+        // expensive query, and do so in both cases quickly
 
+        // initial search
+        $result = $this->search($path, $query, $limit);
+        $total = $result['hits']['total']['value'] ?? false;
+        $total_relation = $result['hits']['total']['relation'] ?? false;
+
+        if ($total_relation === 'eq' && $total <= self::MAX_INDEX_RESULT_WINDOW)
+        {
+            // total results are available in this query, so return
+            // the results and we're done
+
+            $rows = $result['hits']['hits'] ?? false;
             if ($rows === false || count($rows) === 0)
                 return;
 
-            // get the rows; if the limit is exceeded, we're done
             foreach ($rows as $r)
             {
                 $content = $r['_source'];
@@ -212,14 +224,14 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         }
          else
         {
-            // if the limit is greater than the max index result window size, we
-            // need to use scrolling to get the results; the max index result
-            // window size could be set to larger values, but this results in
-            // bad performance, so use scrolling
+echo('bad');
+die;
+
+            // we have more results than can be returned with the normal query, so
+            // redo the query with a scrolling query and return the results
 
             $idx = 0;
             $scroll_id = null;
-            $result = [];
             while (true)
             {
                 // get the page of results
@@ -513,7 +525,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             $url_query_params = array();
             $url_query_params['from'] = 0;
             $url_query_params['size'] = $limit;
-            $url_query_params['filter_path'] = '_scroll_id,took,hits.hits._source'; // default response includes a lot of metadata; only get what we need to save network traffic
+            $url_query_params['filter_path'] = '_scroll_id,took,timed_out,hits.total,hits.hits._source'; // default response includes a lot of metadata; only get what we need to save network traffic
             $url_query_str = http_build_query($url_query_params);
             $url = $this->getHostUrlString() . '/' . urlencode($index) . '/_search?' . $url_query_str;
             $search_str = json_encode($search_query);
