@@ -514,23 +514,5 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
 
         return $mapped_properties;
     }
-
-    private static function convertStoreNameToName(array $row, array $structure) : array
-    {
-        $mapped_row = array();
-        foreach ($structure as $col)
-            $mapped_row[$col['name']] = $row[$col['store_name']] ?? null;
-
-        return $mapped_row;
-    }
-
-    private static function convertNameToStoreName(array $row, array $structure) : array
-    {
-        $mapped_row = array();
-        foreach ($structure as $col)
-            $mapped_row[$col['store_name']] = $row[$col['name']] ?? null;
-
-        return $mapped_row;
-    }
 }
 
