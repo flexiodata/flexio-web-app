@@ -19,7 +19,6 @@ namespace Flexio\Jobs;
 class Factory
 {
     private static $manifest = array(
-        'archive'   => '\Flexio\Jobs\Archive',
         'calc'      => '\Flexio\Jobs\CalcField',
         'convert'   => '\Flexio\Jobs\Convert',
         'copy'      => '\Flexio\Jobs\Copy',
@@ -49,7 +48,6 @@ class Factory
         'select'    => '\Flexio\Jobs\Select',
         'sequence'  => '\Flexio\Jobs\Sequence',
         'transform' => '\Flexio\Jobs\Transform',
-        'unarchive' => '\Flexio\Jobs\Unarchive',
         'write'     => '\Flexio\Jobs\Write'
     );
 
