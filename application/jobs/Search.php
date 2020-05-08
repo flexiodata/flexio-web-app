@@ -216,45 +216,37 @@ class Search implements \Flexio\IFace\IJob
         if (is_null($query_param))
             return null;
 
-        if (is_bool($query_param))
-        {
-            $query_string = 'false';
-            if ($query_param === true)
-                $query_string = 'true';
+        $query_string = null;
 
-            return ['query' => ['query_string' => ['query' => $query_string]]];
-        }
+        if (is_bool($query_param))
+            $query_string = ($query_param === true ? 'true' : 'false');
 
         if (is_int($query_param))
-        {
             $query_string = strval($query_param);
-            return ['query' => ['query_string' => ['query' => $query_string]]];
-        }
 
         if (is_float($query_param))
-        {
             $query_string = strval($query_param);
-            return ['query' => ['query_string' => ['query' => $query_string]]];
-        }
 
         if (is_string($query_param))
-        {
             $query_string = $query_param;
 
-            // if we have an empty string, return null, which will cause all items to be returned
-            if (strlen($query_string) === 0)
-                return null;
-
-            return ['query' => ['query_string' => ['query' => $query_string]]];
-        }
-
         if (is_array($query_param))
-        {
             $query_string = self::buildQuery($query_param);
-            return ['query' => ['query_string' => ['query' => $query_string]]];
-        }
 
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+        // if we weren't able to get a query string, error out
+        if (!isset($query_string))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        // if we have an empty string, return null, which will cause all items to be returned
+        if (strlen($query_string) === 0)
+            return null;
+
+        // right now, we don't need queries with scores, because we're only interested in
+        // whether or not a row matches; using a filter without a score is faster since
+        // the a score doesn't need to be calculated and the results are cached
+        // $query_with_score = ['query' => ['query_string' => ['query' => $query_string]]];
+        $query_without_score = ['query' => ['bool' => ['filter' => ['query_string' => ['query' => $query_string]]]]];
+        return $query_without_score;
     }
 
     private static function getConfig(array $search_params) : ?array
