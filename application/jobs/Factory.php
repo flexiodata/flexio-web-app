@@ -24,7 +24,6 @@ class Factory
         'copy'      => '\Flexio\Jobs\Copy',
         'create'    => '\Flexio\Jobs\Create',
         'delete'    => '\Flexio\Jobs\Delete',
-        'dump'      => '\Flexio\Jobs\Dump',
         'echo'      => '\Flexio\Jobs\Echo1',
         'email'     => '\Flexio\Jobs\Email',
         'execute'   => '\Flexio\Jobs\Execute',
