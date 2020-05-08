@@ -224,9 +224,6 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         }
          else
         {
-echo('bad');
-die;
-
             // we have more results than can be returned with the normal query, so
             // redo the query with a scrolling query and return the results
 
