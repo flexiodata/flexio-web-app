@@ -62,8 +62,8 @@ class Archive implements \Flexio\IFace\IJob
             if (!isset($files) || !is_array($files) || count($files) == 0)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "No files specified.");
 
-            $storage_tmpbase = $GLOBALS['g_config']->storage_root . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
-            $archive_fname = $storage_tmpbase . "tmparchive-" . \Flexio\Base\Util::generateRandomString(30);
+            $storage_tmpbase = \Flexio\System\System::getStoreTempPath();
+            $archive_fname = $storage_tmpbase . DIRECTORY_SEPARATOR . 'tmparchive-' . \Flexio\Base\Util::generateRandomString(30);
             $this->to_delete[] = $archive_fname;
 
             $zip = new \ZipArchive();
@@ -121,8 +121,8 @@ class Archive implements \Flexio\IFace\IJob
         }
         else if ($format == 'gzip')
         {
-            $storage_tmpbase = $GLOBALS['g_config']->storage_root . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
-            $archive_fname = $storage_tmpbase . "tmpgz-" . \Flexio\Base\Util::generateRandomString(30) . ".gz";
+            $storage_tmpbase = \Flexio\System\System::getStoreTempPath();
+            $archive_fname = $storage_tmpbase . DIRECTORY_SEPARATOR . 'tmpgz-' . \Flexio\Base\Util::generateRandomString(30) . '.gz';
             $this->to_delete[] = $archive_fname;
 
 

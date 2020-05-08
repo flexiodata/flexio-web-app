@@ -304,31 +304,17 @@ class Stream implements \Flexio\IFace\IStream
         return $writer;
     }
 
-
+    private $storagefs = null;
     private function getStorageFs() : \Flexio\Services\StorageFs
     {
         if ($this->storagefs === null)
         {
-            $storage_root = $GLOBALS['g_config']->storage_root ?? '';
-            if (strlen($storage_root) == 0)
-            {
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-            }
-
-            if (IS_DEBUG())
-            {
-                if (!is_writable($storage_root . DIRECTORY_SEPARATOR . 'tmp'))
-                {
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS, "Cannot write to tmp store directory");
-                }
-            }
-
-            $this->storagefs = \Flexio\Services\StorageFs::create(['base_path' => $storage_root . DIRECTORY_SEPARATOR . 'tmp']);
+            $storage_temp_path = \Flexio\System\System::getStoreTempPath();
+            $this->storagefs = \Flexio\Services\StorageFs::create(['base_path' => $storage_temp_path]);
         }
 
         return $this->storagefs;
     }
-
 
     public function copyFrom(\Flexio\IFace\IStream $source) : \Flexio\Base\Stream
     {

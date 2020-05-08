@@ -53,8 +53,8 @@ class Unarchive implements \Flexio\IFace\IJob
 
         if ($format == 'zip')
         {
-            $storage_tmpbase = $GLOBALS['g_config']->storage_root . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
-            $archive_fname = $storage_tmpbase . "tmpzip-" . \Flexio\Base\Util::generateRandomString(30) . ".zip";
+            $storage_tmpbase = \Flexio\System\System::getStoreTempPath();
+            $archive_fname = $storage_tmpbase . DIRECTORY_SEPARATOR . 'tmpzip-' . \Flexio\Base\Util::generateRandomString(30) . '.zip';
             register_shutdown_function('unlink', $archive_fname);
 
             $f = fopen($archive_fname, 'wb');
@@ -112,8 +112,8 @@ class Unarchive implements \Flexio\IFace\IJob
         }
         else if ($format == 'gz' || $format == 'gzip')
         {
-            $storage_tmpbase = $GLOBALS['g_config']->storage_root . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
-            $archive_fname = $storage_tmpbase . "tmpgz-" . \Flexio\Base\Util::generateRandomString(30) . ".gz";
+            $storage_tmpbase = \Flexio\System\System::getStoreTempPath();
+            $archive_fname = $storage_tmpbase . DIRECTORY_SEPARATOR . 'tmpgz-' . \Flexio\Base\Util::generateRandomString(30) . '.gz';
             register_shutdown_function('unlink', $archive_fname);
 
             $f = fopen($archive_fname, 'wb');

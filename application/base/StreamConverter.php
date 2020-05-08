@@ -260,9 +260,8 @@ class StreamConverter
 
             $worksheet->fromArray($rows);
 
-
-            $storage_tmpbase = $GLOBALS['g_config']->storage_root . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
-            $spreadsheet_fname = $storage_tmpbase . "tmpspreadsheet-" . \Flexio\Base\Util::generateRandomString(30);
+            $storage_tmpbase = \Flexio\System\System::getStoreTempPath();
+            $spreadsheet_fname = $storage_tmpbase . DIRECTORY_SEPARATOR . 'tmpspreadsheet-' . \Flexio\Base\Util::generateRandomString(30);
             switch ($output_mime_type)
             {
                 default:
@@ -606,8 +605,8 @@ class StreamConverter
 
             $worksheet->fromArray($items);
 
-            $storage_tmpbase = $GLOBALS['g_config']->storage_root . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
-            $spreadsheet_fname = $storage_tmpbase . "tmpspreadsheet-" . \Flexio\Base\Util::generateRandomString(30);
+            $storage_tmpbase = \Flexio\System\System::getStoreTempPath();
+            $spreadsheet_fname = $storage_tmpbase . DIRECTORY_SEPARATOR . 'tmpspreadsheet-' . \Flexio\Base\Util::generateRandomString(30);
             switch ($output_mime_type)
             {
                 default:
@@ -1009,8 +1008,8 @@ class StreamConverter
 
             $worksheet->fromArray($spreadsheet_output);
 
-            $storage_tmpbase = $GLOBALS['g_config']->storage_root . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
-            $spreadsheet_fname = $storage_tmpbase . "tmpspreadsheet-" . \Flexio\Base\Util::generateRandomString(30);
+            $storage_tmpbase = \Flexio\System\System::getStoreTempPath();
+            $spreadsheet_fname = $storage_tmpbase . DIRECTORY_SEPARATOR . 'tmpspreadsheet-' . \Flexio\Base\Util::generateRandomString(30);
             switch ($output_mime_type)
             {
                 default:
@@ -1077,8 +1076,8 @@ class StreamConverter
     {
         $reader = $instream->getReader();
 
-        $storage_tmpbase = $GLOBALS['g_config']->storage_root . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
-        $spreadsheet_fname = $storage_tmpbase . "tmpspreadsheet-" . \Flexio\Base\Util::generateRandomString(30);
+        $storage_tmpbase = \Flexio\System\System::getStoreTempPath();
+        $spreadsheet_fname = $storage_tmpbase . DIRECTORY_SEPARATOR . 'tmpspreadsheet-' . \Flexio\Base\Util::generateRandomString(30);
         register_shutdown_function('unlink', $spreadsheet_fname);
 
         $f = fopen($spreadsheet_fname, 'wb');

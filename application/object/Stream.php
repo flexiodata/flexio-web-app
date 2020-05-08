@@ -447,21 +447,8 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
     {
         if ($this->storagefs === null)
         {
-            $storage_root = $GLOBALS['g_config']->storage_root ?? '';
-            if (strlen($storage_root) == 0)
-            {
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-            }
-
-            if (IS_DEBUG())
-            {
-                if (!is_writable($storage_root . DIRECTORY_SEPARATOR . 'streams'))
-                {
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS, "Cannot write to streams store directory");
-                }
-            }
-
-            $this->storagefs = \Flexio\Services\StorageFs::create(['base_path' => $storage_root . DIRECTORY_SEPARATOR . 'streams']);
+            $storage_stream_path = \Flexio\System\System::getStoreStreamPath();
+            $this->storagefs = \Flexio\Services\StorageFs::create(['base_path' => $storage_stream_path]);
         }
 
         return $this->storagefs;

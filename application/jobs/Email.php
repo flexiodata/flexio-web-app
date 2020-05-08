@@ -195,8 +195,8 @@ class Email implements \Flexio\IFace\IJob
 
     private function convertToDiskFile(\Flexio\IFace\IProcess $process, array &$attachment) : void
     {
-        $storage_tmpbase = $GLOBALS['g_config']->storage_root . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
-        $fname = $storage_tmpbase . "emailattach-" . \Flexio\Base\Util::generateRandomString(20);
+        $storage_tmpbase = \Flexio\System\System::getStoreTempPath();
+        $fname = $storage_tmpbase . DIRECTORY_SEPARATOR . 'emailattach-' . \Flexio\Base\Util::generateRandomString(20);
 
         $vfs = new \Flexio\Services\Vfs($process->getOwner());
         $vfs->setProcess($process);

@@ -242,6 +242,34 @@ class System
         return $search_cache;
     }
 
+    public static function getStoreStreamPath() : string
+    {
+        $storage_root = $GLOBALS['g_config']->storage_root ?? '';
+        if (strlen($storage_root) == 0)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+
+        $storage_stream_path = ($storage_root . DIRECTORY_SEPARATOR . 'streams')
+
+        if (IS_DEBUG() && if (!is_writable($storage_stream_path))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS, "Cannot write to streams store directory");
+
+        return $storage_stream_path;
+    }
+
+    public static function getStoreTempPath() : string
+    {
+        $storage_root = $GLOBALS['g_config']->storage_root ?? '';
+        if (strlen($storage_root) == 0)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+
+        $storage_temp_path = ($storage_root . DIRECTORY_SEPARATOR . 'tmp')
+
+        if (IS_DEBUG() && if (!is_writable($storage_temp_path))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS, "Cannot write to tmp store directory");
+
+        return $storage_temp_path;
+    }
+
     public static function getLocaleDateFormat(string $lang) : string
     {
         $lang_prefix = substr($lang, 0, 2);
