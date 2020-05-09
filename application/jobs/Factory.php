@@ -31,7 +31,6 @@ class Factory
         'exit'      => '\Flexio\Jobs\Exit1',
         'filter'    => '\Flexio\Jobs\Filter',
         'grep'      => '\Flexio\Jobs\Grep',
-        'insert'    => '\Flexio\Jobs\Insert',
         'limit'     => '\Flexio\Jobs\Limit',
         'list'      => '\Flexio\Jobs\List1',
         'lookup'    => '\Flexio\Jobs\Lookup',
