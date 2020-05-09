@@ -19,7 +19,6 @@ namespace Flexio\Jobs;
 class Factory
 {
     private static $manifest = array(
-        'calc'      => '\Flexio\Jobs\CalcField',
         'convert'   => '\Flexio\Jobs\Convert',
         'copy'      => '\Flexio\Jobs\Copy',
         'create'    => '\Flexio\Jobs\Create',
