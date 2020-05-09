@@ -20,7 +20,6 @@ class Factory
 {
     private static $manifest = array(
         'convert'   => '\Flexio\Jobs\Convert',
-        'copy'      => '\Flexio\Jobs\Copy',
         'echo'      => '\Flexio\Jobs\Echo1',
         'email'     => '\Flexio\Jobs\Email',
         'execute'   => '\Flexio\Jobs\Execute',
