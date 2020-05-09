@@ -28,7 +28,6 @@ class Factory
         'execute'   => '\Flexio\Jobs\Execute',
         'extract'   => '\Flexio\Jobs\Extract',
         'exit'      => '\Flexio\Jobs\Exit1',
-        'filter'    => '\Flexio\Jobs\Filter',
         'grep'      => '\Flexio\Jobs\Grep',
         'limit'     => '\Flexio\Jobs\Limit',
         'list'      => '\Flexio\Jobs\List1',
