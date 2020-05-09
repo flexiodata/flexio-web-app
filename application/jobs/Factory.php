@@ -35,7 +35,6 @@ class Factory
         'limit'     => '\Flexio\Jobs\Limit',
         'list'      => '\Flexio\Jobs\List1',
         'lookup'    => '\Flexio\Jobs\Lookup',
-        'merge'     => '\Flexio\Jobs\Merge',
         'read'      => '\Flexio\Jobs\Read',
         'rename'    => '\Flexio\Jobs\Rename',
         'render'    => '\Flexio\Jobs\Render',
