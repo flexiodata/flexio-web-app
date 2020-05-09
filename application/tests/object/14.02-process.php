@@ -59,12 +59,9 @@ class Test
 
         // BEGIN TEST
         $task = [
-            "op" => "create",
-            "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
-            "columns" => [
-                [ "name" => "f1", "type" => "d", "width" => 10, "scale" => 0 ]
-            ],
-            "content" => "bad content"
+            "op" => "execute",
+            "lang" => "python",
+            "code" => "bad content"
         ];
         $process_store = \Flexio\Object\Process::create();
         $process_engine = \Flexio\Jobs\Process::create()->queue("\Flexio\Jobs\Task::run", $task);
