@@ -36,7 +36,6 @@ class Factory
         'list'      => '\Flexio\Jobs\List1',
         'lookup'    => '\Flexio\Jobs\Lookup',
         'merge'     => '\Flexio\Jobs\Merge',
-        'mkdir'     => '\Flexio\Jobs\Mkdir',
         'read'      => '\Flexio\Jobs\Read',
         'rename'    => '\Flexio\Jobs\Rename',
         'render'    => '\Flexio\Jobs\Render',
