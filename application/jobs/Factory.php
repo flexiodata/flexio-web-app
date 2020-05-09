@@ -35,7 +35,6 @@ class Factory
         'lookup'    => '\Flexio\Jobs\Lookup',
         'read'      => '\Flexio\Jobs\Read',
         'render'    => '\Flexio\Jobs\Render',
-        'replace'   => '\Flexio\Jobs\Replace',
         'request'   => '\Flexio\Jobs\Request',
         'search'    => '\Flexio\Jobs\Search',
         'select'    => '\Flexio\Jobs\Select',
