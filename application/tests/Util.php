@@ -306,7 +306,6 @@ EOD;
         return $result;
     }
 
-
     public static function getTestDataFolder($folder /* for example, 'images'... */) : array
     {
         // TODO: get a selection of test data samples
@@ -327,15 +326,6 @@ EOD;
         }
 
         return $result;
-    }
-
-
-    public static function getOutputFilePath(string $output_folderpath, string $input_filepath) : string
-    {
-        $filename = \Flexio\Base\File::getFilename($input_filepath);
-        $fileextension = \Flexio\Base\File::getFileExtension($input_filepath);
-        $output_filepath = $output_folderpath . $filename . "." . $fileextension;
-        return $output_filepath;
     }
 
     public static function getTimestampName() : string
