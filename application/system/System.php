@@ -248,9 +248,9 @@ class System
         if (strlen($storage_root) == 0)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
-        $storage_stream_path = ($storage_root . DIRECTORY_SEPARATOR . 'streams')
+        $storage_stream_path = ($storage_root . DIRECTORY_SEPARATOR . 'streams');
 
-        if (IS_DEBUG() && if (!is_writable($storage_stream_path))
+        if (IS_DEBUG() && !is_writable($storage_stream_path))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS, "Cannot write to streams store directory");
 
         return $storage_stream_path;
@@ -262,9 +262,9 @@ class System
         if (strlen($storage_root) == 0)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
-        $storage_temp_path = ($storage_root . DIRECTORY_SEPARATOR . 'tmp')
+        $storage_temp_path = ($storage_root . DIRECTORY_SEPARATOR . 'tmp');
 
-        if (IS_DEBUG() && if (!is_writable($storage_temp_path))
+        if (IS_DEBUG() && !is_writable($storage_temp_path))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS, "Cannot write to tmp store directory");
 
         return $storage_temp_path;
