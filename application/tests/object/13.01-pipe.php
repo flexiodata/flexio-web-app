@@ -24,22 +24,6 @@ class Test
         $model = \Flexio\Tests\Util::getModel();
 
 
-
-
-        // BEGIN TEST
-        $eid = $model->pipe->create(array());
-        $object = \Flexio\Object\Pipe::load($eid);
-        $other = $object->get();
-        $other = $object->get();
-        $other = $object->get();
-        $other = $object->get();
-        $other = $object->get();
-        $actual = $eid;
-        $expected = $object->getEid();
-        \Flexio\Tests\Check::assertString('B.5', 'Pipe::load(); make sure the eid is set when an object is loaded',  $actual, $expected, $results);
-
-
-
         // TEST: object creation
 
         // BEGIN TEST
