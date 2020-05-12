@@ -161,12 +161,12 @@ class Test
             [
                 "op" => "request",
                 "method" => "get",
-                "url" => "https://raw.githubusercontent.com/flexiodata/functions/master/python/hello-world.py"
+                "url" => "https://raw.githubusercontent.com/flexiodata/data/master/sample/sample-contacts.csv"
             ]
         ]);
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
-        $actual = substr($result['response'],0,27);
-        $expected = 'def flexio_handler(context)';
+        $actual = substr($result['response'],3,13);
+        $expected = 'id,first_name';
         \Flexio\Tests\Check::assertString('C.1', 'Process Request; basic functionality',  $actual, $expected, $results);
 
 
