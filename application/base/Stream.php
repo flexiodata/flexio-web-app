@@ -304,7 +304,6 @@ class Stream implements \Flexio\IFace\IStream
         return $writer;
     }
 
-    private $storagefs = null;
     private function getStorageFs() : \Flexio\Services\StorageFs
     {
         if ($this->storagefs === null)
