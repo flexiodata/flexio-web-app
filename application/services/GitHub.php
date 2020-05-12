@@ -383,6 +383,9 @@ class GitHub implements \Flexio\IFace\IConnection,
         if (!is_array($result))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
+        if (!isset($result['download_url']))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
         $url = $result['download_url'];
 
         $contents = '';
