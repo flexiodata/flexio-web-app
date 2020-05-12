@@ -18,6 +18,32 @@ namespace Flexio\Base;
 
 class StreamUtil
 {
+    public static function createStreamFromFile(string $path) : \Flexio\Base\Stream
+    {
+        $f = @fopen($path, 'rb');
+        if (!$f)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        $mime_type = false;
+
+        $stream = \Flexio\Base\Stream::create();
+        $writer = $stream->getWriter();
+        while (!feof($f))
+        {
+            $buffer = fread($f, 2048);
+            $writer->write($buffer);
+
+            if ($mime_type === false)
+                $mime_type = \Flexio\Base\ContentType::getMimeType($path, $buffer);
+        }
+
+        fclose($f);
+
+        $stream->setMimeType($mime_type);
+
+        return $stream;
+    }
+
     public static function getStreamContents($stream, int $start = 0, int $limit = PHP_INT_MAX, int $readsize = 1024 /* testing */) // returns array for table or string for data buffer
     {
         if ($start < 0 )
