@@ -70,7 +70,6 @@ class Test
             'duration' => null,
             'process_info' => '{}',
             'process_status' => '',
-            'cache_used' => '',
             'owned_by' => '',
             'created_by' => ''
         );
