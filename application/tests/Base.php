@@ -208,14 +208,6 @@ class Base
         return;
     }
 
-    public static function getTestStorageOwner()
-    {
-        // right now, the test storage owner is the user running the
-        // test suite that's set up the connections; so the the current
-        // user; this wrapped allows us to easily set up something else
-        return \Flexio\System\System::getCurrentUserEid();
-    }
-
     private static function addTests($subfolder, &$tests)
     {
         $search = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . $subfolder . DIRECTORY_SEPARATOR . '*.php';
