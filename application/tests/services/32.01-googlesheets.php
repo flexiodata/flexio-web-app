@@ -59,7 +59,7 @@ class Test
         \Flexio\Tests\Check::assertBoolean('A.3', 'new \Flexio\Services\GoogleSheets; instance of IOAuthConnection ',  $actual, $expected, $results);
 
 
-        // TEST: basic service functions
+        // TEST: getFileInfo()
 
         // BEGIN TEST
         try
