@@ -20,11 +20,6 @@ class Test
 {
     public function runScript($script)
     {
-        // DEPRECATED: flex.fs is now unavailable because of (temporary?) removal
-        // of store
-        return;
-
-
         $apibase = \Flexio\Tests\Util::getTestHost() . '/v1';
         $password = \Flexio\Base\Password::generate();
         $userid = \Flexio\Tests\Util::createUser(null, null, $password);
@@ -53,6 +48,11 @@ class Test
 
     public function run(&$results)
     {
+        // DEPRECATED: flex.fs is now unavailable because of (temporary?) removal
+        // of store
+        return;
+
+
         // ENDPOINT: POST /:teamid/processes/:objeid/run
 
 
