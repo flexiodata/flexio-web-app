@@ -27,9 +27,9 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $instance = new \Flexio\Services\XFerFsS3;
+        $instance = new \Flexio\Services\XferFsS3;
         $actual = get_class($instance);
-        $expected = 'Flexio\Services\XFerFsS3';
+        $expected = 'Flexio\Services\XferFsS3';
         \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\XFerFsS3; basic file syntax check',  $actual, $expected, $results);
     }
 }
