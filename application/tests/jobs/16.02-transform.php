@@ -29,20 +29,16 @@ class Test
         // BEGIN TEST
         $task = \Flexio\Tests\Task::create([
             [
-                "op" => "create",
-                "content_type" => \Flexio\Base\ContentType::TEXT,
-                "content" => base64_encode(trim('some content'))
-            ],
-            [
                 "op" => "transform",
                 "operations" => [
                     ["operation" => "case", "case" => "upper"]
                 ]
             ]
         ]);
-        $process = \Flexio\Jobs\Process::create()->execute($task);
-        $actual = $process->getStdout()->getReader()->read();
-        $expected = 'SOME CONTENT';
+        $stream = \Flexio\Tests\Util::createStream('/text/02.70-sample-table.csv');
+        $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
+        $actual = $process->getStdout()->getReader()->read(50);
+        $expected = "C1,C2,N1,N2,N3,D1,D2,B1\nABC,()[]{}<>,-1.02,-1.23,-";
         \Flexio\Tests\Check::assertString('A.1', 'Transform Job; basic transformation on stream content',  $actual, $expected, $results);
     }
 }
