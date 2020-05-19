@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        // TEST: example pipes installed for new users
+        // TEST: example pipes
 
         // BEGIN TEST
         $task = \Flexio\Tests\Task::create([
@@ -34,10 +34,6 @@ class Test
                 "output" => ["format" => "table"]
             ],
             [
-                "op" => "select",
-                "columns" => ["streetaddress"]
-            ],
-            [
                 "op" => "execute",
                 "lang" => "python",
                 "code" => "aW1wb3J0IGpzb24NCmRlZiBmbGV4aW9faGFuZGxlcihjb250ZXh0KToNCiAgICBmb3Igcm93IGluIGNvbnRleHQuaW5wdXQ6DQogICAgICAgIGNvbnRleHQub3V0cHV0LndyaXRlKGpzb24uZHVtcHMocm93KS51cHBlcigpICsgIlxuIikNCg=="
@@ -45,43 +41,8 @@ class Test
         ]);
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->getStdout()->getReader()->read(100);
-        $expected = "{\"STREETADDRESS\": \"1690 MILL STREET\"}\n{\"STREETADDRESS\": \"783 ELK AVENUE\"}\n{\"STREETADDRESS\": \"1748 HE";
-        \Flexio\Tests\Check::assertString('A.1', 'Example Pipe; test for pipe installed for new users',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "request",
-                "url" => "https://api.github.com/repos/flexiodata/examples/commits"
-            ],
-            [
-                "op" => "convert",
-                "input" => ["format" => "json"],
-                "output" => ["format" => "table"]
-            ],
-            [
-                "op" => "calc",
-                "name" => "repository",
-                "expression" => "concat(strpart([commit.tree.url],'/',5),'/',strpart([commit.tree.url],'/',6))"
-            ],
-            [
-                "op" => "select",
-                "columns" => [
-                    "repository",
-                    "commit.author.date",
-                    "commit.author.name",
-                    "commit.author.email",
-                    "commit.committer.name",
-                    "commit.committer.email",
-                    "commit.message"
-                ]
-            ]
-        ]);
-        $process = \Flexio\Jobs\Process::create()->execute($task);
-        $actual = $process->getStdout()->getReader()->getRows(0,1);
-        $expected = json_decode('[{"repository":"flexiodata/examples"}]',true);
-        \Flexio\Tests\Check::assertInArray('A.2', 'Example Pipe; test for pipe installed for new users',  $actual, $expected, $results);
-
+        $expected = "{\"ID\": \"1\", \"GENDER\": \"FEMALE\", \"GIVENNAME\": \"LYNN\", \"MIDDLEINITIAL\": \"S\", \"SURNAME\": \"KUHL\", \"STREE";
+        \Flexio\Tests\Check::assertString('A.1', 'Example Pipe; test for chaining',  $actual, $expected, $results);
 
 
         // TEST: logic similar to demo video pipe
@@ -96,29 +57,28 @@ class Test
                 "op" => "convert",
                 "input" => ["format" => "delimited", "delimiter" => "{comma}", "header" => true],
                 "output" => ["format" => "table"]
-            ],
-            [
-                "op" => "select",
-                "columns" => [
-                    "givenname",
-                    "surname",
-                    "streetaddress",
-                    "city",
-                    "state",
-                    "zipcode",
-                    "birthday"
-                ]
-            ],
-            [
-                "op" => "filter",
-                "where" => "strpart(birthday, \"/\", 1) = \"1980\""
             ]
         ]);
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->getStdout()->getReader()->readRow(0,1);
-        $expected = json_decode('{"city":"Jackson","state":"MS","zipcode":"39201","birthday":"1980/12/29"}',true);
+        $expected = json_decode('
+        {
+            "id":"1",
+            "gender":"female",
+            "firstname":"Lynn",
+            "middle":"S",
+            "lastname":"Kuhl",
+            "address":"1690 Mill Street",
+            "city":"Greenville",
+            "state":"SC",
+            "zipcode":"29615",
+            "telephone":"864-266-3412",
+            "birthday":"1983/03/20",
+            "email":
+            "Lynn.S.Kuhl@mailinator.com"
+        }
+        ',true);
         \Flexio\Tests\Check::assertArray('B.1', 'Example; test for pipe similar to demo video',  $actual, $expected, $results);
-
 
 
         // TEST: public blog entry pipe
@@ -132,20 +92,11 @@ class Test
         $task = \Flexio\Tests\Task::create([
             [
                 "op" => "request",
-                "url" => "https://raw.githubusercontent.com/flexiodata/data/0b757f6771b156e4e9222a4ca9cf5e69643dc2b4/contact-samples/contacts-ltd1.csv"
+                "url" => "https://raw.githubusercontent.com/flexiodata/data/master/contact-samples/contacts-ltd1.csv"
             ],
             [
                 "op" => "convert",
                 "input" => ["format" => "delimited", "delimiter" => "{comma}", "header" => true, "qualifier" => "{double_quote}"]
-            ],
-            [
-                "op" => "transform",
-                "columns" => ["*"],
-                "operations" => [["case" => "upper", "operation" => "case"]]
-            ],
-            [
-                "op" => "filter",
-                "where" => "gender = \"FEMALE\""
             ]
         ]);
         $process = \Flexio\Jobs\Process::create()->execute($task);
@@ -153,25 +104,31 @@ class Test
         $actual = $rows[0];
         $expected = json_decode('
         {
-            "id":"3000",
-            "gender":"FEMALE",
-            "givenname":"EFFIE",
+            "id":"1536",
+            "gender":"female",
+            "givenname":"Elizabeth",
             "middleinitial":"S",
-            "surname":"BRADBERRY",
-            "streetaddress":"4065 CHICAGO AVENUE",
-            "city":"FRESNO",
-            "state":"CA",
-            "zipcode":"93721",
+            "surname":"Marino",
+            "streetaddress":"3469 Saints Alley",
+            "city":"Tampa",
+            "state":"FL",
+            "zipcode":"33614",
             "country":"US",
-            "emailaddress":"EFFIE.S.BRADBERRY@POOKMAIL.COM",
-            "telephonenumber":"559-619-7731",
-            "mothersmaiden":"SCHNEIDER",
-            "birthday":"12/29/1959"
+            "emailaddress":"Elizabeth.S.Marino@mailinator.com",
+            "telephonenumber":"813-756-4552",
+            "mothersmaiden":"Glass",
+            "birthday":"12/20/1968"
         }
         ',true);
         \Flexio\Tests\Check::assertArray('C.1', 'Blog Entry Job; check the last row produced by the job',  $actual, $expected, $results);
 
-
+/*
+        // note: example repository is now private since the examples rely on the old
+        // JS SDK with "chained JSON jobs", some of which are no longer available; in
+        // addition, the following logic includes some of these jobs that are no longer
+        // available (e.g. "select" and "filter"); in addition, the saastr podcast data
+        // is part of this example repo, so the "request" job will also fail because the
+        // repo is private
 
         // TEST: public blog entry pipe
         // Pipe Name: Saastr Podcast Search
@@ -225,6 +182,7 @@ class Test
         $actual = $process->getStdout()->getReader()->read(100);
         $expected = "[\n{\"url\":\"http://saastr.libsyn.com/saastr-026-the-benefits-of-bootstrapping-your-saas-startup-with-l";
         \Flexio\Tests\Check::assertString('D.1', 'Blog Entry Job; check near the first part of the JSON returned',  $actual, $expected, $results);
+*/
     }
 }
 
