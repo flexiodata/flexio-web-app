@@ -25,26 +25,14 @@ class Test
         // BEGIN TEST
         $task = \Flexio\Tests\Task::create([
             [
-                "op" => "create",
-                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
-                "columns" => [
-                    ["name" => "field1", "type" => "character", "width" => 3, "scale" => 0],
-                    ["name" => "field2", "type" => "character", "width" => 3, "scale" => 0]
-                ],
-                "content" => [
-                    ["a","b"],
-                    ["b","B"],
-                    ["c","b"]
-                ]
-            ],
-            [
                 "op" => "limit",
                 "value" => 1
             ]
         ]);
-        $process = \Flexio\Jobs\Process::create()->execute($task);
-        $actual = \Flexio\Tests\Content::getRows($process->getStdout());
-        $expected = [["a","b"]];
+        $stream = \Flexio\Tests\Util::createStream('/text/02.70-sample-table.csv');
+        $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
+        $actual = $process->getStdout()->getReader()->read(100);
+        $expected = "c1,c2,n1,n2,n3,d1,d2,b1";
         \Flexio\Tests\Check::assertString('A.1', 'Limit Job; check basic functionality',  $actual, $expected, $results);
     }
 }
