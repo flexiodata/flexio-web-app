@@ -13,107 +13,50 @@
       class="w-100 center mw-doc pv4 ph4 ph5-l bg-white"
       style="margin-bottom: 15rem"
     >
-      <!-- show excel template download page -->
-      <div v-if="is_show_excel_template_download_page">
-        <div class="center mw7 mt5-l">
-          <div class="h1"></div>
-          <div class="flex flex-row items-center">
-            <img src="../assets/icon/icon-excel-128.png" alt="Microsoft Excel" style="height: 48px" />
-            <div class="ml3 fw6 f4">Microsoft Excel 365</div>
-          </div>
-          <div class="h2"></div>
-          <div class="flex flex-row">
-            <div class="flex-fill">
-              <h2 class="fw4 f2">Download spreadsheet</h2>
-              <p>Would you like to download <strong>{{template_title}}</strong>?</p>
-              <div class="mt4">
-                <a
-                  class="link dib tc border-box no-select ttu fw6 ph4 pv2a lh-title white bg-blue br2 darken-10"
-                  :href="excel_spreadsheet_path"
-                >
-                  Download
-                </a>
-              </div>
-            </div>
-            <div class="tc">
-              <i class="material-icons moon-gray" style="font-size: 9rem">cloud_download</i>
-            </div>
-          </div>
-        </div>
-      </div>
+      <!-- excel template download page -->
+      <TemplateExcelDownloadPanel
+        :title="template_title"
+        :url="excel_spreadsheet_path"
+        v-if="is_show_excel_template_download_page"
+      />
+      <!-- integration setup page -->
       <template v-else>
         <div class="tc">
-          <img src="../assets/logo-square-80x80.png" alt="Flex.io" class="br-100 ba bw1 b--white" style="width: 84px; box-shadow: 0 0 3px rgba(0,0,0,0.4)">
+          <img
+            src="../assets/logo-square-80x80.png"
+            alt="Flex.io"
+            class="br-100 ba bw1 b--white"
+            style="width: 84px; box-shadow: 0 0 3px rgba(0,0,0,0.4)"
+          >
         </div>
 
         <h1 class="fw6 f2 tc pb2">{{title}}</h1>
 
-        <!-- step: show spinner text and take user to the copy sheet page -->
+        <!-- step: template target chooser -->
         <div v-if="active_step == 'template' && existing_integrations.length > 0">
-          <div v-if="is_show_loading_template">
-            <div class="mv4 mh3 br3 ba b--black-10 pv5 ph4">
-              <Spinner size="large" message="Loading template..." />
-            </div>
-          </div>
           <div
-            class="mv4 mh3-l pa4 bg-nearer-white br3"
-            v-else
-          >
-            <p class="tc f3 lh-title">Your spreadsheet template is ready to go! </p>
-            <p class="tc">Would you like to open this template in Google Sheets or Microsoft Excel?</p>
-            <div class="flex-l flex-row-l">
-              <div class="flex-fill">
-                <el-button
-                  class="w-100 fw6"
-                  plain
-                  :disabled="gsheets_spreadsheet_id.length == 0"
-                  @click="redirectToGoogleSheets"
-                >
-                  <div class="flex flex-row items-center justify-center">
-                    <img src="../assets/icon/icon-google-sheets-128.png" alt="Google Sheets" style="height: 32px" />
-                    <div class="ml2 fw6 f5">Google Sheets</div>
-                  </div>
-                </el-button>
-                <div
-                  class="tc mt2 f6 i"
-                  v-if="gsheets_spreadsheet_id.length == 0"
-                >
-                  Google Sheets template coming soon!
-                </div>
-              </div>
-
-              <div class="flex-fill pt3 pt0-l pl4-l">
-                <el-button
-                  class="w-100 fw6"
-                  plain
-                  :disabled="excel_spreadsheet_path.length == 0"
-                  @click="is_show_excel_template_download_page = true"
-                >
-                  <div class="flex flex-row items-center justify-center">
-                    <img src="../assets/icon/icon-excel-128.png" alt="Microsoft Excel" style="height: 32px" />
-                    <div class="ml3 fw6 f5">Microsoft Excel 365</div>
-                  </div>
-                </el-button>
-                <div
-                  class="tc mt2 f6 i"
-                  v-if="excel_spreadsheet_path.length == 0"
-                >
-                  Excel template coming soon!
-                </div>
-              </div>
-            </div>
+            class="mv4 mh3 br3 ba b--black-10 pv5 ph4"
+            v-if="is_show_loading_template"
+           >
+            <Spinner size="large" message="Loading template..." />
           </div>
+          <TemplateTargetChooserPanel
+            class="mv4 mh3-l pa4 bg-nearer-white br3"
+            :gsheets-spreadsheet-id="gsheets_spreadsheet_id"
+            :excel-download-url="excel_spreadsheet_path"
+            @target-click="onTemplateTargetClick"
+            v-else
+          />
         </div>
 
         <!-- step: set up integrations -->
         <div v-else-if="active_step == 'setup'">
-          <!-- fetching config -->
-          <div v-if="is_fetching_config">
-            <div class="br2 ba b--black-10 pv5 ph4">
-              <Spinner size="large" message="Loading configuration..." />
-            </div>
+          <div
+            class="br2 ba b--black-10 pv5 ph4"
+            v-if="is_fetching_config"
+          >
+            <Spinner size="large" message="Loading configuration..." />
           </div>
-
           <FunctionMountSetupWizard
             :connection="active_connection"
             :setup-template="setup_template"
@@ -167,7 +110,8 @@
   import IconList from '@/components/IconList'
   import FunctionMountSetupWizard from '@/components/FunctionMountSetupWizard'
   import ServiceIconWrapper from '@/components/ServiceIconWrapper'
-  import MemberInvitePanel from '@/components/MemberInvitePanel'
+  import TemplateTargetChooserPanel from '@/components/TemplateTargetChooserPanel'
+  import TemplateExcelDownloadPanel from '@/components/TemplateExcelDownloadPanel'
   import PageNotFound from '@/components/PageNotFound'
 
   const getNameSuffix = (length) => {
@@ -181,7 +125,7 @@
   const getDefaultState = () => {
     return {
       is_submitting: false,
-      is_fetching_config: false,
+      is_fetching_config: true,
       is_started_on_template: false,
       is_show_loading_template: false,
       is_show_excel_template_download_page: false,
@@ -210,7 +154,8 @@
       IconList,
       FunctionMountSetupWizard,
       ServiceIconWrapper,
-      MemberInvitePanel,
+      TemplateTargetChooserPanel,
+      TemplateExcelDownloadPanel,
       PageNotFound,
     },
     watch: {
@@ -372,6 +317,13 @@
       },
       redirectToGoogleSheets() {
         window.location = 'https://docs.google.com/spreadsheets/d/' + this.gsheets_spreadsheet_id + '/copy'
+      },
+      onTemplateTargetClick(target, path) {
+        if (target == 'gsheets') {
+          this.redirectToGoogleSheets()
+        } else if (target == 'excel') {
+          this.is_show_excel_template_download_page = true
+        }
       },
       onNextStepClick() {
         this.active_step = this.step_order[this.active_step_idx + 1]
