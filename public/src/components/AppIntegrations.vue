@@ -77,6 +77,17 @@
           </FunctionMountSetupWizard>
         </div>
 
+        <!-- step: show submitting -->
+        <div v-else-if="active_step == 'submitting'">
+          <ServiceIconWrapper :innerSpacing="10">
+            <i
+              class="el-icon-loading bg-white f2 silver"
+              slot="icon"
+            ></i>
+            <p class="tc f3 lh-title">We're setting up your integration...</p>
+          </ServiceIconWrapper>
+        </div>
+
         <!-- step: show result (success) -->
         <div v-else-if="active_step == 'success'">
           <ServiceIconWrapper :innerSpacing="10">
@@ -85,12 +96,34 @@
               slot="icon"
             ></i>
             <p class="tc f3 lh-title">Your integration was created successfully!</p>
-            <p class="nt3 f6 tc silver i">We're importing your functions now. You'll be redirected from this page in <span class="b">{{redirect_seconds}}</span> second(s)...</p>
-            <div class="ma2 bg-nearer-white pa4 tc br2">
-              <Spinner size="medium" />
-              <div class="mt2 fw6">Importing functions...</div>
-              <div class="mt2 tc lh-title silver i f7">NOTE: This process may take awhile to complete</div>
+            <div class="center mw7">
+              <p>We're importing your functions now. This process may take a couple of minutes to complete.</p>
+              <p v-if="!is_coming_from_addon">If you haven't done so already, please <a class="fw6 blue link underline-hover" href="https://gsuite.google.com/marketplace/app/flexio/919566304535">install the Google Sheets add-on</a> or <a class="fw6 blue link underline-hover" href="https://appsource.microsoft.com/en-us/product/office/WA200000394">install the Excel 365 add-in</a> to use this integration in your spreadsheet.</p>
+              <p v-if="is_coming_from_addon">Click <strong>Done</strong> below to close this window and start using this integration in your spreadsheet.</p>
+              <p v-else>Click <strong>Done</strong> below to view this integration and its functions in the Flex.io web app.</p>
             </div>
+            <div class="mt2 tc">
+              <el-button
+                type="primary"
+                class="ttu fw6"
+                @click="onIntegrationSetupDoneClick"
+              >
+                <div class="ph2" v-if="is_started_on_template">Continue</div>
+                <div class="ph2" v-else>Done</div>
+              </el-button>
+            </div>
+          </ServiceIconWrapper>
+        </div>
+
+        <!-- step: show result (failure) -->
+        <div v-else-if="active_step == 'failure'">
+          <ServiceIconWrapper :innerSpacing="10">
+            <i
+              class="el-icon-error bg-white f2 dark-red"
+              slot="icon"
+            ></i>
+            <p class="tc f3 lh-title mb0">Your integration couldn't be created</p>
+            <p class="tc">We encountered some problems while trying to create your integration. Please try again.</p>
           </ServiceIconWrapper>
         </div>
       </template>
@@ -124,18 +157,16 @@
 
   const getDefaultState = () => {
     return {
-      is_submitting: false,
       is_fetching_config: true,
       is_started_on_template: false,
       is_show_loading_template: false,
       is_show_excel_template_download_page: false,
       route_title: '',
-      step_order: ['setup', 'success'],
-      active_step: '', // 'template' or 'setup' or 'success'
+      step_order: ['setup', 'submitting'],
+      active_step: '', // 'setup', 'template', 'submitting', 'success' or 'failure'
       active_integration: {},
       setup_template: null,
-      output_mount: {},
-      redirect_seconds: 5,
+      output_mount: {}
     }
   }
 
@@ -191,6 +222,21 @@
       },
       has_setup_template() {
         return !_.isNil(this.setup_template)
+      },
+      query_context() {
+        return _.get(this.$route, 'query.context', '')
+      },
+      is_coming_from_addon() {
+        switch (this.query_context) {
+          case 'gsheets':
+          case 'googlesheets':
+          case 'excel':
+          case 'excel-web':
+          case 'excel-desktop':
+            return true
+        }
+
+        return false
       },
       route_integration() {
         // NOTE: this value is required to make this page backward compatible
@@ -300,6 +346,8 @@
         // fetch the integration config (we need this for things like
         // the template names as well as the function pack setup)
         this.fetchIntegrationConfig()
+
+        this.active_step = 'success'
       },
       initActiveIntegrationFromRoute() {
         var cname = this.route_integration
@@ -330,7 +378,7 @@
 
         // we're on the last step; commit all changes to the backend
         // and take the user to wherever they're headed next
-        if (this.active_step == 'success') {
+        if (this.active_step == 'submitting') {
           this.submitIntegrationConfig()
           return
         }
@@ -432,18 +480,7 @@
           this.onNextStepClick()
         })
       },
-      decrementRedirect() {
-        setTimeout(() => {
-          this.redirect_seconds--
-          if (this.redirect_seconds > 1) {
-            this.decrementRedirect()
-          }
-        }, 1000)
-      },
       submitIntegrationConfig() {
-        this.is_submitting = true
-        this.decrementRedirect()
-
         var team_name = this.active_team_name
         var create_xhrs = []
 
@@ -463,31 +500,31 @@
 
             // make sure we add parent eids to all child connections if we need to
             this.processSetupConfig(setup_config, eid, () => {
-              // show the 'success' message for a couple of seconds and then move along
-              setTimeout(() => {
-                if (window.opener) {
-                  var msg_json = { type: 'flexio-integration-setup-complete' }
-                  window.opener.postMessage(msg_json, "*")
-                }
+              this.active_step = 'success'
 
-                setTimeout(() => {
-                  if (this.is_started_on_template === true) {
-                    // go back to setting up a template
-                    this.active_step = 'template'
-                    this.setRoute('template')
-                  } else {
-                    this.$router.push({ path: `/${team_name}/functions` })
-                  }
-                }, 50)
-
-                setTimeout(() => { this.is_submitting = false }, 100)
-              }, 5000)
+              if (window.opener) {
+                var msg_json = { type: 'flexio-integration-setup-complete' }
+                window.opener.postMessage(msg_json, "*")
+              }
             })
           })
         })
         .catch(error => {
-
+          this.active_step = 'failure'
         })
+      },
+      onIntegrationSetupDoneClick() {
+        var team_name = this.active_team_name
+
+        if (this.is_started_on_template === true) {
+          // go back to setting up a template
+          this.active_step = 'template'
+          this.setRoute('template')
+        } else if (this.is_coming_from_addon) {
+          window.close()
+        } else {
+          this.$router.push({ path: `/${team_name}/functions` })
+        }
       }
     }
   }
