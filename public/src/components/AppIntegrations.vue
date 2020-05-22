@@ -99,6 +99,10 @@
             <div class="center mw7">
               <p>We're importing your functions now. This process may take a couple of minutes to complete.</p>
               <p v-if="!is_coming_from_addon">If you haven't done so already, please <a class="fw6 blue link underline-hover" href="https://gsuite.google.com/marketplace/app/flexio/919566304535">install the Google Sheets add-on</a> or <a class="fw6 blue link underline-hover" href="https://appsource.microsoft.com/en-us/product/office/WA200000394">install the Excel 365 add-in</a> to use this integration in your spreadsheet.</p>
+              <AddonDownloadButtonPanel
+                class="pv2-l"
+                v-if="!is_coming_from_addon"
+              />
               <p v-if="is_coming_from_addon">Click <strong>Done</strong> below to close this window and start using this integration in your spreadsheet.</p>
               <p v-else>Click <strong>Done</strong> below to view this integration and its functions in the Flex.io web app.</p>
             </div>
@@ -143,6 +147,7 @@
   import IconList from '@/components/IconList'
   import FunctionMountSetupWizard from '@/components/FunctionMountSetupWizard'
   import ServiceIconWrapper from '@/components/ServiceIconWrapper'
+  import AddonDownloadButtonPanel from '@/components/AddonDownloadButtonPanel'
   import TemplateTargetChooserPanel from '@/components/TemplateTargetChooserPanel'
   import TemplateExcelDownloadPanel from '@/components/TemplateExcelDownloadPanel'
   import PageNotFound from '@/components/PageNotFound'
@@ -185,6 +190,7 @@
       IconList,
       FunctionMountSetupWizard,
       ServiceIconWrapper,
+      AddonDownloadButtonPanel,
       TemplateTargetChooserPanel,
       TemplateExcelDownloadPanel,
       PageNotFound,
@@ -346,8 +352,6 @@
         // fetch the integration config (we need this for things like
         // the template names as well as the function pack setup)
         this.fetchIntegrationConfig()
-
-        this.active_step = 'success'
       },
       initActiveIntegrationFromRoute() {
         var cname = this.route_integration

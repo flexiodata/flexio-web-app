@@ -83,40 +83,11 @@
         <!-- step: install add-ons -->
         <div v-if="active_step == 'addons'">
           <p class="center mw7">You're almost done! If you haven't done so already, please install the Flex.io Add-on for either <span class="nowrap">Google Sheets</span> or <span class="nowrap">Microsoft Excel 365</span>. Once you've installed an add-on, you'll see the functions in your spreadsheet.</p>
-          <div class="flex flex-column flex-row-l mv3 nl3 nr3">
-            <div class="flex-fill mv4 mh3 pa4 bg-nearer-white br3">
-              <div class="flex flex-row items-center justify-center">
-                <img src="../assets/icon/icon-google-sheets-128.png" alt="Google Sheets" style="height: 48px" />
-                <div class="ml2 fw6 f4">Google Sheets</div>
-              </div>
-              <div class="center mw6 mt4">
-                <el-button
-                  class="w-100 ttu fw6"
-                  plain
-                  @click="openGoogleSheetsAddonDownload"
-                >
-                  <span class="ph2">Get the Google Sheets add-on</span>
-                </el-button>
-              </div>
-            </div>
-
-            <div class="flex-fill mv4 mh3 pa4 bg-nearer-white br3">
-              <div class="flex flex-row items-center justify-center">
-                <img src="../assets/icon/icon-excel-128.png" alt="Microsoft Excel" style="height: 48px" />
-                <div class="ml3 fw6 f4">Microsoft Excel 365 *</div>
-              </div>
-              <div class="center mw6 mt4">
-                <el-button
-                  class="w-100 ttu fw6"
-                  plain
-                  @click="openExcelAddonDownload"
-                >
-                  <span class="ph2">Get the Excel add-in</span>
-                </el-button>
-              </div>
-            </div>
-          </div>
-          <p class="center mw7 f8 nt3">* The Microsoft Excel 365 add-in will only function with an Excel for Office 365 subscription</p>
+          <AddonDownloadButtonPanel
+            class="pv2-l"
+            :open-links-in-new-window="true"
+          />
+          <p class="center mw7 f8 silver">* The Microsoft Excel 365 add-in will only function with an Excel for Office 365 subscription</p>
         </div>
 
         <!-- button bar for the entire onboarding wizard -->
@@ -147,6 +118,7 @@
   import IconList from '@/components/IconList'
   import FunctionMountSetupWizard from '@/components/FunctionMountSetupWizard'
   import ServiceIconWrapper from '@/components/ServiceIconWrapper'
+  import AddonDownloadButtonPanel from '@/components/AddonDownloadButtonPanel'
   import MemberInvitePanel from '@/components/MemberInvitePanel'
 
   const getNameSuffix = (length) => {
@@ -185,6 +157,7 @@
       IconList,
       FunctionMountSetupWizard,
       ServiceIconWrapper,
+      AddonDownloadButtonPanel,
       MemberInvitePanel,
     },
     data() {
