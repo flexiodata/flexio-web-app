@@ -54,8 +54,6 @@ class Write implements \Flexio\IFace\IJob
     private function run_internal(\Flexio\IFace\IProcess $process) : void
     {
         $instream = $process->getStdin();
-        $outstream = $process->getStdout();
-
         $job_params = $this->getJobParameters();
         $path = $job_params['path'] ?? null;
 
@@ -64,11 +62,7 @@ class Write implements \Flexio\IFace\IJob
 
         $stream_properties = $instream->get();
 
-        // the write job's "stdout" is always just a copy of its "stdin"; do this first
-        $outstream->copyFrom($instream);
-        $outstream = null;
-
-        // now perform the write to 'path'
+        // write to 'path'
         $vfs = new \Flexio\Services\Vfs($process->getOwner());
         $vfs->setProcess($process);
 
@@ -118,7 +112,6 @@ class Write implements \Flexio\IFace\IJob
                     $writer->write($data);
                 }
             }
-
         }
         catch (\Exception $e)
         {

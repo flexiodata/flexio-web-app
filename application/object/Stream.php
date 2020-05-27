@@ -125,22 +125,6 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
         return $this;
     }
 
-    public function copyFrom(\Flexio\IFace\IStream $source) : void
-    {
-        // note: copies a streams properties to $dest, overwriting $dest's properties
-
-        $sourceimpl = $source->getImpl();
-
-        if (!($sourceimpl instanceof \Flexio\Object\Stream))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED, "copy may only be used on stream objects of the same type");
-
-        $properties = $source->get();
-        unset($properties['eid']);
-        unset($properties['created']);
-        unset($properties['updated']);
-        $this->set($properties);
-    }
-
     public function set(array $properties) : \Flexio\Object\Stream
     {
         // TODO: add properties check

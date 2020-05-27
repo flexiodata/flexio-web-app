@@ -63,8 +63,7 @@ class Grep implements \Flexio\IFace\IJob
         switch ($mime_type)
         {
             default:
-                $outstream->copyFrom($instream);
-                return;
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED, 'The input format is not supported');
 
             case \Flexio\Base\ContentType::FLEXIO_TABLE:
                 $this->getOutput($instream, $outstream);

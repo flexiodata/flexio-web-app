@@ -170,8 +170,7 @@ class Convert implements \Flexio\IFace\IJob
         {
             // unhandled input
             default:
-                $outstream->copyFrom($instream);
-                return;
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED, 'The input format is not supported');
 
             // table input
             case \Flexio\Base\ContentType::FLEXIO_TABLE:

@@ -60,7 +60,7 @@ class Exit1 implements \Flexio\IFace\IJob
 
         $params = $this->getJobParameters();
         $code = $params['code'] ?? \Flexio\Jobs\Process::RESPONSE_NORMAL;
-        $response = $params['response'] ?? false;
+        $response = $params['response'] ?? '';
 
         if (is_array($response) || is_object($response))
         {
@@ -68,17 +68,8 @@ class Exit1 implements \Flexio\IFace\IJob
             $response = json_encode($response, JSON_UNESCAPED_SLASHES);
         }
 
-        if ($response !== false)
-        {
-            $streamwriter = $outstream->getWriter();
-            $streamwriter->write($response);
-        }
-         else
-        {
-            // if no response is specified, write out stdout
-            $outstream->copyFrom($instream);
-        }
-
+        $streamwriter = $outstream->getWriter();
+        $streamwriter->write($response);
 
         // this next line will cause the process loop to exit
         // and return the http response code in $code

@@ -155,8 +155,7 @@ class Transform implements \Flexio\IFace\IJob
         {
             // unhandled input
             default:
-                $outstream->copyFrom($instream);
-                return;
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED, 'The input format is not supported');
 
             // table input
             case \Flexio\Base\ContentType::FLEXIO_TABLE:
@@ -177,14 +176,6 @@ class Transform implements \Flexio\IFace\IJob
         $column_expression_map = $this->getTableExpressionMap($instream);
         if (!isset($column_expression_map))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-
-        // if there aren't any operations, simply create an output stream
-        // pointing to the original content
-        if (count($column_expression_map) === 0)
-        {
-            $outstream->copyFrom($instream);
-            return;
-        };
 
         // create the output with the replaced values
         $output_columns = $instream->getStructure()->enum();
@@ -243,14 +234,6 @@ class Transform implements \Flexio\IFace\IJob
         $column_expression_map = $this->getStreamExpressionMap($instream);
         if (!isset($column_expression_map))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-
-        // if there aren't any operations, simply create an output stream
-        // pointing to the original content
-        if (count($column_expression_map) === 0)
-        {
-            $outstream->copyFrom($instream);
-            return;
-        }
 
         // create the output with the replaced values
         $outstream->set($instream->get());
