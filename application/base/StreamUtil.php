@@ -56,7 +56,27 @@ class StreamUtil
         $mime_type = $stream->getMimeType();
         if ($mime_type === \Flexio\Base\ContentType::FLEXIO_TABLE)
         {
-            return $stream->getReader()->getRows($start,$limit);
+            $result = [];
+
+            $idx = -1;
+            $reader = $stream->getReader();
+            while (true)
+            {
+                $idx++;
+
+                if ($idx < $start)
+                    continue;
+                if ($idx >= $start + $limit)
+                    break;
+
+                $row = $reader->readRow();
+                if ($row === false)
+                    break;
+
+                $result[] = $row;
+            }
+
+            return $result;
         }
         else
         {

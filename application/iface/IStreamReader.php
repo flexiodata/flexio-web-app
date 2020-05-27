@@ -20,7 +20,6 @@ interface IStreamReader
 {
     public function read($length = 1024);
     public function readRow();
-    public function getRows(int $offset, int $limit);
     public function close();
 }
 

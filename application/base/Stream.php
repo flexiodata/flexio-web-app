@@ -63,18 +63,11 @@ class StreamReader implements \Flexio\IFace\IStreamReader
         }
     }
 
-    public function getRows(int $offset, int $limit)
-    {
-        // this class not used for tables -- see StorageFileReaderWriter
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-    }
-
     public function close() : bool
     {
         return true;
     }
 }
-
 
 
 
