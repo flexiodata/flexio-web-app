@@ -211,7 +211,6 @@ class Input {
         if (info) {
             this._name = info['name']
             this._contentType = info['content_type']
-            this._isTable = (this.contentType == 'application/vnd.flexio.table') ? true:false
             this._size = info['size']
             this._handle = info['handle']
             this._structure = null
@@ -222,7 +221,6 @@ class Input {
         } else {
             this._name = ''
             this._contentType = 'application/octet-stream'
-            this._isTable = false
             this._size = 0
             this._handle = -1
             this._structure = null
@@ -250,17 +248,10 @@ class Input {
     }
 
     get structure() {
-        if (!this._isTable) {
-            return null
-        }
         if (!this._structure) {
             this._structure = proxy.invokeSync('getInputStreamStructure', [this._handle])
         }
         return this._structure
-    }
-
-    get isTable() {
-        return this._isTable
     }
 
     get fetchStyle() {
@@ -288,9 +279,6 @@ class Input {
         if (length === undefined || length === null) {
             return this.readAll()
         }
-        if (this._isTable) {
-            return null
-        }
         var data = proxy.invokeSync('read', [this._handle, length])
         if (data === false || data === null) {
             return null
@@ -317,27 +305,15 @@ class Input {
     }
 
     readAll() {
-        if (this._isTable) {
-            var rows = [], row
-            while (true) {
-                row = this.readLine()
-                if (row === null) {
-                    break
-                }
-                rows.push(row)
+        var buf = '', chunk
+        while (true) {
+            chunk = this.read(4096)
+            if (chunk === null) {
+                break
             }
-            return rows
-        } else {
-            var buf = '', chunk
-            while (true) {
-                chunk = this.read(4096)
-                if (chunk === null) {
-                    break
-                }
-                buf += chunk
-            }
-            return buf
+            buf += chunk
         }
+        return buf
     }
 
     typeCasts(row) {

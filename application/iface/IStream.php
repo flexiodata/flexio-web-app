@@ -28,7 +28,6 @@ interface IStream
     public function getPath();
     public function setSize($size);
     public function getSize();
-    public function isTable();
     public function getRowCount();
     public function setMimeType(string $mime_type);
     public function getMimeType();

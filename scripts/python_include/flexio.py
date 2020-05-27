@@ -237,7 +237,6 @@ class Stream(object):
         if info:
             self._name = info['name']
             self._content_type = info['content_type']
-            self._is_table = info['is_table']
             self._size = info['size']
             self._handle = info['handle']
             self._structure = None
@@ -249,7 +248,6 @@ class Stream(object):
         else:
             self._name = ''
             self._content_type = 'application/octet-stream'
-            self._is_table = False
             self._size = 0
             self._handle = -1
             self._structure = None
@@ -287,15 +285,9 @@ class Stream(object):
 
     @property
     def structure(self):
-        if not self.is_table:
-            return None
         if not self._structure:
             self._structure = proxy.invoke('getInputStreamStructure', [self._handle])
         return self._structure
-
-    @property
-    def is_table(self):
-        return self._is_table
 
     @property
     def fetch_style(self):
@@ -333,8 +325,6 @@ class Stream(object):
     def read(self, length=None):
         if length is None:
             return self.readall()
-        if self._is_table:
-            return None
         data = proxy.invoke('read', [self._handle, length])
         if data is False:
             return b''
@@ -357,22 +347,13 @@ class Stream(object):
             return row
 
     def readall(self):
-        if self._is_table:
-            rows = []
-            while True:
-                row = self.readline()
-                if row is None:
-                    break
-                rows.append(row)
-            return rows
-        else:
-            buf = b''
-            while True:
-                chunk = proxy.invoke('read', [self._handle, 4096])
-                if chunk is False:
-                    break
-                buf += chunk
-            return buf
+        buf = b''
+        while True:
+            chunk = proxy.invoke('read', [self._handle, 4096])
+            if chunk is False:
+                break
+            buf += chunk
+        return buf
 
     def __iter__(self):
         return self

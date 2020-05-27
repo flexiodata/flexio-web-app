@@ -772,7 +772,6 @@ class ScriptHost
                                'tag' => $k,
                                'name' => $file->stream->getName(),
                                'size' => $file->stream->getSize(),
-                               'is_table' => $file->stream->isTable(),
                                'content_type' => $file->stream->getMimeType());
         }
 
@@ -990,7 +989,6 @@ class ScriptHost
         return array('handle' => $handle,
                      'name' => $file->stream->getName(),
                      'size' => $file->stream->getSize(),
-                     'is_table' => $file->stream->isTable(),
                      'content_type' => $file->stream->getMimeType());
     }
 
@@ -1027,7 +1025,6 @@ class ScriptHost
         return array('handle' => $handle,
                      'name' => '',
                      'size' => $file->stream->getSize(),
-                     'is_table' => $file->stream->isTable(),
                      'content_type' => $file->stream->getMimeType());
     }
 
@@ -1047,7 +1044,6 @@ class ScriptHost
         return array('handle' => $handle,
                      'name' => '',
                      'size' => $file->stream->getSize(),
-                     'is_table' => $file->stream->isTable(),
                      'content_type' => $file->stream->getMimeType());
     }
 
@@ -1069,7 +1065,6 @@ class ScriptHost
             return array('handle' => $handle,
                          'name' => '',
                          'size' => $file->stream->getSize(),
-                         'is_table' => $file->stream->isTable(),
                          'content_type' => $file->stream->getMimeType());
         }
 
@@ -1079,19 +1074,11 @@ class ScriptHost
 
         $info = $vfs->getFileInfo($path);
 
-
-
-        $is_table = false;
         $properties = [ 'mime_type' => ($info['content_type'] ?? 'application/octet-stream') ];
         if (isset($info['structure']))
-        {
-            $is_table = true;
-            $properties['mime_type'] = \Flexio\Base\ContentType::FLEXIO_TABLE;
             $properties['structure'] = $info['structure'];
-        }
 
         $properties['name'] = $path;
-
 
         $stream = \Flexio\Base\Stream::create();
         $stream->set($properties);
@@ -1119,7 +1106,6 @@ class ScriptHost
         return array('handle' => $handle,
                      'name' => '',
                      'size' => $file->stream->getSize(),
-                     'is_table' => $file->stream->isTable(),
                      'content_type' => $file->stream->getMimeType());
     }
 
@@ -1265,7 +1251,6 @@ class ScriptHost
             return;
 
         $stream = $this->files[$handle]->stream;
-        $is_table = ($stream && $stream->isTable());
 
         if ($data instanceof BinaryData)
         {
@@ -1273,17 +1258,11 @@ class ScriptHost
         }
         else if (is_object($data))
         {
-            if ($is_table)
-                $writer->write((array)$data);
-                 else
-                $writer->write(json_encode($data, JSON_UNESCAPED_SLASHES));
+            $writer->write(json_encode($data, JSON_UNESCAPED_SLASHES));
         }
         else if (is_array($data))
         {
-            if ($is_table)
-                $writer->write((array)$data);
-                 else
-                $writer->write(json_encode($data, JSON_UNESCAPED_SLASHES));
+            $writer->write(json_encode($data, JSON_UNESCAPED_SLASHES));
         }
         else
         {

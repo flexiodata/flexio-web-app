@@ -152,48 +152,21 @@ class Grep implements \Flexio\IFace\IJob
 
             if (!$done_writing)
             {
-                if ($is_table)
+                $buf = $streamreader->read(1024);
+                if ($buf === false)
+                    break;
+
+                $len = strlen($buf);
+
+                if ($len > 0)
+                    $external_process->write($buf);
+
+                if ($len != 1024)
                 {
-                    // write data
-
-                    $row = $streamreader->readRow();
-                    if ($row)
-                    {
-                        $str = join(',', array_values($row)) . "\n";
-                        $external_process->write($str);
-
-                        ++$rowcnt;
-                        if ($maxrows != -1 && ++$rowcnt >= $maxrows)
-                        {
-                            $external_process->closeWrite();
-                            $done_writing = true;
-                        }
-                    }
-                     else
-                    {
-                        $external_process->closeWrite();
-                        $done_writing = true;
-                    }
-                }
-                 else
-                {
-                    $buf = $streamreader->read(1024);
-                    if ($buf === false)
-                        break;
-
-                    $len = strlen($buf);
-
-                    if ($len > 0)
-                        $external_process->write($buf);
-
-                    if ($len != 1024)
-                    {
-                        $external_process->closeWrite();
-                        $done_writing = true;
-                    }
+                    $external_process->closeWrite();
+                    $done_writing = true;
                 }
             }
-
 
             if ($external_process->canRead())
             {

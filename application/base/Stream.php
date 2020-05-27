@@ -35,47 +35,31 @@ class StreamReader implements \Flexio\IFace\IStreamReader
 
     public function read($length = 1024)
     {
-        if ($this->stream->isTable())
-        {
-            // this class not used for tables -- see StorageFileReaderWriter
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        }
-         else
-        {
-            if ($this->offset >= strlen($this->stream->buffer))
-                return false;
+        if ($this->offset >= strlen($this->stream->buffer))
+            return false;
 
-            $str = substr($this->stream->buffer, $this->offset, $length);
-            if ($str === false)
-                return false;
-            $this->offset += strlen($str);
-            return $str;
-        }
+        $str = substr($this->stream->buffer, $this->offset, $length);
+        if ($str === false)
+            return false;
+        $this->offset += strlen($str);
+        return $str;
     }
 
     public function readRow()
     {
-        if ($this->stream->isTable())
-        {
-            // this class not used for tables -- see StorageFileReaderWriter
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        }
-         else
-        {
-            $npos = strpos($this->stream->buffer, "\n", $this->offset);
+        $npos = strpos($this->stream->buffer, "\n", $this->offset);
 
-            if ($npos === false)
-            {
-                return $this->read(strlen($this->stream->buffer));
-            }
-             else
-            {
-                $npos -= $this->offset;
-                $line = $this->read($npos+1);
-                if ($line === false)
-                    return false;
-                return rtrim($line, "\r\n");
-            }
+        if ($npos === false)
+        {
+            return $this->read(strlen($this->stream->buffer));
+        }
+            else
+        {
+            $npos -= $this->offset;
+            $line = $this->read($npos+1);
+            if ($line === false)
+                return false;
+            return rtrim($line, "\r\n");
         }
     }
 
@@ -118,36 +102,19 @@ class StreamWriter implements \Flexio\IFace\IStreamWriter
         if ($this->storagefs_writer)
             return $this->storagefs_writer->write($data);
 
-        if ($this->stream->isTable())
+        if (!is_string($data))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, 'Expected string value');
+
+        $curlen = strlen($this->stream->buffer);
+        $datalen = strlen($data);
+        if ($curlen + $datalen > 2000000) // if memory buffer is greater than 2MB, convert to a disk stream
         {
-            if ($this->bytes_written > 1000000)
-            {
-                $this->memory_table_writer->close();
-                $this->memory_table_writer = null;
-
-                $this->storagefs_writer = $this->stream->switchToDiskStorage();
-                return $this->storagefs_writer->write($data);
-            }
-
-            $this->memory_table_writer->write($data);
-            $this->bytes_written += strlen(serialize($data));
+            $this->storagefs_writer = $this->stream->switchToDiskStorage();
+            return $this->storagefs_writer->write($data);
         }
-         else
-        {
-            if (!is_string($data))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, 'Expected string value');
 
-            $curlen = strlen($this->stream->buffer);
-            $datalen = strlen($data);
-            if ($curlen + $datalen > 2000000) // if memory buffer is greater than 2MB, convert to a disk stream
-            {
-                $this->storagefs_writer = $this->stream->switchToDiskStorage();
-                return $this->storagefs_writer->write($data);
-            }
-
-            $this->stream->buffer .= $data;
-            $this->bytes_written += strlen($data);
-        }
+        $this->stream->buffer .= $data;
+        $this->bytes_written += strlen($data);
 
         return true;
     }
@@ -178,7 +145,6 @@ class Stream implements \Flexio\IFace\IStream
     public $buffer = '';             // data buffer; use reader/writer to access
     private $storagefs = null;
     private $storagefs_path = null;
-    private $memory_db = null;
 
     // properties
     private $properties;
@@ -233,32 +199,7 @@ class Stream implements \Flexio\IFace\IStream
         if (isset($properties['file_modified']))
             $object->properties['file_modified'] = $properties['file_modified'];
 
-        $object->prepareStorage();
-
         return $object;
-    }
-
-    public function isTable() : bool
-    {
-        if (($this->properties['mime_type'] ?? '') == \Flexio\Base\ContentType::FLEXIO_TABLE)
-            return true;
-        return false;
-    }
-
-    private $structure_stamp = '';
-    private function prepareStorage()
-    {
-        if ($this->isTable())
-        {
-            // start out with memory table
-
-            $structure_stamp = md5(serialize($this->properties['structure']));
-            if ($structure_stamp != $this->structure_stamp)
-            {
-                $this->structure_stamp = $structure_stamp;
-                $this->memory_db = $this->getStorageFs()->createFile('', [ 'structure' => $this->properties['structure'], 'memory' => true ]);
-            }
-        }
     }
 
     public function switchToDiskStorage() : \Flexio\IFace\IStreamWriter
@@ -266,11 +207,6 @@ class Stream implements \Flexio\IFace\IStream
         $storagefs = $this->getStorageFs();
 
         $create_params = [];
-        if ($this->isTable())
-        {
-            $create_params['structure'] = $this->properties['structure'];
-        }
-
         $path = \Flexio\Base\Util::generateRandomString(20);
 
         $writer = null;
@@ -286,20 +222,9 @@ class Stream implements \Flexio\IFace\IStream
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, "Could not create temporary storage stream");
         }
 
-        if ($this->memory_db)
-        {
-            $reader = $this->memory_db->getReader();
-            while (($row = $reader->readRow()) !== false)
-                $writer->write($row);
-            $this->memory_db = null;
-            $this->storagefs_path = $path;
-        }
-         else
-        {
-            $writer->write($this->buffer);
-            $this->buffer = null;
-            $this->storagefs_path = $path;
-        }
+        $writer->write($this->buffer);
+        $this->buffer = null;
+        $this->storagefs_path = $path;
 
         return $writer;
     }
@@ -333,7 +258,6 @@ class Stream implements \Flexio\IFace\IStream
         $this->buffer = $sourceimpl->buffer;
         $this->storagefs = $sourceimpl->storagefs;
         $this->storagefs_path = $sourceimpl->storagefs_path;
-        $this->memory_db = $sourceimpl->memory_db;
 
         return $this;
     }
@@ -366,11 +290,6 @@ class Stream implements \Flexio\IFace\IStream
             $this->properties['file_created'] = $properties['file_created'];
         if (isset($properties['file_modified']))
             $this->properties['file_modified'] = $properties['file_modified'];
-
-        if ($this->isTable() && !$this->memory_db)
-        {
-            $this->prepareStorage();
-        }
 
         return $this;
     }
@@ -468,11 +387,7 @@ class Stream implements \Flexio\IFace\IStream
 
     public function getReader() : \Flexio\IFace\IStreamReader
     {
-        if ($this->memory_db)
-        {
-            return $this->memory_db->getReader();
-        }
-         else if (!is_null($this->storagefs_path))
+        if (!is_null($this->storagefs_path))
         {
             $file = $this->getStorageFs()->open($this->storagefs_path);
             $file->setStructure($this->properties['structure']);
@@ -489,15 +404,7 @@ class Stream implements \Flexio\IFace\IStream
         if ($access == 'w+' || $access == 'w')
             $this->buffer = '';
 
-        $this->prepareStorage();
-
-        if ($this->memory_db)
-        {
-            $writer = \Flexio\Base\StreamWriter::create($this);
-            $writer->memory_table_writer = $this->memory_db->getWriter($access);
-            return $writer;
-        }
-         else if (!is_null($this->storagefs_path))
+        if (!is_null($this->storagefs_path))
         {
             $file = $this->getStorageFs()->open($this->storagefs_path);
             $file->setStructure($this->properties['structure']);

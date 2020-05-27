@@ -123,28 +123,9 @@ class Write implements \Flexio\IFace\IJob
         catch (\Exception $e)
         {
             $reader = $instream->getReader();
-
-            $is_table = false;
-            if (isset($stream_properties['structure']) && is_array($stream_properties['structure']) && count($stream_properties['structure']) > 0)
-                $is_table = true;
-
-            if ($is_table)
-            {
-                $params = [
-                    'path' => $path,
-                    'structure' => $stream_properties['structure']
-                ];
-
-                $files = $vfs->write($params, function() use (&$reader) {
-                    return $reader->readRow();
-                });
-            }
-             else
-            {
-                $files = $vfs->write($path, function($length) use (&$reader) {
-                    return $reader->read($length);
-                });
-            }
+            $files = $vfs->write($path, function($length) use (&$reader) {
+                return $reader->read($length);
+            });
         }
     }
 
