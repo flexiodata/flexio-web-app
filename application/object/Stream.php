@@ -35,8 +35,6 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
         return json_encode($object);
     }
 
-    public function getImpl() { return $this; }
-
     public static function list(array $filter) : array
     {
         $object = new static();
