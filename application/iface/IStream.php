@@ -18,7 +18,6 @@ namespace Flexio\IFace;
 
 interface IStream
 {
-    public function getImpl();   // returns the object implementing interface; (internal helper)
     public function set(array $properties);
     public function get();
     public function setName(string $name);

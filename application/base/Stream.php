@@ -169,8 +169,6 @@ class Stream implements \Flexio\IFace\IStream
         $this->properties['updated'] = null;
     }
 
-    public function getImpl() { return $this; }
-
     public static function create(array $properties = null) : \Flexio\Base\Stream
     {
         $object = new static();
@@ -238,28 +236,6 @@ class Stream implements \Flexio\IFace\IStream
         }
 
         return $this->storagefs;
-    }
-
-    public function copyFrom(\Flexio\IFace\IStream $source) : \Flexio\Base\Stream
-    {
-        // copies all the properties of another stream into the current stream,
-        // including the buffer
-        $sourceimpl = $source->getImpl();
-
-        if (!($sourceimpl instanceof \Flexio\Base\Stream))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED, "copy may only be used on stream objects of the same type");
-
-        $properties = $source->get();
-        unset($properties['eid']);
-        unset($properties['created']);
-        unset($properties['updated']);
-        $this->set($properties);
-
-        $this->buffer = $sourceimpl->buffer;
-        $this->storagefs = $sourceimpl->storagefs;
-        $this->storagefs_path = $sourceimpl->storagefs_path;
-
-        return $this;
     }
 
     public function set(array $properties) : \Flexio\Base\Stream
