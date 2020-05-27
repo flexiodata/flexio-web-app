@@ -260,12 +260,6 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
         return $local_file_info['size'];
     }
 
-    public function getRowCount() : int
-    {
-        $reader = $this->getReader();
-        return $reader->getRowCount();
-    }
-
     public function setMimeType(string $mime_type) : \Flexio\Object\Stream
     {
         $properties = array();

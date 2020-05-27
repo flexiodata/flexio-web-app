@@ -199,7 +199,6 @@ class Stream
 
             $result = array();
             $result['success'] = true;
-            $result['total_count'] = $stream->getRowCount(); // TODO: fill out
 
             if ($metadata === true)
                 $result['columns'] = $stream->getStructure()->get();

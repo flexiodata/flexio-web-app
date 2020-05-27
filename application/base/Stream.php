@@ -335,12 +335,6 @@ class Stream implements \Flexio\IFace\IStream
         return $this->properties['size'];
     }
 
-    public function getRowCount() : int
-    {
-        // TODO: populate from content
-        return 0;
-    }
-
     public function setMimeType(string $mime_type) : \Flexio\Base\Stream
     {
         $properties = array();
