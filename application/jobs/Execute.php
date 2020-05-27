@@ -779,26 +779,6 @@ class ScriptHost
         return $this->context_files;
     }
 
-    private $runjob_stdin = null;
-    public function func_runJob($json) : void
-    {
-        $task = @json_decode($json,true);
-        if ($task === null)
-            return;
-
-        if ($this->runjob_stdin === null)
-            $this->runjob_stdin = $this->process->getStdin();
-
-        $process = \Flexio\Jobs\Process::create();
-        $process->setOwner($this->getProcess()->getOwner());
-        $process->getStdin()->copyFrom($this->runjob_stdin);
-        $process->execute($task);
-
-        // stdin of the next invocation of runjob is the stdout of the job that just ran
-        $this->runjob_stdin = $process->getStdout();
-        $this->process->getStdout()->copyFrom($this->runjob_stdin);
-    }
-
     public function func_upper($str)
     {
         // tester function -- makes string uppercase
