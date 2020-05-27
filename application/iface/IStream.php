@@ -30,7 +30,6 @@ interface IStream
     public function getMimeType();
     public function setStructure($structure);
     public function getStructure();
-    public function getFileInfo();
     public function getReader() : \Flexio\IFace\IStreamReader;
     public function getWriter($mode = 'w+') : \Flexio\IFace\IStreamWriter;
 }

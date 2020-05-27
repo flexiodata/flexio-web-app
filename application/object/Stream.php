@@ -238,8 +238,10 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
 
     public function getSize() : ?int
     {
-        $local_file_info = $this->getFileInfo();
-        return $local_file_info['size'];
+        if ($this->isCached() === false)
+            $this->populateCache();
+
+        return $this->properties['size'];
     }
 
     public function setMimeType(string $mime_type) : \Flexio\Object\Stream
@@ -275,24 +277,6 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
         $s = $this->properties['structure'];
         $structure = \Flexio\Base\Structure::create($s);
         return $structure;
-    }
-
-    public function getFileInfo() : array
-    {
-        if ($this->isCached() === false)
-            $this->populateCache();
-
-        $info = array();
-        $info['name'] = $this->properties['name'];
-        $info['path'] = $this->properties['path'];
-        $info['size'] = $this->properties['size'];
-        $info['hash'] = $this->properties['hash'];
-        $info['mime_type'] = $this->properties['mime_type'];
-        $info['structure'] = $this->properties['structure'];
-        $info['file_created'] = $this->properties['file_created'];
-        $info['file_modified'] = $this->properties['file_modified'];
-
-        return $info;
     }
 
     public function getChildStreams(string $name = null) : array

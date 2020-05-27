@@ -340,21 +340,6 @@ class Stream implements \Flexio\IFace\IStream
         return $structure;
     }
 
-    public function getFileInfo() : array
-    {
-        $info = array();
-        $info['name'] = $this->properties['name'];
-        $info['path'] = $this->properties['path'];
-        $info['size'] = $this->properties['size'];
-        $info['hash'] = $this->properties['hash'];
-        $info['mime_type'] = $this->properties['mime_type'];
-        $info['structure'] = $this->properties['structure'];
-        $info['file_created'] = $this->properties['file_created'];
-        $info['file_modified'] = $this->properties['file_modified'];
-
-        return $info;
-    }
-
     public function getReader() : \Flexio\IFace\IStreamReader
     {
         if (!is_null($this->storagefs_path))
