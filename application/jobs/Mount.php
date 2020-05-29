@@ -176,7 +176,7 @@ class Mount
                     $pipe_info = \Flexio\Object\Factory::getPipeInfoFromContent($content, $extension);
                     break;
 /*
-                // TODO: STREAM UPDATE. temporarily experimental implementation for importing
+                // TODO: STREAM UPDATE. temporarily disable experimental implementation for importing
                 // from CSVs until streams are overhauled; this is to avoid creating new temporary
                 // streams after having cleared out old streams until we the stream table structure
                 // and storage mechanism as needed; see \Flexio\Object\Factory
@@ -269,6 +269,12 @@ class Mount
             $pipe_task = $pipe_properties['task'];
             if (isset($pipe_task['op']) && $pipe_task['op'] === 'import')
             {
+                // TODO: STREAM UPDATE. temporarily disable experimental implementation for importing
+                // from CSVs until streams are overhauled; this is to avoid creating new temporary
+                // streams after having cleared out old streams until we the stream table structure
+                // and storage mechanism as needed; see \Flexio\Object\Factory
+
+                /*
                 // we have a content that needs to be indexed
 
                 // get the eid of the stream to import
@@ -365,6 +371,7 @@ class Mount
 
                 // update the pipe info
                 $p->set(array('eid_status' => \Model::STATUS_AVAILABLE, 'params' => $pipe_params_info, 'examples' => $pipe_params_examples, 'returns' => $pipe_returns_info));
+            */
             }
             else
             {
