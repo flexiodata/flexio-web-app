@@ -123,10 +123,6 @@ class Api
         'PUT /:teamid/processes/:objid/run'           => '\Flexio\Api\Process::run',
         'DEL /:teamid/processes/:objid/run'           => '\Flexio\Api\Process::run',
 
-        // streams
-        'GET /:teamid/streams/:objid'                 => '\Flexio\Api\Stream::get',
-        'GET /:teamid/streams/:objid/content'         => '\Flexio\Api\Stream::content',
-
         // vfs
         'GET /:teamid/vfs/list'                       => '\Flexio\Api\Vfs::list',
         'GET /:teamid/vfs/info/*'                     => '\Flexio\Api\Vfs::info',
