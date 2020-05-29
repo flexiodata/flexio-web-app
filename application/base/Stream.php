@@ -75,8 +75,6 @@ class StreamWriter implements \Flexio\IFace\IStreamWriter
 {
     private $stream;
     private $bytes_written;
-    private $storagefs_writer = null;
-    public $memory_table_writer = null;
 
     public function __construct()
     {
@@ -92,19 +90,8 @@ class StreamWriter implements \Flexio\IFace\IStreamWriter
 
     public function write($data)
     {
-        if ($this->storagefs_writer)
-            return $this->storagefs_writer->write($data);
-
         if (!is_string($data))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, 'Expected string value');
-
-        $curlen = strlen($this->stream->buffer);
-        $datalen = strlen($data);
-        if ($curlen + $datalen > 2000000) // if memory buffer is greater than 2MB, convert to a disk stream
-        {
-            $this->storagefs_writer = $this->stream->switchToDiskStorage();
-            return $this->storagefs_writer->write($data);
-        }
 
         $this->stream->buffer .= $data;
         $this->bytes_written += strlen($data);
@@ -114,20 +101,11 @@ class StreamWriter implements \Flexio\IFace\IStreamWriter
 
     public function getBytesWritten() : int
     {
-        if ($this->storagefs_writer)
-            return $this->storagefs_writer->getBytesWritten();
-
         return $this->bytes_written;
     }
 
     public function close() : bool
     {
-        if ($this->storagefs_writer)
-            return $this->storagefs_writer->close();
-
-        if ($this->memory_table_writer)
-            return $this->memory_table_writer->close();
-
         return true;
     }
 }
@@ -136,8 +114,6 @@ class StreamWriter implements \Flexio\IFace\IStreamWriter
 class Stream implements \Flexio\IFace\IStream
 {
     public $buffer = '';             // data buffer; use reader/writer to access
-    private $storagefs = null;
-    private $storagefs_path = null;
 
     // properties
     private $properties;
@@ -191,44 +167,6 @@ class Stream implements \Flexio\IFace\IStream
             $object->properties['file_modified'] = $properties['file_modified'];
 
         return $object;
-    }
-
-    public function switchToDiskStorage() : \Flexio\IFace\IStreamWriter
-    {
-        $storagefs = $this->getStorageFs();
-
-        $create_params = [];
-        $path = \Flexio\Base\Util::generateRandomString(20);
-
-        $writer = null;
-        $file = $storagefs->createFile($path, $create_params);
-
-        if ($file)
-        {
-            $writer = $file->getWriter();
-        }
-
-        if (is_null($writer))
-        {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, "Could not create temporary storage stream");
-        }
-
-        $writer->write($this->buffer);
-        $this->buffer = null;
-        $this->storagefs_path = $path;
-
-        return $writer;
-    }
-
-    private function getStorageFs() : \Flexio\Services\StorageFs
-    {
-        if ($this->storagefs === null)
-        {
-            $storage_temp_path = \Flexio\System\System::getStoreTempPath();
-            $this->storagefs = \Flexio\Services\StorageFs::create(['base_path' => $storage_temp_path]);
-        }
-
-        return $this->storagefs;
     }
 
     public function set(array $properties) : \Flexio\Base\Stream
@@ -335,16 +273,7 @@ class Stream implements \Flexio\IFace\IStream
 
     public function getReader() : \Flexio\IFace\IStreamReader
     {
-        if (!is_null($this->storagefs_path))
-        {
-            $file = $this->getStorageFs()->open($this->storagefs_path);
-            $file->setStructure($this->properties['structure']);
-            return $file->getReader();
-        }
-         else
-        {
-            return \Flexio\Base\StreamReader::create($this);
-        }
+        return \Flexio\Base\StreamReader::create($this);
     }
 
     public function getWriter($access = 'w+') : \Flexio\IFace\IStreamWriter
@@ -352,16 +281,7 @@ class Stream implements \Flexio\IFace\IStream
         if ($access == 'w+' || $access == 'w')
             $this->buffer = '';
 
-        if (!is_null($this->storagefs_path))
-        {
-            $file = $this->getStorageFs()->open($this->storagefs_path);
-            $file->setStructure($this->properties['structure']);
-            return $file->getWriter($access);
-        }
-         else
-        {
-            return \Flexio\Base\StreamWriter::create($this);
-        }
+        return \Flexio\Base\StreamWriter::create($this);
     }
 }
 
