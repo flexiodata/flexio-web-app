@@ -18,10 +18,6 @@ namespace Flexio\Object;
 
 class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flexio\IFace\IStream
 {
-    // TODO: add tests for these constants
-    public const TYPE_DIRECTORY = 'SD';
-    public const TYPE_FILE = 'SF';
-
     public function __construct()
     {
     }
@@ -85,10 +81,6 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
         // default path
         if (!isset($properties['path']))
             $properties['path'] = \Flexio\Base\Util::generateHandle();
-
-        // default stream type
-        if (!isset($properties['stream_type']))
-            $properties['stream_type'] = \Flexio\Object\Stream::TYPE_FILE;
 
         $object = new static();
         $stream_model = $object->getModel()->stream;
