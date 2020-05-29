@@ -257,33 +257,12 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
         return $structure;
     }
 
-    public function getChildStreams(string $name = null) : array
-    {
-        // return an array of \Flexio\Object\Stream objects that have a
-        // parent_eid = this object's eid;
-        // if name is specified, the result set will be additionally filtered with name
-
-        // note this function will only return non-deleted child streams; that's what the query for eid_status does
-
-        $where = [ 'parent_eid' => $this->getEid(), 'eid_status' => \Model::STATUS_AVAILABLE ];
-        if (!is_null($name))
-            $where['name'] = $name;
-
-        $arr = self::list($where);
-        return $arr;
-    }
-
     public function getReader() : \Flexio\IFace\IStreamReader
     {
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
     public function getWriter($access = 'w+') : \Flexio\IFace\IStreamWriter
-    {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-    }
-
-    public function getInserter() : \Flexio\IFace\IStreamWriter
     {
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
