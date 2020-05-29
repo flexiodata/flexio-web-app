@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Object;
 
 
-class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flexio\IFace\IStream
+class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 {
     public function __construct()
     {
@@ -247,16 +247,6 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
         $s = $this->properties['structure'];
         $structure = \Flexio\Base\Structure::create($s);
         return $structure;
-    }
-
-    public function getReader() : \Flexio\IFace\IStreamReader
-    {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-    }
-
-    public function getWriter($access = 'w+') : \Flexio\IFace\IStreamWriter
-    {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
     private function isCached() : bool

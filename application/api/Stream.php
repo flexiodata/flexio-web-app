@@ -82,10 +82,15 @@ class Stream
         if ($stream->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_STREAM_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
+        // create a base stream object from the stream properties for accessing
+        // the content
+        $stream_properties = $stream->get();
+        $stream_implmentation = \Flexio\Base\Stream::create($stream_properties);
+
         if ($download === true)
-            self::echoDownload($stream, $content_type, $encode, $metadata, $start, $limit, $filename, $user_agent);
+            self::echoDownload($stream_implmentation, $content_type, $encode, $metadata, $start, $limit, $filename, $user_agent);
               else
-            self::echoContent($stream, $content_type, $encode, $metadata, $start, $limit);
+            self::echoContent($stream_implmentation, $content_type, $encode, $metadata, $start, $limit);
     }
 
     private static function echoDownload(\Flexio\IFace\IStream $stream, $content_type, $encode, $metadata, $start, $limit, $filename, $user_agent) :  void
