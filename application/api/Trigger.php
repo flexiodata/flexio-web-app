@@ -119,43 +119,7 @@ class Trigger
 
         // create a process host to connect the store/engine and run the process
         $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
-        $process_host->run(false);
-
-        // if the echo result flag is set, then return the result of the process
-        if ($echo_result === true)
-        {
-            if ($process_engine->hasError())
-            {
-                $error = $process_engine->getError();
-                \Flexio\Api\Response::sendError($error);
-                return; // TODO: exit(0) in equivalent pipe run code; return here so we can call function directly in test suite
-            }
-
-            $stream = $process_engine->getStdout();
-            $stream_info = $stream->get();
-            if ($stream_info === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-
-            $mime_type = $stream_info['mime_type'];
-            $start = 0;
-            $limit = PHP_INT_MAX;
-            $content = \Flexio\Base\StreamUtil::getStreamContents($stream, $start, $limit);
-            $response_code = $process_engine->getResponseCode();
-
-            if ($mime_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
-            {
-                // return content as-is
-                header('Content-Type: ' . $mime_type, true, $response_code);
-            }
-            else
-            {
-                // flexio table; return application/json in place of internal mime
-                header('Content-Type: ' . \Flexio\Base\ContentType::JSON, true, $response_code);
-                $content = json_encode($content, JSON_UNESCAPED_SLASHES);
-            }
-
-            \Flexio\Api\Response::sendRaw($content);
-        }
+        $process_host->run(true);
     }
 
     private static function createStreamFromMessage(string $message) : \Flexio\Base\Stream
