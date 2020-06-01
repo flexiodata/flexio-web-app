@@ -101,7 +101,7 @@ class Test
         ]);
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $output = $process->getStdout();
-        $rows = \Flexio\Base\StreamUtil::getStreamContents($output,1535,1);
+        $rows = \Flexio\Tests\Util::getStreamContents($output,1535,1);
         $actual = $rows[0];
         $expected = json_decode('
         {

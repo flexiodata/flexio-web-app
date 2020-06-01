@@ -51,7 +51,7 @@ class Test
         $task = self::createConvertTask();
         $stream = \Flexio\Tests\Util::createStream('/json/01.01-empty.json');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
-        $actual = \Flexio\Base\StreamUtil::getStreamContents($process->getStdout());
+        $actual = \Flexio\Tests\Util::getStreamContents($process->getStdout());
         $expected = [];
         \Flexio\Tests\Check::assertArray('A.2', 'Convert JSON; empty file',  $actual, $expected, $results);
 
@@ -70,7 +70,7 @@ class Test
         $task = self::createConvertTask();
         $stream = \Flexio\Tests\Util::createStream('/json/01.02-malformed.json');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
-        $actual = \Flexio\Base\StreamUtil::getStreamContents($process->getStdout());
+        $actual = \Flexio\Tests\Util::getStreamContents($process->getStdout());
         $expected = [];
         \Flexio\Tests\Check::assertArray('B.2', 'Convert JSON; malformed file',  $actual, $expected, $results);
 
@@ -89,7 +89,7 @@ class Test
         $task = self::createConvertTask();
         $stream = \Flexio\Tests\Util::createStream('/json/01.03-minimum.json');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
-        $actual = \Flexio\Base\StreamUtil::getStreamContents($process->getStdout());
+        $actual = \Flexio\Tests\Util::getStreamContents($process->getStdout());
         $expected = [];
         \Flexio\Tests\Check::assertArray('C.2', 'Convert JSON; simple file',  $actual, $expected, $results);
 
@@ -105,7 +105,7 @@ class Test
         $task = self::createConvertTask();
         $stream = \Flexio\Tests\Util::createStream('/json/01.04-simple.json');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
-        $actual = \Flexio\Base\StreamUtil::getStreamContents($process->getStdout());
+        $actual = \Flexio\Tests\Util::getStreamContents($process->getStdout());
         $expected = [];
         \Flexio\Tests\Check::assertArray('C.4', 'Convert JSON; simple file',  $actual, $expected, $results);
 */
