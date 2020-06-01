@@ -20,31 +20,6 @@ class Test
 {
     public function run(&$results)
     {
-
-
-// BEGIN TEST
-$stream_info = array();
-$stream_info['path'] = \Flexio\Base\Util::generateHandle();
-$stream_info['mime_type'] = \Flexio\Base\ContentType::FLEXIO_TABLE;
-$stream_info['structure'] = \Flexio\Base\Structure::create(json_decode('
-[
-    { "name": "f1", "type": "text"}
-]
-',true))->get();
-$stream = \Flexio\Base\Stream::create($stream_info);
-$writer = $stream->getWriter();
-$data = json_decode('[null]',true);
-$writer->write($data);
-$writer->close();
-$reader = $stream->getReader();
-$actual = $reader->readRow();
-$reader->close();
-$expected = json_decode('{ "f1" : null}',true);
-\Flexio\Tests\Check::assertArray('B.1', 'StreamReader/StreamWriter; single field with a null value',  $actual, $expected, $results);
-
-
-return;
-
         // TEST: stream read/writer; basic file read/write
 
         // BEGIN TEST
