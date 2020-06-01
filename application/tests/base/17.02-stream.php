@@ -66,5 +66,22 @@ class Test
         $reader->close();
         $expected = "abcdefg";
         \Flexio\Tests\Check::assertString('A.3', 'StreamReader/StreamWriter; check basic file read/write ',  $actual, $expected, $results);
+
+
+
+        // TEST: basic content query
+
+        // BEGIN TEST
+        $stream_info = array();
+        $stream_info['path'] = \Flexio\Base\Util::generateHandle();
+        $stream_info['mime_type'] = \Flexio\Base\ContentType::TEXT;
+        $stream_info['structure'] = array();
+        $stream = \Flexio\Base\Stream::create($stream_info);
+        $writer = $stream->getWriter();
+        $writer->write("abcdefg");
+        $writer->close();
+        $actual = \Flexio\Tests\Util::getStreamContents($stream, 0, PHP_INT_MAX, 1);
+        $expected = "abcdefg";
+        \Flexio\Tests\Check::assertString('B.1', 'Stream; check basic content query',  $actual, $expected, $results);
     }
 }
