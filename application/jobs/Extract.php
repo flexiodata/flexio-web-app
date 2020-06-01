@@ -53,6 +53,8 @@ class Extract implements \Flexio\IFace\IJob
 
     private function run_internal(\Flexio\IFace\IProcess $process) : void
     {
+        // TODO: this function is very similar to the vfs info job; factor?
+
         $job_params = $this->getJobParameters();
         $path = $job_params['path'] ?? null;
 
@@ -67,10 +69,13 @@ class Extract implements \Flexio\IFace\IJob
         $process_engine->setOwner($process->getOwner());
         $process_engine->queue('\Flexio\Jobs\Read::run', array('path' => $path));
         $process_engine->queue('\Flexio\Jobs\ProcessHandler::chain', array());
-        $process_engine->queue('\Flexio\Jobs\Convert::run', array('input' => array(), 'output' => array('format' => 'table')));
+        $process_engine->queue('\Flexio\Jobs\Convert::run', array('input' => array(), 'output' => array('format' => 'ndjson')));
         $process_engine->run();
 
-        $process_engine_output = $process_engine->getStdout();
+        if ($process_engine->hasError())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        $local_stdout = $process_engine->getStdout();
 
         // convert the table to json, but do so manually so we can
         // handle large tables
@@ -80,17 +85,31 @@ class Extract implements \Flexio\IFace\IJob
         $streamwriter->write("[");
 
         // write out the column names
-        $column_names = $process_engine_output->getStructure()->getNames();
+        $column_names = $local_stdout->getStructure()->getNames();
         $streamwriter->write(json_encode($column_names));
 
         // write out each row
-        $rows = \Flexio\Base\StreamUtil::getStreamContents($process_engine_output);
-        foreach ($rows as $r)
+        $idx = 0;
+        $limit = PHP_INT_MAX; // placeholder for limit if desired
+        $reader = $local_stdout->getReader();
+        $column_names = array_flip($column_names);
+        while (true)
         {
-            $row_values = array_values($r);
+            if ($idx >= $limit)
+                break;
 
+            $item = $reader->readRow();
+            if ($item === false)
+                break;
+
+            // get the key/value info for the rows
+            $item = json_decode($item, true);
+
+            // get the values corresponding to the headers
+            $item_values = array_values(\Flexio\Base\Util::mapArray($column_names, $item));
             $streamwriter->write(',');
-            $streamwriter->write(json_encode($row_values));
+            $streamwriter->write(json_encode($item_values));
+            $idx++;
         }
 
         // end the output
