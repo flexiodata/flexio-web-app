@@ -225,6 +225,13 @@ EOD;
         return $token_info['access_code'];
     }
 
+    public static function createEmailAddress() : string
+    {
+        $handle1 = \Flexio\Base\Util::generateHandle();
+        $handle2 = \Flexio\Base\Util::generateHandle();
+        return $handle1 . '@' . $handle2 . '.com';
+    }
+
     public static function createUser(string $username = null, string $email = null, string $password = null) : string
     {
         if (!isset($username))
@@ -275,14 +282,33 @@ EOD;
     public static function createStream(string $test_file_local_path) : \Flexio\Base\Stream
     {
         $file = \Flexio\System\System::getTestDataDirectory() . $test_file_local_path;
-        return \Flexio\Base\StreamUtil::createStreamFromFile($file);
+        return self::createStreamFromFile($file);
     }
 
-    public static function createEmailAddress() : string
+    public static function createStreamFromFile(string $path) : \Flexio\Base\Stream
     {
-        $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = \Flexio\Base\Util::generateHandle();
-        return $handle1 . '@' . $handle2 . '.com';
+        $f = @fopen($path, 'rb');
+        if (!$f)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        $mime_type = false;
+
+        $stream = \Flexio\Base\Stream::create();
+        $writer = $stream->getWriter();
+        while (!feof($f))
+        {
+            $buffer = fread($f, 2048);
+            $writer->write($buffer);
+
+            if ($mime_type === false)
+                $mime_type = \Flexio\Base\ContentType::getMimeType($path, $buffer);
+        }
+
+        fclose($f);
+
+        $stream->setMimeType($mime_type);
+
+        return $stream;
     }
 
     public static function getStreamContents($stream, int $start = 0, int $limit = PHP_INT_MAX, int $readsize = 1024 /* testing */) // returns array for table or string for data buffer

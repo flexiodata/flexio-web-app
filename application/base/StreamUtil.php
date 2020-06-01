@@ -18,32 +18,6 @@ namespace Flexio\Base;
 
 class StreamUtil
 {
-    public static function createStreamFromFile(string $path) : \Flexio\Base\Stream
-    {
-        $f = @fopen($path, 'rb');
-        if (!$f)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-
-        $mime_type = false;
-
-        $stream = \Flexio\Base\Stream::create();
-        $writer = $stream->getWriter();
-        while (!feof($f))
-        {
-            $buffer = fread($f, 2048);
-            $writer->write($buffer);
-
-            if ($mime_type === false)
-                $mime_type = \Flexio\Base\ContentType::getMimeType($path, $buffer);
-        }
-
-        fclose($f);
-
-        $stream->setMimeType($mime_type);
-
-        return $stream;
-    }
-
     public static function handleStreamUpload($php_stream_handle, string $post_content_type, array $params, \Flexio\IFace\IStreamWriter $streamwriter, string &$filename, string &$mime_type) : void
     {
         // function for writing input from the php input stream to a flexio stream
