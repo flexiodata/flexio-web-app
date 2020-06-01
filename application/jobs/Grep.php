@@ -65,7 +65,7 @@ class Grep implements \Flexio\IFace\IJob
             default:
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED, 'The input format is not supported');
 
-            case \Flexio\Base\ContentType::FLEXIO_TABLE:
+            case \Flexio\Base\ContentType::CSV:
                 $this->getOutput($instream, $outstream);
                 return;
         }
@@ -116,16 +116,6 @@ class Grep implements \Flexio\IFace\IJob
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
         }
 
-        $mime_type = $instream->getMimeType();
-        if ($mime_type === \Flexio\Base\ContentType::FLEXIO_TABLE)
-        {
-            // write header row
-            $row = $instream->getStructure()->getNames();
-            $str = join(',', $row) . "\n";
-            $external_process->write($str);
-        }
-
-
         // $pipes now looks like this:
         // 0 => writeable handle connected to child stdin
         // 1 => readable handle connected to child stdout
@@ -145,10 +135,7 @@ class Grep implements \Flexio\IFace\IJob
         {
             $is_running = $external_process->isRunning();
 
-
-
             // write a chunk to the stdin
-
             if (!$done_writing)
             {
                 $buf = $streamreader->read(1024);
@@ -175,14 +162,12 @@ class Grep implements \Flexio\IFace\IJob
 
             if (!$is_running)
                 break;
-
         }
 
         $external_process->closeRead();
         $external_process->closeError();
 
         @unlink($filename);
-
 
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());

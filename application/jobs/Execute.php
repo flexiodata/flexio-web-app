@@ -1170,7 +1170,6 @@ class ScriptHost
                     $properties['structure'][$i] = (array)$properties['structure'][$i];
             }
 
-            $set['mime_type'] = \Flexio\Base\ContentType::FLEXIO_TABLE;
             $set['structure'] = $properties['structure'];
         }
 

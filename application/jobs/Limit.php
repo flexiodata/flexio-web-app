@@ -67,11 +67,6 @@ class Limit implements \Flexio\IFace\IJob
             default:
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED, 'The input format is not supported');
 
-            // table input
-            case \Flexio\Base\ContentType::FLEXIO_TABLE:
-                $this->getOutput($instream, $outstream);
-                return;
-
             // stream/text/csv input
             case \Flexio\Base\ContentType::STREAM:
             case \Flexio\Base\ContentType::TEXT:

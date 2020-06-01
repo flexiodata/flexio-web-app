@@ -167,24 +167,6 @@ class ProcessHandler
 
         $stdout_mime_type = $stdout_stream_info['mime_type'];
 
-        if ($stdout_mime_type === \Flexio\Base\ContentType::FLEXIO_TABLE)
-        {
-            // handle table type
-            $stdout_reader = $process->getStdout()->getReader();
-
-            // write the output to elasticsearch
-            $params = array(
-                'path' => $index // service uses path for consistency with other services
-            );
-            $elasticsearch->write($params, function() use (&$stdout_reader) {
-                $row = $stdout_reader->readRow();
-                if ($row === false)
-                    return false;
-                // TODO: coerce row types?
-                return $row;
-            });
-        }
-
         if ($stdout_mime_type === \Flexio\Base\ContentType::NDJSON)
         {
             // handle json content type

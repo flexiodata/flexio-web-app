@@ -70,10 +70,7 @@ class Read implements \Flexio\IFace\IJob
 
         $properties = [ 'mime_type' => ($info['content_type'] ?? 'application/octet-stream') ];
         if (isset($info['structure']))
-        {
-            $properties['mime_type'] = \Flexio\Base\ContentType::FLEXIO_TABLE;
             $properties['structure'] = $info['structure'];
-        }
 
         $outstream->set($properties);
         $streamwriter = $outstream->getWriter();
