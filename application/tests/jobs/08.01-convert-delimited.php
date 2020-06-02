@@ -38,6 +38,20 @@ class Test
         return $task;
     }
 
+    public function getTableValues($rows)
+    {
+        if (!is_array($rows))
+            return false;
+
+        $result = array();
+        foreach ($rows as $r)
+        {
+            $result[] = array_values($r);
+        }
+
+        return $result;
+    }
+
     public function run(&$results)
     {
         // TODO: additional tests should include:
@@ -78,7 +92,8 @@ class Test
         $stream = \Flexio\Tests\Util::createStream('/text/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $output = $process->getStdout()->getReader()->read();
-        $actual = json_decode($output,true);
+        $output = json_decode($output,true);
+        $actual = self::getTableValues($output);
         $expected = [
             [",|	~; :,|	~; :"],
             ["|	~; :,|	~; :,"],
@@ -95,7 +110,8 @@ class Test
         $stream = \Flexio\Tests\Util::createStream('/text/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $output = $process->getStdout()->getReader()->read();
-        $actual = json_decode($output,true);
+        $output = json_decode($output,true);
+        $actual = self::getTableValues($output);
         $expected = [
             ["","|	~; :","|	~; :"],
             ["|	~; :","|	~; :",""],
@@ -112,7 +128,8 @@ class Test
         $stream = \Flexio\Tests\Util::createStream('/text/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $output = $process->getStdout()->getReader()->read();
-        $actual = json_decode($output,true);
+        $output = json_decode($output,true);
+        $actual = self::getTableValues($output);
         $expected = [
             [",|	~"," :,|	~"," :"],
             ["|	~"," :,|	~"," :,"],
@@ -129,7 +146,8 @@ class Test
         $stream = \Flexio\Tests\Util::createStream('/text/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $output = $process->getStdout()->getReader()->read();
-        $actual = json_decode($output,true);
+        $output = json_decode($output,true);
+        $actual = self::getTableValues($output);
         $expected = [
             [",","	~; :,","	~; :"],
             ["","	~; :,","	~; :,"],
@@ -146,7 +164,8 @@ class Test
         $stream = \Flexio\Tests\Util::createStream('/text/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $output = $process->getStdout()->getReader()->read();
-        $actual = json_decode($output,true);
+        $output = json_decode($output,true);
+        $actual = self::getTableValues($output);
         $expected = [
             [",|","~; :,|","~; :"],
             ["|","~; :,|","~; :,"],
@@ -163,7 +182,8 @@ class Test
         $stream = \Flexio\Tests\Util::createStream('/text/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $output = $process->getStdout()->getReader()->read();
-        $actual = json_decode($output,true);
+        $output = json_decode($output,true);
+        $actual = self::getTableValues($output);
         $expected = [
             [",|	~;",":,|	~;",":"],
             ["|	~;",":,|	~;",":,"],
@@ -180,7 +200,8 @@ class Test
         $stream = \Flexio\Tests\Util::createStream('/text/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $output = $process->getStdout()->getReader()->read();
-        $actual = json_decode($output,true);
+        $output = json_decode($output,true);
+        $actual = self::getTableValues($output);
         $expected = [
             ["","|	~; :","|	~; :"],
             ["|	~; :","|	~; :",""],
@@ -197,7 +218,8 @@ class Test
         $stream = \Flexio\Tests\Util::createStream('/text/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $output = $process->getStdout()->getReader()->read();
-        $actual = json_decode($output,true);
+        $output = json_decode($output,true);
+        $actual = self::getTableValues($output);
         $expected = [
             [",|","~; :,|","~; :"],
             ["|","~; :,|","~; :,"],
@@ -214,7 +236,8 @@ class Test
         $stream = \Flexio\Tests\Util::createStream('/text/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $output = $process->getStdout()->getReader()->read();
-        $actual = json_decode($output,true);
+        $output = json_decode($output,true);
+        $actual = self::getTableValues($output);
         $expected = [
             [",|	~; ",",|	~; ",""],
             ["|	~; ",",|	~; ",","],
@@ -231,7 +254,8 @@ class Test
         $stream = \Flexio\Tests\Util::createStream('/text/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $output = $process->getStdout()->getReader()->read();
-        $actual = json_decode($output,true);
+        $output = json_decode($output,true);
+        $actual = self::getTableValues($output);
         $expected = [
             [",|	~; :,|	~; :"],
             ["|	~; :,|	~; :,"],
@@ -248,7 +272,8 @@ class Test
         $stream = \Flexio\Tests\Util::createStream('/text/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $output = $process->getStdout()->getReader()->read();
-        $actual = json_decode($output,true);
+        $output = json_decode($output,true);
+        $actual = self::getTableValues($output);
         $expected = [
             [",|	~; :,|	~; :"],
             ["|	~; :,|	~; :,"],
@@ -265,7 +290,8 @@ class Test
         $stream = \Flexio\Tests\Util::createStream('/text/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $output = $process->getStdout()->getReader()->read();
-        $actual = json_decode($output,true);
+        $output = json_decode($output,true);
+        $actual = self::getTableValues($output);
         $expected = [
             ["","	~; :","	~; :"],
             ["|	~; :","	~; :,",null],

@@ -38,6 +38,20 @@ class Test
         return $task;
     }
 
+    public function getTableValues($rows)
+    {
+        if (!is_array($rows))
+            return false;
+
+        $result = array();
+        foreach ($rows as $r)
+        {
+            $result[] = array_values($r);
+        }
+
+        return $result;
+    }
+
     public function run(&$results)
     {
         // TEST: Convert Delimited; single fieldname
