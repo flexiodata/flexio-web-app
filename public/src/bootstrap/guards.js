@@ -40,9 +40,16 @@ router.beforeEach((to, from, next) => {
     // redirect to the sign up page if URL contains a verify code (most likely
     // meaning they are a new user entering the app from an email link)
     var verify_code = _.get(to, 'query.verify_code', '')
+
+    // routes default to going to the sign in page if the user
+    // is not authenticated; using the 'redirect_to_signup=true'
+    // query parameter will take them to the sign up page instead
+    var force_signup = _.get(to, 'query.redirect_to_signup', false)
+    var next_query = _.omit(to.query, ['redirect_to_signup'])
+
     next({
-      name: verify_code.length > 0 ? ROUTE_SIGNUP_PAGE : ROUTE_SIGNIN_PAGE,
-      query: _.assign({}, to.query, { redirect: to.fullPath })
+      name: force_signup !== false || verify_code.length > 0 ? ROUTE_SIGNUP_PAGE : ROUTE_SIGNIN_PAGE,
+      query: _.assign({}, next_query, { redirect: to.fullPath })
     })
   }
 
