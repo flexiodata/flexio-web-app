@@ -30,7 +30,7 @@ class Test
                     "header" => $header,
                 ],
                 "output" => [
-                    "format" => "table"
+                    "format" => "json"
                 ]
             ]
         ]);
@@ -56,7 +56,8 @@ class Test
         $task = self::createConvertTask("{comma}", "{none}", true);
         $stream = \Flexio\Tests\Util::createStream('/text/01.01-empty.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
-        $actual = $process->getStdout()->getStructure()->getNames();
+        $output = $process->getStdout()->getReader()->read();
+        $actual = json_decode($output,true);
         $expected = [];
         \Flexio\Tests\Check::assertArray('A.1', 'Convert Delimited; empty file',  $actual, $expected, $results);
 
@@ -64,25 +65,10 @@ class Test
         $task = self::createConvertTask("{comma}", "{none}", false);
         $stream = \Flexio\Tests\Util::createStream('/text/01.01-empty.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
-        $actual = $process->getStdout()->getStructure()->getNames();
+        $output = $process->getStdout()->getReader()->read();
+        $actual = json_decode($output,true);
         $expected = [];
         \Flexio\Tests\Check::assertArray('A.2', 'Convert Delimited; empty file',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $task = self::createConvertTask("{comma}", "{none}", true);
-        $stream = \Flexio\Tests\Util::createStream('/text/01.01-empty.txt');
-        $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
-        $actual = \Flexio\Tests\Util::getStreamContents($process->getStdout());
-        $expected = [];
-        \Flexio\Tests\Check::assertArray('A.3', 'Convert Delimited; empty file',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $task = self::createConvertTask("{comma}", "{none}", false);
-        $stream = \Flexio\Tests\Util::createStream('/text/01.01-empty.txt');
-        $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
-        $actual = \Flexio\Tests\Util::getStreamContents($process->getStdout());
-        $expected = [];
-        \Flexio\Tests\Check::assertArray('A.4', 'Convert Delimited; empty file',  $actual, $expected, $results);
 
 
         // TEST: Convert Delimited; variations in delimiter
@@ -91,7 +77,8 @@ class Test
         $task = self::createConvertTask("{none}", "{none}", false);
         $stream = \Flexio\Tests\Util::createStream('/text/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
-        $actual = \Flexio\Tests\Util::getStreamContents($process->getStdout());
+        $output = $process->getStdout()->getReader()->read();
+        $actual = json_decode($output,true);
         $expected = [
             [",|	~; :,|	~; :"],
             ["|	~; :,|	~; :,"],
@@ -107,7 +94,8 @@ class Test
         $task = self::createConvertTask("{comma}", "{none}", false);
         $stream = \Flexio\Tests\Util::createStream('/text/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
-        $actual = \Flexio\Tests\Util::getStreamContents($process->getStdout());
+        $output = $process->getStdout()->getReader()->read();
+        $actual = json_decode($output,true);
         $expected = [
             ["","|	~; :","|	~; :"],
             ["|	~; :","|	~; :",""],
@@ -123,7 +111,8 @@ class Test
         $task = self::createConvertTask("{semicolon}", "{none}", false);
         $stream = \Flexio\Tests\Util::createStream('/text/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
-        $actual = \Flexio\Tests\Util::getStreamContents($process->getStdout());
+        $output = $process->getStdout()->getReader()->read();
+        $actual = json_decode($output,true);
         $expected = [
             [",|	~"," :,|	~"," :"],
             ["|	~"," :,|	~"," :,"],
@@ -139,7 +128,8 @@ class Test
         $task = self::createConvertTask("{pipe}", "{none}", false);
         $stream = \Flexio\Tests\Util::createStream('/text/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
-        $actual = \Flexio\Tests\Util::getStreamContents($process->getStdout());
+        $output = $process->getStdout()->getReader()->read();
+        $actual = json_decode($output,true);
         $expected = [
             [",","	~; :,","	~; :"],
             ["","	~; :,","	~; :,"],
@@ -155,7 +145,8 @@ class Test
         $task = self::createConvertTask("{tab}", "{none}", false);
         $stream = \Flexio\Tests\Util::createStream('/text/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
-        $actual = \Flexio\Tests\Util::getStreamContents($process->getStdout());
+        $output = $process->getStdout()->getReader()->read();
+        $actual = json_decode($output,true);
         $expected = [
             [",|","~; :,|","~; :"],
             ["|","~; :,|","~; :,"],
@@ -171,7 +162,8 @@ class Test
         $task = self::createConvertTask("{space}", "{none}", false);
         $stream = \Flexio\Tests\Util::createStream('/text/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
-        $actual = \Flexio\Tests\Util::getStreamContents($process->getStdout());
+        $output = $process->getStdout()->getReader()->read();
+        $actual = json_decode($output,true);
         $expected = [
             [",|	~;",":,|	~;",":"],
             ["|	~;",":,|	~;",":,"],
@@ -187,7 +179,8 @@ class Test
         $task = self::createConvertTask(",", "{none}", false);
         $stream = \Flexio\Tests\Util::createStream('/text/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
-        $actual = \Flexio\Tests\Util::getStreamContents($process->getStdout());
+        $output = $process->getStdout()->getReader()->read();
+        $actual = json_decode($output,true);
         $expected = [
             ["","|	~; :","|	~; :"],
             ["|	~; :","|	~; :",""],
@@ -203,7 +196,8 @@ class Test
         $task = self::createConvertTask("\t", "{none}", false);
         $stream = \Flexio\Tests\Util::createStream('/text/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
-        $actual = \Flexio\Tests\Util::getStreamContents($process->getStdout());
+        $output = $process->getStdout()->getReader()->read();
+        $actual = json_decode($output,true);
         $expected = [
             [",|","~; :,|","~; :"],
             ["|","~; :,|","~; :,"],
@@ -219,7 +213,8 @@ class Test
         $task = self::createConvertTask(":", "{none}", false);
         $stream = \Flexio\Tests\Util::createStream('/text/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
-        $actual = \Flexio\Tests\Util::getStreamContents($process->getStdout());
+        $output = $process->getStdout()->getReader()->read();
+        $actual = json_decode($output,true);
         $expected = [
             [",|	~; ",",|	~; ",""],
             ["|	~; ",",|	~; ",","],
@@ -235,7 +230,8 @@ class Test
         $task = self::createConvertTask("`", "{none}", false);
         $stream = \Flexio\Tests\Util::createStream('/text/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
-        $actual = \Flexio\Tests\Util::getStreamContents($process->getStdout());
+        $output = $process->getStdout()->getReader()->read();
+        $actual = json_decode($output,true);
         $expected = [
             [",|	~; :,|	~; :"],
             ["|	~; :,|	~; :,"],
@@ -251,7 +247,8 @@ class Test
         $task = self::createConvertTask(",,", "{none}", false);
         $stream = \Flexio\Tests\Util::createStream('/text/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
-        $actual = \Flexio\Tests\Util::getStreamContents($process->getStdout());
+        $output = $process->getStdout()->getReader()->read();
+        $actual = json_decode($output,true);
         $expected = [
             [",|	~; :,|	~; :"],
             ["|	~; :,|	~; :,"],
@@ -267,7 +264,8 @@ class Test
         $task = self::createConvertTask(",|", "{none}", false);
         $stream = \Flexio\Tests\Util::createStream('/text/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
-        $actual = \Flexio\Tests\Util::getStreamContents($process->getStdout());
+        $output = $process->getStdout()->getReader()->read();
+        $actual = json_decode($output,true);
         $expected = [
             ["","	~; :","	~; :"],
             ["|	~; :","	~; :,",null],

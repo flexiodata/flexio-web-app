@@ -31,7 +31,7 @@ class Test
             [
                 "op" => "convert",
                 "input" => ["format" => "delimited", "delimiter" => "{comma}", "header" => true],
-                "output" => ["format" => "table"]
+                "output" => ["format" => "ndjson"]
             ],
             [
                 "op" => "execute",
@@ -56,11 +56,11 @@ class Test
             [
                 "op" => "convert",
                 "input" => ["format" => "delimited", "delimiter" => "{comma}", "header" => true],
-                "output" => ["format" => "table"]
+                "output" => ["format" => "ndjson"]
             ]
         ]);
         $process = \Flexio\Jobs\Process::create()->execute($task);
-        $actual = $process->getStdout()->getReader()->readRow(0,1);
+        $actual = json_decode($process->getStdout()->getReader()->readRow(0,1),true);
         $expected = json_decode('
         {
             "id":"1",
@@ -100,9 +100,26 @@ class Test
             ]
         ]);
         $process = \Flexio\Jobs\Process::create()->execute($task);
-        $output = $process->getStdout();
-        $rows = \Flexio\Tests\Util::getStreamContents($output,1535,1);
-        $actual = $rows[0];
+        $stdout_reader = $process->getStdout()->getReader();
+
+        $actual = [{}];
+
+        $idx = 0;
+        while (true)
+        {
+            $row = $stdout_reader->readRow();
+            if ($row === false)
+                break;
+
+            if ($idx === 1535)
+            {
+                $actual = $row;
+                break;
+            }
+
+            $idx++;
+        }
+
         $expected = json_decode('
         {
             "id":"1536",
@@ -149,7 +166,7 @@ class Test
             [
                 "op" => "convert",
                 "input" => ["format" => "delimited", "delimiter" => "{comma}", "qualifier" => "{double-quote}", "header" => true],
-                "output" => ["format" => "table"]
+                "output" => ["format" => "ndjson"]
             ],
             [
                 "op" => "select",
