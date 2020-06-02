@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Base;
 
 
-class StreamNative implements \Flexio\IFace\IStream
+class Resource implements \Flexio\IFace\IStream
 {
 }
 
