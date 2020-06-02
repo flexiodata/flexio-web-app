@@ -276,7 +276,7 @@ class Convert implements \Flexio\IFace\IJob
                 if ($row === false)
                     break;
 
-                $json = json_encode($row, 0) + "\n";
+                $json = json_encode($row, 0) . "\n";
                 $streamwriter->write($json);
             }
 
@@ -486,8 +486,12 @@ class Convert implements \Flexio\IFace\IJob
             }
             else if ($output_mime_type == \Flexio\Base\ContentType::NDJSON)
             {
-                $json = json_encode($row,0) + "\n";
-                $streamwriter->write($row);
+                $json = json_encode($row,0);
+                if (!is_string($json))
+                    $json = '';
+
+                $json = $json . "\n";
+                $streamwriter->write($json);
             }
             else if ($output_mime_type == \Flexio\Base\ContentType::FLEXIO_TABLE)
             {
@@ -692,7 +696,7 @@ class Convert implements \Flexio\IFace\IJob
             $size = 0;
             foreach ($items as $i)
             {
-                $json = json_encode($i,0) + "\n";
+                $json = json_encode($i,0) . "\n";
                 $size += strlen($json);
                 $streamwriter->write($json);
             }
@@ -1167,7 +1171,7 @@ class Convert implements \Flexio\IFace\IJob
 
             foreach ($rows as $r)
             {
-                $json = json_encode($r, 0) + "\n";
+                $json = json_encode($r, 0) . "\n";
                 $streamwriter->write($json);
             }
 
