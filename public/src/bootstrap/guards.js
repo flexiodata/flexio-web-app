@@ -42,14 +42,15 @@ router.beforeEach((to, from, next) => {
     var verify_code = _.get(to, 'query.verify_code', '')
 
     // routes default to going to the sign in page if the user
-    // is not authenticated; using the 'redirect_to_signup=true'
+    // is not authenticated; using the 'new_user=true'
     // query parameter will take them to the sign up page instead
-    var force_signup = _.get(to, 'query.redirect_to_signup', false)
-    var next_query = _.omit(to.query, ['redirect_to_signup'])
+    var force_signup = _.get(to, 'query.new_user', false)
+    var next_query = _.omit(to.query, ['new_user'])
+    var redirect = to.fullPath.replace(/\?new_user[^&]*&/g, '?').replace(/[\?|&]new_user[^&]*/g, '')
 
     next({
       name: force_signup !== false || verify_code.length > 0 ? ROUTE_SIGNUP_PAGE : ROUTE_SIGNIN_PAGE,
-      query: _.assign({}, next_query, { redirect: to.fullPath })
+      query: _.assign({}, next_query, { redirect })
     })
   }
 
