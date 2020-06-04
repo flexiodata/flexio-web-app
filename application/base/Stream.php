@@ -16,7 +16,8 @@ declare(strict_types=1);
 namespace Flexio\Base;
 
 
-class StreamReader implements \Flexio\IFace\IStreamReader
+class MemoryReaderWriter implements \Flexio\IFace\IStreamReader,
+                                    \Flexio\IFace\IStreamWriter
 {
     private $stream;
     private $offset;
@@ -26,7 +27,7 @@ class StreamReader implements \Flexio\IFace\IStreamReader
         $this->offset = 0;
     }
 
-    public static function create(\Flexio\Base\Stream $stream) : \Flexio\Base\StreamReader
+    public static function create(\Flexio\Base\Stream $stream) : \Flexio\Base\MemoryReaderWriter
     {
         $object = new static();
         $object->stream = $stream;
@@ -63,28 +64,6 @@ class StreamReader implements \Flexio\IFace\IStreamReader
         }
     }
 
-    public function close() : bool
-    {
-        return true;
-    }
-}
-
-
-class StreamWriter implements \Flexio\IFace\IStreamWriter
-{
-    private $stream;
-
-    public function __construct()
-    {
-    }
-
-    public static function create(\Flexio\Base\Stream $stream) : \Flexio\Base\StreamWriter
-    {
-        $object = new static();
-        $object->stream = $stream;
-        return $object;
-    }
-
     public function write($data)
     {
         if (!is_string($data))
@@ -99,7 +78,6 @@ class StreamWriter implements \Flexio\IFace\IStreamWriter
         return true;
     }
 }
-
 
 class Stream implements \Flexio\IFace\IStream
 {
@@ -259,7 +237,7 @@ class Stream implements \Flexio\IFace\IStream
 
     public function getReader() : \Flexio\IFace\IStreamReader
     {
-        return \Flexio\Base\StreamReader::create($this);
+        return \Flexio\Base\MemoryReaderWriter::create($this);
     }
 
     public function getWriter($access = 'w+') : \Flexio\IFace\IStreamWriter
@@ -267,7 +245,7 @@ class Stream implements \Flexio\IFace\IStream
         if ($access == 'w+' || $access == 'w')
             $this->buffer = '';
 
-        return \Flexio\Base\StreamWriter::create($this);
+        return \Flexio\Base\MemoryReaderWriter::create($this);
     }
 }
 
