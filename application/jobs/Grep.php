@@ -170,7 +170,6 @@ class Grep implements \Flexio\IFace\IJob
         @unlink($filename);
 
         $streamwriter->close();
-        $outstream->setSize($streamwriter->getBytesWritten());
     }
 
     private function getJobParameters() : array

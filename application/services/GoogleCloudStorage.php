@@ -566,12 +566,11 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection,
             $writer->write($data);
         }
 
-        $total_payload_size = $writer->getBytesWritten();
         $writer->close();
         unset($writer);
 
+        $total_payload_size = $stream->getSize();
         $reader = $stream->getReader();
-
 
         // upload/write the file
         $ch = curl_init();

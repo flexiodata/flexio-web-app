@@ -199,7 +199,6 @@ class Transform implements \Flexio\IFace\IJob
         }
 
         $streamwriter->close();
-        $outstream->setSize($streamwriter->getBytesWritten());
     }
 
     private function getTableExpressionMap(\Flexio\IFace\IStream &$instream) : ?array

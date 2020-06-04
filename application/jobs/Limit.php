@@ -104,7 +104,6 @@ class Limit implements \Flexio\IFace\IJob
         }
 
         $streamwriter->close();
-        $outstream->setSize($streamwriter->getBytesWritten());
     }
 
     private function getJobParameters() : array

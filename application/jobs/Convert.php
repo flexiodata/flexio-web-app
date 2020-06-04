@@ -262,7 +262,6 @@ class Convert implements \Flexio\IFace\IJob
 
             $streamwriter->write("\n]");
             $streamwriter->close();
-            $outstream->setSize($streamwriter->getBytesWritten());
         }
          else if ($output_mime_type == \Flexio\Base\ContentType::NDJSON)
         {
@@ -281,7 +280,6 @@ class Convert implements \Flexio\IFace\IJob
             }
 
             $streamwriter->close();
-            $outstream->setSize($streamwriter->getBytesWritten());
         }
          else if ($output_mime_type == \Flexio\Base\ContentType::XLSX || $output_mime_type == \Flexio\Base\ContentType::XLS || $output_mime_type == \Flexio\Base\ContentType::ODS)
         {
@@ -416,7 +414,6 @@ class Convert implements \Flexio\IFace\IJob
             }
 
             $streamwriter->close();
-            $outstream->setSize($streamwriter->getBytesWritten());
         }
     }
 
@@ -617,7 +614,6 @@ class Convert implements \Flexio\IFace\IJob
         $streamwriter->write($outputtext);
         $streamwriter->close();
         $outstream->setMimeType(\Flexio\Base\ContentType::JSON);
-        $outstream->setSize($streamwriter->getBytesWritten());
     }
 
     private static function createOutputFromJsonInput(array $convert_params, \Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream, string $output_mime_type) : void
@@ -1040,8 +1036,6 @@ class Convert implements \Flexio\IFace\IJob
 
                 if ($result === false)
                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
-
-                $outstream->setSize($streamwriter->getBytesWritten());
             }
         }
 
@@ -1159,10 +1153,7 @@ class Convert implements \Flexio\IFace\IJob
             $streamwriter->close();
 
             // input/output
-            $outstream->set([
-                'mime_type' => \Flexio\Base\ContentType::JSON,
-                'size' => $streamwriter->getBytesWritten()
-            ]);
+            $outstream->setMimeType(\Flexio\Base\ContentType::JSON);
         }
          else if ($output_mime_type == \Flexio\Base\ContentType::NDJSON)
         {
@@ -1176,12 +1167,7 @@ class Convert implements \Flexio\IFace\IJob
             }
 
             $streamwriter->close();
-
-            // input/output
-            $outstream->set([
-                'mime_type' => \Flexio\Base\ContentType::NDJSON,
-                'size' => $streamwriter->getBytesWritten()
-            ]);
+            $outstream->setMimeType(\Flexio\Base\ContentType::NDJSON);
         }
          else
         {

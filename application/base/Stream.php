@@ -73,11 +73,9 @@ class StreamReader implements \Flexio\IFace\IStreamReader
 class StreamWriter implements \Flexio\IFace\IStreamWriter
 {
     private $stream;
-    private $bytes_written;
 
     public function __construct()
     {
-        $this->bytes_written = 0;
     }
 
     public static function create(\Flexio\Base\Stream $stream) : \Flexio\Base\StreamWriter
@@ -93,14 +91,7 @@ class StreamWriter implements \Flexio\IFace\IStreamWriter
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, 'Expected string value');
 
         $this->stream->buffer .= $data;
-        $this->bytes_written += strlen($data);
-
         return true;
-    }
-
-    public function getBytesWritten() : int
-    {
-        return $this->bytes_written;
     }
 
     public function close() : bool
