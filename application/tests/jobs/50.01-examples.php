@@ -60,7 +60,7 @@ class Test
             ]
         ]);
         $process = \Flexio\Jobs\Process::create()->execute($task);
-        $actual = json_decode($process->getStdout()->getReader()->readRow(0,1),true);
+        $actual = json_decode($process->getStdout()->getReader()->readline(),true);
         $expected = json_decode('
         {
             "id":"1",
@@ -107,7 +107,7 @@ class Test
         $idx = 0;
         while (true)
         {
-            $row = $stdout_reader->readRow();
+            $row = $stdout_reader->readline();
             if ($row === false)
                 break;
 

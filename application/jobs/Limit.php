@@ -94,7 +94,7 @@ class Limit implements \Flexio\IFace\IJob
         // read the specified number of input rows and write them out
         for ($rown = 0; $rown < $rows_to_output; ++$rown)
         {
-            $row = $streamreader->readRow();
+            $row = $streamreader->readline();
             if ($row === false)
                 break;
 

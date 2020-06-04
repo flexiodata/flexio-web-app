@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        // TEST: stream readRow()
+        // TEST: stream readline()
 
         // BEGIN TEST
         $stream_info = array();
@@ -28,10 +28,10 @@ class Test
         $stream_info['mime_type'] = \Flexio\Base\ContentType::TEXT;
         $stream = \Flexio\Base\Stream::create($stream_info);
         $reader = $stream->getReader();
-        $actual = $reader->readRow();
+        $actual = $reader->readline();
         $reader->close();
         $expected = "";
-        \Flexio\Tests\Check::assertString('A.1', 'StreamReader/StreamWriter; check readRow()',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('A.1', 'StreamReader/StreamWriter; check readline()',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $stream_info = array();
@@ -42,9 +42,9 @@ class Test
         $writer->write("A");
         $writer->close();
         $reader = $stream->getReader();
-        $actual = $reader->readRow();
+        $actual = $reader->readline();
         $reader->close();
         $expected = "A";
-        \Flexio\Tests\Check::assertString('A.2', 'StreamReader/StreamWriter; check readRow()',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.2', 'StreamReader/StreamWriter; check readline()',  $actual, $expected, $results);
     }
 }

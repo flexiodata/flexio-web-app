@@ -45,7 +45,7 @@ class StreamReader implements \Flexio\IFace\IStreamReader
         return $str;
     }
 
-    public function readRow()
+    public function readline()
     {
         $npos = strpos($this->stream->buffer, "\n", $this->offset);
 

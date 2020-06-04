@@ -180,7 +180,7 @@ class Transform implements \Flexio\IFace\IJob
 
         while (true)
         {
-            $input = $streamreader->readRow();
+            $input = $streamreader->readline();
             if ($input === false)
                 break;
 

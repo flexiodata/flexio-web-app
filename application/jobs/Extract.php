@@ -98,7 +98,7 @@ class Extract implements \Flexio\IFace\IJob
             if ($idx >= $limit)
                 break;
 
-            $item = $reader->readRow();
+            $item = $reader->readline();
             if ($item === false)
                 break;
 

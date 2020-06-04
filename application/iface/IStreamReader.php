@@ -19,7 +19,7 @@ namespace Flexio\IFace;
 interface IStreamReader
 {
     public function read($length = 1024);
-    public function readRow();
+    public function readline();
     public function close();
 }
 

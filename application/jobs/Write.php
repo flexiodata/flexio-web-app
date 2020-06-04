@@ -100,7 +100,7 @@ class Write implements \Flexio\IFace\IJob
 
             if (count($stream_properties['structure']) > 0)
             {
-                while (($row = $reader->readRow()) !== false)
+                while (($row = $reader->readline()) !== false)
                 {
                     $writer->write($row);
                 }

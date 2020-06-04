@@ -233,7 +233,7 @@ class Convert implements \Flexio\IFace\IJob
 
             while (true)
             {
-                $row = $streamreader->readRow();
+                $row = $streamreader->readline();
                 if ($row === false)
                     break;
                 $streamwriter->write($row);
@@ -250,7 +250,7 @@ class Convert implements \Flexio\IFace\IJob
 
             while (true)
             {
-                $row = $streamreader->readRow();
+                $row = $streamreader->readline();
                 if ($row === false)
                     break;
 
@@ -271,7 +271,7 @@ class Convert implements \Flexio\IFace\IJob
 
             while (true)
             {
-                $row = $streamreader->readRow();
+                $row = $streamreader->readline();
                 if ($row === false)
                     break;
 
@@ -292,7 +292,7 @@ class Convert implements \Flexio\IFace\IJob
 
             $streamreader = $instream->getReader();
             $rows = [];
-            while (($row = $streamreader->readRow()) !== false)
+            while (($row = $streamreader->readline()) !== false)
             {
                 if ($row === false)
                     break;
@@ -390,7 +390,7 @@ class Convert implements \Flexio\IFace\IJob
 
             while (true)
             {
-                $row = $streamreader->readRow();
+                $row = $streamreader->readline();
 
                 if (ftell($fp) > 100000 || $row === false)
                 {
@@ -1242,7 +1242,7 @@ class Convert implements \Flexio\IFace\IJob
         while (true)
         {
             // read in a chunk, append it to any existing buffer
-            $readbuf = $streamreader->readRow();
+            $readbuf = $streamreader->readline();
             if ($readbuf === false)
                 break;
 

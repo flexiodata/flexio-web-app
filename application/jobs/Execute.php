@@ -1277,7 +1277,7 @@ class ScriptHost
         if (is_null($reader))
             return false;
 
-        $res = $reader->readRow();
+        $res = $reader->readline();
         if ($res === false)
             return false;
         if (is_string($res))
@@ -1539,7 +1539,7 @@ class Execute implements \Flexio\IFace\IJob
                 $rows = [];
                 while (true)
                 {
-                    $row = $streamreader->readRow();
+                    $row = $streamreader->readline();
                     if ($row === false)
                         break;
                     $rows[] = $row;

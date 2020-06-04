@@ -233,7 +233,7 @@ class Vfs
             if ($idx >= $limit)
                 break;
 
-            $item = $reader->readRow();
+            $item = $reader->readline();
             if ($item === false)
                 break;
 
