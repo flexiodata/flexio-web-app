@@ -125,7 +125,7 @@ class Trigger
     private static function createStreamFromMessage(string $message) : \Flexio\Base\Stream
     {
         $stream = \Flexio\Base\Stream::create();
-        $stream->buffer = (string)$message;     // shortcut to speed it up -- can also use getWriter()->write((string)$v)
+        $stream->getWriter()->write($message);
         return $stream;
     }
 

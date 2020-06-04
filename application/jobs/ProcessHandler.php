@@ -125,8 +125,7 @@ class ProcessHandler
 
                 $stream = \Flexio\Base\Stream::create();
                 $stream->setMimeType(\Flexio\Base\ContentType::FLEXIO_CONNECTION_INFO);
-                $stream->buffer = (string)$connection_info; // shortcut to speed it up -- can also use getWriter()->write((string)$v)
-
+                $stream->getWriter()->write((string)$connection_info);
                 $mount_variables[$key] = $stream;
             }
             catch (\Flexio\Base\Exception $e)

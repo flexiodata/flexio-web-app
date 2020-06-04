@@ -87,7 +87,7 @@ class Process implements \Flexio\IFace\IProcess
             if (!($v instanceof \Flexio\Base\Stream))
             {
                 $stream = \Flexio\Base\Stream::create();
-                $stream->buffer = (string)$v;     // shortcut to speed it up -- can also use getWriter()->write((string)$v)
+                $stream->getWriter()->write((string)$v);
                 $v = $stream;
             }
         }
