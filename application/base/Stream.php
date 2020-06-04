@@ -70,7 +70,6 @@ class StreamReader implements \Flexio\IFace\IStreamReader
 }
 
 
-
 class StreamWriter implements \Flexio\IFace\IStreamWriter
 {
     private $stream;
@@ -113,10 +112,8 @@ class StreamWriter implements \Flexio\IFace\IStreamWriter
 
 class Stream implements \Flexio\IFace\IStream
 {
-    public $buffer = '';             // data buffer; use reader/writer to access
-
-    // properties
-    private $properties;
+    public $buffer = '';    // data buffer; use reader/writer to access
+    private $properties;    // associated data properties
 
     public function __construct()
     {
@@ -232,14 +229,15 @@ class Stream implements \Flexio\IFace\IStream
 
     public function setSize($size) : \Flexio\Base\Stream // TODO: add input parameter types
     {
-        $properties = array();
-        $properties['size'] = $size;
-        return $this->set($properties);
+        // note: size is determined by buffer; don't allow it to be
+        // set directly; currently on interface for use with with
+        // \Flexio\Stream\Object
+        return $this;
     }
 
     public function getSize() : ?int
     {
-        return $this->properties['size'];
+        return len($this->buffer);
     }
 
     public function setMimeType(string $mime_type) : \Flexio\Base\Stream
