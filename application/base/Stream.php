@@ -225,7 +225,7 @@ class Stream implements \Flexio\IFace\IStream
 
     public function getSize() : ?int
     {
-        return len($this->buffer);
+        return strlen($this->buffer);
     }
 
     public function setMimeType(string $mime_type) : \Flexio\Base\Stream

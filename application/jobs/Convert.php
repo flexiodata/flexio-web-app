@@ -333,10 +333,7 @@ class Convert implements \Flexio\IFace\IJob
             $streamwriter->write($contents);
 
             // input/output
-            $outstream->set([
-                'mime_type' => $output_mime_type,
-                'size' => strlen($contents)
-            ]);
+            $outstream->setMimeType($output_mime_type);
         }
          else
         {
@@ -501,9 +498,7 @@ class Convert implements \Flexio\IFace\IJob
         {
             $json = json_encode($rows, JSON_UNESCAPED_SLASHES);
             $streamwriter->write($json);
-
-            $outstream->set(['mime_type' => \Flexio\Base\ContentType::JSON,
-                             'size' => strlen($json)]);
+            $outstream->setMimeType(\Flexio\Base\ContentType::JSON);
         }
     }
 
@@ -681,11 +676,7 @@ class Convert implements \Flexio\IFace\IJob
             $streamwriter = $outstream->getWriter();
             $streamwriter->write($contents);
 
-            // input/output
-            $outstream->set([
-                'mime_type' => $output_mime_type,
-                'size' => strlen($contents)
-            ]);
+            $outstream->setMimeType($output_mime_type);
         }
          else if ($output_mime_type == \Flexio\Base\ContentType::NDJSON)
         {
@@ -697,10 +688,7 @@ class Convert implements \Flexio\IFace\IJob
                 $streamwriter->write($json);
             }
 
-            $outstream->set([
-                'mime_type' => $output_mime_type,
-                'size' => $size
-            ]);
+            $outstream->setMimeType($output_mime_type);
         }
          else
         {
@@ -745,9 +733,6 @@ class Convert implements \Flexio\IFace\IJob
             $output_mime_type = \Flexio\Base\ContentType::FLEXIO_TABLE;
 
         $spreadsheet_output = [];
-        $total_json_size = 0;
-        $total_ndjson_size = 0;
-
         $header = toBoolean($convert_params['input']['header'] ?? true);
         $qualifier = $convert_params['input']['qualifier'] ?? self::TEXT_QUALIFIER_DOUBLE_QUOTE;
         $encoding = $convert_params['input']['encoding'] ?? '';
@@ -797,7 +782,6 @@ class Convert implements \Flexio\IFace\IJob
             // for json output, streamwriter is created here; for table output, streamwriter
             // is created below, because header row must be collected in advance
             $json= '[';
-            $total_json_size += strlen($json);
             $streamwriter = $outstream->getWriter();
             $streamwriter->write($json);
         }
@@ -992,7 +976,6 @@ class Convert implements \Flexio\IFace\IJob
             {
                 $row = json_encode($row, JSON_UNESCAPED_SLASHES);
                 $json = ($rown>0?",\n":"\n") . $row;
-                $total_json_size += strlen($json);
                 $result = $streamwriter->write($json);
             }
             else if ($output == 'ndjson')
@@ -1023,7 +1006,6 @@ class Convert implements \Flexio\IFace\IJob
             if ($output == 'json')
             {
                 $json = "\n]";
-                $total_json_size += strlen($json);
                 $streamwriter->write($json);
             }
             else if ($output == 'ndjson')
@@ -1084,7 +1066,6 @@ class Convert implements \Flexio\IFace\IJob
             // input/output
             $outstream->set([
                 'mime_type' => $output_mime_type,
-                'size' => strlen($contents),
                 'structure' => $structure
             ]);
         }
@@ -1103,7 +1084,6 @@ class Convert implements \Flexio\IFace\IJob
         {
             $output_properties = array(
                 'mime_type' => \Flexio\Base\ContentType::JSON,
-                'size' => $total_json_size,
                 'structure' => $structure
             );
 
@@ -1114,7 +1094,6 @@ class Convert implements \Flexio\IFace\IJob
         {
             $output_properties = array(
                 'mime_type' => \Flexio\Base\ContentType::NDJSON,
-                'size' => $total_ndjson_size,
                 'structure' => $structure
             );
 

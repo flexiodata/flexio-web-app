@@ -1553,8 +1553,7 @@ class Execute implements \Flexio\IFace\IJob
             // create the output stream
             $outstream_properties = array(
                 'name' => $instream->getName() . '.html',
-                'mime_type' => \Flexio\Base\ContentType::FLEXIO_HTML,
-                'size' => strlen($code)
+                'mime_type' => \Flexio\Base\ContentType::FLEXIO_HTML
             );
 
             $outstream->set($outstream_properties);
