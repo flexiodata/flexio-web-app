@@ -125,7 +125,6 @@ class Stream implements \Flexio\IFace\IStream
         $this->properties = array();
         $this->properties['name'] = '';
         $this->properties['path'] = '';
-        $this->properties['size'] = null;
         $this->properties['hash'] = '';
         $this->properties['mime_type'] = '';
         $this->properties['structure'] = array();
@@ -152,8 +151,6 @@ class Stream implements \Flexio\IFace\IStream
             $object->properties['name'] = $properties['name'];
         if (isset($properties['path']))
             $object->properties['path'] = $properties['path'];
-        if (isset($properties['size']))
-            $object->properties['size'] = $properties['size'];
         if (isset($properties['hash']))
             $object->properties['hash'] = $properties['hash'];
         if (isset($properties['mime_type']))
@@ -184,8 +181,6 @@ class Stream implements \Flexio\IFace\IStream
             $this->properties['name'] = $properties['name'];
         if (isset($properties['path']))
             $this->properties['path'] = $properties['path'];
-        if (isset($properties['size']))
-            $this->properties['size'] = $properties['size'];
         if (isset($properties['hash']))
             $this->properties['hash'] = $properties['hash'];
         if (isset($properties['mime_type']))
@@ -200,7 +195,9 @@ class Stream implements \Flexio\IFace\IStream
 
     public function get() : array
     {
-        return $this->properties;
+        $properties = $this->properties;
+        $properties['size'] = $this->getSize();
+        return $properties;
     }
 
     public function setName(string $name) : \Flexio\Base\Stream
