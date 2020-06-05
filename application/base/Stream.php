@@ -4,7 +4,7 @@
  * Copyright (c) 2016, Flex Research LLC. All rights reserved.
  *
  * Project:  Flex.io App
- * Author:   Aaron L. Williams
+ * Author:   Aaron L. Williams, Benjamin I. Williams
  * Created:  2016-04-20
  *
  * @package flexio
@@ -16,18 +16,133 @@ declare(strict_types=1);
 namespace Flexio\Base;
 
 
-class MemoryReaderWriter implements \Flexio\IFace\IStreamReader,
-                                    \Flexio\IFace\IStreamWriter
+class FileReaderWriter implements \Flexio\IFace\IStreamReader,
+                                  \Flexio\IFace\IStreamWriter
 {
-    private $stream;
-    private $offset;
+    private $stream = null;
+    private $file = null;
+    private $bytes_written = 0;
 
-    public function __construct()
+    function __destruct()
     {
-        $this->offset = 0;
+        $this->close();
     }
 
-    public static function create(\Flexio\Base\Stream $stream) : \Flexio\Base\MemoryReaderWriter
+    public static function create(\Flexio\Base\Stream $stream, string $mode) : \Flexio\Base\FileReaderWriter
+    {
+        $object = new static();
+        $object->stream = $stream;
+        $object->init($stream->getTempFilePath(), $mode);
+        return $object;
+    }
+
+    public function init($fspath /* can be string or handle*/, $mode = 'r+') : bool
+    {
+        // make sure mode is allowed value
+        $mode = str_replace('b', '', $mode);
+        $idx = array_search($mode, ['r','r+', 'w', 'w+', 'a', 'a+','+']);
+        if ($idx === false)
+            return false; // unknown mode
+
+        if (!is_string($fspath))
+        {
+            $this->file = $fspath;
+            return true;
+        }
+
+        $exists = file_exists($fspath);
+        if (IS_DEBUG())
+            $this->file = fopen($fspath, $mode . 'b');
+             else
+            $this->file = @fopen($fspath, $mode . 'b');
+
+        if ($exists)
+            fseek($this->file, 0, SEEK_SET);
+
+        return true;
+    }
+
+    public function read($length = 1024)
+    {
+        if ($this->isOk() === false)
+            return false;
+
+        if ($length <= 0)
+            return '';
+
+        $res = fread($this->file, $length);
+        if ($res === false)
+            return false;
+
+        if ($length > 0 && strlen($res) == 0)
+            return false;
+
+        return $res;
+    }
+
+    public function readline()
+    {
+        if ($this->isOk() === false)
+            return false;
+
+        if ($this->file)
+        {
+            $line = fgets($this->file);
+            if ($line === false)
+                return false;
+            return rtrim($line, "\r\n");
+        }
+
+        return false;
+    }
+
+    public function write($data)
+    {
+        if ($this->bytes_written == 0)
+            fseek($this->file, 0, SEEK_END);
+
+        $res = fwrite($this->file, $data);
+        if ($res === false)
+            return false;
+
+        $this->bytes_written += $res;
+    }
+
+    public function close() : bool
+    {
+        if ($this->isOk() === false)
+            return true;
+
+        if ($this->file)
+        {
+            fclose($this->file);
+            $this->file = null;
+        }
+
+        return true;
+    }
+
+    private function isOk() : bool
+    {
+        if ($this->file !== null)
+            return true;
+
+        return false;
+    }
+}
+
+class MemoryReaderWriter implements \Flexio\IFace\IStreamReader,
+                                     \Flexio\IFace\IStreamWriter
+{
+    private $stream = null;
+    private $offset = 0;
+
+    function __destruct()
+    {
+        $this->close();
+    }
+
+    public static function create(\Flexio\Base\Stream $stream, string $mode) : \Flexio\Base\MemoryReaderWriter
     {
         $object = new static();
         $object->stream = $stream;
@@ -39,6 +154,9 @@ class MemoryReaderWriter implements \Flexio\IFace\IStreamReader,
         if ($this->offset >= strlen($this->stream->buffer))
             return false;
 
+        if ($length <= 0)
+            return '';
+
         $str = substr($this->stream->buffer, $this->offset, $length);
         if ($str === false)
             return false;
@@ -49,12 +167,11 @@ class MemoryReaderWriter implements \Flexio\IFace\IStreamReader,
     public function readline()
     {
         $npos = strpos($this->stream->buffer, "\n", $this->offset);
-
         if ($npos === false)
         {
             return $this->read(strlen($this->stream->buffer));
         }
-            else
+         else
         {
             $npos -= $this->offset;
             $line = $this->read($npos+1);
@@ -79,17 +196,93 @@ class MemoryReaderWriter implements \Flexio\IFace\IStreamReader,
     }
 }
 
+class BufferedReaderWriter implements \Flexio\IFace\IStreamReader,
+                                      \Flexio\IFace\IStreamWriter
+{
+    private $stream;
+    private $readerwriter;
+
+    function __destruct()
+    {
+        $this->close();
+    }
+
+    public static function create(\Flexio\Base\Stream $stream, string $mode) : \Flexio\Base\BufferedReaderWriter
+    {
+        $object = new static();
+
+        $object->stream = $stream;
+        $tempfile_path = $stream->getTempFilePath();
+
+        if (isset($tempfile_path))
+            $object->readerwriter = \Flexio\Base\FileReaderWriter::create($stream, $mode);
+             else
+            $object->readerwriter = \Flexio\Base\MemoryReaderWriter::create($stream, $mode);
+
+        return $object;
+    }
+
+    public function read($length = 1024)
+    {
+        return $this->readerwriter->read($length);
+    }
+
+    public function readline()
+    {
+        return $this->readerwriter->readline();
+    }
+
+    public function write($data)
+    {
+        if (!is_string($data))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, 'Expected string value');
+
+        // if we're already writing using a storage file writer, use it
+        if ($this->readerwriter instanceof \Flexio\Base\FileReaderWriter)
+            return $this->readerwriter->write($data);
+
+        // if we're using a memory writer, and within safe memory usage, write
+        // out the data
+        $curlen = $this->stream->getSize();
+        $datalen = strlen($data);
+        if ($curlen + $datalen <= 2000000)
+            return $this->readerwriter->write($data);
+
+        // if memory buffer is greater than set memory size, convert to using disk
+        $temp_filename = \Flexio\Base\Util::generateRandomString(20);
+        $temp_filename_full = \Flexio\System\System::getStoreTempFile($temp_filename);
+        $this->stream->setTempFilePath($temp_filename_full);
+        $this->readerwriter = \Flexio\Base\FileReaderWriter::create($this->stream, 'w+');
+
+        // copy the existing data and clear it from the buffer
+        $this->readerwriter->write($this->stream->buffer);
+        $this->stream->buffer = '';
+
+        // write out the additional data
+        return $this->readerwriter->write($data);
+    }
+
+    public function close() : bool
+    {
+        if (!isset($this->readerwriter))
+            return true;
+
+        return $this->readerwriter->close();
+    }
+}
+
+
 class Stream implements \Flexio\IFace\IStream
 {
-    public $buffer = '';    // data buffer; use reader/writer to access
-    private $properties;    // associated data properties
+    // data storage variables
+    public $buffer = '';            // data buffer
+    private $tempfile_path = null;   // temp file path to convert buffer to if buffer gets too large
+
+    // associated data properties
+    private $properties = array();  // associated data properties
 
     public function __construct()
     {
-        //$this->id = \Flexio\Base\Util::generateRandomString(5);
-
-        $this->buffer = '';
-
         // note: default values match model defaults
         $this->properties = array();
         $this->properties['name'] = '';
@@ -136,8 +329,7 @@ class Stream implements \Flexio\IFace\IStream
     {
         // TODO: add properties check
 
-        // structure is stored as json string; it needs to be validated
-        // and encoded
+        // structure is stored as json string; it needs to be validated and encoded
         if (isset($properties['structure']))
         {
             // if the structure is set, make sure it's valid
@@ -193,7 +385,7 @@ class Stream implements \Flexio\IFace\IStream
         return $this->properties['path'];
     }
 
-    public function setSize($size) : \Flexio\Base\Stream // TODO: add input parameter types
+    public function setSize($size) : \Flexio\Base\Stream
     {
         // note: size is determined by buffer; don't allow it to be
         // set directly; currently on interface for use with with
@@ -203,7 +395,11 @@ class Stream implements \Flexio\IFace\IStream
 
     public function getSize() : ?int
     {
-        return strlen($this->buffer);
+        $tempfile_path = $this->getTempFilePath();
+        if (!isset($tempfile_path))
+            return strlen($this->buffer);
+
+        return filesize($tempfile_path);
     }
 
     public function setMimeType(string $mime_type) : \Flexio\Base\Stream
@@ -218,7 +414,7 @@ class Stream implements \Flexio\IFace\IStream
         return $this->properties['mime_type'];
     }
 
-    public function setStructure($structure) : \Flexio\Base\Stream // TODO: add input parameter types
+    public function setStructure($structure) : \Flexio\Base\Stream
     {
         if (!($structure instanceof \Flexio\Base\Structure))
             $structure = \Flexio\Base\Structure::create($structure);
@@ -237,15 +433,22 @@ class Stream implements \Flexio\IFace\IStream
 
     public function getReader() : \Flexio\IFace\IStreamReader
     {
-        return \Flexio\Base\MemoryReaderWriter::create($this);
+        return \Flexio\Base\BufferedReaderWriter::create($this, 'r');
     }
 
     public function getWriter($access = 'w+') : \Flexio\IFace\IStreamWriter
     {
-        if ($access == 'w+' || $access == 'w')
-            $this->buffer = '';
+        return \Flexio\Base\BufferedReaderWriter::create($this, 'w+');
+    }
 
-        return \Flexio\Base\MemoryReaderWriter::create($this);
+    public function setTempFilePath(string $path) : void
+    {
+        $this->tempfile_path = $path;
+    }
+
+    public function getTempFilePath() : ?string
+    {
+        return $this->tempfile_path;
     }
 }
 
