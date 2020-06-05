@@ -20,7 +20,6 @@ class Test
 {
     public function run(&$results)
     {
-/*
         // TEST: stream read/write
 
         // BEGIN TEST
@@ -121,7 +120,7 @@ class Test
         $reader->close();
         $expected = "abcdefg";
         \Flexio\Tests\Check::assertString('B.7', '\Flexio\Base\Stream; read/write',  $actual, $expected, $results);
-*/
+
 
         // TEST: stream read/write
 
