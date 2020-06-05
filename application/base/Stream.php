@@ -296,6 +296,16 @@ class Stream implements \Flexio\IFace\IStream
         $this->properties['updated'] = null;
     }
 
+    function __destruct()
+    {
+        $tempfile_path = $this->getTempFilePath();
+        if (!isset($tempfile_path))
+            return;
+
+        if (file_exists($tempfile_path))
+            @unlink($this->tempfile_path);
+    }
+
     public static function create(array $properties = null) : \Flexio\Base\Stream
     {
         $object = new static();
