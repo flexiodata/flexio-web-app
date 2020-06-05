@@ -97,16 +97,21 @@
             ></i>
             <p class="tc f3 lh-title">Your integration was created successfully!</p>
             <div class="center mw7">
-              <p class="b">We're importing your functions now. This process may take a couple of minutes to complete.</p>
-              <div class="bb b--black-10 mv3"></div>
+              <p class="mv4 fw6 flex flex-row items-center">
+                <Spinner :size="24" :line-size="2" class="mr2" />
+                <span>We're importing your functions now. This process may take a couple of minutes to complete.</span>
+              </p>
+              <div class="center mw5 bb b--black-10 mv4"></div>
               <p v-if="is_coming_from_addon">Click <strong>Done</strong> below to close this window and start using this integration in your spreadsheet.</p>
               <div v-else>
                 <p>If you haven't done so already, please <a class="fw6 blue link underline-hover" href="https://gsuite.google.com/marketplace/app/flexio/919566304535">install the Google Sheets add-on</a> or <a class="fw6 blue link underline-hover" href="https://appsource.microsoft.com/en-us/product/office/WA200000394">install the Excel 365 add-in</a> to use this integration in your spreadsheet.</p>
                 <AddonDownloadButtonPanel
                   class="pv2-l"
                 />
-                <p v-if="is_started_on_template">Click <strong>Continue</strong> below to get your template.</p>
-                <p v-else>Click <strong>Done</strong> below to view this integration and its functions in the Flex.io web app.</p>
+                <div class="center mw5 bb b--black-10 mv4"></div>
+                <p v-if="is_coming_from_addon">Click <strong>Done</strong> to close this window and finish your setup in the Flex.io API Import add-on.</p>
+                <p v-else-if="is_started_on_template">Click <strong>Continue</strong> below to get started with the <strong>{{template_title}}</strong> template.</p>
+                <p v-else>Click <strong>Continue</strong> below to choose a template to get started using this integration.</p>
               </div>
             </div>
             <div class="mt2 tc">
@@ -115,8 +120,8 @@
                 class="ttu fw6"
                 @click="onIntegrationSetupDoneClick"
               >
-                <div class="ph2" v-if="is_started_on_template">Continue</div>
-                <div class="ph2" v-else>Done</div>
+                <div class="ph2" v-if="is_coming_from_addon">Done</div>
+                <div class="ph2" v-else>Continue</div>
               </el-button>
             </div>
           </ServiceIconWrapper>
@@ -131,6 +136,17 @@
             ></i>
             <p class="tc f3 lh-title mb0">Your integration couldn't be created</p>
             <p class="tc">We encountered some problems while trying to create your integration. Please try again.</p>
+          </ServiceIconWrapper>
+        </div>
+
+        <!-- step: choose template -->
+        <div v-else-if="active_step == 'choose-template'">
+          <ServiceIconWrapper :url="setup_template_image_url">
+            <p>Choose a template from the list below:</p>
+            <TemplateList
+              :templates="templates"
+              @template-click="onTemplateClick"
+            />
           </ServiceIconWrapper>
         </div>
       </template>
@@ -151,6 +167,7 @@
   import FunctionMountSetupWizard from '@/components/FunctionMountSetupWizard'
   import ServiceIconWrapper from '@/components/ServiceIconWrapper'
   import AddonDownloadButtonPanel from '@/components/AddonDownloadButtonPanel'
+  import TemplateList from '@/components/TemplateList'
   import TemplateTargetChooserPanel from '@/components/TemplateTargetChooserPanel'
   import TemplateExcelDownloadPanel from '@/components/TemplateExcelDownloadPanel'
   import PageNotFound from '@/components/PageNotFound'
@@ -194,6 +211,7 @@
       FunctionMountSetupWizard,
       ServiceIconWrapper,
       AddonDownloadButtonPanel,
+      TemplateList,
       TemplateTargetChooserPanel,
       TemplateExcelDownloadPanel,
       PageNotFound,
@@ -231,6 +249,9 @@
       },
       has_setup_template() {
         return !_.isNil(this.setup_template)
+      },
+      setup_template_image_url() {
+        return _.get(this.setup_template, 'image.src', '')
       },
       query_context() {
         return _.get(this.$route, 'query.context', '')
@@ -283,9 +304,11 @@
         var backward_compatible = _.get(this.$route, 'query.spreadsheet_path', '')
         return _.get(this.$route, 'query.excel_spreadsheet_path', backward_compatible)
       },
+      templates() {
+        return _.get(this.setup_template, 'templates', [])
+      },
       template_title() {
-        var templates = _.get(this.setup_template, 'templates', [])
-        var template = _.find(templates, t => t.excel_spreadsheet_path == this.excel_spreadsheet_path)
+        var template = _.find(this.templates, t => t.excel_spreadsheet_path == this.excel_spreadsheet_path)
         var title = _.get(template, 'title', 'this spreadsheet')
         return title
       },
@@ -530,8 +553,19 @@
         } else if (this.is_coming_from_addon) {
           window.close()
         } else {
-          this.$router.push({ path: `/${team_name}/functions` })
+          this.active_step = 'choose-template'
         }
+      },
+      onTemplateClick(template) {
+        this.active_step = 'template'
+
+        var gsheets_spreadsheet_id = _.get(template, 'gsheets_spreadsheet_id', undefined)
+        var excel_spreadsheet_path = _.get(template, 'excel_spreadsheet_path', undefined)
+
+        // update the route
+        var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path', 'query'])
+        new_route.query = _.assign({}, new_route.query, { gsheets_spreadsheet_id, excel_spreadsheet_path })
+        this.$router.replace(new_route)
       }
     }
   }
