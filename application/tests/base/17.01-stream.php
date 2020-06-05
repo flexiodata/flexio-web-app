@@ -26,7 +26,7 @@ class Test
         $object = \Flexio\Base\Stream::create();
         $actual = 'Flexio\Base\Stream';
         $expected = get_class($object);
-        \Flexio\Tests\Check::assertString('A.1', 'Stream::create(); return the object if it\'s successfully created',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', '\Flexio\Base\Stream; return the object if it\'s successfully created',  $actual, $expected, $results);
 
 
         // TEST: stream property setting
@@ -36,7 +36,7 @@ class Test
         $object = $object->set([]);
         $actual =  'Flexio\Base\Stream';
         $expected = get_class($object);
-        \Flexio\Tests\Check::assertString('B.1', 'Stream::set(); return the object',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.1', '\Flexio\Base\Stream; return the object',  $actual, $expected, $results);
 
 
         // TEST: stream property retrieval
@@ -46,7 +46,7 @@ class Test
         $properties = $object->get();
         $actual =  is_array($properties);
         $expected = true;
-        \Flexio\Tests\Check::assertString('C.1', 'Stream::get(); return the properties as an array',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.1', '\Flexio\Base\Stream; return the properties as an array',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Base\Stream::create();
@@ -67,6 +67,6 @@ class Test
             "updated" : null
         }
         ',true);
-        \Flexio\Tests\Check::assertArrayKeys('D.2', 'Stream::get(); return the properties as an array',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArrayKeys('D.2', '\Flexio\Base\Stream; return the properties as an array',  $actual, $expected, $results);
     }
 }
