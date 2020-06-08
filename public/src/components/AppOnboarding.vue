@@ -219,11 +219,11 @@
       },{
         title: 'Basic Examples',
         description: 'Explore some basic examples you can try immediately',
-        link: 'https://www.flex.io/resources/getting-started'
+        link: 'https://www.flex.io/resources/examples'
       },{
         title: 'Explore Integrations',
         description: 'See how you can use Flex with other web services',
-        link: 'https://www.flex.io/resources/examples'
+        link: 'https://www.flex.io/explore'
       }]
     }
   }
