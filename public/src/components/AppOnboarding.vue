@@ -16,23 +16,23 @@
           class="mv4 pv2"
           align-center
           finish-status="success"
-          :active="active_step_idx"
+          :active="step_heading_idx"
           v-if="is_welcome"
         >
-          <el-step title="Choose Integrations" />
-          <el-step title="Set Up Integrations" />
-          <el-step title="Get Add-ons " />
+          <el-step title="Set Up Integration" />
+          <el-step title="Get Add-on" />
+          <el-step title="Get Started" />
         </el-steps>
 
         <!-- step: choose integrations -->
         <div v-if="active_step == 'integrations'">
-          <p class="center mw7">Let's get started with integrations. Pick one or more services below and we'll add a few out-of-the-box functions you can use in your spreadsheet.</p>
+          <p class="center mw7">Let's get started with an integration. Pick one of the services below and we'll add a few out-of-the-box functions you can use in your spreadsheet.</p>
           <IconList
             class="mv4"
             :items="integrations"
             :selected-items.sync="selected_integrations"
             :allow-selection="true"
-            :allow-multiple="true"
+            :allow-multiple="false"
           />
         </div>
 
@@ -63,6 +63,25 @@
           </FunctionMountSetupWizard>
         </div>
 
+
+        <!-- step: integration setup complete -->
+        <div v-if="active_step == 'integration-setup-complete'">
+          <ServiceIconWrapper :innerSpacing="10">
+            <i
+              class="el-icon-success bg-white f2 dark-green"
+              slot="icon"
+            ></i>
+            <p class="tc f3 lh-title">Your integration was created successfully!</p>
+            <div class="bg-nearer-white pa4 br2 tc">
+              <p class="mb0 f4 fw6 flex flex-row items-center justify-center">
+                <Spinner class="mr2" />
+                <span>Importing functions...</span>
+              </p>
+              <p class="mb0 f7 i light-silver lh-copy">NOTE: This process may take a couple of minutes to complete</p>
+            </div>
+          </ServiceIconWrapper>
+        </div>
+
         <!-- step: invite others -->
         <div v-if="active_step == 'members'">
           <p class="center mw7">It's easy to share your functions with co-workers. Simply add their emails below and they'll receive an invite to join your team. You can also skip this step and add people later.</p>
@@ -82,7 +101,7 @@
 
         <!-- step: install add-ons -->
         <div v-if="active_step == 'addons'">
-          <p class="center mw7">You're almost done! If you haven't done so already, please install the Flex.io Add-on for either <span class="nowrap">Google Sheets</span> or <span class="nowrap">Microsoft Excel 365</span>. Once you've installed an add-on, you'll see the functions in your spreadsheet.</p>
+          <p class="center mw7">You're almost done! If you haven't done so already, please install the Flex.io Add-on for <span class="nowrap">Google Sheets</span> or <span class="nowrap">Microsoft Excel 365</span>. Once you've installed the add-on, you'll see the functions in the Flex.io sidebar and will be able to use them in your spreadsheet.</p>
           <AddonDownloadButtonPanel
             class="pv2-l"
             :open-links-in-new-window="true"
@@ -176,11 +195,22 @@
       active_integration() {
         return this.selected_integrations[this.active_integration_idx]
       },
+      step_order() {
+       return ['integrations', 'setup', 'integration-setup-complete', 'addons', 'complete']
+      },
+      // this is just for display purposes
+      step_heading_idx() {
+        switch (this.active_step_idx) {
+          case 0: return 0
+          case 1: return 0
+          case 2: return 0
+          case 3: return 1
+          case 4: return 2
+        }
+        return 0
+      },
       has_active_setup_template() {
         return !_.isNil(this.active_setup_template)
-      },
-      step_order() {
-       return ['integrations', 'setup', 'addons']
       },
       integrations_from_route() {
         var integrations = _.get(this.$route, 'query.integration', '')
@@ -215,8 +245,6 @@
 
       // update title from route
       this.route_title = _.get(this.$route, 'query.title', '')
-
-      this.setRoute(this.active_step)
     },
     methods: {
       ...mapGetters('users', {
@@ -232,13 +260,6 @@
             this.selected_integrations = this.selected_integrations.concat([selected_integration])
           }
         })
-      },
-      setRoute(action) {
-        // update the route
-        var current_action = _.get(this.$route, 'params.action', '')
-        var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path', 'query'])
-        new_route.params = _.assign({}, new_route.params, { action })
-        this.$router[current_action.length == 0 ? 'replace' : 'push'](new_route)
       },
       onUtilityButtonClick() {
         if (this.active_step_idx == 0) {
@@ -271,9 +292,6 @@
             // reset our local component data
             _.assign(this.$data, getDefaultState())
             this.selectIntegrationsFromRoute()
-
-            // make sure the route is in sync
-            this.setRoute(this.active_step)
           })
         }
       },
@@ -297,10 +315,8 @@
             dangerouslyUseHTMLString: true,
           }).then(() => {
             // skip over integration set up if none were selected
-            this.active_step = this.step_order[this.active_step_idx + 2]
-
-            // make sure the route is in sync
-            this.setRoute(this.active_step)
+            var next_idx = _.indexOf(this.step_order, 'addons')
+            this.active_step = this.step_order[next_idx]
           })
         } else {
           this.active_step = this.step_order[this.active_step_idx + 1]
@@ -308,9 +324,6 @@
           if (this.active_step == 'setup') {
             this.fetchIntegrationConfig()
           }
-
-          // make sure the route is in sync
-          this.setRoute(this.active_step)
         }
       },
       onMemberInviteSubmit() {
@@ -424,14 +437,6 @@
         .catch(error => {
 
         })
-      },
-      openGoogleSheetsAddonDownload() {
-        this.$store.track('Clicked Google Sheets Add-on in Onboarding')
-        window.open('https://gsuite.google.com/marketplace/app/flexio/919566304535', '_blank')
-      },
-      openExcelAddonDownload() {
-        this.$store.track('Clicked Excel Add-in in Onboarding')
-        window.open('https://appsource.microsoft.com/en-us/product/office/WA200000394', '_blank')
       },
       endOnboarding() {
         var team_name = this.active_team_name
