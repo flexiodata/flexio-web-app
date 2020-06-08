@@ -135,6 +135,7 @@
           <TemplateList
             :icon="t.icon"
             :templates="t.templates"
+            @template-click="onTemplateClick"
             v-for="t in all_templates"
           />
           <h3 class="mt5 mb4 tc">Get started with the Flex.io App</h3>
@@ -149,7 +150,10 @@
           </div>
           <p class="tc">Want some code examples? Fork one of our open source function packs from GitHub: <a class="ml1 v-mid" href="https://github.com/flexiodata?utf8=%E2%9C%93&q=functions" target="_blank" title="View function packs on Github"><svg xmlns="http://www.w3.org/2000/svg" fill="black" width="32" height="32" viewBox="0 0 16 16"><path d="M8 .198c-4.418 0-8 3.582-8 8 0 3.535 2.292 6.533 5.47 7.59.4.075.548-.173.548-.384 0-.19-.008-.82-.01-1.49-2.227.485-2.696-.943-2.696-.943-.364-.924-.888-1.17-.888-1.17-.726-.497.055-.486.055-.486.802.056 1.225.824 1.225.824.714 1.223 1.872.87 2.328.665.072-.517.28-.87.508-1.07-1.776-.202-3.644-.888-3.644-3.954 0-.874.313-1.588.824-2.148-.083-.202-.357-1.015.077-2.117 0 0 .672-.215 2.2.82.64-.177 1.323-.266 2.003-.27.68.004 1.365.093 2.004.27 1.527-1.035 2.198-.82 2.198-.82.435 1.102.162 1.916.08 2.117.512.56.822 1.274.822 2.147 0 3.072-1.872 3.748-3.653 3.946.288.248.544.735.544 1.48 0 1.07-.01 1.933-.01 2.196 0 .213.145.462.55.384 3.178-1.06 5.467-4.057 5.467-7.59 0-4.418-3.58-8-8-8z"></path></svg></a></p>
 
-          <p class="tc">Need help with a script? <span @click="onNeedHelpClick">Let us know and we'll point you in the right direction!</span></p>
+          <p class="tc">
+            <span>Need help with a script?</span>
+            <el-button type="text" style="font-size: 100%" @click="onNeedHelpClick">Let us know and we'll point you in the right direction!</el-button>
+          </p>
         </div>
 
         <!-- button bar for the entire onboarding wizard -->
@@ -372,7 +376,11 @@
       onNextStepClick() {
         // we're on the last step; commit all changes to the backend and take the user to the app
         if (this.active_step_idx == this.step_order.length - 1) {
-          this.submitOnboardingConfig()
+          this.submitOnboardingConfig(() => {
+            // syncing can take a long time; end the onboarding
+            // while the syncing is going on
+            this.endOnboarding()
+          })
           return
         }
 
@@ -416,6 +424,32 @@
         if (window.Intercom) {
           window.Intercom('showNewMessage')
         }
+      },
+      onTemplateClick(template) {
+        // TODO: *IF* we ever wanted to make this thing support adding
+        //       multiple integrations at the same time again, we'd need
+        //       to make sure this wasn't hard-coded like this
+        var integration_name = _.get(this.output_mounts, '[0].name', '')
+
+        var gsheets_spreadsheet_id = _.get(template, 'gsheets_spreadsheet_id', undefined)
+        var excel_spreadsheet_path = _.get(template, 'excel_spreadsheet_path', undefined)
+
+        var new_route = {
+          path: `/integrations/${integration_name}/template`,
+          query: {
+            context: 'app',
+            gsheets_spreadsheet_id,
+            excel_spreadsheet_path,
+            title: 'All systems go!'
+          }
+        }
+
+        // submit the onboarding config and then go to the template download page
+        this.submitOnboardingConfig(() => {
+          // syncing can take a long time; end the onboarding
+          // while the syncing is going on
+          this.$router.push(new_route)
+        })
       },
       fetchIntegrationConfig() {
         this.is_fetching_config = true
@@ -489,7 +523,7 @@
           }
         })
       },
-      submitOnboardingConfig() {
+      submitOnboardingConfig(successCb, errorCb) {
         var team_name = this.active_team_name
         var create_xhrs = []
 
@@ -513,12 +547,14 @@
             this.processSetupConfig(setup_config, eid)
           })
 
-          // syncing can take a long time; end the onboarding
-          // while the syncing is going on
-          this.endOnboarding()
+          if (_.isFunction(successCb)) {
+            successCb()
+          }
         })
         .catch(error => {
-
+          if (_.isFunction(errorCb)) {
+            errorCb()
+          }
         })
       },
       endOnboarding() {
