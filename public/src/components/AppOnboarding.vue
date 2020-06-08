@@ -51,7 +51,7 @@
             v-else
           >
             <div slot="no-prompts">
-              <div class="tc f6 fw4 lh-copy moon-gray"><em>No configuration is required for this integration.</em></div>
+              <div class="mv2 tc f6 fw4 lh-copy moon-gray"><em>No configuration is required for this integration.</em></div>
               <ButtonBar
                 class="mt4"
                 :cancel-button-visible="false"

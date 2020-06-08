@@ -41,7 +41,7 @@
             <Spinner size="large" message="Loading template..." />
           </div>
           <TemplateTargetChooserPanel
-            class="mv4 mh3-l pa4 bg-nearer-white br3"
+            class="mv4 pa4 bg-nearer-white br3"
             :gsheets-spreadsheet-id="gsheets_spreadsheet_id"
             :excel-download-url="excel_spreadsheet_path"
             @target-click="onTemplateTargetClick"
@@ -65,7 +65,7 @@
             v-else
           >
             <div slot="no-prompts">
-              <div class="tc f6 fw4 lh-copy moon-gray"><em>No configuration is required for this integration.</em></div>
+              <div class="mv2 tc f6 fw4 lh-copy moon-gray"><em>No configuration is required for this integration.</em></div>
               <ButtonBar
                 class="mt4"
                 :cancel-button-visible="false"

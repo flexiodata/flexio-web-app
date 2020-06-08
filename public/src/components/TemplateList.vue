@@ -1,13 +1,27 @@
 <template>
   <div>
-    <div class="flex flex-row flex-wrap template-list">
+    <div class="template-list">
       <div
-        class="template-item"
+        class="flex flex-row template-item"
+        :class="icon.length > 0 ? 'items-center' : ''"
         :key="template.title"
         @click="$emit('template-click', template)"
         v-for="template in templates"
       >
-        <div class="item-label">{{template.title}}</div>
+        <img
+          :src="icon"
+          class="item-icon"
+          v-if="icon.length > 0"
+        >
+        <div class="item-body">
+          <h4 class="mv0 item-title">{{template.title}}</h4>
+          <div
+            class="f6 lh-copy item-description"
+            v-if="hasDescription(template)"
+          >
+            {{template.description}}
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -16,37 +30,54 @@
 <script>
   export default {
     props: {
+      icon: {
+        type: String,
+        default: ''
+      },
       templates: {
         type: Array,
         required: true
+      }
+    },
+    methods: {
+      hasDescription(template) {
+        return _.get(template, 'description', '').length > 0
       }
     }
   }
 </script>
 
 <style lang="stylus" scoped>
-  .template-container
-    overflow: hidden
+  @import '../stylesheets/variables.styl'
+
+  .item-icon
+    max-width: 48px
+
+  .item-body
+    color: #222
+    font-weight: normal
+    margin-left: 24px
+
+  .item-title
+    margin: 0
+
+  .item-description
+    margin-top: 8px
 
   .template-list
-    margin-left: -12px
-    margin-right: -12px
+    margin-top: 1px
 
   .template-item
-    border: 2px solid transparent
-    border-radius: 4px
-    cursor: pointer
-    margin: 12px
-    padding: 24px 16px
-    position: relative
-    width: calc(50% - 24px)
-    box-shadow: 0 4px 16px -4px rgba(0,0,0,0.2)
-    &.selected
+    padding: 28px 24px
+    margin-top: -1px
+    border-top: 1px solid #dcdfe6
+    border-bottom: 1px solid #dcdfe6
     &:hover
-      border-color: #357edd
-
-  .item-label
-    font-size: 16px
-    font-weight: 600
-    color: #333
+    &:active
+      position: relative
+      cursor: pointer
+      border-color: $blue
+      .item-title
+      .item-description
+        color: $blue
 </style>

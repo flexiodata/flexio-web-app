@@ -16,7 +16,7 @@
         v-for="(prompt, index) in prompts"
       />
       <slot name="no-prompts" v-if="prompts.length == 0">
-        <div class="tc f6 fw4 lh-copy moon-gray"><em>No configuration is required for this function mount.</em></div>
+        <div class="mv2 tc f6 fw4 lh-copy moon-gray"><em>No configuration is required for this function mount.</em></div>
       </slot>
     </ServiceIconWrapper>
   </div>
