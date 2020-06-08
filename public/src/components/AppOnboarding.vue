@@ -17,7 +17,6 @@
           align-center
           finish-status="success"
           :active="step_heading_idx"
-          v-if="is_welcome"
         >
           <el-step title="Set Up Integration" />
           <el-step title="Get Add-on" />
@@ -110,7 +109,17 @@
         </div>
 
         <div v-if="active_step == 'complete'">
-          <p class="center mw7">You're all set and ready to go. Here's a set of resources to help get you started. If you need anything, please let us know!</p>
+          <p class="center mw7">You're all set and ready to go. Here's a set of example spreadsheets and other resources to help get you started. If you need anything, please let us know!</p>
+          <template v-if="all_templates.length > 0 ">
+            <h3 class="mt5 mb4 tc">Select an example sheet</h3>
+            <TemplateList
+              :icon="t.icon"
+              :templates="t.templates"
+              @template-click="onTemplateClick"
+              v-for="t in all_templates"
+            />
+          </template>
+          <h3 class="mt5 mb4 tc">Get additional resources</h3>
           <div class="flex-l flex-row-l flex-wrap-l nl3 nr3">
             <a
               class="flex-fill flex flex-row db ma3 pv3 ph4 br2 fw4 dark-gray no-underline w-third-l last-step-item"
@@ -131,13 +140,6 @@
               </div>
             </a>
           </div>
-          <h3 class="mt5 mb4 tc">Select an example sheet</h3>
-          <TemplateList
-            :icon="t.icon"
-            :templates="t.templates"
-            @template-click="onTemplateClick"
-            v-for="t in all_templates"
-          />
           <h3 class="mt5 mb4 tc">Get started with the Flex.io App</h3>
           <p class="center mw7">Go off road. Access just about any data with your own code and share integrations with your team without sharing your credentials.</p>
           <div class="mv4 tc">
@@ -160,11 +162,11 @@
         <ButtonBar
           class="mt5"
           :utility-button-type="'text'"
-          :utility-button-visible="active_step_idx != step_order.length - 1"
-          :utility-button-text="active_step_idx == 0 ? 'Skip setup' : '← Start over'"
+          :utility-button-visible="active_step_idx > 0 && active_step_idx != step_order.length - 1"
+          :utility-button-text="active_step_idx == 1 ? '← Back' : '← Start over'"
           :cancel-button-visible="false"
           :submit-button-visible="active_step != 'setup' && active_step != 'complete'"
-          :submit-button-text="active_step_idx == step_order.length - 1 ? 'Finish Setup' : 'Continue'"
+          :submit-button-text="active_step_idx == 0 ? 'Skip this step' : active_step_idx == step_order.length - 1 ? 'Finish Setup' : 'Continue'"
           @utility-click="onUtilityButtonClick"
           @submit-click="onNextStepClick"
         />
@@ -180,6 +182,8 @@
   import { mapState, mapGetters } from 'vuex'
   import { OBJECT_TYPE_CONNECTION } from '@/constants/object-type'
   import api from '@/api'
+  import { HOSTNAME } from '@/constants/common'
+  import { buildQueryString } from '@/utils'
   import ButtonBar from '@/components/ButtonBar'
   import IconList from '@/components/IconList'
   import FunctionMountSetupWizard from '@/components/FunctionMountSetupWizard'
@@ -199,6 +203,7 @@
   const getDefaultState = () => {
     return {
       is_fetching_config: false,
+      onboarding_config_submitted: false,
       route_title: '',
       custom_title: '',
       active_step: 'integrations', // 'integrations', 'setup', 'addons', 'members'
@@ -208,17 +213,17 @@
       output_mounts: [],
       email_invites: [],
       last_step_items: [{
-        title: 'Quick Start',
-        description: 'Get a sheet with a set of quick start examples',
-        link: 'https://www.flex.io/resources/getting-started/template'
-      },{
         title: 'Getting Started Guide',
         description: 'Learn how to work with Flex.io in your spreadsheet',
         link: 'https://www.flex.io/resources/getting-started'
       },{
+        title: 'Basic Examples',
+        description: 'Explore some basic examples you can try immediately',
+        link: 'https://www.flex.io/resources/getting-started'
+      },{
         title: 'Explore Integrations',
         description: 'See how you can use Flex with other web services',
-        link: 'https://www.flex.io/explore'
+        link: 'https://www.flex.io/resources/examples'
       }]
     }
   }
@@ -228,7 +233,7 @@
       return {
         title: this.title,
         titleTemplate: (chunk) => {
-          return this.is_welcome ? chunk : `${chunk} | Flex.io`
+          return `${chunk} | Flex.io`
         }
       }
     },
@@ -279,16 +284,11 @@
         var integrations = _.get(this.$route, 'query.integration', '')
         return integrations.length > 0 ? integrations.split(',') : []
       },
-      is_welcome() {
-        return this.integrations_from_route.length == 0
-      },
       title() {
         if (this.route_title.length > 0) {
           return this.route_title
-        } else if (this.is_welcome) {
-          return 'Welcome to Flex.io!'
         } else {
-          return 'Integration Setup'
+          return 'Welcome to Flex.io!'
         }
       },
       display_title() {
@@ -336,10 +336,16 @@
           var selected_integration = _.find(this.integrations, f => _.get(f, 'connection.name', '') == cname)
           if (selected_integration) {
             this.selected_integrations = this.selected_integrations.concat([selected_integration])
+            this.$nextTick(() => { this.onNextStepClick() })
           }
         })
       },
       onUtilityButtonClick() {
+        // reset our local component data
+        _.assign(this.$data, getDefaultState())
+        this.selectIntegrationsFromRoute()
+
+        /*
         if (this.active_step_idx == 0) {
           var msg = "Stepping through this setup can help you quickly get started using Flex.io. Are you sure you want to skip setup?"
           var title = 'Really skip setup?'
@@ -372,6 +378,7 @@
             this.selectIntegrationsFromRoute()
           })
         }
+        */
       },
       onNextStepClick() {
         // we're on the last step; commit all changes to the backend and take the user to the app
@@ -434,22 +441,25 @@
         var gsheets_spreadsheet_id = _.get(template, 'gsheets_spreadsheet_id', undefined)
         var excel_spreadsheet_path = _.get(template, 'excel_spreadsheet_path', undefined)
 
-        var new_route = {
-          path: `/integrations/${integration_name}/template`,
-          query: {
-            context: 'app',
-            gsheets_spreadsheet_id,
-            excel_spreadsheet_path,
-            title: 'All systems go!'
-          }
-        }
-
-        // submit the onboarding config and then go to the template download page
-        this.submitOnboardingConfig(() => {
-          // syncing can take a long time; end the onboarding
-          // while the syncing is going on
-          this.$router.push(new_route)
+        var query_str = buildQueryString({
+          gsheets_spreadsheet_id,
+          excel_spreadsheet_path,
+          context: 'app',
+          title: 'TODO',
+          description: 'TODO'
         })
+
+        var url = `https://${HOSTNAME}/integrations/${integration_name}/template?${query_str}`
+
+        if (this.onboarding_config_submitted) {
+          window.open(url)
+        } else {
+          // submit the onboarding config and then go to the template download page
+          this.submitOnboardingConfig(() => {
+            this.onboarding_config_submitted = true
+            window.open(url)
+          })
+        }
       },
       fetchIntegrationConfig() {
         this.is_fetching_config = true

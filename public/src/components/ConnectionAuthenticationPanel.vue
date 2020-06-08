@@ -221,7 +221,6 @@
 <script>
   import axios from 'axios'
   import { mapState } from 'vuex'
-  import { buildQueryString } from '@/utils'
   import { CONNECTION_STATUS_AVAILABLE, CONNECTION_STATUS_UNAVAILABLE } from '@/constants/connection-status'
   import * as ctypes from '@/constants/connection-type'
   import * as cinfos from '@/constants/connection-info'
