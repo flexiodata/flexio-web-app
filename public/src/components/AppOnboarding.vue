@@ -162,13 +162,14 @@
         <ButtonBar
           class="mt5"
           :utility-button-type="'text'"
-          :utility-button-visible="active_step_idx > 0 && active_step_idx != step_order.length - 1"
+          :utility-button-visible="is_start_over_button_visible"
           :utility-button-text="active_step_idx == 1 ? '← Back' : '← Start over'"
           :cancel-button-visible="false"
           :submit-button-visible="active_step != 'setup' && active_step != 'complete'"
-          :submit-button-text="active_step_idx == 0 ? 'Skip this step' : active_step_idx == step_order.length - 1 ? 'Finish Setup' : 'Continue'"
+          :submit-button-text="active_step_idx == 0 ? 'Skip this step' : 'Continue'"
           @utility-click="onUtilityButtonClick"
           @submit-click="onNextStepClick"
+          v-if="active_step_idx < step_order.length - 1"
         />
      </div>
     </div>
@@ -283,6 +284,15 @@
       integrations_from_route() {
         var integrations = _.get(this.$route, 'query.integration', '')
         return integrations.length > 0 ? integrations.split(',') : []
+      },
+      is_start_over_button_visible() {
+        if (this.active_step_idx == 0) {
+          return false
+        } else if (this.active_step_idx == 1 && this.integrations_from_route.length > 0) {
+          return false
+        } else {
+          return true
+        }
       },
       title() {
         if (this.route_title.length > 0) {
