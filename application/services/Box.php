@@ -510,10 +510,10 @@ class Box implements \Flexio\IFace\IConnection,
 
         $buf = "\r\n--$boundary--";
         $writer->write($buf);
-        $total_payload_size = $writer->getBytesWritten();
         $writer->close();
         unset($writer);
 
+        $total_payload_size = $stream->getSize();
         $reader = $stream->getReader();
 
         // upload/write the file

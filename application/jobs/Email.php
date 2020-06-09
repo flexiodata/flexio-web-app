@@ -265,7 +265,7 @@ class Email implements \Flexio\IFace\IJob
         $streamreader = $stream->getReader();
         while (true)
         {
-            $data = $streamreader->readRow();
+            $data = $streamreader->readline();
             if ($data === false)
                 break;
 

@@ -317,7 +317,7 @@ class Util
             $res->setMimeType($content_type);
         }
 
-        $res->buffer = $data;     // shortcut to speed it up -- can also use getWriter()->write((string)$v)
+        $res->getWriter()->write((string)$data);
         return $res;
     }
 }

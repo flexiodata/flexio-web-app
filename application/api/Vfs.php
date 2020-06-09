@@ -169,7 +169,8 @@ class Vfs
 
     public static function info(\Flexio\Api\Request $request) : void
     {
-        // provides a sample of a file in table form
+        // provides a sample of a file in table form;
+        // TODO: this function is very similar to the extract job; factor?
 
         $request_url = urldecode($request->getUrl());
         $requesting_user_eid = $request->getRequestingUser();
@@ -193,20 +194,22 @@ class Vfs
         // grab path, including preceding slash
         $path = substr($path, $pos+10);
 
-        // read the file to get the info; TODO: use cache?
+        // read the file to get the info
         $process_engine = \Flexio\Jobs\Process::create();
         $process_engine->setOwner($owner_user_eid);
         $process_engine->queue('\Flexio\Jobs\Read::run', array('path' => $path));
         $process_engine->queue('\Flexio\Jobs\ProcessHandler::chain', array());
-        $process_engine->queue('\Flexio\Jobs\Convert::run', array('input' => array(), 'output' => array('format' => 'table')));
+        $process_engine->queue('\Flexio\Jobs\Convert::run', array('input' => array(), 'output' => array('format' => 'ndjson')));
         $process_engine->run();
 
+        if ($process_engine->hasError())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
         $local_stdout = $process_engine->getStdout();
-        $column_info = $local_stdout->getStructure()->get();
-        $row_info = \Flexio\Base\StreamUtil::getStreamContents($local_stdout, 1, 10);
 
         // get the columns
         $columns = array();
+        $column_info = $local_stdout->getStructure()->get();
         foreach ($column_info as $c)
         {
             $item = array();
@@ -217,15 +220,33 @@ class Vfs
             $columns[] = $item;
         }
 
-        // get a sample of rows values
+        // get a small sample of the rows
         $rows = array();
-        foreach ($row_info as $r)
+        $idx = 0;
+        $limit = 10;
+
+        $column_names= $local_stdout->getStructure()->getNames();
+        $column_names = array_flip($column_names);
+        $reader = $local_stdout->getReader();
+        while (true)
         {
-            // return rows as an array of objects since this is what
-            // the preview grid in the UI expects
-            $rows[] = $r;
+            if ($idx >= $limit)
+                break;
+
+            $item = $reader->readline();
+            if ($item === false)
+                break;
+
+            // get the key/value info for the rows
+            $item = json_decode($item, true);
+
+            // get the values corresponding to the headers
+            $item_values = array_values(\Flexio\Base\Util::mapArray($column_names, $item));
+            $rows[] = $item_values;
+            $idx++;
         }
 
+        // return the columns and rows
         $result = array();
         $result['columns'] = $columns;
         $result['rows'] = $rows;
@@ -354,24 +375,18 @@ class Vfs
         if ($stream_info === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
+        // send headers
         $mime_type = $stream_info['mime_type'];
-        $start = 0;
-        $limit = PHP_INT_MAX;
-        $content = \Flexio\Base\StreamUtil::getStreamContents($stream, $start, $limit);
         $response_code = $process_engine->getResponseCode();
+        \Flexio\Api\Response::setDefaultHeaders($mime_type, $response_code);
 
-        if ($mime_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
+        // send the content
+        $reader = $stream->getReader();
+        while (($content = $reader->read(4096)) !== false)
         {
-            // return content as-is
-            header('Content-Type: ' . $mime_type, true, $response_code);
-        }
-        else
-        {
-            // flexio table; return application/json in place of internal mime
-            header('Content-Type: ' . \Flexio\Base\ContentType::JSON, true, $response_code);
-            $content = json_encode($content, JSON_UNESCAPED_SLASHES);
+            echo($content);
         }
 
-        \Flexio\Api\Response::sendRaw($content);
+        exit(0);
     }
 }

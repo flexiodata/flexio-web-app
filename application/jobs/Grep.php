@@ -63,10 +63,9 @@ class Grep implements \Flexio\IFace\IJob
         switch ($mime_type)
         {
             default:
-                $outstream->copyFrom($instream);
-                return;
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED, 'The input format is not supported');
 
-            case \Flexio\Base\ContentType::FLEXIO_TABLE:
+            case \Flexio\Base\ContentType::CSV:
                 $this->getOutput($instream, $outstream);
                 return;
         }
@@ -117,16 +116,6 @@ class Grep implements \Flexio\IFace\IJob
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
         }
 
-        $mime_type = $instream->getMimeType();
-        if ($mime_type === \Flexio\Base\ContentType::FLEXIO_TABLE)
-        {
-            // write header row
-            $row = $instream->getStructure()->getNames();
-            $str = join(',', $row) . "\n";
-            $external_process->write($str);
-        }
-
-
         // $pipes now looks like this:
         // 0 => writeable handle connected to child stdin
         // 1 => readable handle connected to child stdout
@@ -146,54 +135,24 @@ class Grep implements \Flexio\IFace\IJob
         {
             $is_running = $external_process->isRunning();
 
-
-
             // write a chunk to the stdin
-
             if (!$done_writing)
             {
-                if ($is_table)
+                $buf = $streamreader->read(1024);
+                if ($buf === false)
+                    break;
+
+                $len = strlen($buf);
+
+                if ($len > 0)
+                    $external_process->write($buf);
+
+                if ($len != 1024)
                 {
-                    // write data
-
-                    $row = $streamreader->readRow();
-                    if ($row)
-                    {
-                        $str = join(',', array_values($row)) . "\n";
-                        $external_process->write($str);
-
-                        ++$rowcnt;
-                        if ($maxrows != -1 && ++$rowcnt >= $maxrows)
-                        {
-                            $external_process->closeWrite();
-                            $done_writing = true;
-                        }
-                    }
-                     else
-                    {
-                        $external_process->closeWrite();
-                        $done_writing = true;
-                    }
-                }
-                 else
-                {
-                    $buf = $streamreader->read(1024);
-                    if ($buf === false)
-                        break;
-
-                    $len = strlen($buf);
-
-                    if ($len > 0)
-                        $external_process->write($buf);
-
-                    if ($len != 1024)
-                    {
-                        $external_process->closeWrite();
-                        $done_writing = true;
-                    }
+                    $external_process->closeWrite();
+                    $done_writing = true;
                 }
             }
-
 
             if ($external_process->canRead())
             {
@@ -203,7 +162,6 @@ class Grep implements \Flexio\IFace\IJob
 
             if (!$is_running)
                 break;
-
         }
 
         $external_process->closeRead();
@@ -211,9 +169,7 @@ class Grep implements \Flexio\IFace\IJob
 
         @unlink($filename);
 
-
         $streamwriter->close();
-        $outstream->setSize($streamwriter->getBytesWritten());
     }
 
     private function getJobParameters() : array

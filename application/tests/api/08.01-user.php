@@ -34,6 +34,9 @@ class Test
         $email = \Flexio\Tests\Util::createEmailAddress();
         $password = \Flexio\Base\Password::generate();
 
+        // note: don't send emails or create examples; creating examples, in particular,
+        // currently involves loading data into the index cache, so we don't want to do this
+        // for testing
         $params = array(
             'method' => 'POST',
             'url' => "$apibase/signup",
@@ -43,8 +46,8 @@ class Test
                 "username": "'.$username.'",
                 "email": "'.$email.'",
                 "password": "'.$password.'",
-                "send_email": "true",
-                "create_examples": "true"
+                "send_email": "false",
+                "create_examples": "false"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -77,8 +80,8 @@ class Test
                 "username": "'.$username1.'",
                 "email": "'.$email1.'",
                 "password": "'.$password1.'",
-                "send_email": "true",
-                "create_examples": "true"
+                "send_email": "false",
+                "create_examples": "false"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params); // create a user
@@ -93,8 +96,8 @@ class Test
                 "username": "'.$username2.'",
                 "email": "'.$email2.'",
                 "password": "'.$password2.'",
-                "send_email": "true",
-                "create_examples": "true"
+                "send_email": "false",
+                "create_examples": "false"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params); // create another user with the same username
@@ -124,8 +127,8 @@ class Test
                 "username": "'.$username1.'",
                 "email": "'.$email1.'",
                 "password": "'.$password1.'",
-                "send_email": "true",
-                "create_examples": "true"
+                "send_email": "false",
+                "create_examples": "false"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params); // create a user
@@ -140,8 +143,8 @@ class Test
                 "username": "'.$username2.'",
                 "email": "'.$email2.'",
                 "password": "'.$password2.'",
-                "send_email": "true",
-                "create_examples": "true"
+                "send_email": "false",
+                "create_examples": "false"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params); // create another user with the same username

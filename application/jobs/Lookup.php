@@ -90,17 +90,38 @@ class Lookup implements \Flexio\IFace\IJob
         $process_engine->setOwner($process->getOwner());
         $process_engine->queue('\Flexio\Jobs\Read::run', array('path' => $path));
         $process_engine->queue('\Flexio\Jobs\ProcessHandler::chain', array());
-        $process_engine->queue('\Flexio\Jobs\Convert::run', array('input' => array(), 'output' => array('format' => 'table')));
+        $process_engine->queue('\Flexio\Jobs\Convert::run', array('input' => array(), 'output' => array('format' => 'ndjson')));
         $process_engine->run();
 
-        // create a lookup index from the table
-        $lookup_index = array();
-        $process_engine_output = $process_engine->getStdout();
-        $rows = \Flexio\Base\StreamUtil::getStreamContents($process_engine_output);
+        if ($process_engine->hasError())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-        foreach ($rows as $r)
+        // create a lookup index from the table
+        // TODO: lookups used to allow a range of lookup values, in which case creating
+        // a lookup table made sense; however, lookup syntax with multiple lookup was
+        // deemed complicated, so function was converted to a single lookup; with single
+        // lookup, building a lookup table is inefficient since all values need to be
+        // read through first; should simply scan table and return first corresponding
+        // value
+        $lookup_index = array();
+
+        $idx = 0;
+        $limit = PHP_INT_MAX; // placeholder for limit if desired
+
+        $reader = $process_engine->getStdout()->getReader();
+        while (true)
         {
-            $lookup_row = array_change_key_case($r, CASE_LOWER);
+            if ($idx >= $limit)
+                break;
+
+            $item = $reader->readline();
+            if ($item === false)
+                break;
+
+            // get the key/value info for the rows
+            $lookup_row = json_decode($item, true);
+            $lookup_row = array_change_key_case($lookup_row, CASE_LOWER);
+
             $key = array();
             foreach ($lookup_keys as $k)
             {
@@ -113,23 +134,7 @@ class Lookup implements \Flexio\IFace\IJob
             $lookup_index[json_encode($key)] = $lookup_row;
         }
 
-        // TODO: array version that allows multiple lookups from one input param
-        // // get the lookup values for the input
-        //$lookup_values = lookup_values[0];
-
-        // $lookup_result = array();
-        // $default_values = array_fill(0, count($return_columns), null);
-
-        // foreach ($lookup_values as $l)
-        // {
-        //     $l = json_encode($l);
-        //     if (!array_key_exists($l, $lookup_index))
-        //         $lookup_result[] = $default_values;
-        //      else
-        //         $lookup_result[] = array_values(\Flexio\Base\Util::filterArray($lookup_index[$l], $return_columns));
-        // }
-
-        // single result lookup version
+        // return the value from the lookup table
         $lookup_values = json_encode($lookup_values);
         $default_values = array_fill(0, count($return_columns), null);
         if (!array_key_exists($lookup_values, $lookup_index))

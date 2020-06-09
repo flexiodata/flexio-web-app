@@ -125,8 +125,7 @@ class ProcessHandler
 
                 $stream = \Flexio\Base\Stream::create();
                 $stream->setMimeType(\Flexio\Base\ContentType::FLEXIO_CONNECTION_INFO);
-                $stream->buffer = (string)$connection_info; // shortcut to speed it up -- can also use getWriter()->write((string)$v)
-
+                $stream->getWriter()->write((string)$connection_info);
                 $mount_variables[$key] = $stream;
             }
             catch (\Flexio\Base\Exception $e)
@@ -167,24 +166,6 @@ class ProcessHandler
 
         $stdout_mime_type = $stdout_stream_info['mime_type'];
 
-        if ($stdout_mime_type === \Flexio\Base\ContentType::FLEXIO_TABLE)
-        {
-            // handle table type
-            $stdout_reader = $process->getStdout()->getReader();
-
-            // write the output to elasticsearch
-            $params = array(
-                'path' => $index // service uses path for consistency with other services
-            );
-            $elasticsearch->write($params, function() use (&$stdout_reader) {
-                $row = $stdout_reader->readRow();
-                if ($row === false)
-                    return false;
-                // TODO: coerce row types?
-                return $row;
-            });
-        }
-
         if ($stdout_mime_type === \Flexio\Base\ContentType::NDJSON)
         {
             // handle json content type
@@ -197,7 +178,7 @@ class ProcessHandler
                 'path' => $index // service uses path for consistency with other services
             );
             $elasticsearch->write($params, function() use (&$stdout_reader) {
-                $row = $stdout_reader->readRow();
+                $row = $stdout_reader->readline();
                 if ($row === false)
                     return false;
                 // TODO: coerce row types?

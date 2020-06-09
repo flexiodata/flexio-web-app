@@ -51,7 +51,8 @@ class User
                 'referrer'             => array('type' => 'string',     'required' => false, 'default' => ''),
                 'token'                => array('type' => 'string',     'required' => false), // stripe payment token if it's included; TODO: more specific name?
                 'stripe_subscription_id' => array('type' => 'string',     'required' => false, 'default' => ''),
-                'config'               => array('type' => 'object',     'required' => false, 'default' => [])
+                'config'               => array('type' => 'object',     'required' => false, 'default' => []),
+                'create_examples'      => array('type' => 'boolean',    'required' => false, self::CREATE_DEFAULT_EXAMPLES), // used in testing
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
@@ -101,7 +102,9 @@ class User
             }
 
             // if appropriate, create default examples
-            if (\Flexio\Api\User::CREATE_DEFAULT_EXAMPLES === true)
+            $create_examples = $validated_post_params['create_examples'] ?? true;
+            $create_examples = toBoolean($create_examples);
+            if ($create_examples === true)
             {
                 // create default example objects
                 $created_objects = \Flexio\Object\Factory::createExampleObjects($user->getEid());

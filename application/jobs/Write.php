@@ -54,8 +54,6 @@ class Write implements \Flexio\IFace\IJob
     private function run_internal(\Flexio\IFace\IProcess $process) : void
     {
         $instream = $process->getStdin();
-        $outstream = $process->getStdout();
-
         $job_params = $this->getJobParameters();
         $path = $job_params['path'] ?? null;
 
@@ -64,11 +62,7 @@ class Write implements \Flexio\IFace\IJob
 
         $stream_properties = $instream->get();
 
-        // the write job's "stdout" is always just a copy of its "stdin"; do this first
-        $outstream->copyFrom($instream);
-        $outstream = null;
-
-        // now perform the write to 'path'
+        // write to 'path'
         $vfs = new \Flexio\Services\Vfs($process->getOwner());
         $vfs->setProcess($process);
 
@@ -106,7 +100,7 @@ class Write implements \Flexio\IFace\IJob
 
             if (count($stream_properties['structure']) > 0)
             {
-                while (($row = $reader->readRow()) !== false)
+                while (($row = $reader->readline()) !== false)
                 {
                     $writer->write($row);
                 }
@@ -118,33 +112,13 @@ class Write implements \Flexio\IFace\IJob
                     $writer->write($data);
                 }
             }
-
         }
         catch (\Exception $e)
         {
             $reader = $instream->getReader();
-
-            $is_table = false;
-            if (isset($stream_properties['structure']) && is_array($stream_properties['structure']) && count($stream_properties['structure']) > 0)
-                $is_table = true;
-
-            if ($is_table)
-            {
-                $params = [
-                    'path' => $path,
-                    'structure' => $stream_properties['structure']
-                ];
-
-                $files = $vfs->write($params, function() use (&$reader) {
-                    return $reader->readRow();
-                });
-            }
-             else
-            {
-                $files = $vfs->write($path, function($length) use (&$reader) {
-                    return $reader->read($length);
-                });
-            }
+            $files = $vfs->write($path, function($length) use (&$reader) {
+                return $reader->read($length);
+            });
         }
     }
 

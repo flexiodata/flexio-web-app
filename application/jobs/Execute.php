@@ -772,32 +772,11 @@ class ScriptHost
                                'tag' => $k,
                                'name' => $file->stream->getName(),
                                'size' => $file->stream->getSize(),
-                               'is_table' => $file->stream->isTable(),
                                'content_type' => $file->stream->getMimeType());
         }
 
         $this->context_files = $results;
         return $this->context_files;
-    }
-
-    private $runjob_stdin = null;
-    public function func_runJob($json) : void
-    {
-        $task = @json_decode($json,true);
-        if ($task === null)
-            return;
-
-        if ($this->runjob_stdin === null)
-            $this->runjob_stdin = $this->process->getStdin();
-
-        $process = \Flexio\Jobs\Process::create();
-        $process->setOwner($this->getProcess()->getOwner());
-        $process->getStdin()->copyFrom($this->runjob_stdin);
-        $process->execute($task);
-
-        // stdin of the next invocation of runjob is the stdout of the job that just ran
-        $this->runjob_stdin = $process->getStdout();
-        $this->process->getStdout()->copyFrom($this->runjob_stdin);
     }
 
     public function func_upper($str)
@@ -990,7 +969,6 @@ class ScriptHost
         return array('handle' => $handle,
                      'name' => $file->stream->getName(),
                      'size' => $file->stream->getSize(),
-                     'is_table' => $file->stream->isTable(),
                      'content_type' => $file->stream->getMimeType());
     }
 
@@ -1027,7 +1005,6 @@ class ScriptHost
         return array('handle' => $handle,
                      'name' => '',
                      'size' => $file->stream->getSize(),
-                     'is_table' => $file->stream->isTable(),
                      'content_type' => $file->stream->getMimeType());
     }
 
@@ -1047,7 +1024,6 @@ class ScriptHost
         return array('handle' => $handle,
                      'name' => '',
                      'size' => $file->stream->getSize(),
-                     'is_table' => $file->stream->isTable(),
                      'content_type' => $file->stream->getMimeType());
     }
 
@@ -1069,7 +1045,6 @@ class ScriptHost
             return array('handle' => $handle,
                          'name' => '',
                          'size' => $file->stream->getSize(),
-                         'is_table' => $file->stream->isTable(),
                          'content_type' => $file->stream->getMimeType());
         }
 
@@ -1079,19 +1054,11 @@ class ScriptHost
 
         $info = $vfs->getFileInfo($path);
 
-
-
-        $is_table = false;
         $properties = [ 'mime_type' => ($info['content_type'] ?? 'application/octet-stream') ];
         if (isset($info['structure']))
-        {
-            $is_table = true;
-            $properties['mime_type'] = \Flexio\Base\ContentType::FLEXIO_TABLE;
             $properties['structure'] = $info['structure'];
-        }
 
         $properties['name'] = $path;
-
 
         $stream = \Flexio\Base\Stream::create();
         $stream->set($properties);
@@ -1119,7 +1086,6 @@ class ScriptHost
         return array('handle' => $handle,
                      'name' => '',
                      'size' => $file->stream->getSize(),
-                     'is_table' => $file->stream->isTable(),
                      'content_type' => $file->stream->getMimeType());
     }
 
@@ -1204,7 +1170,6 @@ class ScriptHost
                     $properties['structure'][$i] = (array)$properties['structure'][$i];
             }
 
-            $set['mime_type'] = \Flexio\Base\ContentType::FLEXIO_TABLE;
             $set['structure'] = $properties['structure'];
         }
 
@@ -1265,7 +1230,6 @@ class ScriptHost
             return;
 
         $stream = $this->files[$handle]->stream;
-        $is_table = ($stream && $stream->isTable());
 
         if ($data instanceof BinaryData)
         {
@@ -1273,17 +1237,11 @@ class ScriptHost
         }
         else if (is_object($data))
         {
-            if ($is_table)
-                $writer->write((array)$data);
-                 else
-                $writer->write(json_encode($data, JSON_UNESCAPED_SLASHES));
+            $writer->write(json_encode($data, JSON_UNESCAPED_SLASHES));
         }
         else if (is_array($data))
         {
-            if ($is_table)
-                $writer->write((array)$data);
-                 else
-                $writer->write(json_encode($data, JSON_UNESCAPED_SLASHES));
+            $writer->write(json_encode($data, JSON_UNESCAPED_SLASHES));
         }
         else
         {
@@ -1319,7 +1277,7 @@ class ScriptHost
         if (is_null($reader))
             return false;
 
-        $res = $reader->readRow();
+        $res = $reader->readline();
         if ($res === false)
             return false;
         if (is_string($res))
@@ -1581,7 +1539,7 @@ class Execute implements \Flexio\IFace\IJob
                 $rows = [];
                 while (true)
                 {
-                    $row = $streamreader->readRow();
+                    $row = $streamreader->readline();
                     if ($row === false)
                         break;
                     $rows[] = $row;
@@ -1595,8 +1553,7 @@ class Execute implements \Flexio\IFace\IJob
             // create the output stream
             $outstream_properties = array(
                 'name' => $instream->getName() . '.html',
-                'mime_type' => \Flexio\Base\ContentType::FLEXIO_HTML,
-                'size' => strlen($code)
+                'mime_type' => \Flexio\Base\ContentType::FLEXIO_HTML
             );
 
             $outstream->set($outstream_properties);

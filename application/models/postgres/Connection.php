@@ -19,7 +19,8 @@ class Connection extends ModelBase
 {
     public function create(array $params) : string
     {
-        $default_name = \Flexio\Base\Util::generateRandomName('connection-');
+        $owner = $params['owned_by'] ?? '';
+        $default_name = self::getDefaultName($owner);
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
@@ -286,6 +287,24 @@ class Connection extends ModelBase
             return false;
 
         return $result;
+    }
+
+    private function getDefaultName(string $owner) : string
+    {
+        // generate a random name
+        $name = \Flexio\Base\Util::generateRandomName('connection-');
+
+        // if the name doesn't exist return it
+        $db = $this->getDatabase();
+        $qowner = $db->quote($owner);
+        $qname = $db->quote($name);
+        $result = $this->getDatabase()->fetchOne("select eid from tbl_connection where owned_by = $qowner and name = $qname");
+
+        if ($result === false)
+            return $name;
+
+        // if the name exists, try another name
+        return self::getDefaultName($owner);
     }
 
     private static function isValidConnectionStatus(string $status) : bool

@@ -259,7 +259,7 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
         else
         {
             $stream = \Flexio\Base\Stream::create();
-            $stream->buffer = (string)$v;     // shortcut to speed it up -- can also use getWriter()->write((string)$v)
+            $stream->getWriter()->write((string)$v);
             return $stream;
         }
     }

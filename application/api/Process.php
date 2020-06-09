@@ -302,42 +302,16 @@ class Process
         if ($stream_info === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
+        // send headers
         $mime_type = $stream_info['mime_type'];
         $response_code = $process_engine->getResponseCode();
+        \Flexio\Api\Response::setDefaultHeaders($mime_type, $response_code);
 
-        if ($mime_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
+        // send the content
+        $reader = $stream->getReader();
+        while (($content = $reader->read(4096)) !== false)
         {
-            // send headers
-            \Flexio\Api\Response::setDefaultHeaders($mime_type, $response_code);
-
-            // send the content
-            $reader = $stream->getReader();
-            while (($content = $reader->read(4096)) !== false)
-            {
-                echo($content);
-            }
-        }
-        else
-        {
-            // send headers
-            $mime_type = \Flexio\Base\ContentType::JSON;
-            \Flexio\Api\Response::setDefaultHeaders($mime_type, $response_code);
-
-            // send the content; return application/json in place of internal mime
-            echo('[');
-
-            $first = true;
-            $reader = $stream->getReader();
-            while (($row = $reader->readRow()) !== false)
-            {
-                $content = $first ? '' : ',';
-                $content .= json_encode($row, JSON_UNESCAPED_SLASHES);
-                echo($content);
-
-                $first = false;
-            }
-
-            echo(']');
+            echo($content);
         }
 
         exit(0);
@@ -429,24 +403,18 @@ class Process
         if ($stream_info === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
+        // send headers
         $mime_type = $stream_info['mime_type'];
-        $start = 0;
-        $limit = PHP_INT_MAX;
-        $content = \Flexio\Base\StreamUtil::getStreamContents($stream, $start, $limit);
         $response_code = $process_engine->getResponseCode();
+        \Flexio\Api\Response::setDefaultHeaders($mime_type, $response_code);
 
-        if ($mime_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
+        // send the content
+        $reader = $stream->getReader();
+        while (($content = $reader->read(4096)) !== false)
         {
-            // return content as-is
-            header('Content-Type: ' . $mime_type, true, $response_code);
-        }
-        else
-        {
-            // flexio table; return application/json in place of internal mime
-            header('Content-Type: ' . \Flexio\Base\ContentType::JSON, true, $response_code);
-            $content = json_encode($content, JSON_UNESCAPED_SLASHES);
+            echo($content);
         }
 
-        \Flexio\Api\Response::sendRaw($content);
+        exit(0);
     }
 }

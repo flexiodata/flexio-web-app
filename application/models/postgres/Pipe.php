@@ -19,10 +19,8 @@ class Pipe extends ModelBase
 {
     public function create(array $params) : string
     {
-        // note: non-empty names are unique within owner and object type; this constraint
-        // is enforced in the database schema
-
-        $default_name = \Flexio\Base\Util::generateRandomName('func-');
+        $owner = $params['owned_by'] ?? '';
+        $default_name = self::getDefaultName($owner);
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
@@ -311,6 +309,24 @@ class Pipe extends ModelBase
 
         $row = $result->fetch();
         return isset($row['dt']) ? $row['dt'] : false;
+    }
+
+    private function getDefaultName(string $owner) : string
+    {
+        // generate a random name
+        $name = \Flexio\Base\Util::generateRandomName('func-');
+
+        // if the name doesn't exist return it
+        $db = $this->getDatabase();
+        $qowner = $db->quote($owner);
+        $qname = $db->quote($name);
+        $result = $this->getDatabase()->fetchOne("select eid from tbl_pipe where owned_by = $qowner and name = $qname");
+
+        if ($result === false)
+            return $name;
+
+        // if the name exists, try another name
+        return self::getDefaultName($owner);
     }
 
     private static function isValidPipeDeployMode(string $mode) : bool

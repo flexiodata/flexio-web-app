@@ -292,7 +292,6 @@ class Factory
         $properties = array();
         $properties['connection_eid'] = $connection->getEid();
         $properties['parent_eid'] = ''; // cached content has no parent
-        $properties['stream_type'] = \Flexio\Object\Stream::TYPE_FILE;
         $properties['name'] = $handle;
         $properties['path'] = \Flexio\Base\Util::generateHandle(); // path is the path to storage, not the path in the connection
         $properties['owned_by'] = $connection->getOwner();

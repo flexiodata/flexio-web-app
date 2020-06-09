@@ -130,10 +130,7 @@ class Request implements \Flexio\IFace\IJob
         }
 
         $streamwriter->close();
-        $outstream->set(array(
-            'size' => $streamwriter->getBytesWritten(),
-            'mime_type' => $content_type
-        ));
+        $outstream->setMimeType($content_type);
 
         // cleanup
         if ($result === false)

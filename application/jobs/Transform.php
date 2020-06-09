@@ -155,13 +155,7 @@ class Transform implements \Flexio\IFace\IJob
         {
             // unhandled input
             default:
-                $outstream->copyFrom($instream);
-                return;
-
-            // table input
-            case \Flexio\Base\ContentType::FLEXIO_TABLE:
-                $this->getTableOutput($instream, $outstream);
-                return;
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED, 'The input format is not supported');
 
             // stream/text/csv input
             case \Flexio\Base\ContentType::STREAM:
@@ -172,85 +166,11 @@ class Transform implements \Flexio\IFace\IJob
         }
     }
 
-    private function getTableOutput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream) : void
-    {
-        $column_expression_map = $this->getTableExpressionMap($instream);
-        if (!isset($column_expression_map))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-
-        // if there aren't any operations, simply create an output stream
-        // pointing to the original content
-        if (count($column_expression_map) === 0)
-        {
-            $outstream->copyFrom($instream);
-            return;
-        };
-
-        // create the output with the replaced values
-        $output_columns = $instream->getStructure()->enum();
-        foreach ($output_columns as &$column)
-        {
-            $output_name = $column['name'];
-            if (isset($column_expression_map[$output_name]))
-            {
-                $output_structure = $column_expression_map[$output_name]['structure'];
-                $column['type'] = $output_structure['type'];
-                $column['width'] = $output_structure['width'];
-                $column['scale'] = $output_structure['scale'];
-            }
-        }
-
-
-        $outstream->set(['mime_type' => \Flexio\Base\ContentType::FLEXIO_TABLE,
-                         'structure' => $output_columns ]);
-
-        $streamreader = $instream->getReader();
-        $streamwriter = $outstream->getWriter();
-
-        while (true)
-        {
-            $input_row = $streamreader->readRow();
-            if ($input_row === false)
-                break;
-
-            $output_row = array();
-            foreach ($input_row as $name => $value)
-            {
-                // if we have nothing to evaluate, copy the value
-                if (!isset($column_expression_map[$name]))
-                {
-                    $output_row[$name] = $value;
-                    continue;
-                }
-
-                // we have something to replace; execute the expression
-                $retval = null;
-                $expression_evaluator = $column_expression_map[$name]['expreval'];
-                $expression_evaluator->execute($input_row, $retval);
-                $output_row[$name] = $retval;
-            }
-
-            // write the output row
-            $streamwriter->write($output_row);
-        }
-
-        $streamwriter->close();
-        $outstream->setSize($streamwriter->getBytesWritten());
-    }
-
     private function getFileOutput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream) : void
     {
         $column_expression_map = $this->getStreamExpressionMap($instream);
         if (!isset($column_expression_map))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-
-        // if there aren't any operations, simply create an output stream
-        // pointing to the original content
-        if (count($column_expression_map) === 0)
-        {
-            $outstream->copyFrom($instream);
-            return;
-        }
 
         // create the output with the replaced values
         $outstream->set($instream->get());
@@ -260,7 +180,7 @@ class Transform implements \Flexio\IFace\IJob
 
         while (true)
         {
-            $input = $streamreader->read();
+            $input = $streamreader->readline();
             if ($input === false)
                 break;
 
@@ -279,7 +199,6 @@ class Transform implements \Flexio\IFace\IJob
         }
 
         $streamwriter->close();
-        $outstream->setSize($streamwriter->getBytesWritten());
     }
 
     private function getTableExpressionMap(\Flexio\IFace\IStream &$instream) : ?array

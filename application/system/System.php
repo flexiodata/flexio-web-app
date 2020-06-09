@@ -270,6 +270,27 @@ class System
         return $storage_temp_path;
     }
 
+    public static function getStoreTempFile(string $filename) : string
+    {
+        // get the base storage path
+        $storage_tmpbase = \Flexio\System\System::getStoreTempPath();
+
+        // trim off trailing/preceding slashes and whitespace
+        $filename = trim($filename, "\ \t\n\r\0\x0B");
+
+        foreach (explode('/', $filename) as $part)
+        {
+            if ($part == '..')
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "relative paths not allowed");
+        }
+
+        $str = $storage_tmpbase . DIRECTORY_SEPARATOR . $filename;
+        if (DIRECTORY_SEPARATOR != '/')
+            $str = str_replace('/', DIRECTORY_SEPARATOR, $str);
+
+        return $str;
+    }
+
     public static function getLocaleDateFormat(string $lang) : string
     {
         $lang_prefix = substr($lang, 0, 2);

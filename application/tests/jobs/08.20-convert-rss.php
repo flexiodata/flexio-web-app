@@ -27,7 +27,7 @@ class Test
                     "format" => "rss"
                 ],
                 "output" => [
-                    "format" => "table"
+                    "format" => "ndjson"
                 ]
             ]
         ]);
@@ -51,9 +51,9 @@ class Test
         $task = self::createConvertTask();
         $stream = \Flexio\Tests\Util::createStream('/xml/01.01-empty.rss');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
-        $actual = \Flexio\Tests\Content::getRows($process->getStdout());
-        $expected = [];
-        \Flexio\Tests\Check::assertArray('A.2', 'Convert RSS; empty file',  $actual, $expected, $results);
+        $actual = $process->getStdout()->getReader()->read();
+        $expected = '';
+        \Flexio\Tests\Check::assertString('A.2', 'Convert RSS; empty file',  $actual, $expected, $results);
 
 
         // TEST: Convert RSS; malformed file
@@ -70,9 +70,9 @@ class Test
         $task = self::createConvertTask();
         $stream = \Flexio\Tests\Util::createStream('/xml/01.02-malformed.rss');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
-        $actual = \Flexio\Tests\Content::getRows($process->getStdout());
-        $expected = [];
-        \Flexio\Tests\Check::assertArray('B.2', 'Convert RSS; malformed file',  $actual, $expected, $results);
+        $actual = $process->getStdout()->getReader()->read();
+        $expected = '';
+        \Flexio\Tests\Check::assertString('B.2', 'Convert RSS; malformed file',  $actual, $expected, $results);
 
 
         // TEST: Convert RSS; simple file
@@ -89,9 +89,9 @@ class Test
         $task = self::createConvertTask();
         $stream = \Flexio\Tests\Util::createStream('/xml/01.03-minimum.rss');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
-        $actual = \Flexio\Tests\Content::getRows($process->getStdout());
-        $expected = [["","","","",null,null,null]];
-        \Flexio\Tests\Check::assertArray('C.2', 'Convert RSS; simple file',  $actual, $expected, $results);
+        $actual = $process->getStdout()->getReader()->read();
+        $expected = '{"link":"","title":"","description":"","content":"","source":null,"author":null,"date":null}';
+        \Flexio\Tests\Check::assertString('C.2', 'Convert RSS; simple file',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = self::createConvertTask();
@@ -105,8 +105,8 @@ class Test
         $task = self::createConvertTask();
         $stream = \Flexio\Tests\Util::createStream('/xml/01.04-simple.rss');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
-        $actual = \Flexio\Tests\Content::getRows($process->getStdout());
-        $expected = [["http://www.flex.io/rss/item.html","Item Title","This is a test.","This is a test.",null,null,null]];
-        \Flexio\Tests\Check::assertArray('C.4', 'Convert RSS; simple file',  $actual, $expected, $results);
+        $actual = $process->getStdout()->getReader()->read();
+        $expected = '{"link":"http://www.flex.io/rss/item.html","title":"Item Title","description":"This is a test.","content":"This is a test.","source":null,"author":null,"date":null}';
+        \Flexio\Tests\Check::assertString('C.4', 'Convert RSS; simple file',  $actual, $expected, $results);
     }
 }

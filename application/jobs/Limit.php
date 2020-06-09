@@ -65,13 +65,7 @@ class Limit implements \Flexio\IFace\IJob
         {
             // unhandled input
             default:
-                $outstream->copyFrom($instream);
-                return;
-
-            // table input
-            case \Flexio\Base\ContentType::FLEXIO_TABLE:
-                $this->getOutput($instream, $outstream);
-                return;
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED, 'The input format is not supported');
 
             // stream/text/csv input
             case \Flexio\Base\ContentType::STREAM:
@@ -100,7 +94,7 @@ class Limit implements \Flexio\IFace\IJob
         // read the specified number of input rows and write them out
         for ($rown = 0; $rown < $rows_to_output; ++$rown)
         {
-            $row = $streamreader->readRow();
+            $row = $streamreader->readline();
             if ($row === false)
                 break;
 
@@ -110,7 +104,6 @@ class Limit implements \Flexio\IFace\IJob
         }
 
         $streamwriter->close();
-        $outstream->setSize($streamwriter->getBytesWritten());
     }
 
     private function getJobParameters() : array

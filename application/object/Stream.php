@@ -16,12 +16,8 @@ declare(strict_types=1);
 namespace Flexio\Object;
 
 
-class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flexio\IFace\IStream
+class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 {
-    // TODO: add tests for these constants
-    public const TYPE_DIRECTORY = 'SD';
-    public const TYPE_FILE = 'SF';
-
     public function __construct()
     {
     }
@@ -34,8 +30,6 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
         );
         return json_encode($object);
     }
-
-    public function getImpl() { return $this; }
 
     public static function list(array $filter) : array
     {
@@ -88,30 +82,12 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
         if (!isset($properties['path']))
             $properties['path'] = \Flexio\Base\Util::generateHandle();
 
-        // default stream type
-        if (!isset($properties['stream_type']))
-            $properties['stream_type'] = \Flexio\Object\Stream::TYPE_FILE;
-
         $object = new static();
         $stream_model = $object->getModel()->stream;
         $local_eid = $stream_model->create($properties);
 
         $object->setEid($local_eid);
         $object->clearCache();
-
-
-        // create empty store file
-        $create_params = [];
-        if (isset($structure) && count($structure) > 0)
-        {
-            $create_params['structure'] = $structure;
-        }
-
-        if (strlen($properties['path']) > 0)
-        {
-            $storagefs = $object->getStorageFs();
-            $storagefs->createFile($properties['path'], $create_params);
-        }
 
         return $object;
     }
@@ -123,22 +99,6 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
 
         $stream_model->delete($this->getEid());
         return $this;
-    }
-
-    public function copyFrom(\Flexio\IFace\IStream $source) : void
-    {
-        // note: copies a streams properties to $dest, overwriting $dest's properties
-
-        $sourceimpl = $source->getImpl();
-
-        if (!($sourceimpl instanceof \Flexio\Object\Stream))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED, "copy may only be used on stream objects of the same type");
-
-        $properties = $source->get();
-        unset($properties['eid']);
-        unset($properties['created']);
-        unset($properties['updated']);
-        $this->set($properties);
     }
 
     public function set(array $properties) : \Flexio\Object\Stream
@@ -226,14 +186,6 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
 
     public function setPath(string $path) : \Flexio\Object\Stream
     {
-        $old_path = $this->getPath();
-
-        $storagefs = $this->getStorageFs();
-        if ($storagefs->exists($old_path))
-        {
-            $storagefs->move($old_path, $path);
-        }
-
         $properties = array();
         $properties['path'] = $path;
         return $this->set($properties);
@@ -256,14 +208,10 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
 
     public function getSize() : ?int
     {
-        $local_file_info = $this->getFileInfo();
-        return $local_file_info['size'];
-    }
+        if ($this->isCached() === false)
+            $this->populateCache();
 
-    public function getRowCount() : int
-    {
-        $reader = $this->getReader();
-        return $reader->getRowCount();
+        return $this->properties['size'];
     }
 
     public function setMimeType(string $mime_type) : \Flexio\Object\Stream
@@ -301,127 +249,6 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
         return $structure;
     }
 
-    public function isTable() : bool
-    {
-        if ($this->isCached() === false)
-            $this->populateCache();
-        return count($this->properties['structure']) > 0 ? true : false;
-    }
-
-    public function getFileInfo() : array
-    {
-        if ($this->isCached() === false)
-            $this->populateCache();
-
-        $info = array();
-        $info['name'] = $this->properties['name'];
-        $info['path'] = $this->properties['path'];
-        $info['size'] = $this->properties['size'];
-        $info['hash'] = $this->properties['hash'];
-        $info['mime_type'] = $this->properties['mime_type'];
-        $info['structure'] = $this->properties['structure'];
-        $info['file_created'] = $this->properties['file_created'];
-        $info['file_modified'] = $this->properties['file_modified'];
-
-        return $info;
-    }
-
-    public function getChildStreams(string $name = null) : array
-    {
-        // return an array of \Flexio\Object\Stream objects that have a
-        // parent_eid = this object's eid;
-        // if name is specified, the result set will be additionally filtered with name
-
-        // note this function will only return non-deleted child streams; that's what the query for eid_status does
-
-        $where = [ 'parent_eid' => $this->getEid(), 'eid_status' => \Model::STATUS_AVAILABLE ];
-        if (!is_null($name))
-            $where['name'] = $name;
-
-        $arr = self::list($where);
-        return $arr;
-    }
-
-    public function getReader() : \Flexio\IFace\IStreamReader
-    {
-        if ($this->isCached() === false)
-            $this->populateCache();
-
-        //return \Flexio\Object\StreamReader::create($this);
-        $storagefs = $this->getStorageFs();
-
-        // pass along structure
-        $props = [];
-        if (count($this->properties['structure']) > 0)
-            $props['structure'] = $this->properties['structure'];
-
-        $file = $storagefs->open($this->getPath(), $props);
-        return $file->getReader();
-    }
-
-    public function getWriter($access = 'w+') : \Flexio\IFace\IStreamWriter
-    {
-        if ($this->isCached() === false)
-            $this->populateCache();
-
-        //return \Flexio\Object\StreamWriter::create($this, true);
-        $storagefs = $this->getStorageFs();
-
-        // pass along structure
-        $props = [];
-        $structure = $this->getStructure()->enum();
-        if (count($structure) > 0)
-        {
-            $props['structure'] = $structure;
-        }
-
-        try
-        {
-            $file = $storagefs->open($this->getPath(), $props);
-            return $file->getWriter($access);
-        }
-        catch (\Flexio\Base\Exception $e)
-        {
-            if ($e->getCode() == \Flexio\Base\Error::UNAVAILABLE)
-            {
-                // underlying data file is missing -- recreate
-                if (strlen($this->properties['path']) > 0)
-                {
-                    $create_params = [];
-                    if (isset($this->properties['structure']) && count($this->properties['structure']) > 0)
-                    {
-                        $create_params['structure'] = $this->properties['structure'];
-                    }
-
-                    $file = $storagefs->createFile($this->getPath(), $create_params);
-                    return $file->getWriter();
-                }
-            }
-
-            throw $e;
-        }
-    }
-
-    public function getInserter() : \Flexio\IFace\IStreamWriter
-    {
-        if ($this->isCached() === false)
-            $this->populateCache();
-
-        //return \Flexio\Object\StreamWriter::create($this, true);
-        $storagefs = $this->getStorageFs();
-
-        // pass along structure
-        $props = [];
-        $structure = $this->getStructure()->enum();
-        if (count($structure) > 0)
-        {
-            $props['structure'] = $structure;
-        }
-
-        $file = $storagefs->open($this->getPath(), $props);
-        return $file->getInserter();
-    }
-
     private function isCached() : bool
     {
         if (!$this->properties)
@@ -440,18 +267,6 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
         $stream_model = $this->getModel()->stream;
         $properties = $stream_model->get($this->getEid());
         $this->properties = self::formatProperties($properties);
-    }
-
-    private $storagefs = null;
-    private function getStorageFs() : \Flexio\Services\StorageFs
-    {
-        if ($this->storagefs === null)
-        {
-            $storage_stream_path = \Flexio\System\System::getStoreStreamPath();
-            $this->storagefs = \Flexio\Services\StorageFs::create(['base_path' => $storage_stream_path]);
-        }
-
-        return $this->storagefs;
     }
 
     private static function formatProperties(array $properties) : array

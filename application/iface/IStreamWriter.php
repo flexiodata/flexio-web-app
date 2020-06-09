@@ -19,7 +19,6 @@ namespace Flexio\IFace;
 interface IStreamWriter
 {
     public function write($data);
-    public function getBytesWritten();
     public function close();
 }
 
