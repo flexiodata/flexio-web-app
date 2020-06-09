@@ -33,6 +33,22 @@
         <h1 class="fw6 f2 tc pb2">{{title}}</h1>
         <h2 class="center tc nt2 mb4 f4 fw4 bb-0 silver" style="padding: 0; line-height: 1.7em" v-if="description.length > 0">{{description}}</h2>
 
+        <!-- step heading -->
+        <div
+          class="dn db-ns mv4 pv2"
+          v-if="!is_coming_from_addon"
+        >
+          <el-steps
+            align-center
+            finish-status="success"
+            :active="step_heading_idx"
+          >
+            <el-step title="Set Up Integration" />
+            <el-step title="Get Add-on" />
+            <el-step title="Get Started" />
+          </el-steps>
+        </div>
+
         <!-- step: template target chooser -->
         <div v-if="active_step == 'template' && existing_integrations.length > 0">
           <div
@@ -51,7 +67,7 @@
         </div>
 
         <!-- step: set up integrations -->
-        <div v-else-if="active_step == 'setup'">
+        <div v-if="active_step == 'setup'">
           <div
             class="br2 ba b--black-10 pv5 ph4"
             v-if="is_fetching_config"
@@ -79,7 +95,7 @@
         </div>
 
         <!-- step: show submitting -->
-        <div v-else-if="active_step == 'submitting'">
+        <div v-if="active_step == 'submitting'">
           <ServiceIconWrapper :innerSpacing="10">
             <i
               class="el-icon-loading bg-white f2 silver"
@@ -90,46 +106,38 @@
         </div>
 
         <!-- step: show result (success) -->
-        <div v-else-if="active_step == 'success'">
+        <div v-if="active_step == 'success'">
           <ServiceIconWrapper :innerSpacing="10">
             <i
               class="el-icon-success bg-white f2 dark-green"
               slot="icon"
             ></i>
             <p class="tc f3 lh-title">Your integration was created successfully!</p>
-            <div class="center mw7">
-              <p class="mv4 fw6 flex flex-row items-center">
-                <Spinner :size="24" :line-size="2" class="mr2" />
-                <span>We're importing your functions now. This process may take a couple of minutes to complete.</span>
+            <div class="bg-nearer-white pa4 br2 tc">
+              <p class="mb0 f4 fw6 flex flex-row items-center justify-center">
+                <Spinner class="mr2" />
+                <span>Importing functions...</span>
               </p>
-              <div class="center mw5 bb b--black-10 mv4"></div>
-              <p v-if="is_coming_from_addon">Click <strong>Done</strong> below to close this window and start using this integration in your spreadsheet.</p>
-              <div v-else>
-                <p>If you haven't done so already, please <a class="fw6 blue link underline-hover" href="https://gsuite.google.com/marketplace/app/flexio/919566304535">install the Google Sheets add-on</a> or <a class="fw6 blue link underline-hover" href="https://appsource.microsoft.com/en-us/product/office/WA200000394">install the Excel 365 add-in</a> to use this integration in your spreadsheet.</p>
-                <AddonDownloadButtonPanel
-                  class="pv2-l"
-                />
-                <div class="center mw5 bb b--black-10 mv4"></div>
-                <p v-if="is_coming_from_addon">Click <strong>Done</strong> to close this window and finish your setup in the Flex.io API Import add-on.</p>
-                <p v-else-if="is_started_on_template">Click <strong>Continue</strong> below to get started with the <strong>{{template_title}}</strong> template.</p>
-                <p v-else>Click <strong>Continue</strong> below to choose a template to get started using this integration.</p>
-              </div>
+              <p class="center mw6 mb0 f7 i light-silver lh-copy">NOTE: This process may take a couple of minutes to complete. You're free to continue with the setup &mdash; the import will continue in the background.</p>
             </div>
-            <div class="mt2 tc">
+            <div class="mt4" v-if="is_coming_from_addon">
+              <p>Click <strong>Done</strong> below to close this window and start using this integration in your spreadsheet.</p>
+            </div>
+            <div class="mt4 tr">
               <el-button
                 type="primary"
                 class="ttu fw6"
                 @click="onIntegrationSetupDoneClick"
               >
                 <div class="ph2" v-if="is_coming_from_addon">Done</div>
-                <div class="ph2" v-else>Continue</div>
+                <div v-else>Continue</div>
               </el-button>
             </div>
           </ServiceIconWrapper>
         </div>
 
         <!-- step: show result (failure) -->
-        <div v-else-if="active_step == 'failure'">
+        <div v-if="active_step == 'failure'">
           <ServiceIconWrapper :innerSpacing="10">
             <i
               class="el-icon-error bg-white f2 dark-red"
@@ -140,16 +148,32 @@
           </ServiceIconWrapper>
         </div>
 
-        <!-- step: choose template -->
-        <div v-else-if="active_step == 'choose-template'">
-          <ServiceIconWrapper :url="setup_template_image_url">
-            <p>Choose a template from the list below:</p>
-            <TemplateList
-              :templates="templates"
-              @template-click="onTemplateClick"
-            />
-          </ServiceIconWrapper>
+        <!-- step: install add-ons -->
+        <div v-if="active_step == 'addons'">
+          <p class="center mw7">You're almost done! If you haven't done so already, please install the Flex.io Add-on for <span class="nowrap">Google Sheets</span> or <span class="nowrap">Microsoft Excel 365</span>. Once you've installed the add-on, you'll see your functions in the Flex.io sidebar and will be able to use them in your spreadsheet.</p>
+          <AddonDownloadButtonPanel
+            class="pv2-l"
+            :open-links-in-new-window="true"
+          />
+          <p class="center mw7 f8 silver">* The Microsoft Excel 365 add-in will only function with an Excel for Office 365 subscription</p>
+          <div class="mt4 tr">
+            <el-button
+              type="primary"
+              class="ttu fw6"
+              @click="onAddonStepDoneClick"
+            >
+              Continue
+            </el-button>
+          </div>
         </div>
+
+        <!-- step: integration setup complete -->
+        <IntegrationSetupCompletePanel
+          :integration-info="integration_info"
+          @template-click="onTemplateClick"
+          @open-app-click="onOpenAppClick"
+          v-if="active_step == 'complete'"
+        />
       </template>
     </div>
   </main>
@@ -168,7 +192,7 @@
   import FunctionMountSetupWizard from '@/components/FunctionMountSetupWizard'
   import ServiceIconWrapper from '@/components/ServiceIconWrapper'
   import AddonDownloadButtonPanel from '@/components/AddonDownloadButtonPanel'
-  import TemplateList from '@/components/TemplateList'
+  import IntegrationSetupCompletePanel from '@/components/IntegrationSetupCompletePanel'
   import TemplateTargetChooserPanel from '@/components/TemplateTargetChooserPanel'
   import TemplateExcelDownloadPanel from '@/components/TemplateExcelDownloadPanel'
   import PageNotFound from '@/components/PageNotFound'
@@ -211,7 +235,7 @@
       FunctionMountSetupWizard,
       ServiceIconWrapper,
       AddonDownloadButtonPanel,
-      TemplateList,
+      IntegrationSetupCompletePanel,
       TemplateTargetChooserPanel,
       TemplateExcelDownloadPanel,
       PageNotFound,
@@ -241,11 +265,24 @@
       integrations() {
         return this.getProductionIntegrations()
       },
+      active_connection() {
+        return _.get(this.active_integration, 'connection', {})
+      },
       active_step_idx() {
         return _.indexOf(this.step_order, this.active_step)
       },
-      active_connection() {
-        return _.get(this.active_integration, 'connection', {})
+      // this is just for display purposes
+      step_heading_idx() {
+        switch (this.active_step) {
+          case 'setup':      return 0
+          case 'submitting': return 0
+          case 'success':    return 0
+          case 'failure':    return 0
+          case 'addons':     return 1
+          case 'complete':   return 2
+          case 'template':   return 2
+        }
+        return 0
       },
       has_setup_template() {
         return !_.isNil(this.setup_template)
@@ -307,8 +344,17 @@
       templates() {
         return _.get(this.setup_template, 'templates', [])
       },
+      integration_icon() {
+        return _.get(this.setup_template, 'image.src', '')
+      },
       integration_title() {
         return _.get(this.setup_template, 'title', '')
+      },
+      integration_info() {
+        return [{
+          icon: this.integration_icon,
+          templates: this.templates
+        }]
       },
       found_template() {
         var find_by_gsheets = _.find(this.templates, t => t.gsheets_spreadsheet_id == this.gsheets_spreadsheet_id)
@@ -435,13 +481,7 @@
         // and take the user to wherever they're headed next
         if (this.active_step == 'submitting') {
           this.submitIntegrationConfig()
-          return
         }
-
-        // TODO: I don't think we want to mess around with routes just
-        //       for showing the success page -- it just causes problems
-        //       if the user decides to do a hard page refresh
-        //this.setRoute(this.active_step)
       },
       fetchIntegrationConfig() {
         this.is_fetching_config = true
@@ -569,16 +609,19 @@
         })
       },
       onIntegrationSetupDoneClick() {
-        var team_name = this.active_team_name
-
+        if (this.is_coming_from_addon) {
+          window.close()
+        } else {
+          this.active_step = 'addons'
+        }
+      },
+      onAddonStepDoneClick() {
         if (this.is_started_on_template === true) {
           // go back to setting up a template
           this.active_step = 'template'
           this.setRoute('template')
-        } else if (this.is_coming_from_addon) {
-          window.close()
         } else {
-          this.active_step = 'choose-template'
+          this.active_step = 'complete'
         }
       },
       onTemplateClick(template) {
@@ -589,8 +632,17 @@
 
         // update the route
         var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path', 'query'])
+        new_route.params = _.assign({}, new_route.params, { action: 'template' })
         new_route.query = _.assign({}, new_route.query, { gsheets_spreadsheet_id, excel_spreadsheet_path })
         this.$router.replace(new_route)
+      },
+      onOpenAppClick() {
+        var team_name = this.active_team_name
+        var path = `/${team_name}/functions`
+
+        this.$store.dispatch('teams/changeActiveTeam', { team_name }).then(response => {
+          this.$router.push({ path })
+        })
       }
     }
   }

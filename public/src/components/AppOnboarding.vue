@@ -1,8 +1,8 @@
 <template>
-  <main class="pv4 pv5-ns ph3 ph5-ns bg-nearer-white overflow-y-scroll">
+  <main class="pv4 pv5-ns ph4 ph5-l bg-nearer-white overflow-y-scroll">
     <div class="mt4">
       <div
-        class="w-100 center mw-doc pt4 pb5 ph5 bg-white br2 css-white-box"
+        class="w-100 center mw-doc pt4 pb5 ph4 ph5-l bg-white br2 css-white-box"
         style="margin-bottom: 15rem"
       >
         <div class="tc" style="margin-top: -76px">
@@ -12,16 +12,17 @@
         <h1 class="fw6 f2 tc pb2">{{display_title}}</h1>
 
         <!-- step heading -->
-        <el-steps
-          class="mv4 pv2"
-          align-center
-          finish-status="success"
-          :active="step_heading_idx"
-        >
-          <el-step title="Set Up Integration" />
-          <el-step title="Get Add-on" />
-          <el-step title="Get Started" />
-        </el-steps>
+        <div class="dn db-ns mv4 pv2">
+          <el-steps
+            align-center
+            finish-status="success"
+            :active="step_heading_idx"
+          >
+            <el-step title="Set Up Integration" />
+            <el-step title="Get Add-on" />
+            <el-step title="Get Started" />
+          </el-steps>
+        </div>
 
         <!-- step: choose integrations -->
         <div v-if="active_step == 'integrations'">
@@ -36,7 +37,7 @@
         </div>
 
         <!-- step: set up integrations -->
-        <div v-if="active_step == 'setup'">
+        <div v-if="active_step == 'integration-setup'">
           <!-- fetching config -->
           <div v-if="is_fetching_config">
             <div class="br2 ba b--black-10 pv5 ph4">
@@ -76,7 +77,7 @@
                 <Spinner class="mr2" />
                 <span>Importing functions...</span>
               </p>
-              <p class="center mw6 mb0 f7 i light-silver lh-copy">NOTE: This process may take a couple of minutes to complete. You're free to continue with the setup &mdash; the import will continue to happen in the background.</p>
+              <p class="center mw6 mb0 f7 i light-silver lh-copy">NOTE: This process may take a couple of minutes to complete. You're free to continue with the setup &mdash; the import will continue in the background.</p>
             </div>
           </ServiceIconWrapper>
         </div>
@@ -108,55 +109,13 @@
           <p class="center mw7 f8 silver">* The Microsoft Excel 365 add-in will only function with an Excel for Office 365 subscription</p>
         </div>
 
-        <div v-if="active_step == 'complete'">
-          <p class="center mw7">You're all set and ready to go. Here's a set of example spreadsheets and other resources to help get you started. If you need anything, please let us know!</p>
-          <template v-if="all_templates.length > 0 ">
-            <h3 class="mt5 mb4 tc">Select an example sheet</h3>
-            <TemplateList
-              :icon="t.icon"
-              :templates="t.templates"
-              @template-click="onTemplateClick"
-              v-for="t in all_templates"
-            />
-          </template>
-          <h3 class="mt5 mb4 tc">Get additional resources</h3>
-          <div class="flex-l flex-row-l flex-wrap-l nl3 nr3">
-            <a
-              class="flex-fill flex flex-row db ma3 pv3 ph4 br2 fw4 dark-gray no-underline w-third-l last-step-item"
-              target="_blank"
-              :href="item.link"
-              :key="item.title"
-              v-for="item in last_step_items"
-            >
-              <div>
-                <h3 class="mt2 mb0 fw6">{{item.title}}</h3>
-                <p class="flex-fill f6 lh-copy mv3">{{item.description}}</p>
-                <div class="mb3">
-                  <span class="flex flex-row items-center blue fw6">
-                    <span>View</span>
-                    <i class="material-icons ml1">arrow_right_alt</i>
-                  </span>
-                </div>
-              </div>
-            </a>
-          </div>
-          <h3 class="mt5 mb4 tc">Get started with the Flex.io App</h3>
-          <p class="center mw7">Go off road. Access just about any data with your own code and share integrations with your team without sharing your credentials.</p>
-          <div class="mv4 tc">
-            <button
-              class="db dib-ns pv3 ph5 tc b ttu blue br2 ba b--blue hover-bg-blue hover-white"
-              @click="onNextStepClick"
-            >
-              Open the Flex App
-            </button>
-          </div>
-          <p class="tc">Want some code examples? Fork one of our open source function packs from GitHub: <a class="ml1 v-mid" href="https://github.com/flexiodata?utf8=%E2%9C%93&q=functions" target="_blank" title="View function packs on Github"><svg xmlns="http://www.w3.org/2000/svg" fill="black" width="32" height="32" viewBox="0 0 16 16"><path d="M8 .198c-4.418 0-8 3.582-8 8 0 3.535 2.292 6.533 5.47 7.59.4.075.548-.173.548-.384 0-.19-.008-.82-.01-1.49-2.227.485-2.696-.943-2.696-.943-.364-.924-.888-1.17-.888-1.17-.726-.497.055-.486.055-.486.802.056 1.225.824 1.225.824.714 1.223 1.872.87 2.328.665.072-.517.28-.87.508-1.07-1.776-.202-3.644-.888-3.644-3.954 0-.874.313-1.588.824-2.148-.083-.202-.357-1.015.077-2.117 0 0 .672-.215 2.2.82.64-.177 1.323-.266 2.003-.27.68.004 1.365.093 2.004.27 1.527-1.035 2.198-.82 2.198-.82.435 1.102.162 1.916.08 2.117.512.56.822 1.274.822 2.147 0 3.072-1.872 3.748-3.653 3.946.288.248.544.735.544 1.48 0 1.07-.01 1.933-.01 2.196 0 .213.145.462.55.384 3.178-1.06 5.467-4.057 5.467-7.59 0-4.418-3.58-8-8-8z"></path></svg></a></p>
-
-          <p class="tc">
-            <span>Need help with a script?</span>
-            <el-button type="text" style="font-size: 100%" @click="onNeedHelpClick">Let us know and we'll point you in the right direction!</el-button>
-          </p>
-        </div>
+        <!-- step: integration setup complete -->
+        <IntegrationSetupCompletePanel
+          :integration-info="integration_info"
+          @template-click="onTemplateClick"
+          @open-app-click="onNextStepClick"
+          v-if="active_step == 'complete'"
+        />
 
         <!-- button bar for the entire onboarding wizard -->
         <ButtonBar
@@ -165,7 +124,7 @@
           :utility-button-visible="is_start_over_button_visible"
           :utility-button-text="active_step_idx == 1 ? '← Back' : '← Start over'"
           :cancel-button-visible="false"
-          :submit-button-visible="active_step != 'setup' && active_step != 'complete'"
+          :submit-button-visible="active_step != 'integration-setup' && active_step != 'complete'"
           :submit-button-text="active_step_idx == 0 ? 'Skip this step' : 'Continue'"
           @utility-click="onUtilityButtonClick"
           @submit-click="onNextStepClick"
@@ -186,9 +145,10 @@
   import { buildQueryString } from '@/utils'
   import ButtonBar from '@/components/ButtonBar'
   import IconList from '@/components/IconList'
-  import FunctionMountSetupWizard from '@/components/FunctionMountSetupWizard'
   import ServiceIconWrapper from '@/components/ServiceIconWrapper'
+  import FunctionMountSetupWizard from '@/components/FunctionMountSetupWizard'
   import AddonDownloadButtonPanel from '@/components/AddonDownloadButtonPanel'
+  import IntegrationSetupCompletePanel from '@/components/IntegrationSetupCompletePanel'
   import MemberInvitePanel from '@/components/MemberInvitePanel'
   import TemplateList from '@/components/TemplateList'
 
@@ -206,7 +166,7 @@
       onboarding_config_submitted: false,
       route_title: '',
       custom_title: '',
-      active_step: 'integrations', // 'integrations', 'setup', 'addons', 'members'
+      active_step: 'integrations', // 'integrations', 'integration-setup', 'integration-setup-complete', 'addons', 'members'
       active_integration_idx: 0,
       active_setup_template: null,
       selected_integrations: [],
@@ -244,6 +204,7 @@
       FunctionMountSetupWizard,
       ServiceIconWrapper,
       AddonDownloadButtonPanel,
+      IntegrationSetupCompletePanel,
       MemberInvitePanel,
       TemplateList
     },
@@ -269,16 +230,16 @@
         return this.selected_integrations[this.active_integration_idx]
       },
       step_order() {
-       return ['integrations', 'setup', 'integration-setup-complete', 'addons', 'complete']
+       return ['integrations', 'integration-setup', 'integration-setup-complete', 'addons', 'complete']
       },
       // this is just for display purposes
       step_heading_idx() {
-        switch (this.active_step_idx) {
-          case 0: return 0
-          case 1: return 0
-          case 2: return 0
-          case 3: return 1
-          case 4: return 2
+        switch (this.active_step) {
+          case 'integrations':               return 0
+          case 'integration-setup':          return 0
+          case 'integration-setup-complete': return 0
+          case 'addons':                     return 1
+          case 'complete':                   return 2
         }
         return 0
       },
@@ -318,10 +279,10 @@
           return this.title
         }
       },
-      all_templates() {
+      integration_info() {
         return _.map(this.output_mounts, m => {
           return {
-            icon:  _.get(m, 'icon', ''),
+            icon: _.get(m, 'icon', ''),
             templates: _.get(m, 'setup_template.templates', [])
           }
         })
@@ -337,7 +298,7 @@
       // update the active step from the route
       this.active_step = _.get(this.$route, 'params.action', 'integrations')
 
-      if (this.active_step == 'setup') {
+      if (this.active_step == 'integration-setup') {
         this.fetchIntegrationConfig()
       }
 
@@ -397,7 +358,7 @@
         } else {
           this.active_step = this.step_order[this.active_step_idx + 1]
 
-          if (this.active_step == 'setup') {
+          if (this.active_step == 'integration-setup') {
             this.fetchIntegrationConfig()
           }
 
@@ -577,12 +538,3 @@
     }
   }
 </script>
-
-<style lang="stylus">
-  .last-step-item
-    background-color: rgba(255,255,255,0.2)
-    box-shadow: 0 8px 24px -1px rgba(0,0,0,0.075)
-    transition: all 0.2s ease-out
-    &:hover
-      box-shadow: 0 8px 24px 0 rgba(0,0,0,0.2)
-</style>
