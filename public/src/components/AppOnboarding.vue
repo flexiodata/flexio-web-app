@@ -454,9 +454,7 @@
         var query_str = buildQueryString({
           gsheets_spreadsheet_id,
           excel_spreadsheet_path,
-          context: 'app',
-          title: 'TODO',
-          description: 'TODO'
+          context: 'app'
         })
 
         var url = `https://${HOSTNAME}/integrations/${integration_name}/template?${query_str}`

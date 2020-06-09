@@ -31,6 +31,7 @@
         </div>
 
         <h1 class="fw6 f2 tc pb2">{{title}}</h1>
+        <h2 class="center tc nt2 mb4 f4 fw4 bb-0 silver" style="padding: 0; line-height: 1.7em" v-if="description.length > 0">{{description}}</h2>
 
         <!-- step: template target chooser -->
         <div v-if="active_step == 'template' && existing_integrations.length > 0">
@@ -186,7 +187,6 @@
       is_started_on_template: false,
       is_show_loading_template: false,
       is_show_excel_template_download_page: false,
-      route_title: '',
       step_order: ['setup', 'submitting'],
       active_step: '', // 'setup', 'template', 'submitting', 'success' or 'failure'
       active_integration: {},
@@ -307,24 +307,49 @@
       templates() {
         return _.get(this.setup_template, 'templates', [])
       },
+      integration_title() {
+        return _.get(this.setup_template, 'title', '')
+      },
+      found_template() {
+        var find_by_gsheets = _.find(this.templates, t => t.gsheets_spreadsheet_id == this.gsheets_spreadsheet_id)
+        var find_by_excel = _.find(this.templates, t => t.excel_spreadsheet_path == this.excel_spreadsheet_path)
+        return find_by_gsheets || find_by_excel
+      },
       template_title() {
-        var template = _.find(this.templates, t => t.excel_spreadsheet_path == this.excel_spreadsheet_path)
-        var title = _.get(template, 'title', 'this spreadsheet')
-        return title
+        return _.get(this.found_template, 'title', 'this spreadsheet')
+      },
+      template_description() {
+        return _.get(this.found_template, 'description', '')
       },
       template_target() {
         return _.get(this.$route, 'query.target', '')
       },
+      route_title() {
+        return _.get(this.$route, 'query.title', '')
+      },
+      route_description() {
+        return _.get(this.$route, 'query.description', '')
+      },
       title() {
-        return this.route_title.length > 0 ? this.route_title : 'Integration Setup'
+        if (this.route_action == 'template' && this.template_title != 'this spreadsheet') {
+          return this.template_title
+        } else {
+          return this.route_title.length > 0 ? this.route_title :
+                 this.integration_title.length > 0 ? 'Connect to ' + this.integration_title :
+                 'Integration Setup'
+        }
+      },
+      description() {
+        if (this.route_action == 'template') {
+          return this.template_description
+        } else {
+          return this.route_description.length > 0 ? this.route_description : ''
+        }
       },
     },
     mounted() {
       var team_name = this.getActiveUsername()
       this.$store.dispatch('teams/changeActiveTeam', { team_name })
-
-      // update title from route
-      this.route_title = _.get(this.$route, 'query.title', '')
     },
     methods: {
       ...mapGetters('users', {
