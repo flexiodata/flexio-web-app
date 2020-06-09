@@ -378,7 +378,7 @@ class Pipe
 
         // create a new process engine for running a process; only add
         // mount parameters if we're running passthrough mode; otherwise,
-        // the cache has already been built and mount parametesr aren't needed
+        // the cache has already been built and mount parameters aren't needed
         $process_engine = \Flexio\Jobs\Process::create();
         if ($pipe_run_mode == \Model::PIPE_RUN_MODE_PASSTHROUGH)
             $process_engine->queue('\Flexio\Jobs\ProcessHandler::addMountParams', $process_properties);
