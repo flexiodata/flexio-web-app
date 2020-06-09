@@ -25,3 +25,19 @@ export const fallbackCss = (el_id, href) => {
 
   document.body.removeChild(tmp_el)
 }
+
+export const parseUrl = (url) => {
+  var parser = document.createElement('a')
+  /*
+  parser.href = "http://example.com:3000/pathname/?search=test#hash"
+  parser.protocol // => "http:"
+  parser.hostname // => "example.com"
+  parser.port     // => "3000"
+  parser.pathname // => "/pathname/"
+  parser.search   // => "?search=test"
+  parser.hash     // => "#hash"
+  parser.host     // => "example.com:3000"
+  */
+  parser.href = url
+  return parser
+}

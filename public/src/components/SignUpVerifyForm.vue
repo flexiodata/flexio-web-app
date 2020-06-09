@@ -91,6 +91,7 @@
 
 <script>
   import api from '@/api'
+  import { parseUrl } from '@/utils/dom'
   import { ROUTE_APP_ONBOARDING } from '@/constants/route'
   import MixinRedirect from '@/components/mixins/redirect'
 
@@ -177,12 +178,30 @@
           api.verifyAccount(verify_params).then(response => {
             this.$store.track('Verified Account')
             this.is_verified = true
+
             var redirect = _.get(this.$route, 'query.redirect', '')
+
+            // if the user is newly verified, they're a new user, so if they're
+            // trying to go to an integration setup or template setup page,
+            // take them through the onboarding instead
+            var parsed_url = parseUrl(redirect)
+            var match = parsed_url.pathname.match(/\/integrations\/([^\/]*)\//)
+            var integration_name = _.get(match, '[1]', '')
+
+            if (integration_name.length > 0) {
+              var query_str = parsed_url.search.substring(1)
+              var new_query_str = '?integration=' + integration_name
+              if (query_str.length > 0) {
+                new_query_str += '&' + query_str
+              }
+
+              redirect = '/start' + new_query_str
+            }
 
             if (redirect.length > 0) {
                 // if we've already specified a redirect, go there...
               setTimeout(() => {
-                this.$_Redirect_redirect()
+                this.$_Redirect_redirect(redirect)
               }, 3000)
             } else {
               // ...otherwise, take the user to the onboarding (fwiw)
