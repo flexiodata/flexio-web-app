@@ -561,7 +561,7 @@
         })
 
         var team_name = this.active_team_name
-        var path = `/${team_name}/integrations/${integration_name}/template?${query_str}`
+        var path = `/integrations/${integration_name}/template?${query_str}`
 
         if (this.onboarding_config_submitted) {
           open_new_window === true ? window.open(path) : this.endOnboarding(path)
