@@ -76,7 +76,7 @@
                 <Spinner class="mr2" />
                 <span>Importing functions...</span>
               </p>
-              <p class="mb0 f7 i light-silver lh-copy">NOTE: This process may take a couple of minutes to complete</p>
+              <p class="center mw6 mb0 f7 i light-silver lh-copy">NOTE: This process may take a couple of minutes to complete. You're free to continue with the setup &mdash; the import will continue to happen in the background.</p>
             </div>
           </ServiceIconWrapper>
         </div>
@@ -100,7 +100,7 @@
 
         <!-- step: install add-ons -->
         <div v-if="active_step == 'addons'">
-          <p class="center mw7">You're almost done! If you haven't done so already, please install the Flex.io Add-on for <span class="nowrap">Google Sheets</span> or <span class="nowrap">Microsoft Excel 365</span>. Once you've installed the add-on, you'll see the functions in the Flex.io sidebar and will be able to use them in your spreadsheet.</p>
+          <p class="center mw7">You're almost done! If you haven't done so already, please install the Flex.io Add-on for <span class="nowrap">Google Sheets</span> or <span class="nowrap">Microsoft Excel 365</span>. Once you've installed the add-on, you'll see your functions in the Flex.io sidebar and will be able to use them in your spreadsheet.</p>
           <AddonDownloadButtonPanel
             class="pv2-l"
             :open-links-in-new-window="true"
@@ -247,6 +247,11 @@
       AddonDownloadButtonPanel,
       MemberInvitePanel,
       TemplateList
+    },
+    watch: {
+      selected_integrations: {
+        handler: 'onSelectedIntegrationChange'
+      }
     },
     data() {
       return getDefaultState()
@@ -467,6 +472,11 @@
             this.onboarding_config_submitted = true
             window.open(url)
           })
+        }
+      },
+      onSelectedIntegrationChange(val, old_val) {
+        if (old_val.length == 0 && val.length > 0) {
+          this.onNextStepClick()
         }
       },
       fetchIntegrationConfig() {

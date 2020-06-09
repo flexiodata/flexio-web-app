@@ -6,7 +6,7 @@
         <img src="../assets/icon/icon-excel-128.png" alt="Microsoft Excel" style="height: 48px" />
         <div class="ml3 fw6 f4">Microsoft Excel 365</div>
       </div>
-      <div class="h2"></div>
+      <div class="h1"></div>
       <div class="flex flex-row">
         <div class="flex-fill">
           <h2 class="fw4 f2">Download spreadsheet</h2>
@@ -20,7 +20,7 @@
             </a>
           </div>
         </div>
-        <div class="tc">
+        <div class="tc ml3">
           <i class="material-icons moon-gray" style="font-size: 9rem">cloud_download</i>
         </div>
       </div>
