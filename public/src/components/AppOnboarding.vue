@@ -183,7 +183,6 @@
   import { mapState, mapGetters } from 'vuex'
   import { OBJECT_TYPE_CONNECTION } from '@/constants/object-type'
   import api from '@/api'
-  import { HOSTNAME } from '@/constants/common'
   import { buildQueryString } from '@/utils'
   import ButtonBar from '@/components/ButtonBar'
   import IconList from '@/components/IconList'
@@ -290,6 +289,12 @@
         var integrations = _.get(this.$route, 'query.integration', '')
         return integrations.length > 0 ? integrations.split(',') : []
       },
+      gsheets_spreadsheet_id() {
+        return _.get(this.$route, 'query.gsheets_spreadsheet_id', undefined)
+      },
+      excel_spreadsheet_path() {
+        return _.get(this.$route, 'query.excel_spreadsheet_path', undefined)
+      },
       is_start_over_button_visible() {
         if (this.active_step_idx == 0) {
           return false
@@ -351,7 +356,6 @@
           var selected_integration = _.find(this.integrations, f => _.get(f, 'connection.name', '') == cname)
           if (selected_integration) {
             this.selected_integrations = this.selected_integrations.concat([selected_integration])
-            this.$nextTick(() => { this.onNextStepClick() })
           }
         })
       },
@@ -359,41 +363,9 @@
         // reset our local component data
         _.assign(this.$data, getDefaultState())
         this.selectIntegrationsFromRoute()
-
-        /*
-        if (this.active_step_idx == 0) {
-          var msg = "Stepping through this setup can help you quickly get started using Flex.io. Are you sure you want to skip setup?"
-          var title = 'Really skip setup?'
-
-          this.$confirm(msg, title, {
-            type: 'warning',
-            confirmButtonClass: 'ttu fw6',
-            cancelButtonClass: 'ttu fw6',
-            confirmButtonText: 'Continue',
-            cancelButtonText: 'Cancel',
-            dangerouslyUseHTMLString: true,
-          }).then(() => {
-            this.$store.track('Skipped Onboarding')
-            this.endOnboarding()
-          })
-        } else {
-          var msg = "Looks like you want to start over; if so, you will lose any configuration details you've entered. Would you like to continue?"
-          var title = 'Really start over?'
-
-          this.$confirm(msg, title, {
-            type: 'warning',
-            confirmButtonClass: 'ttu fw6',
-            cancelButtonClass: 'ttu fw6',
-            confirmButtonText: 'Continue',
-            cancelButtonText: 'Cancel',
-            dangerouslyUseHTMLString: true,
-          }).then(() => {
-            // reset our local component data
-            _.assign(this.$data, getDefaultState())
-            this.selectIntegrationsFromRoute()
-          })
+        if (this.selected_integrations.length > 0) {
+          this.onNextStepClick()
         }
-        */
       },
       onNextStepClick() {
         // we're on the last step; commit all changes to the backend and take the user to the app
@@ -431,6 +403,10 @@
 
           if (this.active_step == 'complete') {
             this.custom_title = 'All systems go!'
+
+            if (_.isString(this.gsheets_spreadsheet_id) || _.isString(this.excel_spreadsheet_path)) {
+              this.openTemplateChooserPage(this.gsheets_spreadsheet_id, this.excel_spreadsheet_path, false)
+            }
           }
         }
       },
@@ -448,31 +424,10 @@
         }
       },
       onTemplateClick(template) {
-        // TODO: *IF* we ever wanted to make this thing support adding
-        //       multiple integrations at the same time again, we'd need
-        //       to make sure this wasn't hard-coded like this
-        var integration_name = _.get(this.output_mounts, '[0].name', '')
-
         var gsheets_spreadsheet_id = _.get(template, 'gsheets_spreadsheet_id', undefined)
         var excel_spreadsheet_path = _.get(template, 'excel_spreadsheet_path', undefined)
 
-        var query_str = buildQueryString({
-          gsheets_spreadsheet_id,
-          excel_spreadsheet_path,
-          context: 'app'
-        })
-
-        var url = `https://${HOSTNAME}/integrations/${integration_name}/template?${query_str}`
-
-        if (this.onboarding_config_submitted) {
-          window.open(url)
-        } else {
-          // submit the onboarding config and then go to the template download page
-          this.submitOnboardingConfig(() => {
-            this.onboarding_config_submitted = true
-            window.open(url)
-          })
-        }
+        this.openTemplateChooserPage(gsheets_spreadsheet_id, excel_spreadsheet_path, true)
       },
       onSelectedIntegrationChange(val, old_val) {
         if (old_val.length == 0 && val.length > 0) {
@@ -585,13 +540,39 @@
           }
         })
       },
-      endOnboarding() {
+      endOnboarding(next_path) {
         var team_name = this.active_team_name
+        var path = _.isString(next_path) ? next_path : `/${team_name}/functions`
 
         this.$store.dispatch('teams/changeActiveTeam', { team_name }).then(response => {
-          var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path', 'query'])
-          this.$router.push({ path: `/${team_name}/functions` })
+          this.$router.push({ path })
         })
+      },
+      openTemplateChooserPage(gsheets_spreadsheet_id, excel_spreadsheet_path, open_new_window) {
+        // TODO: *IF* we ever wanted to make this thing support adding
+        //       multiple integrations at the same time again, we'd need
+        //       to make sure this wasn't hard-coded like this
+        var integration_name = _.get(this.output_mounts, '[0].name', '')
+
+        var query_str = buildQueryString({
+          gsheets_spreadsheet_id,
+          excel_spreadsheet_path,
+          context: 'app'
+        })
+
+        var team_name = this.active_team_name
+        var path = `/${team_name}/integrations/${integration_name}/template?${query_str}`
+
+        if (this.onboarding_config_submitted) {
+          open_new_window === true ? window.open(path) : this.endOnboarding(path)
+        } else {
+          // submit the onboarding config and then go to the template download page
+          this.submitOnboardingConfig(() => {
+            this.onboarding_config_submitted = true
+            open_new_window === true ? window.open(path) : this.endOnboarding(path)
+          })
+        }
+
       }
     }
   }
