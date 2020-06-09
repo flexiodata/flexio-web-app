@@ -1,137 +1,141 @@
 <template>
   <main class="pv4 pv5-ns ph4 ph5-l bg-nearer-white overflow-y-scroll">
-    <div class="mt4">
-      <div
-        class="w-100 center mw-doc pt4 pb5 ph4 ph5-l bg-white br2 css-white-box"
-        style="margin-bottom: 15rem"
-      >
-        <div class="tc" style="margin-top: -76px">
-          <img src="../assets/logo-square-80x80.png" alt="Flex.io" class="br-100 ba bw1 b--white" style="width: 84px; box-shadow: 0 0 3px rgba(0,0,0,0.4)">
-        </div>
+    <div class="h2"></div>
+    <div
+      class="w-100 center mw-doc pt4 pb5 ph4 ph5-l bg-white br2 css-white-box"
+      style="margin-bottom: 15rem"
+    >
+      <div class="tc" style="margin-top: -76px">
+        <img
+          src="../assets/logo-square-80x80.png"
+          alt="Flex.io"
+          class="br-100 ba bw1 b--white"
+          style="width: 84px; box-shadow: 0 0 3px rgba(0,0,0,0.4)"
+        >
+      </div>
 
-        <h1 class="fw6 f2 tc pb2">{{display_title}}</h1>
+      <h1 class="fw6 f2 tc pb2">{{display_title}}</h1>
 
-        <!-- step heading -->
-        <div class="dn db-ns mv4 pv2">
-          <el-steps
-            align-center
-            finish-status="success"
-            :active="step_heading_idx"
-          >
-            <el-step title="Set Up Integration" />
-            <el-step title="Get Add-on" />
-            <el-step title="Get Started" />
-          </el-steps>
-        </div>
+      <!-- step heading -->
+      <div class="dn db-ns mv4 pv2">
+        <el-steps
+          align-center
+          finish-status="success"
+          :active="step_heading_idx"
+        >
+          <el-step title="Set Up Integration" />
+          <el-step title="Get Add-on" />
+          <el-step title="Get Started" />
+        </el-steps>
+      </div>
 
-        <!-- step: choose integrations -->
-        <div v-if="active_step == 'integrations'">
-          <p class="center mw7">Let's get started with an integration. Pick one of the services below and we'll add a few out-of-the-box functions you can use in your spreadsheet.</p>
-          <IconList
-            class="mv4"
-            :items="integrations"
-            :selected-items.sync="selected_integrations"
-            :allow-selection="true"
-            :allow-multiple="false"
-          />
-        </div>
+      <!-- step: choose integrations -->
+      <div v-if="active_step == 'integrations'">
+        <p class="center mw7">Let's get started with an integration. Pick one of the services below and we'll add a few out-of-the-box functions you can use in your spreadsheet.</p>
+        <IconList
+          class="mv4"
+          :items="integrations"
+          :selected-items.sync="selected_integrations"
+          :allow-selection="true"
+          :allow-multiple="false"
+        />
+      </div>
 
-        <!-- step: set up integrations -->
-        <div v-if="active_step == 'integration-setup'">
-          <!-- fetching config -->
-          <div v-if="is_fetching_config">
-            <div class="br2 ba b--black-10 pv5 ph4">
-              <Spinner size="large" message="Loading configuration..." />
-            </div>
+      <!-- step: set up integrations -->
+      <div v-if="active_step == 'integration-setup'">
+        <!-- fetching config -->
+        <div v-if="is_fetching_config">
+          <div class="br2 ba b--black-10 pv5 ph4">
+            <Spinner size="large" message="Loading configuration..." />
           </div>
-
-          <FunctionMountSetupWizard
-            :setup-template="active_setup_template"
-            @submit="saveIntegration"
-            v-else
-          >
-            <div slot="no-prompts">
-              <div class="mv2 tc f6 fw4 lh-copy moon-gray"><em>No configuration is required for this integration.</em></div>
-              <ButtonBar
-                class="mt4"
-                :cancel-button-visible="false"
-                :cancel-button-text="'Back'"
-                :submit-button-text="'Next'"
-                @submit-click="saveIntegration({})"
-              />
-            </div>
-          </FunctionMountSetupWizard>
         </div>
 
-
-        <!-- step: integration setup complete -->
-        <div v-if="active_step == 'integration-setup-complete'">
-          <ServiceIconWrapper :innerSpacing="10">
-            <i
-              class="el-icon-success bg-white f2 dark-green"
-              slot="icon"
-            ></i>
-            <p class="tc f3 lh-title">Your integration was created successfully!</p>
-            <div class="bg-nearer-white pa4 br2 tc">
-              <p class="mb0 f4 fw6 flex flex-row items-center justify-center">
-                <Spinner class="mr2" />
-                <span>Importing functions...</span>
-              </p>
-              <p class="center mw6 mb0 f7 i light-silver lh-copy">NOTE: This process may take a couple of minutes to complete. You're free to continue with the setup &mdash; the import will continue in the background.</p>
-            </div>
-          </ServiceIconWrapper>
-        </div>
-
-        <!-- step: invite others -->
-        <div v-if="active_step == 'members'">
-          <p class="center mw7">It's easy to share your functions with co-workers. Simply add their emails below and they'll receive an invite to join your team. You can also skip this step and add people later.</p>
-          <ServiceIconWrapper class="mv4">
-            <i
-              class="material-icons moon-gray bg-white" style="font-size: 4rem"
-              slot="icon"
-            >people</i>
-            <MemberInvitePanel
-              :show-header="false"
-              :emails="email_invites"
-              @submit="onMemberInviteSubmit"
-
+        <FunctionMountSetupWizard
+          :setup-template="active_setup_template"
+          @submit="saveIntegration"
+          v-else
+        >
+          <div slot="no-prompts">
+            <div class="mv2 tc f6 fw4 lh-copy moon-gray"><em>No configuration is required for this integration.</em></div>
+            <ButtonBar
+              class="mt4"
+              :cancel-button-visible="false"
+              :cancel-button-text="'Back'"
+              :submit-button-text="'Next'"
+              @submit-click="saveIntegration({})"
             />
-          </ServiceIconWrapper>
-        </div>
+          </div>
+        </FunctionMountSetupWizard>
+      </div>
 
-        <!-- step: install add-ons -->
-        <div v-if="active_step == 'addons'">
-          <p class="center mw7">You're almost done! If you haven't done so already, please install the Flex.io Add-on for <span class="nowrap">Google Sheets</span> or <span class="nowrap">Microsoft Excel 365</span>. Once you've installed the add-on, you'll see your functions in the Flex.io sidebar and will be able to use them in your spreadsheet.</p>
-          <AddonDownloadButtonPanel
-            class="pv2-l"
-            :open-links-in-new-window="true"
+
+      <!-- step: integration setup complete -->
+      <div v-if="active_step == 'integration-setup-complete'">
+        <ServiceIconWrapper :innerSpacing="10">
+          <i
+            class="el-icon-success bg-white f2 dark-green"
+            slot="icon"
+          ></i>
+          <p class="tc f3 lh-title">Your integration was created successfully!</p>
+          <div class="bg-nearer-white pa4 br2 tc">
+            <p class="mb0 f4 fw6 flex flex-row items-center justify-center">
+              <Spinner class="mr2" />
+              <span>Importing functions...</span>
+            </p>
+            <p class="center mw6 mb0 f7 i light-silver lh-copy">NOTE: This process may take a couple of minutes to complete. You're free to continue with the setup &mdash; the import will continue in the background.</p>
+          </div>
+        </ServiceIconWrapper>
+      </div>
+
+      <!-- step: invite others -->
+      <div v-if="active_step == 'members'">
+        <p class="center mw7">It's easy to share your functions with co-workers. Simply add their emails below and they'll receive an invite to join your team. You can also skip this step and add people later.</p>
+        <ServiceIconWrapper class="mv4">
+          <i
+            class="material-icons moon-gray bg-white" style="font-size: 4rem"
+            slot="icon"
+          >people</i>
+          <MemberInvitePanel
+            :show-header="false"
+            :emails="email_invites"
+            @submit="onMemberInviteSubmit"
+
           />
-          <p class="center mw7 f8 silver">* The Microsoft Excel 365 add-in will only function with an Excel for Office 365 subscription</p>
-        </div>
+        </ServiceIconWrapper>
+      </div>
 
-        <!-- step: integration setup complete -->
-        <IntegrationSetupCompletePanel
-          :integration-info="integration_info"
-          @template-click="onTemplateClick"
-          @open-app-click="onNextStepClick"
-          v-if="active_step == 'complete'"
+      <!-- step: install add-ons -->
+      <div v-if="active_step == 'addons'">
+        <p class="center mw7">You're almost done! If you haven't done so already, please install the Flex.io Add-on for <span class="nowrap">Google Sheets</span> or <span class="nowrap">Microsoft Excel 365</span>. Once you've installed the add-on, you'll see your functions in the Flex.io sidebar and will be able to use them in your spreadsheet.</p>
+        <AddonDownloadButtonPanel
+          class="pv2-l"
+          :open-links-in-new-window="true"
         />
+        <p class="center mw7 f8 silver">* The Microsoft Excel 365 add-in will only function with an Excel for Office 365 subscription</p>
+      </div>
 
-        <!-- button bar for the entire onboarding wizard -->
-        <ButtonBar
-          class="mt5"
-          :utility-button-type="'text'"
-          :utility-button-visible="is_start_over_button_visible"
-          :utility-button-text="active_step_idx == 1 ? '← Back' : '← Start over'"
-          :cancel-button-visible="false"
-          :submit-button-visible="active_step != 'integration-setup' && active_step != 'complete'"
-          :submit-button-text="active_step_idx == 0 ? 'Skip this step' : 'Continue'"
-          @utility-click="onUtilityButtonClick"
-          @submit-click="onNextStepClick"
-          v-if="active_step_idx < step_order.length - 1"
-        />
-     </div>
-    </div>
+      <!-- step: integration setup complete -->
+      <IntegrationSetupCompletePanel
+        :integration-info="integration_info"
+        @template-click="onTemplateClick"
+        @open-app-click="onNextStepClick"
+        v-if="active_step == 'complete'"
+      />
+
+      <!-- button bar for the entire onboarding wizard -->
+      <ButtonBar
+        class="mt5"
+        :utility-button-type="'text'"
+        :utility-button-visible="is_start_over_button_visible"
+        :utility-button-text="active_step_idx == 1 ? '← Back' : '← Start over'"
+        :cancel-button-visible="false"
+        :submit-button-visible="active_step != 'integration-setup' && active_step != 'complete'"
+        :submit-button-text="active_step_idx == 0 ? 'Skip this step' : 'Continue'"
+        @utility-click="onUtilityButtonClick"
+        @submit-click="onNextStepClick"
+        v-if="active_step_idx < step_order.length - 1"
+      />
+   </div>
   </main>
 </template>
 

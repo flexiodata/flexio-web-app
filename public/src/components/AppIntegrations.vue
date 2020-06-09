@@ -6,11 +6,15 @@
   />
 
   <main
-    class="overflow-y-scroll bg-white"
+    class="overflow-y-scroll"
+    :class="use_white_box ? 'pv4 pv5-ns ph4 ph5-l bg-nearer-white' : 'bg-white'"
     v-else
   >
+    <div class="h2" v-if="use_white_box"></div>
+
     <div
-      class="w-100 center mw-doc pv4 ph4 ph5-l bg-white"
+      class="w-100 center mw-doc bg-white pt4 pb5 ph4 ph5-l"
+      :class="use_white_box ? 'br2 css-white-box' : ''"
       style="margin-bottom: 15rem"
     >
       <!-- excel template download page -->
@@ -19,9 +23,13 @@
         :url="excel_spreadsheet_path"
         v-if="is_show_excel_template_download_page"
       />
+
       <!-- integration setup page -->
       <template v-else>
-        <div class="tc">
+        <div
+          class="tc"
+          :style="use_white_box ? 'margin-top: -76px' : ''"
+        >
           <img
             src="../assets/logo-square-80x80.png"
             alt="Flex.io"
@@ -304,6 +312,9 @@
         }
 
         return false
+      },
+      use_white_box() {
+        return this.is_coming_from_addon || this.is_show_excel_template_download_page ? false : true
       },
       route_integration() {
         // NOTE: this value is required to make this page backward compatible
