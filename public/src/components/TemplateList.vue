@@ -64,9 +64,6 @@
   .item-description
     margin-top: 8px
 
-  .template-list
-    margin-top: 1px
-
   .template-item
     padding: 28px 24px
     margin-top: -1px

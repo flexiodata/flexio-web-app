@@ -1,16 +1,18 @@
 <template>
   <div>
     <p class="center mw7">You're all set and ready to go. Here's a set of example spreadsheets and other resources to help get you started. If you need anything, please let us know!</p>
-    <template v-if="integrationInfo.length > 0 ">
-      <h3 class="mt5 mb4 tc">Select an example sheet</h3>
-      <TemplateList
-        :icon="t.icon"
-        :templates="t.templates"
-        @template-click="onTemplateClick"
-        v-for="t in integrationInfo"
-      />
-    </template>
-    <h3 class="mt5 mb4 tc">Get additional resources</h3>
+
+    <h3 class="mv4 tc">Select an example sheet</h3>
+    <TemplateList
+      :key="t.icon"
+      :icon="t.icon"
+      :templates="t.templates"
+      @template-click="onTemplateClick"
+      v-for="t in template_list_items"
+    />
+
+    <div class="h2"></div>
+    <h3 class="mv4 tc">Get additional resources</h3>
     <div class="flex-l flex-row-l flex-wrap-l nl3 nr3">
       <a
         class="flex-fill flex flex-row db ma3 pv3 ph4 br2 fw4 dark-gray no-underline w-third-l last-step-item"
@@ -31,7 +33,9 @@
         </div>
       </a>
     </div>
-    <h3 class="mt5 mb4 tc">Get started with the Flex.io App</h3>
+
+    <div class="h2"></div>
+    <h3 class="mv4 tc">Get started with the Flex.io App</h3>
     <p class="center mw7">Go off road. Access just about any data with your own code and share integrations with your team without sharing your credentials.</p>
     <div class="mv4 tc">
       <button
@@ -53,21 +57,37 @@
 <script>
   import TemplateList from '@/components/TemplateList'
 
+  const quick_start_templates = {
+    icon: 'https://static.flex.io/assets/logos2/quick-start.png',
+    templates: [{
+       name: 'flexio-quick-start-guide',
+       title: 'Flex.io quick start spreadsheet',
+       description: 'Explore a set of examples for using Flex.io with this spreadsheet guide',
+       gsheets_spreadsheet_id: '14samTw-5MJ8IkBy89LIu4i2K4bshJ-qNKRJpY5mp8SU',
+       excel_spreadsheet_path: 'https://static.flex.io/templates/quick-start/flexio-quick-start-guide.xlsx',
+       is_public: false,
+       is_private: false
+    }]
+  }
+
+  const last_step_items = [{
+    title: 'Getting Started Guide',
+    description: 'Learn how to work with Flex.io in your spreadsheet',
+    link: 'https://www.flex.io/resources/getting-started'
+  },{
+    title: 'Basic Examples',
+    description: 'Explore some basic examples you can try immediately',
+    link: 'https://www.flex.io/resources/examples'
+  },{
+    title: 'Explore Integrations',
+    description: 'See how you can use Flex with other web services',
+    link: 'https://www.flex.io/explore'
+  }]
+
   const getDefaultState = () => {
     return {
-      last_step_items: [{
-        title: 'Getting Started Guide',
-        description: 'Learn how to work with Flex.io in your spreadsheet',
-        link: 'https://www.flex.io/resources/getting-started'
-      },{
-        title: 'Basic Examples',
-        description: 'Explore some basic examples you can try immediately',
-        link: 'https://www.flex.io/resources/examples'
-      },{
-        title: 'Explore Integrations',
-        description: 'See how you can use Flex with other web services',
-        link: 'https://www.flex.io/explore'
-      }]
+      quick_start_templates,
+      last_step_items
     }
   }
 
@@ -83,6 +103,11 @@
     },
     data() {
       return getDefaultState()
+    },
+    computed: {
+      template_list_items() {
+        return [].concat(this.quick_start_templates).concat(this.integrationInfo)
+      }
     },
     methods: {
       onTemplateClick(template) {

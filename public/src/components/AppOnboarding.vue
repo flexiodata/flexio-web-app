@@ -154,7 +154,6 @@
   import AddonDownloadButtonPanel from '@/components/AddonDownloadButtonPanel'
   import IntegrationSetupCompletePanel from '@/components/IntegrationSetupCompletePanel'
   import MemberInvitePanel from '@/components/MemberInvitePanel'
-  import TemplateList from '@/components/TemplateList'
 
   const getNameSuffix = (length) => {
     return randomstring.generate({
@@ -209,8 +208,7 @@
       ServiceIconWrapper,
       AddonDownloadButtonPanel,
       IntegrationSetupCompletePanel,
-      MemberInvitePanel,
-      TemplateList
+      MemberInvitePanel
     },
     watch: {
       selected_integrations: {
