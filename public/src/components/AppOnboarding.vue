@@ -527,14 +527,15 @@
 
         var team_name = this.active_team_name
         var path = `/integrations/${integration_name}/template?${query_str}`
+        var wnd_path = '/app' + path
 
         if (this.onboarding_config_submitted) {
-          open_new_window === true ? window.open(path) : this.endOnboarding(path)
+          open_new_window === true ? window.open(wnd_path) : this.endOnboarding(path)
         } else {
           // submit the onboarding config and then go to the template download page
           this.submitOnboardingConfig(() => {
             this.onboarding_config_submitted = true
-            open_new_window === true ? window.open(path) : this.endOnboarding(path)
+            open_new_window === true ? window.open(wnd_path) : this.endOnboarding(path)
           })
         }
 
