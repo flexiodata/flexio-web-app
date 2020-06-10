@@ -152,55 +152,25 @@ class Factory
     {
         try
         {
-            // get the language from the extension type
             $language = false;
             switch ($extension)
             {
-                case 'py':      $language = 'python'; break;
-                case 'js':      $language = 'nodejs'; break;
+                default:
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+                case 'yml': $language = 'yml'; break;
+                case 'py':  $language = 'python'; break;
+                case 'js':  $language = 'nodejs'; break;
             }
 
-            if ($language === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+            // if we have yml; the file supplies the parameters directly
+            if ($language === 'yml')
+                return self::getPipeParamsFromYaml($yaml);
 
-            // set basic pipe info using mostly same parameter names as
-            // pipe api; use defaults supplied by object/model as well
+            // if we have one of the languages, extract the yaml, get the properties,
+            // and then set the execute job manually
             $yaml = \Flexio\Base\Yaml::extract($content);
-            $pipe_info_from_content = \Flexio\Base\Yaml::parse($yaml);
-            $pipe_params = array();
-
-            // note: in the yaml, it's convenient to have placeholders for different elements,
-            // such as "examples"; when these are empty arrays, the value passed is null,
-            // which may cause an error when creating the object if an empty array is expected;
-            // so, supply appropriate defaults for pipe elements that are null
-            $pipe_params['name'] = $pipe_info_from_content['name'] ?? '';
-            $pipe_params['title'] = $pipe_info_from_content['title'] ?? '';
-            $pipe_params['icon'] = $pipe_info_from_content['icon'] ?? '';
-            $pipe_params['description'] = $pipe_info_from_content['description'] ?? '';
-            $pipe_params['examples'] = $pipe_info_from_content['examples'] ?? [];
-            $pipe_params['params'] = $pipe_info_from_content['params'] ?? [];
-            $pipe_params['returns'] = $pipe_info_from_content['returns'] ?? [];
-            $pipe_params['notes'] = $pipe_info_from_content['notes'] ?? '';
-
-            // convert config type into pipe run mode; default to pass-through
-            $pipe_params['run_mode'] = \Model::PIPE_RUN_MODE_PASSTHROUGH;
-            if (isset($pipe_info_from_content['config']) && $pipe_info_from_content['config'] === 'index')
-                $pipe_params['run_mode'] = \Model::PIPE_RUN_MODE_INDEX;
-
-            // convert deploy flag into deploy mode; default to inactive (build)
-            $pipe_params['deploy_mode'] = \Model::PIPE_DEPLOY_MODE_BUILD;
-            if (isset($pipe_info_from_content['deployed']) && $pipe_info_from_content['deployed'] === true)
-                $pipe_params['deploy_mode'] = \Model::PIPE_DEPLOY_MODE_RUN;
-
-            // content format consolidates schedule information: if it exists
-            // the schedule is activated and if it doesn't exist, the schedule
-            // isn't; unpack into form currently used by the model/api
-            $pipe_params['deploy_schedule'] = \Model::PIPE_DEPLOY_STATUS_INACTIVE;
-            if (isset($pipe_info_from_content['schedule']))
-            {
-                $pipe_params['deploy_schedule'] = \Model::PIPE_DEPLOY_STATUS_ACTIVE;
-                $pipe_params['schedule'] = $pipe_info_from_content['schedule'];
-            }
+            $pipe_params = self::getPipeParamsFromYaml($yaml);
 
             $execute_job_params = array();
             $execute_job_params['op'] = 'execute'; // set the execute operation so this doesn't need to be supplied
@@ -223,6 +193,47 @@ class Factory
         }
 
         return null;
+    }
+
+    private static function getPipeParamsFromYaml(string $yaml) : array
+    {
+        $pipe_info_from_content = \Flexio\Base\Yaml::parse($yaml);
+
+        // note: in the yaml, it's convenient to have placeholders for different elements,
+        // such as "examples"; when these are empty arrays, the value passed is null,
+        // which may cause an error when creating the object if an empty array is expected;
+        // so, supply appropriate defaults for pipe elements that are null
+        $pipe_params = array();
+        $pipe_params['name'] = $pipe_info_from_content['name'] ?? '';
+        $pipe_params['title'] = $pipe_info_from_content['title'] ?? '';
+        $pipe_params['icon'] = $pipe_info_from_content['icon'] ?? '';
+        $pipe_params['description'] = $pipe_info_from_content['description'] ?? '';
+        $pipe_params['examples'] = $pipe_info_from_content['examples'] ?? [];
+        $pipe_params['params'] = $pipe_info_from_content['params'] ?? [];
+        $pipe_params['returns'] = $pipe_info_from_content['returns'] ?? [];
+        $pipe_params['notes'] = $pipe_info_from_content['notes'] ?? '';
+
+        // convert config type into pipe run mode; default to pass-through
+        $pipe_params['run_mode'] = \Model::PIPE_RUN_MODE_PASSTHROUGH;
+        if (isset($pipe_info_from_content['config']) && $pipe_info_from_content['config'] === 'index')
+            $pipe_params['run_mode'] = \Model::PIPE_RUN_MODE_INDEX;
+
+        // convert deploy flag into deploy mode; default to inactive (build)
+        $pipe_params['deploy_mode'] = \Model::PIPE_DEPLOY_MODE_BUILD;
+        if (isset($pipe_info_from_content['deployed']) && $pipe_info_from_content['deployed'] === true)
+            $pipe_params['deploy_mode'] = \Model::PIPE_DEPLOY_MODE_RUN;
+
+        // content format consolidates schedule information: if it exists
+        // the schedule is activated and if it doesn't exist, the schedule
+        // isn't; unpack into form currently used by the model/api
+        $pipe_params['deploy_schedule'] = \Model::PIPE_DEPLOY_STATUS_INACTIVE;
+        if (isset($pipe_info_from_content['schedule']))
+        {
+            $pipe_params['deploy_schedule'] = \Model::PIPE_DEPLOY_STATUS_ACTIVE;
+            $pipe_params['schedule'] = $pipe_info_from_content['schedule'];
+        }
+
+        return $pipe_params;
     }
 
 /*
