@@ -156,7 +156,6 @@ class Factory
             $language = false;
             switch ($extension)
             {
-                case 'flexio':  $language = 'flexio'; break;
                 case 'py':      $language = 'python'; break;
                 case 'js':      $language = 'nodejs'; break;
             }
@@ -203,32 +202,17 @@ class Factory
                 $pipe_params['schedule'] = $pipe_info_from_content['schedule'];
             }
 
-            // set the task info
-            if ($language === 'flexio')
-            {
-                // TODO: need to trim off front-matter; currently, 'flexio' pipes
-                // aren't used, so this isn't a factor and following code provides
-                // an outline
-                $task = array();
-                $pipe = @json_decode($content,true);
-                if (!is_null($pipe))
-                    $task = $pipe['task'] ?? array();
-                $pipe_params['task'] = $task;
-            }
-            else
-            {
-                $execute_job_params = array();
-                $execute_job_params['op'] = 'execute'; // set the execute operation so this doesn't need to be supplied
-                $execute_job_params['lang'] = $language;
-                $execute_job_params['code'] = base64_encode($content); // encode the script
+            $execute_job_params = array();
+            $execute_job_params['op'] = 'execute'; // set the execute operation so this doesn't need to be supplied
+            $execute_job_params['lang'] = $language;
+            $execute_job_params['code'] = base64_encode($content); // encode the script
 
-                $pipe_params['task'] = [
-                    "op" => "sequence",
-                    "items" => [
-                        $execute_job_params
-                    ]
-                ];
-            }
+            $pipe_params['task'] = [
+                "op" => "sequence",
+                "items" => [
+                    $execute_job_params
+                ]
+            ];
 
             return $pipe_params;
         }

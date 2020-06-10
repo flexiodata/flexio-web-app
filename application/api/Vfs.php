@@ -293,8 +293,6 @@ class Vfs
         // get the file extension and set the language
         $language = false;
         $ext = strtolower(\Flexio\Base\File::getFileExtension($path));
-        if ($ext === 'flexio')
-            $language = 'flexio'; // execute content as a JSON pipe
         if ($ext === 'py')
             $language = 'python';
         if ($ext === 'js')
@@ -325,29 +323,17 @@ class Vfs
         $process_params['created_by'] = $requesting_user_eid;
         $process_params['triggered_by'] = $triggered_by;
 
-        // set the task info
-        if ($language === 'flexio')
-        {
-            $task = array();
-            $pipe = @json_decode($content,true);
-            if (!is_null($pipe))
-                $task = $pipe['task'] ?? array();
-            $process_params['task'] = $task;
-        }
-        else
-        {
-            $execute_job_params = array();
-            $execute_job_params['op'] = 'execute'; // set the execute operation so this doesn't need to be supplied
-            $execute_job_params['lang'] = $language; // TODO: set the language from the extension
-            $execute_job_params['code'] = base64_encode($content); // encode the script
+        $execute_job_params = array();
+        $execute_job_params['op'] = 'execute'; // set the execute operation so this doesn't need to be supplied
+        $execute_job_params['lang'] = $language; // TODO: set the language from the extension
+        $execute_job_params['code'] = base64_encode($content); // encode the script
 
-            $process_params['task'] = [
-                "op" => "sequence",
-                "items" => [
-                    $execute_job_params
-                ]
-            ];
-        }
+        $process_params['task'] = [
+            "op" => "sequence",
+            "items" => [
+                $execute_job_params
+            ]
+        ];
 
         // create a new process object for storing process info
         $process_store = \Flexio\Object\Process::create($process_params);
