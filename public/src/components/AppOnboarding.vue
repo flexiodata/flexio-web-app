@@ -23,7 +23,7 @@
           finish-status="success"
           :active="step_heading_idx"
         >
-          <el-step title="Set Up Integration" />
+          <el-step :title="is_quick_start ? 'Sign Up' : 'Set Up Integration'" />
           <el-step title="Get Add-on" />
           <el-step title="Get Started" />
         </el-steps>
@@ -130,7 +130,7 @@
         :utility-button-text="active_step_idx == 1 ? '← Back' : '← Start over'"
         :cancel-button-visible="false"
         :submit-button-visible="active_step != 'integration-setup' && active_step != 'complete'"
-        :submit-button-text="active_step_idx == 0 ? 'Skip this step' : 'Continue'"
+        :submit-button-text="active_step == 'integrations' ? 'Skip this step' : 'Continue'"
         @utility-click="onUtilityButtonClick"
         @submit-click="onNextStepClick"
         v-if="active_step_idx < step_order.length - 1"
@@ -231,8 +231,19 @@
       active_integration() {
         return this.selected_integrations[this.active_integration_idx]
       },
+      integrations_from_route() {
+        var integrations = _.get(this.$route, 'query.integration', '')
+        return integrations.length > 0 ? integrations.split(',') : []
+      },
+      is_quick_start() {
+        return _.get(this.integrations_from_route, '[0]', '') == 'quick-start'
+      },
       step_order() {
-       return ['integrations', 'integration-setup', 'integration-setup-complete', 'addons', 'complete']
+        if (this.is_quick_start) {
+          return ['addons', 'complete']
+        }
+
+        return ['integrations', 'integration-setup', 'integration-setup-complete', 'addons', 'complete']
       },
       // this is just for display purposes
       step_heading_idx() {
@@ -247,10 +258,6 @@
       },
       has_active_setup_template() {
         return !_.isNil(this.active_setup_template)
-      },
-      integrations_from_route() {
-        var integrations = _.get(this.$route, 'query.integration', '')
-        return integrations.length > 0 ? integrations.split(',') : []
       },
       gsheets_spreadsheet_id() {
         return _.get(this.$route, 'query.gsheets_spreadsheet_id', undefined)
@@ -294,14 +301,19 @@
       var team_name = this.getActiveUsername()
       this.$store.dispatch('teams/changeActiveTeam', { team_name })
 
-      // pre-select integrations
-      this.selectIntegrationsFromRoute()
+      if (this.is_quick_start) {
+        // update the active step from the route
+        this.active_step = 'addons'
+      } else {
+        // pre-select integrations
+        this.selectIntegrationsFromRoute()
 
-      // update the active step from the route
-      this.active_step = _.get(this.$route, 'params.action', 'integrations')
+        // update the active step from the route
+        this.active_step = _.get(this.$route, 'params.action', 'integrations')
 
-      if (this.active_step == 'integration-setup') {
-        this.fetchIntegrationConfig()
+        if (this.active_step == 'integration-setup') {
+          this.fetchIntegrationConfig()
+        }
       }
 
       // update title from route
@@ -358,7 +370,18 @@
             this.active_step = this.step_order[next_idx]
           })
         } else {
-          this.active_step = this.step_order[this.active_step_idx + 1]
+          // do this so we can check the next step before actually setting it
+          // to be the active step (avoids flicker when moving directly to templates)
+          var next_step = this.step_order[this.active_step_idx + 1]
+
+          if (next_step == 'complete') {
+            if (_.isString(this.gsheets_spreadsheet_id) || _.isString(this.excel_spreadsheet_path)) {
+              this.openTemplateChooserPage(this.gsheets_spreadsheet_id, this.excel_spreadsheet_path, false)
+              return
+            }
+          }
+
+          this.active_step = next_step
 
           if (this.active_step == 'integration-setup') {
             this.fetchIntegrationConfig()
@@ -366,10 +389,6 @@
 
           if (this.active_step == 'complete') {
             this.custom_title = 'All systems go!'
-
-            if (_.isString(this.gsheets_spreadsheet_id) || _.isString(this.excel_spreadsheet_path)) {
-              this.openTemplateChooserPage(this.gsheets_spreadsheet_id, this.excel_spreadsheet_path, false)
-            }
           }
         }
       },
@@ -515,11 +534,12 @@
         // TODO: *IF* we ever wanted to make this thing support adding
         //       multiple integrations at the same time again, we'd need
         //       to make sure this wasn't hard-coded like this
-        var integration_name = _.get(this.output_mounts, '[0].name', '')
+        var integration_name = this.is_quick_start ? 'quick-start' : _.get(this.output_mounts, '[0].name', '')
 
         var query_str = buildQueryString({
           gsheets_spreadsheet_id,
           excel_spreadsheet_path,
+          title: this.is_quick_start ? _.get(this.$route, 'query.title', 'Quick Start Guide') : undefined,
           context: 'app'
         })
 

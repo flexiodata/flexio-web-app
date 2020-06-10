@@ -51,14 +51,14 @@
             finish-status="success"
             :active="step_heading_idx"
           >
-            <el-step title="Set Up Integration" />
+            <el-step :title="is_quick_start ? 'Sign Up' : 'Set Up Integration'" />
             <el-step title="Get Add-on" />
             <el-step title="Get Started" />
           </el-steps>
         </div>
 
         <!-- step: template target chooser -->
-        <div v-if="active_step == 'template' && existing_integrations.length > 0">
+        <div v-if="active_step == 'template' && (existing_integrations.length > 0 || is_quick_start)">
           <div
             class="mv4 mh3 br3 ba b--black-10 pv5 ph4"
             v-if="is_show_loading_template"
@@ -338,6 +338,9 @@
         var backward_compatible = _.get(this.$route, 'params.integration_name', '')
         return _.get(this.$route, 'params.action', backward_compatible)
       },
+      is_quick_start() {
+        return this.route_integration == 'quick-start'
+      },
       gsheets_spreadsheet_id() {
         // NOTE: this value is required to make this page backward compatible
         // for older add-ons and should be removed at some point: we renamed the
@@ -428,10 +431,13 @@
         this.active_step = val
 
         if (this.active_step == 'template') {
-          // the user has already created an integration of this type (crunchbase, etc.)
-          // and most likely only has one integration of this type; just take them directly
-          // to the template in Google Sheets
-          if (this.existing_integrations.length > 0) {
+          if (this.is_quick_start) {
+            // nothing to do; we're done
+            return
+          } else if (this.existing_integrations.length > 0) {
+            // the user has already created an integration of this type (crunchbase, etc.)
+            // and most likely only has one integration of this type; just take them directly
+            // to the template in Google Sheets
             if (this.template_target == 'gsheets' && this.gsheets_spreadsheet_id.length > 0) {
               // redirect to Copy Google Sheet page
               this.is_show_loading_template = true
