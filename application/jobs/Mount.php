@@ -165,7 +165,7 @@ class Mount
             switch ($extension)
             {
                 // if we have a script, get the info from the front-matter
-                case 'flexio':
+                case 'yml':
                 case 'py':
                 case 'js':
                     $content = '';
