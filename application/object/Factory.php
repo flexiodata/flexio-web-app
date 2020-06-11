@@ -165,7 +165,7 @@ class Factory
 
             // if we have yml; the file supplies the parameters directly
             if ($language === 'yml')
-                return self::getPipeParamsFromYaml($yaml);
+                return self::getPipeParamsFromYaml($content);
 
             // if we have one of the languages, extract the yaml, get the properties,
             // and then set the execute job manually
