@@ -175,34 +175,6 @@ class Mount
                     });
                     $pipe_info = \Flexio\Object\Factory::getPipeInfoFromContent($content, $extension);
                     break;
-/*
-                // TODO: STREAM UPDATE. temporarily disable experimental implementation for importing
-                // from CSVs until streams are overhauled; this is to avoid creating new temporary
-                // streams after having cleared out old streams until we the stream table structure
-                // and storage mechanism as needed; see \Flexio\Object\Factory
-
-                // if we have a csv file, build it manually
-                case 'csv':
-                    $stream = \Flexio\Object\Factory::getStreamFromConnectionInfo($connection_info, $item_info);
-                    $file_name_base = \Flexio\Base\File::getFilename($item_info['path']);
-                    $pipe_info['name'] = \Flexio\Base\Identifier::makeValid($file_name_base);
-                    $pipe_info['title'] = $file_name_base;
-
-                    // add temporary task for triggering index; note: this isn't a real job, and is replace
-                    // with an empty task in a subsequent import step; it's just a flag to trigger the
-                    // indexing of content; the reason we need to do this now is legacy: pipes haven't
-                    // traditionally supported content, but only tasks, so this is where "content" is stored;
-                    // however since task info is copied to the process, we don't want to include the raw
-                    // file content here; TODO: we need a way of storing content that can include either data
-                    // or task info and associate that with a pipe in a way that works well with pipes/processes;
-                    // maybe a stream reference? but whatever is copied to the process by way of reference should
-                    // not longer change, so maybe when a process is run, copy the stream
-                    $pipe_info['task'] = array('op' => 'import', 'stream' => $stream->getEid());
-                    $pipe_info['run_mode'] = \Model::PIPE_RUN_MODE_INDEX;                // pipes with content are always an index type
-                    $pipe_info['deploy_schedule'] = \Model::PIPE_DEPLOY_STATUS_INACTIVE; // no schedule
-                    $pipe_info['deploy_mode'] = \Model::PIPE_DEPLOY_MODE_RUN;            // turn on pipes
-                    break;
-*/
             }
 
             // if we can't get the pipe info, move on
@@ -249,7 +221,6 @@ class Mount
         // check; need to move things into logical places, but a lot has been in flux with
         // the application and what connections/pipes/process are and how they function
 
-
         // populate the initial cache for index pipes
         foreach ($pipes as $p)
         {
@@ -262,141 +233,24 @@ class Mount
                 continue;
             }
 
-            // if we have an "import" type task, we're importing a raw file; this "import"
-            // task is set in a previous mount step and isn't an official job, but simply
-            // a way of storing the logic we need to execute here, so reset the task to
-            // empty
-            $pipe_task = $pipe_properties['task'];
-            if (isset($pipe_task['op']) && $pipe_task['op'] === 'import')
-            {
-                // TODO: STREAM UPDATE. temporarily disable experimental implementation for importing
-                // from CSVs until streams are overhauled; this is to avoid creating new temporary
-                // streams after having cleared out old streams until we the stream table structure
-                // and storage mechanism as needed; see \Flexio\Object\Factory
+            // create a new process engine for running a process
+            $process_properties = array(
+                'parent_eid' => $pipe_properties['eid'],
+                'task' => $pipe_properties['task'],
+                'triggered_by' => $triggered_by
+            );
+            $elastic_search_params = array(
+                'index' => $pipe_properties['eid']
+            );
+            $process_engine = \Flexio\Jobs\Process::create();
+            $process_engine->setOwner($owner_user_eid);
+            $process_engine->queue('\Flexio\Jobs\ProcessHandler::addMountParams', $process_properties);
+            $process_engine->queue('\Flexio\Jobs\Task::run', $process_properties['task']);
+            $process_engine->queue('\Flexio\Jobs\ProcessHandler::saveStdoutToElasticSearch', $elastic_search_params);
+            $process_engine->run();
 
-                /*
-                // we have a content that needs to be indexed
-
-                // get the eid of the stream to import
-                $stream_eid_with_info_to_index = $pipe_task['stream'] ?? '';
-
-                // set the task to empty since the import 'op' is a convention internal to this import process
-                $p->set(array('task' => array()));
-
-                // create a new process engine for running a process
-                $process_properties = array(
-                    'parent_eid' => $pipe_properties['eid'],
-                    'triggered_by' => $triggered_by
-                );
-                $process_engine = \Flexio\Jobs\Process::create();
-                $process_engine->setOwner($owner_user_eid);
-
-                // copy the stream contents from the stream object to the stdin of the process
-                $stored_stream = \Flexio\Object\Stream::load($stream_eid_with_info_to_index);
-                $streamreader = $stored_stream->getReader();
-                $streamwriter = $process_engine->getStdin()->getWriter();
-
-                while (($data = $streamreader->read(32768)) !== false)
-                    $streamwriter->write($data);
-
-                // load the data into the index
-                $elastic_search_params = array(
-                    'index' => $pipe_properties['eid']
-                );
-                $process_engine->queue('\Flexio\Jobs\Convert::run', array('input' => array('format' => 'csv'), 'output' => array('format' => 'ndjson')));
-                $process_engine->queue('\Flexio\Jobs\ProcessHandler::saveStdoutToElasticSearch', $elastic_search_params);
-                $process_engine->run();
-
-                // get the structure and set the various pipe info
-                $structure = $process_engine->getStdout()->getStructure();
-
-                $pipe_returns_info = array();
-                $column_info = $structure->get();
-                foreach ($column_info as $c)
-                {
-                    $name = $c['name'];
-                    $type = $c['type'];
-
-                    // convert structure type to appropriate api/json convention
-                    switch ($type)
-                    {
-
-                        case \Flexio\Base\Structure::TYPE_STRING:
-                        case \Flexio\Base\Structure::TYPE_TEXT:
-                        case \Flexio\Base\Structure::TYPE_CHARACTER:
-                        case \Flexio\Base\Structure::TYPE_WIDECHARACTER:
-                        case \Flexio\Base\Structure::TYPE_DATE:
-                        case \Flexio\Base\Structure::TYPE_DATETIME:
-                            $type = \Flexio\Base\Structure::TYPE_STRING;
-                            break;
-
-                        case \Flexio\Base\Structure::TYPE_NUMBER:
-                        case \Flexio\Base\Structure::TYPE_NUMERIC:
-                        case \Flexio\Base\Structure::TYPE_DOUBLE:
-                            $type = \Flexio\Base\Structure::TYPE_NUMBER;
-                            break;
-                    }
-
-                    $item = array();
-                    $item['name'] = $name;
-                    $item['type'] = $type;
-                    $item['description'] = 'The ' . $name . ' of the item';
-                    $pipe_returns_info[] = $item;
-                }
-
-                $pipe_params_info = array();
-                $pipe_params_info[] = array(
-                    'name' => 'properties',
-                    'type' => 'array',
-                    'description' => 'The properties to return; use "*" for all properties, which is also the default',
-                    'required' => false
-                );
-                $pipe_params_info[] = array(
-                    'name' => 'filter',
-                    'type' => 'string',
-                    'description' => 'Search query to determine the rows to return',
-                    'required' => false
-                );
-                $pipe_params_info[] = array(
-                    'name' => 'config',
-                    'type' => 'string',
-                    'description' => 'Additional configuration items',
-                    'required' => false
-                );
-
-                $pipe_params_examples = array(
-                    '',
-                    '"*"'
-                );
-
-                // update the pipe info
-                $p->set(array('eid_status' => \Model::STATUS_AVAILABLE, 'params' => $pipe_params_info, 'examples' => $pipe_params_examples, 'returns' => $pipe_returns_info));
-            */
-            }
-            else
-            {
-                // we have an ordinary task with an index output, so run the job as usual
-                // and output the data to the index
-
-                // create a new process engine for running a process
-                $process_properties = array(
-                    'parent_eid' => $pipe_properties['eid'],
-                    'task' => $pipe_properties['task'],
-                    'triggered_by' => $triggered_by
-                );
-                $elastic_search_params = array(
-                    'index' => $pipe_properties['eid']
-                );
-                $process_engine = \Flexio\Jobs\Process::create();
-                $process_engine->setOwner($owner_user_eid);
-                $process_engine->queue('\Flexio\Jobs\ProcessHandler::addMountParams', $process_properties);
-                $process_engine->queue('\Flexio\Jobs\Task::run', $process_properties['task']);
-                $process_engine->queue('\Flexio\Jobs\ProcessHandler::saveStdoutToElasticSearch', $elastic_search_params);
-                $process_engine->run();
-
-                // pipe is ready
-                $p->set(array('eid_status' => \Model::STATUS_AVAILABLE));
-            }
+            // pipe is ready
+            $p->set(array('eid_status' => \Model::STATUS_AVAILABLE));
         }
     }
 
