@@ -168,9 +168,8 @@ class Mount
                 case 'yml':
                 case 'py':
                 case 'js':
-                    $content = '';
-                    $connection = \Flexio\Object\Connection::load($connection_eid);
-                    $connection->getService()->read(['path' => $item_info['path']], function($data) use (&$content) {
+                    $vfs = new \Flexio\Services\Vfs($this->getConnection()->getOwner());
+                    $vfs->read($item_info['path'], function($data) use (&$content) {
                         $content .= $data;
                     });
                     $pipe_info = \Flexio\Object\Factory::getPipeInfoFromContent($content, $extension);
@@ -261,14 +260,9 @@ class Mount
         // get the manifest; if we have an HTTP connection, the manifest is at
         // a specific URL; if we have any other connection, look for the flexio.yml
         // file in the base directory
-        $manifest_path_base = '';
         $manifest_path = 'flexio.yml';
-        if ($connection_info['connection_type'] === \Model::CONNECTION_TYPE_HTTP)
-        {
-            if (isset($connection_info['connection_info']) && isset($connection_info['connection_info']['url']))
-                $manifest_path = $connection_info['connection_info']['url'];
-            $manifest_path_base = dirname($manifest_path);
-        }
+        if ($connection_info['connection_type'] === \Model::CONNECTION_TYPE_HTTP && isset($connection_info['connection_info']['url']))
+            $manifest_path = $connection_info['connection_info']['url'];
 
         try
         {
@@ -291,7 +285,23 @@ class Mount
                 if (!isset($f['path']))
                     continue;
 
-                $function_path = strlen($manifest_path_base) === 0 ? $f['path'] : \Flexio\Base\Util::appendUrlPath($manifest_path_base, $f['path']);
+                $function_path = '';
+                if ($connection_info['connection_type'] === \Model::CONNECTION_TYPE_HTTP)
+                {
+                    $manifest_path_base = dirname($manifest_path);
+                    $function_path = \Flexio\Base\Util::appendUrlPath($manifest_path_base, $f['path']);
+                }
+
+                // a manifest can have a relative path or a full http path; if we have
+                // a full http path, leave it as is, otherwise set the relative path based
+                // on the local connection eid
+                if (\Flexio\Base\Util::isValidUrl($function_path) === false)
+                {
+                    $manifest_path_base = $connection_info['eid'];
+                    $function_path = $manifest_path_base . ':/' . $f['path']; // vfs path
+                }
+
+                $function_path = $function_path;
                 $item = [];
                 $item['type'] = 'FILE';
                 $item['path'] = $function_path;
