@@ -376,6 +376,46 @@ class Pipe
         // create a new process object for storing process info
         $process_store = \Flexio\Object\Process::create($process_properties);
 
+        // EXPERIMENTAL: integrations can be based on a team; in these cases, the pipes
+        // in the integration point to the pipes in the team and the request/results need
+        // to be proxied; this allows the team to track the usage as well as allow any
+        // indexes powering the team pipes to be utilized; to track this type of case,
+        // the task has a special type of "op" called "redirect" along with a "path" parameter
+        // specifying the redirect; note: we could use the job engine to process these,
+        // but it's more efficient to stream the result; to still track the job in the
+        // local list of processes, create the object process but don't use the process
+        // engine
+        $op = $process_properties['task']['op'] ?? '';
+        if ($op === 'redirect')
+        {
+            try
+            {
+
+                $client = new \GuzzleHttp\Client(['verify' => false]);
+                $php_stream_handle = \Flexio\System\System::openPhpInputStream(); // pass on input post
+
+                $path = $process_properties['task']['path'] ?? '';
+                $content = array('headers' => array(), 'body' => $php_stream_handle);
+                $options = array('stream' => true);
+                $request = $client->request('POST', $path, $content, $options);
+
+                $stream = $request->getBody();
+                while (!$stream->eof())
+                {
+                    $line = $stream->read(4096);
+                    echo($line);
+                }
+                exit(0);
+            }
+            catch (\Flexio\Base\Exception | \Exception | \Error $e)
+            {
+                // note: we don't want to pass on any error information
+                // from the proxy request, so catch everything and raise a
+                // new exception
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+            }
+        }
+
         // create a new process engine for running a process; only add
         // mount parameters if we're running passthrough mode; otherwise,
         // the cache has already been built and mount parameters aren't needed
