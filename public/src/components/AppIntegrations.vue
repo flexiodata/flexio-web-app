@@ -338,6 +338,12 @@
         var backward_compatible = _.get(this.$route, 'params.integration_name', '')
         return _.get(this.$route, 'params.action', backward_compatible)
       },
+      route_title() {
+        return _.get(this.$route, 'query.title', '')
+      },
+      route_description() {
+        return _.get(this.$route, 'query.description', '')
+      },
       is_quick_start() {
         return this.route_integration == 'quick-start'
       },
@@ -376,6 +382,10 @@
         return find_by_gsheets || find_by_excel
       },
       template_title() {
+        if (this.is_quick_start) {
+          return this.route_title.length > 0 ? this.route_title : 'Flex.io quick start spreadsheet'
+        }
+
         return _.get(this.found_template, 'title', 'this spreadsheet')
       },
       template_description() {
@@ -383,12 +393,6 @@
       },
       template_target() {
         return _.get(this.$route, 'query.target', '')
-      },
-      route_title() {
-        return _.get(this.$route, 'query.title', '')
-      },
-      route_description() {
-        return _.get(this.$route, 'query.description', '')
       },
       title() {
         if (this.route_action == 'template' && this.template_title != 'this spreadsheet') {
