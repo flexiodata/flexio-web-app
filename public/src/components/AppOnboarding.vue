@@ -376,7 +376,8 @@
 
           if (next_step == 'complete') {
             if (_.isString(this.gsheets_spreadsheet_id) || _.isString(this.excel_spreadsheet_path)) {
-              this.openTemplateChooserPage(this.gsheets_spreadsheet_id, this.excel_spreadsheet_path, false)
+              var title = this.route_title.length > 0 ? this.route_title : undefined
+              this.openTemplateChooserPage(this.gsheets_spreadsheet_id, this.excel_spreadsheet_path, title, false)
               return
             }
           }
@@ -408,8 +409,9 @@
       onTemplateClick(template) {
         var gsheets_spreadsheet_id = _.get(template, 'gsheets_spreadsheet_id', undefined)
         var excel_spreadsheet_path = _.get(template, 'excel_spreadsheet_path', undefined)
+        var title = _.get(template, 'title', undefined)
 
-        this.openTemplateChooserPage(gsheets_spreadsheet_id, excel_spreadsheet_path, true)
+        this.openTemplateChooserPage(gsheets_spreadsheet_id, excel_spreadsheet_path, title, true)
       },
       onSelectedIntegrationChange(val, old_val) {
         if (old_val.length == 0 && val.length > 0) {
@@ -530,22 +532,18 @@
           this.$router.push({ path })
         })
       },
-      openTemplateChooserPage(gsheets_spreadsheet_id, excel_spreadsheet_path, open_new_window) {
+      openTemplateChooserPage(gsheets_spreadsheet_id, excel_spreadsheet_path, title, open_new_window) {
         // TODO: *IF* we ever wanted to make this thing support adding
         //       multiple integrations at the same time again, we'd need
         //       to make sure this wasn't hard-coded like this
         var integration_name = this.is_quick_start ? 'quick-start' : _.get(this.output_mounts, '[0].name', '')
 
-        var query_params = {
+        var query_params = _.omitBy({
           gsheets_spreadsheet_id,
           excel_spreadsheet_path,
+          title,
           context: 'app'
-        }
-
-        // only include the title if we're on the quick start guide
-        if (this.is_quick_start) {
-          query_params.title = _.get(this.$route, 'query.title', 'Quick Start Guide')
-        }
+        }, _.isNil)
 
         var query_str = buildQueryString(query_params)
 
