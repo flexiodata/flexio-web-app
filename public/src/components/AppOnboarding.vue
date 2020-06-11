@@ -536,12 +536,18 @@
         //       to make sure this wasn't hard-coded like this
         var integration_name = this.is_quick_start ? 'quick-start' : _.get(this.output_mounts, '[0].name', '')
 
-        var query_str = buildQueryString({
+        var query_params = {
           gsheets_spreadsheet_id,
           excel_spreadsheet_path,
-          title: this.is_quick_start ? _.get(this.$route, 'query.title', 'Quick Start Guide') : undefined,
           context: 'app'
-        })
+        }
+
+        // only include the title if we're on the quick start guide
+        if (this.is_quick_start) {
+          query_params.title = _.get(this.$route, 'query.title', 'Quick Start Guide')
+        }
+
+        var query_str = buildQueryString(query_params)
 
         var team_name = this.active_team_name
         var path = `/integrations/${integration_name}/template?${query_str}`
