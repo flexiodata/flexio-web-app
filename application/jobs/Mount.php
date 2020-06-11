@@ -404,28 +404,22 @@ class Mount
     {
         $connection_info = $this->getConnection()->get();
 
-        // if we have a regular file type service, just get the list of files
-        // from the service; TODO: use file system interface as test
-        if ($connection_info['connection_type'] !== \Model::CONNECTION_TYPE_HTTP)
+        // get the manifest; if we have an HTTP connection, the manifest is at
+        // a specific URL; if we have any other connection, look for the flexio.yml
+        // file in the base directory
+        $manifest_path_base = '';
+        $manifest_path = 'flexio.yml';
+        if ($connection_info['connection_type'] === \Model::CONNECTION_TYPE_HTTP)
         {
-            $service =  $this->getConnection()->getService();
-            return $service->list();
+            if (isset($connection_info['connection_info']) && isset($connection_info['connection_info']['url']))
+                $manifest_path = $connection_info['connection_info']['url'];
+            $manifest_path_base = dirname($manifest_path);
         }
-
-        // in the case of HTTP, the list of files to return is specific to a particular
-        // manifest at a URL (which is why a general service list implementation isn't
-        // used); get the manifest and build up the list of files from the manifest
-
-        $manifest_url = '';
-        if (isset($connection_info['connection_info']) && isset($connection_info['connection_info']['url']))
-            $manifest_url = $connection_info['connection_info']['url'];
-        $manifest_url_base = dirname($manifest_url);
 
         try
         {
             $content = '';
-            $http_service = \Flexio\Services\Http::create();
-            $http_service->read(['path' => $manifest_url], function($data) use (&$content) {
+            $this->getConnection()->getService()->read(['path' => $manifest_path], function($data) use (&$content) {
                 $content .= $data;
             });
 
@@ -443,7 +437,7 @@ class Mount
                 if (!isset($f['path']))
                     continue;
 
-                $function_path = \Flexio\Base\Util::appendUrlPath($manifest_url_base, $f['path']);
+                $function_path = strlen($manifest_path_base) === 0 ? $f['path'] : \Flexio\Base\Util::appendUrlPath($manifest_path_base, $f['path']);
                 $item = [];
                 $item['type'] = 'FILE';
                 $item['path'] = $function_path;
