@@ -168,7 +168,8 @@ class Factory
                 return self::getPipeParamsFromYaml($content);
 
             // if we have one of the languages, extract the yaml, get the properties,
-            // and then set the execute job manually
+            // and then set the execute job manually; override the task with a task
+            // to execute the content
             $yaml = \Flexio\Base\Yaml::extract($content);
             $pipe_params = self::getPipeParamsFromYaml($yaml);
 
@@ -212,6 +213,7 @@ class Factory
         $pipe_params['params'] = $pipe_info_from_content['params'] ?? [];
         $pipe_params['returns'] = $pipe_info_from_content['returns'] ?? [];
         $pipe_params['notes'] = $pipe_info_from_content['notes'] ?? '';
+        $pipe_params['task'] = $pipe_info_from_content['task'] ?? json_decode('{}');
 
         // convert config type into pipe run mode; default to pass-through
         $pipe_params['run_mode'] = \Model::PIPE_RUN_MODE_PASSTHROUGH;

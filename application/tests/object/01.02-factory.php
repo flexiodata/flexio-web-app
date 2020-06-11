@@ -30,7 +30,10 @@ class Test
             "deploy_mode": "R",
             "run_mode": "I",
             "title": "Flex Sample Contacts",
-            "description": "Returns sample contact information"
+            "description": "Returns sample contact information",
+            "task": {
+                "op": "sequence"
+            }
         }';
         \Flexio\Tests\Check::assertInArray('A.1', '\Flexio\Object\Factory::getPipeInfoFromContent(); check that properties are properly read',  $actual, $expected, $results);
 
@@ -42,7 +45,11 @@ class Test
             "deploy_mode": "R",
             "run_mode": "I",
             "title": "Flex Sample Contacts",
-            "description": "Returns sample contact information"
+            "description": "Returns sample contact information",
+            "task": {
+                "op": "execute",
+                "lang": "python"
+            }
         }';
         \Flexio\Tests\Check::assertInArray('A.2', '\Flexio\Object\Factory::getPipeInfoFromContent(); check that properties are properly read',  $actual, $expected, $results);
     }
@@ -243,5 +250,8 @@ examples:
   - '""'
   - '"first_name, last_name, email"'
   - '"first_name, city, state, zipcode", "CA"'
+task:
+  op: execute
+  lang: python
 EOD;
 }
