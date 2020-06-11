@@ -430,7 +430,7 @@ class Connection
 
         // create a process host to connect the store/engine and run the process
         $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
-        $process_host->run(false /*true: run in background*/);
+        $process_host->run(true /*true: run in background*/);
 
         // return information about the connection
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
