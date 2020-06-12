@@ -3,12 +3,13 @@
     <p class="center mw7">You're all set and ready to go. Here's a set of example spreadsheets and other resources to help get you started. If you need anything, please let us know!</p>
 
     <h3 class="mv4 tc">Select an example sheet</h3>
-    <TemplateList
-      :key="t.icon"
-      :icon="t.icon"
+    <IntegrationTemplateList
+      :key="t.name"
+      :integration-name="t.name"
+      :integration-icon="t.icon"
       :templates="t.templates"
       @template-click="onTemplateClick"
-      v-for="t in template_list_items"
+      v-for="t in our_integrations"
     />
 
     <div class="h2"></div>
@@ -55,9 +56,10 @@
 </template>
 
 <script>
-  import TemplateList from '@/components/TemplateList'
+  import IntegrationTemplateList from '@/components/IntegrationTemplateList'
 
   const quick_start_templates = {
+    name: 'quick-start',
     icon: 'https://static.flex.io/assets/logos2/quick-start.png',
     templates: [{
        name: 'flexio-quick-start-guide',
@@ -99,19 +101,19 @@
       }
     },
     components: {
-      TemplateList
+      IntegrationTemplateList
     },
     data() {
       return getDefaultState()
     },
     computed: {
-      template_list_items() {
+      our_integrations() {
         return [].concat(this.quick_start_templates).concat(this.integrationInfo)
       }
     },
     methods: {
-      onTemplateClick(template) {
-        this.$emit('template-click', template)
+      onTemplateClick(template, integration_name) {
+        this.$emit('template-click', template, integration_name)
       },
       onNeedHelpClick() {
         if (window.Intercom) {

@@ -372,6 +372,7 @@
       },
       integration_info() {
         return [{
+          name: this.route_integration,
           icon: this.integration_icon,
           templates: this.templates
         }]

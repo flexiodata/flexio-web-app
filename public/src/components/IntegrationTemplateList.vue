@@ -3,15 +3,15 @@
     <div class="template-list">
       <div
         class="flex flex-row template-item"
-        :class="icon.length > 0 ? 'items-center' : ''"
+        :class="integrationIcon.length > 0 ? 'items-center' : ''"
         :key="template.title"
-        @click="$emit('template-click', template)"
+        @click="$emit('template-click', template, integrationName)"
         v-for="template in templates"
       >
         <img
-          :src="icon"
+          :src="integrationIcon"
           class="item-icon"
-          v-if="icon.length > 0"
+          v-if="integrationIcon.length > 0"
         >
         <div class="item-body">
           <h4 class="mv0 item-title">{{template.title}}</h4>
@@ -30,7 +30,11 @@
 <script>
   export default {
     props: {
-      icon: {
+      integrationName: {
+        type: String,
+        default: ''
+      },
+      integrationIcon: {
         type: String,
         default: ''
       },
