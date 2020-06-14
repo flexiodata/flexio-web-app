@@ -124,9 +124,9 @@
             <div class="bg-nearer-white pa4 br2 tc">
               <p class="mb0 f4 fw6 flex flex-row items-center justify-center">
                 <Spinner :size="28" :line-size="2" class="mr2" v-if="false" />
-                <span>Importing functions...</span>
+                <span>We're preparing your functions...</span>
               </p>
-              <p class="center mw6 mb0 f7 i light-silver lh-copy">NOTE: This process may take a couple of minutes to complete. You're free to continue with the setup &mdash; the import will continue in the background.</p>
+              <p class="mb0 f7 i light-silver lh-copy">NOTE: This process may take a few minutes to complete, but you can continue with your setup.</p>
             </div>
             <div class="mt4" v-if="is_coming_from_addon">
               <p>Click <strong>Done</strong> below to close this window and start using this integration in your spreadsheet.</p>

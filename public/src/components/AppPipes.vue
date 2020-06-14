@@ -163,9 +163,9 @@
                   <div class="pa3 br2 import-notice">
                     <div class="flex flex-row items-center">
                       <Spinner size="small" />
-                      <span class="ml2">Importing...</span>
+                      <span class="fw6 ml2">Importing...</span>
                     </div>
-                    <div class="pt2 lh-title silver i">NOTE: Importing from a function mount may take awhile to complete</div>
+                    <div class="pt2 pr2 lh-title silver i">NOTE: This process may take a few minutes to complete</div>
                   </div>
                 </div>
                 <div
