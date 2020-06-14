@@ -79,7 +79,7 @@
           <p class="tc f3 lh-title">Your integration was created successfully!</p>
           <div class="bg-nearer-white pa4 br2 tc">
             <p class="mb0 f4 fw6 flex flex-row items-center justify-center">
-              <Spinner class="mr2" />
+              <Spinner :size="28" :line-size="2" class="mr2" v-if="false" />
               <span>Importing functions...</span>
             </p>
             <p class="center mw6 mb0 f7 i light-silver lh-copy">NOTE: This process may take a couple of minutes to complete. You're free to continue with the setup &mdash; the import will continue in the background.</p>
