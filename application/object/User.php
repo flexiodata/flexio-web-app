@@ -318,6 +318,10 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public function checkVerifyCode(string $verify_code) : bool
     {
+        // allow special code for development
+        if (IS_LOCALHOST() && $verify_code = '999999')
+            return true;
+
         return $this->getModel()->user->checkVerifyCode($this->getEid(), $verify_code);
     }
 
