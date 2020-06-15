@@ -697,6 +697,21 @@ class User extends ModelBase
         return false;
     }
 
+    public function isIntegration(string $eid) : bool
+    {
+        if (!\Flexio\Base\Eid::isValid($eid))
+            return false;
+
+        $role = $this->getDatabase()->fetchOne("select role from tbl_user where eid = ?", $eid);
+        if ($role === false)
+            return false;
+
+        if ($role === \Model::SYSTEM_ROLE_INTEGRATION)
+            return true;
+
+        return false;
+    }
+
     public static function isValidUserStatus(string $status) : bool
     {
         // note: similar to Model::isValidStatus(), except that STATUS_DELETED

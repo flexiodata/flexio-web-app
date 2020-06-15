@@ -334,6 +334,10 @@ class Test
         $expected = 'A';
         \Flexio\Tests\Check::assertString('H.2', 'System role status constant',  $actual, $expected, $results);
 
+        $actual = \Model::SYSTEM_ROLE_INTEGRATION;
+        $expected = 'I';
+        \Flexio\Tests\Check::assertString('H.2', 'System role status constant',  $actual, $expected, $results);
+
 
 
         // TEST: Model system role status constants; the database stores raw values
