@@ -70,7 +70,8 @@ function IS_PROCESSTRYCATCH()
 
 function IS_LOCALHOST()
 {
-    return (GET_HTTP_HOST() == 'localhost');
+    $host = GET_HTTP_HOST();
+    return ($host === 'localhost' || $host === 'localhost:8080');
 }
 
 function IS_CLI()   // determines if this is a command line environment
