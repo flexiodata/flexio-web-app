@@ -6,7 +6,7 @@
         :class="integrationIcon.length > 0 ? 'items-center' : ''"
         :key="template.title"
         @click="$emit('template-click', template, integrationName)"
-        v-for="template in templates"
+        v-for="template in public_templates"
       >
         <img
           :src="integrationIcon"
@@ -41,6 +41,11 @@
       templates: {
         type: Array,
         required: true
+      }
+    },
+    computed: {
+      public_templates() {
+        return _.filter(this.templates, { is_public: true })
       }
     },
     methods: {
