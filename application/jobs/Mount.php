@@ -168,6 +168,7 @@ class Mount
                 case 'yml':
                 case 'py':
                 case 'js':
+                    $content = '';
                     $vfs = new \Flexio\Services\Vfs($this->getConnection()->getOwner());
                     $vfs->read($item_info['path'], function($data) use (&$content) {
                         $content .= $data;

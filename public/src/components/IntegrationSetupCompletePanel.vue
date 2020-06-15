@@ -67,7 +67,7 @@
        description: 'Explore a set of examples for using Flex.io with this spreadsheet guide',
        gsheets_spreadsheet_id: '14samTw-5MJ8IkBy89LIu4i2K4bshJ-qNKRJpY5mp8SU',
        excel_spreadsheet_path: 'https://static.flex.io/templates/quick-start/flexio-quick-start-guide.xlsx',
-       is_public: false,
+       is_public: true,
        is_private: false
     }]
   }

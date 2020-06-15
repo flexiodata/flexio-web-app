@@ -376,21 +376,19 @@ class Pipe
         // create a new process object for storing process info
         $process_store = \Flexio\Object\Process::create($process_properties);
 
-        // EXPERIMENTAL: integrations can be based on a team; in these cases, the pipes
-        // in the integration point to the pipes in the team and the request/results need
-        // to be proxied; this allows the team to track the usage as well as allow any
-        // indexes powering the team pipes to be utilized; to track this type of case,
-        // the task has a special type of "op" called "redirect" along with a "path" parameter
-        // specifying the redirect; note: we could use the job engine to process these,
-        // but it's more efficient to stream the result; to still track the job in the
-        // local list of processes, create the object process but don't use the process
-        // engine
+        // EXPERIMENTAL (LINKED PIPE): integrations can be based on a team; in these cases, the
+        // pipes in the integration point to the pipes in the team and the request/results need
+        // to be proxied; this allows the team to track the usage as well as allow any indexes
+        // powering the team pipes to be utilized; to track this type of case, the task has a
+        // special type of "op" called "redirect" along with a "path" parameter specifying the
+        // redirect; note: we could use the job engine to process these, but it's more efficient
+        // to stream the result; to still track the job in the local list of processes, create
+        // the object process but don't use the process engine
         $op = $process_properties['task']['op'] ?? '';
         if ($op === 'redirect')
         {
             try
             {
-
                 $client = new \GuzzleHttp\Client(['verify' => false]);
                 $php_stream_handle = \Flexio\System\System::openPhpInputStream(); // pass on input post
 
