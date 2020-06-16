@@ -389,14 +389,25 @@ class Pipe
         {
             try
             {
+                // we want make a request as the current user; generate a token representing
+                // the user and make an api call with the token
+                $token = \Flexio\Object\User::generateTokenFromUserEid($requesting_user_eid);
+
+                // make the request
                 $client = new \GuzzleHttp\Client(['verify' => false]);
                 $php_stream_handle = \Flexio\System\System::openPhpInputStream(); // pass on input post
-
                 $path = $process_properties['task']['path'] ?? '';
-                $content = array('headers' => array(), 'body' => $php_stream_handle);
+                $content = [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $token,
+                        'Accept'        => 'application/json'
+                    ],
+                    'body' => $php_stream_handle
+                ];
                 $options = array('stream' => true);
                 $request = $client->request('POST', $path, $content, $options);
 
+                // process the response
                 $stream = $request->getBody();
                 while (!$stream->eof())
                 {
