@@ -60,7 +60,7 @@
 
   const quick_start_templates = {
     name: 'quick-start',
-    icon: 'https://static.flex.io/assets/icon/icon-quick-start-128.png',
+    icon: 'https://static.flex.io/assets/logos/quick-start.png',
     templates: [{
        name: 'flexio-quick-start-guide',
        title: 'Flex.io quick start spreadsheet',
