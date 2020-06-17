@@ -22,7 +22,7 @@ class Admin
     {
         $requesting_user_eid = $request->getRequestingUser();
 
-        // only allow users from flex.io to get this info
+        // only allow administrators
         $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
         if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
@@ -57,7 +57,7 @@ class Admin
     {
         $requesting_user_eid = $request->getRequestingUser();
 
-        // only allow users from flex.io to get this info
+        // only allow administrators
         $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
         if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
@@ -96,7 +96,7 @@ class Admin
         // convert owned_by/created_by identifiers into eids
         $validated_query_params = self::convertUserIdentifierQueryParams($validated_query_params);
 
-        // only allow users from flex.io to get this info
+        // only allow administrators
         $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
         if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
@@ -150,7 +150,7 @@ class Admin
         // convert owned_by/created_by identifiers into eids
         $validated_query_params = self::convertUserIdentifierQueryParams($validated_query_params);
 
-        // only allow users from flex.io to get this info
+        // only allow administrators
         $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
         if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
@@ -223,7 +223,7 @@ class Admin
         // convert owned_by/created_by identifiers into eids
         $validated_query_params = self::convertUserIdentifierQueryParams($validated_query_params);
 
-        // only allow users from flex.io to get this info
+        // only allow administrators
         $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
         if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
@@ -266,7 +266,7 @@ class Admin
         // convert owned_by/created_by identifiers into eids
         $validated_query_params = self::convertUserIdentifierQueryParams($validated_query_params);
 
-        // only allow users from flex.io to get this info
+        // only allow administrators
         $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
         if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
@@ -309,7 +309,7 @@ class Admin
         // convert owned_by/created_by identifiers into eids
         $validated_query_params = self::convertUserIdentifierQueryParams($validated_query_params);
 
-        // only allow users from flex.io to get this info
+        // only allow administrators
         $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
         if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
@@ -370,7 +370,7 @@ class Admin
         // convert owned_by/created_by identifiers into eids
         $validated_query_params = self::convertUserIdentifierQueryParams($validated_query_params);
 
-        // only allow users from flex.io to get this info
+        // only allow administrators
         $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
         if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
@@ -413,7 +413,7 @@ class Admin
     {
         $requesting_user_eid = $request->getRequestingUser();
 
-        // only allow users from flex.io to get this info
+        // only allow administrators
         $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
         if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
@@ -429,7 +429,7 @@ class Admin
     {
         $requesting_user_eid = $request->getRequestingUser();
 
-        // only allow users from flex.io to get this info
+        // only allow administrators
         $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
         if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
@@ -447,7 +447,7 @@ class Admin
     {
         $requesting_user_eid = $request->getRequestingUser();
 
-        // only allow users from flex.io to get this info
+        // only allow administrators
         $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
         if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
@@ -465,7 +465,7 @@ class Admin
     {
         $requesting_user_eid = $request->getRequestingUser();
 
-        // only allow users from flex.io to get this info
+        // only allow administrators
         $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
         if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
@@ -527,7 +527,7 @@ class Admin
     {
         $requesting_user_eid = $request->getRequestingUser();
 
-        // only allow users from flex.io to get this info
+        // only allow administrators to do this
         $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
         if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
@@ -542,6 +542,64 @@ class Admin
 
         $cron = new \Flexio\Api\Cron;
         $cron->run();
+    }
+
+    public static function indexCleanup(\Flexio\Api\Request $request) : void
+    {
+        // deletes any indices having with an associated pipe that's been deleted
+
+        $requesting_user_eid = $request->getRequestingUser();
+
+        // only allow administrators to do this
+        $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
+        if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        if ($requesting_user->isAdministrator() !== true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        $elasticsearch = \Flexio\System\System::getSearchCache();
+        $stats = $elasticsearch->getIndicesStats();
+        $indices = $stats['indices'];
+
+        $result = [];
+        foreach ($indices as $index_name => $index_info)
+        {
+            $pipe_info = array();
+            try
+            {
+                // for each index, see if we have a pipe
+                $pipe = \Flexio\Object\Pipe::load($index_name);
+                if ($pipe->getStatus() !== \Model::STATUS_DELETED)
+                    continue;
+
+                // if the pipe has been deleted, then delete the corresponding index
+                $elasticsearch->deleteIndex($pipe->getEid());
+
+                // report the deleted indices
+                $uuid = $index_info['uuid'] ?? '';
+                $doc_count = $index_info['primaries']['docs'] ?? null;
+                $size = $index_info['primaries']['store']['size_in_bytes'] ?? null;
+
+                // TODO: include other information from the stats
+                $result[] = array(
+                                'name' => $index_name,
+                                'uuid' => $uuid,
+                                'size' => $size,
+                                'doc_count' => $doc_count,
+                                'pipe_eid' => $pipe_info['eid'] ?? '',
+                                'pipe_eid_status' => $pipe_info['eid_status'] ?? '',
+                                'pipe_owner' => $pipe_info['owned_by'] ?? ''
+                            );
+            }
+            catch (\Flexio\Base\Exception $e)
+            {
+                // pipe didn't load; fall through
+            }
+        }
+
+        // report the indices that have been deleted
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        \Flexio\Api\Response::sendContent($result);
     }
 
     private static function checkServerSettings() : array

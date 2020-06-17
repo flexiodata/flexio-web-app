@@ -140,6 +140,9 @@ class Api
         'POS /admin/email/run'                        => '\Flexio\Api\Admin::email',
         'POS /admin/cron/run'                         => '\Flexio\Api\Admin::cron',
 
+        // maintenance
+        'POS /admin/index/cleanup'                    => '\Flexio\Api\Admin::indexCleanup',
+
         // system usage
         'GET /admin/info/users'                       => '\Flexio\Api\Admin::users',
         'GET /admin/info/actions'                     => '\Flexio\Api\Admin::actions',
