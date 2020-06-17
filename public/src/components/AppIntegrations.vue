@@ -126,7 +126,7 @@
                 <Spinner :size="28" :line-size="2" class="mr2" v-if="false" />
                 <span>Next, let's get the spreadsheet add-on for Excel or Google Sheets</span>
               </p>
-              <p class="mb0 f7 i light-silver lh-copy">The add-ons let you work with the data from your integration in your spreadsheets.</p>
+              <p class="mb0 f7 i light-silver lh-copy">The add-ons let you work with the data from your integration in your spreadsheet.</p>
             </div>
             <div class="mt4" v-if="is_coming_from_addon">
               <p>Click <strong>Done</strong> below to close this window and start using this integration in your spreadsheet.</p>

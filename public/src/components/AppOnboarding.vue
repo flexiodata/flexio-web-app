@@ -80,9 +80,9 @@
           <div class="bg-nearer-white pa4 br2 tc">
             <p class="mb0 f4 fw6 flex flex-row items-center justify-center">
               <Spinner :size="28" :line-size="2" class="mr2" v-if="false" />
-              <span>We're preparing your functions...</span>
+              <span>Next, let's get the spreadsheet add-on for Excel or Google Sheets</span>
             </p>
-            <p class="mb0 f7 i light-silver lh-copy">NOTE: This process may take a few minutes to complete, but you can continue with your setup.</p>
+            <p class="mb0 f7 i light-silver lh-copy">The add-ons let you work with the data from your integration in your spreadsheet.</p>
           </div>
         </ServiceIconWrapper>
       </div>
