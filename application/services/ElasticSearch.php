@@ -297,7 +297,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             $rows_to_write = array();
 
             // small delay
-            usleep(100000); // sleep 1000ms
+            usleep(100000); // sleep 100ms
         }
 
         // write out whatever is left over
