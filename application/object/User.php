@@ -176,8 +176,24 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
     {
         // purges all rows a given user owns, including the user itself;
         // note: can't be undone; this is a physical delete
-
         $owner_eid = $this->getEid();
+
+        // get a list of pipes for the user and delete any associated
+        // index for the these pipes
+        $elasticsearch = \Flexio\System\System::getSearchCache();
+
+        $filter = array('owned_by' => $owner_eid);
+        $pipes = \Flexio\Object\Pipe::list($filter);
+        foreach ($pipes as $p)
+        {
+            $pipe_eid = $p->getEid();
+
+            // sanity check to make sure the pipes were filtered to the owner
+            if ($p->getOwner() !== $owner_eid)
+                continue;
+
+            $elasticsearch->deleteIndex($pipe_eid);
+        }
 
         // physically delete the database records owned by the user
         $this->getModel()->action->purge($owner_eid);
