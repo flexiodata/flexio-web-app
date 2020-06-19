@@ -395,15 +395,28 @@ class Connection
         if ($connection_info['connection_mode'] !== \Model::CONNECTION_MODE_FUNCTION)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
-        // update the connection and delete associated pipes; note: the mount job
-        // also does this, but we want to do this while still blocking so that the
-        // result from this function shows the status change and doesn't return
-        // any associated pipes; TODO: should we make something in the job that
-        // allows initial job stuff to be set in non-blocking mode before the job
-        // runs?
+        // update the connection;
         $connection->set(array('eid_status' => \Model::STATUS_UPDATING));
+
+        // delete associated pipes; note: the mount job also does this, but we want
+        // to do this while still blocking so that the result from this function shows
+        // the status change and doesn't return any associated pipes; TODO: should we
+        // make something in the job that allows initial job stuff to be set in
+        // non-blocking mode before the job runs?
         $pipe_model = \Flexio\System\System::getModel()->pipe;
-        $pipes_to_update = array('parent_eid' => $connection->getEid());
+        $pipes_to_update = array(
+            'parent_eid' => $connection->getEid(),
+            'eid_status' => [\Model::STATUS_PENDING, \Model::STATUS_UPDATING, \Model::STATUS_AVAILABLE]
+        );
+        $pipes = \Flexio\Object\Pipe::list($pipes_to_update);
+
+        // delete any associated index for these pipes and then delete the pipes
+        $elasticsearch = \Flexio\System\System::getSearchCache();
+        foreach ($pipes as $p)
+        {
+            $pipe_eid = $p->getEid();
+            $elasticsearch->deleteIndex($pipe_eid);
+        }
         $process_arr = array('eid_status' => \Model::STATUS_DELETED, 'name' => '');
         $pipe_model->update($pipes_to_update, $process_arr);
 

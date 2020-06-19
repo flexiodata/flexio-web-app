@@ -106,8 +106,33 @@ class Mount
         if ($connection_mode !== \Model::CONNECTION_MODE_FUNCTION)
             return;
 
+        // get a list of pipes for the connection that haven't already
+        // been deleted
         $pipe_model = \Flexio\System\System::getModel()->pipe;
-        $pipes_to_update = array('parent_eid' => $connection_eid);
+        $pipes_to_update = array(
+            'parent_eid' => $connection_eid,
+            'eid_status' => [\Model::STATUS_PENDING, \Model::STATUS_UPDATING, \Model::STATUS_AVAILABLE]
+        );
+        $pipes = \Flexio\Object\Pipe::list($pipes_to_update);
+
+        // delete any associated index for these pipes
+        $elasticsearch = \Flexio\System\System::getSearchCache();
+
+        $result = array();
+        foreach ($pipes as $p)
+        {
+            $info = $p->get();
+            $result[] = array(
+                'eid' => $info['eid'],
+                'eid_status' => $info['eid_status'],
+                'name' => $info['name']
+            );
+
+            $pipe_eid = $p->getEid();
+            $elasticsearch->deleteIndex($pipe_eid);
+        }
+
+        // set the deleted flag
         $process_arr = array('eid_status' => \Model::STATUS_DELETED, 'name' => '');
         $pipe_model->update($pipes_to_update, $process_arr);
     }
