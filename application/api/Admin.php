@@ -544,6 +544,69 @@ class Admin
         $cron->run();
     }
 
+    public static function userPurge(\Flexio\Api\Request $request) : void
+    {
+        // purges a list of users; note: this deletes users and their associated
+        // records from the database; it can't be undone
+
+        $post_params = $request->getPostParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
+        // only allow administrators to do this
+        $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
+        if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        if ($requesting_user->isAdministrator() !== true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        // for bulk purge, incoming form is an array of users to purge in
+        // the following format where the value of the eid key is the user
+        // eid:
+        // [{"eid": ""}, {"eid": ""}, ...]
+
+        // make sure we have an array of at least one item to delete
+        $user_eids_to_purge = $post_params;
+        if (!is_array($user_eids_to_purge))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+        if (count($user_eids_to_purge) === 0)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        // purge the users
+        $result = array();
+        foreach ($user_eids_to_purge as $u)
+        {
+            try
+            {
+                // load the user
+                $user_eid = $u['eid'] ?? '';
+                $user = \Flexio\Object\User::load($user_eid);
+                $user_info = $user->get();
+
+                // purge the user
+                $purge_result = $user->purge();
+                if ($purge_result === true)
+                {
+                    $result[] = array(
+                        'eid' => $user_info['eid'],
+                        'eid_status' => $user_info['eid_status'],
+                        'username' => $user_info['username'],
+                        'first_name' => $user_info['first_name'],
+                        'last_name' => $user_info['last_name'],
+                        'email' => $user_info['email']
+                    );
+                }
+            }
+            catch (\Flexio\Base\Exception $e)
+            {
+                // fall through; don't error out
+            }
+        }
+
+        // report the users that have been purged
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        \Flexio\Api\Response::sendContent($result);
+    }
+
     public static function indexCleanup(\Flexio\Api\Request $request) : void
     {
         // deletes any indices having with an associated pipe that's been deleted

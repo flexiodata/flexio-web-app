@@ -141,7 +141,8 @@ class Api
         'POS /admin/cron/run'                         => '\Flexio\Api\Admin::cron',
 
         // maintenance
-        'POS /admin/index/cleanup'                    => '\Flexio\Api\Admin::indexCleanup',
+        'POS /admin/maintenance/index/cleanup'        => '\Flexio\Api\Admin::indexCleanup',
+        'POS /admin/maintenance/user/purge'           => '\Flexio\Api\Admin::userPurge',
 
         // system usage
         'GET /admin/info/users'                       => '\Flexio\Api\Admin::users',
