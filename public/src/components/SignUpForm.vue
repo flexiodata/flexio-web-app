@@ -79,6 +79,17 @@
       <span class="f8 dark-red" v-show="has_password_error">{{password_error}}</span>
     </div>
     <div class="mv3">
+      <input
+        type="text"
+        placeholder="Promo code"
+        auto-complete="off"
+        spellcheck="false"
+        :class="input_cls"
+        v-model="promocode"
+      >
+      <span class="f8 dark-red" v-show="has_promocode_error">{{promocode_error}}</span>
+    </div>
+    <div class="mv3">
       <button
         type="button"
         :class="button_cls"
@@ -87,13 +98,13 @@
       >
         {{button_label}}
       </button>
-      <div class="mt1 f8 fw6 black-60">
+      <div class="mt2 f8 fw6 black-60">
         By signing up, you agree to Flex.io's
         <a class="link underline-hover blue" href="/terms" target="_blank" rel="noopener noreferrer">Terms</a> and
         <a class="link underline-hover blue" href="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.
       </div>
     </div>
-    <div class="mt3 pt2 f5 fw6 tc">
+    <div class="mt3 mb2 pt2 f5 fw6 tc">
       Already have an account?
       <button type="button" class="link dib blue underline-hover db fw6" @click="$emit('sign-in-click')">Sign in</button>
     </div>
@@ -118,6 +129,7 @@
         username: '',
         email: '',
         password: '',
+        promocode: '',
         verify_code: '',
         email_provided: false,
         is_submitting: false,
@@ -130,7 +142,8 @@
     watch: {
       email: function(val, old_val) { this.checkSignup('email') },
       username: function(val, old_val) { this.checkSignup('username') },
-      password: function(val, old_val) { this.checkSignup('password') }
+      password: function(val, old_val) { this.checkSignup('password') },
+      promocode: function(val, old_val) { this.checkSignup('promocode') }
     },
     computed: {
       ...mapState({
@@ -153,6 +166,9 @@
       password_error() {
         return _.get(this.ss_errors, 'password.message', '')
       },
+      promocode_error() {
+        return _.get(this.ss_errors, 'promocode.message', '')
+      },
       has_email_error() {
         return this.email_error.length > 0
       },
@@ -162,8 +178,11 @@
       has_password_error() {
         return this.password_error.length > 0
       },
+      has_promocode_error() {
+        return this.promocode_error.length > 0
+      },
       has_errors() {
-        return this.has_email_error || this.has_username_error || this.has_password_error
+        return this.has_email_error || this.has_username_error || this.has_password_error || this.has_promocode_error
       }
     },
     mounted() {
@@ -177,7 +196,7 @@
     methods: {
       getAttrs() {
         // assemble non-empty values for submitting to the backend
-        return _.pick(this.$data, ['first_name', 'last_name', 'username', 'email', 'password', 'verify_code'])
+        return _.pick(this.$data, ['first_name', 'last_name', 'username', 'email', 'password', 'promocode', 'verify_code'])
       },
       checkSignup: _.debounce(function(validate_key, callback) {
         var attrs = this.getAttrs()
@@ -194,6 +213,10 @@
           key: 'password',
           value: _.get(attrs, 'password', ''),
           type: 'password'
+        },{
+          key: 'promocode',
+          value: _.get(attrs, 'promocode', ''),
+          type: 'promocode'
         }]
 
         // if a validation key is provided; only run validation on that key
