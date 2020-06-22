@@ -1285,7 +1285,6 @@ class ScriptHost
         return $associative ? $res : array_values($res);
     }
 
-
     public function func_kvGet(string $key)
     {
         global $g_config;
@@ -1358,6 +1357,112 @@ class ScriptHost
             $redis->decr($store_key);
         else
             $redis->decrBy($store_key, $value);
+    }
+
+    public function func_indexCreate(string $name, string $params)
+    {
+        // get the owner
+        $owner_user_eid = $this->getProcess()->getOwner();
+
+        // check the rights on the owner; ability to create an object is governed
+        // currently by user write privileges
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        if ($owner_user->allows($owner_user_eid, \Flexio\Api\Action::TYPE_PIPE_CREATE) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        // create the object
+        $pipe_properties = @json_decode($params, true);
+        $pipe_properties['name'] = $name;
+        $pipe_properties['owned_by'] = $owner_user_eid;
+        $pipe_properties['created_by'] = $owner_user_eid;
+        $pipe = \Flexio\Object\Pipe::create($pipe_properties);
+    }
+
+    public function func_indexRemove(string $name)
+    {
+        // get the owner
+        $owner_user_eid = $this->getProcess()->getOwner();
+
+        // load the object; make sure the eid is associated with the owner
+        // as an additional check
+        $pipe_eid = \Flexio\Object\Pipe::getEidFromName($owner_user_eid, $name);
+        if ($pipe_eid === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+        $pipe = \Flexio\Object\Pipe::load($pipe_eid);
+        if ($owner_user_eid !== $pipe->getOwner())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+        // check the rights on the object
+        if ($pipe->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        if ($pipe->allows($owner_user_eid, \Flexio\Api\Action::TYPE_PIPE_DELETE) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        $pipe->delete();
+    }
+
+    public function func_indexClear(string $name)
+    {
+        // get the owner
+        $owner_user_eid = $this->getProcess()->getOwner();
+
+        // load the object; make sure the eid is associated with the owner
+        // as an additional check
+        $pipe_eid = \Flexio\Object\Pipe::getEidFromName($owner_user_eid, $name);
+        if ($pipe_eid === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+        $pipe = \Flexio\Object\Pipe::load($pipe_eid);
+        if ($owner_user_eid !== $pipe->getOwner())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+        // check the rights on the object
+        if ($pipe->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        if ($pipe->allows($owner_user_eid, \Flexio\Api\Action::TYPE_PIPE_UPDATE) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        $elasticsearch = \Flexio\System\System::getSearchCache();
+        $elasticsearch->deleteIndex($pipe_eid);
+    }
+
+    public function func_indexInsert(string $name, string $params)
+    {
+        // get the owner
+        $owner_user_eid = $this->getProcess()->getOwner();
+
+        // load the object; make sure the eid is associated with the owner
+        // as an additional check
+        $pipe_eid = \Flexio\Object\Pipe::getEidFromName($owner_user_eid, $name);
+        if ($pipe_eid === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+        $pipe = \Flexio\Object\Pipe::load($pipe_eid);
+        if ($owner_user_eid !== $pipe->getOwner())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+        // check the rights on the object
+        if ($pipe->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        if ($pipe->allows($owner_user_eid, \Flexio\Api\Action::TYPE_PIPE_UPDATE) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        $elasticsearch = \Flexio\System\System::getSearchCache();
+
+        // if the index doesn't exist, create it
+        if ($elasticsearch->exists($pipe_eid) === false)
+            $elasticsearch->createIndex($pipe_eid);
+
+        // write out the rows
+        // [
+        //   ["col1"=>"val1", "col2"=>"val2"],
+        //   ["col1"=>"val3", "col2"=>"val4"]
+        // ]
+        $params = @json_decode($params, true);
+        $elasticsearch->writeRows($pipe_eid, $params);
     }
 }
 

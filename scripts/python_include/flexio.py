@@ -407,6 +407,8 @@ class Stream(object):
             proxy.invoke('fsCommit', [self._handle])
             self._need_commit = False
 
+
+
 class PipeFunctions(object):
     def __init__(self):
         pass
@@ -414,6 +416,8 @@ class PipeFunctions(object):
     # general purpose task proxy for testing/debugging
     def task(self, params):
         return proxy.invoke('runJob', [json.dumps(params)])
+
+
 
 class ContextFs(object):
 
@@ -461,15 +465,12 @@ class ContextFs(object):
 
 
     def list(self, path, connection=''):
-
         return proxy.invoke('fsList', [path, connection])
 
     def exists(self, path, connection=''):
-
         return proxy.invoke('fsExists', [path, connection])
 
     def remove(self, path, connection=''):
-
         return proxy.invoke('fsRemove', [path, connection])
 
 
@@ -501,6 +502,26 @@ class ContextKeyValue(object):
         return proxy.invoke('kvDecr', [k,v])
 
 
+
+class ContextIndex(object):
+
+    def __init__(self):
+        pass
+
+    def create(self, name, params={}):
+        return proxy.invoke('indexCreate', [name, json.dumps(params)])
+
+    def remove(self, name):
+        return proxy.invoke('indexRemove', [name])
+
+    def clear(self, name):
+        return proxy.invoke('indexClear', [name])
+
+    def insert(self, name, params):
+        return proxy.invoke('indexInsert', [name, json.dumps(params)])
+
+
+
 class Context(object):
     def __init__(self):
         self._input = None
@@ -512,6 +533,7 @@ class Context(object):
         self.email = ContextEmail()
         self.fs = ContextFs()
         self.kv = ContextKeyValue()
+        self.index = ContextIndex()
 
     @property
     def input(self):

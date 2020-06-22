@@ -137,8 +137,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
 
     public function exists(string $path) : bool
     {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        return $this->existsIndex($path);
     }
 
     public function createFile(string $path, array $properties = []) : bool
@@ -347,6 +346,30 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         }
 
         return $indexes;
+    }
+
+    public function existsIndex(string $index) : bool
+    {
+        // see here for more info:
+        // https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-exists.html
+
+        try
+        {
+            $url = $this->getHostUrlString() . '/' . urlencode($index);
+            $request = new \GuzzleHttp\Psr7\Request('HEAD', $url);
+            $response = $this->sendWithCredentials($request);
+
+            $httpcode = $response->getStatusCode();
+            $result = (string)$response->getBody();
+            if ($httpcode === 200)
+                return true;
+        }
+        catch (\Exception $e)
+        {
+            // fall through
+        }
+
+        return false;
     }
 
     public function deleteIndex(string $index) : void
