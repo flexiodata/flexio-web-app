@@ -547,7 +547,8 @@ class Pipe
         $process_engine = \Flexio\Jobs\Process::create();
         $process_engine->queue('\Flexio\Jobs\ProcessHandler::addMountParams', $process_properties);
         $process_engine->queue('\Flexio\Jobs\Task::run', $process_properties['task']);
-        $process_engine->queue('\Flexio\Jobs\ProcessHandler::saveStdoutToElasticSearch', $elastic_search_params);
+        if ($pipe_properties['run_mode'] === \Model::PIPE_RUN_MODE_INDEX)
+            $process_engine->queue('\Flexio\Jobs\ProcessHandler::saveStdoutToElasticSearch', $elastic_search_params);
 
         $php_stream_handle = \Flexio\System\System::openPhpInputStream();
         $post_content_type = \Flexio\System\System::getPhpInputStreamContentType();
