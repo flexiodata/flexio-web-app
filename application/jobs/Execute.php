@@ -1386,18 +1386,18 @@ class ScriptHost
         $owner_user_eid = $this->getProcess()->getOwner();
 
         // load the object; make sure the eid is associated with the owner
-        // as an additional check
+        // as an additional check; if the pipe doesn't exist or is already
+        // deleted, silently don't do anything
         $pipe_eid = \Flexio\Object\Pipe::getEidFromName($owner_user_eid, $name);
         if ($pipe_eid === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-
+            return;
         $pipe = \Flexio\Object\Pipe::load($pipe_eid);
         if ($owner_user_eid !== $pipe->getOwner())
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+            return;
+        if ($pipe->getStatus() === \Model::STATUS_DELETED)
+            return;
 
         // check the rights on the object
-        if ($pipe->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
         if ($pipe->allows($owner_user_eid, \Flexio\Api\Action::TYPE_PIPE_DELETE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
