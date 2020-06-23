@@ -520,6 +520,9 @@ class ContextIndex(object):
     def insert(self, name, params):
         return proxy.invoke('indexInsert', [name, json.dumps(params)])
 
+    def exists(self, name):
+        return proxy.invoke('indexExists', [name])
+
 
 
 class Context(object):
