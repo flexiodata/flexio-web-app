@@ -68,71 +68,9 @@ class ProcessHandler
         // callback function to add parameters from mounts for functions that
         // are mounted
 
-        // load the pipe parent, which is the mount connection; if we're unable
-        // to load the mount because it doesn't exist, there's nothing to
-        // populate; note: this will also silently return where parent eids do
-        // exist, but they can't be loaded; downstream logic that requires the
-        // mount parameters will fail, but may want to cut-it-off here
-        try
-        {
-            $pipe_eid = $callback_params['parent_eid'] ?? '';
-            $pipe = \Flexio\Object\Pipe::load($pipe_eid);
-            $pipe_info = $pipe->get();
-
-            $connection_eid = $pipe_info['parent']['eid'] ?? '';
-            $connection = \Flexio\Object\Connection::load($connection_eid);
-            $connection_info = $connection->get();
-        }
-        catch (\Flexio\Base\Exception $e)
-        {
-            return;
-        }
-
-        $setup_config = $connection_info['setup_config'];
-        if (!$setup_config)
-            return;
-
-        $mount_variables = array();
-        foreach ($setup_config as $key => $value)
-        {
-            // note: setup config is a set of key/values; currently, values can
-            // be either strings or oauth connection object; if we don't have a
-            // connection object, simply pass on the value, otherwise, "dereference"
-            // the connection and pass on the connection info
-
-            // if we don't have an object identifier, simply pass on what's there
-            $mount_item_eid = $value['eid'] ?? false;
-            if ($mount_item_eid === false)
-            {
-                $mount_variables[$key] = $value;
-                continue;
-            }
-
-            // if we have an eid, try to load the appropriate oauth service and
-            // get the access token
-            try
-            {
-                $requesting_user_eid = $process->getOwner();
-                $connection = \Flexio\Object\Connection::load($mount_item_eid);
-                if ($connection->getStatus() !== \Model::STATUS_AVAILABLE)
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-                if ($connection->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_CONNECTION_READ) === false)
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
-                $service = $connection->getService(); // getting the service refreshes tokens
-                $connection_info = $service->get();
-                $connection_info = json_encode($connection_info);
-
-                $stream = \Flexio\Base\Stream::create();
-                $stream->setMimeType(\Flexio\Base\ContentType::FLEXIO_CONNECTION_INFO);
-                $stream->getWriter()->write((string)$connection_info);
-                $mount_variables[$key] = $stream;
-            }
-            catch (\Flexio\Base\Exception $e)
-            {
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-            }
-        }
+        $requesting_user_eid = $process->getOwner();
+        $pipe_eid = $callback_params['parent_eid'] ?? '';
+        $mount_variables = self::getMountParams($requesting_user_eid, $pipe_eid);
 
         // merge the mount variables into the existing parameters
         $user_variables = $process->getParams();
@@ -218,6 +156,108 @@ class ProcessHandler
                 return $row;
             });
         }
+    }
+
+    public static function getMountAuthenticator(string $requesting_user_eid, string $pipe_eid) : ?string
+    {
+        // return any authenticating function callbacks from the mount setup info
+        try
+        {
+            $pipe = \Flexio\Object\Pipe::load($pipe_eid);
+            $pipe_info = $pipe->get();
+
+            $connection_eid = $pipe_info['parent']['eid'] ?? '';
+            $connection = \Flexio\Object\Connection::load($connection_eid);
+            $connection_info = $connection->get();
+
+            $setup_template = $connection_info['setup_template'];
+            if (isset($setup_template['authentication']))
+            {
+                // TODO: need to get the name of the pipe created from the manifest,
+                // so we can run that, not just the path in the template; however,
+                // these names, by convention, are almost always the same (e.g
+                // funcname.py vs funcname) so as a shortcut for now, trim off
+                // any trailing extension
+                $filename = $setup_template['authentication'];
+                $funcname = \Flexio\Base\File::getFilename($filename);
+                return $funcname;
+            }
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+            // fall through
+        }
+
+        return null;
+    }
+
+    public static function getMountParams(string $requesting_user_eid, string $pipe_eid) : array
+    {
+        // load the pipe parent, which is the mount connection; if we're unable
+        // to load the mount because it doesn't exist, there's nothing to
+        // populate; note: this will also silently return where parent eids do
+        // exist, but they can't be loaded; downstream logic that requires the
+        // mount parameters will fail, but may want to cut-it-off here
+        try
+        {
+            $pipe = \Flexio\Object\Pipe::load($pipe_eid);
+            $pipe_info = $pipe->get();
+
+            $connection_eid = $pipe_info['parent']['eid'] ?? '';
+            $connection = \Flexio\Object\Connection::load($connection_eid);
+            $connection_info = $connection->get();
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+            return array();
+        }
+
+        $setup_config = $connection_info['setup_config'];
+        if (!$setup_config)
+            return array();
+
+        $mount_variables = array();
+        foreach ($setup_config as $key => $value)
+        {
+            // note: setup config is a set of key/values; currently, values can
+            // be either strings or oauth connection object; if we don't have a
+            // connection object, simply pass on the value, otherwise, "dereference"
+            // the connection and pass on the connection info
+
+            // if we don't have an object identifier, simply pass on what's there
+            $mount_item_eid = $value['eid'] ?? false;
+            if ($mount_item_eid === false)
+            {
+                $mount_variables[$key] = $value;
+                continue;
+            }
+
+            // if we have an eid, try to load the appropriate oauth service and
+            // get the access token
+            try
+            {
+                $connection = \Flexio\Object\Connection::load($mount_item_eid);
+                if ($connection->getStatus() !== \Model::STATUS_AVAILABLE)
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+                if ($connection->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_CONNECTION_READ) === false)
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+                $service = $connection->getService(); // getting the service refreshes tokens
+                $connection_info = $service->get();
+                $connection_info = json_encode($connection_info);
+
+                $stream = \Flexio\Base\Stream::create();
+                $stream->setMimeType(\Flexio\Base\ContentType::FLEXIO_CONNECTION_INFO);
+                $stream->getWriter()->write((string)$connection_info);
+                $mount_variables[$key] = $stream;
+            }
+            catch (\Flexio\Base\Exception $e)
+            {
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+            }
+        }
+
+        return $mount_variables;
     }
 
     public static function addProcessInputFromStream($php_stream_handle, string $post_content_type, $process) : void
