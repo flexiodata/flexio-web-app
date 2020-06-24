@@ -330,7 +330,55 @@ class Pipe
         if ($pipe->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
         if ($pipe->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PROCESS_CREATE) === false)
-             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+        {
+            // if the pipe normally can't be run by the requesting user, see if there's
+            // a special authentication function defined as part of any mount this pipe
+            // is part of, and if so, perform additional rights checking using a custom
+            // authentication function and information passed by the caller
+            $authentication_function_name = \Flexio\Jobs\ProcessHandler::getMountAuthenticator($requesting_user_eid, $pipe->getEid());
+            if (!isset($authentication_function_name))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+            // we have an authentication function, so perform rights checking using
+            // it and information passed by the caller
+
+            // get information from the caller
+            $caller_mount_params = array();
+            $request_header_params = $request->getHeaderParams();
+            if (isset($request_header_params['x-flexio-caller']))
+            {
+                // get the calling pipe mount params; note: calling user and current
+                // requesting user are the same because we authenticated the proxied
+                // call with the calling user
+                $caller_pipe_eid = $request_header_params['x-flexio-caller'];
+                $caller_mount_params = \Flexio\Jobs\ProcessHandler::getMountParams($requesting_user_eid, $caller_pipe_eid);
+            }
+
+            try
+            {
+                $authentication_function_eid = \Flexio\Object\Pipe::getEidFromName($pipe->getOwner(), $authentication_function_name);
+                if ($authentication_function_eid === false)
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+                $authentication_function = \Flexio\Object\Pipe::load($authentication_function_eid);
+                $authentication_function_info = $authentication_function->get();
+                $authentication_function_task = $authentication_function_info['task'];
+
+                $authentication_process_engine = \Flexio\Jobs\Process::create();
+                $authentication_process_engine->setOwner($requesting_user_eid);
+                $authentication_process_engine->setParams($caller_mount_params);
+                $authentication_process_engine->execute($authentication_function_task);
+
+                if ($authentication_process_engine->hasError())
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            }
+            catch (\Flexio\Base\Exception $e)
+            {
+                // normally, processes catch try/catch, but just in case, don't pass on any
+                // messy errors to caller when authenticating
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            }
+        }
 
         // TODO: check that user is within usage limits; should this be factored out into a separate object along with rights?
         $owner_user = \Flexio\Object\User::load($owner_user_eid);
@@ -393,6 +441,12 @@ class Pipe
                 // the user and make an api call with the token
                 $token = \Flexio\Object\User::generateTokenFromUserEid($requesting_user_eid);
 
+                // pass the pipe where the request is coming from; this will be used by the
+                // api to load the mount info; note: if we want to isolate the params, we
+                // could package them up with the body info as well, but this should work
+                // for now; TODO: review
+                $x_flexio_caller = $pipe_eid;
+
                 // make the request
                 $client = new \GuzzleHttp\Client(['verify' => false]);
                 $php_stream_handle = \Flexio\System\System::openPhpInputStream(); // pass on input post
@@ -400,7 +454,8 @@ class Pipe
                 $content = [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
-                        'Accept'        => 'application/json'
+                        'Accept'        => 'application/json',
+                        'x-flexio-caller' => $x_flexio_caller
                     ],
                     'body' => $php_stream_handle
                 ];
