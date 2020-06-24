@@ -162,7 +162,7 @@ class ExecuteProxy
         $access_key = \Flexio\Base\Util::generateRandomString(20);
 
         $container_name = 'fxexec-' . $this->owner_eid;
-        $max_execution_time = 3600;
+        $max_execution_time = 7200; // allow 2-hour execution for index loads that need time
         $exception = null;
         $exception_msg = '';
 
