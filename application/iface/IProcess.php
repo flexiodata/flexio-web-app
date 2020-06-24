@@ -20,6 +20,8 @@ interface IProcess
 {
     public function setOwner(string $owner_eid);
     public function getOwner();
+    public function setMount(string $mount_eid);
+    public function getMount();
     public function setParams(array $arr);
     public function getParams();
     public function addFile(string $name, \Flexio\IFace\IStream $stream);

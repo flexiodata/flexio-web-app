@@ -72,6 +72,19 @@ class ProcessHandler
         $pipe_eid = $callback_params['parent_eid'] ?? '';
         $mount_variables = self::getMountParams($requesting_user_eid, $pipe_eid);
 
+        try
+        {
+            // TODO: redundant to pipe load logic in getMountParams()
+            $pipe = \Flexio\Object\Pipe::load($pipe_eid);
+            $pipe_info = $pipe->get();
+
+            $connection_eid = $pipe_info['parent']['eid'] ?? '';
+            $process->setMount($connection_eid);
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+        }
+
         // merge the mount variables into the existing parameters
         $user_variables = $process->getParams();
         $process->setParams(array_merge($user_variables, $mount_variables));
@@ -198,6 +211,9 @@ class ProcessHandler
         // populate; note: this will also silently return where parent eids do
         // exist, but they can't be loaded; downstream logic that requires the
         // mount parameters will fail, but may want to cut-it-off here
+
+        $mount_variables = array();
+
         try
         {
             $pipe = \Flexio\Object\Pipe::load($pipe_eid);
@@ -216,7 +232,6 @@ class ProcessHandler
         if (!$setup_config)
             return array();
 
-        $mount_variables = array();
         foreach ($setup_config as $key => $value)
         {
             // note: setup config is a set of key/values; currently, values can

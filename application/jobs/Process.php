@@ -35,6 +35,7 @@ class Process implements \Flexio\IFace\IProcess
     private $handlers = [];     // array of callbacks to run
 
     private $owner_eid;                 // user eid of the owner of the process
+    private $mount_eid;                 // mount/connection eid of the pipe that created the process, if any
     private $response_code;
     private $process_status;
     private $error;
@@ -48,6 +49,7 @@ class Process implements \Flexio\IFace\IProcess
     public function __construct()
     {
         $this->owner_eid = '';
+        $this->mount_eid = '';
         $this->response_code = self::RESPONSE_NONE;
         $this->process_status = self::STATUS_UNDEFINED;
         $this->error = array();
@@ -78,6 +80,17 @@ class Process implements \Flexio\IFace\IProcess
     public function getOwner() : string
     {
         return $this->owner_eid;
+    }
+
+    public function setMount(string $mount_eid) : \Flexio\Jobs\Process
+    {
+        $this->mount_eid = $mount_eid;
+        return $this;
+    }
+
+    public function getMount() : string
+    {
+        return $this->mount_eid;
     }
 
     public function setParams(array $arr) : \Flexio\Jobs\Process

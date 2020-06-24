@@ -1372,9 +1372,11 @@ class ScriptHost
         if ($owner_user->allows($owner_user_eid, \Flexio\Api\Action::TYPE_PIPE_CREATE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        // create the object
+        // create the object; group the pipe in the same mount/integration
+        // that it's running in if appropriate
         $pipe_properties = @json_decode($params, true);
         $pipe_properties['name'] = $name;
+        $pipe_properties['parent_eid'] = $this->getProcess()->getMount();
         $pipe_properties['owned_by'] = $owner_user_eid;
         $pipe_properties['created_by'] = $owner_user_eid;
         $pipe = \Flexio\Object\Pipe::create($pipe_properties);
