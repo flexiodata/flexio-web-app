@@ -75,6 +75,8 @@ class ProcessHandler
 
         $pipe_eid = $callback_params['parent_eid'] ?? '';
         $mount_variables = self::getMountConfig($pipe_eid);
+        if (!isset($mount_variables))
+            return;
 
         // merge the mount config items into the existing parameters
         $user_variables = $process->getParams();
