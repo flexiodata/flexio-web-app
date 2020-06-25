@@ -252,7 +252,7 @@ class Search implements \Flexio\IFace\IJob
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         // if we have an empty string, return null, which will cause all items to be returned
-        if (strlen($query_string) === 0)
+        if (strlen(trim($query_string)) === 0)
             return null;
 
         // right now, we don't need queries with scores, because we're only interested in
