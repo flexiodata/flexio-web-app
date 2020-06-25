@@ -173,12 +173,6 @@ class Api
         'GET /:teamid/processes/exec'                 => '\Flexio\Api\Process::exec',
         'POS /:teamid/processes/exec'                 => '\Flexio\Api\Process::exec',
 
-        // experimental vfs-style endpoint for running code (creates and runs a process based on a path)
-        'GET /:teamid/run/*'                          => '\Flexio\Api\Vfs::exec',
-        'POS /:teamid/run/*'                          => '\Flexio\Api\Vfs::exec',
-        'PUT /:teamid/run/*'                          => '\Flexio\Api\Vfs::exec',
-        'DEL /:teamid/run/*'                          => '\Flexio\Api\Vfs::exec',
-
 
         // EXPERIMENTAL ENDPOINTS FOR MOUNTED FUNCTIONS
 
