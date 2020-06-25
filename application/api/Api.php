@@ -113,6 +113,7 @@ class Api
         'POS /:teamid/pipes/:objid/run'               => '\Flexio\Api\Pipe::run',
         'PUT /:teamid/pipes/:objid/run'               => '\Flexio\Api\Pipe::run',
         'DEL /:teamid/pipes/:objid/run'               => '\Flexio\Api\Pipe::run',
+        'POS /:teamid/pipes/:objid/populatecache'     => '\Flexio\Api\Pipe::populatecache',
 
         // processes
         'POS /:teamid/processes'                      => '\Flexio\Api\Process::create',
@@ -167,9 +168,6 @@ class Api
 
 
         // EXPERIMENTAL ENDPOINTS
-
-        // experimental/test pipe endpoint for populating an elasticsearch cache from a pipe output
-        'POS /:teamid/pipes/:objid/populatecache'     => '\Flexio\Api\Pipe::populatecache',
 
         // experimental processes endpoint for running code (creates and runs a process from code)
         'GET /:teamid/processes/exec'                 => '\Flexio\Api\Process::exec',
