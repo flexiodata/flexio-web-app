@@ -63,10 +63,33 @@ class ProcessHandler
         \Flexio\System\System::getModel()->user->decrementActiveProcessCount($owner_eid);
     }
 
+    public static function addMountConfig(\Flexio\Jobs\Process $process, array $callback_params) : void
+    {
+        // callback function to add parameters from mounts for functions that
+        // are mounted; these config items are the fixed items defined in the
+        // mount yml configuration file
+
+        // TODO: should consolidate addMountConfig/addMountParams, but implemented
+        // separately right since addMountConfig is only needed to limit search
+        // and this helps clarify this one use, which is experimental right now
+
+        $pipe_eid = $callback_params['parent_eid'] ?? '';
+        $mount_variables = self::getMountConfig($pipe_eid);
+
+        // merge the mount config items into the existing parameters
+        $user_variables = $process->getParams();
+        $process->setParams(array_merge($user_variables, $mount_variables));
+    }
+
     public static function addMountParams(\Flexio\Jobs\Process $process, array $callback_params) : void
     {
         // callback function to add parameters from mounts for functions that
-        // are mounted
+        // are mounted; these param items are the items entered by the user
+        // when they configure the mount
+
+        // TODO: should consolidate addMountConfig/addMountParams, but implemented
+        // separately right since addMountConfig is only needed to limit search
+        // and this helps clarify this one use, which is experimental right now
 
         $requesting_user_eid = $process->getOwner();
         $pipe_eid = $callback_params['parent_eid'] ?? '';
@@ -194,6 +217,48 @@ class ProcessHandler
                 $filename = $setup_template['authentication'];
                 $funcname = \Flexio\Base\File::getFilename($filename);
                 return $funcname;
+            }
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+            // fall through
+        }
+
+        return null;
+    }
+
+    public static function getMountConfig(string $pipe_eid) : ?array
+    {
+        // return configuration from the mount as a set of key/values suitable for adding
+        // to the process parameters for use by tasks
+        try
+        {
+            $pipe = \Flexio\Object\Pipe::load($pipe_eid);
+            $pipe_info = $pipe->get();
+
+            $connection_eid = $pipe_info['parent']['eid'] ?? '';
+            $connection = \Flexio\Object\Connection::load($connection_eid);
+            $connection_info = $connection->get();
+
+            $setup_template = $connection_info['setup_template'];
+            if (isset($setup_template['config']) && is_array($setup_template['config']))
+            {
+                // return config items as key/values
+                $result = array();
+
+                $config_items = $setup_template['config'];
+                foreach ($config_items as $c)
+                {
+                    $name = $c['name'] ?? false;
+                    $value = $c['value'] ?? false;
+
+                    if ($name === false || $value === false)
+                        continue;
+
+                    $result[$name] = $value;
+                }
+
+                return $result;
             }
         }
         catch (\Flexio\Base\Exception $e)

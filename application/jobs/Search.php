@@ -118,8 +118,22 @@ class Search implements \Flexio\IFace\IJob
             $return_headers = $additional_output_config['headers'];
 
         $limit_row_count = false; // don't limit rows by default
+
+        // limit based on user-passed parameters
         if (isset($additional_output_config['limit']))
             $limit_row_count = $additional_output_config['limit'];
+
+        // cap limit based on fixed process parameters passed in from
+        // mount config items
+        $process_params = $process->getParams();
+        if (isset($process_params['search_max_result_size']))
+        {
+            $search_max_result_size_param = $process_params['search_max_result_size'];
+            $search_max_result_size_param = $search_max_result_size_param->getReader()->read(12); // should be small integer value
+            $search_max_result_size = intval($search_max_result_size_param);
+            if ($limit_row_count === false || $limit_row_count > $search_max_result_size)
+                $limit_row_count = $search_max_result_size;
+        }
 
         // connect to elasticsearch
         $elasticsearch = \Flexio\System\System::getSearchCache();
