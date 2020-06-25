@@ -331,53 +331,8 @@ class Pipe
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
         if ($pipe->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PROCESS_CREATE) === false)
         {
-            // if the pipe normally can't be run by the requesting user, see if there's
-            // a special authentication function defined as part of any mount this pipe
-            // is part of, and if so, perform additional rights checking using a custom
-            // authentication function and information passed by the caller
-            $authentication_function_name = \Flexio\Jobs\ProcessHandler::getMountAuthenticator($requesting_user_eid, $pipe->getEid());
-            if (!isset($authentication_function_name))
+            if (self::authenticatorAllowsExecute($request) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
-            // we have an authentication function, so perform rights checking using
-            // it and information passed by the caller
-
-            // get information from the caller
-            $caller_mount_params = array();
-            $request_header_params = $request->getHeaderParams();
-            if (isset($request_header_params['x-flexio-caller']))
-            {
-                // get the calling pipe mount params; note: calling user and current
-                // requesting user are the same because we authenticated the proxied
-                // call with the calling user
-                $caller_pipe_eid = $request_header_params['x-flexio-caller'];
-                $caller_mount_params = \Flexio\Jobs\ProcessHandler::getMountParams($requesting_user_eid, $caller_pipe_eid);
-            }
-
-            try
-            {
-                $authentication_function_eid = \Flexio\Object\Pipe::getEidFromName($pipe->getOwner(), $authentication_function_name);
-                if ($authentication_function_eid === false)
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
-                $authentication_function = \Flexio\Object\Pipe::load($authentication_function_eid);
-                $authentication_function_info = $authentication_function->get();
-                $authentication_function_task = $authentication_function_info['task'];
-
-                $authentication_process_engine = \Flexio\Jobs\Process::create();
-                $authentication_process_engine->setOwner($requesting_user_eid);
-                $authentication_process_engine->setParams($caller_mount_params);
-                $authentication_process_engine->execute($authentication_function_task);
-
-                if ($authentication_process_engine->hasError())
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-            }
-            catch (\Flexio\Base\Exception $e)
-            {
-                // normally, processes catch try/catch, but just in case, don't pass on any
-                // messy errors to caller when authenticating
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-            }
         }
 
         // TODO: check that user is within usage limits; should this be factored out into a separate object along with rights?
@@ -674,6 +629,63 @@ class Pipe
         // create a process host to connect the store/engine and run the process
         $process_host = \Flexio\Jobs\ProcessHost::create($process_store, $process_engine);
         $process_host->run(true /*true: run in background*/);
+    }
+
+    private static function authenticatorAllowsExecute(\Flexio\Api\Request $request) : bool
+    {
+        $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+        $pipe_eid = $request->getObjectFromUrl();
+
+        // if the pipe normally can't be run by the requesting user, see if there's
+        // a special authentication function defined as part of any mount this pipe
+        // is part of, and if so, perform additional rights checking using a custom
+        // authentication function and information passed by the caller; if there's
+        // no function, don't allow execution
+        $authentication_function_name = \Flexio\Jobs\ProcessHandler::getMountAuthenticator($requesting_user_eid, $pipe_eid);
+        if (!isset($authentication_function_name))
+            return false;
+
+        // we have an authentication function, so perform rights checking using
+        // it and information passed by the caller
+
+        // get information from the caller
+        $caller_mount_params = array();
+        $request_header_params = $request->getHeaderParams();
+        if (isset($request_header_params['x-flexio-caller']))
+        {
+            // get the calling pipe mount params; note: calling user and current
+            // requesting user are the same because we authenticated the proxied
+            // call with the calling user
+            $caller_pipe_eid = $request_header_params['x-flexio-caller'];
+            $caller_mount_params = \Flexio\Jobs\ProcessHandler::getMountParams($requesting_user_eid, $caller_pipe_eid);
+        }
+
+        try
+        {
+            $authentication_function_eid = \Flexio\Object\Pipe::getEidFromName($owner_user_eid, $authentication_function_name);
+            if ($authentication_function_eid === false)
+                return false;
+
+            $authentication_function = \Flexio\Object\Pipe::load($authentication_function_eid);
+            $authentication_function_info = $authentication_function->get();
+            $authentication_function_task = $authentication_function_info['task'];
+
+            $authentication_process_engine = \Flexio\Jobs\Process::create();
+            $authentication_process_engine->setOwner($requesting_user_eid);
+            $authentication_process_engine->setParams($caller_mount_params);
+            $authentication_process_engine->execute($authentication_function_task);
+
+            if ($authentication_process_engine->hasError())
+                return false;
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+            // if there are any errors, don't allow execution
+            return false;
+        }
+
+        return true;
     }
 
     private static function doTaskCasting(array &$a)
