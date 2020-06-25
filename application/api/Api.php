@@ -116,13 +116,8 @@ class Api
         'POS /:teamid/pipes/:objid/populatecache'     => '\Flexio\Api\Pipe::populatecache',
 
         // processes
-        'POS /:teamid/processes'                      => '\Flexio\Api\Process::create',
         'GET /:teamid/processes'                      => '\Flexio\Api\Process::list',
         'GET /:teamid/processes/:objid'               => '\Flexio\Api\Process::get',
-        'GET /:teamid/processes/:objid/run'           => '\Flexio\Api\Process::run',
-        'POS /:teamid/processes/:objid/run'           => '\Flexio\Api\Process::run',
-        'PUT /:teamid/processes/:objid/run'           => '\Flexio\Api\Process::run',
-        'DEL /:teamid/processes/:objid/run'           => '\Flexio\Api\Process::run',
 
         // vfs
         'GET /:teamid/vfs/list'                       => '\Flexio\Api\Vfs::list',
@@ -133,6 +128,14 @@ class Api
         // actions
         'POS /:teamid/actions'                        => '\Flexio\Api\Action::create',
         'GET /:teamid/actions'                        => '\Flexio\Api\Action::list',
+
+
+        // DEPRECATED
+        'POS /:teamid/processes'                      => '\Flexio\Api\Process::create',
+        'GET /:teamid/processes/:objid/run'           => '\Flexio\Api\Process::run',
+        'POS /:teamid/processes/:objid/run'           => '\Flexio\Api\Process::run',
+        'PUT /:teamid/processes/:objid/run'           => '\Flexio\Api\Process::run',
+        'DEL /:teamid/processes/:objid/run'           => '\Flexio\Api\Process::run',
 
 
         // ADMINISTRATOR ENDPOINTS
