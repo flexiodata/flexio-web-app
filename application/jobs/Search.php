@@ -123,6 +123,16 @@ class Search implements \Flexio\IFace\IJob
         if (isset($additional_output_config['limit']))
             $limit_row_count = $additional_output_config['limit'];
 
+        // if row limit isn't set by the user, set it to any default
+        // given by the mount config items
+        $process_params = $process->getParams();
+        if ($limit_row_count === false && isset($process_params['search_default_result_size']))
+        {
+            $search_default_result_size_param = $process_params['search_default_result_size'];
+            $search_default_result_size_param = $search_default_result_size_param->getReader()->read(12); // should be small integer value
+            $limit_row_count = intval($search_default_result_size_param);
+        }
+
         // cap limit based on fixed process parameters passed in from
         // mount config items
         $process_params = $process->getParams();
