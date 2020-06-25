@@ -167,13 +167,6 @@ class Api
         'GET /admin/action/test'                      => '\Flexio\Api\Action::test',
 
 
-        // EXPERIMENTAL ENDPOINTS
-
-        // experimental processes endpoint for running code (creates and runs a process from code)
-        'GET /:teamid/processes/exec'                 => '\Flexio\Api\Process::exec',
-        'POS /:teamid/processes/exec'                 => '\Flexio\Api\Process::exec',
-
-
         // EXPERIMENTAL ENDPOINTS FOR MOUNTED FUNCTIONS
 
         // connections; works almost the same, except for connect/disconnect; here for reference
