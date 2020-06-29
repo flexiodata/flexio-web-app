@@ -513,6 +513,8 @@ class ContextIndex(object):
     def exists(self, name):
         return proxy.invoke('indexExists', [name])
 
+    def rename(self, old_name, new_name):
+        return proxy.invoke('indexRename', [old_name, new_name])
 
 
 class Context(object):

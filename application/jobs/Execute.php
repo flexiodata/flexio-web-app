@@ -1372,6 +1372,10 @@ class ScriptHost
         if ($owner_user->allows($owner_user_eid, \Flexio\Api\Action::TYPE_PIPE_CREATE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
+        // make sure the name is valid
+        if (!\Flexio\Base\Identifier::isValid($name))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+
         // create the object; group the pipe in the same mount/integration
         // that it's running in if appropriate
         $pipe_properties = @json_decode($params, true);
@@ -1500,6 +1504,42 @@ class ScriptHost
         }
 
         return false;
+    }
+
+    public function func_indexRename(string $old_name, string $new_name) : void
+    {
+        // get the owner
+        $owner_user_eid = $this->getProcess()->getOwner();
+
+        // load the object; make sure the eid is associated with the owner
+        // as an additional check
+        $old_pipe_eid = \Flexio\Object\Pipe::getEidFromName($owner_user_eid, $old_name);
+        if ($old_pipe_eid === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+        $old_pipe = \Flexio\Object\Pipe::load($old_pipe_eid);
+        if ($owner_user_eid !== $old_pipe->getOwner())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+        // check the rights on the object
+        if ($old_pipe->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        if ($old_pipe->allows($owner_user_eid, \Flexio\Api\Action::TYPE_PIPE_UPDATE) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        // make sure the name is valid
+        if (!\Flexio\Base\Identifier::isValid($new_name))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+
+        // make sure a pipe with the new name doesn't already exist
+        $possible_existing_pipe_eid = \Flexio\Object\Pipe::getEidFromName($owner_user_eid, $new_name);
+        if ($possible_existing_pipe_eid !== false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+
+        // rename the pipe
+        $pipe_properties = array();
+        $pipe_properties['name'] = $new_name;
+        $old_pipe->set($pipe_properties);
     }
 }
 
