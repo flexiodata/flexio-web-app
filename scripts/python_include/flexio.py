@@ -409,16 +409,6 @@ class Stream(object):
 
 
 
-class PipeFunctions(object):
-    def __init__(self):
-        pass
-
-    # general purpose task proxy for testing/debugging
-    def task(self, params):
-        return proxy.invoke('runJob', [json.dumps(params)])
-
-
-
 class ContextFs(object):
 
     def __init__(self):
@@ -532,7 +522,6 @@ class Context(object):
         self._query = None
         self._form = None
         self._files = None
-        self.pipe = PipeFunctions()
         self.email = ContextEmail()
         self.fs = ContextFs()
         self.kv = ContextKeyValue()
