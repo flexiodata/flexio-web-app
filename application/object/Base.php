@@ -117,11 +117,6 @@ class Base
             // fall through
         }
 
-        // CHECK: see if the owner is an integration, in which case
-        // allow basic integration rights to all authenticated users
-        if ($this->getModel()->user->isIntegration($this->getOwner()) === true)
-            return self::getIntegrationRights();
-
         // action not allowed
         return array();
     }
@@ -372,16 +367,6 @@ class Base
             \Flexio\Api\Action::TYPE_STREAM_UPDATE,
             \Flexio\Api\Action::TYPE_STREAM_DELETE,
             \Flexio\Api\Action::TYPE_STREAM_READ
-        );
-    }
-
-    private static function getIntegrationRights() : array
-    {
-        return array(
-
-            // allow pipes to be run, and that's it
-            \Flexio\Api\Action::TYPE_PROCESS_CREATE
-
         );
     }
 

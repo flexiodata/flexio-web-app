@@ -193,7 +193,6 @@ class Model
 
     public const SYSTEM_ROLE_UNDEFINED     = '';
     public const SYSTEM_ROLE_ADMINISTRATOR = 'A';
-    public const SYSTEM_ROLE_INTEGRATION = 'I'; // special internal flag for granting public run status to pipes for integrations
 
     public const TEAM_ROLE_UNDEFINED       = '';
     public const TEAM_ROLE_USER            = 'U';
