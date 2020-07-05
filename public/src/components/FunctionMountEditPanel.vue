@@ -95,7 +95,8 @@
             class="el-icon-warning bg-white f2 dark-red"
             slot="icon"
           ></i>
-          <p class="tc">No <strong>flexio.yml</strong> setup template file could be found at the specified location. Please try again.</p>
+          <p class="tc" v-if="error_msg.length > 0">{{error_msg}}</p>
+          <p class="tc" v-else>No <strong>flexio.yml</strong> setup template file could be found at the specified location. Please try again.</p>
         </ServiceIconWrapper>
         <ButtonBar
           class="mt4"
@@ -337,7 +338,16 @@
           var prompts = _.get(setup_template, 'prompts', [])
           this.setup_template = _.assign({}, setup_template)
           this.edit_mount = _.assign({}, this.edit_mount, { setup_template })
-          this.active_step = prompts.length > 0 ? 'setup-config' : 'setup-success'
+
+          if (prompts.length > 0) {
+            // we need to prompt the user for some configuration settings
+            // in order to set up this function mount
+            this.active_step = 'setup-config'
+          } else {
+            // we need to save the mount setup here, even though there is no configuration,
+            // in order to make sure the setup template is stored with the function mount
+            this.saveMountSetup({})
+          }
         }).catch(error => {
           if (this.mountType == 'integration') {
             this.$store.dispatch('connections/delete', { team_name, eid }).then(response => {
@@ -400,6 +410,9 @@
           this.$store.dispatch('connections/update', { team_name, eid, attrs }).then(response => {
             this.edit_mount = _.assign({}, this.edit_mount, _.cloneDeep(response.data))
             this.active_step = 'setup-success'
+          }).catch(error => {
+            this.active_step = 'setup-error'
+            this.error_msg = 'An error occured while trying to save this function mount. Please try again.'
           })
         })
       },
