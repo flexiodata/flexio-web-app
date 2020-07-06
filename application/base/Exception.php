@@ -20,7 +20,7 @@ class Exception extends \Exception
 {
     public function __construct($code, $message = null)
     {
-        if (isset($GLOBALS['g_config']->debug_error_log))
+        if (isset($GLOBALS['g_config']->error_log))
         {
             // specifying DEBUG_BACKTRACE_IGNORE_ARGS avoids debug_print_backtrace()
             // throwing an exception itself (for instance, when a closure such as
@@ -34,7 +34,7 @@ class Exception extends \Exception
             if (is_string($message))
                 $excp = ' Exception message: ' . $message;
 
-            file_put_contents($GLOBALS['g_config']->debug_error_log, "Error '$message' set!$excp\n$data\n\n", FILE_APPEND);
+            file_put_contents($GLOBALS['g_config']->error_log, "Error '$message' set!$excp\n$data\n\n", FILE_APPEND);
         }
 
         $local_error = array('code' => $code, 'message' => $message);
