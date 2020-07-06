@@ -390,49 +390,39 @@ class Pipe
         $op = $process_properties['task']['op'] ?? '';
         if ($op === 'redirect')
         {
-            try
+            // we want make a request as the current user; generate a token representing
+            // the user and make an api call with the token
+            $token = \Flexio\Object\User::generateTokenFromUserEid($requesting_user_eid);
+
+            // pass the pipe where the request is coming from; this will be used by the
+            // api to load the mount info; note: if we want to isolate the params, we
+            // could package them up with the body info as well, but this should work
+            // for now; TODO: review
+            $x_flexio_caller = $pipe_eid;
+
+            // make the request
+            $client = new \GuzzleHttp\Client(['verify' => false]);
+            $php_stream_handle = \Flexio\System\System::openPhpInputStream(); // pass on input post
+            $path = $process_properties['task']['path'] ?? '';
+            $content = [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,
+                    'Accept'        => 'application/json',
+                    'x-flexio-caller' => $x_flexio_caller
+                ],
+                'body' => $php_stream_handle
+            ];
+            $options = array('stream' => true);
+            $request = $client->request('POST', $path, $content, $options);
+
+            // process the response
+            $stream = $request->getBody();
+            while (!$stream->eof())
             {
-                // we want make a request as the current user; generate a token representing
-                // the user and make an api call with the token
-                $token = \Flexio\Object\User::generateTokenFromUserEid($requesting_user_eid);
-
-                // pass the pipe where the request is coming from; this will be used by the
-                // api to load the mount info; note: if we want to isolate the params, we
-                // could package them up with the body info as well, but this should work
-                // for now; TODO: review
-                $x_flexio_caller = $pipe_eid;
-
-                // make the request
-                $client = new \GuzzleHttp\Client(['verify' => false]);
-                $php_stream_handle = \Flexio\System\System::openPhpInputStream(); // pass on input post
-                $path = $process_properties['task']['path'] ?? '';
-                $content = [
-                    'headers' => [
-                        'Authorization' => 'Bearer ' . $token,
-                        'Accept'        => 'application/json',
-                        'x-flexio-caller' => $x_flexio_caller
-                    ],
-                    'body' => $php_stream_handle
-                ];
-                $options = array('stream' => true);
-                $request = $client->request('POST', $path, $content, $options);
-
-                // process the response
-                $stream = $request->getBody();
-                while (!$stream->eof())
-                {
-                    $line = $stream->read(4096);
-                    echo($line);
-                }
-                exit(0);
+                $line = $stream->read(4096);
+                echo($line);
             }
-            catch (\Flexio\Base\Exception | \Exception | \Error $e)
-            {
-                // note: we don't want to pass on any error information
-                // from the proxy request, so catch everything and raise a
-                // new exception
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-            }
+            exit(0);
         }
 
         // create a new process engine for running a process
