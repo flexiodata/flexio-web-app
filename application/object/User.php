@@ -103,12 +103,23 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
         // compare the timestamp to the current time; if the timestamp is more than
         // a certain period time after the one in the token, then the token is
-        // no longer valid, so return null
+        // no longer valid, so return null; note: we used to also look for instances
+        // where the token time was less the current system time and treated these
+        // like an expired token as well; however, this caused problems because
+        // a token could be generated on one server using and then used on another
+        // server with time slightly ahead of the original server it was generated on,
+        // causing a $date_diff_seconds to be negative and the function to not return
+        // the user; while we want to check for expired tokens, we don't need to worry
+        // so much about negative $date_diff_seconds, since the negative diff should
+        // only be slightly, and the token is encrypted, so the negative value can't
+        // come from somebody else trying to spoof the timestamp; TODO:however, should
+        // consider moving over to some type of synced timestamp (using NTP?); see note
+        // in \Flexio\Base\Util::getCurrentTimestamp()
         // TODO: current time token period is set to 365 days; should we use a smaller
         // time period with refresh tokens?
         $current_timestamp = \Flexio\Base\Util::getCurrentTimestamp();
         $date_diff_seconds = \Flexio\Base\Util::formatDateDiff($token_timestamp, $current_timestamp);
-        if ($date_diff_seconds < 0 || $date_diff_seconds > 60*60*24*365)
+        if ($date_diff_seconds > 60*60*24*365)
             return null;
 
         // return the user info

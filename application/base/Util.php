@@ -528,6 +528,17 @@ class Util
 
     public static function getCurrentTimestamp() : string
     {
+        // TODO: because the system can be deployed to multiple computers,
+        // it's possible that the times on the individual computers can
+        // be slightly out-of-sync, which can cause issues if a token with
+        // a timestamp generated on one sever is used on another computer
+        // and the timestamp is compared; should implement a new function
+        // that uses NTP and the free AWS service on the local IP: 169.254.169.123
+        // or else synchronize computer time clocks using NTP;
+        // see here for more info:
+        // https://aws.amazon.com/blogs/aws/keeping-time-with-amazon-time-sync-service/
+
+
         // return the timestamp as accurately as we can determine
         $time_exact = microtime(true);
         $time_rounded = floor($time_exact);
