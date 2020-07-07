@@ -47,6 +47,11 @@
           v-model="edit_values[fi.name]"
           v-else-if="fi.element == 'code-editor'"
         />
+        <el-slider
+          v-model="edit_values[fi.name]"
+          v-bind="fi"
+          v-else-if="fi.element == 'slider'"
+        />
         <el-switch
           v-model="edit_values[fi.name]"
           v-else-if="fi.element == 'switch'"

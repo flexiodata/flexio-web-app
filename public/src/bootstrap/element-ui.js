@@ -32,6 +32,7 @@ import {
   RadioButton,
   RadioGroup,
   Select,
+  Slider,
   Step,
   Steps,
   Switch,
@@ -74,6 +75,7 @@ Vue.use(Radio)
 Vue.use(RadioButton)
 Vue.use(RadioGroup)
 Vue.use(Select)
+Vue.use(Slider)
 Vue.use(Step)
 Vue.use(Steps)
 Vue.use(Switch)
