@@ -57,11 +57,24 @@
       },
       calc_prompts() {
         return _.isNil(this.prompts) ? _.get(this.setup_template, 'prompts', []) : this.prompts
+      },
+      all_form_items() {
+        var prompt_form_items = _.map(this.calc_prompts, cp => _.get(cp, 'form_items', []))
+        var form_items = []
+        prompt_form_items.forEach(pfi => {
+          form_items = form_items.concat(pfi)
+        })
+        return form_items
+      },
+      all_form_item_keys() {
+        var form_item_keys = _.map(this.all_form_items, afi => _.get(afi, 'name', undefined))
+        return _.compact(form_item_keys)
       }
     },
     methods: {
       onValuesChange(values) {
         this.config = _.assign({}, this.config, values)
+        this.config = _.pick(this.config, this.all_form_item_keys)
       },
       onBackClick() {
         if (this.active_idx > 0) {
