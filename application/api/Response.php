@@ -56,6 +56,36 @@ class Response
 
     public static function sendError(array $error, string $http_error_code_override = null) : void
     {
+        // if the error log is set up, log the error
+
+        if (isset($GLOBALS['g_config']->error_log))
+        {
+            // get the time
+            $t1 = (int)microtime(true);
+            $t1_micropart = sprintf("%06d", ($t1 - floor($t1)) * 1000000);
+            $date = new \DateTime(date('Y-m-d H:i:s.' . $t1_micropart, $t1));
+            $timestamp = $date->format("Y-m-d H:i:s.u");
+
+            // build the output
+            $error_log_lines = array();
+            $error_log_lines[] = "--------------------------------------------";
+            $error_log_lines[] = "Timestamp: " . $timestamp;
+            $error_log_lines[] = "Type: " . $error['type'];
+            $error_log_lines[] = "Code: " . $error['code'];
+            $error_log_lines[] = "Message: " . $error['message'];
+            $error_log_lines[] = "Module: " . $error['module'];
+            $error_log_lines[] = "Line: " . $error['line'];
+            $error_log_lines[] = "Trace: " . $error['trace'];
+            $error_log_lines[] = "\n\n";
+
+            // log the error
+            register_shutdown_function(function () use ($error_log_lines) {
+                $error_log_lines_str = join("\n", $error_log_lines);
+                file_put_contents($GLOBALS['g_config']->error_log, $error_log_lines_str, FILE_APPEND);
+            });
+        }
+
+        // get the code and the message for determining headers and default message
         $error_code = $error['code'] ?? \Flexio\Base\Error::GENERAL;
         $error_message = $error['message'] ?? '';
 
@@ -82,12 +112,29 @@ class Response
             $error_message = \Flexio\Base\Error::getDefaultMessage($error_code);
 
         // make sure the error code and message are updated with defaults
-        $error['code'] = $error_code;
-        $error['message'] = $error_message;
+        $error_info = array();
+        $error_info['code'] = $error_code;
+        $error_info['message'] = $error_message;
+
+        // only pass on the message if it's a flexio error; otherwise it's a system
+        // error, and we don't want to expose internal info, so set it to an empty
+        // string
+        $error_type = $error['type'] ?? '';
+        if ($error_type !== 'flexio exception' && !IS_DEBUG())
+            $error_info['message'] = '';
+
+        // if we're in debug mode, pass on additional info
+        if (IS_DEBUG())
+        {
+            $error_info['type'] = $error['type'];
+            $error_info['module'] = $error['module'];
+            $error_info['line'] = $error['line'];
+            $error_info['trace'] = $error['trace'];
+        }
 
         // send the response
         $response = array();
-        $response['error'] = $error;
+        $response['error'] = $error_info;
         $response = @json_encode($response, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
         echo $response;
     }
