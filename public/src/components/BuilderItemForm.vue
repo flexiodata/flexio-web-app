@@ -166,6 +166,10 @@
         type: Object,
         required: true
       },
+      autofocusFirstItem: {
+        type: Boolean,
+        default: true
+      },
       visible: {
         type: Boolean,
         default: true
@@ -243,9 +247,12 @@
 
         // reset our local component data
         _.assign(this.$data, getDefaultState(), { edit_values, rules })
-        this.autoFocus()
+
+        if (this.autofocusFirstItem) {
+          this.doFocus()
+        }
       },
-      autoFocus() {
+      doFocus() {
         this.$nextTick(() => {
           var form = this.$refs['form']
           if (form) {
