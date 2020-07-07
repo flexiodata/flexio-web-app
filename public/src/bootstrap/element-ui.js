@@ -40,7 +40,8 @@ import {
   TableColumn,
   Tabs,
   TabPane,
-  Tag
+  Tag,
+  Upload
 } from 'element-ui'
 
 // setup for Element UI
@@ -84,6 +85,7 @@ Vue.use(TableColumn)
 Vue.use(Tabs)
 Vue.use(TabPane)
 Vue.use(Tag)
+Vue.use(Upload)
 
 Vue.prototype.$message = Message
 Vue.prototype.$msgbox = MessageBox

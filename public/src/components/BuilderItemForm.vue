@@ -47,6 +47,13 @@
           v-model="edit_values[fi.name]"
           v-else-if="fi.element == 'code-editor'"
         />
+        <el-upload
+          v-model="edit_values[fi.name]"
+          v-bind="fi"
+          v-else-if="fi.element == 'upload'"
+        >
+        <el-button size="small" type="primary">Click to upload</el-button>
+        </el-upload>
         <el-slider
           v-model="edit_values[fi.name]"
           v-bind="fi"
