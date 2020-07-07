@@ -33,10 +33,9 @@
         :closable="false"
         v-show="error_msg.length > 0"
       />
-      <BuilderDocument
-        class="h-100"
-        :class="error_msg.length > 0 ? 'o-40 no-pointer-events no-select' : ''"
-        :definition="edit_json"
+      <AdminBuilderUi
+        class="flex-fill pa5 overflow-y-scroll"
+        :prompts="calc_prompts"
       />
     </div>
   </div>
@@ -44,10 +43,10 @@
 
 <script>
   import yaml from 'js-yaml'
-  import CodeEditor from '@comp/CodeEditor'
-  import BuilderDocument from '@comp/BuilderDocument'
+  import CodeEditor from '@/components/CodeEditor'
+  import AdminBuilderUi from '@/components/AdminBuilderUi'
 
-  import test_def from '../data/builder/test-def.yml'
+  import test_def from '../data/builder/docusign-example.yml'
   // easy way to get rid of a bunch of elements for quick testing
   //test_def.prompts = _.filter(test_def.prompts, { element: 'form' })
 
@@ -59,7 +58,7 @@
     },
     components: {
       CodeEditor,
-      BuilderDocument
+      AdminBuilderUi
     },
     watch: {
       edit_code: {
@@ -74,6 +73,11 @@
         edit_json: {},
         error_msg: '',
         code_expanded: true
+      }
+    },
+    computed: {
+      calc_prompts() {
+        return _.get(this.edit_json, 'prompts', [])
       }
     },
     methods: {

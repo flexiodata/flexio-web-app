@@ -50,6 +50,10 @@
       name: 'Tests',
       icon: 'gavel'
     },{
+      route: 'builder',
+      name: 'Builder',
+      icon: 'code'
+    },{
       route: 'prototype',
       name: 'Prototype',
       icon: 'build'

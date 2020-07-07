@@ -4,6 +4,7 @@ import AppAdmin from '@/components/AppAdmin'
 import AdminTest from '@/components/AdminTest'
 import AdminProcessActivity from '@/components/AdminProcessActivity'
 import AdminUserActivity from '@/components/AdminUserActivity'
+import AdminBuilder from '@/components/AdminBuilder'
 import AdminPrototype from '@/components/AdminPrototype'
 
 export default {
@@ -28,6 +29,10 @@ export default {
     {
       path: 'users',
       component: AdminUserActivity
+    },
+    {
+      path: 'builder',
+      component: AdminBuilder
     },
     {
       path: 'prototype',
