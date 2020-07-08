@@ -52,7 +52,7 @@
           v-bind="fi"
           v-else-if="fi.element == 'upload'"
         >
-        <el-button size="small" type="primary">Click to upload</el-button>
+          <el-button size="small" type="primary">Click to upload</el-button>
         </el-upload>
         <el-slider
           v-model="edit_values[fi.name]"
