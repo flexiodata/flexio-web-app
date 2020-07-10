@@ -97,6 +97,11 @@
         var items = path.split('/')
         items = _.compact(items)
 
+        // failsafe
+        if (items.length == 0) {
+          return []
+        }
+
         // make sure we include the connection in our items array
         items.splice(0, 0, connection_identifier)
 
