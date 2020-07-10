@@ -21,7 +21,13 @@
       :show-header="false"
       :show-footer="false"
       v-on="$listeners"
+      v-if="has_valid_connection_type"
     />
+    <div
+      v-else
+    >
+      <em>Invalid connection type</em>
+    </div>
     <ButtonBar
       class="mt4"
       @cancel-click="onCancelClick"
@@ -35,6 +41,7 @@
 <script>
   import marked from 'marked'
   import { OBJECT_TYPE_CONNECTION } from '@/constants/object-type'
+  import * as ctypes from '@/constants/connection-type'
   import ConnectionEditPanel from '@/components/ConnectionEditPanel'
   import ButtonBar from '@/components/ButtonBar'
 
@@ -120,6 +127,10 @@
         })
         return obj
       },
+      has_valid_connection_type() {
+        var our_ctype = _.get(this.edit_connection, 'connection_type', '')
+        return _.includes(ctypes, our_ctype)
+      }
     },
     methods: {
       initSelf() {
