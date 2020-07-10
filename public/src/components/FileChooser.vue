@@ -165,7 +165,9 @@
           } else {
             // since the connection path hasn't changed, reactivity isn't going
             // to trigger a refresh here so we need to do it manually
-            this.$refs['file-chooser'].refreshList()
+            if (this.$refs['file-chooser']) {
+              this.$refs['file-chooser'].refreshList()
+            }
           }
         })
       },
