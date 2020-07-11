@@ -66,9 +66,7 @@
   const getDefaultState = () => {
     return {
       edit_connection: {},
-      edit_values: {
-        files: []
-      },
+      edit_values: {},
       selected_files: [],
     }
   }
