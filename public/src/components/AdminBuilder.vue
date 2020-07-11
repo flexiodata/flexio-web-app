@@ -43,6 +43,7 @@
 
 <script>
   import yaml from 'js-yaml'
+  import { mapGetters } from 'vuex'
   import CodeEditor from '@/components/CodeEditor'
   import AdminBuilderUi from '@/components/AdminBuilderUi'
 
@@ -80,7 +81,15 @@
         return _.get(this.edit_json, 'prompts', [])
       }
     },
+    mounted() {
+      // we need this for the API call that creates the pending connection in BuilderItemFileChooser
+      var team_name = this.getActiveUsername()
+      this.$store.dispatch('teams/changeActiveTeam', { team_name })
+    },
     methods: {
+      ...mapGetters('users', {
+        'getActiveUsername': 'getActiveUsername',
+      }),
       updateJSON() {
         var res = ''
         try {

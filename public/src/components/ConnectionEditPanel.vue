@@ -238,10 +238,12 @@
         var ctype = _.get(this.edit_connection, 'connection_type', '')
         return _.find(cinfos, { connection_type: ctype })
       },
+      // this function is used outside of this file;
+      //do not change/remove it without searching for where it is used!
       createPendingConnection(item) {
-        var ctype = item.connection_type
-        var ctitle = item.service_name
-        var service_slug = slugify(item.service_name)
+        var ctype = item.connection_type // required
+        var ctitle = _.get(item, 'service_name', ctype)
+        var service_slug = slugify(ctitle)
         var team_name = this.active_team_name
 
         // when using the connection edit panel in 'add' mode, if the panel

@@ -15,13 +15,18 @@
       v-show="description.length > 0"
     >
     </div>
+    <FileChooser
+      :connection="edit_connection"
+      v-if="has_connection_eid && has_available_connection"
+    />
     <ConnectionEditPanel
+      ref="connection-edit-panel"
       :active-step="'authentication'"
       :connection.sync="edit_connection"
       :show-header="false"
       :show-footer="false"
       v-on="$listeners"
-      v-if="has_valid_connection_type"
+      v-else-if="has_valid_connection_type"
     />
     <div
       v-else
@@ -40,10 +45,22 @@
 
 <script>
   import marked from 'marked'
+  import randomstring from 'randomstring'
+  import { OBJECT_STATUS_PENDING } from '@/constants/object-status'
   import { OBJECT_TYPE_CONNECTION } from '@/constants/object-type'
+  import { CONNECTION_STATUS_AVAILABLE } from '@/constants/connection-status'
   import * as ctypes from '@/constants/connection-type'
   import ConnectionEditPanel from '@/components/ConnectionEditPanel'
+  import FileChooser from '@/components/FileChooser'
   import ButtonBar from '@/components/ButtonBar'
+
+  const getNameSuffix = (length) => {
+    return randomstring.generate({
+      length,
+      charset: 'alphabetic',
+      capitalization: 'lowercase'
+    })
+  }
 
   const getDefaultState = () => {
     return {
@@ -85,6 +102,7 @@
     },
     components: {
       ConnectionEditPanel,
+      FileChooser,
       ButtonBar
     },
     watch: {
@@ -102,7 +120,7 @@
         handler: 'updateEditValues',
         immediate: true,
         deep: true
-      },
+      }
     },
     data() {
       return getDefaultState()
@@ -130,6 +148,22 @@
       has_valid_connection_type() {
         var ctype = _.get(this.edit_connection, 'connection_type', '')
         return _.isString(ctype) && ctype.length > 0 && _.includes(ctypes, ctype)
+      },
+      has_connection_eid() {
+        var eid = _.get(this.edit_connection, 'eid', '')
+        return _.isString(eid) && eid.length > 0
+      },
+      has_available_connection() {
+        return _.get(this.edit_connection, 'connection_status', '') === CONNECTION_STATUS_AVAILABLE
+      },
+    },
+    mounted() {
+      var connection_attrs = _.get(this.item, 'connection', {})
+      var eid = _.get(this.edit_connection, 'eid', '')
+
+      if (eid.length == 0 && this.$refs['connection-edit-panel']) {
+        var { connection_type } = connection_attrs
+        this.$refs['connection-edit-panel'].createPendingConnection({ connection_type })
       }
     },
     methods: {
