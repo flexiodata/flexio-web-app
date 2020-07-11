@@ -4,6 +4,7 @@
     v-on="$listeners"
     v-bind="$attrs"
     v-model="is_visible"
+    v-if="connection.eid"
   >
     <FileChooser
       style="min-height: 250px; height: 36vh"
