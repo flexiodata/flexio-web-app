@@ -17,6 +17,7 @@
     </div>
     <FileChooser
       :connection="edit_connection"
+      :selected-items.sync="selected_files"
       v-if="has_connection_eid && has_available_connection"
     />
     <ConnectionEditPanel
@@ -65,7 +66,10 @@
   const getDefaultState = () => {
     return {
       edit_connection: {},
-      edit_values: {},
+      edit_values: {
+        files: []
+      },
+      selected_files: [],
     }
   }
 
@@ -116,7 +120,7 @@
         immediate: true,
         deep: true
       },
-      edit_connection: {
+      selected_files: {
         handler: 'updateEditValues',
         immediate: true,
         deep: true
@@ -183,7 +187,8 @@
           var key = _.get(this.form_items, '[0].name', '')
           if (key.length > 0) {
             var new_values = {}
-            new_values[key] = _.cloneDeep(this.edit_connection)
+            new_values[key] = _.map(this.selected_files, f => _.get(f, 'full_path', ''))
+            new_values[key] = _.compact(new_values[key])
             this.edit_values = _.assign({}, this.edit_values, new_values)
           }
         }
