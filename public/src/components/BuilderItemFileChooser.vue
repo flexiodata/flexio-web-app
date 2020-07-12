@@ -181,14 +181,15 @@
         this.$emit('values-change', this.edit_values, this.item)
       },
       updateEditValues() {
-        if (this.form_items.length == 1) {
-          var key = _.get(this.form_items, '[0].name', '')
-          if (key.length > 0) {
-            var new_values = {}
-            new_values[key] = _.map(this.selected_files, f => _.get(f, 'full_path', ''))
-            new_values[key] = _.compact(new_values[key])
-            this.edit_values = _.assign({}, this.edit_values, new_values)
-          }
+        var conn_key = _.get(this.form_items, '[0].name', '')
+        var files_key = _.get(this.form_items, '[1].name', '')
+
+        if (conn_key.length > 0 && files_key.length > 0) {
+          var new_values = {}
+          new_values[conn_key] = _.cloneDeep(this.edit_connection)
+          new_values[files_key] = _.map(this.selected_files, f => _.get(f, 'full_path', ''))
+          new_values[files_key] = _.compact(new_values[files_key])
+          this.edit_values = _.assign({}, this.edit_values, new_values)
         }
       },
       onCancelClick() {
