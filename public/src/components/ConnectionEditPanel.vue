@@ -239,7 +239,7 @@
         return _.find(cinfos, { connection_type: ctype })
       },
       // this function is used outside of this file;
-      //do not change/remove it without searching for where it is used!
+      // do not change/remove it without searching for where it is used!
       createPendingConnection(item) {
         var ctype = item.connection_type // required
         var ctitle = _.get(item, 'service_name', ctype)

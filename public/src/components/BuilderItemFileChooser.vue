@@ -15,20 +15,30 @@
       v-show="description.length > 0"
     >
     </div>
-    <FileChooser
-      :connection="edit_connection"
-      :selected-items.sync="selected_files"
-      v-if="has_connection_eid && has_available_connection"
-    />
-    <ConnectionEditPanel
-      ref="connection-edit-panel"
-      :active-step="'authentication'"
-      :connection.sync="edit_connection"
-      :show-header="false"
-      :show-footer="false"
-      v-on="$listeners"
-      v-else-if="has_valid_connection_type"
-    />
+    <template v-if="has_connection_eid && has_available_connection">
+      <div
+        v-html="getMarkdown(file_chooser_message)"
+        v-if="file_chooser_message.length > 0"
+      ></div>
+      <FileChooser
+        :connection="edit_connection"
+        :selected-items.sync="selected_files"
+      />
+    </template>
+    <template v-else-if="has_valid_connection_type">
+      <div
+        v-html="getMarkdown(connection_message)"
+        v-if="connection_message.length > 0"
+      ></div>
+      <ConnectionEditPanel
+        ref="connection-edit-panel"
+        :active-step="'authentication'"
+        :connection.sync="edit_connection"
+        :show-header="false"
+        :show-footer="false"
+        v-on="$listeners"
+      />
+    </template>
     <div
       v-else
     >
@@ -147,6 +157,12 @@
         })
         return obj
       },
+      connection_message() {
+        return _.get(this.form_items, '[0].description', '')
+      },
+      file_chooser_message() {
+        return _.get(this.form_items, '[1].description', '')
+      },
       has_valid_connection_type() {
         var ctype = _.get(this.edit_connection, 'connection_type', '')
         return _.isString(ctype) && ctype.length > 0 && _.includes(ctypes, ctype)
@@ -176,6 +192,9 @@
 
         // reset our local component data
         _.assign(this.$data, getDefaultState(), { edit_values, edit_connection })
+      },
+      getMarkdown(val) {
+        return marked(val)
       },
       emitFormValues() {
         this.$emit('values-change', this.edit_values, this.item)
