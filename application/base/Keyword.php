@@ -690,7 +690,6 @@ class Keyword
         'settypes' => '',
         'spawn' => '',
         'spawns' => '',
-        'sftp' => '',
         'show' => '',
         'shows' => '',
         'sleep' => '',
