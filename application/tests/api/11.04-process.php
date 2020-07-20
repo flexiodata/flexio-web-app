@@ -18,12 +18,54 @@ namespace Flexio\Tests;
 
 class Test
 {
+    public function getMessageTask1()
+    {
+        $code = <<<EOD
+def flex_handler(flex):
+    params = dict(flex.vars)
+    msg = params.get('form.msg','')
+    flex.end(msg)
+EOD;
+        $result = [
+            'task' => [
+                'op' => 'execute',
+                'lang' => 'python',
+                'code' => base64_encode($code)
+            ]
+        ];
+
+        return json_encode($result);
+    }
+
+    public function getMessageTask2()
+    {
+        $code = <<<EOD
+def flex_handler(flex):
+    params = dict(flex.vars)
+    noun = params.get('form.noun','')
+    verb = params.get('form.verb','')
+    msg = 'Hello, ' + noun + '. Would you like to ' + verb + '?'
+    flex.end(msg)
+EOD;
+        $result = [
+            'task' => [
+                'op' => 'execute',
+                'lang' => 'python',
+                'code' => base64_encode($code)
+            ]
+        ];
+
+        return json_encode($result);
+    }
+
     public function run(&$results)
     {
         // ENDPOINT: POST /:teamid/processes/:objeid/run
 
 
         // SETUP
+
+
         $apibase = \Flexio\Tests\Util::getTestHost() . '/v1';
         $password1 = \Flexio\Base\Password::generate();
         $userid1 = \Flexio\Tests\Util::createUser(null, null, $password1);
@@ -37,12 +79,7 @@ class Test
             'url' => "$apibase/$userid1/processes",
             'token' => $token1,
             'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "echo",
-                    "msg": "${form.msg}"
-                }
-            }'
+            'params' => self::getMessageTask1()
         );
         $result = \Flexio\Tests\Util::callApi($params);
         $response = json_decode($result['response'],true);
@@ -53,12 +90,7 @@ class Test
             'url' => "$apibase/$userid2/processes",
             'token' => $token2,
             'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "echo",
-                    "msg": "${form.msg}"
-                }
-            }'
+            'params' => self::getMessageTask1()
         );
         $result = \Flexio\Tests\Util::callApi($params);
         $response = json_decode($result['response'],true);
@@ -69,12 +101,7 @@ class Test
             'url' => "$apibase/$userid1/processes",
             'token' => $token1,
             'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "echo",
-                    "msg": "Hello, ${form.noun}. Would you like to ${form.verb}?"
-                }
-            }'
+            'params' => self::getMessageTask2()
         );
         $result = \Flexio\Tests\Util::callApi($params);
         $response = json_decode($result['response'],true);
@@ -194,12 +221,7 @@ class Test
             'url' => "$apibase/$userid1/processes",
             'token' => $token1,
             'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "echo",
-                    "msg": "${form.msg}"
-                }
-            }'
+            'params' => self::getMessageTask1()
         );
         $result = \Flexio\Tests\Util::callApi($params);
         $response = json_decode($result['response'],true);
@@ -225,12 +247,7 @@ class Test
             'url' => "$apibase/$userid1/processes",
             'token' => $token1,
             'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "echo",
-                    "msg": "${form.msg}"
-                }
-            }'
+            'params' => self::getMessageTask1()
         );
         $result = \Flexio\Tests\Util::callApi($params);
         $response = json_decode($result['response'],true);
@@ -260,12 +277,7 @@ class Test
             'url' => "$apibase/$userid1/processes",
             'token' => $token1,
             'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "echo",
-                    "msg": "${form.msg}"
-                }
-            }'
+            'params' => self::getMessageTask1()
         );
         $result = \Flexio\Tests\Util::callApi($params);
         $response = json_decode($result['response'],true);
@@ -290,12 +302,7 @@ class Test
             'url' => "$apibase/$userid1/processes",
             'token' => $token1,
             'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "echo",
-                    "msg": "${form.msg}"
-                }
-            }'
+            'params' => self::getMessageTask1()
         );
         $result = \Flexio\Tests\Util::callApi($params);
         $response = json_decode($result['response'],true);
@@ -320,12 +327,7 @@ class Test
             'url' => "$apibase/$userid1/processes",
             'token' => $token1,
             'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "echo",
-                    "msg": "${form.msg}"
-                }
-            }'
+            'params' => self::getMessageTask1()
         );
         $result = \Flexio\Tests\Util::callApi($params);
         $response = json_decode($result['response'],true);
@@ -350,12 +352,7 @@ class Test
             'url' => "$apibase/$userid1/processes",
             'token' => $token1,
             'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "echo",
-                    "msg": "${form.msg}"
-                }
-            }'
+            'params' => self::getMessageTask1()
         );
         $result = \Flexio\Tests\Util::callApi($params);
         $response = json_decode($result['response'],true);
@@ -380,12 +377,7 @@ class Test
             'url' => "$apibase/$userid1/processes",
             'token' => $token1,
             'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "echo",
-                    "msg": "${form.msg}"
-                }
-            }'
+            'params' => self::getMessageTask1()
         );
         $result = \Flexio\Tests\Util::callApi($params);
         $response = json_decode($result['response'],true);
@@ -410,12 +402,7 @@ class Test
             'url' => "$apibase/$userid1/processes",
             'token' => $token1,
             'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "echo",
-                    "msg": "${form.msg}"
-                }
-            }'
+            'params' => self::getMessageTask1()
         );
         $result = \Flexio\Tests\Util::callApi($params);
         $response = json_decode($result['response'],true);
@@ -441,12 +428,7 @@ class Test
             'url' => "$apibase/$userid1/processes",
             'token' => $token1,
             'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "echo",
-                    "msg": "${form.msg}"
-                }
-            }'
+            'params' => self::getMessageTask1()
         );
         $result = \Flexio\Tests\Util::callApi($params);
         $response = json_decode($result['response'],true);
@@ -471,12 +453,7 @@ class Test
             'url' => "$apibase/$userid1/processes",
             'token' => $token1,
             'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "echo",
-                    "msg": "${form.msg}"
-                }
-            }'
+            'params' => self::getMessageTask1()
         );
         $result = \Flexio\Tests\Util::callApi($params);
         $response = json_decode($result['response'],true);
@@ -501,12 +478,7 @@ class Test
             'url' => "$apibase/$userid1/processes",
             'token' => $token1,
             'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "echo",
-                    "msg": "${form.msg}"
-                }
-            }'
+            'params' => self::getMessageTask1()
         );
         $result = \Flexio\Tests\Util::callApi($params);
         $response = json_decode($result['response'],true);
@@ -531,12 +503,7 @@ class Test
             'url' => "$apibase/$userid1/processes",
             'token' => $token1,
             'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "echo",
-                    "msg": "${form.msg}"
-                }
-            }'
+            'params' => self::getMessageTask1()
         );
         $result = \Flexio\Tests\Util::callApi($params);
         $response = json_decode($result['response'],true);
@@ -561,12 +528,7 @@ class Test
             'url' => "$apibase/$userid1/processes",
             'token' => $token1,
             'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "echo",
-                    "msg": "${form.msg}"
-                }
-            }'
+            'params' => self::getMessageTask1()
         );
         $result = \Flexio\Tests\Util::callApi($params);
         $response = json_decode($result['response'],true);
@@ -591,12 +553,7 @@ class Test
             'url' => "$apibase/$userid1/processes",
             'token' => $token1,
             'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "echo",
-                    "msg": "${form.msg}"
-                }
-            }'
+            'params' => self::getMessageTask1()
         );
         $result = \Flexio\Tests\Util::callApi($params);
         $response = json_decode($result['response'],true);
@@ -621,12 +578,7 @@ class Test
             'url' => "$apibase/$userid1/processes",
             'token' => $token1,
             'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "echo",
-                    "msg": "${form.msg}"
-                }
-            }'
+            'params' => self::getMessageTask1()
         );
         $result = \Flexio\Tests\Util::callApi($params);
         $response = json_decode($result['response'],true);
@@ -651,12 +603,7 @@ class Test
             'url' => "$apibase/$userid1/processes",
             'token' => $token1,
             'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "echo",
-                    "msg": "${form.msg}"
-                }
-            }'
+            'params' => self::getMessageTask1()
         );
         $result = \Flexio\Tests\Util::callApi($params);
         $response = json_decode($result['response'],true);
@@ -681,12 +628,7 @@ class Test
             'url' => "$apibase/$userid1/processes",
             'token' => $token1,
             'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "echo",
-                    "msg": "${form.msg}"
-                }
-            }'
+            'params' => self::getMessageTask1()
         );
         $result = \Flexio\Tests\Util::callApi($params);
         $response = json_decode($result['response'],true);
@@ -714,12 +656,7 @@ class Test
             'url' => "$apibase/$userid1/processes",
             'token' => $token1,
             'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "echo",
-                    "msg": "Hello, ${form.noun}. Would you like to ${form.verb}?"
-                }
-            }'
+            'params' => self::getMessageTask2()
         );
         $result = \Flexio\Tests\Util::callApi($params);
         $response = json_decode($result['response'],true);
@@ -743,12 +680,7 @@ class Test
             'url' => "$apibase/$userid1/processes",
             'token' => $token1,
             'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "echo",
-                    "msg": "Hello, ${form.noun}. Would you like to ${form.verb}?"
-                }
-            }'
+            'params' => self::getMessageTask2()
         );
         $result = \Flexio\Tests\Util::callApi($params);
         $response = json_decode($result['response'],true);
@@ -773,12 +705,7 @@ class Test
             'url' => "$apibase/$userid1/processes",
             'token' => $token1,
             'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "echo",
-                    "msg": "Hello, ${form.noun}. Would you like to ${form.verb}?"
-                }
-            }'
+            'params' => self::getMessageTask2()
         );
         $result = \Flexio\Tests\Util::callApi($params);
         $response = json_decode($result['response'],true);
@@ -803,12 +730,7 @@ class Test
             'url' => "$apibase/$userid1/processes",
             'token' => $token1,
             'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "echo",
-                    "msg": "Hello, ${form.noun}. Would you like to ${form.verb}?"
-                }
-            }'
+            'params' => self::getMessageTask2()
         );
         $result = \Flexio\Tests\Util::callApi($params);
         $response = json_decode($result['response'],true);
@@ -834,12 +756,7 @@ class Test
             'url' => "$apibase/$userid1/processes",
             'token' => $token1,
             'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "echo",
-                    "msg": "Hello, ${form.noun}. Would you like to ${form.verb}?"
-                }
-            }'
+            'params' => self::getMessageTask2()
         );
         $result = \Flexio\Tests\Util::callApi($params);
         $response = json_decode($result['response'],true);
@@ -868,12 +785,7 @@ class Test
             'url' => "$apibase/$userid1/processes",
             'token' => $token1,
             'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "echo",
-                    "msg": "${form.msg}"
-                }
-            }'
+            'params' => self::getMessageTask1()
         );
         $result = \Flexio\Tests\Util::callApi($params);
         $response = json_decode($result['response'],true);

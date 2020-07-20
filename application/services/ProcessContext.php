@@ -123,21 +123,6 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
                 );
             }
         }
-        else if ($folder == 'fileno')
-        {
-            $params = $this->process->getLocalFiles();
-            foreach ($params as $k => $v)
-            {
-                $result[] = array(
-                    'name' => "$k",
-                    'path' => "$k",
-                    'size' => $v->getSize(),
-                    'modified' => null,
-                    'hash' => '', // TODO: available?
-                    'type' => 'FILE'
-                );
-            }
-        }
 
         return $result;
     }
@@ -239,13 +224,6 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
             $val = $params[$file];
-        }
-        else if ($folder == 'fileno')
-        {
-            $val = $this->process->getLocalFile((int)$file);
-
-            if (!isset($val))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
         }
         else
         {

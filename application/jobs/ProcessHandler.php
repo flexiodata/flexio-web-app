@@ -326,12 +326,7 @@ class ProcessHandler
 
                 $service = $connection->getService(); // getting the service refreshes tokens
                 $connection_info = $service->get();
-                $connection_info = json_encode($connection_info);
-
-                $stream = \Flexio\Base\Stream::create();
-                $stream->setMimeType(\Flexio\Base\ContentType::FLEXIO_CONNECTION_INFO);
-                $stream->getWriter()->write((string)$connection_info);
-                $mount_variables[$key] = $stream;
+                $mount_variables[$key] = $connection_info;
             }
             catch (\Flexio\Base\Exception $e)
             {

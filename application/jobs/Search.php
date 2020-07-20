@@ -123,7 +123,6 @@ class Search implements \Flexio\IFace\IJob
         if ($limit_row_count === false && isset($process_params['search_default_result_size']))
         {
             $search_default_result_size_param = $process_params['search_default_result_size'];
-            $search_default_result_size_param = $search_default_result_size_param->getReader()->read(12); // should be small integer value
             $limit_row_count = intval($search_default_result_size_param);
         }
 
@@ -133,7 +132,6 @@ class Search implements \Flexio\IFace\IJob
         if (isset($process_params['search_max_result_size']))
         {
             $search_max_result_size_param = $process_params['search_max_result_size'];
-            $search_max_result_size_param = $search_max_result_size_param->getReader()->read(12); // should be small integer value
             $search_max_result_size = intval($search_max_result_size_param);
             if ($limit_row_count === false || $limit_row_count > $search_max_result_size)
                 $limit_row_count = $search_max_result_size;

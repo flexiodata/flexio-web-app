@@ -95,16 +95,6 @@ class Process implements \Flexio\IFace\IProcess
 
     public function setParams(array $arr) : \Flexio\Jobs\Process
     {
-        foreach ($arr as $k => &$v)
-        {
-            if (!($v instanceof \Flexio\Base\Stream))
-            {
-                $stream = \Flexio\Base\Stream::create();
-                $stream->getWriter()->write((string)$v);
-                $v = $stream;
-            }
-        }
-
         $this->params = $arr;
         return $this;
     }

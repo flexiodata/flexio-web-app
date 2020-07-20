@@ -156,11 +156,6 @@ class Test
         $expected = 'application/vnd.flexio.folder';
         \Flexio\Tests\Check::assertString('B.4', '\ContentType mime type constant',  $actual, $expected, $results);
 
-        // BEGIN TEST
-        $actual = \Flexio\Base\ContentType::FLEXIO_CONNECTION_INFO;
-        $expected = 'application/vnd.flexio.connection_info';
-        \Flexio\Tests\Check::assertString('B.5', '\ContentType mime type constant',  $actual, $expected, $results);
-
 
         // TEST: extensions for mime types
 
