@@ -4,6 +4,7 @@
       <BuilderItem
         :key="prompt.name"
         :item="prompt"
+        :default-values="config"
         :autofocus-first-item="false"
         :visible="index == active_idx"
         :cancel-button-visible="active_idx > 0"

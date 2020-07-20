@@ -15,34 +15,15 @@
       v-show="description.length > 0"
     >
     </div>
-    <template v-if="has_connection_eid && has_available_connection">
-      <div
-        v-html="getMarkdown(file_chooser_message)"
-        v-if="file_chooser_message.length > 0"
-      ></div>
-      <FileChooser
-        :connection="edit_connection"
-        :selected-items.sync="selected_files"
-      />
-    </template>
-    <template v-else-if="has_valid_connection_type">
-      <div
-        v-html="getMarkdown(connection_message)"
-        v-if="connection_message.length > 0"
-      ></div>
-      <ConnectionEditPanel
-        ref="connection-edit-panel"
-        :active-step="'authentication'"
-        :connection.sync="edit_connection"
-        :show-header="false"
-        :show-footer="false"
-        v-on="$listeners"
-      />
-    </template>
+    <FileChooser
+      :connection="connection"
+      :selected-items.sync="selected_files"
+      v-if="has_connection"
+    />
     <div
       v-else
     >
-      <em>Invalid connection type</em>
+      <em>Invalid connection</em>
     </div>
     <ButtonBar
       class="mt4"
@@ -56,26 +37,11 @@
 
 <script>
   import marked from 'marked'
-  import randomstring from 'randomstring'
-  import { OBJECT_STATUS_PENDING } from '@/constants/object-status'
-  import { OBJECT_TYPE_CONNECTION } from '@/constants/object-type'
-  import { CONNECTION_STATUS_AVAILABLE } from '@/constants/connection-status'
-  import * as ctypes from '@/constants/connection-type'
-  import ConnectionEditPanel from '@/components/ConnectionEditPanel'
   import FileChooser from '@/components/FileChooser'
   import ButtonBar from '@/components/ButtonBar'
 
-  const getNameSuffix = (length) => {
-    return randomstring.generate({
-      length,
-      charset: 'alphabetic',
-      capitalization: 'lowercase'
-    })
-  }
-
   const getDefaultState = () => {
     return {
-      edit_connection: {},
       edit_values: {},
       selected_files: [],
     }
@@ -113,7 +79,6 @@
       }
     },
     components: {
-      ConnectionEditPanel,
       FileChooser,
       ButtonBar
     },
@@ -157,41 +122,24 @@
         })
         return obj
       },
-      connection_message() {
-        return _.get(this.form_items, '[0].description', '')
+      connection() {
+        // this file chooser builder item *MUST* come after the builder item
+        // that creates the connection
+        var connection_key = _.get(this.item, 'connection_form_item_name', '')
+        return _.find(this.defaultValues, (val, key) => {
+          return key === connection_key
+        })
       },
-      file_chooser_message() {
-        return _.get(this.form_items, '[1].description', '')
-      },
-      has_valid_connection_type() {
-        var ctype = _.get(this.edit_connection, 'connection_type', '')
-        return _.isString(ctype) && ctype.length > 0 && _.includes(ctypes, ctype)
-      },
-      has_connection_eid() {
-        var eid = _.get(this.edit_connection, 'eid', '')
-        return _.isString(eid) && eid.length > 0
-      },
-      has_available_connection() {
-        return _.get(this.edit_connection, 'connection_status', '') === CONNECTION_STATUS_AVAILABLE
-      },
-    },
-    mounted() {
-      var connection_attrs = _.get(this.item, 'connection', {})
-      var eid = _.get(this.edit_connection, 'eid', '')
-
-      if (eid.length == 0 && this.$refs['connection-edit-panel']) {
-        var { connection_type } = connection_attrs
-        this.$refs['connection-edit-panel'].createPendingConnection({ connection_type })
+      has_connection() {
+        return _.get(this.connection, 'eid', '').length > 0
       }
     },
     methods: {
       initSelf() {
-        var connection_attrs = _.get(this.item, 'connection', {})
         var edit_values = _.assign({}, this.form_values, this.defaultValues)
-        var edit_connection = _.assign({}, connection_attrs, { eid_type: OBJECT_TYPE_CONNECTION })
 
         // reset our local component data
-        _.assign(this.$data, getDefaultState(), { edit_values, edit_connection })
+        _.assign(this.$data, getDefaultState(), { edit_values })
       },
       getMarkdown(val) {
         return marked(val)
@@ -200,15 +148,14 @@
         this.$emit('values-change', this.edit_values, this.item)
       },
       updateEditValues() {
-        var conn_key = _.get(this.form_items, '[0].name', '')
-        var files_key = _.get(this.form_items, '[1].name', '')
-
-        if (conn_key.length > 0 && files_key.length > 0) {
-          var new_values = {}
-          new_values[conn_key] = _.cloneDeep(this.edit_connection)
-          new_values[files_key] = _.map(this.selected_files, f => _.get(f, 'full_path', ''))
-          new_values[files_key] = _.compact(new_values[files_key])
-          this.edit_values = _.assign({}, this.edit_values, new_values)
+        if (this.form_items.length == 1) {
+          var key = _.get(this.form_items, '[0].name', '')
+          if (key.length > 0) {
+            var new_values = {}
+            new_values[key] = _.map(this.selected_files, f => _.get(f, 'full_path', ''))
+            new_values[key] = _.compact(new_values[key])
+            this.edit_values = _.assign({}, this.edit_values, new_values)
+          }
         }
       },
       onCancelClick() {

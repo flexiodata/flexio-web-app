@@ -16,6 +16,7 @@
     >
     </div>
     <ConnectionEditPanel
+      ref="connection-edit-panel"
       :active-step="'authentication'"
       :connection.sync="edit_connection"
       :show-header="false"
@@ -32,7 +33,7 @@
       class="mt4"
       @cancel-click="onCancelClick"
       @submit-click="onSubmitClick"
-      v-bind="$attrs"
+      v-bind="button_bar_props"
       v-show="showFooter"
     />
   </div>
@@ -41,6 +42,7 @@
 <script>
   import marked from 'marked'
   import { OBJECT_TYPE_CONNECTION } from '@/constants/object-type'
+  import { CONNECTION_STATUS_AVAILABLE } from '@/constants/connection-status'
   import * as ctypes from '@/constants/connection-type'
   import ConnectionEditPanel from '@/components/ConnectionEditPanel'
   import ButtonBar from '@/components/ButtonBar'
@@ -130,6 +132,25 @@
       has_valid_connection_type() {
         var ctype = _.get(this.edit_connection, 'connection_type', '')
         return _.isString(ctype) && ctype.length > 0 && _.includes(ctypes, ctype)
+      },
+      has_available_connection() {
+        return _.get(this.edit_connection, 'connection_status', '') === CONNECTION_STATUS_AVAILABLE
+      },
+      button_bar_props() {
+        var submitButtonDisabled = this.has_available_connection ? false : true
+        return _.assign({}, this.$attrs, { submitButtonDisabled })
+      }
+    },
+    mounted() {
+      var connection_attrs = _.get(this.item, 'connection', {})
+      var eid = _.get(this.edit_connection, 'eid', '')
+      var create_pending_connection = _.get(this.item, 'create_pending_connection', false)
+
+      if (create_pending_connection &&
+          eid.length == 0 &&
+          this.$refs['connection-edit-panel']) {
+        var { connection_type } = connection_attrs
+        this.$refs['connection-edit-panel'].createPendingConnection({ connection_type })
       }
     },
     methods: {
