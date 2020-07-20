@@ -4,7 +4,7 @@
       <BuilderItem
         :key="prompt.name"
         :item="prompt"
-        :default-values="setupConfig"
+        :default-values="default_values"
         :visible="index == active_idx"
         :cancel-button-visible="active_idx > 0"
         :cancel-button-text="'Back'"
@@ -61,6 +61,9 @@
       setup_template_image_url() {
         return _.get(this.setupTemplate, 'image.src', '')
       },
+      default_values() {
+        return _.assign({}, this.setupConfig, this.config)
+      }
     },
     methods: {
       onValuesChange(values) {
