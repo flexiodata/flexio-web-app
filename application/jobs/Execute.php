@@ -1606,11 +1606,6 @@ class Execute implements \Flexio\IFace\IJob
     public static function run(\Flexio\IFace\IProcess $process, array $task) : void
     {
         unset($task['op']);
-
-        // don't replace parameters to save a little bit of work;
-        // logic is in script so no replacement necessary
-        //\Flexio\Jobs\Util::replaceParameterTokens($process, $task);
-
         $object = new static();
         $object->properties = $task;
         $object->run_internal($process);

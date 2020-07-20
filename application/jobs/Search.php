@@ -46,12 +46,6 @@ class Search implements \Flexio\IFace\IJob
     public static function run(\Flexio\IFace\IProcess $process, array $task) : void
     {
         unset($task['op']);
-
-        // search is an internal function for pulling info from the
-        // elasticsearch index; don't allow parameter replacement to
-        // save a little bit of time
-        //\Flexio\Jobs\Util::replaceParameterTokens($process, $task);
-
         $object = new static();
         $object->properties = $task;
         $object->run_internal($process);

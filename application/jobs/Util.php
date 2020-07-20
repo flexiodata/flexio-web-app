@@ -20,7 +20,11 @@ class Util
 {
     public static function replaceParameterTokens($process, array &$task) : void
     {
-        // note: $process can be either a process or an array
+        // replaces parameter tokens with values; note: parameter replacement
+        // is no longer used, but keep the function here along with the
+        // associated tests in case it's needed in the future
+
+        // $process can be either a process or an array
         self::replaceParameterTokensRecurse($process, $task);
     }
 

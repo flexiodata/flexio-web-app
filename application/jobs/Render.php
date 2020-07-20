@@ -54,8 +54,6 @@ class Render implements \Flexio\IFace\IJob
     public static function run(\Flexio\IFace\IProcess $process, array $task) : void
     {
         unset($task['op']);
-        \Flexio\Jobs\Util::replaceParameterTokens($process, $task);
-
         $object = new static();
         $object->properties = $task;
         $object->run_internal($process);
