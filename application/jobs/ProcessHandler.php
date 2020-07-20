@@ -314,8 +314,8 @@ class ProcessHandler
                 continue;
             }
 
-            // if we have an eid, try to load the appropriate oauth service and
-            // get the access token
+            // if we have an eid, try to load the appropriate connection and pass
+            // on the connection info
             try
             {
                 $connection = \Flexio\Object\Connection::load($mount_item_eid);
