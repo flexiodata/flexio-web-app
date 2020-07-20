@@ -386,7 +386,7 @@
           case 'error':   return 'el-icon-error'
         }
 
-        return 'Test connection'
+        return ''
       },
       test_btn_label() {
         switch (this.test_state) {
