@@ -396,7 +396,7 @@
           case 'error':   return 'Error'
         }
 
-        return 'Test connection'
+        return 'Connect'
       },
     },
     methods: {
