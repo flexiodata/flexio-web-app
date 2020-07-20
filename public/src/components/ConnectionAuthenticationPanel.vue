@@ -390,8 +390,8 @@
       },
       test_btn_label() {
         switch (this.test_state) {
-          case 'none':    return 'Test connection'
-          case 'testing': return 'Testing...'
+          case 'none':    return 'Connect'
+          case 'testing': return 'Connecting...'
           case 'success': return 'Success!'
           case 'error':   return 'Error'
         }
