@@ -257,14 +257,22 @@
 
         var attrs = _.assign({}, getDefaultAttrs(), prop_connection_attrs, {
           eid_status,
-          name: `${service_slug}-` + getNameSuffix(16),
+          name: `${service_slug}-` + getNameSuffix(8),
           title: ctitle,
           connection_type: ctype
         })
 
         this.$store.dispatch('connections/create', { team_name, attrs }).then(response => {
           var connection = _.cloneDeep(response.data)
-          connection.name = this.$store.getUniqueName(service_slug, 'connections')
+
+          // connections that are already created as available connections should keep
+          // whatever name they were given; changing the connection name in the local state
+          // and not on the backend here was causing an issue with the builder item file chooser
+          // having a connection name mismatch
+          if (_.get(connection, 'eid_status', OBJECT_STATUS_PENDING) === OBJECT_STATUS_PENDING) {
+            connection.name = this.$store.getUniqueName(service_slug, 'connections')
+          }
+
           this.omitMaskedValues(connection)
           this.active_step = 'authentication'
         })
