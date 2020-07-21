@@ -8,8 +8,6 @@
       v-show="showHeader"
     />
 
-    <p class="mb4" v-if="our_desc.length > 0">{{our_desc}}</p>
-
     <!-- body -->
     <div>
       <!-- step 1: choose source -->
@@ -17,6 +15,8 @@
         class="mb1"
         v-if="active_step == 'choose-source' && !has_mount"
       >
+        <p class="mb4" v-if="our_desc.length > 0">{{our_desc}}</p>
+
         <IconList
           :items="integrations"
           @item-click="onIntegrationClick"
