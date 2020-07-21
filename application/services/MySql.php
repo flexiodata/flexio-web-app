@@ -77,7 +77,7 @@ class MySql implements \Flexio\IFace\IConnection,
         if ($this->initialize($host, $port, $database, $username, $password) === false)
             return false;
 
-        return $this;
+        return true;
     }
 
     public function disconnect() : void
