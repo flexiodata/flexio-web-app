@@ -42,6 +42,7 @@
 <script>
   import marked from 'marked'
   import { OBJECT_TYPE_CONNECTION } from '@/constants/object-type'
+  import { OBJECT_STATUS_AVAILABLE } from '@/constants/object-status'
   import { CONNECTION_STATUS_AVAILABLE } from '@/constants/connection-status'
   import * as ctypes from '@/constants/connection-type'
   import ConnectionEditPanel from '@/components/ConnectionEditPanel'
@@ -149,8 +150,9 @@
       if (create_pending_connection &&
           eid.length == 0 &&
           this.$refs['connection-edit-panel']) {
+        var eid_status = OBJECT_STATUS_AVAILABLE
         var { connection_type } = connection_attrs
-        this.$refs['connection-edit-panel'].createPendingConnection({ connection_type })
+        this.$refs['connection-edit-panel'].createPendingConnection({ eid_status, connection_type })
       }
     },
     methods: {

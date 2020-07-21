@@ -242,7 +242,10 @@
       // do not change/remove it without searching for where it is used!
       createPendingConnection(item) {
         var ctype = item.connection_type // required
-        var ctitle = _.get(item, 'service_name', ctype)
+        var eid_status = _.get(item, 'eid_status', OBJECT_STATUS_PENDING)
+        var cinfo = _.find(cinfos, { connection_type: ctype })
+        var default_ctitle = _.get(cinfo, 'service_name', _.startCase(ctype))
+        var ctitle = _.get(item, 'service_name', default_ctitle)
         var service_slug = slugify(ctitle)
         var team_name = this.active_team_name
 
@@ -253,7 +256,7 @@
         var prop_connection_attrs = _.cloneDeep(this.connection)
 
         var attrs = _.assign({}, getDefaultAttrs(), prop_connection_attrs, {
-          eid_status: OBJECT_STATUS_PENDING,
+          eid_status,
           name: `${service_slug}-` + getNameSuffix(16),
           title: ctitle,
           connection_type: ctype
