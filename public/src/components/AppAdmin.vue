@@ -27,6 +27,11 @@
       </div>
       <router-view class="flex-fill relative"></router-view>
     </template>
+    <div class="flex-fill" v-else-if="is_admin_builder_route">
+      <div class="flex flex-column justify-center bg-nearer-white h-100">
+        <Spinner size="large" message="Loading current user's team..." />
+      </div>
+    </div>
     <PageNotFound class="flex-fill" v-else />
   </div>
 </template>
@@ -78,6 +83,11 @@
       }),
       is_system_admin() {
         return this.isActiveUserSystemAdmin()
+      },
+      // the admin builder needs to re-query the current user's connections, etc,
+      // which temporarily makes "is_system_admin" false, so this fixes that
+      is_admin_builder_route() {
+        return this.$route.path.indexOf('admin/builder') >= 0
       }
     },
     mounted() {
