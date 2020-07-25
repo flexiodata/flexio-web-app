@@ -152,7 +152,7 @@
           var key = _.get(this.form_items, '[0].name', '')
           if (key.length > 0) {
             var new_values = {}
-            new_values[key] = _.map(this.selected_files, f => _.get(f, 'full_path', ''))
+            new_values[key] = _.map(this.selected_files, f => _.pick(f, ['id', 'name', 'path', 'full_path']))
             new_values[key] = _.compact(new_values[key])
             this.edit_values = _.assign({}, this.edit_values, new_values)
           }
