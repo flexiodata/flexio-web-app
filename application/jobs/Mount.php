@@ -178,7 +178,46 @@ class Mount
             $existing_pipe_names[$pipe_info['name']] = 1;
         }
 
-        // STEP 2: create the pipes from files indicated by function parameter
+        // STEP 2: create pipes from an installation function
+        $function_items = $this->getFunctionsFromManifest('installation');
+        foreach ($function_items as $item_info)
+        {
+            // get the file extension
+            $extension = strtolower(\Flexio\Base\File::getFileExtension($item_info['path']));
+
+            // get the pipe content and info
+            $pipe_info = null;
+            switch ($extension)
+            {
+                // if we have a script, get the info from the front-matter
+                case 'yml':
+                case 'py':
+                case 'js':
+                    $content = '';
+                    $vfs = new \Flexio\Services\Vfs($connection->getOwner());
+                    $vfs->read($item_info['path'], function($data) use (&$content) {
+                        $content .= $data;
+                    });
+                    $pipe_info = \Flexio\Object\Factory::getPipeInfoFromContent($content, $extension);
+                    break;
+            }
+
+            // if we can't get the pipe info, move on
+            if (!isset($pipe_info))
+                continue;
+
+            // create a new process engine for running a process
+            $mount_properties = array(
+                'connection_eid' => $connection->getEid()
+            );
+            $process_engine = \Flexio\Jobs\Process::create();
+            $process_engine->setOwner($owner_user_eid);
+            $process_engine->queue('\Flexio\Jobs\ProcessHandler::addMountParams', $mount_properties);
+            $process_engine->queue('\Flexio\Jobs\Task::run', $pipe_info['task']);
+            $process_engine->run();
+        }
+
+        // STEP 3: create the pipes from files indicated by function parameter
         $function_items = $this->getFunctionsFromManifest('functions');
         foreach ($function_items as $item_info)
         {
