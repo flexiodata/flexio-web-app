@@ -430,14 +430,12 @@ class Pipe
         // mounts currently have two types of parameters:
         // 1. parameters that are part of the configuration settings as fixed values
         // 2. parameters that are entered by the user when they set up the mount
-        // currently, #1 is general purpose for both search and custom execute
-        // and #2 is only related to running scripts; in the following, always
-        // add the items from #1 to the process, but only add #2 to the process if
-        // it's an execute job to save a little bit of work
+        // these are consolidated and added in the addMountParameters callback
+        $mount_properties = array(
+            'connection_eid' => $pipe_properties['parent']['eid'] ?? ''
+        );
         $process_engine = \Flexio\Jobs\Process::create();
-        $process_engine->queue('\Flexio\Jobs\ProcessHandler::addMountConfig', $process_properties);
-        if ($pipe_run_mode == \Model::PIPE_RUN_MODE_PASSTHROUGH)
-            $process_engine->queue('\Flexio\Jobs\ProcessHandler::addMountParams', $process_properties);
+        $process_engine->queue('\Flexio\Jobs\ProcessHandler::addMountParams', $mount_properties);
         $process_engine->queue('\Flexio\Jobs\Task::run', $process_properties['task']);
 
         $php_stream_handle = \Flexio\System\System::openPhpInputStream();
@@ -548,12 +546,15 @@ class Pipe
         $process_store = \Flexio\Object\Process::create($process_properties);
 
         // create a new process engine for running a process
+        $mount_properties = array(
+            'connection_eid' => $pipe_properties['parent']['eid'] ?? ''
+        );
         $elastic_search_params = array(
             'index' => $pipe_properties['eid']
         );
         $process_engine = \Flexio\Jobs\Process::create();
-        $process_engine->queue('\Flexio\Jobs\ProcessHandler::addMountParams', $process_properties);
-        $process_engine->queue('\Flexio\Jobs\Task::run', $process_properties['task']);
+        $process_engine->queue('\Flexio\Jobs\ProcessHandler::addMountParams', $mount_properties);
+        $process_engine->queue('\Flexio\Jobs\Task::run', $pipe_properties['task']);
         if ($pipe_properties['run_mode'] === \Model::PIPE_RUN_MODE_INDEX)
             $process_engine->queue('\Flexio\Jobs\ProcessHandler::saveStdoutToElasticSearch', $elastic_search_params);
 
@@ -614,12 +615,15 @@ class Pipe
         $process_store = \Flexio\Object\Process::create($process_properties);
 
         // create a new process engine for running a process
+        $mount_properties = array(
+            'connection_eid' => $pipe_properties['parent']['eid'] ?? ''
+        );
         $elastic_search_params = array(
             'index' => $pipe_properties['eid']
         );
         $process_engine = \Flexio\Jobs\Process::create();
-        $process_engine->queue('\Flexio\Jobs\ProcessHandler::addMountParams', $process_properties);
-        $process_engine->queue('\Flexio\Jobs\Task::run', $process_properties['task']);
+        $process_engine->queue('\Flexio\Jobs\ProcessHandler::addMountParams', $mount_properties);
+        $process_engine->queue('\Flexio\Jobs\Task::run', $pipe_properties['task']);
         if ($pipe_properties['run_mode'] === \Model::PIPE_RUN_MODE_INDEX)
             $process_engine->queue('\Flexio\Jobs\ProcessHandler::saveStdoutToElasticSearch', $elastic_search_params);
 
@@ -639,8 +643,22 @@ class Pipe
         // is part of, and if so, perform additional rights checking using a custom
         // authentication function and information passed by the caller; if there's
         // no function, don't allow execution
-        $authentication_function_name = \Flexio\Jobs\ProcessHandler::getMountAuthenticator($requesting_user_eid, $pipe_eid);
-        if (!isset($authentication_function_name))
+        $connection_eid = false;
+        $authentication_function_name = false;
+
+        try
+        {
+            $pipe_info = \Flexio\Object\Pipe::load($pipe_eid)->get();
+            $connection_eid = $pipe_info['parent']['eid'] ?? '';
+            $authentication_function_name = \Flexio\Jobs\ProcessHandler::getMountAuthenticator($requesting_user_eid, $connection_eid);
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+        }
+
+        if (!$connection_eid)
+            return false;
+        if (!$authentication_function_name)
             return false;
 
         // we have an authentication function, so perform rights checking using
@@ -655,7 +673,7 @@ class Pipe
             // requesting user are the same because we authenticated the proxied
             // call with the calling user
             $caller_pipe_eid = $request_header_params['x-flexio-caller'];
-            $caller_mount_params = \Flexio\Jobs\ProcessHandler::getMountParams($requesting_user_eid, $caller_pipe_eid);
+            $caller_mount_params = \Flexio\Jobs\ProcessHandler::getMountParams($requesting_user_eid, $connection_eid);
         }
 
         try

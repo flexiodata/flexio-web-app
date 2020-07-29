@@ -278,7 +278,6 @@ class Process
         // create a new process engine for running a process
         $process_properties = $process_store->get();
         $process_engine = \Flexio\Jobs\Process::create();
-        $process_engine->queue('\Flexio\Jobs\ProcessHandler::addMountParams', $process_properties);
         $process_engine->queue('\Flexio\Jobs\Task::run', $process_properties['task']);
 
         $php_stream_handle = \Flexio\System\System::openPhpInputStream();

@@ -63,52 +63,18 @@ class ProcessHandler
         \Flexio\System\System::getModel()->user->decrementActiveProcessCount($owner_eid);
     }
 
-    public static function addMountConfig(\Flexio\Jobs\Process $process, array $callback_params) : void
-    {
-        // callback function to add parameters from mounts for functions that
-        // are mounted; these config items are the fixed items defined in the
-        // mount yml configuration file
-
-        // TODO: should consolidate addMountConfig/addMountParams, but implemented
-        // separately right since addMountConfig is only needed to limit search
-        // and this helps clarify this one use, which is experimental right now
-
-        $pipe_eid = $callback_params['parent_eid'] ?? '';
-        $mount_variables = self::getMountConfig($pipe_eid);
-        if (!isset($mount_variables))
-            return;
-
-        // merge the mount config items into the existing parameters
-        $user_variables = $process->getParams();
-        $process->setParams(array_merge($user_variables, $mount_variables));
-    }
-
     public static function addMountParams(\Flexio\Jobs\Process $process, array $callback_params) : void
     {
         // callback function to add parameters from mounts for functions that
         // are mounted; these param items are the items entered by the user
         // when they configure the mount
 
-        // TODO: should consolidate addMountConfig/addMountParams, but implemented
-        // separately right since addMountConfig is only needed to limit search
-        // and this helps clarify this one use, which is experimental right now
-
         $requesting_user_eid = $process->getOwner();
-        $pipe_eid = $callback_params['parent_eid'] ?? '';
-        $mount_variables = self::getMountParams($requesting_user_eid, $pipe_eid);
+        $connection_eid = $callback_params['connection_eid'] ?? '';
 
-        try
-        {
-            // TODO: redundant to pipe load logic in getMountParams()
-            $pipe = \Flexio\Object\Pipe::load($pipe_eid);
-            $pipe_info = $pipe->get();
-
-            $connection_eid = $pipe_info['parent']['eid'] ?? '';
-            $process->setMount($connection_eid);
-        }
-        catch (\Flexio\Base\Exception $e)
-        {
-        }
+        // get the mount parameters and set the connection mount
+        $mount_variables = self::getMountParams($requesting_user_eid, $connection_eid);
+        $process->setMount($connection_eid);
 
         // merge the mount variables into the existing parameters
         $user_variables = $process->getParams();
@@ -196,15 +162,11 @@ class ProcessHandler
         }
     }
 
-    public static function getMountAuthenticator(string $requesting_user_eid, string $pipe_eid) : ?string
+    public static function getMountAuthenticator(string $requesting_user_eid, string $connection_eid) : ?string
     {
         // return any authenticating function callbacks from the mount setup info
         try
         {
-            $pipe = \Flexio\Object\Pipe::load($pipe_eid);
-            $pipe_info = $pipe->get();
-
-            $connection_eid = $pipe_info['parent']['eid'] ?? '';
             $connection = \Flexio\Object\Connection::load($connection_eid);
             $connection_info = $connection->get();
 
@@ -229,49 +191,7 @@ class ProcessHandler
         return null;
     }
 
-    public static function getMountConfig(string $pipe_eid) : ?array
-    {
-        // return configuration from the mount as a set of key/values suitable for adding
-        // to the process parameters for use by tasks
-        try
-        {
-            $pipe = \Flexio\Object\Pipe::load($pipe_eid);
-            $pipe_info = $pipe->get();
-
-            $connection_eid = $pipe_info['parent']['eid'] ?? '';
-            $connection = \Flexio\Object\Connection::load($connection_eid);
-            $connection_info = $connection->get();
-
-            $setup_template = $connection_info['setup_template'];
-            if (isset($setup_template['config']) && is_array($setup_template['config']))
-            {
-                // return config items as key/values
-                $result = array();
-
-                $config_items = $setup_template['config'];
-                foreach ($config_items as $c)
-                {
-                    $name = $c['name'] ?? false;
-                    $value = $c['value'] ?? false;
-
-                    if ($name === false || $value === false)
-                        continue;
-
-                    $result[$name] = $value;
-                }
-
-                return $result;
-            }
-        }
-        catch (\Flexio\Base\Exception $e)
-        {
-            // fall through
-        }
-
-        return null;
-    }
-
-    public static function getMountParams(string $requesting_user_eid, string $pipe_eid) : array
+    public static function getMountParams(string $requesting_user_eid, string $connection_eid) : array
     {
         // load the pipe parent, which is the mount connection; if we're unable
         // to load the mount because it doesn't exist, there's nothing to
@@ -280,13 +200,11 @@ class ProcessHandler
         // mount parameters will fail, but may want to cut-it-off here
 
         $mount_variables = array();
+        $connection_info = array();
 
+        // STEP 1: get the connection info
         try
         {
-            $pipe = \Flexio\Object\Pipe::load($pipe_eid);
-            $pipe_info = $pipe->get();
-
-            $connection_eid = $pipe_info['parent']['eid'] ?? '';
             $connection = \Flexio\Object\Connection::load($connection_eid);
             $connection_info = $connection->get();
         }
@@ -295,42 +213,65 @@ class ProcessHandler
             return array();
         }
 
-        $setup_config = $connection_info['setup_config'];
-        if (!$setup_config)
-            return array();
-
-        foreach ($setup_config as $key => $value)
+        // STEP 2: add the configuration information from the setup template;
+        // these are the fixed configuraton items defined in a mount/integration
+        // manifest file
+        $setup_template = $connection_info['setup_template'];
+        if (isset($setup_template['config']) && is_array($setup_template['config']))
         {
-            // note: setup config is a set of key/values; currently, values can
-            // be either strings or oauth connection object; if we don't have a
-            // connection object, simply pass on the value, otherwise, "dereference"
-            // the connection and pass on the connection info
-
-            // if we don't have an object identifier, simply pass on what's there
-            $mount_item_eid = $value['eid'] ?? false;
-            if ($mount_item_eid === false)
+            $config_items = $setup_template['config'];
+            foreach ($config_items as $c)
             {
-                $mount_variables[$key] = $value;
-                continue;
+                $name = $c['name'] ?? false;
+                $value = $c['value'] ?? false;
+
+                if ($name === false || $value === false)
+                    continue;
+
+                $mount_variables[$name] = $value;
             }
+        }
 
-            // if we have an eid, try to load the appropriate connection and pass
-            // on the connection info
-            try
+        // STEP 3: add the configuration information from the setup config;
+        // these are the user-defined configuration items entered in the prompts
+        // created by running the setup template when adding a mount or
+        // integration
+        $setup_config = $connection_info['setup_config'];
+        if (is_array($setup_config))
+        {
+            foreach ($setup_config as $key => $value)
             {
-                $connection = \Flexio\Object\Connection::load($mount_item_eid);
-                if ($connection->getStatus() !== \Model::STATUS_AVAILABLE)
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-                if ($connection->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_CONNECTION_READ) === false)
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+                // note: setup config is a set of key/values; currently, values can
+                // be either strings or oauth connection object; if we don't have a
+                // connection object, simply pass on the value, otherwise, "dereference"
+                // the connection and pass on the connection info
 
-                $service = $connection->getService(); // getting the service refreshes tokens
-                $connection_info = $service->get();
-                $mount_variables[$key] = $connection_info;
-            }
-            catch (\Flexio\Base\Exception $e)
-            {
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+                // if we don't have an object identifier, simply pass on what's there
+                $mount_item_eid = $value['eid'] ?? false;
+                if ($mount_item_eid === false)
+                {
+                    $mount_variables[$key] = $value;
+                    continue;
+                }
+
+                // if we have an eid, try to load the appropriate connection and pass
+                // on the connection info
+                try
+                {
+                    $connection = \Flexio\Object\Connection::load($mount_item_eid);
+                    if ($connection->getStatus() !== \Model::STATUS_AVAILABLE)
+                        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+                    if ($connection->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_CONNECTION_READ) === false)
+                        throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+                    $service = $connection->getService(); // getting the service refreshes tokens
+                    $connection_info = $service->get();
+                    $mount_variables[$key] = $connection_info;
+                }
+                catch (\Flexio\Base\Exception $e)
+                {
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+                }
             }
         }
 

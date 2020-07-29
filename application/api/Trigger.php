@@ -87,9 +87,12 @@ class Trigger
         $process_store = \Flexio\Object\Process::create($process_properties);
 
         // create a new process engine for running a process
+        $mount_properties = array(
+            'connection_eid' => $pipe_properties['parent']['eid'] ?? ''
+        );
         $process_engine = \Flexio\Jobs\Process::create();
-        $process_engine->queue('\Flexio\Jobs\ProcessHandler::addMountParams', $process_properties);
-        $process_engine->queue('\Flexio\Jobs\Task::run', $process_properties['task']);
+        $process_engine->queue('\Flexio\Jobs\ProcessHandler::addMountParams', $mount_properties);
+        $process_engine->queue('\Flexio\Jobs\Task::run', $pipe_properties['task']);
 
         // set an environment variable (parameter) with the "from" email address
         $process_email_params = array();

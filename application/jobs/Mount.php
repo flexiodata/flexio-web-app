@@ -34,7 +34,7 @@ class Mount
 
     public static function import(\Flexio\Jobs\Process $process, array $callback_params) : void
     {
-        // note: syncs pipes in a mounted a connection with the source files in the connection
+        // note: imports the items for a mount or integration
 
         // create the object and set the connection
         $object = new static();
@@ -158,10 +158,10 @@ class Mount
     private function createAssociatedPipes() : void
     {
         // note: creates associated pipes for a mounted connection
-
-        $connection_info =  $this->getConnection()->get();
-        $connection_eid = $connection_info['eid'];
+        $connection =  $this->getConnection();
+        $connection_info =  $connection->get();
         $connection_mode = $connection_info['connection_mode'];
+        $properties = $this->getProperties();
 
         // if the connection mode isn't a mount; there are no associated pipes
         if ($connection_mode !== \Model::CONNECTION_MODE_FUNCTION)
@@ -170,7 +170,7 @@ class Mount
         // STEP 1: get a list of existing pipe names for this owner so
         // we can make sure the pipe name created is unique
         $existing_pipe_names = array();
-        $filter = array('owned_by' =>  $this->getConnection()->getOwner(), 'eid_status' => \Model::STATUS_AVAILABLE);
+        $filter = array('owned_by' =>  $connection->getOwner(), 'eid_status' => \Model::STATUS_AVAILABLE);
         $existing_pipes = \Flexio\Object\Pipe::list($filter);
         foreach ($existing_pipes as $p)
         {
@@ -178,9 +178,9 @@ class Mount
             $existing_pipe_names[$pipe_info['name']] = 1;
         }
 
-        // STEP 2: create the pipes
-        $connection_items = $this->getConnectionItemsToImport();
-        foreach ($connection_items as $item_info)
+        // STEP 2: create the pipes from files indicated by function parameter
+        $function_items = $this->getFunctionsFromManifest('functions');
+        foreach ($function_items as $item_info)
         {
             // get the file extension
             $extension = strtolower(\Flexio\Base\File::getFileExtension($item_info['path']));
@@ -218,7 +218,7 @@ class Mount
             // set basic pipe info
             $pipe_params = $pipe_info;
             $pipe_params['eid_status'] = \Model::STATUS_PENDING; // set initial status to pending; this will be set to available when final pipe content is loaded
-            $pipe_params['parent_eid'] = $connection_eid;
+            $pipe_params['parent_eid'] = $connection->getEid();
             $pipe_params['name'] = $pipe_name; // override supplied name with name that's unique
             $pipe_params['owned_by'] = $connection_info['owned_by']['eid'];
             $pipe_params['created_by'] = $connection_info['created_by']['eid'];
@@ -233,7 +233,6 @@ class Mount
         $connection =  $this->getConnection();
         $properties = $this->getProperties();
         $owner_user_eid = $connection->getOwner();
-        $triggered_by = $properties['triggered_by'] ?? '';
 
         // get a list of pending pipes for this connection
         $filter = array('owned_by' => $owner_user_eid, 'eid_status' => \Model::STATUS_PENDING, 'parent_eid' => $connection->getEid());
@@ -259,18 +258,16 @@ class Mount
             }
 
             // create a new process engine for running a process
-            $process_properties = array(
-                'parent_eid' => $pipe_properties['eid'],
-                'task' => $pipe_properties['task'],
-                'triggered_by' => $triggered_by
+            $mount_properties = array(
+                'connection_eid' => $connection->getEid()
             );
             $elastic_search_params = array(
-                'index' => $pipe_properties['eid']
+                'index' => $p->getEid()
             );
             $process_engine = \Flexio\Jobs\Process::create();
             $process_engine->setOwner($owner_user_eid);
-            $process_engine->queue('\Flexio\Jobs\ProcessHandler::addMountParams', $process_properties);
-            $process_engine->queue('\Flexio\Jobs\Task::run', $process_properties['task']);
+            $process_engine->queue('\Flexio\Jobs\ProcessHandler::addMountParams', $mount_properties);
+            $process_engine->queue('\Flexio\Jobs\Task::run', $pipe_properties['task']);
             $process_engine->queue('\Flexio\Jobs\ProcessHandler::saveStdoutToElasticSearch', $elastic_search_params);
             $process_engine->run();
 
@@ -279,7 +276,7 @@ class Mount
         }
     }
 
-    private function getConnectionItemsToImport() : array
+    private function getFunctionsFromManifest(string $tag) : array
     {
         $connection_info = $this->getConnection()->get();
 
@@ -301,10 +298,10 @@ class Mount
 
             if (!$manifest_info)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-            if (!isset($manifest_info['functions']))
+            if (!isset($manifest_info[$tag]))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-            $functions = $manifest_info['functions'];
+            $functions = $manifest_info[$tag];
             $result = [];
             foreach ($functions as $f)
             {
