@@ -211,7 +211,7 @@ class Mount
                 'connection_eid' => $connection->getEid()
             );
             $process_engine = \Flexio\Jobs\Process::create();
-            $process_engine->setOwner($owner_user_eid);
+            $process_engine->setOwner($connection->getOwner());
             $process_engine->queue('\Flexio\Jobs\ProcessHandler::addMountParams', $mount_properties);
             $process_engine->queue('\Flexio\Jobs\Task::run', $pipe_info['task']);
             $process_engine->run();
