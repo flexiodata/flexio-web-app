@@ -137,7 +137,7 @@ class GoogleSheets implements \Flexio\IFace\IConnection,
                     'id' => sha1($spreadsheet->spreadsheet_id),
                     'spreadsheet_id' => $spreadsheet->spreadsheet_id,
                     'name' => $spreadsheet->title,
-                    'path' => '/' . $spreadsheet->title,
+                    'path' => '/' . $spreadsheet->spreadsheet_id . '/' . $spreadsheet->title,
                     'size' => null, // size unknown
                     'modified' => $spreadsheet->updated,
                     'hash' => '', // TODO: available?
@@ -156,7 +156,15 @@ class GoogleSheets implements \Flexio\IFace\IConnection,
         {
             if ($path[0] == '/')
                 $path = substr($path,1);
+
             $spreadsheet = $this->getSpreadsheetByTitle($path);
+            if (!$spreadsheet)
+            {
+                // try getting the spreadsheet by treating the first part of the path
+                // as the spreadsheet id
+                $path_parts = explode('/', $path);
+                $spreadsheet = $this->getSpreadsheetById($path_parts[0]);
+            }
 
             if (!$spreadsheet)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, "Cannot locate spreadsheet '$path'");
@@ -170,7 +178,7 @@ class GoogleSheets implements \Flexio\IFace\IConnection,
                     'spreadsheet_id' => $spreadsheet->spreadsheet_id,
                     'worksheet_id' => $worksheet->worksheet_id,
                     'name' => $worksheet->title,
-                    'path' => '/' . $spreadsheet->title . '/' . $worksheet->title,
+                    'path' => '/' . $spreadsheet->spreadsheet_id . '/' . $worksheet->title,
                     'size' => null,
                     'modified' => null,
                     'hash' => '', // TODO: available?
