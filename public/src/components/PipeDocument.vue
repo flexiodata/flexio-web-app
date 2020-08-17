@@ -56,7 +56,7 @@
       class="el-collapse--plain el-collapse--arrow-left"
       v-model="expanded_sections"
     >
-      <!-- definition -->
+      <!-- definition; note: some tasks, such as 'redirect' for linked implementations, should be hidden -->
       <a href="#" ref="definition-section"></a>
       <el-collapse-item
         name="definition"
@@ -65,6 +65,8 @@
           'o-40 no-pointer-events no-select': is_addon_editing,
           'is-editing': is_task_editing
         }"
+
+        v-show="['extract','lookup','execute'].includes(pipe_task_type)"
       >
         <div
           class="flex flex-row items-center pipe-section-title"
