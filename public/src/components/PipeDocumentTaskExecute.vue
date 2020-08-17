@@ -7,6 +7,7 @@
       :model="$data"
       @submit.prevent.native
     >
+<!-- DEPRECATED: remote option; only allow inline
       <el-form-item
         key="remote_state"
         prop="remote_state"
@@ -22,6 +23,7 @@
           </el-radio-button>
         </el-radio-group>
       </el-form-item>
+ -->
       <el-form-item
         key="lang"
         prop="lang"
@@ -36,6 +38,7 @@
           />
         </el-select>
       </el-form-item>
+<!-- DEPRECATED: remote option; only allow inline
       <el-form-item
         class="w-100"
         style="margin-bottom: 0"
@@ -63,6 +66,7 @@
           </BrowseButton>
         </el-input>
       </el-form-item>
+ -->
       <el-form-item
         class="w-100"
         style="margin-bottom: 0"
@@ -183,7 +187,10 @@ exports.flex_handler = function(flex) {
         return 'python'
       },
       initial_remote_state() {
-        return _.get(this.task, 'path', '').length == 0 ? 'inline' : 'remote'
+        // DEPRECATED: remote option; only allow inline; old logic is here for
+        // reference, particularly since some old jobs may have the path info set
+        //return _.get(this.task, 'path', '').length == 0 ? 'inline' : 'remote'
+        return 'inline'
       },
       is_changed() {
         if (this.remote_state != this.initial_remote_state) { return true }
