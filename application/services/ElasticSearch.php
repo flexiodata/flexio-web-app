@@ -468,6 +468,44 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         }
     }
 
+    public function getStructure(string $index) : ?array
+    {
+        // get mapping information: https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-get-mapping.html
+        // view the mapping of an index (see this title for format): https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping.html
+
+        try
+        {
+            $url = $this->getHostUrlString() . '/' . urlencode($index) . '/_mapping' ;
+            $request = new \GuzzleHttp\Psr7\Request('GET', $url);
+            $response = $this->sendWithCredentials($request);
+
+            $httpcode = $response->getStatusCode();
+            $result = (string)$response->getBody();
+            if ($httpcode < 200 || $httpcode > 299)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_DATABASE);
+
+            $result = json_decode($result,true);
+
+            // get the mapping info for this index
+            $index = urlencode($index);
+            $mapping_info_for_index = $result[$index]['mappings']['properties'] ?? array();
+
+            // TODO: for now, only return name, but should also include type information
+            // using standard structure types that correspond to elasticsearch types
+            $structure = array();
+            foreach ($mapping_info_for_index as $key => $value)
+            {
+                $structure[] = array('name' => $key);
+            }
+
+            return $structure;
+        }
+        catch (\Exception $e)
+        {
+            return array();
+        }
+    }
+
     public function writeRows(string $index, array $rows, bool $refresh_immediately = false) : void
     {
         // additional optimizations:

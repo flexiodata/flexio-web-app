@@ -103,6 +103,20 @@ class Search implements \Flexio\IFace\IJob
         if (!is_array($query_parameters))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
+        // connect to elasticsearch
+        $elasticsearch = \Flexio\System\System::getSearchCache();
+
+        // if we don't have any available columns from an input structure, get them
+        // from the index; practically, this makes it easier to get results back
+        // without having to specify some type of input structure to get results
+        if (count($available_columns) === 0)
+        {
+            $structure = $elasticsearch->getStructure($index);
+            $structure = \Flexio\Base\Structure::create($structure);
+            $available_columns = $structure->getNames();
+        }
+
+        // get the query info
         $columns_to_return = self::getColumns($query_parameters, $available_columns);
         $rows_to_return = self::getQuery($query_parameters);
         $additional_output_config = self::getConfig($query_parameters);
@@ -136,9 +150,6 @@ class Search implements \Flexio\IFace\IJob
             if ($limit_row_count === false || $limit_row_count > $search_max_result_size)
                 $limit_row_count = $search_max_result_size;
         }
-
-        // connect to elasticsearch
-        $elasticsearch = \Flexio\System\System::getSearchCache();
 
         // write the output of the search query to stdout
         $outstream = $process->getStdout();
