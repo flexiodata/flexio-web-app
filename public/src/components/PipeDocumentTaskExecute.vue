@@ -27,7 +27,7 @@
       <el-form-item
         key="lang"
         prop="lang"
-        label="Language"
+        label="Type"
       >
         <el-select v-model="lang">
           <el-option
@@ -72,7 +72,7 @@
         style="margin-bottom: 0"
         key="code"
         prop="code"
-        label="Code"
+        label="Content"
         v-show="remote_state == 'inline'"
       >
         <CodeEditor
