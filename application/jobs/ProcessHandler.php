@@ -108,6 +108,32 @@ class ProcessHandler
 
         $stdout_mime_type = $stdout_stream_info['mime_type'];
 
+        if ($stdout_mime_type === \Flexio\Base\ContentType::CSV)
+        {
+            // convert csv to ndjson and insert it
+
+            // read the file to get the info
+            $process_engine = \Flexio\Jobs\Process::create();
+            $process_engine->setStdin($process->getStdout());
+            $process_engine->setOwner($process->getOwner());
+            $process_engine->queue('\Flexio\Jobs\Convert::run', array('input' => array('format' => 'csv'), 'output' => array('format' => 'ndjson')));
+            $process_engine->run();
+            $converted_stdout_reader = $process_engine->getStdout()->getReader();
+
+            // write the output to elasticsearch
+            $params = array(
+                'path' => $index // service uses path for consistency with other services
+            );
+            $elasticsearch->write($params, function() use (&$converted_stdout_reader) {
+                $row = $converted_stdout_reader->readline();
+                if ($row === false)
+                    return false;
+                // TODO: coerce row types?
+                $row = json_decode($row, true);
+                return $row;
+            });
+        }
+
         if ($stdout_mime_type === \Flexio\Base\ContentType::NDJSON)
         {
             // handle json content type
