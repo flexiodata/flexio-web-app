@@ -1703,36 +1703,6 @@ class Execute implements \Flexio\IFace\IJob
             $streamwriter = $outstream->getWriter();
             $streamwriter->write($this->code);
         }
-        else if ($this->lang == 'html')
-        {
-            $outstream = $process->getStdout();
-            if (strpos($this->code, 'flexio.input.json_assoc()') !== false)
-            {
-                $streamreader = $instream->getReader();
-                $rows = [];
-                while (true)
-                {
-                    $row = $streamreader->readline();
-                    if ($row === false)
-                        break;
-                    $rows[] = $row;
-                }
-
-                $json = json_encode($rows, JSON_UNESCAPED_SLASHES);
-
-                $code = str_replace('flexio.input.json_assoc()', $json, $code);
-            }
-
-            // create the output stream
-            $outstream_properties = array(
-                'name' => $instream->getName() . '.html',
-                'mime_type' => \Flexio\Base\ContentType::FLEXIO_HTML
-            );
-
-            $outstream->set($outstream_properties);
-            $streamwriter = $outstream->getWriter();
-            $streamwriter->write($code);
-        }
         else
         {
             // unknown language

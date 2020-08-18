@@ -47,7 +47,6 @@ class ContentType
     public const XML            = 'application/xml';
     public const ZIP            = 'application/zip';
     public const FLEXIO_TABLE   = 'application/vnd.flexio.table';
-    public const FLEXIO_HTML    = 'application/vnd.flexio.html';
     public const FLEXIO_FOLDER  = 'application/vnd.flexio.folder';
 
     public static function getMimeType($extension, $buffer = '', $content_length = false) : string

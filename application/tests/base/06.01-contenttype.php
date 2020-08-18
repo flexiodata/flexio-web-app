@@ -147,14 +147,9 @@ class Test
         \Flexio\Tests\Check::assertString('B.2', '\ContentType mime type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\ContentType::FLEXIO_HTML;
-        $expected = 'application/vnd.flexio.html';
-        \Flexio\Tests\Check::assertString('B.3', '\ContentType mime type constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
         $actual = \Flexio\Base\ContentType::FLEXIO_FOLDER;
         $expected = 'application/vnd.flexio.folder';
-        \Flexio\Tests\Check::assertString('B.4', '\ContentType mime type constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.3', '\ContentType mime type constant',  $actual, $expected, $results);
 
 
         // TEST: extensions for mime types
