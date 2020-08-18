@@ -120,6 +120,8 @@ exports.flex_handler = function(flex) {
 ]
 `)
 
+  const code_csv = btoaUnicode(``)
+
   const remote_options = [
     { label: 'Inline script', val: 'inline' },
     { label: 'Remote script', val: 'remote' }
@@ -128,7 +130,8 @@ exports.flex_handler = function(flex) {
   const lang_options = [
     { label: 'Python',  val: 'python' },
     { label: 'Node.js', val: 'nodejs' },
-    { label: 'JSON', val: 'json' }
+    { label: 'JSON', val: 'json' },
+    { label: 'CSV', val: 'csv' }
   ]
 
   const getDefaultState = () => {
@@ -136,6 +139,7 @@ exports.flex_handler = function(flex) {
       code_python,
       code_javascript,
       code_json,
+      code_csv,
       lang_options,
       remote_options,
       remote_state: 'inline',
@@ -191,6 +195,7 @@ exports.flex_handler = function(flex) {
           case 'python': return 'python'
           case 'nodejs': return 'javascript'
           case 'json': return 'json'
+          case 'csv': return 'csv'
         }
 
         return 'python'
@@ -223,6 +228,7 @@ exports.flex_handler = function(flex) {
           case 'python': this.code_python = code; break
           case 'nodejs': this.code_javascript = code; break
           case 'json': this.code_json = code; break
+          case 'csv': this.code_csv = code; break
         }
 
         this.$emit('update:isEditing', false)
@@ -233,6 +239,7 @@ exports.flex_handler = function(flex) {
           case 'python': return this.code_python
           case 'nodejs': return this.code_javascript
           case 'json': return this.code_json
+          case 'csv': return this.code_csv
         }
 
         return ''

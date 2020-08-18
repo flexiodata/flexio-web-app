@@ -19,7 +19,7 @@ namespace Flexio\Jobs;
 // DESCRIPTION:
 {
     "op": "execute",  // string, required
-    "lang": "",       // string, required, enum: python|nodejs|javascript|json
+    "lang": "",       // string, required, enum: python|nodejs|javascript|json|csv
     "code": "",       // string (base64 encoded string of code to run); either "code" or "path" is required
     "path": "",       // string (url to remote code to execute); either "code" or "path" is required
     "integrity": ""   // string (integrity check; sha256, sha384, sha512 allowed with format: <sha-type>:<integrity-check>
@@ -29,7 +29,7 @@ namespace Flexio\Jobs;
 $validator = \Flexio\Base\Validator::create();
 if (($validator->check($params, array(
         'op'         => array('required' => true,  'enum' => ['execute']),
-        'lang'       => array('required' => true,  'enum' => ['python','nodejs','javascript','json']),
+        'lang'       => array('required' => true,  'enum' => ['python','nodejs','javascript','json','csv']),
         'code'       => array('required' => false, 'type' => 'string'),
         'path'       => array('required' => false, 'type' => 'string'),
         'integrity'  => array('required' => false, 'type' => 'string')
@@ -1696,6 +1696,18 @@ class Execute implements \Flexio\IFace\IJob
             // create the output stream
             $outstream_properties = array(
                 'mime_type' => \Flexio\Base\ContentType::JSON
+            );
+
+            $outstream = $process->getStdout();
+            $outstream->set($outstream_properties);
+            $streamwriter = $outstream->getWriter();
+            $streamwriter->write($this->code);
+        }
+        else if ($this->lang == 'csv')
+        {
+            // create the output stream
+            $outstream_properties = array(
+                'mime_type' => \Flexio\Base\ContentType::CSV
             );
 
             $outstream = $process->getStdout();
