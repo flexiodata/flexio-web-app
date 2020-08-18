@@ -717,7 +717,38 @@ class Convert implements \Flexio\IFace\IJob
         // parameters
         $streamwriter = null;
 
-        $delimiter = $convert_params['input']['delimiter'] ?? self::DELIMITER_COMMA;
+        $delimiter = $convert_params['input']['delimiter'] ?? false;
+
+        // if we don't have a delimiter, see if we can determine one from a small sample
+        if ($delimiter === false)
+        {
+            $possible_delimiters = array(
+                ',' => 0,
+                ';' => 0,
+                '|' => 0,
+                "\t" => 0
+            );
+
+            $streamreader = $instream->getReader();
+            for ($i = 0; $i <= 100; ++$i)
+            {
+                $readbuf = $streamreader->readline();
+                if (!$readbuf)
+                    break;
+
+                foreach ($possible_delimiters as $d => &$count)
+                    $count = count(str_getcsv($readbuf, $d));
+            }
+
+            $most_frequent_delimiter = array_search(max($possible_delimiters), $possible_delimiters);
+            switch ($most_frequent_delimiter)
+            {
+                case ',': $delimiter = self::DELIMITER_COMMA; break;
+                case ';': $delimiter = self::DELIMITER_SEMICOLON; break;
+                case '|': $delimiter = self::DELIMITER_PIPE; break;
+                case "\t": $delimiter = self::DELIMITER_TAB; break;
+            }
+        }
 
         $output = 'table';
 
