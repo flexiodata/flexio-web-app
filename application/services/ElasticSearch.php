@@ -422,7 +422,18 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             $index_configuration['settings'] = [
                 'max_result_window' => self::MAX_INDEX_RESULT_WINDOW,
                 "number_of_shards" => 1, // * see note 1, note 2
-                "number_of_replicas" => 1
+                "number_of_replicas" => 1,
+                "analysis" => [          // * see note 3
+                    "analyzer" => [
+                        "default" => [
+                            "type" => "custom",
+                            "tokenizer" => "whitespace",
+                            "filter" => [
+                                "lowercase"
+                            ]
+                        ]
+                    ]
+                ]
             ];
             // * note 1: number of shards is important because a cluster limits the amount
             //           of shards overall based on number of nodes, and if this limit is
@@ -436,6 +447,20 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
             //           of 1 shard per 30GB); see:
             //           https://www.elastic.co/blog/how-many-shards-should-i-have-in-my-elasticsearch-cluster
             //           https://aws.amazon.com/blogs/database/get-started-with-amazon-elasticsearch-service-how-many-shards-do-i-need/
+            // * note 3: the default analyzer for text fields uses the "standard" tokenizer, which splits
+            //           text up based on the unicode segementation algorithm; for our purposes, most
+            //           data being indexed is structured, and we want to preserve keys that may contain
+            //           punctuation (e.g. xxxx-xxxx-xxxx-xxxx); to do this, set the default analyzer to
+            //           use a custom tokenizer that splits up text based on whitespace, and further customizes
+            //           it to be case-insensitive; the downside of this approach is that fields that contain raw
+            //           text with punctuation will include puncutation as part of words (e.g. a sentence ending in
+            //           "... the end." will index the last word as "end." and not "end"; if we move over to
+            //           field-by-field mappings, we could add some type of flag or type designation to allow
+            //           both options, depending on the field; see:
+            //           https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-custom-analyzer.html
+            //           https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-whitespace-analyzer.html
+            //           https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-lowercase-tokenfilter.html
+            //           https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-standard-tokenizer.html
 
             if ($mapping_enabled)
             {
