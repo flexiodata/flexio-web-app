@@ -739,6 +739,62 @@ class ElasticSearch implements \Flexio\IFace\IConnection,
         }
     }
 
+    public function searchSql(string $search_query = null, int $limit = self::MAX_INDEX_RESULT_WINDOW) : array
+    {
+        // perform a regular query without scrolling; used for search requests
+        // less than the max result window
+
+        // clamp limit to max result window size
+        if ($limit > self::MAX_INDEX_RESULT_WINDOW)
+            $limit = self::MAX_INDEX_RESULT_WINDOW;
+
+        try
+        {
+            $request = false;
+
+            if (!isset($search_query))
+                $search_query = array('query' => '');
+                 else
+                $search_query = array('query' => $search_query);
+
+            // perform regular search query
+            $url_query_params = array();
+            $url_query_str = http_build_query($url_query_params);
+            $url = $this->getHostUrlString() . '/_sql?' . $url_query_str;
+            $search_str = json_encode($search_query);
+            $request = new \GuzzleHttp\Psr7\Request('POST', $url, ['Content-Type' => 'application/json'], $search_str);
+
+            if ($request === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+            // send the request
+            $response = $this->sendWithCredentials($request);
+
+            $httpcode = $response->getStatusCode();
+            $result = (string)$response->getBody();
+
+            if ($httpcode < 200 || $httpcode > 299)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+            $result = json_decode($result,true);
+
+            if (!is_array($result))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+            if (isset($result['error']) && $result['error'] === true)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+            if (isset($result['errors']) && $result['errors'] === true)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+            return $result;
+        }
+        catch (\Exception $e)
+        {
+            die($e->getMessage());
+
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+        }
+    }
+
     public function getClusterStats() : array
     {
         // additional information is available about hte cluster here; TODO return?

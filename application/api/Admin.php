@@ -665,6 +665,54 @@ class Admin
         \Flexio\Api\Response::sendContent($result);
     }
 
+    public static function indexSql(\Flexio\Api\Request $request) : void
+    {
+        // EXPERIMENTAL
+
+        $requesting_user_eid = $request->getRequestingUser();
+
+        // only allow administrators to do this
+        $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
+        if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        if ($requesting_user->isAdministrator() !== true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        // get the query from the input
+        $php_stream_handle = \Flexio\System\System::openPhpInputStream();
+        $post_content = fread($php_stream_handle, 2048);
+        fclose($php_stream_handle);
+
+        $post_content = json_decode($post_content, true);
+        if ($post_content === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, 'input needs to be in JSON format');
+
+        if (!isset($post_content['query']))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, 'missing query parameter');
+
+        $search_query = $post_content['query'];
+
+        // TODO: smarter parsing of tablename with error handling
+
+        // replace the table path with the index eid
+        $pipe_name_start_offset= strpos($search_query, 'from ') + 5;
+        $pipe_name_start = trim(substr($search_query, $pipe_name_start_offset));
+        $arr = explode(' ', $pipe_name_start);
+        $pipe_name = $arr[0];
+        $pipe_name_parts = explode('/', $pipe_name);
+        $owner_eid = \Flexio\Object\User::getEidFromIdentifier($pipe_name_parts[0]);
+        $pipe_eid = \Flexio\Object\Pipe::getEidFromName($owner_eid, $pipe_name_parts[1]);
+        $search_query = str_replace($pipe_name, $pipe_eid, $search_query);
+
+        // run the query and return the results
+        $elasticsearch = \Flexio\System\System::getSearchCache();
+        $result = $elasticsearch->searchSql($search_query);
+        $result = json_encode($result);
+
+        echo($result);
+        exit(0);
+    }
+
     private static function checkServerSettings() : array
     {
         $messages = array();

@@ -164,6 +164,9 @@ class Api
         'GET /admin/info/system/indices/stats/basic'  => '\Flexio\Api\Admin::statsIndicesBasic', // used for finding listing indices to compare with pipes
         'GET /admin/info/settings'                    => '\Flexio\Api\Admin::settings',
 
+        // elasticsearch sql test
+        'POS /admin/index/sql'                        => '\Flexio\Api\Admin::indexSql',
+
         // tests
         'GET /admin/tests/configure'                  => '\Flexio\Tests\Base::configure',
         'GET /admin/tests/run'                        => '\Flexio\Tests\Base::run',
