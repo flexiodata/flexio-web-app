@@ -164,7 +164,8 @@ class Api
         'GET /admin/info/system/indices/stats/basic'  => '\Flexio\Api\Admin::statsIndicesBasic', // used for finding listing indices to compare with pipes
         'GET /admin/info/settings'                    => '\Flexio\Api\Admin::settings',
 
-        // elasticsearch sql test
+        // elasticsearch test
+        'POS /admin/index/json/*'                     => '\Flexio\Api\Admin::indexJson',
         'POS /admin/index/sql'                        => '\Flexio\Api\Admin::indexSql',
 
         // tests
@@ -498,6 +499,15 @@ class Api
             $request->setOwnerFromUrl($user_eid);
             return $function;
         }
+
+        // PATH POSSIBILITY 8; the path is an admin index test path with a qualifier and/or path after the prefix
+        $apiendpoint = self::buildApiEndpointString($request_method, $url_params);
+
+        if (substr($apiendpoint,0,22) === 'POS /admin/index/json/') $apiendpoint = 'POS /admin/index/json/*';
+
+        $function = self::$endpoints[$apiendpoint] ?? false;
+        if ($function !== false)
+            return $function;
 
         // we couldn't find any function
         return '';
