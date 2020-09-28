@@ -24,23 +24,11 @@ class Pipe
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
 
-        // if the copy_eid parameter is set, then copy the pipe,
-        // using the original parameters; this simply allows us to reuse
-        // the create api call, even though the two functions are distinct
-        if (isset($post_params['copy_eid']))
-        {
-            self::copy($request);
-            return;
-        }
-
-        // start tracking the request after copy() since copy() may be called
-        // separately and has it's own tracking function
         $request->track(\Flexio\Api\Action::TYPE_PIPE_CREATE);
         $request->setRequestParams($post_params);
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
-                'copy_eid'        => array('type' => 'eid',    'required' => false),
                 'eid_status'      => array('type' => 'string', 'required' => false),
                 'name'            => array('type' => 'identifier',  'required' => false),
                 'title'           => array('type' => 'string', 'required' => false),
