@@ -176,6 +176,8 @@ class Api
 
         // EXPERIMENTAL ENDPOINTS FOR MOUNTED FUNCTIONS
 
+        'POS /:teamid/content/*'                      => '\Flexio\Api\Pipe::createOrUpdate',
+
         // connections; works almost the same, except for connect/disconnect; here for reference
         // 'POS /:teamid/connections'                    => '\Flexio\Api\Connection::create',
         // 'GET /:teamid/connections'                    => '\Flexio\Api\Connection::list',
@@ -508,6 +510,20 @@ class Api
         $function = self::$endpoints[$apiendpoint] ?? false;
         if ($function !== false)
             return $function;
+
+        // PATH POSSIBILITY 9; the path is an experimental content path with a qualifier and/or path after the prefix
+        $api_params = $url_params;
+        $api_params['apiparam1'] = $user_eid !== '' ? ':teamid' : $api_params['apiparam1'];
+        $apiendpoint = self::buildApiEndpointString($request_method, $api_params);
+
+        if (substr($apiendpoint,0,21) === 'POS /:teamid/content/') $apiendpoint = 'POS /:teamid/content/*';
+
+        $function = self::$endpoints[$apiendpoint] ?? false;
+        if ($function !== false)
+        {
+            $request->setOwnerFromUrl($user_eid);
+            return $function;
+        }
 
         // we couldn't find any function
         return '';

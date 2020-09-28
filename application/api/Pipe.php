@@ -83,6 +83,55 @@ class Pipe
         \Flexio\Api\Response::sendContent($result);
     }
 
+    public static function createOrUpdate(\Flexio\Api\Request $request)  : void
+    {
+        $request_url = urldecode($request->getUrl());
+        $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+
+        $path = parse_url($request_url, PHP_URL_PATH);
+        $pos = strpos($path, '/content/');
+        if ($pos === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
+
+        // grab path, including preceding slash
+        $pipe_name = substr($path, $pos+9);
+
+        // load the user
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+
+        // check the rights on the object; if the object exists, check the update
+        // rights; otherwise check the create rights on the user
+        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+        $pipe = false;
+        $pipe_eid = \Flexio\Object\Pipe::getEidFromName($owner_user_eid, $pipe_name);
+
+        if ($pipe_eid !== false)
+        {
+            $pipe = \Flexio\Object\Pipe::load($pipe_eid);
+            if ($pipe->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PIPE_UPDATE) === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+        }
+         else
+        {
+            if ($owner_user->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PIPE_CREATE) === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+            // create the object
+            $pipe_properties = array();
+            $pipe_properties['name'] = $pipe_name; // TODO: verify name is valid object name
+            $pipe_properties['owned_by'] = $owner_user_eid;
+            $pipe_properties['created_by'] = $requesting_user_eid;
+            $pipe = \Flexio\Object\Pipe::create($pipe_properties);
+        }
+
+        // TODO: insert the data into the pipe
+
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+    }
+
     public static function delete(\Flexio\Api\Request $request) : void
     {
         $requesting_user_eid = $request->getRequestingUser();
