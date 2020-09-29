@@ -77,13 +77,15 @@ class Pipe
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
 
+        $request->track(\Flexio\Api\Action::TYPE_PIPE_CREATE);
+
         $path = parse_url($request_url, PHP_URL_PATH);
-        $pos = strpos($path, '/content/');
+        $pos = strpos($path, '/pipes/content/');
         if ($pos === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
 
         // grab path, including preceding slash
-        $pipe_name = substr($path, $pos+9);
+        $pipe_name = substr($path, $pos+15);
 
         // load the user
         $owner_user = \Flexio\Object\User::load($owner_user_eid);
@@ -113,11 +115,58 @@ class Pipe
             $pipe_properties['owned_by'] = $owner_user_eid;
             $pipe_properties['created_by'] = $requesting_user_eid;
             $pipe = \Flexio\Object\Pipe::create($pipe_properties);
+            $pipe_eid = $pipe->getEid();
         }
 
-        // TODO: insert the data into the pipe
+        // read the uploaded content
+        $php_stream_handle = \Flexio\System\System::openPhpInputStream();
+        $post_content_type = \Flexio\System\System::getPhpInputStreamContentType();
 
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        $content = '';
+        while (true)
+        {
+            $chunk = fread($php_stream_handle, 1024);
+            if (!$chunk)
+                break;
+            $content .= $chunk;
+        }
+        fclose($php_stream_handle);
+
+        // set the pipe variables, including loading the data into the pipe
+        $pipe_properties_updated = array(
+            'eid_status' => \Model::STATUS_AVAILABLE,
+            'run_mode' => \Model::PIPE_RUN_MODE_INDEX,
+            'deploy_mode' => \Model::PIPE_DEPLOY_MODE_RUN,
+            'task' => array(
+                'op' => 'sequence',
+                'items' => array(
+                    array(
+                        'op' => 'execute',
+                        'lang' => 'csv',
+                        'code' => base64_encode($content)
+                    )
+                )
+            )
+        );
+        $pipe->set($pipe_properties_updated);
+
+        // run the pipe to populate the index
+        self::runFromEid($pipe_eid);
+
+        // get the pipe properties
+        $properties = $pipe->get();
+
+        $result = array();
+        $result['eid'] = $properties['eid'];
+        $result['eid_status'] = $properties['eid_status'];
+        $result['name'] = $properties['name'];
+        $result['created'] = $properties['created'];
+        $result['updated'] = $properties['updated'];
+
+        $request->setResponseParams($result);
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        $request->track();
+        \Flexio\Api\Response::sendContent($result);
     }
 
     public static function delete(\Flexio\Api\Request $request) : void

@@ -176,7 +176,7 @@ class Api
 
         // EXPERIMENTAL ENDPOINTS FOR MOUNTED FUNCTIONS
 
-        'POS /:teamid/content/*'                      => '\Flexio\Api\Pipe::createOrUpdate',
+        'POS /:teamid/pipes/content/*'                => '\Flexio\Api\Pipe::createOrUpdate',
 
         // connections; works almost the same, except for connect/disconnect; here for reference
         // 'POS /:teamid/connections'                    => '\Flexio\Api\Connection::create',
@@ -516,7 +516,7 @@ class Api
         $api_params['apiparam1'] = $user_eid !== '' ? ':teamid' : $api_params['apiparam1'];
         $apiendpoint = self::buildApiEndpointString($request_method, $api_params);
 
-        if (substr($apiendpoint,0,21) === 'POS /:teamid/content/') $apiendpoint = 'POS /:teamid/content/*';
+        if (substr($apiendpoint,0,27) === 'POS /:teamid/pipes/content/') $apiendpoint = 'POS /:teamid/pipes/content/*';
 
         $function = self::$endpoints[$apiendpoint] ?? false;
         if ($function !== false)
