@@ -37,13 +37,11 @@ return;
         // TEST: request task HEAD method
 
         // BEGIN TEST
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "request",
-                "method" => "head",
-                "url" => "https://postman-echo.com/head"
-            ]
-        ]);
+        $task = array(
+            "op" => "request",
+            "method" => "head",
+            "url" => "https://postman-echo.com/head"
+        );
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = json_decode($result['response'],true);
         $expected = '{

@@ -33,16 +33,14 @@ class Test
         // TEST: exit task basic task functionality
 
         // BEGIN TEST
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "exit",
-                "code" => 404,
-                "response" => [
-                    "error" => "item-not-found",
-                    "message" => "The item you requested was not found."
-                ]
-            ]
-        ]);
+        $task = array(
+            "op" => "exit",
+            "code" => 404,
+            "response" => array(
+                "error" => "item-not-found",
+                "message" => "The item you requested was not found."
+            )
+        );
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = $result;
         $expected = array(

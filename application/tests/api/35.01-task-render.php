@@ -31,15 +31,13 @@ class Test
 
 
         // TEST: render task basic functionality
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "render",
-                "method" => "get",
-                "url" => "https://www.flex.io",
-                "width" => 50,
-                "height" => 50
-            ]
-        ]);
+        $task = array(
+            "op" => "render",
+            "method" => "get",
+            "url" => "https://www.flex.io",
+            "width" => 50,
+            "height" => 50
+        );
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $response = $result['response'] ?? '';
         $mime_type = '';

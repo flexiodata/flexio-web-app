@@ -20,17 +20,15 @@ class Test
 {
     public function createConvertTask()
     {
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "convert",
-                "input" => [
-                    "format" => "json"
-                ],
-                "output" => [
-                    "format" => "csv"
-                ]
-            ]
-        ]);
+        $task = array(
+            "op" => "convert",
+            "input" => array(
+                "format" => "json"
+            ),
+            "output" => array(
+                "format" => "csv"
+            )
+        );
 
         return $task;
     }

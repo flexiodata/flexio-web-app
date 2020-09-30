@@ -26,7 +26,12 @@ class Test
         // TEST: Email Job
 
         // BEGIN TEST
-        $task = \Flexio\Tests\Task::create([["email" => "read", "to" => "", "subject" => "Test", "body" => "This is a test"]]);
+        $task = array(
+            "email" => "read",
+            "to" => "",
+            "subject" => "Test",
+            "body" => "This is a test"
+        );
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $output = $process->getStdout()->getReader()->read();
         $actual = json_decode($output,true);

@@ -26,9 +26,11 @@ class Test
         $token = \Flexio\Tests\Util::createToken($userid);
 
 
-        $task = \Flexio\Tests\Task::create([
-            ["op" => "execute", "lang" => "python", "code" => base64_encode($script)]
-        ]);
+        $task = array(
+            "op" => "execute",
+            "lang" => "python",
+            "code" => base64_encode($script)
+        );
         $result = \Flexio\Tests\Util::callApi(array(
             'method' => 'POST',
             'url' => "$apibase/$userid/processes",

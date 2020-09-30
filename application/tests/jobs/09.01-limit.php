@@ -23,12 +23,10 @@ class Test
         // TEST: Limit Job
 
         // BEGIN TEST
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "limit",
-                "value" => 1
-            ]
-        ]);
+        $task = array(
+            "op" => "limit",
+            "value" => 1
+        );
         $stream = \Flexio\Tests\Util::createStream('/text/02.70-sample-table.csv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getReader()->read(100);

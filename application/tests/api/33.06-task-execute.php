@@ -41,9 +41,11 @@ def flexio_handler(context):
         context.output.write(str(v) + ";")
     context.output.content_type = "text/plain"
 EOD;
-        $task = \Flexio\Tests\Task::create([
-            ["op" => "execute", "lang" => "python", "code" => base64_encode($script)]
-        ]);
+        $task = array(
+            "op" => "execute",
+            "lang" => "python",
+            "code" => base64_encode($script)
+        );
         $result = \Flexio\Tests\Util::callApi(array(
             'method' => 'POST',
             'url' => "$apibase/$userid/processes",
@@ -79,13 +81,13 @@ exports.flexio_handler = function(context) {
     context.end()
 }
 EOD;
-        $task = \Flexio\Tests\Task::create([
-            ["op" => "execute", "lang" => "nodejs", "code" => base64_encode($script)]
-        ]);
+        $task = array(
+            "op" => "execute",
+            "lang" => "nodejs",
+            "code" => base64_encode($script)
+        );
         $result = \Flexio\Tests\Util::callApi(array(
             'method' => 'POST',
-            'url' => "$apibase/$userid/processes",
-            'token' => $token,
             'content_type' => 'application/json',
             'params' => json_encode(["task" => $task])
         ));
@@ -117,9 +119,11 @@ def flexio_handler(context):
     context.output.write(result)
     context.output.content_type = "text/plain"
 EOD;
-        $task = \Flexio\Tests\Task::create([
-            ["op" => "execute", "lang" => "python", "code" => base64_encode($script)]
-        ]);
+        $task = array(
+            "op" => "execute",
+            "lang" => "python",
+            "code" => base64_encode($script)
+        );
         $result = \Flexio\Tests\Util::callApi(array(
             'method' => 'POST',
             'url' => "$apibase/$userid/processes",
@@ -153,9 +157,11 @@ exports.flexio_handler = function(context) {
     context.end()
 }
 EOD;
-        $task = \Flexio\Tests\Task::create([
-            ["op" => "execute", "lang" => "nodejs", "code" => base64_encode($script)]
-        ]);
+        $task = array(
+            "op" => "execute",
+            "lang" => "nodejs",
+            "code" => base64_encode($script)
+        );
         $result = \Flexio\Tests\Util::callApi(array(
             'method' => 'POST',
             'url' => "$apibase/$userid/processes",

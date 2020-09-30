@@ -20,16 +20,13 @@ class Test
 {
     public function createConvertTask()
     {
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "convert",
-                "input" => [
-                    "format" => "pdf",
-                    "pages" => "1"
-
-                ]
-            ]
-        ]);
+        $task = arary(
+            "op" => "convert",
+            "input" => array(
+                "format" => "pdf",
+                "pages" => "1"
+            )
+        );
 
         return $task;
     }

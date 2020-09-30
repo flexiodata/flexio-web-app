@@ -20,20 +20,18 @@ class Test
 {
     public function createConvertTask(string $delimiter, string $qualifier, bool $header)
     {
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "convert",
-                "input" => [
-                    "format" => "delimited",
-                    "delimiter" => "$delimiter",
-                    "qualifier" => "$qualifier",
-                    "header" => $header,
-                ],
-                "output" => [
-                    "format" => "ndjson"
-                ]
-            ]
-        ]);
+        $task = array(
+            "op" => "convert",
+            "input" => array(
+                "format" => "delimited",
+                "delimiter" => "$delimiter",
+                "qualifier" => "$qualifier",
+                "header" => $header,
+            ),
+            "output" => array(
+                "format" => "ndjson"
+            )
+        );
 
         return $task;
     }

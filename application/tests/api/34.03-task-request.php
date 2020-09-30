@@ -33,13 +33,11 @@ class Test
         // TEST: request task GET method
 
         // BEGIN TEST
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "request",
-                "method" => "get",
-                "url" => "https://postman-echo.com/get"
-            ]
-        ]);
+        $task = array(
+            "op" => "request",
+            "method" => "get",
+            "url" => "https://postman-echo.com/get"
+        );
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = json_decode($result['response'],true);
         $expected = '{
@@ -49,13 +47,11 @@ class Test
         \Flexio\Tests\Check::assertInArray('A.1', 'Process Request; GET method type',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "request",
-                "method" => "get",
-                "url" => "https://postman-echo.com/get?p1=A&P2=b"
-            ]
-        ]);
+        $task = array(
+            "op" => "request",
+            "method" => "get",
+            "url" => "https://postman-echo.com/get?p1=A&P2=b"
+        );
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = json_decode($result['response'],true);
         $expected = '{

@@ -38,9 +38,11 @@ def flexio_handler(context):
     context.output.content_type = "text/plain"
     context.output.write("Hello, World!")
 EOD;
-        $task = \Flexio\Tests\Task::create([
-            ["op" => "execute", "lang" => "python", "code" => base64_encode($script)]
-        ]);
+        $task = array(
+            "op" => "execute",
+            "lang" => "python",
+            "code" => base64_encode($script)
+        );
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = $result;
         $expected = '{
@@ -58,9 +60,11 @@ exports.flexio_handler = function(context) {
     context.end();
 }
 EOD;
-        $task = \Flexio\Tests\Task::create([
-            ["op" => "execute", "lang" => "nodejs", "code" => base64_encode($script)]
-        ]);
+        $task = array(
+            "op" => "execute",
+            "lang" => "nodejs",
+            "code" => base64_encode($script)
+        );
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = $result;
         $expected = '{

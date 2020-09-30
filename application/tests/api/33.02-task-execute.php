@@ -34,14 +34,12 @@ class Test
 
         // BEGIN TEST
         $script = "exports.flexio_handler=function(context){context.end('Hello,World!');}";
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "execute",
-                "lang" => "nodejs",
-                "code" => base64_encode($script),
-                "integrity" => "sha256:5fdf4d934018537db16a8e5cd24d84edb7e6efaee155ea5219d48c55e7b06b27"
-            ]
-        ]);
+        $task = array(
+            "op" => "execute",
+            "lang" => "nodejs",
+            "code" => base64_encode($script),
+            "integrity" => "sha256:5fdf4d934018537db16a8e5cd24d84edb7e6efaee155ea5219d48c55e7b06b27"
+        );
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = $result;
         $expected = '{
@@ -53,14 +51,12 @@ class Test
 
         // BEGIN TEST
         $script = "exports.flexio_handler=function(context){context.end('Hello,World!');}";
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "execute",
-                "lang" => "nodejs",
-                "code" => base64_encode($script),
-                "integrity" => "sha256:5FDF4D934018537DB16A8E5CD24D84EDB7E6EFAEE155EA5219D48C55E7B06B27"
-            ]
-        ]);
+        $task = array(
+            "op" => "execute",
+            "lang" => "nodejs",
+            "code" => base64_encode($script),
+            "integrity" => "sha256:5FDF4D934018537DB16A8E5CD24D84EDB7E6EFAEE155EA5219D48C55E7B06B27"
+        );
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = $result;
         $expected = '{
@@ -72,14 +68,12 @@ class Test
 
         // BEGIN TEST
         $script = "exports.flexio_handler=function(context){context.end('Hello,World!');}";
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "execute",
-                "lang" => "nodejs",
-                "code" => base64_encode($script),
-                "integrity" => "sha256:9beee4ffd5906d126ac456b262c5f6fac718062bab269886149f73773a31d9b7"
-            ]
-        ]);
+        $task = array(
+            "op" => "execute",
+            "lang" => "nodejs",
+            "code" => base64_encode($script),
+            "integrity" => "sha256:9beee4ffd5906d126ac456b262c5f6fac718062bab269886149f73773a31d9b7"
+        );
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $response = json_decode($result['response'],true);
         $actual = $result;
@@ -98,14 +92,12 @@ class Test
 
         // BEGIN TEST
         $script = "exports.flexio_handler=function(context){context.end('Hello,World!');}";
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "execute",
-                "lang" => "nodejs",
-                "code" => base64_encode($script),
-                "integrity" => "sha512:9beee4ffd5906d126ac456b262c5f6fac718062bab269886149f73773a31d9b7"
-            ]
-        ]);
+        $task = array(
+            "op" => "execute",
+            "lang" => "nodejs",
+            "code" => base64_encode($script),
+            "integrity" => "sha512:9beee4ffd5906d126ac456b262c5f6fac718062bab269886149f73773a31d9b7"
+        );
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $response = json_decode($result['response'],true);
         $actual = $result;
@@ -124,14 +116,12 @@ class Test
 
         // BEGIN TEST
         $script = "exports.flexio_handler=function(context){context.end('Hello,World!');}";
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "execute",
-                "lang" => "nodejs",
-                "code" => base64_encode($script),
-                "integrity" => "md5-a223b94fdf072f085adf67a4310abb59"
-            ]
-        ]);
+        $task = array(
+            "op" => "execute",
+            "lang" => "nodejs",
+            "code" => base64_encode($script),
+            "integrity" => "md5-a223b94fdf072f085adf67a4310abb59"
+        );
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $response = json_decode($result['response'],true);
         $actual = $result;
@@ -153,14 +143,12 @@ class Test
 
         // BEGIN TEST
         $script = "exports.flexio_handler=function(context){context.end('Hello,World!');}";
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "execute",
-                "lang" => "nodejs",
-                "code" => base64_encode($script),
-                "integrity" => "sha384:703eeae35c1281c445575d9326f0ab03b7e84886fd54f782ea17c7dccbf9ada9a792222356d752d7792f993e6326531a"
-            ]
-        ]);
+        $task = array(
+            "op" => "execute",
+            "lang" => "nodejs",
+            "code" => base64_encode($script),
+            "integrity" => "sha384:703eeae35c1281c445575d9326f0ab03b7e84886fd54f782ea17c7dccbf9ada9a792222356d752d7792f993e6326531a"
+        );
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = $result;
         $expected = '{
@@ -172,14 +160,12 @@ class Test
 
         // BEGIN TEST
         $script = "exports.flexio_handler=function(context){context.end('Hello,You!');}";
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "execute",
-                "lang" => "nodejs",
-                "code" => base64_encode($script),
-                "integrity" => "sha384:703eeae35c1281c445575d9326f0ab03b7e84886fd54f782ea17c7dccbf9ada9a792222356d752d7792f993e6326531b"
-            ]
-        ]);
+        $task = array(
+            "op" => "execute",
+            "lang" => "nodejs",
+            "code" => base64_encode($script),
+            "integrity" => "sha384:703eeae35c1281c445575d9326f0ab03b7e84886fd54f782ea17c7dccbf9ada9a792222356d752d7792f993e6326531b"
+        );
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $response = json_decode($result['response'],true);
         $actual = $result;
@@ -201,14 +187,12 @@ class Test
 
         // BEGIN TEST
         $script = "exports.flexio_handler=function(context){context.end('Hello,World!');}";
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "execute",
-                "lang" => "nodejs",
-                "code" => base64_encode($script),
-                "integrity" => "sha512:E9C5660CBD8BACBAFFE6B237A65B8C8A7FAE9EA0DB07EDAEBEF7CFCE8499F6431C2AF750714201FE559F68259A744B8EB9B5EDB17773F2B3D72392C03B51AF5A"
-            ]
-        ]);
+        $task = array(
+            "op" => "execute",
+            "lang" => "nodejs",
+            "code" => base64_encode($script),
+            "integrity" => "sha512:E9C5660CBD8BACBAFFE6B237A65B8C8A7FAE9EA0DB07EDAEBEF7CFCE8499F6431C2AF750714201FE559F68259A744B8EB9B5EDB17773F2B3D72392C03B51AF5A"
+        );
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = $result;
         $expected = '{
@@ -220,14 +204,12 @@ class Test
 
         // BEGIN TEST
         $script = "exports.flexio_handler=function(context){context.end('Hello,You!');}";
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "execute",
-                "lang" => "nodejs",
-                "code" => base64_encode($script),
-                "integrity" => "sha512:E9C5660CBD8BACBAFFE6B237A65B8C8A7FAE9EA0DB07EDAEBEF7CFCE8499F6431C2AF750714201FE559F68259A744B8EB9B5EDB17773F2B3D72392C03B51AF5B"
-            ]
-        ]);
+        $task = array(
+            "op" => "execute",
+            "lang" => "nodejs",
+            "code" => base64_encode($script),
+            "integrity" => "sha512:E9C5660CBD8BACBAFFE6B237A65B8C8A7FAE9EA0DB07EDAEBEF7CFCE8499F6431C2AF750714201FE559F68259A744B8EB9B5EDB17773F2B3D72392C03B51AF5B"
+        );
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $response = json_decode($result['response'],true);
         $actual = $result;

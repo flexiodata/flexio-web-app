@@ -23,7 +23,7 @@ class Test
         // TEST: example pipes
 
         // BEGIN TEST
-        $task = \Flexio\Tests\Task::create([
+        $task = [
             [
                 "op" => "request",
                 "url" => "https://raw.githubusercontent.com/flexiodata/data/master/contact-samples/contacts-ltd1.csv"
@@ -38,7 +38,7 @@ class Test
                 "lang" => "python",
                 "code" => "aW1wb3J0IGpzb24NCmRlZiBmbGV4aW9faGFuZGxlcihjb250ZXh0KToNCiAgICBmb3Igcm93IGluIGNvbnRleHQuaW5wdXQ6DQogICAgICAgIGNvbnRleHQub3V0cHV0LndyaXRlKGpzb24uZHVtcHMocm93KS51cHBlcigpICsgIlxuIikNCg=="
             ]
-        ]);
+        ];
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->getStdout()->getReader()->read(100);
         $expected = "{\"ID\": \"1\", \"GENDER\": \"FEMALE\", \"GIVENNAME\": \"LYNN\", \"MIDDLEINITIAL\": \"S\", \"SURNAME\": \"KUHL\", \"STREE";
@@ -48,7 +48,7 @@ class Test
         // TEST: logic similar to demo video pipe
 
         // BEGIN TEST
-        $task = \Flexio\Tests\Task::create([
+        $task = [
             [
                 "op" => "request",
                 "url" => "https://raw.githubusercontent.com/flexiodata/data/master/contact-samples/contacts-ltd2.csv"
@@ -58,7 +58,7 @@ class Test
                 "input" => ["format" => "delimited", "delimiter" => "{comma}", "header" => true],
                 "output" => ["format" => "ndjson"]
             ]
-        ]);
+        ];
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = json_decode($process->getStdout()->getReader()->readline(),true);
         $expected = json_decode('
@@ -89,7 +89,7 @@ class Test
         // old 'input' job; however the the following is still useful as a close test for the blog entry)
 
         // BEGIN TEST
-        $task = \Flexio\Tests\Task::create([
+        $task = [
             [
                 "op" => "request",
                 "url" => "https://raw.githubusercontent.com/flexiodata/data/master/contact-samples/contacts-ltd1.csv"
@@ -98,7 +98,7 @@ class Test
                 "op" => "convert",
                 "input" => ["format" => "delimited", "delimiter" => "{comma}", "header" => true, "qualifier" => "{double_quote}"]
             ]
-        ]);
+        ];
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $stdout_reader = $process->getStdout()->getReader();
 
@@ -158,7 +158,7 @@ class Test
         // Note: updated 20180717; use new data input path in test below
 
         // BEGIN TEST
-        $task = \Flexio\Tests\Task::create([
+        $task = [
             [
                 "op" => "request",
                 "url" => "https://raw.githubusercontent.com/flexiodata/examples/master/demo-saastr-podcast-search/source-data/saastr-podcast-20170205.csv"
@@ -192,7 +192,7 @@ class Test
                 "op" => "convert",
                 "output" => ["format" => "json"]
             ]
-        ]);
+        ];
         $params = [
             "filter" => "bootstrap"
         ];

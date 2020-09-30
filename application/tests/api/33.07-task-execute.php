@@ -36,13 +36,15 @@ class Test
         $script = <<<EOD
 print('Hello, World!')
 EOD;
-        $task = \Flexio\Tests\Task::create([
-            ["op" => "execute", "lang" => "python", "code" => base64_encode($script)]
+        $task = array(
+            "op" => "execute",
+            "lang" => "python",
+            "code" => base64_encode($script)
         ]);
         $result = \Flexio\Tests\Util::callApi(array(
             'method' => 'POST',
             'url' => "$apibase/$userid/processes",
-            'token' => $token,
+          'token' => $token,
             'content_type' => 'application/json',
             'params' => json_encode(["task" => $task])
         ));
@@ -66,9 +68,11 @@ EOD;
 import sys
 sys.stdout.write('Hello, World!')
 EOD;
-        $task = \Flexio\Tests\Task::create([
-            ["op" => "execute", "lang" => "python", "code" => base64_encode($script)]
-        ]);
+        $task = array(
+            "op" => "execute",
+            "lang" => "python",
+            "code" => base64_encode($script)
+        );
         $result = \Flexio\Tests\Util::callApi(array(
             'method' => 'POST',
             'url' => "$apibase/$userid/processes",
@@ -95,9 +99,11 @@ EOD;
         $script = <<<EOD
 Console.log('Hello, World!')
 EOD;
-        $task = \Flexio\Tests\Task::create([
-            ["op" => "execute", "lang" => "nodejs", "code" => base64_encode($script)]
-        ]);
+        $task = array(
+            "op" => "execute",
+            "lang" => "nodejs",
+            "code" => base64_encode($script)
+        );
         $result = \Flexio\Tests\Util::callApi(array(
             'method' => 'POST',
             'url' => "$apibase/$userid/processes",

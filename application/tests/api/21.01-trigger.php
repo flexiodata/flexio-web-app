@@ -35,12 +35,10 @@ class Test
 
         // BEGIN TEST
         $name = \Flexio\Base\Util::generateHandle();
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "echo",
-                "msg" => 'From: ${email-from-display} <${email-from}>; Message: ${input}; Files: ${files}'
-            ]
-        ]);
+        $task = array(
+            "op" => "echo",
+            "msg" => 'From: ${email-from-display} <${email-from}>; Message: ${input}; Files: ${files}'
+        );
         $params = array(
             'method' => 'POST',
             'url' => "$apibase/$userid/pipes",

@@ -32,13 +32,11 @@ class Test
 
         // TEST: request task DELETE method
 
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "request",
-                "method" => "delete",
-                "url" => "https://postman-echo.com/delete"
-            ]
-        ]);
+        $task = array(
+            "op" => "request",
+            "method" => "delete",
+            "url" => "https://postman-echo.com/delete"
+        );
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = json_decode($result['response'],true);
         $expected = '{
@@ -49,13 +47,11 @@ class Test
         \Flexio\Tests\Check::assertInArray('A.1', 'Process Request; DELETE method type',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "request",
-                "method" => "delete",
-                "url" => "https://postman-echo.com/delete?p1=A&P2=b"
-            ]
-        ]);
+        $task = array(
+            "op" => "request",
+            "method" => "delete",
+            "url" => "https://postman-echo.com/delete?p1=A&P2=b"
+        );
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = json_decode($result['response'],true);
         $expected = '{
@@ -69,17 +65,15 @@ class Test
         \Flexio\Tests\Check::assertInArray('A.2', 'Process Request; DELETE method type',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "request",
-                "method" => "delete",
-                "url" => "https://postman-echo.com/delete",
-                "data" => [
-                    "f1" => "A",
-                    "F2" => "b"
-                ]
-            ]
-        ]);
+        $task = array(
+            "op" => "request",
+            "method" => "delete",
+            "url" => "https://postman-echo.com/delete",
+            "data" => array(
+                "f1" => "A",
+                "F2" => "b"
+            )
+        );
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = json_decode($result['response'],true);
         $expected = '{
@@ -93,17 +87,15 @@ class Test
         \Flexio\Tests\Check::assertInArray('A.3', 'Process Request; DELETE method type',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "request",
-                "method" => "delete",
-                "url" => "https://postman-echo.com/delete?p1=A&P2=b",
-                "data" => [
-                    "f1" => "A",
-                    "F2" => "b"
-                ]
-            ]
-        ]);
+        $task = array(
+            "op" => "request",
+            "method" => "delete",
+            "url" => "https://postman-echo.com/delete?p1=A&P2=b",
+            "data" => array(
+                "f1" => "A",
+                "F2" => "b"
+            )
+        );
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = json_decode($result['response'],true);
         $expected = '{

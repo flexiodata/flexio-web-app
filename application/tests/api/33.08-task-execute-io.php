@@ -37,9 +37,11 @@ class Test
 def flex_handler(flex):
     flex.output.write("Hello, World!")
 EOD;
-        $task = \Flexio\Tests\Task::create([
-            ["op" => "execute", "lang" => "python", "code" => base64_encode($script)]
-        ]);
+        $task = array(
+            "op" => "execute",
+            "lang" => "python",
+            "code" => base64_encode($script)
+        );
         $result = \Flexio\Tests\Util::callApi(array(
             'method' => 'POST',
             'url' => "$apibase/$userid/processes",
@@ -72,10 +74,10 @@ def flex_handler(flex):
     buf = flex.input.read()
     flex.output.write(buf)
 EOD;
-        $task = \Flexio\Tests\Task::create([
+        $task = [
             ["op" => "execute", "lang" => "python", "code" => base64_encode($script1)],
             ["op" => "execute", "lang" => "python", "code" => base64_encode($script2)]
-        ]);
+        ];
         $result = \Flexio\Tests\Util::callApi(array(
             'method' => 'POST',
             'url' => "$apibase/$userid/processes",

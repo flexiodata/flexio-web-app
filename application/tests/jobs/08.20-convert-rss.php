@@ -20,17 +20,15 @@ class Test
 {
     public function createConvertTask()
     {
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "convert",
-                "input" => [
-                    "format" => "rss"
-                ],
-                "output" => [
-                    "format" => "ndjson"
-                ]
-            ]
-        ]);
+        $task = array(
+            "op" => "convert",
+            "input" => array(
+                "format" => "rss"
+            ),
+            "output" => array(
+                "format" => "ndjson"
+            )
+        );
 
         return $task;
     }

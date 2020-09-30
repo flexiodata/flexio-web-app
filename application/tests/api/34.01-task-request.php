@@ -33,11 +33,9 @@ class Test
         // TEST: request parameters
 
         // BEGIN TEST
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "request"
-            ]
-        ]);
+        $task = array(
+            "op" => "request"
+        );
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $response = json_decode($result['response'],true);
         $actual = $result;
@@ -55,13 +53,11 @@ class Test
         \Flexio\Tests\Check::assertInArray('A.1', 'Process Request; missing url parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "request",
-                "method" => "invalid",
-                "url" => "https://postman-echo.com/get"
-            ]
-        ]);
+        $task = array(
+            "op" => "request",
+            "method" => "invalid",
+            "url" => "https://postman-echo.com/get"
+        );
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $response = json_decode($result['response'],true);
         $actual = $result;
@@ -79,13 +75,11 @@ class Test
         \Flexio\Tests\Check::assertInArray('A.2', 'Process Request; invalid method',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "request",
-                "method" => "get",
-                "url" => "http"
-            ]
-        ]);
+        $task = array(
+            "op" => "request",
+            "method" => "get",
+            "url" => "http"
+        );
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $response = json_decode($result['response'],true);
         $actual = $result;
@@ -98,12 +92,10 @@ class Test
         \Flexio\Tests\Check::assertInArray('A.3', 'Process Request; invalid url',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "request",
-                "url" => "https://postman-echo.com/get"
-            ]
-        ]);
+        $task = array(
+            "op" => "request",
+            "url" => "https://postman-echo.com/get"
+        );
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $response = json_decode($result['response'],true);
         $actual = $result;
@@ -122,13 +114,11 @@ class Test
         // TEST: request task method case insensitivity
 
         // BEGIN TEST
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "request",
-                "method" => "get",
-                "url" => "https://postman-echo.com/get"
-            ]
-        ]);
+        $task = array(
+            "op" => "request",
+            "method" => "get",
+            "url" => "https://postman-echo.com/get"
+        );
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = json_decode($result['response'],true);
         $expected = '{
@@ -138,13 +128,11 @@ class Test
         \Flexio\Tests\Check::assertInArray('B.1', 'Process Request; method case insensitivity',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "request",
-                "method" => "GET",
-                "url" => "https://postman-echo.com/get"
-            ]
-        ]);
+        $task = array(
+            "op" => "request",
+            "method" => "GET",
+            "url" => "https://postman-echo.com/get"
+        );
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = json_decode($result['response'],true);
         $expected = '{
@@ -157,13 +145,11 @@ class Test
         // TEST: request task basic functionality
 
         // BEGIN TEST
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "request",
-                "method" => "get",
-                "url" => "https://raw.githubusercontent.com/flexiodata/data/master/sample/sample-contacts.csv"
-            ]
-        ]);
+        $task = array(
+            "op" => "request",
+            "method" => "get",
+            "url" => "https://raw.githubusercontent.com/flexiodata/data/master/sample/sample-contacts.csv"
+        );
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = substr($result['response'],3,13);
         $expected = 'id,first_name';
@@ -173,15 +159,13 @@ class Test
         // TEST: request task basic auth
 
         // BEGIN TEST
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "request",
-                "method" => "get",
-                "url" => "https://postman-echo.com/get",
-                "username" => "a",
-                "password" => ""
-            ]
-        ]);
+        $task = array(
+            "op" => "request",
+            "method" => "get",
+            "url" => "https://postman-echo.com/get",
+            "username" => "a",
+            "password" => ""
+        );
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = json_decode($result['response'],true);
         $expected = '{
@@ -194,15 +178,13 @@ class Test
         \Flexio\Tests\Check::assertInArray('D.1', 'Process Request; basic auth',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "request",
-                "method" => "get",
-                "url" => "https://postman-echo.com/get",
-                "username" => "",
-                "password" => "b"
-            ]
-        ]);
+        $task = array(
+            "op" => "request",
+            "method" => "get",
+            "url" => "https://postman-echo.com/get",
+            "username" => "",
+            "password" => "b"
+        );
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = json_decode($result['response'],true);
         $expected = '{
@@ -215,15 +197,13 @@ class Test
         \Flexio\Tests\Check::assertInArray('D.2', 'Process Request; basic auth',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "request",
-                "method" => "get",
-                "url" => "https://postman-echo.com/get",
-                "username" => "a",
-                "password" => "b"
-            ]
-        ]);
+        $task = array(
+            "op" => "request",
+            "method" => "get",
+            "url" => "https://postman-echo.com/get",
+            "username" => "a",
+            "password" => "b"
+        );
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = json_decode($result['response'],true);
         $expected = '{
@@ -236,15 +216,13 @@ class Test
         \Flexio\Tests\Check::assertInArray('D.3', 'Process Request; basic auth',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "request",
-                "method" => "get",
-                "url" => "https://postman-echo.com/get",
-                "username" => "A",
-                "password" => "B"
-            ]
-        ]);
+        $task = array(
+            "op" => "request",
+            "method" => "get",
+            "url" => "https://postman-echo.com/get",
+            "username" => "A",
+            "password" => "B"
+        );
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = json_decode($result['response'],true);
         $expected = '{

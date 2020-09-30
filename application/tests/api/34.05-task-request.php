@@ -32,13 +32,11 @@ class Test
 
         // TEST: request task POST method
 
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "request",
-                "method" => "post",
-                "url" => "https://postman-echo.com/post"
-            ]
-        ]);
+        $task = array(
+            "op" => "request",
+            "method" => "post",
+            "url" => "https://postman-echo.com/post"
+        );
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = json_decode($result['response'],true);
         $expected = '{
@@ -49,13 +47,11 @@ class Test
         \Flexio\Tests\Check::assertInArray('A.1', 'Process Request; POST method type',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "request",
-                "method" => "post",
-                "url" => "https://postman-echo.com/post?p1=A&P2=b"
-            ]
-        ]);
+        $task = array(
+            "op" => "request",
+            "method" => "post",
+            "url" => "https://postman-echo.com/post?p1=A&P2=b"
+        );
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = json_decode($result['response'],true);
         $expected = '{
@@ -69,17 +65,15 @@ class Test
         \Flexio\Tests\Check::assertInArray('A.2', 'Process Request; POST method type',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "request",
-                "method" => "post",
-                "url" => "https://postman-echo.com/post",
-                "data" => [
-                    "f1" => "A",
-                    "F2" => "b"
-                ]
-            ]
-        ]);
+        $task = array(
+            "op" => "request",
+            "method" => "post",
+            "url" => "https://postman-echo.com/post",
+            "data" => array(
+                "f1" => "A",
+                "F2" => "b"
+            )
+        );
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = json_decode($result['response'],true);
         $expected = '{
@@ -93,17 +87,15 @@ class Test
         \Flexio\Tests\Check::assertInArray('A.3', 'Process Request; POST method type',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "request",
-                "method" => "post",
-                "url" => "https://postman-echo.com/post?p1=A&P2=b",
-                "data" => [
-                    "f1" => "A",
-                    "F2" => "b"
-                ]
-            ]
-        ]);
+        $task = array(
+            "op" => "request",
+            "method" => "post",
+            "url" => "https://postman-echo.com/post?p1=A&P2=b",
+            "data" => array(
+                "f1" => "A",
+                "F2" => "b"
+            )
+        );
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = json_decode($result['response'],true);
         $expected = '{

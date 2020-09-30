@@ -33,9 +33,10 @@ class Test
         // TEST: echo task basic functionality
 
         // BEGIN TEST
-        $task = \Flexio\Tests\Task::create([
-            ["op" => "echo", "msg" => "Hello, World!"]
-        ]);
+        $task = array(
+            "op" => "echo",
+            "msg" => "Hello, World!"
+        );
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = $result['response'];
         $expected = 'Hello, World!';
