@@ -32,7 +32,6 @@ class Factory
         'render'    => '\Flexio\Jobs\Render',
         'request'   => '\Flexio\Jobs\Request',
         'search'    => '\Flexio\Jobs\Search',
-        'sequence'  => '\Flexio\Jobs\Sequence',
         'transform' => '\Flexio\Jobs\Transform',
         'write'     => '\Flexio\Jobs\Write'
     );

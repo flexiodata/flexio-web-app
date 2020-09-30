@@ -324,7 +324,7 @@
         return _.get(this.pipe, 'vuex_meta.is_fetching', false) || this.is_local_fetching /* Vuex pipe `is_fetching` isn't yet implemented */
       },
       pipe_task() {
-        return _.get(this.pipe, 'task.items[0]', {})
+        return _.get(this.pipe, 'task', {})
       },
       pipe_task_type() {
         return _.get(this.pipe_task, 'op', '')
@@ -408,10 +408,7 @@
       },
       updateTask(new_task, old_task) {
         var attrs = {
-          task: {
-            op: 'sequence',
-            items: [new_task]
-          }
+          task: new_task
         }
 
         // if our pipe doesn't have any parameters and we're saving a lookup task,

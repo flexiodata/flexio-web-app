@@ -108,10 +108,6 @@ class Util
     {
         if (is_array($value))
         {
-            // don't replace subsequences
-            if (isset($value['op']) && $value['op'] == 'sequence')
-                return;
-
             foreach ($value as $k => &$v)
             {
                 self::replaceParameterTokensRecurse($process, $v);

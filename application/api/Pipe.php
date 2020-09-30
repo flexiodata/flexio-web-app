@@ -138,14 +138,9 @@ class Pipe
             'run_mode' => \Model::PIPE_RUN_MODE_INDEX,
             'deploy_mode' => \Model::PIPE_DEPLOY_MODE_RUN,
             'task' => array(
-                'op' => 'sequence',
-                'items' => array(
-                    array(
-                        'op' => 'execute',
-                        'lang' => 'csv',
-                        'code' => base64_encode($content)
-                    )
-                )
+                'op' => 'execute',
+                'lang' => 'csv',
+                'code' => base64_encode($content)
             )
         );
         $pipe->set($pipe_properties_updated);
@@ -807,6 +802,21 @@ class Pipe
             {
                 $a['data'] = (object)$a['data'];
             }
+        }
+
+        // convert old sequence task to only return first element of items array;
+        // this is to support tasks created by the ui that used to wrap a single task
+        // in an old sequence job; however, the ui no longer looks for the wrapper
+        // sequence job, nor does it wrap tasks in a sequence; the actual values
+        // in the pipe table will be migrated to the new convention, but this
+        // will convert if the values aren't yet migrated
+        if (($a['op'] ?? '') == 'sequence')
+        {
+            $task_items = $a['items'] ?? [];
+            if (count($task_items) > 0)
+                $a = $task_items[0];
+                 else
+                $a = new \stdClass();
         }
 
         foreach ($a as $k => $v)

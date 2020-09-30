@@ -322,8 +322,7 @@ def flex_handler(flex):
       deploy_mode: 'R',
       deploy_api: 'A',
       task: {
-        op: 'sequence',
-        items: []
+        op: ''
       }
     }
   }
@@ -693,10 +692,7 @@ def flex_handler(flex):
         }
 
         var name = op + '-' + getNameSuffix(4)
-        var task = {
-          op: 'sequence',
-          items: [step]
-        }
+        var task = step
 
         return _.assign({}, getDefaultAttrs(), { name, task })
       },

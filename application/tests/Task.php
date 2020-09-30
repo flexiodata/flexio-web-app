@@ -20,20 +20,6 @@ class Task
 {
     public static function create(array $tasks) : array
     {
-        // utility function for converting an array of task info into
-        // a properly formatting task sequence
-
-        $sequence = array();
-        foreach ($tasks as $t)
-        {
-            $sequence[] = $t;
-        }
-
-        // wrap all the tasks in a sequence operation
-        $result = array();
-        $result['op'] = 'sequence';
-        $result['items'] = $sequence;
-
-        return $result;
+        return $tasks;
     }
 }

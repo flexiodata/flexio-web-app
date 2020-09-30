@@ -177,13 +177,7 @@ class Factory
             $execute_job_params['op'] = 'execute'; // set the execute operation so this doesn't need to be supplied
             $execute_job_params['lang'] = $language;
             $execute_job_params['code'] = base64_encode($content); // encode the script
-
-            $pipe_params['task'] = [
-                "op" => "sequence",
-                "items" => [
-                    $execute_job_params
-                ]
-            ];
+            $pipe_params['task'] = $execute_job_params;
 
             return $pipe_params;
         }

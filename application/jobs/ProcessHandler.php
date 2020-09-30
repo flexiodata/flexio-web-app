@@ -24,7 +24,7 @@ class ProcessHandler
     public static function chain(\Flexio\Jobs\Process $process, array $callback_params) : void
     {
         // moves stdout to stdin and clears stdout; used for chaining jobs
-        // manually in a queue, similar to what the sequence task does
+        // manually in a queue
         $new_stdout_stream = \Flexio\Base\Stream::create()->setMimeType(\Flexio\Base\ContentType::TEXT);
         $process->setStdin($process->getStdout());
         $process->setStdout($new_stdout_stream);

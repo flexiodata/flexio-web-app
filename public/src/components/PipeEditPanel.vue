@@ -119,7 +119,7 @@
         return _.get(this.pipe, 'name', '')
       },
       fop() {
-        return _.get(this.pipe, 'task.items[0].op', '')
+        return _.get(this.pipe, 'task.op', '')
       },
       our_title() {
         if (this.title.length > 0) {
