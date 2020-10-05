@@ -98,8 +98,6 @@ function updatePipeTable($db)
         // if we don't have a sequence task, move on
         if (!is_array($pipe_task))
             continue;
-        if (!array_key_exists('op', $pipe_task))
-            continue;
 
         $pipe_task_type = $pipe_task['op'] ?? false;
         if ($pipe_task_type !== 'sequence')
