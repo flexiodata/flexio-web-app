@@ -84,7 +84,7 @@ function updatePipeTable($db)
     {
         "op": "sequence",
         "params": {
-            "items": [{"op":""}] // old task array goes in the items array
+            "items": [{"op":""}] // extract the task from the items and make it the top-level task
         }
     }
 */
@@ -135,7 +135,7 @@ function updateProcessTable($db)
     {
         "op": "sequence",
         "params": {
-            "items": [{"op":""}] // old task array goes in the items array
+            "items": [{"op":""}] // extract the task from the items and make it the top-level task
         }
     }
 */
