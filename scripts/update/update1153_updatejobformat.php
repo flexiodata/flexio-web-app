@@ -75,16 +75,17 @@ function updatePipeTable($db)
     $result = $db->query($query_sql);
 
     // STEP 2: for each pipe, get the task and if we have a top-level
-    // sequence job that wraps the old task array, extract the task
-    // array and if there's only one item in that task array, make that
-    // the job, or if there's multiple items in the task array, make
-    // the entire array the job (note: this reverses update 1068, but
-    // also makes arrays of a single item into single task object
+    // sequence job that wraps an array of tasks in the items node, then
+    // extract the task array and if there's only one item in that task
+    // array, make that the top-level task, or if there's multiple items
+    // in the task array, make the entire array the top-level task (note:
+    // this reverses update 1068, but also makes arrays of a single task
+    // item into single task object)
 /*
     {
         "op": "sequence",
         "params": {
-            "items": [{"op":""}] // extract the task from the items and make it the top-level task
+            "items": [{"op":""}] // extract the task from the items node and make it the top-level task
         }
     }
 */
@@ -126,16 +127,17 @@ function updateProcessTable($db)
     $result = $db->query($query_sql);
 
     // STEP 2: for each process, get the task and if we have a top-level
-    // sequence job that wraps the old task array, extract the task
-    // array and if there's only one item in that task array, make that
-    // the job, or if there's multiple items in the task array, make
-    // the entire array the job (note: this reverses update 1068, but
-    // also makes arrays of a single item into single task object
+    // sequence job that wraps an array of tasks in the items node, then
+    // extract the task array and if there's only one item in that task
+    // array, make that the top-level task, or if there's multiple items
+    // in the task array, make the entire array the top-level task (note:
+    // this reverses update 1068, but also makes arrays of a single task
+    // item into single task object)
 /*
     {
         "op": "sequence",
         "params": {
-            "items": [{"op":""}] // extract the task from the items and make it the top-level task
+            "items": [{"op":""}] // extract the task from the items node and make it the top-level task
         }
     }
 */
