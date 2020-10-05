@@ -48,10 +48,26 @@ if (is_null($db))
 try
 {
     // STEP 1: update the pipe table
-    updatePipeTable($db);
+    while (true)
+    {
+        $count = updatePipeTable($db);
+        if ($count === 0)
+            break;
+
+        echo ("Updated " . $result . " pipes...\n");
+    }
 
     // STEP 2: update the process table
-    updateProcessTable($db);
+    while (true)
+    {
+        $count = updateProcessTable($db);
+        if ($count === 0)
+            break;
+
+        echo ("Updated " . $count . " processes...\n");
+    }
+
+    echo ("Finished.\n\n");
 }
 catch(\Exception $e)
 {
@@ -68,10 +84,19 @@ echo '{ "success": true, "msg": "Operation completed successfully." }';
 
 
 
-function updatePipeTable($db)
+function updatePipeTable($db) : int
 {
     // STEP 1: get a list of pipes
-    $query_sql = 'select eid, task from tbl_pipe';
+    $query_sql = <<<EOD
+        select
+            eid, task
+        from
+            tbl_pipe
+        where
+            task::json::text not like '%\\u0000%' and task->>'op' = 'sequence'
+        limit 10000;
+EOD;
+
     $result = $db->query($query_sql);
 
     // STEP 2: for each pipe, get the task and if we have a top-level
@@ -90,8 +115,10 @@ function updatePipeTable($db)
     }
 */
 
+    $count = 0;
     while ($result && ($row = $result->fetch()))
     {
+        $count++;
         $pipe_eid = $row['eid'];
         $pipe_task = json_decode($row['task'], true);
 
@@ -116,12 +143,23 @@ function updatePipeTable($db)
         $updated_pipe_task = json_encode($updated_pipe_task);
         writePipe($db, $pipe_eid, $updated_pipe_task);
     }
+
+    return $count;
 }
 
-function updateProcessTable($db)
+function updateProcessTable($db) : int
 {
     // STEP 1: get a list of processes
-    $query_sql = 'select eid, task from tbl_process';
+    $query_sql = <<<EOD
+        select
+            eid, task
+        from
+            tbl_process
+        where
+            task::json::text not like '%\\u0000%' and task->>'op' = 'sequence'
+        limit 10000;
+EOD;
+
     $result = $db->query($query_sql);
 
     // STEP 2: for each process, get the task and if we have a top-level
@@ -140,8 +178,10 @@ function updateProcessTable($db)
     }
 */
 
+    $count = 0;
     while ($result && ($row = $result->fetch()))
     {
+        $count++;
         $process_eid = $row['eid'];
         $process_task = json_decode($row['task'], true);
 
@@ -166,6 +206,8 @@ function updateProcessTable($db)
         $updated_process_task = json_encode($updated_process_task);
         writeProcess($db, $process_eid, $updated_process_task);
     }
+
+    return $count;
 }
 
 function writePipe($db, $pipe_eid, $task)
