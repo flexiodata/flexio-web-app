@@ -93,7 +93,7 @@ function updatePipeTable($db) : int
         from
             tbl_pipe
         where
-            regexp_replace(task::text, '\\u0000', '', 'g')::jsonb->>'op' = 'sequence'
+            task->>'op' = 'sequence'
         limit 10000;
 EOD;
 
@@ -156,7 +156,7 @@ function updateProcessTable($db) : int
         from
             tbl_process
         where
-            regexp_replace(task::text, '\\u0000', '', 'g')::jsonb->>'op' = 'sequence'
+            task->>'op' = 'sequence'
         limit 10000;
 EOD;
 
