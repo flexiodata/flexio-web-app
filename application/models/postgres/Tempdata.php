@@ -35,13 +35,13 @@ class Tempdata extends ModelBase
         return $registry_model->setString('', "tempdata.$name", $value, $expires);
     }
 
-    public function getValue(string $name) // TODO: add return type
+    public function getValue(string $name) : ?string
     {
         $registry_model = $this->getModel()->registry;
         return $registry_model->getString('', "tempdata.$name");
     }
 
-    public function getArray(string $name) // TODO: add return type
+    public function getArray(string $name) : ?array
     {
         $registry_model = $this->getModel()->registry;
 
