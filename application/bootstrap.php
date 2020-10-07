@@ -355,10 +355,6 @@ class Flexio
             false === strstr($uri, '/user') &&
             false === strstr($uri, '/oauth'))
         {
-            // TODO: make sure user info is being written on
-            // post; doesn't need to happen here, as long it's
-            // happening on the post; previously we had user/edit
-            // here
             @session_write_close();
         }
 
