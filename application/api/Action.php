@@ -18,8 +18,6 @@ namespace Flexio\Api;
 
 class Action
 {
-    // TODO: add tests for these constants
-
     public const TYPE_UNDEFINED              = '';
     public const TYPE_TEST                   = 'action.test';
     public const TYPE_GENERAL                = 'action.general';
@@ -80,13 +78,6 @@ class Action
     public const TYPE_UI_SEARCH              = 'action.ui.search';
     public const TYPE_UI_BUTTONCLICK         = 'action.ui.buttonclick';
 
-
-
-    // TODO: add actions for following API endpoints:
-
-    // * creating folder/file; TODO: what about delete?
-    //   public const TYPE_STORE_FOLDER_CREATE   = 'action.store.folder.create';
-    //   public const TYPE_STORE_FILE_CREATE     = 'action.store.file.create';
 
     public static function test(\Flexio\Api\Request $request) : void
     {
