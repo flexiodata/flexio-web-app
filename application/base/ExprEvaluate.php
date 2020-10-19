@@ -2769,12 +2769,12 @@ class ExprEvaluate
 
     private static function getMaxLocaleMonthLength()
     {
-        // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
     private static function getMaxLocaleWeekdayLength()
     {
-        // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
     private static function mb_str_pad($input, $pad_length, $pad_string = ' ', $pad_type = STR_PAD_RIGHT, $encoding = null)

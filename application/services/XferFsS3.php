@@ -95,7 +95,7 @@ class XferFsS3
     public static function deleteFile(string $path) : bool
     {
         // TODO: implement
-        return false;
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
     public static function exportFile(string $path, string $local_path) : bool
