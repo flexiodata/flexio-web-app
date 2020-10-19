@@ -177,14 +177,12 @@ class Request
 
     public function setRequestingUser(string $request_created_by) : \Flexio\Api\Request
     {
-        // TODO: rename function to follow convention
         $this->request_created_by = $request_created_by;
         return $this;
     }
 
     public function getRequestingUser() : string
     {
-        // TODO: rename function to follow convention
         return $this->request_created_by;
     }
 
@@ -215,27 +213,23 @@ class Request
 
     public function setOwnerFromUrl(string $request_object_owner_eid) : \Flexio\Api\Request
     {
-        // TODO: rename function to follow convention
         $this->request_object_owner_eid = $request_object_owner_eid;
         return $this;
     }
 
     public function getOwnerFromUrl() : string
     {
-        // TODO: rename function to follow convention
         return $this->request_object_owner_eid;
     }
 
     public function setObjectFromUrl(string $request_object_eid) : \Flexio\Api\Request
     {
-        // TODO: rename function to follow convention
         $this->request_object_eid = $request_object_eid;
         return $this;
     }
 
     public function getObjectFromUrl() : string
     {
-        // TODO: rename function to follow convention
         return $this->request_object_eid;
     }
 
