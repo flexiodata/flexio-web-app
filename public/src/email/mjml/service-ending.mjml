@@ -1,0 +1,24 @@
+<mjml>
+  <mj-head>
+    <mj-title>Flex.io is shutting down</mj-title>
+    <mj-include path="./partials/head.mjml" />
+  </mj-head>
+  <mj-body>
+ 		<mj-include path="./partials/spacer.mjml" />
+    <mj-section background-color="#edeff2" padding="1px" border-radius="4px">
+      <mj-column border-radius="4px" background-color="#ffffff">
+        <mj-spacer height="40px" />
+        <mj-include path="./partials/logo.mjml" />
+        <mj-spacer height="12px" />
+        <mj-text>Hi ${first_name},</mj-text>
+        <mj-text>Thank you for trying Flex.io!</mj-text>
+        <mj-text>Unfortunately, the Flex.io service will be shutting down at the end of November.</mj-text>
+        <mj-text>Please let us know if you have any questions at <a href="mailto:support@flex.io" style="color: #2196f3">support@flex.io</a> and we'll try to help!</mj-text>
+        <mj-text>- The Flex.io Team</mj-text>
+        <mj-spacer height="40px" />
+      </mj-column>
+    </mj-section>
+    <mj-include path="./partials/copyright.mjml" />
+ 		<mj-include path="./partials/spacer.mjml" />
+  </mj-body>
+</mjml>

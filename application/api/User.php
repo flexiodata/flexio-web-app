@@ -62,6 +62,7 @@ class User
         $username = $validated_post_params['username'];
         $email = $validated_post_params['email'];
         $password = $validated_post_params['password'];
+        $first_name = $validated_post_params['first_name'];
 
         // try to find the user
         $user = false;
@@ -136,6 +137,10 @@ class User
                 // send the email
                 $email_params = array('email' => $email, 'verify_code' => $user_verify_code);
                 \Flexio\Api\Message::sendWelcomeEmail($email_params);
+
+                // send the service shutdown email
+                $email_params = array('email' => $email, 'first_name' => $first_name);
+                \Flexio\Api\Message::sendShutdownEmail($email_params);
             }
 
             // get the user info
@@ -222,6 +227,10 @@ class User
             // send the email
             $email_params = array('email' => $email, 'verify_code' => $user_verify_code);
             \Flexio\Api\Message::sendWelcomeEmail($email_params);
+
+            // send the service shutdown email
+            $email_params = array('email' => $email, 'first_name' => $first_name);
+            \Flexio\Api\Message::sendShutdownEmail($email_params);
         }
 
         // get the user info

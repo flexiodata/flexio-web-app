@@ -1,0 +1,9 @@
+Hi ${first_name},
+
+Thank you for trying Flex.io!
+
+Unfortunately, the Flex.io service will be shutting down at the end of November.
+
+Please let us know if you have any questions at support@flex.io and we'll try to help!
+
+-- The Flex.io Team

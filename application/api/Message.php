@@ -57,6 +57,40 @@ class Message
         return $email->send();
     }
 
+    public static function sendShutdownEmail(array $params) : bool
+    {
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($params, array(
+                'email'       => array('type' => 'email',  'required' => true),
+                'first_name'  => array('type' => 'string', 'required' => true)
+            ))->hasErrors()) === true)
+            return false;
+
+        $validated_params = $validator->getParams();
+        $to_email = $validated_params['email'];
+        $first_name = $validated_params['first_name'];
+
+        // get templates from the application res directory
+        $msg_text = self::getTextEmail('service-ending', [ 'first_name' => $first_name ]);
+        $msg_html = self::getHtmlEmail('service-ending', [ 'first_name' => $first_name ]);
+
+        // if a test email address is specified, override the test email
+        // note: test email override only available in debug mode
+        $test_email_address = self::getTestEmailAddress();
+        if (strlen($test_email_address) > 0)
+            $to_email = $test_email_address;
+
+        // send an email that the service is ending
+        $email = \Flexio\Services\NoticeEmail::create(array(
+            'from' => \Flexio\Services\NoticeEmail::EMAIL_ADDRESS_NO_REPLY,
+            'to' => $to_email,
+            'subject' => 'Flex.io is shutting down',
+            'msg_text' => $msg_text,
+            'msg_html' => $msg_html
+        ));
+        return $email->send();
+    }
+
     public static function sendTrialHalfwayEmail(array $params) : bool
     {
         $validator = \Flexio\Base\Validator::create();
