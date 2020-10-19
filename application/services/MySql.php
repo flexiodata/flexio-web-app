@@ -527,13 +527,13 @@ class MySql implements \Flexio\IFace\IConnection,
         // BINARY, VARBINARY
         if (preg_match('/^((?:var)?binary)\((\d+)\)/i', $info['Type'], $matches))
         {
-            // TODO: fill out
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         }
 
         // LONGBLOB, MEDIUMBLOB, TINYBLOB, BLOB
         if (preg_match('/^((?:long|medium|tiny)?blob)/i', $info['Type'], $matches))
         {
-            // TODO: fill out
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         }
     }
 

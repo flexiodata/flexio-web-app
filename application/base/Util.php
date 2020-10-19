@@ -1073,7 +1073,7 @@ class Util
 
     public static function createExcel(string $filename, array $values) : bool
     {
-        // TODO: fill out
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 }
 
