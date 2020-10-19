@@ -99,9 +99,8 @@ class Ftp implements \Flexio\IFace\IConnection,
 
     public function list(string $path = '', array $options = []) : array
     {
-        // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-
+/*
         if (!$this->authenticated())
         {
             // try to reconnect
@@ -122,7 +121,7 @@ class Ftp implements \Flexio\IFace\IConnection,
 
         // TODO: $files is a non-keyed array and needs to be parsed
         // to split into appropriate info
-/*
+
         foreach ($files as $file => $info)
         {
             if ($file == '.' || $file == '..')
@@ -144,48 +143,45 @@ class Ftp implements \Flexio\IFace\IConnection,
 
             $result[] = $entry;
         }
-*/
+
         return $result;
+*/
     }
 
     public function getFileInfo(string $path) : array
     {
-        // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
     public function exists(string $path) : bool
     {
-        // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
     public function createFile(string $path, array $properties = []) : bool
     {
-        // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
     public function createDirectory(string $path, array $properties = []) : bool
     {
-        // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
     public function unlink(string $path) : bool
     {
-        // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
     public function open($path) : \Flexio\IFace\IStream
     {
-        // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
     public function read(array $params, callable $callback) // TODO: add return type
     {
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+/*
         $path = $params['path'] ?? '';
 
         if (!$this->authenticated())
@@ -195,13 +191,13 @@ class Ftp implements \Flexio\IFace\IConnection,
             if (!$this->authenticated())
                 return;
         }
-
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+*/
     }
 
     public function write(array $params, callable $callback) // TODO: add return type
     {
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+/*
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
 
@@ -212,9 +208,7 @@ class Ftp implements \Flexio\IFace\IConnection,
             if (!$this->authenticated())
                 return;
         }
-
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+*/
     }
 
     ////////////////////////////////////////////////////////////

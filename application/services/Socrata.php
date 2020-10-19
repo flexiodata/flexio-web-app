@@ -198,37 +198,31 @@ class Socrata implements \Flexio\IFace\IConnection,
 
     public function getFileInfo(string $path) : array
     {
-        // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
     public function exists(string $path) : bool
     {
-        // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
     public function createFile(string $path, array $properties = []) : bool
     {
-        // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
     public function createDirectory(string $path, array $properties = []) : bool
     {
-        // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
     public function unlink(string $path) : bool
     {
-        // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
     public function open($path) : \Flexio\IFace\IStream
     {
-        // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
@@ -323,10 +317,6 @@ class Socrata implements \Flexio\IFace\IConnection,
 
     public function write(array $params, callable $callback) // TODO: add return type
     {
-        $path = $params['path'] ?? '';
-        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
-
-        // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 

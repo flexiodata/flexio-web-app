@@ -309,7 +309,6 @@ class GitHub implements \Flexio\IFace\IConnection,
 
     public function exists(string $path) : bool
     {
-        // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
@@ -323,20 +322,15 @@ class GitHub implements \Flexio\IFace\IConnection,
     {
         // git doesn't support folders; you have to create a directory with a file in it
         return true;
-
-        // TODO: implement
-        //throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
     public function unlink(string $path) : bool
     {
-        // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
     public function open($path) : \Flexio\IFace\IStream
     {
-        // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 

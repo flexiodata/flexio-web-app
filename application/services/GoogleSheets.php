@@ -278,7 +278,6 @@ class GoogleSheets implements \Flexio\IFace\IConnection,
 
     public function exists(string $path) : bool
     {
-        // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
@@ -388,19 +387,16 @@ class GoogleSheets implements \Flexio\IFace\IConnection,
 
     public function createDirectory(string $path, array $properties = []) : bool
     {
-        // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
     public function unlink(string $path) : bool
     {
-        // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
     public function open($path) : \Flexio\IFace\IStream
     {
-        // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
