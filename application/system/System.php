@@ -398,7 +398,7 @@ class System
         {
             // get the eid for the user joining
             $user_eid = \Flexio\Object\User::getEidFromEmail($email_to);
-            if ($user_eid === false)
+            if (!$user_eid)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
             $current_user = \Flexio\Object\User::load($user_eid);

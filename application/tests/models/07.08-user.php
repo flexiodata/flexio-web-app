@@ -45,7 +45,7 @@ class Test
 
         // BEGIN TEST
         $username = $model->getUsernameFromEid('xxxxxxxxxxxx');
-        $actual = $username === false;
+        $actual = is_null($username);
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('A.2', '\Flexio\Model\User::getUsernameFromEid(); return false when username can\'t be found',  $actual, $expected, $results);
 

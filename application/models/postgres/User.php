@@ -354,116 +354,124 @@ class User extends ModelBase
         return $result;
     }
 
-    public function getStripeCustomerIdFromEid(string $eid) // TODO: add return type
+    public function getStripeCustomerIdFromEid(string $eid) : ?string
     {
         if (!\Flexio\Base\Eid::isValid($eid))
-            return false;
+            return null;
 
         $db = $this->getDatabase();
         $stripe_customer_id = $db->fetchOne('select stripe_customer_id from tbl_user where eid = ?', $eid);
+
         if ($stripe_customer_id === false)
-            return false;
+            return null;
 
         return $stripe_customer_id;
     }
 
-    public function getStripeSubscriptionIdFromEid(string $eid) // TODO: add return type
+    public function getStripeSubscriptionIdFromEid(string $eid) : ?string
     {
         if (!\Flexio\Base\Eid::isValid($eid))
-            return false;
+            return null;
 
         $db = $this->getDatabase();
         $stripe_subscription_id = $db->fetchOne('select stripe_subscription_id from tbl_user where eid = ?', $eid);
+
         if ($stripe_subscription_id === false)
-            return false;
+            return null;
 
         return $stripe_subscription_id;
     }
 
-    public function getUsernameFromEid(string $eid) // TODO: add return type
+    public function getUsernameFromEid(string $eid) : ?string
     {
         if (!\Flexio\Base\Eid::isValid($eid))
-            return false;
+            return null;
 
         $db = $this->getDatabase();
         $username = $db->fetchOne('select username from tbl_user where eid = ?', $eid);
+
         if ($username === false)
-            return false;
+            return null;
 
         return $username;
     }
 
-    public function getEmailFromEid(string $eid) // TODO: add return type
+    public function getEmailFromEid(string $eid) : ?string
     {
         if (!\Flexio\Base\Eid::isValid($eid))
-            return false;
+            return null;
 
         $db = $this->getDatabase();
         $email = $db->fetchOne('select email from tbl_user where eid = ?', $eid);
+
         if ($email === false)
-            return false;
+            return null;
 
         return $email;
     }
 
-    public function getEidFromIdentifier(string $identifier) // TODO: add return type
+    public function getEidFromIdentifier(string $identifier) : ?string
     {
         // basic check since identifier can be either a username or email
         if (strlen($identifier) <= 0)
-            return false;
+            return null;
 
         // the identifier is either the username or the email; identifiers are case insensitive
         $db = $this->getDatabase();
         $qidentifier = $db->quote(strtolower($identifier));
         $eid = $db->fetchOne("select eid from tbl_user where username = $qidentifier or email = $qidentifier");
+
         if ($eid === false)
-            return false;
+            return null;
 
         return $eid;
     }
 
-    public function getEidFromUsername(string $identifier) // TODO: add return type
+    public function getEidFromUsername(string $identifier) : ?string
     {
         if (!\Flexio\Base\Identifier::isValid($identifier))
-            return false;
+            return null;
 
         // get the eid; identifiers are case insensitive
         $db = $this->getDatabase();
         $qidentifier = $db->quote(strtolower($identifier));
         $eid = $db->fetchOne("select eid from tbl_user where username = $qidentifier");
+
         if ($eid === false)
-            return false;
+            return null;
 
         return $eid;
     }
 
-    public function getEidFromEmail(string $identifier) // TODO: add return type
+    public function getEidFromEmail(string $identifier) : ?string
     {
         if (!\Flexio\Base\Email::isValid($identifier))
-            return false;
+            return null;
 
         // get the eid; identifiers are case insensitive
         $db = $this->getDatabase();
         $qidentifier = $db->quote(strtolower($identifier));
         $eid = $db->fetchOne("select eid from tbl_user where email = $qidentifier");
+
         if ($eid === false)
-            return false;
+            return null;
 
         return $eid;
     }
 
-    public function getEidFromVerifyCode(string $identifier) // TODO: add return type
+    public function getEidFromVerifyCode(string $identifier) : ?string
     {
         // basic check for verify code, which must have a non-zero length
         if (strlen($identifier) <= 0)
-            return false;
+            return null;
 
         // get the eid
         $db = $this->getDatabase();
         $qidentifier = $db->quote($identifier);
         $eid = $db->fetchOne("select eid from tbl_user where verify_code = $qidentifier");
+
         if ($eid === false)
-            return false;
+            return null;
 
         return $eid;
     }

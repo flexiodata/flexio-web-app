@@ -198,7 +198,7 @@ class System
         {
             // try to get the user eid from username
             $current_user_eid = \Flexio\Object\User::getEidFromIdentifier($username);
-            if ($current_user_eid === false)
+            if (!$current_user_eid)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
             $current_user = \Flexio\Object\User::load($current_user_eid);

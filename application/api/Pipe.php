@@ -98,7 +98,7 @@ class Pipe
         $pipe = false;
         $pipe_eid = \Flexio\Object\Pipe::getEidFromName($owner_user_eid, $pipe_name);
 
-        if ($pipe_eid !== false)
+        if ($pipe_eid)
         {
             $pipe = \Flexio\Object\Pipe::load($pipe_eid);
             if ($pipe->allows($requesting_user_eid, \Flexio\Api\Action::TYPE_PIPE_UPDATE) === false)
@@ -760,7 +760,7 @@ class Pipe
         try
         {
             $authentication_function_eid = \Flexio\Object\Pipe::getEidFromName($owner_user_eid, $authentication_function_name);
-            if ($authentication_function_eid === false)
+            if (!$authentication_function_eid)
                 return false;
 
             $authentication_function = \Flexio\Object\Pipe::load($authentication_function_eid);

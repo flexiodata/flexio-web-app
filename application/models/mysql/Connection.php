@@ -311,13 +311,13 @@ class Connection extends ModelBase
         }
     }
 
-    public function getEidFromName(string $owner, string $name) // TODO: add return type
+    public function getEidFromName(string $owner, string $name) : ?string
     {
         // eids must correspond to a valid owner and name
         if (!\Flexio\Base\Eid::isValid($owner))
-            return false;
+            return null;
         if (strlen($name) === 0)
-            return false;
+            return null;
 
         $db = $this->getDatabase();
         $qowner = $db->quote($owner);
@@ -325,7 +325,7 @@ class Connection extends ModelBase
         $result = $this->getDatabase()->fetchOne("select eid from tbl_connection where owned_by = $qowner and name = $qname");
 
         if ($result === false)
-            return false;
+            return null;
 
         return $result;
     }

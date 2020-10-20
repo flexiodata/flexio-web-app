@@ -845,7 +845,7 @@ class Admin
             if (!\Flexio\Base\Eid::isValid($owned_by_param))
             {
                 $converted_owned_by_param = \Flexio\Object\User::getEidFromIdentifier($owned_by_param);
-                if ($converted_owned_by_param !== false)
+                if ($converted_owned_by_param)
                     $converted_params['owned_by'] = $converted_owned_by_param;
             }
         }
@@ -856,7 +856,7 @@ class Admin
             if (!\Flexio\Base\Eid::isValid($created_by_param))
             {
                 $converted_created_by_param = \Flexio\Object\User::getEidFromIdentifier($created_by_param);
-                if ($converted_created_by_param !== false)
+                if ($converted_created_by_param)
                     $converted_params['created_by'] = $converted_created_by_param;
             }
         }

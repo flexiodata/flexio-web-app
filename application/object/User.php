@@ -31,28 +31,28 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return json_encode($object);
     }
 
-    public static function getEidFromIdentifier(string $identifier) // TODO: add return type
+    public static function getEidFromIdentifier(string $identifier) : ?string
     {
         $object = new static();
         $user_model = $object->getModel()->user;
         return $user_model->getEidFromIdentifier($identifier);
     }
 
-    public static function getEidFromUsername(string $identifier) // TODO: add return type
+    public static function getEidFromUsername(string $identifier) : ?string
     {
         $object = new static();
         $user_model = $object->getModel()->user;
         return $user_model->getEidFromUsername($identifier);
     }
 
-    public static function getEidFromEmail(string $identifier) // TODO: add return type
+    public static function getEidFromEmail(string $identifier) : ?string
     {
         $object = new static();
         $user_model = $object->getModel()->user;
         return $user_model->getEidFromEmail($identifier);
     }
 
-    public static function getEidFromVerifyCode(string $identifier) // TODO: add return type
+    public static function getEidFromVerifyCode(string $identifier) : ?string
     {
         $object = new static();
         $user_model = $object->getModel()->user;
@@ -288,7 +288,7 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $user_model = $this->getModel()->user;
         $stripe_customer_id = $user_model->getStripeCustomerIdFromEid($this->getEid());
 
-        if ($stripe_customer_id === false)
+        if (!$stripe_customer_id)
             return '';
 
         return $stripe_customer_id;
@@ -299,7 +299,7 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $user_model = $this->getModel()->user;
         $stripe_subscription_id = $user_model->getStripeSubscriptionIdFromEid($this->getEid());
 
-        if ($stripe_subscription_id === false)
+        if (!$stripe_subscription_id)
             return '';
 
         return $stripe_subscription_id;

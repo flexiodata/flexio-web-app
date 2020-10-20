@@ -542,7 +542,7 @@ class Api
         // if we don't have an eid identifier, try to load the user eid from
         // the identifier
         $user_eid = \Flexio\Object\User::getEidFromUsername($identifier);
-        if ($user_eid !== false)
+        if ($user_eid)
             return $user_eid;
 
         // invalid identifier
@@ -560,7 +560,7 @@ class Api
         if ($type === 'pipes')
         {
             $pipe_eid = \Flexio\Object\Pipe::getEidFromName($owner, $identifier);
-            if ($pipe_eid !== false)
+            if ($pipe_eid)
                 return $pipe_eid;
         }
 
@@ -569,7 +569,7 @@ class Api
         if ($type === 'connections')
         {
             $connection_eid = \Flexio\Object\Connection::getEidFromName($owner, $identifier);
-            if ($connection_eid !== false)
+            if ($connection_eid)
                 return $connection_eid;
         }
 

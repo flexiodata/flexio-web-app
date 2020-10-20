@@ -46,7 +46,7 @@ class Test
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
         $eid = $model->getEidFromIdentifier($handle);
-        $actual = $eid === false;
+        $actual = is_null($eid);
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('A.2', '\Flexio\Model\User::getEidFromIdentifier(); return false when eid can\'t be found',  $actual, $expected, $results);
 

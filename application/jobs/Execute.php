@@ -1379,7 +1379,7 @@ class ScriptHost
         // as an additional check; if the pipe doesn't exist or is already
         // deleted, silently don't do anything
         $pipe_eid = \Flexio\Object\Pipe::getEidFromName($owner_user_eid, $name);
-        if ($pipe_eid === false)
+        if (!$pipe_eid)
             return;
         $pipe = \Flexio\Object\Pipe::load($pipe_eid);
         if ($owner_user_eid !== $pipe->getOwner())
@@ -1402,7 +1402,7 @@ class ScriptHost
         // load the object; make sure the eid is associated with the owner
         // as an additional check
         $pipe_eid = \Flexio\Object\Pipe::getEidFromName($owner_user_eid, $name);
-        if ($pipe_eid === false)
+        if (!$pipe_eid)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         $pipe = \Flexio\Object\Pipe::load($pipe_eid);
@@ -1427,7 +1427,7 @@ class ScriptHost
         // load the object; make sure the eid is associated with the owner
         // as an additional check
         $pipe_eid = \Flexio\Object\Pipe::getEidFromName($owner_user_eid, $name);
-        if ($pipe_eid === false)
+        if (!$pipe_eid)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         $pipe = \Flexio\Object\Pipe::load($pipe_eid);
@@ -1465,7 +1465,7 @@ class ScriptHost
         // load the object; make sure the eid is associated with the owner
         // as an additional check
         $pipe_eid = \Flexio\Object\Pipe::getEidFromName($owner_user_eid, $name);
-        if ($pipe_eid === false)
+        if (!$pipe_eid)
             return false;
 
         try
@@ -1498,7 +1498,7 @@ class ScriptHost
         // load the object; make sure the eid is associated with the owner
         // as an additional check
         $old_pipe_eid = \Flexio\Object\Pipe::getEidFromName($owner_user_eid, $old_name);
-        if ($old_pipe_eid === false)
+        if (!$old_pipe_eid)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         $old_pipe = \Flexio\Object\Pipe::load($old_pipe_eid);
@@ -1517,7 +1517,7 @@ class ScriptHost
 
         // make sure a pipe with the new name doesn't already exist
         $possible_existing_pipe_eid = \Flexio\Object\Pipe::getEidFromName($owner_user_eid, $new_name);
-        if ($possible_existing_pipe_eid !== false)
+        if ($possible_existing_pipe_eid)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
         // rename the pipe

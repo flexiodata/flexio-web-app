@@ -59,7 +59,7 @@ class TeamMember
         $member_param = $validated_post_params['member'];
         $member_user_eid = self::getMemberEidFromParam($member_param);
 
-        if ($member_user_eid === false)
+        if (!$member_user_eid)
         {
             // user doesn't exist based on anything supplied; see if we have an email address
             // and if so invite the user in; otherwise fail
@@ -397,7 +397,7 @@ class TeamMember
 
         // get the eid for the user joining; if the user doesn't exist, throw an error
         $member_user_eid = \Flexio\Object\User::getEidFromEmail($email);
-        if ($member_user_eid === false)
+        if (!$member_user_eid)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         // attempt to update the team member
@@ -460,16 +460,12 @@ class TeamMember
         \Flexio\Api\Response::sendContent($result);
     }
 
-    private static function getMemberEidFromParam(string $param) // TODO: add return type
+    private static function getMemberEidFromParam(string $param) : ?string
     {
         if (\Flexio\System\System::getModel()->user->exists($param))
             return $param; // param is an eid
 
-        $eid = \Flexio\System\System::getModel()->user->getEidFromIdentifier($param);
-        if ($eid !== false)
-            return $eid; // param is a username or email; return eid from info
-
-        return false;
+        return \Flexio\System\System::getModel()->user->getEidFromIdentifier($param);
     }
 
     private static function getMemberInfo(string $member_user_eid, string $owner_user_eid) : ?array

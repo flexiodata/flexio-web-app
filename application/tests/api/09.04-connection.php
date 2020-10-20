@@ -87,7 +87,7 @@ class Test
             $testsuite_connection_eid = \Flexio\Object\Connection::getEidFromName($storage_owner, $storage_location);
 
             // TODO: add some type of test setup failure notice
-            if ($testsuite_connection_eid === false)
+            if (!$testsuite_connection_eid)
                 continue;
 
             $testsuite_connection_info = \Flexio\Object\Connection::load($testsuite_connection_eid)->get();

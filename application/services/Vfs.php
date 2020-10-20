@@ -390,7 +390,7 @@ class Vfs implements \Flexio\IFace\IFileSystem
         if (\Flexio\Base\Eid::isValid($connection_identifier) === false)
         {
             $eid_from_identifier = \Flexio\Object\Connection::getEidFromName($owner_user_eid, $connection_identifier);
-            $connection_identifier = $eid_from_identifier !== false ? $eid_from_identifier : '';
+            $connection_identifier = isset($eid_from_identifier) ? $eid_from_identifier : '';
         }
 
         $connection = \Flexio\Object\Connection::load($connection_identifier);

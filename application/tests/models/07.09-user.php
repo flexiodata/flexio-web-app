@@ -45,7 +45,7 @@ class Test
 
         // BEGIN TEST
         $email = $model->getEmailFromEid('xxxxxxxxxxxx');
-        $actual = $email === false;
+        $actual = is_null($email);
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('A.2', '\Flexio\Model\User::getEmailFromEid(); return false when a user\'s email can\'t be found',  $actual, $expected, $results);
 

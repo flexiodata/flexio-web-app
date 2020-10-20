@@ -168,7 +168,7 @@ class Process implements \Flexio\IFace\IProcess
         catch (\Exception $e)
         {
             $eid_from_identifier = \Flexio\Object\Connection::getEidFromName($owner_user_eid, $identifier);
-            if ($eid_from_identifier === false)
+            if (!$eid_from_identifier)
                 throw $e;
 
             $connection = \Flexio\Object\Connection::load($eid_from_identifier);

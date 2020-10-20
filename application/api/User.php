@@ -69,7 +69,7 @@ class User
         try
         {
             $user_eid = \Flexio\Object\User::getEidFromEmail($email);
-            if ($user_eid !== false)
+            if ($user_eid)
                 $user = \Flexio\Object\User::load($user_eid);
         }
         catch (\Flexio\Base\Exception $e)
@@ -715,7 +715,7 @@ class User
         try
         {
             $user_eid = \Flexio\Object\User::getEidFromEmail($email);
-            if ($user_eid === false)
+            if (!$user_eid)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
             $user = \Flexio\Object\User::load($user_eid);
             if ($user->getStatus() === \Model::STATUS_DELETED)
@@ -763,7 +763,7 @@ class User
         try
         {
             $user_eid = \Flexio\Object\User::getEidFromEmail($email);
-            if ($user_eid === false)
+            if (!$user_eid)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
             $user = \Flexio\Object\User::load($user_eid);
             if ($user->getStatus() === \Model::STATUS_DELETED)
@@ -812,7 +812,7 @@ class User
         try
         {
             $user_eid = \Flexio\Object\User::getEidFromEmail($email);
-            if ($user_eid === false)
+            if (!$user_eid)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
             $user = \Flexio\Object\User::load($user_eid);
             if ($user->getStatus() === \Model::STATUS_DELETED)
@@ -865,7 +865,7 @@ class User
         try
         {
             $user_eid = \Flexio\Object\User::getEidFromEmail($email);
-            if ($user_eid === false)
+            if (!$user_eid)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
             $user = \Flexio\Object\User::load($user_eid);
             if ($user->getStatus() === \Model::STATUS_DELETED)
@@ -1249,7 +1249,7 @@ class User
             return false;
 
         // check if identifier already exists
-        if (\Flexio\Object\User::getEidFromUsername($value) !== false)
+        if (!is_null(\Flexio\Object\User::getEidFromUsername($value)))
         {
             switch ($type)
             {
@@ -1327,7 +1327,7 @@ class User
             }
 
             if (($eid_type == \Model::TYPE_PIPE || $eid_type == \Model::TYPE_UNDEFINED) &&
-                \Flexio\Object\Pipe::getEidFromName($owner_user->getEid(), $value) !== false)
+                !is_null(\Flexio\Object\Pipe::getEidFromName($owner_user->getEid(), $value)))
             {
                 // identifier already exists
                 $message = _('This name is already taken.');
@@ -1335,7 +1335,7 @@ class User
             }
 
             if (($eid_type == \Model::TYPE_CONNECTION || $eid_type == \Model::TYPE_UNDEFINED) &&
-                \Flexio\Object\Connection::getEidFromName($owner_user->getEid(), $value) !== false)
+                !is_null(\Flexio\Object\Connection::getEidFromName($owner_user->getEid(), $value)))
             {
                 // identifier already exists
                 $message = _('This name is already taken.');

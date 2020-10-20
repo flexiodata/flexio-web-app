@@ -262,7 +262,7 @@ class Request implements \Flexio\IFace\IJob
             if (\Flexio\Base\Eid::isValid($connection_identifier) === false)
             {
                 $eid_from_identifier = \Flexio\Object\Connection::getEidFromName($owner_user_eid, $connection_identifier);
-                $connection_identifier = $eid_from_identifier !== false ? $eid_from_identifier : '';
+                $connection_identifier = isset($eid_from_identifier) ? $eid_from_identifier : '';
             }
             $connection = \Flexio\Object\Connection::load($connection_identifier);
             if ($connection->getStatus() === \Model::STATUS_DELETED)
@@ -276,7 +276,7 @@ class Request implements \Flexio\IFace\IJob
                 if (\Flexio\Base\Eid::isValid($eid_from_identifier) === false)
                 {
                     $eid_from_identifier = \Flexio\Object\Connection::getEidFromName($owner_user_eid, $eid_from_identifier);
-                    if ($eid_from_identifier === false)
+                    if (!$eid_from_identifier)
                         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
                 }
 
